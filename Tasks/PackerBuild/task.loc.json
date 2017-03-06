@@ -61,6 +61,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccount"
     },
     {
+      "name": "azureResourceGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup"
+    },
+    {
       "name": "baseImage",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.baseImage",
@@ -114,6 +125,11 @@
       "target": "azureStorageAccount",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureStorageServiceNames"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
     }
   ],
   "sourceDefinitions": [],

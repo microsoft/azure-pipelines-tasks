@@ -61,6 +61,17 @@
             "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment."
         },
         {
+            "name": "azureResourceGroup",
+            "type": "pickList",
+            "label": "Resource group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the storage account specified above."
+        },
+        {
             "name": "baseImage",
             "type": "pickList",
             "label": "Base image",
@@ -114,6 +125,11 @@
             "target": "azureStorageAccount",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureStorageServiceNames"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
         }
     ],
     "sourceDefinitions": [],

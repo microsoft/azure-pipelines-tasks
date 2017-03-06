@@ -2,7 +2,6 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import packerHost from "./packerHost";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
 
@@ -12,31 +11,32 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
     constructor() {
     }
 
-    public register(packerHost: packerHost): void {
+    public register(packerHost: definitions.IPackerHost): void {
         packerHost.registerTemplateVariablesProvider(definitions.VariablesProviderTypes.TaskInput, this);
         tl.debug("registered task input variables provider");        
     }
 
-    public getTemplateVariables(): Map<string, string> {
+    public getTemplateVariables(packerHost: definitions.IPackerHost): Map<string, string> {
         if(!!this._templateVariables) {
             return this._templateVariables;
         }
 
         // VM specific variables
         this._templateVariables = new Map<string, string>();
-        this._templateVariables.set(constants.TemplateVariableResourceGroupName, tl.getInput(constants.ResourceGroupInputName, true));
-        this._templateVariables.set(constants.TemplateVariableStorageAccountName, tl.getInput(constants.StorageAccountInputName, true));
-        this._templateVariables.set(constants.TemplateVariableImagePublisherName, tl.getInput(constants.ImagePublisherInputName, true));
-        this._templateVariables.set(constants.TemplateVariableImageOfferName, tl.getInput(constants.ImageOfferInputName, true));
-        this._templateVariables.set(constants.TemplateVariableImageSkuName, tl.getInput(constants.ImageSkuInputName, true));
-        this._templateVariables.set(constants.TemplateVariableLocationName, tl.getInput(constants.LocationInputName, true));
+        var taskParameters = packerHost.getTaskParameters();
+        this._templateVariables.set(constants.TemplateVariableResourceGroupName, taskParameters.resourceGroup);
+        this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
+        this._templateVariables.set(constants.TemplateVariableImagePublisherName, taskParameters.imagePublisher);
+        this._templateVariables.set(constants.TemplateVariableImageOfferName, taskParameters.imageOffer);
+        this._templateVariables.set(constants.TemplateVariableImageSkuName, taskParameters.imageSku);
+        this._templateVariables.set(constants.TemplateVariableLocationName, taskParameters.location);
 
         var capturePrefix = tl.getVariable('release.releaseName') || tl.getVariable('build.buildnumber') || "vstscapture";
         this._templateVariables.set(constants.TemplateVariableCapturePrefixName, capturePrefix);        
         
         // user deployment script specific variables
-        var deployScriptPath = tl.getInput(constants.DeployScriptPathInputName, true);
-        var packagePath = tl.getInput(constants.DeployPackageInputName, true);
+        var deployScriptPath = taskParameters.deployScriptPath;
+        var packagePath = taskParameters.packagePath;
         this._templateVariables.set(constants.TemplateVariableScriptPathName, deployScriptPath);
         this._templateVariables.set(constants.TemplateVariableScriptName, path.basename(deployScriptPath));
         this._templateVariables.set(constants.TemplateVariablePackagePathName, packagePath);

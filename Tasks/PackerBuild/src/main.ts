@@ -39,7 +39,7 @@ function registerProviders(host: packerHost): void {
     var taskInputTemplateVariablesProvider = new TaskInputTemplateVariablesProvider();
     taskInputTemplateVariablesProvider.register(host);
 
-    //register SPN nariables provider which will fetch SPN data as variables for packer template
+    //register SPN variables provider which will fetch SPN data as variables for packer template
     var spnVariablesProvider = new azureSpnTemplateVariablesProvider();
     spnVariablesProvider.register(host);
 }

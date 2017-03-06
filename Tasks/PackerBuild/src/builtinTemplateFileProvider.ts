@@ -2,8 +2,6 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-//import PackerTemplateManager from "./packerTemplateManager";
-import packerHost from "./packerHost";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
 import * as utils from "./utilities"
@@ -15,17 +13,17 @@ export default class BuiltInTemplateFileProvider implements definitions.ITemplat
         this._builtInTemplateFiles.set(constants.BuiltInTemplateOSTypeWindows, constants.BuiltInWindowsTemplateLocation);
     }
 
-    public register(packerHost: packerHost): void {
+    public register(packerHost: definitions.IPackerHost): void {
         packerHost.registerTemplateFileProvider(definitions.TemplateFileProviderTypes.BuiltIn, this);
         tl.debug("registered builtin template provider");
     }
 
-    public getTemplateFileLocation(): string {
+    public getTemplateFileLocation(packerHost: definitions.IPackerHost): string {
         if(!!this._templateFileLocation) {
             return this._templateFileLocation;
         }
 
-        var osType = tl.getInput(constants.OsTypeInputName);
+        var osType = packerHost.getTaskParameters().osType;
         if(this._builtInTemplateFiles.has(osType)) {
             var templateFileLocation = this._builtInTemplateFiles.get(osType);
             tl.checkPath(templateFileLocation, tl.loc("BuiltInTemplateNotFoundErrorMessagePathName", osType));
