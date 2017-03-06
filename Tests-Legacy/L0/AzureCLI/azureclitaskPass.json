@@ -26,10 +26,6 @@
       "code": 0,
       "stdout":"bash executed successfully"
     },
-    "/usr/local/bin/az account import subscriptions.publishsettings": {
-      "code": 0,
-      "stdout": "azure output here"
-    },
     "/usr/local/bin/az login --service-principal -u id -p key --tenant tenant": {
       "code": 0,
       "stdout": "azure output here"

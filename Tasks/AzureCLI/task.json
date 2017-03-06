@@ -110,6 +110,7 @@
         "ScriptReturnCode": "Script exited with return code: %d",
         "ScriptFailed": "Script failed with error: %s",
         "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Service Principal for AzureRM",
-        "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine."
+        "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
+        "FailedToLogout": "The following error occured while logging out: %s"
     }
 }

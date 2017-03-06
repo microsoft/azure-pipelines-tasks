@@ -110,6 +110,7 @@
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
     "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
-    "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound"
+    "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
+    "FailedToLogout": "ms-resource:loc.messages.FailedToLogout"
   }
 }
