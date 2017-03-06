@@ -16,11 +16,11 @@
     ],
     "demands": [],
     "version": {
-        "Major": 0,
-        "Minor": 2,
-        "Patch": 7
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1
     },
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
     "groups": [
         {
@@ -31,34 +31,12 @@
     ],
     "inputs": [
         {
-            "name": "connectedServiceNameSelector",
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "defaultValue": "connectedServiceNameARM",
-            "required": true,
-            "helpMarkDown": "Select the Azure connection type for the Deployment",
-            "options": {
-                "connectedServiceName": "Azure Classic",
-                "connectedServiceNameARM": "Azure Resource Manager"
-            }
-        },
-        {
             "name": "connectedServiceNameARM",
             "type": "connectedService:AzureRM",
             "label": "AzureRM Subscription",
             "defaultValue": "",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment"
-        },
-        {
-            "name": "connectedServiceName",
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceName",
-            "required": true,
-            "helpMarkDown": "Select the Azure Classic subscription for the deployment"
         },
         {
             "name": "scriptLocation",
