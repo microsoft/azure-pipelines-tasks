@@ -10,13 +10,13 @@
 		"Release"
 	],
 	"runsOn": [
-		"MachineGroup"
+		"DeploymentGroup"
 	],
 	"demands": [],
 	"version": {
 		"Major": 0,
 		"Minor": 2,
-		"Patch": 1
+		"Patch": 2
 	},
 	"minimumAgentVersion": "2.111.0",
 	"instanceNameFormat": "Manage $(IISDeploymentType)",
