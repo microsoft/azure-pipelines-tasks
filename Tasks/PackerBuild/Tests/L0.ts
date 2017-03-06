@@ -164,7 +164,7 @@ describe('PackerBuild Suite', function() {
         done();
     });
 
-    it('should fail if output variables cannot be parsed from packer log', (done:MochaDone) => {
+    it('should not fail if output variables cannot be parsed from packer log but output variables has not been set by user', (done:MochaDone) => {
         process.env["__no_output_vars__"] = "true";
         process.env["__packer_build_no_output__"] = "true";
         
@@ -174,7 +174,7 @@ describe('PackerBuild Suite', function() {
         process.env["__no_output_vars__"] = "false";
         process.env["__packer_build_no_output__"] = "false";        
 
-        assert(tr.succeeded, 'task should fail if output is not parsed properly');
+        assert(tr.succeeded, 'task should not fail if output is not parsed properly');
         assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]") == -1, "should not try to set output variable");         
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]") == -1, "should not try to set output variable");           
