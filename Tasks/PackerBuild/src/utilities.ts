@@ -5,16 +5,17 @@ import * as path from "path";
 import * as stream from "stream";
 import * as tl from "vsts-task-lib/task";
 
-export function copyFile(source: string, destination: string): void {
-    tl.checkPath(source, tl.loc("CopySourceNotExists", source));
+// copy source file to destination folder. destination folder will be created if it does not exists, otherwise its contents will be overwritten.
+export function copyFile(sourceFile: string, destinationFolder: string): void {
+    tl.checkPath(sourceFile, tl.loc("CopySourceNotExists", sourceFile));
 
-    if(!tl.exist(destination)) {
-        console.log(tl.loc("CreatingDestinationDir", destination));
-        tl.mkdirP(destination);
-        console.log(tl.loc("CreatedDestinationDir", destination));        
+    if(!tl.exist(destinationFolder)) {
+        console.log(tl.loc("CreatingDestinationDir", destinationFolder));
+        tl.mkdirP(destinationFolder);
+        console.log(tl.loc("CreatedDestinationDir", destinationFolder));        
     }
 
-    tl.cp(source, destination, "-f")
+    tl.cp(sourceFile, destinationFolder, "-f")
 }
 
 export function getTempDirectory(): string {

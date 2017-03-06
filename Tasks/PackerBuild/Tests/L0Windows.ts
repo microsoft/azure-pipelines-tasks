@@ -15,6 +15,8 @@ tr.setInput('location', 'South India');
 tr.setInput('packagePath', 'C:\\dummy.zip');
 tr.setInput('deployScriptPath', 'C:\\deploy.ps1');
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+tr.setInput('imageUri', 'imageUri');
+tr.setInput('imageStorageAccount', 'imageStorageAccount');
 
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
@@ -44,6 +46,13 @@ let a: any = <any>{
             "code": 0,
             "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
         }
+    },
+    "exist": {
+        "F:\\somedir\\tempdir\\100": true,
+        "F:\\somedir\\tempdir\\100\\": true        
+    },
+    "rmRF": {
+        "F:\\somedir\\tempdir\\100": { 'success': true }
     }
 };
 

@@ -49,6 +49,10 @@ export default class BuiltInTemplateFileProvider implements definitions.ITemplat
         throw (tl.loc("OSTypeNotSupported", osType));
     }
 
+    public shouldTemplateFileBeCleanedup(): boolean {
+        return true;
+    }
+
     private _builtInTemplateFiles: Map<string, string>;
     private _templateFileLocation: string;
 }

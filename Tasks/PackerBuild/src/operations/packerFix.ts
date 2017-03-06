@@ -13,5 +13,5 @@ export function run(packerHost: packerHost): Q.Promise<any> {
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation());
 
     console.log(tl.loc("ExecutingPackerFix"));
-    return packerHost.execPackerTool(command);
+    return packerHost.execTool(command);
 }

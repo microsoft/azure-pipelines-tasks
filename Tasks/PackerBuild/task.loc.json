@@ -139,6 +139,7 @@
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
     "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
-    "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName"
+    "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
+    "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory"
   }
 }

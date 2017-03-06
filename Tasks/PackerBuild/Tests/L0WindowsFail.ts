@@ -15,6 +15,10 @@ tr.setInput('location', 'South India');
 tr.setInput('packagePath', 'C:\\dummy.zip');
 tr.setInput('deployScriptPath', 'C:\\deploy.ps1');
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+if(!process.env["__no_output_vars__"] || process.env["__no_output_vars__"] !== "true") {
+    tr.setInput('imageUri', 'imageUri');
+    tr.setInput('imageStorageAccount', 'imageStorageAccount');
+}
 
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
@@ -44,6 +48,13 @@ let a: any = <any>{
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : (process.env["__packer_build_no_output__"] === "true" ? "Executed Successfully but output search will fail" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"),
         },
+    },
+    "exist": {
+        "F:\\somedir\\tempdir\\100\\": true,
+        "F:\\somedir\\tempdir\\100": true        
+    },
+    "rmRF": {
+        "F:\\somedir\\tempdir\\100": { 'success': process.env["__cleanup_fails__"] === "true" ? false : true }
     }
 };
 

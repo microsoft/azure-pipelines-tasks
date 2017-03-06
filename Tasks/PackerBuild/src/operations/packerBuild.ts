@@ -27,7 +27,7 @@ export async function run(packerHost: packerHost): Promise<any> {
 
     console.log(tl.loc("ExecutingPackerBuild"));
     var outputVariablesParser: definitions.IOutputParser = new OutputVariablesParser([constants.PackerLogTokenImageUri, constants.PackerLogTokenStorageLocation]);
-    await packerHost.execPackerTool(command, outputVariablesParser);
+    await packerHost.execTool(command, outputVariablesParser);
 
     // set output task variables
     setOutputVariables(outputVariablesParser.getExtractedOutputs());
@@ -37,17 +37,21 @@ function setOutputVariables(outputs: Map<string, string>): void {
     var imageUri = outputs.get(constants.PackerLogTokenImageUri);
     var imageStorageAccount = outputs.get(constants.PackerLogTokenStorageLocation);
 
-    if(!utils.IsNullOrEmpty(imageUri)) {
-        tl.debug("Setting image URI variable to: " + imageUri);
-        tl.setVariable(constants.OutputVariableImageUri, imageUri);
-    } else {
-        console.log(tl.loc("ImageURIOutputVariableNotFound"));
+    if(!utils.IsNullOrEmpty(tl.getInput(constants.OutputVariableImageUri, false))) {
+        if(!utils.IsNullOrEmpty(imageUri)) {
+            tl.debug("Setting image URI variable to: " + imageUri);
+            tl.setVariable(tl.getInput(constants.OutputVariableImageUri, false), imageUri);
+        } else {
+            throw tl.loc("ImageURIOutputVariableNotFound");
+        }
     }
 
-    if(!utils.IsNullOrEmpty(imageStorageAccount)) {
-        tl.debug("Setting image storage location variable to: " + imageStorageAccount);
-        tl.setVariable(constants.OutputVariableImageStorageAccountLocation, imageStorageAccount);
-    } else {
-        console.log(tl.loc("StorageAccountLocationOutputVariableNotFound"));
+    if(!utils.IsNullOrEmpty(tl.getInput(constants.OutputVariableImageStorageAccountLocation, false))) {
+        if(!utils.IsNullOrEmpty(imageStorageAccount)) {
+            tl.debug("Setting image storage location variable to: " + imageStorageAccount);
+            tl.setVariable(tl.getInput(constants.OutputVariableImageStorageAccountLocation, false), imageStorageAccount);
+        } else {
+            throw tl.loc("StorageAccountLocationOutputVariableNotFound");
+        }
     }
 }

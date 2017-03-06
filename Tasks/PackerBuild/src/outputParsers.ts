@@ -13,18 +13,18 @@ export default class OutputVariablesParser implements definitions.IOutputParser 
         this._extractedOutputs = new Map<string, string>();
     }
 
-    public parse(line: string): void {
-        if(utils.IsNullOrEmpty(line) || !utils.HasItems(this._outputExtractionKeys)) {
+    public parse(log: string): void {
+        if(utils.IsNullOrEmpty(log) || !utils.HasItems(this._outputExtractionKeys)) {
             return;
         }
 
         tl.debug("Parsing log line to extract output...");
         tl.debug("/*************************************")
-        tl.debug(line);
+        tl.debug(log);
         tl.debug("**************************************/")
 
         this._outputExtractionKeys.forEach((key: string) => {
-            var keyValue = this._extractOutputValue(line, key);
+            var keyValue = this._extractOutputValue(log, key);
             if(keyValue !== null) {
                 this._extractedOutputs.set(key, keyValue);
             }
@@ -35,19 +35,13 @@ export default class OutputVariablesParser implements definitions.IOutputParser 
         return this._extractedOutputs;
     }
 
-    private _extractOutputValue(line: string, key: string): string {
-        var matchingInfoStartIndex = line.search(util.format("(\\n|\\r|\\u2028|\\u2029|\\s|^)%s: \\S*(\\n|\\r|\\u2028|\\u2029|\\s)", key));
+    private _extractOutputValue(log: string, key: string): string {
+        var matchingInfoStartIndex = log.search(util.format("(\\n|\\r|\\u2028|\\u2029)%s: .*(\\n|\\r|\\u2028|\\u2029)", key));
         tl.debug("Match start index: " + matchingInfoStartIndex);
 
         if (matchingInfoStartIndex !== -1) {
-            var padding = 1;
-            
-            if(line.startsWith(key)) {
-                padding = 0;
-            }
-
-            var matchingInfo = line.substring(matchingInfoStartIndex + key.length + padding + 1).trim(); // one extra character is for ':' preceding the key
-            var matchingInfoEndIndex = matchingInfo.search("(\\n|\\r|\\u2028|\\u2029|\\s)");
+            var matchingInfo = log.substring(matchingInfoStartIndex + key.length + 2).trim(); // one extra character is for ':' preceding the key
+            var matchingInfoEndIndex = matchingInfo.search("(\\n|\\r|\\u2028|\\u2029)");
             tl.debug("Match end index: " + matchingInfoEndIndex);
 
             if (matchingInfoEndIndex !== -1) {

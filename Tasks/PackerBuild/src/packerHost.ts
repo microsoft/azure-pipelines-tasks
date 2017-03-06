@@ -23,7 +23,7 @@ export default class PackerHost implements definitions.IPackerHost {
 
     // Creates packer toolrunner with options
     // Also sets up parser which will parse output log on the fly
-    public execPackerTool(command: tr.ToolRunner, outputParser?: definitions.IOutputParser): Q.Promise<any> {
+    public execTool(command: tr.ToolRunner, outputParser?: definitions.IOutputParser): Q.Promise<any> {
         var outputExtractorFunc = null;
         if(!!outputParser) {
             outputExtractorFunc = (line: string) => {

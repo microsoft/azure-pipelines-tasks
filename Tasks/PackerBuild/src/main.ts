@@ -18,10 +18,15 @@ async function run(): Promise<any> {
     registerProviders(host);
 
     // run packer commands
-    await packerFix.run(host);
-    await packerValidate.run(host);
-    await packerBuild.run(host);
-    console.log(tl.loc("PackerBuildCompleted"));
+    try {
+        await packerFix.run(host);
+        await packerValidate.run(host);
+        await packerBuild.run(host);
+        console.log(tl.loc("PackerBuildCompleted"));
+    }
+    finally {
+        cleanup(host);
+    }
 }
 
 function registerProviders(host: packerHost): void {
@@ -39,6 +44,20 @@ function registerProviders(host: packerHost): void {
     spnVariablesProvider.register(host);
 }
 
+function cleanup(host: packerHost): void {
+
+    var templateFileDirectory = path.dirname(host.getTemplateFileProvider().getTemplateFileLocation());    
+    
+    try{
+        if(tl.exist(templateFileDirectory)) {
+            tl.rmRF(templateFileDirectory, true);
+        }
+    }
+    catch (err) {
+        tl.warning(tl.loc("CouldNotDeleteTemporaryTemplateDirectory", templateFileDirectory));
+    }
+}
+
 try {
     tl.setResourcePath(path.join(__dirname, "..//task.json"));
 }
@@ -48,7 +67,7 @@ catch (err) {
 }
 
 run().then((result) =>
-   tl.setResult(tl.TaskResult.Succeeded, "")
+    tl.setResult(tl.TaskResult.Succeeded, "")
 ).catch((error) => 
     tl.setResult(tl.TaskResult.Failed, error)
 );

@@ -15,14 +15,14 @@ tr.setInput('location', 'South India');
 tr.setInput('packagePath', 'C:\\dummy.zip');
 tr.setInput('deployScriptPath', 'C:\\deploy.ps1');
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+tr.setInput('imageUri', 'imageUri');
+tr.setInput('imageStorageAccount', 'imageStorageAccount');
 
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
-
-        process.env["__build_output__"] = "Executed Successfully OSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\tStorageAccountLocation: SouthIndia some random string\n";
 
 // provide answers for task mock
 let a: any = <any>{
@@ -46,6 +46,9 @@ let a: any = <any>{
             "code": 0,
             "stdout": process.env["__build_output__"]
         }
+    },
+    "exist": {
+        "F:\\somedir\\tempdir\\100\\": true
     }
 };
 

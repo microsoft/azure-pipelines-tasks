@@ -17,7 +17,7 @@ export interface IOutputParser {
 
 export interface IPackerHost {
     createPackerTool(): tr.ToolRunner;
-    execPackerTool(command: tr.ToolRunner, outputParser?: IOutputParser): Q.Promise<any>;
+    execTool(command: tr.ToolRunner, outputParser?: IOutputParser): Q.Promise<any>;
     getTemplateFileProvider(): ITemplateFileProvider;
     getTemplateVariablesProviders(): ITemplateVariablesProvider[];
 }
@@ -25,6 +25,7 @@ export interface IPackerHost {
 export interface ITemplateFileProvider {
     register(packerHost: IPackerHost): void;
     getTemplateFileLocation(): string;
+    shouldTemplateFileBeCleanedup(): boolean;
 }
 
 export interface ITemplateVariablesProvider {
