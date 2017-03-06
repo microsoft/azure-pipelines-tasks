@@ -68,7 +68,7 @@
 			"name": "IISDeploymentType",
 			"type": "pickList",
 			"label": "Configuration type",
-			"required": false,
+			"required": true,
 			"defaultValue": "IISWebsite",
 			"options": {
 				"IISWebsite": "IIS Website",
@@ -101,7 +101,7 @@
 			"defaultValue": "CreateOrUpdateAppPool",
 			"options": {
 				"CreateOrUpdateAppPool": "Create Or Update",
-				"StartAppPool": " Start",
+				"StartAppPool": "Start",
 				"StopAppPool": "Stop",
 				"RecycleAppPool": "Recycle"
 			},

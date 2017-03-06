@@ -2,7 +2,7 @@
 
 ## Overview
 
-This task is used to manage an IIS web site or a web application or a virtual directory or an application pool. You can Create or update a Web Application or a Virtual Directory as a child of an existing IIS Web Site. 
+This task is used to manage an IIS website, web application, virtual directory or an application pool. 
 
 The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. [Deployment Groups](https://opsstaging.www.visualstudio.com/en-gb/docs/release/getting-started/machine-group-agents?branch=users%2Fahomer%2Frelease-master) are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring a Team Services Release definition, you can specify the deployments targets for a [phase](https://opsstaging.www.visualstudio.com/en-gb/docs/build/concepts/process/phases) using the deployment group.
 
@@ -38,15 +38,15 @@ Carry out the following steps to create a Deployment group:
 
 ## Parameters of the task
 
-The task can be used to create/update a web application/Website/Virtual Directory/App pool in an IIS web server. The task parameters are described in detail below. The parameters listed with a \* are required parameters for the task.
+The task can be used to create/update a web application, website, virtual Directory, App pool in an IIS web server. The task parameters are described in detail below. The parameters listed with a \* are required parameters for the task.
 
-* **Configuration type\*:** Choose whether you want to create/update an IIS web application or an IIS website or an IIS virtual directory or an IIS application pool. IIS Virtual Directory or an IIS Web Application are created as a child of an existing IIS Web Site.
+* **Configuration type\*:** Choose whether you want to create/update an IIS web application or an IIS website or an IIS virtual directory or an IIS application pool. IIS Virtual Directory or an IIS Web Application are created as a child of an existing IIS Website.
 
 * **Action\*:** Select the action to be performed. Create or Update , start, stop actions are supported based on the Configuration type selected. For App pool, Recycle option is also available.
 
 The following parameters are selectively shown based on the configuration type and the action chosen:
 
-* **Website Name\*:** The display name of the IIS Web Site to create or reconfigure. For IIS Virtual directory or IIS Web Application, provide the name of the parent Website under which the directory/application will be created or updated.
+* **Website Name\*:** The display name of the IIS Website to create or reconfigure. For IIS Virtual directory or IIS Web Application, provide the name of the parent website under which the directory/application will be created or updated.
 * **Physical path\*:** Provide the physical path where the content of the website/virtual directory/web application will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like 'C:\Fabrikam or \\ContentShare\Fabrikam'. 
 * **Virtual path\*:** Provide the virtual path in IIS relative to the parent website.  
 Example: To create an application Site/Application enter /Application. The parent website should be already existing.
