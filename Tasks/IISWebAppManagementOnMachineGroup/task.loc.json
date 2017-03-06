@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -40,6 +40,18 @@
       "visibleRule": "ActionIISApplicationPool = CreateOrUpdateAppPool"
     },
     {
+      "name": "WebApplication",
+      "displayName": "ms-resource:loc.group.displayName.WebApplication",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISWebApplication"
+    },
+    {
+      "name": "VirtualDirectory",
+      "displayName": "ms-resource:loc.group.displayName.VirtualDirectory",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISVirtualDirectory"
+    },
+    {
       "name": "ApplicationPoolForApplication",
       "displayName": "ms-resource:loc.group.displayName.ApplicationPoolForApplication",
       "isExpanded": true,
@@ -56,7 +68,7 @@
       "name": "IISDeploymentType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.IISDeploymentType",
-      "required": false,
+      "required": true,
       "defaultValue": "IISWebsite",
       "options": {
         "IISWebsite": "IIS Website",
@@ -75,8 +87,8 @@
       "visibleRule": "IISDeploymentType = IISWebsite",
       "options": {
         "CreateOrUpdateWebsite": "Create Or Update",
-        "StartWebsite": "Start Website",
-        "StopWebsite": "Stop Website"
+        "StartWebsite": "Start",
+        "StopWebsite": "Stop"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ActionIISWebsite"
     },
@@ -89,9 +101,9 @@
       "defaultValue": "CreateOrUpdateAppPool",
       "options": {
         "CreateOrUpdateAppPool": "Create Or Update",
-        "StartAppPool": "Start Application Pool",
-        "StopAppPool": "Stop Applcation Pool",
-        "RecycleAppPool": "Recycle Application Pool"
+        "StartAppPool": "Start",
+        "StopAppPool": "Stop",
+        "RecycleAppPool": "Recycle"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ActionIISApplicationPool"
     },
@@ -335,7 +347,7 @@
       "label": "ms-resource:loc.input.label.ParentWebsiteNameForVD",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "groupName": "VirtualDirectory",
       "helpMarkDown": "ms-resource:loc.input.help.ParentWebsiteNameForVD"
     },
     {
@@ -344,7 +356,7 @@
       "label": "ms-resource:loc.input.label.VirtualPathForVD",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "groupName": "VirtualDirectory",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualPathForVD"
     },
     {
@@ -353,7 +365,7 @@
       "label": "ms-resource:loc.input.label.PhysicalPathForVD",
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
       "required": true,
-      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "groupName": "VirtualDirectory",
       "helpMarkDown": "ms-resource:loc.input.help.PhysicalPathForVD"
     },
     {
@@ -361,7 +373,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.VDPhysicalPathAuth",
       "required": false,
-      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "groupName": "VirtualDirectory",
       "defaultValue": "Application User (Pass-through)",
       "options": {
         "VDUserPassThrough": "Application User (Pass-through)",
@@ -375,6 +387,7 @@
       "label": "ms-resource:loc.input.label.VDAuthUserName",
       "required": true,
       "defaultValue": "",
+      "groupName": "VirtualDirectory",
       "visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
       "helpMarkDown": "ms-resource:loc.input.help.VDAuthUserName"
     },
@@ -384,6 +397,7 @@
       "label": "ms-resource:loc.input.label.VDAuthUserPassword",
       "required": false,
       "defaultValue": "",
+      "groupName": "VirtualDirectory",
       "visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
       "helpMarkDown": "ms-resource:loc.input.help.VDAuthUserPassword"
     },
@@ -393,7 +407,7 @@
       "label": "ms-resource:loc.input.label.ParentWebsiteNameForApplication",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "groupName": "WebApplication",
       "helpMarkDown": "ms-resource:loc.input.help.ParentWebsiteNameForApplication"
     },
     {
@@ -402,7 +416,7 @@
       "label": "ms-resource:loc.input.label.VirtualPathForApplication",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "groupName": "WebApplication",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualPathForApplication"
     },
     {
@@ -411,7 +425,7 @@
       "label": "ms-resource:loc.input.label.PhysicalPathForApplication",
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
       "required": true,
-      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "groupName": "WebApplication",
       "helpMarkDown": "ms-resource:loc.input.help.PhysicalPathForApplication"
     },
     {
@@ -419,7 +433,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ApplicationPhysicalPathAuth",
       "required": false,
-      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "groupName": "WebApplication",
       "defaultValue": "Application User (Pass-through)",
       "options": {
         "ApplicationUserPassThrough": "Application User (Pass-through)",
@@ -433,6 +447,7 @@
       "label": "ms-resource:loc.input.label.ApplicationAuthUserName",
       "required": true,
       "defaultValue": "",
+      "groupName": "WebApplication",
       "visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
       "helpMarkDown": "ms-resource:loc.input.help.ApplicationAuthUserName"
     },
@@ -442,6 +457,7 @@
       "label": "ms-resource:loc.input.label.ApplicationAuthUserPassword",
       "required": false,
       "defaultValue": "",
+      "groupName": "WebApplication",
       "visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
       "helpMarkDown": "ms-resource:loc.input.help.ApplicationAuthUserPassword"
     },
@@ -451,7 +467,7 @@
       "label": "ms-resource:loc.input.label.CreateOrUpdateAppPoolForApplication",
       "required": false,
       "defaultValue": "false",
-      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "groupName": "WebApplication",
       "helpMarkDown": "ms-resource:loc.input.help.CreateOrUpdateAppPoolForApplication"
     },
     {
