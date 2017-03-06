@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "上述指定之負載測試資料夾下所用的負載測試檔案名稱。",
   "loc.input.label.ThresholdLimit": "允許的臨界值違規次數",
   "loc.input.help.ThresholdLimit": "超過此臨界值違規數目，即會將負載測試結果視為不成功。",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "執行負載測試的方法:"
 }

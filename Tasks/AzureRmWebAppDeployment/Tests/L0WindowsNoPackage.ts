@@ -59,7 +59,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {
     	"webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "Invalid_webAppPkg": false
     }, 
     "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
@@ -90,21 +91,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
-        return true;
     }
 }); 
 
-tr.registerMock('webdeployment-common/azurerestutility.js', {
+tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -135,6 +132,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		id: 'appid',
   		properties: { 
      		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
     	} 
   	}
 
@@ -151,6 +149,23 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    },
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 

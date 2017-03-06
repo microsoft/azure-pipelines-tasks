@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Pubblica risultati di code coverage",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "Pubblica i risultati di code coverage in VSTS/TFS",
   "loc.instanceNameFormat": "Pubblica risultati di code coverage $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Strumento di code coverage",

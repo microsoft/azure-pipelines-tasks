@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Esegui test funzionali",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Consente di eseguire i test codificati dell'interfaccia utente/Selenium/funzionali su un set di computer usando Agente di test",
   "loc.instanceNameFormat": "Esegui test $(sourcefilters) in $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Opzioni di installazione",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "Computer",
   "loc.input.help.testMachineGroup": "Consente di specificare un elenco di indirizzi IP o FQDN separati da virgola. Esempio: `dbserver.fabrikam.com o 192.168.12.34` In alternativa, consente di specificare la variabile di output di altre attività. Esempio: `$(variableName)` In alternativa, consente di specificare un nome di gruppo di computer",
   "loc.input.label.dropLocation": "Destinazione finale test",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "Percorso di destinazione dei file binari di test nei computer agente durante l'attività 'Copia dei file del computer Windows' o 'Copia dei file di Azure'. Nella stringa del percorso è anche possibile usare variabili di ambiente di sistema, ad esempio `%systemdrive%\\Tests`, `%temp%\\DropLocation` e così via.",
   "loc.input.label.testSelection": "Selezione test",
   "loc.input.help.testSelection": "Consente di selezionare la modalità di esecuzione dei test, ovvero con assembly di test o con il piano di test.",
   "loc.input.label.testPlan": "Piano di test",
@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Configurazione",
   "loc.input.help.configuration": "Configurazione da usare per i test. Usare qui l'eventuale variabile definita per la configurazione nell'attività di compilazione.",
   "loc.input.label.testConfigurations": "Configurazioni di test",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Consente, facoltativamente, di associare un filtro del test case a un ID di configurazione di test. Sintassi: &lt;Filtro1&gt;:&lt;Id1&gt;;ConfigurazioneTestPredefinita:&lt;Id3&gt;. Ad esempio: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "Computer applicazione sottoposta a test",
   "loc.input.help.autMachineGroup": "Elenco delimitato da virgole di computer, variabili di output o nomi di gruppo di computer in cui sono in esecuzione processi server, come W3WP.exe"
 }

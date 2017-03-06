@@ -147,6 +147,19 @@ function Get-SqlPackageCommandArguments
 
         if($sqlUsername)
         {
+            if ($serverName)
+            {
+                $serverNameSplittedArgs = $serverName.Trim().Split(".")
+                if ($serverNameSplittedArgs.Length -gt 0)
+                {
+                    $sqlServerFirstName = $serverNameSplittedArgs[0]
+                    if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
+                    {
+                        $sqlUsername = $sqlUsername + "@" + $serverName 
+                    }
+                }
+            }
+
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))
             {
@@ -185,25 +198,29 @@ function Get-SqlPackageCommandArguments
     return $scriptArgument
 }
 
-function Run-Command
+function Execute-Command
 {
-    param([String][Parameter(Mandatory=$true)] $command)
+    param(
+        [String][Parameter(Mandatory=$true)] $FileName,
+        [String][Parameter(Mandatory=$true)] $Arguments
+    )
 
-    try
-	{
-        if( $psversiontable.PSVersion.Major -le 4)
-        {
-           cmd.exe /c "`"$command`"" 2>&1
+    $ErrorActionPreference = 'Continue' 
+    Invoke-Expression "& '$FileName' --% $Arguments" 2>&1 -ErrorVariable errors | ForEach-Object {
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            Write-Error $_
+        } else {
+            Write-Host $_
         }
-        else
-        {
-           cmd.exe /c "$command" 2>&1
-        }
-
+    } 
+    
+    foreach($errorMsg in $errors){
+        Write-Error $errorMsg
     }
-	catch [System.Exception]
+    $ErrorActionPreference = 'Stop'
+    if($LASTEXITCODE -ne 0)
     {
-        throw $_.Exception
+         throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed")
     }
 }
 

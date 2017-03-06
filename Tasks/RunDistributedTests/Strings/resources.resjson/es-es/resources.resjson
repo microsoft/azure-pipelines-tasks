@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ejecutar pruebas funcionales",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Ejecutar pruebas automatizadas de IU, pruebas de Selenium o pruebas funcionales en un conjunto de máquinas (mediante el agente de pruebas)",
   "loc.instanceNameFormat": "Ejecutar pruebas $(sourcefilters) en $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Opciones de instalación",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "Máquinas",
   "loc.input.help.testMachineGroup": "Proporcione una lista separada por comas de las direcciones IP de máquinas o FQDN. Por ejemplo: \"dbserver.fabrikam.com o 192.168.12.34\". O bien, proporcione la variable de salida de las otras tareas. Por ejemplo: \"$(variableName)\" o el nombre de un grupo de máquinas.",
   "loc.input.label.dropLocation": "Ubicación de almacenamiento de la prueba",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "Ubicación de las máquinas de agente donde se colocaron los archivos binarios de prueba como parte de la tarea \"Copia de archivos de la máquina con Windows\" o \"Copia de archivos de Azure\". También se pueden usar variables de entorno del sistema en la cadena de ubicación, p. ej., `%systemdrive%\\Tests`, `%temp%\\DropLocation`, etc.",
   "loc.input.label.testSelection": "Selección de pruebas",
   "loc.input.help.testSelection": "Seleccione la forma en que desea ejecutar pruebas: utilizando los ensamblados de prueba o el Plan de pruebas.",
   "loc.input.label.testPlan": "Plan de pruebas",
@@ -31,13 +31,13 @@
   "loc.input.label.customSlicingEnabled": "Distribuir pruebas por número de máquinas",
   "loc.input.help.customSlicingEnabled": "Las pruebas se distribuirán en función del número de máquinas proporcionadas en lugar del número de contenedores de pruebas. Tenga en cuenta que las pruebas con un archivo dll también se pueden distribuir a varias máquinas.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
-  "loc.input.help.testRunTitle": "Proporcione un nombre para la ejecución de prueba.",
+  "loc.input.help.testRunTitle": "Proporcione un nombre para la serie de pruebas.",
   "loc.input.label.platform": "Plataforma",
   "loc.input.help.platform": "Plataforma en la que se deben evaluar las pruebas. Si tiene una variable de plataforma definida en la tarea de compilación, úsela aquí.",
   "loc.input.label.configuration": "Configuración",
   "loc.input.help.configuration": "Configuración con la que se debe informar de las pruebas. Si tiene una variable de configuración definida en la tarea de compilación, úsela aquí.",
   "loc.input.label.testConfigurations": "Configuraciones de prueba",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Asocie opcionalmente un filtro de caso de prueba a un id. de configuración de prueba. Sintaxis: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. Por ejemplo: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "Aplicación en las máquinas de prueba",
   "loc.input.help.autMachineGroup": "Lista de máquinas o variable de salida o nombre de grupo de equipo en los procesos del servidor de separados por comas, como W3WP.exe, en ejecución"
 }

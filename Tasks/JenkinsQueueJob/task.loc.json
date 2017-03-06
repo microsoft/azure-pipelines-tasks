@@ -12,9 +12,15 @@
   "author": "Microsoft",
   "demands": [],
   "version": {
+<<<<<<< HEAD
     "Major": "1",
     "Minor": "2",
     "Patch": "6"
+=======
+    "Major": 1,
+    "Minor": 112,
+    "Patch": 1
+>>>>>>> upstream/master
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -64,5 +70,8 @@
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued"
   }
 }

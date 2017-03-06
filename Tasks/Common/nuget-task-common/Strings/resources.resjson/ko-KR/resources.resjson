@@ -1,5 +1,5 @@
 {
-  "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
-  "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
-  "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s"
+  "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "검색된 NuGet 확장 로더 경로(NUGET_EXTENSIONS_PATH 환경 변수). 기본 제공 NuGet 클라이언트를 사용할 경우 확장은 무시됩니다.",
+  "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "검색된 NuGet 확장 로더 경로(NUGET_EXTENSIONS_PATH 환경 변수): %s",
+  "loc.messages.NGCommon_UnableToFindTool": "%s 도구를 찾을 수 없습니다."
 }

@@ -6,17 +6,16 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Release"
   ],
   "runsOn": [
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 0
+    "Minor": 3,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
@@ -37,7 +36,7 @@
     },
     {
       "name": "DacpacFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
       "visibleRule": "TaskType = dacpac",
@@ -79,6 +78,15 @@
         "publishProfile": "Publish Profile"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "defaultValue": "localhost",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
       "name": "DatabaseName",
@@ -167,6 +175,8 @@
     "SQLPowershellModuleisnotinstalledonyouragentmachine": "ms-resource:loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine",
     "InstallPowershellToolsharedManagementObjectsdependency": "ms-resource:loc.messages.InstallPowershellToolsharedManagementObjectsdependency",
     "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "ms-resource:loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates",
-    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt"
+    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
   }
 }

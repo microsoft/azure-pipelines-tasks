@@ -1,0 +1,4 @@
+{
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
+  "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que la variable de entorno '%s' existe y está establecida en la ubicación del JDK correspondiente."
+}

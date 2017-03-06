@@ -1,17 +1,13 @@
-import {AnalysisResult} from './AnalysisResult'
-import {IAnalysisTool} from './IAnalysisTool'
-import {BuildOutput, BuildEngine} from './BuildOutput'
-import {ModuleOutput} from './ModuleOutput'
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import {BaseTool} from './BaseTool'
+import { BuildOutput, BuildEngine } from './BuildOutput';
+import { ModuleOutput } from './ModuleOutput';
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { BaseTool } from './BaseTool';
 
 import path = require('path');
 import fs = require('fs');
-import glob = require('glob');
 import xml2js = require('xml2js');
 
 import tl = require('vsts-task-lib/task');
-
 
 /**
  * An object that is able to configure the build to run PMD and identify and parse PMD reports
@@ -21,7 +17,6 @@ import tl = require('vsts-task-lib/task');
  * @implements {IAnalysisToolReportParser}
  */
 export class PmdTool extends BaseTool {
-
     constructor(buildOutput: BuildOutput, boolInputName: string) {
         super('PMD', buildOutput, boolInputName);
     }
@@ -36,15 +31,15 @@ export class PmdTool extends BaseTool {
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), this.toolName);
 
             switch (this.buildOutput.buildEngine) {
-                case BuildEngine.Maven: {
+                case BuildEngine.Maven:
                     toolRunner.arg(['pmd:pmd']);
                     break;
-                }
-                case BuildEngine.Gradle: {
-                    var initScriptPath: string = path.join(__dirname, '..', 'pmd.gradle');
+                case BuildEngine.Gradle:
+                    let initScriptPath: string = path.join(__dirname, '..', 'pmd.gradle');
                     toolRunner.arg(['-I', initScriptPath]);
                     break;
-                }
+                default:
+                    break;
             }
         }
         return toolRunner;
@@ -53,8 +48,7 @@ export class PmdTool extends BaseTool {
     /**
      * Implementers must specify where the XML reports are located
      */
-    protected getBuildReportDir(output: ModuleOutput) {
-
+    protected getBuildReportDir(output: ModuleOutput): string {
         switch (this.buildOutput.buildEngine) {
             case BuildEngine.Maven:
                 return path.join(output.moduleRoot);
@@ -63,7 +57,6 @@ export class PmdTool extends BaseTool {
             default:
                 throw new Error('No such build engine ' + this.buildOutput.buildEngine);
         }
-
     }
 
     /**
@@ -75,7 +68,7 @@ export class PmdTool extends BaseTool {
         let fileCount = 0;
         let violationCount = 0;
 
-        var reportContent = fs.readFileSync(xmlReport, 'utf-8');
+        let reportContent: string = fs.readFileSync(xmlReport, 'utf-8');
         xml2js.parseString(reportContent, (err, data) => {
             // If the file is not XML, or is not from PMD, return immediately
             if (!data || !data.pmd) {
@@ -100,5 +93,4 @@ export class PmdTool extends BaseTool {
 
         return [violationCount, fileCount];
     }
-
 }

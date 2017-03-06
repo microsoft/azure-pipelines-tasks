@@ -1,3 +1,4 @@
+import tl = require('vsts-task-lib');
 
 export function isPredefinedVariable(variable: string): boolean {
     var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];
@@ -20,4 +21,15 @@ export function isObject(object){
         return false;
     }
     return true;
+}
+
+export function getVariableMap() {
+    var variableMap = {};
+    var taskVariables = tl.getVariables();
+    for(var taskVariable of taskVariables) {
+        if(!isPredefinedVariable(taskVariable.name)) {
+            variableMap[taskVariable.name] = taskVariable.value;
+        }
+    }
+    return variableMap;
 }

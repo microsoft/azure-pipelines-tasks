@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Befehlszeile",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Befehlszeile mit Argumenten ausführen",
   "loc.instanceNameFormat": "$(filename) ausführen",
   "loc.group.displayName.advanced": "Erweitert",

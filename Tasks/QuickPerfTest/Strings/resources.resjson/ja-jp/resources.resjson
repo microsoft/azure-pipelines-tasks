@@ -15,5 +15,5 @@
   "loc.input.help.runDuration": "ロード テストの実行期間 (秒数)。",
   "loc.input.label.geoLocation": "負荷の場所",
   "loc.input.help.geoLocation": "負荷の生成元とする地理的な領域。詳しくは、ヘルプをご覧ください。",
-  "loc.input.label.machineType": "Run load test using"
+  "loc.input.label.machineType": "次を使用してロードテストを実行:"
 }

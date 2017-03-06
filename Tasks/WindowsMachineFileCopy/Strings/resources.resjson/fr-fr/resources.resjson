@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copie des fichiers de l'ordinateur Windows",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copier les fichiers sur les ordinateurs distants",
   "loc.instanceNameFormat": "Copier les fichiers à partir de $(Source Path)",
   "loc.group.displayName.advanced": "Options avancées",

@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "Copia e pubblica artefatti di compilazione",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Copia gli artefatti di compilazione nella cartella di gestione temporanea, quindi li pubblica nel server o in una condivisione file usando criteri di corrispondenza minima",
+  "loc.description": "Copia gli artefatti di compilazione in una cartella di gestione temporanea usando criteri di corrispondenza minima e quindi li pubblica nel server o in una condivisione file",
   "loc.instanceNameFormat": "Copia e pubblica artefatto: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copia radice",
-  "loc.input.help.CopyRoot": "Cartella radice a cui applicare i criteri di copia. Se non viene specificata, corrisponde alla radice del repository. Usare le variabili se le istruzioni di compilazione vengono compilate all'esterno del repository. Esempio: $(agent.builddirectory)",
+  "loc.input.help.CopyRoot": "Cartella radice a cui devono essere applicati i criteri di corrispondenza minima dei file. Se non viene specificato alcun valore, verrà usata la radice del repository. Usare le variabili per specificare una cartella esterna al repository, ad esempio $(Agent.BuildDirectory).",
   "loc.input.label.Contents": "Contenuti",
-  "loc.input.help.Contents": "Percorsi di file o cartella da includere nell'artefatto. Sono supportati criteri su più righe o di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.help.Contents": "Percorsi di file o cartella da includere nell'artefatto. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "Nome artefatto",
   "loc.input.help.ArtifactName": "Nome dell'artefatto da creare.",
   "loc.input.label.ArtifactType": "Tipo di artefatto",
-  "loc.input.help.ArtifactType": "Tipo dell'artefatto da creare.",
+  "loc.input.help.ArtifactType": "Consente di scegliere se archiviare l'artefatto in TFS/Team Services oppure copiarlo in una condivisione file accessibile dall'agente di compilazione.",
   "loc.input.label.TargetPath": "Percorso",
-  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file"
+  "loc.input.help.TargetPath": "Percorso di file UNC in cui copiare l'artefatto. Deve essere accessibile dall'agente di compilazione.",
+  "loc.messages.ErrorFileShareLinux": "Non è possibile pubblicare artefatti da OSX o Linux in una condivisione file. È possibile modificare 'Tipo di artefatto' in 'Server', usare Windows oppure usare l'attività 'Copia file', 'Copia file tramite SSH' o 'Caricamento FTP'."
 }

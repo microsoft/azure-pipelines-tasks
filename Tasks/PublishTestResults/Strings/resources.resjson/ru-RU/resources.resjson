@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Публикация результатов теста",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Опубликовать результаты теста в VSTS или TFS",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
   "loc.group.displayName.advanced": "Дополнительно",

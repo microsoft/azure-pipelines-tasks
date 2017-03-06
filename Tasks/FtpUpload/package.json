@@ -15,7 +15,6 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "^0.9.20",
-    "collections": "3.0.0",
     "ftp": "*"
   }
 }

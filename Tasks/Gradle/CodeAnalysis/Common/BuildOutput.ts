@@ -1,4 +1,4 @@
-import {ModuleOutput} from './ModuleOutput';
+import { ModuleOutput } from './ModuleOutput';
 
 import path = require('path');
 import fs = require('fs');
@@ -19,10 +19,7 @@ export enum BuildEngine {
  * @implements {IBuildOutput}
  */
 export class BuildOutput {
-
-    constructor(private rootDirectory: string, public buildEngine: BuildEngine) {
-
-    }
+    constructor(private rootDirectory: string, public buildEngine: BuildEngine) { }
 
     /**
      * Finds the module outputs by looking at the file structure. In Gradle the modules are in the "build" 
@@ -30,16 +27,14 @@ export class BuildOutput {
      * @returns {ModuleOutput[]}
      */
     public findModuleOutputs(): ModuleOutput[] {
-
         let moduleOutputs: ModuleOutput[] = [];
-        let modulePaths = glob.sync(path.join(this.rootDirectory, '**', this.getBuildDirectoryName()))
+        let modulePaths: string[] = glob.sync(path.join(this.rootDirectory, '**', this.getBuildDirectoryName()))
             .filter((dir) => fs.lstatSync(dir).isDirectory());
 
-        for (var modulePath of modulePaths) {
-
-            let moduleName = this.getModuleName(modulePath);
-            let mo = new ModuleOutput(moduleName, modulePath);
-            tl.debug(`[CA] Candidate module: ${mo.moduleName} - root ${mo.moduleRoot}`)
+        for (let modulePath of modulePaths) {
+            let moduleName: string = this.getModuleName(modulePath);
+            let mo: ModuleOutput = new ModuleOutput(moduleName, modulePath);
+            tl.debug(`[CA] Candidate module: ${mo.moduleName} - root ${mo.moduleRoot}`);
             moduleOutputs.push(mo);
         }
 
@@ -47,7 +42,7 @@ export class BuildOutput {
     }
 
     private getModuleName(modulePath: string): string {
-        let rootBuildDir = path.join(this.rootDirectory, this.getBuildDirectoryName());
+        let rootBuildDir: string = path.join(this.rootDirectory, this.getBuildDirectoryName());
         tl.debug(`[CA] modulePath: ${modulePath} rootBuildDir: ${rootBuildDir}`);
 
         if (path.normalize(modulePath) === path.normalize(rootBuildDir)) {
@@ -59,14 +54,12 @@ export class BuildOutput {
     private getBuildDirectoryName(): string {
         switch (this.buildEngine) {
             case BuildEngine.Gradle:
-                {
-                    return 'build';
-                }
+                return 'build';
             case BuildEngine.Maven:
-                {
-                    return 'target'
-                }
+                return 'target';
+            default:
+                tl.debug(`Unknown build engine value.`);
+                return null;
         }
     }
-
 }

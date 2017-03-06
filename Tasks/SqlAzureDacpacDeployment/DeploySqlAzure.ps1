@@ -165,7 +165,7 @@ Try
 
         Write-Verbose "Executing : $commandToBeLogged"
 
-        Run-Command $SqlPackageCommand
+        Execute-Command -FileName $SqlPackagePath -Arguments $scriptArgument
     }
     else
     {
@@ -202,12 +202,26 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
     }
 
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    if($_.Exception.Message) 
+    {
+        Write-Error ($_.Exception.Message)
+    }
+    else 
+    {
+        Write-Error ($_.Exception)
+    }
     throw
 }
 Catch [Exception]
 {
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    if($_.Exception.Message) 
+    {
+        Write-Error ($_.Exception.Message)
+    }
+    else 
+    {
+        Write-Error ($_.Exception)
+    }
     throw
 }
 Finally

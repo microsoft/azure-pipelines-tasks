@@ -1,9 +1,9 @@
 {
-  "loc.messages.SettingUpSSHConnection": "Setting up SSH connection to remote host %s.",
-  "loc.messages.ConnectionNotSetup": "SSH connection is not setup.",
-  "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
-  "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
-  "loc.messages.RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-  "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s."
+  "loc.messages.SettingUpSSHConnection": "Die SSH-Verbindung mit dem Remotehost %s wird eingerichtet.",
+  "loc.messages.ConnectionNotSetup": "Die SSH-Verbindung ist nicht eingerichtet.",
+  "loc.messages.ConnectionFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Endpunktdetails. %s.",
+  "loc.messages.RemoteCmdExecutionErr": "Fehler des Befehls \"%s\" auf dem Remotecomputer. %s.",
+  "loc.messages.CheckLogForStdErr": "Überprüfen Sie das Buildprotokoll auf Ausgabe an STDERR vom Befehl.",
+  "loc.messages.RemoteCmdNonZeroExitCode": "Der Befehl \"%s\" wurde mit dem Code %s beendet.",
+  "loc.messages.UploadFileFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Endpunktdetails. %s."
 }

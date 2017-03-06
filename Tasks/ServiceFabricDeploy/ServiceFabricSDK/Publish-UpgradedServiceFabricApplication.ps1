@@ -35,6 +35,15 @@ function Publish-UpgradedServiceFabricApplication
     .PARAMETER SkipPackageValidation
     Switch signaling whether the package should be validated or not before deployment.
 
+    .PARAMETER CopyPackageTimeoutSec
+    Timeout in seconds for copying application package to image store.
+
+    .PARAMETER RegisterPackageTimeoutSec
+    Timeout in seconds for registering application package.
+
+    .PARAMETER CompressPackage
+    Indicates whether the application package should be compressed before copying to the image store.
+
     .EXAMPLE
     Publish-UpgradeServiceFabricApplication -ApplicationPackagePath 'pkg\Debug' -ApplicationParameterFilePath 'AppParameters.Local.xml'
 
@@ -78,7 +87,19 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName="ApplicationParameterFilePath")]
         [Parameter(ParameterSetName="ApplicationName")]
-        [Switch]$SkipPackageValidation
+        [Switch]$SkipPackageValidation,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [int]$CopyPackageTimeoutSec,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [int]$RegisterPackageTimeoutSec,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [Switch]$CompressPackage
     )
 
 
@@ -186,14 +207,56 @@ function Publish-UpgradedServiceFabricApplication
     
         $applicationPackagePathInImageStore = $names.ApplicationTypeName
         Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
-        Copy-ServiceFabricApplicationPackage -ApplicationPackagePath $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore
+
+        $copyParameters = @{
+            'ApplicationPackagePath' = $AppPkgPathToUse
+            'ImageStoreConnectionString' = $imageStoreConnectionString
+            'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
+        }
+
+        $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
+
+        if ($CopyPackageTimeoutSec)
+        {
+            if ($InstalledSdkVersion -ge [version]"2.3")
+            {
+                $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
+            }
+            else
+            {
+                Write-Warning (Get-VstsLocString -Key SFSDK_CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+            }
+        }
+
+        if ($CompressPackage)
+        {
+            if ($InstalledSdkVersion -ge [version]"2.5")
+            {
+                $copyParameters['CompressPackage'] = $CompressPackage
+            }
+            else
+            {
+                Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
+            }
+        }
+
+        Copy-ServiceFabricApplicationPackage @copyParameters
         if(!$?)
         {
             throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
         }
-    
+        
+        $registerParameters = @{
+            'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+        }
+        
+        if ($RegisterPackageTimeoutSec)
+        {
+            $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
+        }
+
         Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-        Register-ServiceFabricApplicationType -ApplicationPathInImageStore $applicationPackagePathInImageStore
+        Register-ServiceFabricApplicationType @registerParameters
         if(!$?)
         {
             throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
@@ -273,7 +336,7 @@ function Publish-UpgradedServiceFabricApplication
         }
         elseif($upgradeStatus.UpgradeState -eq "RollingBackCompleted")
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
+            Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
         }
     }
 }

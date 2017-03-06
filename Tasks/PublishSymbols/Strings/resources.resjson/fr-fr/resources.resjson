@@ -25,7 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "Nettoyage réussi du fichier sémaphore '{0}'.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "Impossible de nettoyer le fichier sémaphore existant '{0}'. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "Erreur '{0}' durant l'accès au fichier sémaphore '{1}'. Nouvelle tentative dans {2:N0} secondes.",
-  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Échec du chargement de dbghelp.dll à partir de {0}. Code d'erreur : '{1}'.",
   "loc.messages.Found0Files": "{0:N0} fichiers trouvés.",
   "loc.messages.FreeLibraryDbghelpDllError0": "Échec de la libération de la bibliothèque dbghelp.dll. Code d'erreur '{0}'.",
   "loc.messages.NoFilesForIndexing": "Aucun fichier sélectionné pour l'indexation.",

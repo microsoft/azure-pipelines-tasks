@@ -9,6 +9,7 @@ export function initializeDOM(xmlContent) {
     xmlDomLookUpTable = {};
     headerContent = null;
     var xmlDom = ltx.parse(xmlContent);
+    readHeader(xmlContent);
     buildLookUpTable(xmlDom);
     return xmlDom;
 }
@@ -17,7 +18,6 @@ function readHeader(xmlContent) {
     var index = xmlContent.indexOf('\n');
     if(index > -1) {
         var firstLine = xmlContent.substring(0,index).trim();
-        console.log(firstLine);
         if(firstLine.startsWith("<?") && firstLine.endsWith("?>")) {
             headerContent = firstLine;
         }
@@ -25,7 +25,7 @@ function readHeader(xmlContent) {
 }
 
 export function getContentWithHeader(xmlDom) {
-    return xmlDom ? (headerContent ? headerContent+"\n" : "") + xmlDom.root().toString() : "";
+    return xmlDom ? (headerContent ? headerContent + "\n" : "") + xmlDom.root().toString() : "";
 }
 
 /**

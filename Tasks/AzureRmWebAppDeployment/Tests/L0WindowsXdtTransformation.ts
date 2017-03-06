@@ -8,8 +8,7 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
-tr.setInput('XmlTransformsAndVariableSubstitutions', 'true');
-tr.setInput('XdtTransformation', 'true');
+tr.setInput('XmlTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -33,7 +32,8 @@ process.env["AGENT_NAME"] = "author";
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd"
+        "cmd": "cmd",
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -46,24 +46,28 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath": {
         "cmd": true,
         "webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "msdeploy": true
     },
-    "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
-            "code": 0,
-            "stdout": "Executed Successfully"
-        },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+    "exec": {        
+        "msdeploy -verb:getParameters -source:package=\'DefaultWorkingDirectory\\temp_web_package.zip\'": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
         "cmd /C DefaultWorkingDirectory\\cttCommand.bat": {
             "code": 0,
             "stdout": "ctt execution successful"
+        },
+        "msdeploy -verb:sync -source:package=\'DefaultWorkingDirectory\\temp_web_package.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
+            "code": 0,
+            "stdout": "Executed Successfully"
         }
     },
     "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "temp_web_package_random_path": {
+            "success": true
+        },
+        "DefaultWorkingDirectory\temp_web_package.zip": {
             "success": true
         }
     },
@@ -71,13 +75,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     	"webAppPkg.zip": true,
         "webAppPkg": true
     }, 
-    "glob": {
+    "findMatch": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
-        "DefaultWorkingDirectory\\temp_web_package_folder\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"],
-        "DefaultWorkingDirectory/temp_web_package_folder/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
+        "**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -101,21 +104,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
-        return true;
     }
 }); 
 
-tr.registerMock('webdeployment-common/azurerestutility.js', {
+tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -146,6 +145,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		id: 'appid',
   		properties: { 
      		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
     	} 
   	}
 
@@ -162,6 +162,23 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    },
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -171,6 +188,56 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function() {
         return "DefaultWorkingDirectory\\temp_web_package.zip"
+    },
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries":[
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
+    }
+});
+
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { 
+            "isWriteStreamObj": true,
+            "on": (event) => {
+                console.log("event: " + event + " has occurred");
+            },
+            "end" : () => { return true }
+        };
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
+    },
+    fsyncSync: function(fd) {
+        return true;
     }
 });
 

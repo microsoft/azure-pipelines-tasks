@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "cURL-Dateiupload",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Verwendet cURL zum Hochladen von Dateien mit FTP, FTPS, SFTP, HTTP usw.",
   "loc.instanceNameFormat": "$(files) mit cURL hochladen",
   "loc.group.displayName.advanced": "Erweitert",
@@ -15,5 +15,10 @@
   "loc.input.label.options": "Optionale Argumente",
   "loc.input.help.options": "Zusätzliche Argumente, die an cURL übergeben werden.",
   "loc.input.label.redirectStderr": "Standardfehler an Standardausgabe umleiten",
-  "loc.input.help.redirectStderr": "Fügt cURL \"--stderr -\" als Argument hinzu. Standardmäßig schreibt cURL die Statusleiste in stderr. Dies wird vom Build als Fehlerausgabe interpretiert. Wenn Sie dieses Kontrollkästchen aktivieren, wird dieses Verhalten unterdrückt."
+  "loc.input.help.redirectStderr": "Fügt cURL \"--stderr -\" als Argument hinzu. Standardmäßig schreibt cURL die Statusleiste in stderr. Dies wird vom Build als Fehlerausgabe interpretiert. Wenn Sie dieses Kontrollkästchen aktivieren, wird dieses Verhalten unterdrückt.",
+  "loc.messages.CurlReturnCode": "curl wurde mit dem folgenden Rückgabecode beendet: %d",
+  "loc.messages.CurlFailed": "curl-Fehler: %s",
+  "loc.messages.NoMatchingFilesFound": "Keine mit dem Suchmuster übereinstimmenden Dateien gefunden: %s",
+  "loc.messages.UploadingFiles": "Datei(en) werden hochgeladen: %s",
+  "loc.messages.CurlNotFound": "curl wurde nicht in PATH gefunden."
 }

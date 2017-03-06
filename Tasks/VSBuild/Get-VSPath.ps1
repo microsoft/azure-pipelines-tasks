@@ -2,15 +2,12 @@ function Get-VSPath {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [string]$Version,
-
-        [switch]$SearchCom)
+        [string]$Version)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Search for a 15.0 Willow instance.
-        if ($SearchCom -and
-            $Version -eq "15.0" -and
+        if ($Version -eq "15.0" -and
             ($instance = Get-VisualStudio_15_0) -and
             $instance.Path) {
 

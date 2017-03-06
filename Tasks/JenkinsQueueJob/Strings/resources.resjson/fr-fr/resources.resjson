@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "loc.friendlyName": "Jenkins Queue Job",
   "loc.helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
   "loc.description": "Queue a job on a Jenkins server",
@@ -9,4 +10,24 @@
   "loc.input.help.jobName": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server.",
   "loc.input.label.captureConsole": "Capture console output and wait for completion",
   "loc.input.help.captureConsole": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
+=======
+  "loc.friendlyName": "Mettre en file d'attente un travail Jenkins",
+  "loc.helpMarkDown": "Cette étape permet de mettre en file d'attente un travail sur un serveur [Jenkins](https://jenkins.io/). L'accès à des fonctionnalités d'intégration complètes nécessite l'installation du [Plug-in Team Foundation Server](https://wiki.jenkins-ci.org/display/JENKINS/Team+Foundation+Server+Plugin) sur Jenkins. [Plus d'informations](http://go.microsoft.com/fwlink/?LinkId=816956).",
+  "loc.description": "Mise en file d'attente d'un travail sur un serveur Jenkins",
+  "loc.instanceNameFormat": "Mettre en file d'attente le travail Jenkins : $(jobName)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.serverEndpoint": "Point de terminaison de service Jenkins",
+  "loc.input.help.serverEndpoint": "Sélectionnez le point de terminaison de service de votre instance Jenkins. Pour en créer un, cliquez sur le lien Gérer, puis créez un point de terminaison de service Jenkins.",
+  "loc.input.label.jobName": "Nom du travail",
+  "loc.input.help.jobName": "Nom du travail Jenkins à mettre en file d'attente. Il doit correspondre exactement au nom du travail sur le serveur Jenkins.",
+  "loc.input.label.captureConsole": "Capturer la sortie de console et attendre la fin de l'exécution",
+  "loc.input.help.captureConsole": "Si cette étape est sélectionnée, elle capture la sortie de console de la build Jenkins, attend la fin de l'exécution de la build Jenkins, puis s'achève par un succès/échec en fonction du résultat de la build Jenkins. Sinon, une fois que le travail Jenkins a été placé correctement en file d'attente, cette étape se déroule normalement sans attendre l'exécution de la build Jenkins.",
+  "loc.input.label.capturePipeline": "Capturer la sortie de pipeline et attendre la fin de l'exécution du pipeline",
+  "loc.input.help.capturePipeline": "Si cette étape est sélectionnée, elle capture la sortie de console de l'intégralité du pipeline de build Jenkins, attend la fin de l'exécution de l'intégralité du pipeline de build Jenkins, puis s'achève par un succès/échec en fonction du résultat de la build Jenkins. Sinon, une fois le premier travail Jenkins terminé, cette étape se déroule normalement sans attendre l'exécution de l'intégralité du pipeline de build Jenkins.",
+  "loc.input.label.parameterizedJob": "Travail paramétrable",
+  "loc.input.help.parameterizedJob": "Sélectionnez cette option si le travail Jenkins accepte les paramètres. Effectuez ce choix, même si toutes les valeurs des paramètres par défaut sont utilisées, et qu'aucun paramètre n'est réellement spécifié.",
+  "loc.input.label.jobParameters": "Paramètres du travail",
+  "loc.input.help.jobParameters": "Spécifiez les paramètres du travail, ligne par ligne, sous la forme <b>`<parameterName>=<parameterValue>`</b><p>Pour affecter une valeur vide à un paramètre (utile pour remplacer une valeur par défaut), ne touchez pas à la valeur du paramètre. Par exemple, spécifiez <b>`<parameterName>=`</b><p>Les variables sont prises en charge. Par exemple, pour affecter un ID de validation Git à la valeur du paramètre <b>`commitId`</b> de la build, indiquez <b>`commitId=$(Build.SourceVersion)`</b>. Pour plus d'informations, consultez la [documentation sur les variables](https://www.visualstudio.com/docs/build/define/variables).<p>Les types de paramètre Jenkins pris en charge sont les suivants : <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
+  "loc.messages.JenkinsJobQueued": "Travail Jenkins mis en file d'attente"
+>>>>>>> upstream/master
 }

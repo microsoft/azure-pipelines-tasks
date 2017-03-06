@@ -10,13 +10,24 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent"
+  ],
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 2
+    "Minor": 3,
+    "Patch": 6
   },
+  "demands": [
+    "Cmd"
+  ],
   "minimumAgentVersion": "1.95.0",
   "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
     {
       "name": "upgrade",
       "displayName": "ms-resource:loc.group.displayName.upgrade",
@@ -56,6 +67,47 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
+    },
+    {
+      "name": "compressPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.compressPackage",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.compressPackage"
+    },
+    {
+      "name": "copyPackageTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.copyPackageTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.copyPackageTimeoutSec"
+    },
+    {
+      "name": "registerPackageTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registerPackageTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
+    },
+    {
+      "name": "overwriteBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.overwriteBehavior",
+      "defaultValue": "SameAppTypeAndVersion",
+      "required": true,
+      "options": {
+        "Always": "Always",
+        "Never": "Never",
+        "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
     },
     {
       "name": "overridePublishProfileSettings",
@@ -126,15 +178,6 @@
       "label": "ms-resource:loc.input.label.TimeoutSec",
       "defaultValue": "",
       "required": false,
-      "groupname": "upgrade",
-      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-    },
-    {
-      "name": "Force",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.Force",
-      "defaultValue": "true",
-      "required": true,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
     },
@@ -239,22 +282,13 @@
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
     "FoundPath": "ms-resource:loc.messages.FoundPath",
-    "ConnectedToCluster": "ms-resource:loc.messages.ConnectedToCluster",
-    "AadAuthority": "ms-resource:loc.messages.AadAuthority",
-    "ClusterAppId": "ms-resource:loc.messages.ClusterAppId",
-    "ClientAppId": "ms-resource:loc.messages.ClientAppId",
     "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
-    "ServiceFabricSDKNotInstalled": "ms-resource:loc.messages.ServiceFabricSDKNotInstalled",
-    "ErrorOnCertificateImport": "ms-resource:loc.messages.ErrorOnCertificateImport",
-    "ErrorOnAcquireToken": "ms-resource:loc.messages.ErrorOnAcquireToken",
-    "ImportedCertificate": "ms-resource:loc.messages.ImportedCertificate",
     "ServiceEndpointUpgradeWarning": "ms-resource:loc.messages.ServiceEndpointUpgradeWarning",
     "OverrideApplicationParameterFile": "ms-resource:loc.messages.OverrideApplicationParameterFile",
     "OverrideUpgradeSettings": "ms-resource:loc.messages.OverrideUpgradeSettings",
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
-    "DefaultPortWarning": "ms-resource:loc.messages.DefaultPortWarning",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
@@ -281,6 +315,8 @@
     "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
     "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
-    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError"
+    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
+    "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
+    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning"
   }
 }

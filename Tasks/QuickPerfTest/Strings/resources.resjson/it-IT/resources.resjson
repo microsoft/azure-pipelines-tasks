@@ -15,5 +15,5 @@
   "loc.input.help.runDuration": "Durata dell'esecuzione dei test di carico espressa in secondi.",
   "loc.input.label.geoLocation": "Località di carico",
   "loc.input.help.geoLocation": "Area geografica da cui generare il carico. Per altri dettagli, vedere la Guida.",
-  "loc.input.label.machineType": "Run load test using"
+  "loc.input.label.machineType": "Esegui test di carico con"
 }

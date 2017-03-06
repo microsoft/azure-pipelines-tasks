@@ -8,15 +8,15 @@
     "visibility": [
         "Build"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 5,
-        "Patch": 25
+        "Patch": 27
     },
     "demands": [
         "node.js"

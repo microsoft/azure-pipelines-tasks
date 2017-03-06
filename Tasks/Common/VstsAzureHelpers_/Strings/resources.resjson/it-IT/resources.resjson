@@ -1,10 +1,10 @@
 {
-  "loc.messages.AZ_AzureRMProfileModuleNotFound": "Module 'AzureRM.Profile' not found. The 'AzureRM' module may not be fully installed. Running the  following PowerShell commands from an elevated session may resolve the issue: Import-Module AzureRM ; Install-AzureRM",
-  "loc.messages.AZ_CertificateAuthNotSupported": "Certificate based authentication is not supported. Azure PowerShell module is not found.",
-  "loc.messages.AZ_CredentialsError": "There was an error with the Azure credentials used for the deployment.",
-  "loc.messages.AZ_ModuleNotFound": "Neither the Azure module nor the AzureRM module was found. If the module was recently installed, retry after restarting the VSTS task agent.",
-  "loc.messages.AZ_RequiresMinVersion0": "The required minimum version ({0}) of the Azure PowerShell module is not installed.",
-  "loc.messages.AZ_ServicePrincipalError": "There was an error with the service principal used for the deployment.",
-  "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint."
+  "loc.messages.AZ_AzureRMProfileModuleNotFound": "Il modulo 'AzureRM.Profile' non è stato trovato. È possibile che il modulo 'AzureRM' non sia completamente installato. Per risolvere il problema, provare a eseguire i comandi di PowerShell seguenti da una sessione con privilegi elevati: Import-Module AzureRM; Install-AzureRM",
+  "loc.messages.AZ_CertificateAuthNotSupported": "L'autenticazione basata su certificato non è supportata. Il modulo Azure PowerShell non è stato trovato.",
+  "loc.messages.AZ_CredentialsError": "Si è verificato un errore con le credenziali di Azure usate per la distribuzione.",
+  "loc.messages.AZ_ModuleNotFound": "Non è stato trovato né il modulo Azure né quello AzureRM. Se il modulo è stato installato di recente, riprovare dopo aver riavviato l'agente delle attività VSTS.",
+  "loc.messages.AZ_RequiresMinVersion0": "La versione minima richiesta ({0}) del modulo Azure PowerShell non è installata.",
+  "loc.messages.AZ_ServicePrincipalError": "Si è verificato un errore con l'entità servizio usata per la distribuzione.",
+  "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "L'autenticazione basata su entità servizio non è supportata nella versione '{0}' del modulo Azure.",
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint di Azure."
 }

@@ -1,9 +1,9 @@
 {
-  "loc.messages.SettingUpSSHConnection": "Setting up SSH connection to remote host %s.",
-  "loc.messages.ConnectionNotSetup": "SSH connection is not setup.",
-  "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
-  "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
-  "loc.messages.RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-  "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s."
+  "loc.messages.SettingUpSSHConnection": "正在設定對遠端主機 %s 的 SSH 連線。",
+  "loc.messages.ConnectionNotSetup": "SSH 連線未設定。",
+  "loc.messages.ConnectionFailed": "無法連線到遠端電腦。請查看 SSH 端點的詳細資料。%s。",
+  "loc.messages.RemoteCmdExecutionErr": "遠端電腦發生錯誤，導致命令 %s 失敗。%s。",
+  "loc.messages.CheckLogForStdErr": "請查看建置記錄中的命令有無 STDERR。",
+  "loc.messages.RemoteCmdNonZeroExitCode": "命令 %s 在程式碼 %s 結束。",
+  "loc.messages.UploadFileFailed": "無法將 %s 上傳到遠端電腦上的 %s。%s。"
 }

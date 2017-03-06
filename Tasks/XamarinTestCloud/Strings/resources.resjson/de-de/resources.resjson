@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "Mobile Apps mit Xamarin-Testcloud mithilfe von \"Xamarin.UITest\" testen",
   "loc.instanceNameFormat": "$(app) mit \"Xamarin.UITest\" in Xamarin-Testcloud testen",
   "loc.group.displayName.advanced": "Erweitert",

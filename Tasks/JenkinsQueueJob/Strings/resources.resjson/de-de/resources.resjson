@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "loc.friendlyName": "Jenkins Queue Job",
   "loc.helpMarkDown": "Queue a job on a [Jenkins](https://jenkins.io/) server.  [More Information](http://go.microsoft.com/fwlink/?LinkId=816956).",
   "loc.description": "Queue a job on a Jenkins server",
@@ -9,4 +10,24 @@
   "loc.input.help.jobName": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server.",
   "loc.input.label.captureConsole": "Capture console output and wait for completion",
   "loc.input.help.captureConsole": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
+=======
+  "loc.friendlyName": "Jenkins-Warteschlangenauftrag",
+  "loc.helpMarkDown": "Dieser Schritt reiht einen Auftrag auf einem [Jenkins](https://jenkins.io/)-Server in die Warteschlange ein. Für vollständige Integrationsfunktionen ist die Installation des [Team Foundation Server Plug-Ins](https://wiki.jenkins-ci.org/display/JENKINS/Team+Foundation+Server+Plugin) für Jenkins erforderlich. [Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=816956).",
+  "loc.description": "Reiht einen Auftrag auf einem Jenkins-Server in die Warteschlange ein.",
+  "loc.instanceNameFormat": "Warteschlange Jenkins-Auftrag: $(jobName)",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.serverEndpoint": "Endpunkt des Jenkins-Diensts",
+  "loc.input.help.serverEndpoint": "Wählen Sie den Dienstendpunkt für Ihre Jenkins-Instanz aus. Wenn Sie einen Dienstendpunkt erstellen möchten, klicken Sie auf den Link \"Verwalten\", und erstellen Sie einen neuen Jenkins-Dienstendpunkt.",
+  "loc.input.label.jobName": "Auftragsname",
+  "loc.input.help.jobName": "Der Name des Jenkins-Auftrags, der in die Warteschlange eingereiht werden soll. Dieser Name muss genau mit dem Auftragsnamen auf dem Jenkins-Server übereinstimmen.",
+  "loc.input.label.captureConsole": "Konsolenausgabe erfassen und auf den Abschluss warten",
+  "loc.input.help.captureConsole": "Wenn ausgewählt, wird in diesem Schritt die Konsolenausgabe des Jenkins-Builds erfasst, auf den Abschluss des Jenkins-Builds gewartet und dann auf der Grundlage des Ergebnisses des Jenkins-Builds Erfolg bzw. ein Fehler gemeldet. Andernfalls wird dieser Schritt nach dem erfolgreichen Einreihen des Jenkins-Auftrags in die Warteschlange erfolgreich abgeschlossen, ohne auf die Ausführung des Jenkins-Builds zu warten.",
+  "loc.input.label.capturePipeline": "Pipelineausgabe erfassen und auf den Abschluss der Pipeline warten",
+  "loc.input.help.capturePipeline": "Wenn ausgewählt, wird in diesem Schritt die vollständige Pipelinekonsolenausgabe des Jenkins-Builds erfasst, auf den Abschluss der gesamten Jenkins-Buildpipeline gewartet und dann auf der Grundlage des Ergebnisses der Jenkins-Buildpipeline die erfolgreiche Ausführung bzw. ein Fehler gemeldet. Andernfalls wird dieser Schritt nach Abschluss des ersten Jenkins-Auftrags erfolgreich abgeschlossen, ohne auf die Ausführung der gesamten Jenkins-Buildpipeline zu warten.",
+  "loc.input.label.parameterizedJob": "Parametrisierter Auftrag",
+  "loc.input.help.parameterizedJob": "Wählen Sie aus, ob der Jenkins-Auftrag Parameter akzeptiert. Diese Option sollte selbst dann ausgewählt werden, wenn nur Standardparameterwerte verwendet werden und tatsächlich keine Parameterangabe erfolgt.",
+  "loc.input.label.jobParameters": "Auftragsparameter",
+  "loc.input.help.jobParameters": "Geben Sie Auftragsparameter (ein Parameter pro Zeile) im Format <b><Parametername>=<Parameterwert></b> an.<p>Wenn Sie einen Parameter auf einen leeren Wert festlegen möchten (dies ist zum Überschreiben eines Standardwerts sinnvoll), lassen Sie den Parameterwert aus. Beispiel: <b><Parametername>=</b>.<p>Variablen werden unterstützt, z. B. zum Definieren des Parameters <b>commitId</b> als <b>Git-Commit-ID</b> für den Build. Verwenden Sie zu diesem Zweck die folgende Syntax: <b>commitId=$(Build.SourceVersion)</b>. Weitere Details finden Sie in der [Dokumentation zu Variablen](https://www.visualstudio.com/docs/build/define/variables).<p>Die folgenden Jenkins-Parametertypen werden unterstützt: <ul><li>\"Boolean\"</li><li>\"Choice\"</li><li>\"Password\"</li><li>\"String\"</li></ul>",
+  "loc.messages.JenkinsJobQueued": "Jenkins-Auftrag in Warteschlange eingereiht"
+>>>>>>> upstream/master
 }

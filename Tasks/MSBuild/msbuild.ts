@@ -94,7 +94,7 @@ var result = Q(<any>{});
 filesList.forEach((fn) => {
     result = result.then(() => {
         if (clean) {
-            runxbuild(fn, true).then( () => {
+            return runxbuild(fn, true).then( () => {
                 return runxbuild(fn, false);
             });
         } else {

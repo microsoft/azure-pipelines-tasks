@@ -7,6 +7,7 @@ var project = tl.getPathInput('project', true);
 var target = tl.getInput('target');
 var outputDir = tl.getInput('outputDir');
 var configuration = tl.getInput('configuration');
+var createAppPackage = tl.getBoolInput('createAppPackage');
 var clean = tl.getBoolInput('clean');
 var xbuildLocation = tl.getPathInput('msbuildLocation');
 var msbuildArguments = tl.getInput('msbuildArguments');
@@ -66,7 +67,7 @@ var runxbuild = function (fn) {
         if (target) {
             xbuild.arg('/t:' + target);
         }
-        xbuild.arg('/t:PackageForAndroid');
+        xbuild.argIf(createAppPackage, '/t:PackageForAndroid');
         if (msbuildArguments) {
             xbuild.argString(msbuildArguments);
         }

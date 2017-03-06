@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "要在上面指定的负载测试文件夹下使用的负载测试文件名。",
   "loc.input.label.ThresholdLimit": "可允许的阈值违规次数",
   "loc.input.help.ThresholdLimit": "阈值冲突数，高于它便将负载测试结果视为不成功。",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "运行负载测试使用"
 }

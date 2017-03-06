@@ -33,6 +33,9 @@ describe('AzurePowerShell Suite', function () {
         it('performs basic flow', (done) => {
             psr.run(path.join(__dirname, 'PerformsBasicFlow.ps1'), done);
         })
+        it('validates inline script flow', (done) => {
+            psr.run(path.join(__dirname, 'ValidateInlineScriptFlow.ps1'), done);
+        })
         it('redirects errors', (done) => {
             psr.run(path.join(__dirname, 'RedirectsErrors.ps1'), done);
         })

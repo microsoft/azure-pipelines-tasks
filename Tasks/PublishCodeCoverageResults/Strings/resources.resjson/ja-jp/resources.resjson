@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "コード カバレッジ結果の発行",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "VSTS/TFS にコード カバレッジ結果を発行する",
   "loc.instanceNameFormat": "コード カバレッジ結果 $(summaryFileLocation) の発行",
   "loc.input.label.codeCoverageTool": "コード カバレッジ ツール",

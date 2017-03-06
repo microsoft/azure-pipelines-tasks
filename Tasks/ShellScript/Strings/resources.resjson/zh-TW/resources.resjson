@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Shell 指令碼",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613738)",
   "loc.description": "使用 bash 執行 Shell 指令碼",
   "loc.instanceNameFormat": "Shell 指令碼 $(scriptPath)",
   "loc.group.displayName.advanced": "進階",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cargar archivos con cURL",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Use cURL para cargar archivos con FTP, FTPS, SFTP, HTTP, etc.",
   "loc.instanceNameFormat": "Upload $(files) with cURL",
   "loc.group.displayName.advanced": "Avanzado",
@@ -15,5 +15,10 @@
   "loc.input.label.options": "Argumentos opcionales",
   "loc.input.help.options": "Argumentos adicionales que se van a pasar a cURL.",
   "loc.input.label.redirectStderr": "Redirigir error estándar a salida estándar",
-  "loc.input.help.redirectStderr": "Agrega \"--stderr -\" como un argumento a cURL. De manera predeterminada, cURL escribe su barra de progreso en stderr, cosa que la compilación considerará un resultado erróneo. Al habilitar esta casilla, se suprime ese comportamiento."
+  "loc.input.help.redirectStderr": "Agrega \"--stderr -\" como un argumento a cURL. De manera predeterminada, cURL escribe su barra de progreso en stderr, cosa que la compilación considerará un resultado erróneo. Al habilitar esta casilla, se suprime ese comportamiento.",
+  "loc.messages.CurlReturnCode": "Se cerró curl con el código de devolución: %d",
+  "loc.messages.CurlFailed": "Error de curl con el mensaje: %s",
+  "loc.messages.NoMatchingFilesFound": "No se encontraron archivos coincidentes con el patrón de búsqueda: %s",
+  "loc.messages.UploadingFiles": "Cargando archivos(s): %s",
+  "loc.messages.CurlNotFound": "No se ha encontrado curl en la RUTA DE ACCESO."
 }

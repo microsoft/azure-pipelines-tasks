@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Xamarin Component Restore",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=786653)",
-  "loc.description": "Restores Xamarin components for the specified solution",
-  "loc.instanceNameFormat": "Xamarin component restore $(solution)",
-  "loc.input.label.solution": "Path to Solution",
-  "loc.input.help.solution": "The path to the Visual Studio Solution file",
-  "loc.input.label.email": "Email",
-  "loc.input.help.email": "Xamarin account email address.",
-  "loc.input.label.password": "Password",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.messages.XamarinComponentRestoreReturnCode": "xamarin-component.exe exited with return code: %d",
-  "loc.messages.XamarinComponentRestoreFailed": "xamarin-component.exe failed with error: %s"
+  "loc.friendlyName": "Восстановление компонентов Xamarin",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=786653)",
+  "loc.description": "Восстановление компонентов Xamarin для указанного решения",
+  "loc.instanceNameFormat": "Восстановление компонентов Xamarin $(solution)",
+  "loc.input.label.solution": "Путь к решению",
+  "loc.input.help.solution": "Путь к файлу решения Visual Studio",
+  "loc.input.label.email": "Электронная почта",
+  "loc.input.help.email": "Адрес электронной почты учетной записи Xamarin.",
+  "loc.input.label.password": "Пароль",
+  "loc.input.help.password": "Пароль учетной записи Xamarin. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
+  "loc.messages.XamarinComponentRestoreReturnCode": "Выход xamarin-component.exe с кодом возврата: %d",
+  "loc.messages.XamarinComponentRestoreFailed": "Сбой xamarin-component.exe с ошибкой: %s"
 }

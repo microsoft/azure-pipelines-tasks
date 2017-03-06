@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "Run a npm command",
+  "loc.description": "Run an npm command",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "working folder",
   "loc.input.help.cwd": "Working directory where the npm command is run. Defaults to the root of the repo.",

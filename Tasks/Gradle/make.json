@@ -17,7 +17,8 @@
                 "CodeAnalysis/checkstyle.gradle",
                 "CodeAnalysis/checkstyle.xml",
                 "CodeAnalysis/pmd.gradle",
-                "CodeAnalysis/sonar.gradle"
+                "CodeAnalysis/sonar.gradle",
+                "CodeAnalysis/findbugs.gradle"
             ],
             "dest": "CodeAnalysis/"
         }

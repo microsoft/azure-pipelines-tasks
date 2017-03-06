@@ -44,6 +44,11 @@ if ($b_versionByBuild)
     Write-Verbose "Autoversion: Getting version number from build"
     ##Get Version from Build
     
+    if($Env:SYSTEM_HOSTTYPE -eq "release") {
+        Write-Error (Get-LocalizedString -Key "Autoversion: Getting version number from build option is not supported in releases")
+        exit 1
+    }
+
     # Regular expression pattern to find the version in the build number 
     # and then apply it to the assemblies
     $VersionRegex = "\d+\.\d+\.\d+(?:\.\d+)?"
@@ -164,6 +169,22 @@ if (-not $nuGetPath)
     throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
 }
 
+$allBuildProps = @()
+
+# We set the default to $(BuildConfiguration) so the task works by default with the Visual
+# Studio Build / MSBuild template. Unfortunately, that causes it to *not* work by default
+# with the empty build template, so we just ignore the value if it wasn't substituted with
+# something useful.
+if($configurationToPack -and $configurationToPack -ne '$(BuildConfiguration)')
+{
+    $allBuildProps += @("Configuration=$configurationToPack")
+}
+
+if ($buildProperties)
+{
+    $allBuildProps += @($buildProperties -split ";")
+}
+
 $initialNuGetExtensionsPath = $env:NUGET_EXTENSIONS_PATH
 try
 {
@@ -187,12 +208,12 @@ try
         $slnFolder = $(Get-ItemProperty -Path $fileToPackage -Name 'DirectoryName').DirectoryName
         #Setup Nuget
 
-        $buildProps = "Configuration=$configurationToPack";
-        if ([string]::IsNullOrEmpty($buildProperties) -eq $false)
+        $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`""
+        
+        if ($allBuildProps)
         {
-            $buildProps = ($buildProps + ";" + $buildProperties)
+            $argsPack += " -Properties $($allBuildProps -join ";")"
         }
-        $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`" -Properties $buildProps";
         
         if($b_includeReferencedProjects)
         {

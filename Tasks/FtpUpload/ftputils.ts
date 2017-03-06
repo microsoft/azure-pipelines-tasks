@@ -1,7 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
-var SortedSet = require('collections/sorted-set');
 
 import task = require('./ftpuploadtask');
 import FtpOptions = task.FtpOptions;
@@ -246,7 +245,7 @@ export function findFiles(ftpOptions: FtpOptions): string[] {
     }
 
     // use a set to avoid duplicates
-    var matchingFilesSet = new SortedSet();
+    let matchingFilesSet: Set<string> = new Set();
 
     for (var i = 0; i < ftpOptions.filePatterns.length; i++) {
         var normalizedPattern: string = path.join(ftpOptions.rootFolder, path.normalize(ftpOptions.filePatterns[i]));
@@ -273,5 +272,5 @@ export function findFiles(ftpOptions: FtpOptions): string[] {
             }
         }
     }
-    return matchingFilesSet.sorted();
+    return Array.from(matchingFilesSet).sort();
 }

@@ -12,12 +12,14 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.sdk": "SDK",
   "loc.input.help.sdk": "Build an Xcode project or workspace against the specified SDK.  Run *xcodebuild -showsdks* to see the valid list of SDKs.",
-  "loc.input.label.xcWorkspacePath": "Workspace Path",
-  "loc.input.help.xcWorkspacePath": "Optional relative path from repo root where xcworkspace folder exists. Scheme must also be specified if value provided. Omit if you intend to use the -target flag under Advanced Arguments.",
+  "loc.input.label.xcWorkspacePath": "Workspace/Project Path",
+  "loc.input.help.xcWorkspacePath": "Optional relative path from repo root to the Xcode workspace or project. For example: `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`. Leave blank if you intend to use the -target flag under Advanced Arguments.",
   "loc.input.label.scheme": "Scheme",
   "loc.input.help.scheme": "Optional scheme name in Xcode. *Must be a shared scheme* (shared checkbox under managed schemes in Xcode). **Required if Workspace is specified.**",
   "loc.input.label.packageApp": "Create App Package",
   "loc.input.help.packageApp": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section.",
+  "loc.input.label.packageTool": "Create Package (IPA) using",
+  "loc.input.help.packageTool": "Choose the tool to use for generating the IPA.",
   "loc.input.label.archivePath": "Archive Path",
   "loc.input.help.archivePath": "Optionally specify a directory where created archives should be placed.",
   "loc.input.label.exportPath": "Export Path",
@@ -82,5 +84,7 @@
   "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
   "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
   "loc.messages.ExportMethodNotIdentified": "Failed to identify the export method to use automatically from the archive file. This might cause errors during build or produce an invalid package. Set `Export Options` to `Specify` or `Plist`.",
-  "loc.messages.ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file."
+  "loc.messages.ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file.",
+  "loc.messages.SchemeRequiredForArchive": "Scheme needs to be specified to generate the package with xcodebuild archive and export.",
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Workspace or Project path needs to be specified to generate the package with xcodebuild archive and export."
 }

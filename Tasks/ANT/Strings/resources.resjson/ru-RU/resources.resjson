@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "Сборка с помощью Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Результаты теста JUnit",
-  "loc.group.displayName.codeCoverage": "Объем протестированного кода",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.antBuildFile": "Файл сборки Ant",
   "loc.input.help.antBuildFile": "Относительный путь от корня репозитория к файлу сборки Ant.",
@@ -35,5 +35,8 @@
   "loc.input.label.jdkUserInputPath": "Путь к JDK",
   "loc.input.help.jdkUserInputPath": "Установка для JAVA_HOME определенного пути.",
   "loc.input.label.jdkArchitecture": "Архитектура JDK",
-  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64)."
+  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64).",
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Найдите JAVA_HOME для Java %s %s",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Не удалось найти указанную версию JDK. Убедитесь, что переменная среды \"%s\" существует и содержит расположение соответствующего пакета JDK.",
+  "loc.messages.DiscontinueAntCodeCoverage": "Мы прекращаем поддержку автоматического создания отчетов об объемах протестированного кода для проектов Ant. Подробности см. на странице https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md."
 }

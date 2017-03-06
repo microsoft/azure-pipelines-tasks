@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "ビルド成果物のコピーと発行",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "ビルド成果物をステージング フォルダーにコピーし、minimatch パターンを使用して、ビルド成果物をサーバーまたはファイル共有に発行する",
+  "loc.description": "minimatch パターンを使用してビルド成果物をステージング フォルダーにコピーし、それをサーバーまたはファイル共有に発行します",
   "loc.instanceNameFormat": "成果物のコピーと発行: $(ArtifactName)",
   "loc.input.label.CopyRoot": "コピー ルート",
-  "loc.input.help.CopyRoot": "コピー パターンの適用先のルート フォルダー。空白はリポジトリのルートです。リポジトリの外部で作成するビルド ステップの場合は、変数を使用します。例: $(agent.builddirectory)",
+  "loc.input.help.CopyRoot": "ファイル一致パターンを適用するルート フォルダー。値が指定されていない場合は、リポジトリのルートが使用されます。変数を使用して、$(Agent.BuildDirectory) などリポジトリ外のフォルダーを指定します。",
   "loc.input.label.Contents": "コンテンツ",
-  "loc.input.help.Contents": "成果物の一部として含めるファイル パスまたはフォルダー パス。複数行または minimatch パターンをサポートします。[詳細](https://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.help.Contents": "成果物の一部として含まれるファイルまたはフォルダー パス。minimatch パターンで複数行をサポートします。[追加情報](https://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "成果物の名前",
   "loc.input.help.ArtifactName": "作成する成果物の名前。",
   "loc.input.label.ArtifactType": "成果物の種類",
-  "loc.input.help.ArtifactType": "作成する成果物の種類。",
+  "loc.input.help.ArtifactType": "TFS/Team Services に成果物を保存するか、ビルド エージェントからアクセス可能なファイル共有にコピーするかを選択します。",
   "loc.input.label.TargetPath": "パス",
-  "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有"
+  "loc.input.help.TargetPath": "成果物をコピーする UNC ファイル パスの場所。ビルド エージェントからアクセス可能である必要があります。",
+  "loc.messages.ErrorFileShareLinux": "OSX または Linux からファイル共有に成果物を公開できません。[成果物の種類] を [サーバー] に変更するか、Windows を使用するか、あるいは「ファイルのコピー」、「SSH によるファイルのコピー」、「FTP アップロード」タスクを使用します。"
 }

@@ -87,5 +87,6 @@
   "loc.messages.AFC_AddNetworkSecurityRuleFailed": "Failed to add the network security rule: {0}",
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Failed to enable copy prerequisites. {0}",
-  "loc.messages.AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account"
+  "loc.messages.AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
 }

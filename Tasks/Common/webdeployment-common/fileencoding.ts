@@ -27,9 +27,7 @@ function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
 
 function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding without BOM');
-    if(buffer.length < 4) {
-        throw Error('File buffer is too short to detect encoding type');
-    }
+
     var typeCode = 0;
     for(var index = 0; index < 4; index++) {
         typeCode = typeCode << 1;
@@ -47,12 +45,12 @@ function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
         case 15:
             return ['utf-8', false];
         default:
-            throw Error(tl.loc('UnknownFileEncodeError', typeCode));
+            throw Error(tl.loc('UnknownFileEncodeError', fileName, typeCode));
     }
 }
 export function detectFileEncoding(fileName: string, buffer: Buffer) {
     if(buffer.length < 4) {
-        throw Error('ShortFileBufferError');
+        throw Error(tl.loc('ShortFileBufferError', fileName));
     }
     var fileEncoding = detectFileEncodingWithBOM(fileName, buffer) || detectFileEncodingWithoutBOM(fileName, buffer);
     return fileEncoding;

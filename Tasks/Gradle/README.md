@@ -36,6 +36,16 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
+####Code Analysis
+
+- **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](https://blogs.msdn.com/b/visualstudioalm/archive/2015/10/08/the-maven-build-task-now-simplifies-sonarqube-analysis.aspx)
+
+- **Run Checkstyle :** You can choose to run the Checkstyle static code analysis tool, which checks the compliance of your source code with coding rules. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
+
+- **Run PMD :** You can choose to run the PMD static code analysis tool, which examines your source code for possible bugs. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
+
+- **Run FindBugs :** You can choose to run the FindBugs static code analysis tool, which examines the bytecode of your program for possible bugs. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
+
 ###Q&A
 
 ####How do I generate a wrapper from my Gradle project?

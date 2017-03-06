@@ -14,8 +14,8 @@
   ],
   "version": {
     "Major": 8,
-    "Minor": 0,
-    "Patch": 2
+    "Minor": 1,
+    "Patch": 3
   },
   "inputs": [
     {
@@ -30,6 +30,14 @@
         "rows": "10",
         "maxLength": "500"
       }
+    },
+    {
+      "name": "emailRecipients",
+      "type": "identities",
+      "label": "ms-resource:loc.input.label.emailRecipients",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

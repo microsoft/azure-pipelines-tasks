@@ -9,11 +9,11 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 25
+        "Patch": 30
     },
-	"runsOn": [
+    "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -89,12 +89,12 @@
             "type": "radio",
             "label": "NuGet Version",
             "defaultValue": "3.3.0",
-            "helpMarkDown": "The version of NuGet to use, or external verson.",
+            "helpMarkDown": "The version of NuGet to use, or external version.",
             "required": "true",
             "groupName": "advanced",
             "options": {
                 "3.3.0": "3.3.0",
-                "3.5.0.1829": "3.5.0 - build 1938 (rc2)",
+                "3.5.0.1829": "3.5.0",
                 "custom": "Custom"
             }
         },

@@ -1,10 +1,10 @@
 {
-  "loc.messages.AZ_AzureRMProfileModuleNotFound": "Module 'AzureRM.Profile' not found. The 'AzureRM' module may not be fully installed. Running the  following PowerShell commands from an elevated session may resolve the issue: Import-Module AzureRM ; Install-AzureRM",
-  "loc.messages.AZ_CertificateAuthNotSupported": "Certificate based authentication is not supported. Azure PowerShell module is not found.",
-  "loc.messages.AZ_CredentialsError": "There was an error with the Azure credentials used for the deployment.",
-  "loc.messages.AZ_ModuleNotFound": "Neither the Azure module nor the AzureRM module was found. If the module was recently installed, retry after restarting the VSTS task agent.",
-  "loc.messages.AZ_RequiresMinVersion0": "The required minimum version ({0}) of the Azure PowerShell module is not installed.",
-  "loc.messages.AZ_ServicePrincipalError": "There was an error with the service principal used for the deployment.",
-  "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint."
+  "loc.messages.AZ_AzureRMProfileModuleNotFound": "Das Modul \"AzureRM.Profile\" wurde nicht gefunden. Das Modul \"AzureRM\" ist ggf. nicht vollständig installiert. Das Ausführen der folgenden PowerShell-Befehle aus einer Sitzung mit erhöhten Rechten behebt dieses Problem möglicherweise: \"Import-Module AzureRM\", \"Install-AzureRM\".",
+  "loc.messages.AZ_CertificateAuthNotSupported": "Zertifikatbasierte Authentifizierung wird nicht unterstützt. Das Azure PowerShell-Modul wurde nicht gefunden.",
+  "loc.messages.AZ_CredentialsError": "Fehler mit den für die Bereitstellung verwendeten Azure-Anmeldeinformationen.",
+  "loc.messages.AZ_ModuleNotFound": "Das Azure-Modul und das AzureRM-Modul wurden nicht gefunden. Wenn das Modul vor Kurzem installiert wurde, versuchen Sie es nach dem Neustart des VSTS-Task-Agents erneut.",
+  "loc.messages.AZ_RequiresMinVersion0": "Die erforderliche Mindestversion ({0}) des Azure PowerShell-Moduls ist nicht installiert.",
+  "loc.messages.AZ_ServicePrincipalError": "Fehler im für die Bereitstellung verwendeten Dienstprinzipal.",
+  "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Dienstprinzipalauthentifizierung wird in Version \"{0}\" des Azure-Moduls nicht unterstützt.",
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für den Azure-Endpunkt."
 }

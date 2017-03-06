@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "Consente di compilare con Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Risultati del test JUnit",
-  "loc.group.displayName.codeCoverage": "Code coverage",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.antBuildFile": "File di compilazione Ant",
   "loc.input.help.antBuildFile": "Percorso relativo dalla radice del repository al file di compilazione Ant.",
@@ -35,5 +35,8 @@
   "loc.input.label.jdkUserInputPath": "Percorso JDK",
   "loc.input.help.jdkUserInputPath": "Consente di impostare JAVA_HOME sul percorso specificato.",
   "loc.input.label.jdkArchitecture": "Architettura JDK",
-  "loc.input.help.jdkArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di JDK."
+  "loc.input.help.jdkArchitecture": "Consente facoltativamente di specificare l'architettura (x86, x64) di JDK.",
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Individuare JAVA_HOME per Java %s %s",
+  "loc.messages.FailedToLocateSpecifiedJVM": "La versione JDK specificata non è stata trovata. Assicurarsi che la variabile di ambiente '%s' sia presente e sia impostata sul percorso di un JDK corrispondente.",
+  "loc.messages.DiscontinueAntCodeCoverage": "Il supporto della generazione automatizzata di report di code coverage per progetti Ant a breve verrà sospeso. Per maggiori dettagli, vedere https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md."
 }

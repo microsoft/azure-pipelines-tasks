@@ -6,7 +6,7 @@
   "loc.group.displayName.deployment": "Déploiement",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.EnvironmentName": "Ordinateurs",
-  "loc.input.help.EnvironmentName": "Indiquez une liste séparée par des virgules d'adresses IP ou de noms de domaine complets d'ordinateurs ainsi que les ports. Le port par défaut dépend du protocole sélectionné. <br>Exemple : dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Ou indiquez une variable de sortie d'autres tâches. Exemple : $(variableName)",
+  "loc.input.help.EnvironmentName": "Indiquez une liste séparée par des virgules d'adresses IP ou de noms de domaine complets d'ordinateurs ainsi que les ports. Le port par défaut dépend du protocole sélectionné. <br>Exemple : dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Vous pouvez aussi indiquer une variable de sortie d'autres tâches. Exemple : $(variableName) <br>Si vous utilisez HTTPS, le nom ou l'adresse IP de la machine doit correspondre au CN dans le certificat.",
   "loc.input.label.AdminUserName": "Informations de connexion d'administrateur",
   "loc.input.help.AdminUserName": "Informations de connexion d'administrateur pour les ordinateurs cibles.",
   "loc.input.label.AdminPassword": "Mot de passe",

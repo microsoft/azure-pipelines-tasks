@@ -12,5 +12,7 @@
   "loc.input.label.outFile": "Ruta del archivo descifrado",
   "loc.input.help.outFile": "Nombre de archivo opcional para el archivo descifrado. Se establece de manera predeterminada con el nombre del archivo cifrado y la extensión \".out\"",
   "loc.input.label.cwd": "Directorio de trabajo",
-  "loc.input.help.cwd": "Directorio de trabajo para el descifrado. Se establece de manera predeterminada en la raíz del repositorio."
+  "loc.input.help.cwd": "Directorio de trabajo para el descifrado. Se establece de manera predeterminada en la raíz del repositorio.",
+  "loc.messages.OpenSSLReturnCode": "Se cerró openssl con el código de devolución: %d",
+  "loc.messages.OpenSSLFailed": "Error de openssl: %s"
 }

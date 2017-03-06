@@ -194,7 +194,7 @@ try
                 $vs15 = Get-VisualStudio_15_0
                 if ($vs15 -and $vs15.Path) {
                     $vstestConsole15 = Get-VSTestConsole15Path -Path $vs15.Path
-                    if ((Test-Leaf -LiteralPath $vstestConsole15)) {
+                    if ((Test-Leaf -LiteralPath $vstestConsole15) -and (InvokeVsTestCmdletHasMember "VSTestLocation")) {
                         Invoke-VSTest -TestAssemblies $testAssemblyFiles -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory -VSTestLocation $vstestConsole15
                     }
                     else # fallback to latest
