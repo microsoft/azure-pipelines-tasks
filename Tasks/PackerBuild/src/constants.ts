@@ -18,6 +18,7 @@ export var TemplateVariableImagePublisherName = "image_publisher";
 export var TemplateVariableImageOfferName = "image_offer";
 export var TemplateVariableImageSkuName = "image_sku";
 export var TemplateVariableLocationName = "location";
+export var TemplateVariableCapturePrefixName = "capture_name_prefix";
 export var TemplateVariableScriptPathName = "script_path";
 export var TemplateVariableScriptName = "script_name";
 export var TemplateVariablePackagePathName = "package_path";
@@ -27,4 +28,10 @@ export var TemplateVariableClientIdName = "client_id";
 export var TemplateVariableClientSecretName = "client_secret";
 export var TemplateVariableTenantIdName = "tenant_id";
 export var TemplateVariableObjectIdName = "object_id";
+
+export var PackerLogTokenImageUri = "OSDiskUri";
+export var PackerLogTokenStorageLocation = "StorageAccountLocation";
+
+export var OutputVariableImageUri = "imageUri";
+export var OutputVariableImageStorageAccountLocation = "imageStorageAccount";
 

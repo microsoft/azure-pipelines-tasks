@@ -32,19 +32,90 @@
     ],
     "inputs": [
         {
-            "name": "osType",
-            "type": "pickList",
-            "label": "OS Type",
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "groupName": "Template",
-            "options": {
-                "Windows": "windows",
-                "Linux": "linux"
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "location",
+            "type": "pickList",
+            "label": "Location",
+            "required": true,
+            "helpMarkDown": "Location for storing the created VHD. This location will also be used to create a temporary VM for the purpose of capturing image. If the resource group already exists in the subscription, then this value will be ignored.",
+            "properties": {
+                "EditableOptions": "True"
             }
+        },
+        {
+            "name": "azureStorageAccount",
+            "type": "pickList",
+            "label": "Storage account",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment."
+        },
+        {
+            "name": "baseImage",
+            "type": "pickList",
+            "label": "Base image",
+            "required": true,
+            "helpMarkDown": "Base image to used fo creating VHD.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "options": {
+                "Windows 2012-R2-Datacenter": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows"
+            }
+        },
+        {
+            "name": "packagePath",
+            "type": "filePath",
+            "label": "Package or folder",
+            "required": true,
+            "helpMarkDown": "Specify the path to deployment package."
+        },
+        {
+            "name": "deployScriptPath",
+            "type": "filePath",
+            "label": "Deployment script",
+            "required": true,
+            "helpMarkDown": "Specify the path to powershell or shell script which deploys application."
+        },
+        {
+            "name": "imageUri",
+            "type": "string",
+            "label": "Image URI",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the variable for output image URI."
+        },
+        {
+            "name": "imageStorageAccount",
+            "type": "string",
+            "label": "Image storage account location",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the variable for output image storage account location."
         }
     ],
-    "dataSourceBindings": [],
+    "dataSourceBindings": [
+        {
+            "target": "location",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
+        },
+        {
+            "target": "azureStorageAccount",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageServiceNames"
+        }
+    ],
     "sourceDefinitions": [],
     "instanceNameFormat": "Packer build for $(osType)",
     "execution": {
@@ -67,7 +138,8 @@
         "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
         "PackerBuildCompleted": "packer build completed.",
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
-        "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set."
+        "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
+        "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s "
                 
     }
 }

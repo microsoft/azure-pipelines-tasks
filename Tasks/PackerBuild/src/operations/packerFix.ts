@@ -5,13 +5,13 @@ import * as tl from "vsts-task-lib/task";
 import packerHost from "../packerHost";
 
 export function run(packerHost: packerHost): Q.Promise<any> {
-    var command = packerHost.createCommand();
+    var command = packerHost.createPackerTool();
     command.arg("fix");
 
     // do not validate in fix. We will validate separately
     command.arg("-validate=false");
-    command.arg(packerHost.templateManager.getTemplateFileLocation());
+    command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation());
 
     console.log(tl.loc("ExecutingPackerFix"));
-    return packerHost.execCommand(command);
+    return packerHost.execPackerTool(command);
 }

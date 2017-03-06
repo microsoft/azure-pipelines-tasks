@@ -6,17 +6,20 @@ import * as tl from "vsts-task-lib/task";
 import packerHost from "../packerHost";
 
 export function run(packerHost: packerHost): Q.Promise<any> {
-    var command = packerHost.createCommand();
+    var command = packerHost.createPackerTool();
     command.arg("validate");
 
     // add all variables
-    var variables: Map<string, string> = packerHost.templateManager.getTemplateVariables();
-    variables.forEach((value: string, key: string) => {
-        command.arg(["-var", util.format("%s=%s", key, value)]);
-    })
+    var variableProviders = packerHost.getTemplateVariablesProviders(); 
+    variableProviders.forEach((provider) => {
+        var variables = provider.getTemplateVariables();
+        variables.forEach((value: string, key: string) => {
+            command.arg(["-var", util.format("%s=%s", key, value)]);
+        });
+    });
     
-    command.arg(packerHost.templateManager.getTemplateFileLocation());
+    command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation());
 
     console.log(tl.loc("ExecutingPackerValidate"));
-    return packerHost.execCommand(command);
+    return packerHost.execPackerTool(command);
 }

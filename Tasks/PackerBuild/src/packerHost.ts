@@ -2,51 +2,66 @@
 
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
-import * as ptm from "./packerTemplateManager";
-import * as utils from "./utilities"
-import * as op from "./outputParsers"
+//import PackerTemplateManager from "./packerTemplateManager";
+import * as utils from "./utilities";
+import * as constants from "./constants";
+import * as definitions from "./definitions"
 
-export default class PackerHost {
-    public templateManager: ptm.PackerTemplateManager;
+export default class PackerHost implements definitions.IPackerHost {
 
     constructor() {
         this._packerPath = tl.which("packer", true);
-        this.templateManager = new ptm.PackerTemplateManager();
-        this._extractedOutputs = new Map<string, string>();
+        this._templateFileProviders = {};
+        this._templateVariablesProviders = {};
     }
 
-    // Will create and return toolrunner
-    public createCommand(): tr.ToolRunner {
+    // Will create and return packer toolrunner
+    public createPackerTool(): tr.ToolRunner {
         var command = tl.tool(this._packerPath);
         return command;
     }
 
-    // Creates toolrunner with options
+    // Creates packer toolrunner with options
     // Also sets up parser which will parse output log on the fly
-    public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions, outputParser?: op.IOutputParser): Q.Promise<any> {
-        this._extractedOutputs.clear();
-
+    public execPackerTool(command: tr.ToolRunner, outputParser?: definitions.IOutputParser): Q.Promise<any> {
         var outputExtractorFunc = null;
         if(!!outputParser) {
             outputExtractorFunc = (line: string) => {
-                outputParser.parse(line, this._extractedOutputs);
+                outputParser.parse(line);
             }
         }
 
-        if (!options) {
-            options = <any>{
-                outStream: new utils.StringWritable({ decodeStrings: false }, outputExtractorFunc),
-                errStream: new utils.StringWritable({ decodeStrings: false })
-            };
-        }
+        var options = <any>{
+            outStream: new utils.StringWritable({ decodeStrings: false }, outputExtractorFunc),
+            errStream: new utils.StringWritable({ decodeStrings: false })
+        };
 
         return command.exec(options);
     }
 
-    public getExtractedOutputs(): any {
-        return this._extractedOutputs;
+    public getTemplateFileProvider(): definitions.ITemplateFileProvider {
+        var templateFileProvider = this._templateFileProviders[definitions.TemplateFileProviderTypes.BuiltIn];
+        return templateFileProvider;
+    }
+
+    public getTemplateVariablesProviders(): definitions.ITemplateVariablesProvider[] {
+        var taskInputTemplateVariablesProvider = this._templateVariablesProviders[definitions.VariablesProviderTypes.TaskInput];
+        var azureSpnTemplateVariablesProvider = this._templateVariablesProviders[definitions.VariablesProviderTypes.AzureSPN];
+        
+        return [taskInputTemplateVariablesProvider, azureSpnTemplateVariablesProvider];
+    }
+
+    public registerTemplateFileProvider(providerType: definitions.TemplateFileProviderTypes, provider: definitions.ITemplateFileProvider) {
+        this._templateFileProviders[providerType] = provider;
+    }
+
+    public registerTemplateVariablesProvider(providerType: definitions.VariablesProviderTypes, provider: definitions.ITemplateVariablesProvider) {
+        this._templateVariablesProviders[providerType] = provider;
     }
 
     private _packerPath: string;
-    private _extractedOutputs: Map<string, string>;
+    private _templateFileProviders: ObjectDictionary<definitions.ITemplateFileProvider>;
+    private _templateVariablesProviders: ObjectDictionary<definitions.ITemplateVariablesProvider>;
 }
+
+interface ObjectDictionary<T> { [key: number]: T; }

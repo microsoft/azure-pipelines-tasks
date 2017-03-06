@@ -70,7 +70,7 @@ describe('PackerBuild Suite', function() {
         process.env["__copy_fails__"] = "false";        
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.indexOf("copy failed!!") != -1, "error message should be right");               
+        assert(tr.stdout.indexOf("Not found .\\DefaultTemplates\\default.windows.template.json") != -1, "error message should be right");               
         done();
     });
 
@@ -184,7 +184,7 @@ describe('PackerBuild Suite', function() {
         tr.run();
              
         assert(tr.stdout.indexOf("creating path: F:\\somedir\\tempdir\\100") == -1, "dest should not be created");
-        assert(tr.stdout.indexOf("copying F:\\somedir\\tempdir\\100 to") != -1, "copy should be done");
+        assert(tr.stdout.indexOf("copying .\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "copy should be done");
         done();
     });
 
@@ -198,7 +198,7 @@ describe('PackerBuild Suite', function() {
         process.env["__dest_path_exists__"] = true;
               
         assert(tr.stdout.indexOf("creating path: F:\\somedir\\tempdir\\100") != -1, "dest should be created");
-        assert(tr.stdout.indexOf("copying F:\\somedir\\tempdir\\100 to") != -1, "copy should be done");
+        assert(tr.stdout.indexOf("copying .\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "copy should be done");
         done();
     });
 });

@@ -4,19 +4,17 @@ import * as os from "os";
 import * as util from "util"
 import * as utils from "./utilities";
 import * as tl from "vsts-task-lib/task";
+import * as definitions from "./definitions"
 
-export interface IOutputParser {
-    parse(line: string, parsedOutputs: Map<string, string>): void;
-}
-
-export class OutputVariablesExtractor implements IOutputParser {
+export default class OutputVariablesParser implements definitions.IOutputParser {
 
     constructor(outputExtractionKeys?: string[]) {
         this._outputExtractionKeys = outputExtractionKeys;
+        this._extractedOutputs = new Map<string, string>();
     }
 
-    public parse(line: string, parsedOutputs: Map<string, string>): void {
-        if(utils.IsNullOrEmpty(line) || utils.HasItems(this._outputExtractionKeys)) {
+    public parse(line: string): void {
+        if(utils.IsNullOrEmpty(line) || !utils.HasItems(this._outputExtractionKeys)) {
             return;
         }
 
@@ -28,17 +26,27 @@ export class OutputVariablesExtractor implements IOutputParser {
         this._outputExtractionKeys.forEach((key: string) => {
             var keyValue = this._extractOutputValue(line, key);
             if(keyValue !== null) {
-                parsedOutputs.set(key, keyValue);
+                this._extractedOutputs.set(key, keyValue);
             }
         })
     }
 
+    public getExtractedOutputs(): any {
+        return this._extractedOutputs;
+    }
+
     private _extractOutputValue(line: string, key: string): string {
-        var matchingInfoStartIndex = line.search(util.format("%s: \\S*(\\n|\\r|\\u2028|\\u2029|\\s)", key));
+        var matchingInfoStartIndex = line.search(util.format("(\\n|\\r|\\u2028|\\u2029|\\s|^)%s: \\S*(\\n|\\r|\\u2028|\\u2029|\\s)", key));
         tl.debug("Match start index: " + matchingInfoStartIndex);
 
         if (matchingInfoStartIndex !== -1) {
-            var matchingInfo = line.substring(matchingInfoStartIndex + key.length + 1).trim();
+            var padding = 1;
+            
+            if(line.startsWith(key)) {
+                padding = 0;
+            }
+
+            var matchingInfo = line.substring(matchingInfoStartIndex + key.length + padding + 1).trim(); // one extra character is for ':' preceding the key
             var matchingInfoEndIndex = matchingInfo.search("(\\n|\\r|\\u2028|\\u2029|\\s)");
             tl.debug("Match end index: " + matchingInfoEndIndex);
 
@@ -55,4 +63,5 @@ export class OutputVariablesExtractor implements IOutputParser {
     }
 
     private _outputExtractionKeys: string[];
+    private _extractedOutputs: Map<string, string>;
 }

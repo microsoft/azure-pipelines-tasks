@@ -14,7 +14,8 @@
     "script_path": "",
     "script_name": "",
     "package_path": "",
-    "package_name": ""    
+    "package_name": "",
+    "capture_name_prefix": ""
   },
   "builders": [{
         "type": "azure-arm",
@@ -30,19 +31,22 @@
         "image_publisher": "{{user `image_publisher`}}",
         "image_offer": "{{user `image_offer`}}",
         "image_sku": "{{user `image_sku`}}",
+        "location": "{{user `location`}}",
+        "vm_size": "Standard_D3_v2",
+
         "communicator": "winrm",
         "winrm_use_ssl": "true",
         "winrm_insecure": "true",
         "winrm_timeout": "15m",
         "winrm_username": "packer",
-        "location": "{{user `location`}}",
-        "vm_size": "Standard_D3_v2",
-        "capture_container_name": "packer",
-        "capture_name_prefix": "packer"
+
+        "capture_container_name": "vsts-buildimagetask",
+        "capture_name_prefix": "{{user `capture_name_prefix`}}"
     }],
     "provisioners": [{
             "type": "windows-shell",
             "inline": [
+                "cmd /c \"if exist c:\\\\DeployTemp rd /s /q c:\\\\DeployTemp\"",
                 "cmd /c \"mkdir c:\\\\DeployTemp\""
             ]
         },
@@ -60,7 +64,14 @@
             "type": "powershell",
             "inline": [
                 "ls \"C:\\DeployTemp\"",
-                "Start-Process powershell -ArgumentList \"C:\\\\DeployTemp\\\\{{user `script_name`}}\" -NoNewWindow -Wait"
+                "C:\\DeployTemp\\{{user `script_name`}}"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline": [
+                "if( Test-Path $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml ){ rm $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml -Force}",
+                "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet"
             ]
         }]
 }

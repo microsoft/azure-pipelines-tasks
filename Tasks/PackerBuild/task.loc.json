@@ -32,19 +32,90 @@
   ],
   "inputs": [
     {
-      "name": "osType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.osType",
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "groupName": "Template",
-      "options": {
-        "Windows": "windows",
-        "Linux": "linux"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.location",
+      "properties": {
+        "EditableOptions": "True"
       }
+    },
+    {
+      "name": "azureStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccount"
+    },
+    {
+      "name": "baseImage",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.baseImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.baseImage",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "Windows 2012-R2-Datacenter": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows"
+      }
+    },
+    {
+      "name": "packagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.packagePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packagePath"
+    },
+    {
+      "name": "deployScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.deployScriptPath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath"
+    },
+    {
+      "name": "imageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageUri",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageUri"
+    },
+    {
+      "name": "imageStorageAccount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageStorageAccount",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageStorageAccount"
     }
   ],
-  "dataSourceBindings": [],
+  "dataSourceBindings": [
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "azureStorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageServiceNames"
+    }
+  ],
   "sourceDefinitions": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
@@ -67,6 +138,7 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
-    "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound"
+    "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
+    "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName"
   }
 }

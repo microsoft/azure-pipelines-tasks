@@ -35,10 +35,10 @@ export function IsNullOrEmpty(str: string): boolean {
 
 export function HasItems(arr: any[]): boolean {
     if(arr === null || arr === undefined || arr.length === 0) {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 // Extends stream.Writable to support parsing data as they are written
@@ -50,7 +50,7 @@ export class StringWritable extends stream.Writable {
     }
 
     _write(data: any, encoding: string, callback: Function): void {
-        console.log(data);
+        console.log(data.toString());
 
         if(!!this._parserCallback) {
             this._parserCallback(data.toString());
