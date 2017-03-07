@@ -30,26 +30,27 @@ export async function run(packerHost: packerHost): Promise<any> {
     await packerHost.execTool(command, outputVariablesParser);
 
     // set output task variables
-    setOutputVariables(outputVariablesParser.getExtractedOutputs());
+    setOutputVariables(packerHost, outputVariablesParser.getExtractedOutputs());
 }
 
-function setOutputVariables(outputs: Map<string, string>): void {
+function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>): void {
     var imageUri = outputs.get(constants.PackerLogTokenImageUri);
     var imageStorageAccount = outputs.get(constants.PackerLogTokenStorageLocation);
+    var taskParameters = packerHost.getTaskParameters();
 
-    if(!utils.IsNullOrEmpty(tl.getInput(constants.OutputVariableImageUri, false))) {
+    if(!utils.IsNullOrEmpty(taskParameters.imageUri)) {
         if(!utils.IsNullOrEmpty(imageUri)) {
             tl.debug("Setting image URI variable to: " + imageUri);
-            tl.setVariable(tl.getInput(constants.OutputVariableImageUri, false), imageUri);
+            tl.setVariable(taskParameters.imageUri, imageUri);
         } else {
             throw tl.loc("ImageURIOutputVariableNotFound");
         }
     }
 
-    if(!utils.IsNullOrEmpty(tl.getInput(constants.OutputVariableImageStorageAccountLocation, false))) {
+    if(!utils.IsNullOrEmpty(taskParameters.storageAccountLocation)) {
         if(!utils.IsNullOrEmpty(imageStorageAccount)) {
             tl.debug("Setting image storage location variable to: " + imageStorageAccount);
-            tl.setVariable(tl.getInput(constants.OutputVariableImageStorageAccountLocation, false), imageStorageAccount);
+            tl.setVariable(taskParameters.storageAccountLocation, imageStorageAccount);
         } else {
             throw tl.loc("StorageAccountLocationOutputVariableNotFound");
         }

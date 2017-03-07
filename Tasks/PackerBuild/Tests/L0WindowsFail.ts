@@ -30,7 +30,7 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": process.env["__packer_exists__"] === "false" ? false : true,
-        ".\\DefaultTemplates\\default.windows.template.json": process.env["__copy_fails__"] === "true" ? false : true
+        "basedir\\DefaultTemplates\\default.windows.template.json": process.env["__copy_fails__"] === "true" ? false : true
     },
     "exec": {
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
@@ -68,6 +68,9 @@ tr.registerMock('./utilities', {
     },
     getTempDirectory: function() {
         return "F:\\somedir\\tempdir"
+    },
+    getCurrentDirectory: function() {
+        return "basedir\\currdir";
     }
 }); 
 

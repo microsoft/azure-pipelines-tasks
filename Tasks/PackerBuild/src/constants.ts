@@ -1,5 +1,5 @@
 export var BuiltInTemplateOSTypeWindows = "windows";
-export var BuiltInWindowsTemplateLocation = ".\\DefaultTemplates\\default.windows.template.json";
+export var BuiltInWindowsTemplateName =  "default.windows.template.json";
 
 export var OsTypeInputName = "osType";
 export var ResourceGroupInputName = "azureResourceGroup";

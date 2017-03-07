@@ -28,7 +28,7 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        ".\\DefaultTemplates\\default.windows.template.json": true
+        "basedir\\DefaultTemplates\\default.windows.template.json": true
     },
     "exec": {
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
@@ -62,6 +62,9 @@ tr.registerMock('./utilities', {
     },
     getTempDirectory: function() {
         return "F:\\somedir\\tempdir"
+    },
+    getCurrentDirectory: function() {
+        return "basedir\\currdir";
     }
 }); 
 

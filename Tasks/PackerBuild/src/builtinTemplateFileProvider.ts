@@ -10,7 +10,7 @@ export default class BuiltInTemplateFileProvider implements definitions.ITemplat
 
     constructor() {
         this._builtInTemplateFiles = new Map<string, string>();
-        this._builtInTemplateFiles.set(constants.BuiltInTemplateOSTypeWindows, constants.BuiltInWindowsTemplateLocation);
+        this._builtInTemplateFiles.set(constants.BuiltInTemplateOSTypeWindows, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInWindowsTemplateName));
     }
 
     public register(packerHost: definitions.IPackerHost): void {

@@ -19,6 +19,9 @@ export default class TaskParameters {
     public packagePath: string;
     public deployScriptPath: string;
 
+    public imageUri: string;
+    public storageAccountLocation: string;
+
     constructor() {
         try {
             this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
@@ -31,6 +34,9 @@ export default class TaskParameters {
 
             this.deployScriptPath = tl.getInput(constants.DeployScriptPathInputName, true);
             this.packagePath = tl.getInput(constants.DeployPackageInputName, true);
+
+            this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
+            this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
         } 
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error.message));

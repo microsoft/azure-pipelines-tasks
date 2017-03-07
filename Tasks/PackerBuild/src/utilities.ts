@@ -26,6 +26,10 @@ export function getCurrentTime(): number {
     return new Date().getTime();
 }
 
+export function getCurrentDirectory(): string {
+    return __dirname;
+}
+
 export function IsNullOrEmpty(str: string): boolean {
     if(str === null || str === undefined || str === "") {
         return true;

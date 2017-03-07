@@ -46,7 +46,7 @@ function registerProviders(host: packerHost): void {
 
 function cleanup(host: packerHost): void {
 
-    var templateFileDirectory = path.dirname(host.getTemplateFileProvider().getTemplateFileLocation());    
+    var templateFileDirectory = path.dirname(host.getTemplateFileProvider().getTemplateFileLocation(host));    
     
     try{
         if(tl.exist(templateFileDirectory)) {
