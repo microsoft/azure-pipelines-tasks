@@ -68,7 +68,17 @@
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to the symbols folder.",
-            "visibleRule": "symbolsType = Windows || symbolsType == AndroidNative"
+            "visibleRule": "symbolsType == AndroidNative"
+        },
+        {
+            "name": "pdbPath",
+            "type": "filePath",
+            "label": "PDB Files Path Pattern",
+            "defaultValue": "**/*.pdb",
+            "groupName": "symbols",
+            "required": false,
+            "helpMarkDown": "Relative path pattern from the repo root to PDB symbols files.",
+            "visibleRule": "symbolsType = Windows"
         },
         {
             "name": "dsymPath",

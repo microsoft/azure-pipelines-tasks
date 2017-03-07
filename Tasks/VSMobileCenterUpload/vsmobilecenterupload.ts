@@ -287,6 +287,20 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
                 }
             }
         })
+    } else if (symbolsType === "Windows") {
+        // User can specifay a symbols path pattern that selects 
+        // multiple PDB paths for Windows application.
+        let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+
+        pdbPaths.forEach(pdbFile => {
+            if (pdbFile) {
+                let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
+                // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
+                if (pdbPath) {
+                    symbolsPaths.push(pdbPath);
+                }
+            }
+        })
     } else {
         // For all other application types user can specifay a symbols path pattern 
         // that selects only one file or one folder.
@@ -335,6 +349,9 @@ async function run() {
                 break;
             case "AndroidJava":
                 symbolVariableName = "mappingTxtPath";
+                break;
+            case "Windows":
+                symbolVariableName = "pdbPath";
                 break;
             default:
                 symbolVariableName = "symbolsPath";
