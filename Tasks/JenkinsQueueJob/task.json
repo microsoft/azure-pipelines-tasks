@@ -13,8 +13,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 112,
-        "Patch": 1
+        "Minor": 115,
+        "Patch": 0
     },
     "groups": [
         {
@@ -89,6 +89,7 @@
         }
     },
     "messages": {
-        "JenkinsJobQueued": "Jenkins job queued"
+        "JenkinsJobQueued": "Jenkins job queued",
+        "FailedToGenerateSummary": "Failed to generate build summary."
     }
 }

@@ -181,6 +181,16 @@ export class JobQueue {
     }
 
     writeFinalMarkdown(complete: boolean) {
+        let colorize = (s) => {
+            // 'Success' is green, everything else is red
+            let color = 'red';
+            if (s === 'succeeded') {
+                color = 'green';
+            }
+
+            return `<font color='${color}'>${s}</font>`
+        }
+
         function walkHierarchy(job: Job, indent: string, padding: number): string {
             var jobContents = indent + '<ul style="padding-left:' + padding + '">\n';
 
@@ -188,9 +198,9 @@ export class JobQueue {
             job = findWorkingJob(job);
 
             if (job.executableNumber == -1) {
-                jobContents += indent + job.name + ' ' + job.getResultString() + '<br>\n';
+                jobContents += indent + job.name + ' ' + colorize(job.getResultString()) + '<br>\n';
             } else {
-                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + job.getResultString() + '<br>\n';
+                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString()) + '<br>\n';
             }
 
             var childContents = "";
@@ -209,15 +219,76 @@ export class JobQueue {
             }
         }
 
-        function generatePipelineReport(job: Job) {
+        function createPipelineReport(job: Job, taskOptions: TaskOptions, report): string {
+            let authority = util.getUrlAuthority(job.executableUrl);
 
+            let getStageUrl = (authority, stage) => {
+                let result = '';
+                if (stage && stage['_links']
+                          && stage['_links']['self']
+                          && stage['_links']['self']['href'])
+                {
+                    result = stage['_links']['self']['href'];
+                    //remove the api link
+                    result = result.replace('/wfapi/describe', '');
+                }
+
+                return `${authority}${result}`;
+            };
+
+
+            let convertStatus = (s) => {
+                let status = s.toLowerCase();
+                if (status === 'success') {
+                    status = 'succeeded';
+                }
+
+                return status;
+            }
+
+            // Top level pipeline job status
+            let jobContent = '<ul style="padding-left: 0">';
+            jobContent += '[' + taskOptions.jobName + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString());
+            if (job.getResultString() !== 'succeeded') {
+                jobContent += ` ([console](${job.executableUrl}/console))`
+            }
+            jobContent += '<br>';
+
+            // For each stage, write its status
+            let stageContents = '';
+            for (let stage of report['stages']) {
+                let stageUrl = getStageUrl(authority, stage);
+                stageContents += '[' + stage["name"] + '](' + stageUrl + ') ' + colorize(convertStatus(stage.status))+'<br>';
+            }
+
+            if (stageContents) {
+                jobContent += '<ul style="padding-left: 4">\n';
+                jobContent += stageContents;
+                jobContent += '</ul>';
+            }
+
+            //close out the element for the entire job
+            jobContent += '</ul>';
+            return jobContent;
         }
 
-        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent) => void) {
+        function generatePipelineReport(job: Job, taskOptions: TaskOptions, callback: (pipelineReport: string) => void) {
+            util.getPipelineReport(job, taskOptions)
+                .then((body) => {
+                    if (body) {
+                        let parsedBody = JSON.parse(body);
+                        callback(createPipelineReport(job, taskOptions, parsedBody));
+                    } else {
+                        callback(tl.loc('FailedToGenerateSummary'));
+                    }
+                })
+        }
+
+        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent: string) => void) {
             util.isPipelineJob(job, taskOptions)
                 .then((isPipeline) => {
                     if (isPipeline) {
-                        callback("This is a pipeline job: "+job.name + " " + job.executableNumber);
+                        generatePipelineReport(job, taskOptions, callback);
                     } else {
                         callback(walkHierarchy(job, "", 0));
                     }
