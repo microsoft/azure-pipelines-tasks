@@ -12,7 +12,8 @@ async function xmlVarSub() {
         'xdt:Locator' : 'Match(tag)',
         'DefaultConnection': 'connectionStringValue1',
         'OtherDefaultConnection': 'connectionStringValue2',
-        'ParameterConnection': 'New_Connection_String From xml var subs'
+        'ParameterConnection': 'New_Connection_String From xml var subs',
+        'connectionString': 'replaced_value'
     }
 
     var parameterFilePath = path.join(__dirname, 'L1XmlVarSub/parameters_test.xml');
