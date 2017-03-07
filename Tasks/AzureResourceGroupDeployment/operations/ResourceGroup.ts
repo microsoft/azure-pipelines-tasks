@@ -15,6 +15,7 @@ import winRM = require("./WinRMExtensionHelper");
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
+import fileEncoding = require('./FileEncoding');
 
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -186,11 +187,23 @@ export class ResourceGroup {
         });
     }
 
+    private getJson(filepath): JSON {
+        var json: JSON;
+        var fileBuffer: Buffer = fs.readFileSync(filepath);
+        var fileEncodeType = fileEncoding.detectFileEncoding(filepath, fileBuffer);
+        var fileContent: string = fileBuffer.toString(fileEncodeType[0]);
+        if (fileEncodeType[1]) {
+            fileContent = fileContent.slice(1);
+        }
+        json = JSON.parse(fileContent);
+        return json;
+    }
+
     private getDeploymentDataForLinkedArtifact(): Deployment {
         var template: Object;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(fs.readFileSync(this.taskParameters.csmFile, 'UTF-8'));
+            template = this.getJson(this.taskParameters.csmFile);
             tl.debug("Loaded CSM File");
         }
         catch (error) {
@@ -202,9 +215,9 @@ export class ResourceGroup {
             if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
                 if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
                     tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
+                    var parameterFile = this.getJson(this.taskParameters.csmParametersFile);
                     tl.debug("Loaded Parameters File");
-                    parameters = JSON.parse(parameterFile).parameters;
+                    parameters = parameterFile["parameters"];
                 }
             }
         }
