@@ -45,17 +45,8 @@ function registerProviders(host: packerHost): void {
 }
 
 function cleanup(host: packerHost): void {
-
-    var templateFileDirectory = path.dirname(host.getTemplateFileProvider().getTemplateFileLocation(host));    
-    
-    try{
-        if(tl.exist(templateFileDirectory)) {
-            tl.rmRF(templateFileDirectory, true);
-        }
-    }
-    catch (err) {
-        tl.warning(tl.loc("CouldNotDeleteTemporaryTemplateDirectory", templateFileDirectory));
-    }
+    var fileProvider = host.getTemplateFileProvider();
+    fileProvider.cleanup();
 }
 
 try {

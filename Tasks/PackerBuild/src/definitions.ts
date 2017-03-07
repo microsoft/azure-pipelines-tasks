@@ -29,7 +29,7 @@ export interface IPackerHost {
 export interface ITemplateFileProvider {
     register(packerHost: IPackerHost): void;
     getTemplateFileLocation(packerHost: IPackerHost): string;
-    shouldTemplateFileBeCleanedup(): boolean;
+    cleanup(): void;
 }
 
 export interface ITemplateVariablesProvider {

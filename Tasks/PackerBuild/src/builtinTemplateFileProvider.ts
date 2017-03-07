@@ -47,8 +47,21 @@ export default class BuiltInTemplateFileProvider implements definitions.ITemplat
         throw (tl.loc("OSTypeNotSupported", osType));
     }
 
-    public shouldTemplateFileBeCleanedup(): boolean {
-        return true;
+    public cleanup(): void {
+        if(!this._templateFileLocation) {
+            return;
+        }
+
+        var templateFileDirectory = path.dirname(this._templateFileLocation);    
+        try{
+            if(tl.exist(templateFileDirectory)) {
+                tl.debug("Cleaning-up temporary directory " + this._templateFileLocation);
+                tl.rmRF(templateFileDirectory, true);
+            }
+        }
+        catch (err) {
+            tl.warning(tl.loc("CouldNotDeleteTemporaryTemplateDirectory", templateFileDirectory));
+        }
     }
 
     private _builtInTemplateFiles: Map<string, string>;
