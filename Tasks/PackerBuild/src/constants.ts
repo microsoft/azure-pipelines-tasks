@@ -1,9 +1,10 @@
 export var BuiltInTemplateOSTypeWindows = "windows";
-export var BuiltInWindowsTemplateLocation = ".\\DefaultTemplates\\default.windows.template.json";
+export var BuiltInWindowsTemplateName =  "default.windows.template.json";
 
 export var OsTypeInputName = "osType";
 export var ResourceGroupInputName = "azureResourceGroup";
 export var StorageAccountInputName = "azureStorageAccount";
+export var BaseImageInputName = "baseImage";
 export var ImagePublisherInputName = "imagePublisher";
 export var ImageOfferInputName = "imageOffer";
 export var ImageSkuInputName = "imageSku";

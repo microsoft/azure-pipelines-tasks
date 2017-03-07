@@ -44,7 +44,7 @@ describe('PackerBuild Suite', function() {
         assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf("copying .\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "built-in template should be copied to temp location");
+        assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "built-in template should be copied to temp location");
         done();
     });
 
@@ -80,7 +80,7 @@ describe('PackerBuild Suite', function() {
         process.env["__copy_fails__"] = "false";
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.indexOf("Not found .\\DefaultTemplates\\default.windows.template.json") != -1, "error message should be right");               
+        assert(tr.stdout.indexOf("Not found basedir\\DefaultTemplates\\default.windows.template.json") != -1, "error message should be right");               
         done();
     });
 

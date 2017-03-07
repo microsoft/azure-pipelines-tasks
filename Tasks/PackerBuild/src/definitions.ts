@@ -1,4 +1,5 @@
 import * as tr from "vsts-task-lib/toolrunner";
+import TaskParameters from "./taskParameters"
 
 export enum TemplateFileProviderTypes {
     BuiltIn = 0,
@@ -20,15 +21,18 @@ export interface IPackerHost {
     execTool(command: tr.ToolRunner, outputParser?: IOutputParser): Q.Promise<any>;
     getTemplateFileProvider(): ITemplateFileProvider;
     getTemplateVariablesProviders(): ITemplateVariablesProvider[];
+    registerTemplateFileProvider(providerType: TemplateFileProviderTypes, provider: ITemplateFileProvider);
+    registerTemplateVariablesProvider(providerType: VariablesProviderTypes, provider: ITemplateVariablesProvider);
+    getTaskParameters(): TaskParameters;
 }
 
 export interface ITemplateFileProvider {
     register(packerHost: IPackerHost): void;
-    getTemplateFileLocation(): string;
-    shouldTemplateFileBeCleanedup(): boolean;
+    getTemplateFileLocation(packerHost: IPackerHost): string;
+    cleanup(): void;
 }
 
 export interface ITemplateVariablesProvider {
     register(packerHost: IPackerHost): void;
-    getTemplateVariables(): Map<string, string>;
+    getTemplateVariables(packerHost: IPackerHost): Map<string, string>;
 }

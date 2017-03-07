@@ -2,10 +2,11 @@
 
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
-//import PackerTemplateManager from "./packerTemplateManager";
 import * as utils from "./utilities";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
+import TaskParameters from "./taskParameters"
+
 
 export default class PackerHost implements definitions.IPackerHost {
 
@@ -13,6 +14,7 @@ export default class PackerHost implements definitions.IPackerHost {
         this._packerPath = tl.which("packer", true);
         this._templateFileProviders = {};
         this._templateVariablesProviders = {};
+        this._taskParameters = new TaskParameters();
     }
 
     // Will create and return packer toolrunner
@@ -39,6 +41,10 @@ export default class PackerHost implements definitions.IPackerHost {
         return command.exec(options);
     }
 
+    public getTaskParameters(): TaskParameters {
+        return this._taskParameters;
+    }
+
     public getTemplateFileProvider(): definitions.ITemplateFileProvider {
         var templateFileProvider = this._templateFileProviders[definitions.TemplateFileProviderTypes.BuiltIn];
         return templateFileProvider;
@@ -60,6 +66,7 @@ export default class PackerHost implements definitions.IPackerHost {
     }
 
     private _packerPath: string;
+    private _taskParameters: TaskParameters;
     private _templateFileProviders: ObjectDictionary<definitions.ITemplateFileProvider>;
     private _templateVariablesProviders: ObjectDictionary<definitions.ITemplateVariablesProvider>;
 }

@@ -2,15 +2,16 @@
   "loc.friendlyName": "Build VMSS images using Packer",
   "loc.helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
   "loc.description": "Build VMSS images using Packer",
-  "loc.instanceNameFormat": "Packer build for $(osType)",
-  "loc.group.displayName.AzureDetails": "Azure Details",
-  "loc.group.displayName.Template": "Template",
+  "loc.instanceNameFormat": "Packer build",
+  "loc.group.displayName.Output": "Output",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.location": "Location",
   "loc.input.help.location": "Location for storing the created VHD. This location will also be used to create a temporary VM for the purpose of capturing image. If the resource group already exists in the subscription, then this value will be ignored.",
   "loc.input.label.azureStorageAccount": "Storage account",
   "loc.input.help.azureStorageAccount": "Storage account for storing the created VHD. Storage account must exist prior to deployment.",
+  "loc.input.label.azureResourceGroup": "Resource group",
+  "loc.input.help.azureResourceGroup": "Enter or Select the Azure Resource group that contains the storage account specified above.",
   "loc.input.label.baseImage": "Base image",
   "loc.input.help.baseImage": "Base image to used fo creating VHD.",
   "loc.input.label.packagePath": "Package or folder",
@@ -37,5 +38,6 @@
   "loc.messages.ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
   "loc.messages.StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
   "loc.messages.BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
-  "loc.messages.CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually."
+  "loc.messages.CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
+  "loc.messages.TaskParametersConstructorFailed": "Error happened while initializing task: %s."
 }

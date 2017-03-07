@@ -10,7 +10,7 @@ export function run(packerHost: packerHost): Q.Promise<any> {
 
     // do not validate in fix. We will validate separately
     command.arg("-validate=false");
-    command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation());
+    command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
 
     console.log(tl.loc("ExecutingPackerFix"));
     return packerHost.execTool(command);

@@ -14,19 +14,14 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 8
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
-      "name": "AzureDetails",
-      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
-      "isExpanded": true
-    },
-    {
-      "name": "Template",
-      "displayName": "ms-resource:loc.group.displayName.Template",
+      "name": "Output",
+      "displayName": "ms-resource:loc.group.displayName.Output",
       "isExpanded": true
     }
   ],
@@ -61,6 +56,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccount"
     },
     {
+      "name": "azureResourceGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup"
+    },
+    {
       "name": "baseImage",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.baseImage",
@@ -70,7 +76,7 @@
         "EditableOptions": "True"
       },
       "options": {
-        "Windows 2012-R2-Datacenter": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows"
+        "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter"
       }
     },
     {
@@ -93,7 +99,8 @@
       "label": "ms-resource:loc.input.label.imageUri",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.imageUri"
+      "helpMarkDown": "ms-resource:loc.input.help.imageUri",
+      "groupName": "Output"
     },
     {
       "name": "imageStorageAccount",
@@ -101,7 +108,8 @@
       "label": "ms-resource:loc.input.label.imageStorageAccount",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.imageStorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.imageStorageAccount",
+      "groupName": "Output"
     }
   ],
   "dataSourceBindings": [
@@ -113,7 +121,12 @@
     {
       "target": "azureStorageAccount",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureStorageServiceNames"
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
     }
   ],
   "sourceDefinitions": [],
@@ -140,6 +153,7 @@
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
     "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
-    "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory"
+    "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
+    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed"
   }
 }

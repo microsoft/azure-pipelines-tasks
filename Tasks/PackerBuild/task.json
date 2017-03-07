@@ -14,19 +14,14 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
     "groups": [
         {
-            "name": "AzureDetails",
-            "displayName": "Azure Details",
-            "isExpanded": true
-        },
-        {
-            "name": "Template",
-            "displayName": "Template",
+            "name": "Output",
+            "displayName": "Output",
             "isExpanded": true
         }
     ],
@@ -61,6 +56,17 @@
             "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment."
         },
         {
+            "name": "azureResourceGroup",
+            "type": "pickList",
+            "label": "Resource group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the storage account specified above."
+        },
+        {
             "name": "baseImage",
             "type": "pickList",
             "label": "Base image",
@@ -70,7 +76,7 @@
                 "EditableOptions": "True"
             },
             "options": {
-                "Windows 2012-R2-Datacenter": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows"
+                "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter"
             }
         },
         {
@@ -93,7 +99,8 @@
             "label": "Image URI",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a name for the variable for output image URI."
+            "helpMarkDown": "Provide a name for the variable for output image URI.",
+            "groupName": "Output"
         },
         {
             "name": "imageStorageAccount",
@@ -101,7 +108,8 @@
             "label": "Image storage account location",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a name for the variable for output image storage account location."
+            "helpMarkDown": "Provide a name for the variable for output image storage account location.",
+            "groupName": "Output"            
         }
     ],
     "dataSourceBindings": [
@@ -113,11 +121,16 @@
         {
             "target": "azureStorageAccount",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureStorageServiceNames"
+            "dataSourceName": "AzureStorageAccountRM"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
         }
     ],
     "sourceDefinitions": [],
-    "instanceNameFormat": "Packer build for $(osType)",
+    "instanceNameFormat": "Packer build",
     "execution": {
         "Node": {
             "target": "src//main.js"
@@ -140,7 +153,8 @@
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
         "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
-        "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually."
+        "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
+        "TaskParametersConstructorFailed": "Error happened while initializing task: %s."
                 
     }
 }

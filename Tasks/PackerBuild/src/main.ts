@@ -39,23 +39,14 @@ function registerProviders(host: packerHost): void {
     var taskInputTemplateVariablesProvider = new TaskInputTemplateVariablesProvider();
     taskInputTemplateVariablesProvider.register(host);
 
-    //register SPN nariables provider which will fetch SPN data as variables for packer template
+    //register SPN variables provider which will fetch SPN data as variables for packer template
     var spnVariablesProvider = new azureSpnTemplateVariablesProvider();
     spnVariablesProvider.register(host);
 }
 
 function cleanup(host: packerHost): void {
-
-    var templateFileDirectory = path.dirname(host.getTemplateFileProvider().getTemplateFileLocation());    
-    
-    try{
-        if(tl.exist(templateFileDirectory)) {
-            tl.rmRF(templateFileDirectory, true);
-        }
-    }
-    catch (err) {
-        tl.warning(tl.loc("CouldNotDeleteTemporaryTemplateDirectory", templateFileDirectory));
-    }
+    var fileProvider = host.getTemplateFileProvider();
+    fileProvider.cleanup();
 }
 
 try {
