@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -367,6 +367,7 @@
         "DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
-        "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'"
+        "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
+        "EncodeNotSupported": "'{1}' encoding is not supported by us on {0}"
     }
 }
