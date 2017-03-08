@@ -140,5 +140,31 @@ describe('VSMobileCenterUpload L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
 
         done()
-    })
+    });
+
+    it('Positive path: a single PDB', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0SymPDBs_single.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done()
+    });
+
+
+    it('Positive path: multiple PDBs', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0SymPDBs_multiple.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done()
+    });
+   
 });

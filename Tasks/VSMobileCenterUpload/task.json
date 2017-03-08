@@ -12,8 +12,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 114,
-        "Patch": 1
+
+        "Minor": 115,
+        "Patch": 0
     },
     "groups": [
         {
@@ -58,7 +59,8 @@
                 "Apple": "Apple",
                 "AndroidJava": "Android (Java)",
                 "AndroidNative": "Android (native C/C++)",
-                "Windows": "Windows"
+                "Windows": "Windows 8.1",
+                "UWP": "Universal Windows Platform (UWP)"
             }
         },
         {
@@ -68,7 +70,17 @@
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to the symbols folder.",
-            "visibleRule": "symbolsType = Windows || symbolsType == AndroidNative"
+            "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
+        },
+        {
+            "name": "pdbPath",
+            "type": "filePath",
+            "label": "Symbols Path (*.pdb)",
+            "defaultValue": "**/*.pdb",
+            "groupName": "symbols",
+            "required": false,
+            "helpMarkDown": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+            "visibleRule": "symbolsType = UWP"
         },
         {
             "name": "dsymPath",
@@ -76,7 +88,7 @@
             "label": "dSYM Path",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Relative path from the repo root to dSYM folder.",
+            "helpMarkDown": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
             "visibleRule": "symbolsType = Apple"
         },
         {

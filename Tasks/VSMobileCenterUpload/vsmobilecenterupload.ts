@@ -165,7 +165,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
 /**
  * If the input is a single file, upload this file without any processing.
  * If the input is a single folder, zip it's content. The archive name is the folder's name
- * If the input is a set of folders, zip the folders so they appear on the root of the archive. The archive name is the parent folder's name.
+ * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
 function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> { 
     tl.debug("-- Prepare symbols");
@@ -287,6 +287,20 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
                 }
             }
         })
+    } else if (symbolsType === "UWP") {
+        // User can specifay a symbols path pattern that selects 
+        // multiple PDB paths for UWP application.
+        let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+
+        pdbPaths.forEach(pdbFile => {
+            if (pdbFile) {
+                let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
+                // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
+                if (pdbPath) {
+                    symbolsPaths.push(pdbPath);
+                }
+            }
+        })
     } else {
         // For all other application types user can specifay a symbols path pattern 
         // that selects only one file or one folder.
@@ -335,6 +349,9 @@ async function run() {
                 break;
             case "AndroidJava":
                 symbolVariableName = "mappingTxtPath";
+                break;
+            case "UWP":
+                symbolVariableName = "pdbPath";
                 break;
             default:
                 symbolVariableName = "symbolsPath";
