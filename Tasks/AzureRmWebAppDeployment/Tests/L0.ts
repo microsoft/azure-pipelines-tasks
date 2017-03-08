@@ -474,9 +474,14 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tr.run();
 
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have uploaded file');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have uploaded file: kuduPostDeploymentScript.cmd');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd') >= 0, 'should have uploaded file: mainCmdFile.cmd');
         assert(tr.stdout.search('POST:https://mytestappKuduUrl/api/command') >= 0, 'should have executed script');
-        assert(tr.stdout.search('DELETED:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have removed file');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt') >= 0, 'should have retrieved file content: stdout.txt');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt') >= 0, 'should have retrieved file content: stderr.txt');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt') >= 0, 'should have retrieved file content: script_result.txt');
+        assert(tr.stdout.search('DELETED:https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have removed file: kuduPostDeploymentScript.cmd');
+        assert(tr.stdout.search('DELETED:https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd') >= 0, 'should have removed file: mainCmdFile.cmd');
         done();
     });
 });

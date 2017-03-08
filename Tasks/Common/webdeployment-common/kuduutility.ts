@@ -50,7 +50,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         tl.debug('Trying to enable app offline mode.');
         var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_temp.htm');
         tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
-        await uploadFiletoKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'app_offline.htm', appOfflineFilePath);
+        await uploadFiletoKudu(publishingProfile, '/site/wwwroot', 'app_offline.htm', appOfflineFilePath);
         tl.debug('App Offline mode enabled.');
     }
     console.log(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
@@ -64,7 +64,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
             if(takeAppOfflineFlag) {
                 tl.debug('Trying to disable app offline mode.');
                 try {
-                    await deleteFileFromKudu(publishingProfile.publishUrl, physicalPath, headers, 'app_offline.htm');
+                    await deleteFileFromKudu(publishingProfile, physicalPath, 'app_offline.htm', false);
                     tl.debug('App Offline mode disabled.');
                 }
                 catch(error) {
@@ -136,10 +136,15 @@ async function createPhysicalPath(publishingProfile, physicalPath: string) {
     return defer.promise;
 }
 
-async function uploadFiletoKudu(publishUrl: string, physicalPath: string, headers, fileName: string, filePath: string) {
+async function uploadFiletoKudu(publishingProfile, physicalPath: string, fileName: string, filePath: string) {
     var defer = Q.defer<string>();
+    var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
+    var headers = {
+        'Authorization': basicAuthToken,
+        'If-Match': '*'
+    };
     var readStream = fs.createReadStream(filePath);
-    var kuduDeploymentURL = "https://" + publishUrl + "/api/vfs/" + physicalPath + '/' + fileName;
+    var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/vfs/" + physicalPath + '/' + fileName;
 
     tl.debug('Uploading file: ' + fileName + ' using publishUrl: ' + kuduDeploymentURL);
     httpObj.sendStream('PUT', kuduDeploymentURL, readStream, headers, (error, response, body) => {
@@ -157,22 +162,35 @@ async function uploadFiletoKudu(publishUrl: string, physicalPath: string, header
     return defer.promise;
 }
 
-async function deleteFileFromKudu(publishUrl: string, physicalPath: string, headers, fileName: string) {
+async function deleteFileFromKudu(publishingProfile, physicalPath: string, fileName: string, continueOnError: boolean) {
     var defer = Q.defer<string>();
-    var kuduDeploymentURL = "https://" + publishUrl + "/api/vfs/" + physicalPath + '/' + fileName;
-    headers['Content-Length'] = 0;
+    var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
+    var headers = {
+        'Authorization': basicAuthToken,
+        'If-Match': '*',
+        'Content-Length': 0
+    };
+    var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/vfs/" + physicalPath + '/' + fileName;
 
     tl.debug('Removing file: ' + fileName + ' using publishUrl: ' + kuduDeploymentURL);
     httpObj.get('DELETE', kuduDeploymentURL, headers, (error, response, contents) => {
-        if(error) {
-            defer.reject(tl.loc('FailedtoDeleteFileFromKuduError', fileName, kuduDeploymentURL));
-        }
-        else if(response.statusCode === 200 || response.statusCode === 204) {
+        if(response.statusCode === 200 || response.statusCode === 204) {
             tl.debug('file: ' + fileName + ' removed from path: ' + physicalPath);
             defer.resolve('file removed from kudu');
         }
+        else if(error) {
+            if(continueOnError) {
+                tl.debug('Unable to delete file: ' + fileName + ' using publishURL : ' + kuduDeploymentURL + '. Error: ' + error);
+                defer.resolve(' ');    
+            }
+            defer.reject(tl.loc('FailedtoDeleteFileFromKuduError', fileName, error));
+        }
         else {
-            defer.reject(tl.loc('FailedtoDeleteFileFromKuduError', fileName, kuduDeploymentURL, response.statusCode, response.statusMessage));
+            if(continueOnError) {
+                tl.debug('Unable to delete file: ' + fileName + ' using publishURL : ' + kuduDeploymentURL + '. statusCode: ' + response.statusCode + ' (' + response.statusMessage + ')');
+                defer.resolve(' ');    
+            }
+            defer.reject(tl.loc('FailedtoDeleteFileFromKudu', fileName, kuduDeploymentURL, response.statusCode, response.statusMessage));
         }
     });
     return defer.promise;
@@ -350,25 +368,17 @@ function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
 }
 
 export async function runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, appOfflineFlag) {
-
-    var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
-    var headers = {
-        'Authorization': basicAuthToken,
-        'If-Match': '*'
-    };
     var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
-
     if(appOfflineFlag) {
         var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_local.htm');
         tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
-        await uploadFiletoKudu(publishingProfile.publishUrl, 'site/wwwroot', headers, 'app_offline.htm', appOfflineFilePath);
+        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', appOfflineFilePath);
     }
-
     try {
         var mainCmdFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'mainFile_local.cmd');
         tl.writeFile(mainCmdFilePath, "@echo off\ndel script_result.txt /F /Q\ncall kuduPostDeploymentScript.cmd > stdout.txt 2> stderr.txt\necho %errorlevel% > script_result.txt");
-        await uploadFiletoKudu(publishingProfile.publishUrl, 'site/wwwroot', headers, 'mainCmdFile.cmd', mainCmdFilePath);
-        await uploadFiletoKudu(publishingProfile.publishUrl, 'site/wwwroot', headers, 'kuduPostDeploymentScript.cmd', scriptFile.filePath);
+        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile.cmd', mainCmdFilePath);
+        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript.cmd', scriptFile.filePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
         console.log(await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile.cmd'));
         await getPosDeploymentScriptLogs(publishingProfile, 'site/wwwroot');
@@ -381,20 +391,11 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
             tl.rmRF(scriptFile.filePath, true);
         }
         tl.rmRF(mainCmdFilePath, true);
-        try {
-            await deleteFileFromKudu(publishingProfile.publishUrl, 'site/wwwroot', headers, 'mainCmdFile.cmd');
-        }
-        catch(error) {
-            tl.debug('Unable to remove mainCmdFile.cmd. Error: ' + error);
-        }
-        try {
-            await deleteFileFromKudu(publishingProfile.publishUrl, 'site/wwwroot', headers, 'kuduPostDeploymentScript.cmd');    
-        }
-        catch(error) {
-            tl.debug('Unable to remove kuduPostDeploymentScript.cmd. Error: ' + error);
-        }
+        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile.cmd', true);
+        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript.cmd', true);
+
         if(appOfflineFlag) {
-            await deleteFileFromKudu(publishingProfile.publishUrl, 'site/wwwroot', headers, 'app_offline.htm');
+            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', false);
             tl.rmRF(appOfflineFilePath, true);
         }
     }
