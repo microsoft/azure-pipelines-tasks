@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -367,6 +367,9 @@
     "DeletingMGAgentOnVMs": "ms-resource:loc.messages.DeletingMGAgentOnVMs",
     "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
-    "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation"
+    "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
+    "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
+    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
   }
 }
