@@ -69,6 +69,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tmr.setAnswers(a);
 tmr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tmr.registerMock('nuget-task-common/utility', require('./mock-findfiles'));
+tmr.registerMock('nuget-task-common/Utility', require('./mock-findfiles'));
 
 tmr.run();

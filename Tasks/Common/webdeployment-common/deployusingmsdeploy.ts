@@ -34,7 +34,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         setParametersFileName = setParametersFile.slice(setParametersFile.lastIndexOf('\\') + 1, setParametersFile.length);
     }
     var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await utility.isMSDeployPackage(webDeployPkg);
-    var msDeployPath = await msDeployUtility.getMSDeployFullPath();
+
     var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFileName, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment, 
         useWebDeploy);
@@ -50,11 +50,11 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     try {
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
         if(publishingProfile != null) {
-            console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+            console.log(tl.loc('PackageDeploymentSuccess'));
         }
     }
     catch (error) {
-        tl.error(tl.loc('Failedtodeploywebsite'));
+        tl.error(tl.loc('PackageDeploymentFailed'));
         tl.debug(JSON.stringify(error));        
         throw Error(error.message);
     }

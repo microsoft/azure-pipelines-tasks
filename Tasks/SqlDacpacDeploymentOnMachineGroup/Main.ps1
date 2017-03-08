@@ -47,6 +47,7 @@ $dacpacFile = Get-VstsInput -Name "dacpacFile"
 $sqlFile = Get-VstsInput -Name "sqlFile" 
 $inlineSql = Get-VstsInput -Name "inlineSql"
 $targetMethod = Get-VstsInput -Name "targetMethod"
+$serverName = Get-VstsInput -Name "serverName" -Require
 $databaseName = Get-VstsInput -Name "databaseName" -Require
 $authscheme = Get-VstsInput -Name "authscheme" -Require
 $sqlUsername = Get-VstsInput -Name "sqlUsername"
@@ -60,7 +61,7 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 
 Try
 {
-    $serverName = "localhost"
+
     if ($taskType -ne "dacpac")
     {
         $additionalArguments = $additionalArgumentsSql

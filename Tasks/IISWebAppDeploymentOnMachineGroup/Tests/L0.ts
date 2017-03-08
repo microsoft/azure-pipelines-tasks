@@ -210,4 +210,13 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         done();
     });
 
+     it('Validate webdeployment-common.utility.copyDirectory()', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0CopyDirectory.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('## Copy Files Successful ##') >=0, 'should have copied the files');
+        assert(tr.stdout.search('## mkdir Successful ##') >= 0, 'should have created dir including dest folder');
+        done();
+    });
 });

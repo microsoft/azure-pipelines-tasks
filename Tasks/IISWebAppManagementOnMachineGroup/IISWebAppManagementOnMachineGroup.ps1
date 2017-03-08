@@ -11,6 +11,7 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 # Website related inputs 
 $actionIISWebsite = Get-VstsInput -Name "ActionIISWebsite"
 $websiteName = Get-VstsInput -Name "WebsiteName" 
+$startStopWebsiteName = Get-VstsInput -Name "StartStopWebsiteName"
 $websitePhysicalPath = Get-VstsInput -Name "WebsitePhysicalPath" 
 $websitePhysicalPathAuth = Get-VstsInput -Name "WebsitePhysicalPathAuth" 
 $websiteAuthUserName = Get-VstsInput -Name "WebsiteAuthUserName"
@@ -60,6 +61,7 @@ $appPoolPasswordForApplication = Get-VstsInput -Name "AppPoolPasswordForApplicat
 # Application pool related inputs 
 $actionIISApplicationPool = Get-VstsInput -Name "ActionIISApplicationPool"
 $appPoolName = Get-VstsInput -Name "AppPoolName"
+$startStopRecycleAppPoolName = Get-VstsInput -Name "StartStopRecycleAppPoolName"
 $dotNetVersion = Get-VstsInput -Name "DotNetVersion"
 $pipeLineMode = Get-VstsInput -Name "PipeLineMode"
 $appPoolIdentity = Get-VstsInput -Name "AppPoolIdentity"
@@ -77,22 +79,28 @@ try {
     {
         "IISWebsite" 
         {
-            Manage-IISWebsite
-            break
+            Manage-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
+                -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
+                -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
+                -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
+                -appCmdCommands $appCmdCommands
         }
         "IISWebApplication" 
         {
-            Manage-IISWebApplication
-            break
+            Manage-IISWebApplication -parentWebsiteName $parentWebsiteNameForApplication -virtualPath $virtualPathForApplication -physicalPath $physicalPathForApplication -physicalPathAuth $applicationPhysicalPathAuth -physicalPathAuthUserName $applicationAuthUserName -physicalPathAuthUserPassword $applicationAuthUserPassword `
+                -createOrUpdateAppPool $createOrUpdateAppPoolForApplication -appPoolName $appPoolNameForApplication -dotNetVersion $dotNetVersionForApplication -pipeLineMode $pipeLineModeForApplication -appPoolIdentity $appPoolIdentityForApplication -appPoolUsername $appPoolUsernameForApplication -appPoolPassword $appPoolPasswordForApplication `
+                -appCmdCommands $appCmdCommands
+
         }
         "IISVirtualDirectory" 
         {
-            Manage-IISVirtualDirectory
-            break
+            Manage-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
+                -physicalPathAuthUserName $vdAuthUserName -physicalPathAuthUserPassword $vdAuthUserPassword -appCmdCommands $appCmdCommands
         }
         "IISApplicationPool" 
         {
-            Manage-IISApplicationPool
+            Manage-IISApplicationPool -actionIISApplicationPool $actionIISApplicationPool -appPoolName $appPoolName -startStopRecycleAppPoolName $startStopRecycleAppPoolName -dotNetVersion $dotNetVersion `
+                -pipeLineMode $pipeLineMode -appPoolIdentity $appPoolIdentity -appPoolUsername $appPoolUsername -appPoolPassword $appPoolPassword -appCmdCommands $appCmdCommands
         }
         default 
         {

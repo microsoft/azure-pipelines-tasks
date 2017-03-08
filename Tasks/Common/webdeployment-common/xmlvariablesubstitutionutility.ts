@@ -198,12 +198,17 @@ async function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap) 
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;
 
-    if(xmlDomNodeAttributes.hasOwnProperty("name") && xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
-        if(variableMap[xmlDomNodeAttributes.name]) {
+    if(xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
+        if(xmlDomNodeAttributes.hasOwnProperty("name") && variableMap[xmlDomNodeAttributes.name]) {
             tl.debug('Substituting connectionString value for name=' + xmlDomNodeAttributes.name);
             xmlDomNode.attr("connectionString", variableMap[xmlDomNodeAttributes.name]);
         }
-    }	
+        else if(variableMap["connectionString"]) {
+            tl.debug('Substituting connectionString value for connectionString=' + xmlDomNodeAttributes.name);
+            xmlDomNode.attr("connectionString", variableMap["connectionString"]);
+        }
+    }
+
     var children = xmlDomNode.children;
     for(var i=0; i < children.length; i++) {
         var childNode = children[i];

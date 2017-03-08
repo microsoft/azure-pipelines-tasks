@@ -912,7 +912,7 @@ var createHotfixLayout = function (packagePath, taskName) {
     var scriptContent = '# Hotfix created from branch: ' + branch + os.EOL;
     scriptContent += '# Commit: ' + commitInfo + os.EOL;
     scriptContent += '$ErrorActionPreference=\'Stop\'' + os.EOL;
-    scriptContent += 'Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot\\task.zip' + os.EOL;
+    scriptContent += 'Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot\\tasks.zip' + os.EOL;
     fs.writeFileSync(scriptPath, scriptContent);
 
     // link the non-aggregated tasks zip

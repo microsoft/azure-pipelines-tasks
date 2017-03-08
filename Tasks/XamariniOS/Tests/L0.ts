@@ -66,4 +66,22 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
 
+    it('XamariniOS clean build', (done:MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0CleanBuild.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean'),
+        'xbuild /t:Clean should have run');
+        assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should have run');
+        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
+        'xbuild should have run');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });

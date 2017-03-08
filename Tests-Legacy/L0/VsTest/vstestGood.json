@@ -74,7 +74,7 @@
             "code": 0,
             "stdout": "vstest"
         },
-        "powershell -file /path/to/vs15Helper.ps1": {
+        "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
             "code": 0,
             "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
         }

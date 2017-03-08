@@ -74,7 +74,7 @@ export class ServiceClient {
 
         this.credentials = credentials;
         this.subscriptionId = subscriptionId
-        this.baseUri = 'https://management.azure.com';
+        this.baseUri = this.credentials.armUrl;
         this.longRunningOperationRetryTimeout = 60; // In minutes
     }
 

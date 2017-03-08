@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 84
+    "Patch": 86
   },
   "demands": [
     "azureps"
@@ -323,6 +323,7 @@
     "AFC_AddNetworkSecurityRuleFailed": "ms-resource:loc.messages.AFC_AddNetworkSecurityRuleFailed",
     "AFC_UnableToSetCustomScriptExtension": "ms-resource:loc.messages.AFC_UnableToSetCustomScriptExtension",
     "AFC_CopyPrereqsFailed": "ms-resource:loc.messages.AFC_CopyPrereqsFailed",
-    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound"
+    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound",
+    "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory"
   }
 }
