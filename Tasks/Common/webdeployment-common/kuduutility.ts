@@ -278,16 +278,16 @@ async function pollForFile(publishingProfile, physicalPath, fileName) {
     return defer.promise;
 }
 
-async function getPosDeploymentScriptLogs(publishingProfile, physicalPath) {
+async function getPostDeploymentScriptLogs(publishingProfile, physicalPath, uniqueID) {
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
     var headers = {
         'Authorization': basicAuthToken,
         'If-Match': '*'
     };
     try {
-        var stdoutLog = (await getFileContentUtility(publishingProfile, physicalPath, 'stdout.txt'));
-        var stderrLog = (await getFileContentUtility(publishingProfile, physicalPath, 'stderr.txt'));
-        var scriptReturnCode = (await getFileContentUtility(publishingProfile, physicalPath, 'script_result.txt')).trim();
+        var stdoutLog = (await getFileContentUtility(publishingProfile, physicalPath, 'stdout_' + uniqueID + '.txt'));
+        var stderrLog = (await getFileContentUtility(publishingProfile, physicalPath, 'stderr_' + uniqueID + '.txt'));
+        var scriptReturnCode = (await getFileContentUtility(publishingProfile, physicalPath, 'script_result_' + uniqueID + '.txt')).trim();
     }
     catch(error) {
         throw Error(error);
@@ -305,7 +305,7 @@ async function getPosDeploymentScriptLogs(publishingProfile, physicalPath) {
         }
     }
 }
-async function runCommandOnKudu(publishingProfile, physicalPath: string, command: string) {
+async function runCommandOnKudu(publishingProfile, physicalPath: string, command: string, uniqueID) {
     var defer = Q.defer<string>();
     var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/command";
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
@@ -325,7 +325,7 @@ async function runCommandOnKudu(publishingProfile, physicalPath: string, command
             if(error.toString().indexOf('Request timeout: /api/command') != -1) {
                 tl.debug('Request timeout occurs. Trying to poll for file: script_result.txt');
                 try {
-                    await pollForFile(publishingProfile, physicalPath, 'script_result.txt');
+                    await pollForFile(publishingProfile, physicalPath, 'script_result_' + uniqueID + '.txt');
                     defer.resolve('');
                 }
                 catch(error) {
@@ -369,6 +369,9 @@ function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
 
 export async function runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, appOfflineFlag) {
     var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
+    var uniqueID = Date.now();
+
+    var deleteLogFiles = false;
     if(appOfflineFlag) {
         var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_local.htm');
         tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
@@ -376,12 +379,16 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
     }
     try {
         var mainCmdFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'mainFile_local.cmd');
-        tl.writeFile(mainCmdFilePath, "@echo off\ndel script_result.txt /F /Q\ncall kuduPostDeploymentScript.cmd > stdout.txt 2> stderr.txt\necho %errorlevel% > script_result.txt");
-        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile.cmd', mainCmdFilePath);
-        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript.cmd', scriptFile.filePath);
+        tl.writeFile(mainCmdFilePath, "@echo off\ndel script_result.txt /F /Q\ncall kuduPostDeploymentScript_" + uniqueID + ".cmd" +
+                    " > stdout_" + uniqueID + ".txt 2> stderr_" + uniqueID + ".txt\n" +
+                    "echo %errorlevel% > script_result_" + uniqueID + ".txt"
+        );
+        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', mainCmdFilePath);
+        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript_' + uniqueID + '.cmd', scriptFile.filePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
-        console.log(await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile.cmd'));
-        await getPosDeploymentScriptLogs(publishingProfile, 'site/wwwroot');
+        console.log(await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', uniqueID));
+        deleteLogFiles = true;
+        await getPostDeploymentScriptLogs(publishingProfile, 'site/wwwroot', uniqueID);
     }
     catch(Exception) {
         throw Error(Exception);
@@ -391,9 +398,13 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
             tl.rmRF(scriptFile.filePath, true);
         }
         tl.rmRF(mainCmdFilePath, true);
-        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile.cmd', true);
-        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript.cmd', true);
-
+        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', true);
+        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript_' + uniqueID + '.cmd', true);
+        if(deleteLogFiles) {
+            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'stdout_' + uniqueID + '.txt', true);
+            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'stderr_' + uniqueID + '.txt', true);
+            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'script_result_' + uniqueID + '.txt', true);
+        }
         if(appOfflineFlag) {
             await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', false);
             tl.rmRF(appOfflineFilePath, true);

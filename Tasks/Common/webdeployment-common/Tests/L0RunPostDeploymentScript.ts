@@ -1,4 +1,5 @@
 var mockery = require('mockery');
+var path = require('path');
 mockery.enable({
     useCleanCache: true,
     warnOnReplace: false,
@@ -16,6 +17,7 @@ mockery.registerMock('vso-node-api/HttpClient', {
                 throw Error('Unknown verb or URL - SEND');
             },
             sendStream: function (verb, url) {
+                url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
                 var urlArray = [
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd'
@@ -28,6 +30,7 @@ mockery.registerMock('vso-node-api/HttpClient', {
                 throw Error('Unknown verb or URL - sendStream');
             },
             get: function(verb, url) {
+                url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
                 var deleteUrlArray = [
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd'
