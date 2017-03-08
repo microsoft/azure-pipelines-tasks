@@ -159,5 +159,7 @@
   "loc.messages.AddingExtensionFailed": "Addition of extension on vm %s failed",
   "loc.messages.TimeoutWhileWaiting": "Timed out while waiting",
   "loc.messages.InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
-  "loc.messages.EncodeNotSupported": "'{1}' encoding is not supported by us on {0}"
+  "loc.messages.EncodingNotSupported": "'{1}' encoding is not supported on {0}",
+  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of '{0}' file",
+  "loc.messages.ShortFileBufferError": "Short file buffer error on file '{0}'"
 }
