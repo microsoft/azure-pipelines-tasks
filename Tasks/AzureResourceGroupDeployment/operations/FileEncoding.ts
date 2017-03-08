@@ -4,7 +4,7 @@
 var fs = require('fs');
 import tl = require('vsts-task-lib');
 
-export class fileEncoding {
+export class FileEncoding {
     public type: string;
     public usesBOM: boolean;
     constructor(type: string, usesBOM: boolean) {
@@ -35,7 +35,7 @@ function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
         tl.debug('Unable to detect File encoding using BOM');
         return null;
     }
-    return new fileEncoding(type, true);
+    return new FileEncoding(type, true);
 }
 
 function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
@@ -65,16 +65,17 @@ function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
         default:
             return null;
     }
-    return new fileEncoding(type, false);
+    return new FileEncoding(type, false);
 }
-export function detectFileEncoding(fileName: string, buffer: Buffer): fileEncoding {
+export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncoding {
     if (buffer.length < 4) {
         throw Error(tl.loc('ShortFileBufferError', fileName));
     }
-    var fileEncoding: fileEncoding = detectFileEncodingWithBOM(fileName, buffer);
-    if (!!fileEncoding)
+    var fileEncoding: FileEncoding = detectFileEncodingWithBOM(fileName, buffer);
+    if (fileEncoding == null)
         fileEncoding = detectFileEncodingWithoutBOM(fileName, buffer);
-    if (!!fileEncoding) {
+
+    if (fileEncoding == null) {
         throw new Error(tl.loc("CouldNotDetectEncoding"));
     }
     return fileEncoding;
@@ -87,5 +88,9 @@ export function readFileContentsAsText(fileName: string): string {
     if (supportedFileEncodings.indexOf(fileEncoding.type) < 0) {
         throw new Error(tl.loc('EncodingNotSupported', fileEncoding.type, fileName));
     }
-    return buffer.toString(fileEncoding.type);
+    var fileContents: string = buffer.toString(fileEncoding.type);
+    if (fileEncoding.usesBOM) {
+        fileContents = fileContents.slice(1);
+    }
+    return fileContents;
 }
