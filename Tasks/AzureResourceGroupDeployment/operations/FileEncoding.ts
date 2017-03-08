@@ -69,14 +69,15 @@ function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
 }
 export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncoding {
     if (buffer.length < 4) {
-        throw Error(tl.loc('ShortFileBufferError', fileName));
+        tl.debug(tl.loc('ShortFileBufferError', fileName))
+        throw Error(tl.loc("CouldNotDetectEncoding", fileName));
     }
     var fileEncoding: FileEncoding = detectFileEncodingWithBOM(fileName, buffer);
     if (fileEncoding == null)
         fileEncoding = detectFileEncodingWithoutBOM(fileName, buffer);
 
     if (fileEncoding == null) {
-        throw new Error(tl.loc("CouldNotDetectEncoding"));
+        throw new Error(tl.loc("CouldNotDetectEncoding", fileName));
     }
     return fileEncoding;
 }
@@ -86,7 +87,7 @@ export function readFileContentsAsText(fileName: string): string {
     var supportedFileEncodings = ["utf-8", "utf-16le"]
     var fileEncoding = detectFileEncoding(fileName, buffer);
     if (supportedFileEncodings.indexOf(fileEncoding.type) < 0) {
-        throw new Error(tl.loc('EncodingNotSupported', fileEncoding.type, fileName));
+        throw new Error(tl.loc('EncodingNotSupported', fileName, fileEncoding.type));
     }
     var fileContents: string = buffer.toString(fileEncoding.type);
     if (fileEncoding.usesBOM) {
