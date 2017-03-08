@@ -1,0 +1,175 @@
+{
+    "id": "beec8c90-1b61-11e6-957c-9ff41d11d6a9",
+    "name": "TriggerAnotherBuildAndWait",
+    "friendlyName": "  Trigger Another Build and wait",
+    "description": "  Trigger Another Build and wait",
+    "author": "Intel TIM",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": "0",
+        "Minor": "2",
+        "Patch": "70"
+    },
+    "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name": "Parameters",
+            "displayName": "Parameters",
+            "isExpanded": false
+        },
+     {
+        "name":"Demands",
+        "displayName":"Demands",
+        "isExpanded":false
+    }
+    ],
+    "instanceNameFormat": "TriggerAnotherBuild $(message)",
+    "inputs": [
+        {
+            "name": "GlobalDisabling",
+            "type": "string",
+            "label": "Global disabling",
+            "required": false,
+            "defaultValue": "--- please read instructions in the help on the right --- ",
+            "helpMarkDown": "Empty field. If variable 'DisableChainedBuilds' is set to TRUE – Skip  all build triggering steps"
+        },
+        {
+            "name": "BuildDefinitionID",
+            "type": "string",
+            "label": "Build Definition ID",
+            "required": true,
+            "helpMarkDown": "Build definition ID can be found in the “Variables” tab of each build."
+        },
+        {
+            "name": "BuildDefinitionName",
+            "type": "string",
+            "label": "Build Definition name",
+            "required": true,
+            "helpMarkDown": "Please enter a build definition name which matches the ID number above."
+        },
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "Server Endpoint",
+            "required": true,
+            "helpMarkDown": "The server generic endpoint, set the key -Password/Token Key- field to your API key."
+        },
+        {
+            "name": "ToWait",
+            "type": "boolean",
+            "label": "Wait for completion",
+            "required": true,
+            "defaultValue": false,
+            "helpMarkDown": "Wait untill the trigger build will is finished."
+        },
+        {
+            "name": "TimeOut",
+            "type": "string",
+            "label": "Timeout [min]",
+            "required": true,
+            "defaultValue": "120",
+            "helpMarkDown": "If timeout is expired failing the triggering step and moving on to the next step.",
+            "visibleRule": "ToWait = true"
+        },
+        {
+            "name": "Changeset",
+            "type": "boolean",
+            "label": "Changeset passing to child build",
+            "defaultValue": false,
+            "helpMarkDown": "Changeset passing to child build."
+        },
+         {
+            "name": "triggerWithShelveset",
+            "type": "boolean",
+            "label": "Trigger With Shelveset",
+            "defaultValue": false,
+            "helpMarkDown": "Trigger the selected build with the passed shelvset (if exist)."
+        },
+        {
+            "name": "ParameterNameA",
+            "type": "string",
+            "label": "Parameter Name",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterValueA",
+            "type": "string",
+            "label": "Value",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterNameB",
+            "type": "string",
+            "label": "Parameter Name",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterValueB",
+            "type": "string",
+            "label": "Value",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterNameC",
+            "type": "string",
+            "label": "Parameter Name",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterValueC",
+            "type": "string",
+            "label": "Value",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterNameD",
+            "type": "string",
+            "label": "Parameter Name",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "ParameterValueD",
+            "type": "string",
+            "label": "Value",
+            "required": false,
+            "helpMarkDown": "Optional",
+            "groupName": "Parameters"
+        },
+        {
+            "name": "demands",
+            "type": "string",
+            "label": "Demands",
+            "required": false,
+            "helpMarkDown": "For equale write: capability1=value1; capability2=value2; ...",
+            "groupName":"Demands"
+           
+        }
+    ],
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\TriggerBuild.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}

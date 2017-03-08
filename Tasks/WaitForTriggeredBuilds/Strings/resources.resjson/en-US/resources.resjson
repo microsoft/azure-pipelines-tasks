@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "PerC  Wait For Triggered Builds",
+  "loc.helpMarkDown": "Wait For Triggered Builds",
+  "loc.description": "Wait For Triggered Builds",
+  "loc.instanceNameFormat": "Test $(message)",
+  "loc.input.label.connectedServiceName": "Server Endpoint",
+  "loc.input.help.connectedServiceName": "The server generic endpoint, set the key -Password/Token Key- field to your API key.",
+  "loc.input.label.timeOut": "Timeout [min]",
+  "loc.input.help.timeOut": "If timeout is expired failing the triggering step and moving on to the next step."
+}

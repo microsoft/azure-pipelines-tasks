@@ -1,0 +1,108 @@
+{
+  "id": "86911db0-48d5-11e6-a21b-cbd463711c4d",
+  "name": "NUnitRunner",
+  "friendlyName": "NUnit Runner",
+  "description": "NUnit tests runner tool",
+  "author": "ALME2E",
+  "helpMarkDown": "Replace with markdown to show in help",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "8"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "platforms",
+      "displayName": "Tests Platforms",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": true
+    }
+  ],
+  "instanceNameFormat": "NUnitRunner $(libsToRun)",
+  "inputs": [
+    {
+      "name": "libsPath",
+      "type": "string",
+      "label": "Tests Location",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path of tests libraries (DLLs)."
+    },
+    {
+      "name": "libsToRun",
+      "type": "string",
+      "label": "Test Library Name",
+      "required": true,
+      "helpMarkDown": "You can specify multiple tests by separating names with commas (without spaces). For example: tests1.dll,test2.dll..."
+    },
+    {
+      "name": "includeCategories",
+      "type": "string",
+      "label": "Include Categories",
+      "required": false,
+      "helpMarkDown": "Include category attribute for use in including run of one or more categories (comma separated list)."
+    },
+    {
+      "name": "excludeCategories",
+      "type": "string",
+      "label": "Exclude Categories",
+      "required": false,
+      "helpMarkDown": "Exclude category attribute for use in excluding run of one or more categories (comma separated list)."
+    },
+    {
+      "name": "testsToRun",
+      "type": "string",
+      "label": "Tests To Run",
+      "required": false,
+      "helpMarkDown": "Specify name of test to run. Comma separated test list. If empty run all tests."
+    },
+    {
+      "name": "platformX86",
+      "type": "boolean",
+      "label": "x86",
+      "groupName": "platforms",
+      "defaultValue": true
+    },
+    {
+      "name": "platformX64",
+      "type": "boolean",
+      "label": "x64",
+      "groupName": "platforms",
+      "defaultValue": true
+    },
+    {
+      "name": "separateRun",
+      "type": "boolean",
+      "label": "Separate Run",
+      "defaultValue": false,
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "If true then each 'Category' or 'Test To Run' will run on separate process."
+    },
+    {
+      "name": "failOnTestFailure",
+      "type": "boolean",
+      "label": "Fail on test failure",
+      "defaultValue": true,
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "If true then fail the step on test failure."
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\NUnitRunner.ps1"
+    }
+  }
+}

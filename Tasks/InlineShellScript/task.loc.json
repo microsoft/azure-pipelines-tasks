@@ -1,0 +1,101 @@
+{
+  "id": "d9c9d610-4f20-11e6-8efc-53eddb99a14a",
+  "name": "InlineShellScript",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "TIM",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "version": {
+    "Major": "0",
+    "Minor": "2",
+    "Patch": "0"
+  },
+  "demands": [
+    "sh",
+    "Agent.OS -equals linux"
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "$(build.sourcesDirectory)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "customTool",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customTool",
+      "defaultValue": "bash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customTool",
+      "groupName": "advanced"
+    },
+    {
+      "name": "script",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.script",
+      "defaultValue": "#!/bin/bash \nset -e\n\n##Add your script here ...",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.script"
+    },
+    {
+      "name": "fileExtension",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fileExtension",
+      "defaultValue": ".sh",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.fileExtension",
+      "groupName": "advanced",
+      "options": {
+        ".sh": ".sh",
+        ".py": ".py",
+        ".pl": ".pl",
+        ".js": ".js",
+        ".rb": ".rb"
+      }
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "inlineshellscript.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
+    "BashFailed": "ms-resource:loc.messages.BashFailed"
+  }
+}

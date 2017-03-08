@@ -1,0 +1,49 @@
+{
+  "id": "51bfc8a0-32ed-11e6-a436-95631bb1291a",
+  "name": "WaitForTriggeredBuilds",
+  "friendlyName": "Wait For Triggered Builds",
+  "description": "Wait For Triggered Builds",
+  "author": "Intel TIM",
+  "helpMarkDown": "Wait For Triggered Builds",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+   "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "36"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "groups": [],
+  
+  "instanceNameFormat": "Wait For Triggered Builds for $(timeOut) [min]",
+  "inputs": [
+    {
+     "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "Server Endpoint",
+      "required": true,
+      "helpMarkDown": "The server generic endpoint, set the key -Password/Token Key- field to your API key."
+    },
+    {
+      "name": "timeOut",
+      "type": "string",
+      "label": "Timeout [min]",
+      "required": true,
+      "defaultValue": "120",
+      "helpMarkDown": "If timeout is expired failing the triggering step and moving on to the next step."
+      
+    }
+   
+  ],
+  "execution": {
+   "PowerShell": {
+      "target": "$(currentDirectory)\\WaitForTriggeredBuilds.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

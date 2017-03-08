@@ -12,17 +12,10 @@
   "author": "Microsoft",
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 112,
-    "Patch": 1
+    "Major": "1",
+    "Minor": "2",
+    "Patch": "6"
   },
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": true
-    }
-  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -50,36 +43,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.captureConsole"
     },
     {
-      "name": "capturePipeline",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.capturePipeline",
-      "defaultValue": true,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.capturePipeline",
-      "visibleRule": "captureConsole = true"
-    },
-    {
-      "name": "parameterizedJob",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.parameterizedJob",
-      "defaultValue": false,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.parameterizedJob",
-      "groupName": "advanced"
-    },
-    {
-      "name": "jobParameters",
+      "name": "parameters",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.jobParameters",
+      "label": "ms-resource:loc.input.label.parameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.jobParameters",
-      "groupName": "advanced",
-      "visibleRule": "parameterizedJob = true",
-      "properties": {
-        "resizable": "true",
-        "rows": "4"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.parameters"
+    },
+    {
+      "name": "token",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.token"
     }
   ],
   "execution": {
@@ -87,8 +64,5 @@
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
     }
-  },
-  "messages": {
-    "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued"
   }
 }

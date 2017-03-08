@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "PerC Get Build Artifacts",
+  "loc.helpMarkDown": "Replace with markdown to show in help",
+  "loc.description": "Get path to build artifacts",
+  "loc.instanceNameFormat": "PerCGetBuildArtifacts $(message)",
+  "loc.input.label.buildDefName": "Build Definition Name",
+  "loc.input.help.buildDefName": "Name of the build definition to get Artifacts from.",
+  "loc.input.label.buildDefID": "Build Definition ID",
+  "loc.input.help.buildDefID": "Id of the build definition to get Artifacts from.",
+  "loc.input.label.artifactPathVarName": "Artifact Path Variable",
+  "loc.input.help.artifactPathVarName": "The step returns to this variable path for the found Artifact (input name only without $).",
+  "loc.input.label.buildArtifactName": "Artifact Name",
+  "loc.input.help.buildArtifactName": "Name of Artifact to get from the selected build. Keep it empty to get first Artifact.",
+  "loc.input.label.connectedServiceName": "Credentials",
+  "loc.input.help.connectedServiceName": "The server generic endpoint, set the key 'Password/Token Key' field to your API key.",
+  "loc.input.label.latestSucceeded": "Last Succeeded Build",
+  "loc.input.help.latestSucceeded": "Set true to get artifacts from last succeeded build",
+  "loc.input.label.buildQuality": "Build Quality",
+  "loc.input.help.buildQuality": "Filter the builds according to build quality tag (for example: Ready for Deployment)",
+  "loc.input.label.customFilter": "Custom Filter",
+  "loc.input.help.customFilter": "Custom fillter to get builds (for example: qualityFilter=Ready for Deployment)"
+}
