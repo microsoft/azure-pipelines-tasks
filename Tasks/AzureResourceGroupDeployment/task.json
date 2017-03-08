@@ -368,9 +368,9 @@
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
-        "EncodingNotSupported": "'{1}' encoding is not supported on {0}",
-        "CouldNotDetectEncoding": "Could not detect encoding of '{0}' file",
-        "ShortFileBufferError": "Short file buffer error on file '{0}'"
+        "EncodingNotSupported": "'%s' encoding is not supported on %s",
+        "CouldNotDetectEncoding": "Could not detect encoding of '%s' file",
+        "ShortFileBufferError": "Short file buffer error on file '%s'"
         
     }
 }
