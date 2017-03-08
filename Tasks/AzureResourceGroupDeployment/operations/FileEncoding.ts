@@ -4,67 +4,88 @@
 var fs = require('fs');
 import tl = require('vsts-task-lib');
 
-export class detectionResult
-{
+export class fileEncoding {
     public type: string;
-    public detectable: boolean;
-    constructor(result: [string, boolean]) {
-        this.type = result[0];
-        this.detectable = result[1];
+    public usesBOM: boolean;
+    constructor(type: string, usesBOM: boolean) {
+        this.type = type;
+        this.usesBOM = usesBOM;
     }
 }
 
 function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding using BOM');
-    if(buffer.slice(0,3).equals(new Buffer([239, 187, 191]))) {
-        return new detectionResult(['utf-8', true]);
+    var type: string;
+    if (buffer.slice(0, 3).equals(new Buffer([239, 187, 191]))) {
+        type = 'utf-8';
     }
-    else if(buffer.slice(0,4).equals(new Buffer([255, 254, 0, 0]))) {
-        throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32LE', 'UTF-32LE'));
+    else if (buffer.slice(0, 4).equals(new Buffer([255, 254, 0, 0]))) {
+        type = 'UTF-32LE';
     }
-    else if(buffer.slice(0,2).equals(new Buffer([254, 255]))) {
-        throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-16BE', 'UTF-16BE'));
+    else if (buffer.slice(0, 2).equals(new Buffer([254, 255]))) {
+        type = 'UTF-16BE';
     }
-    else if(buffer.slice(0,2).equals(new Buffer([255, 254]))) {
-        return new detectionResult(['utf-16le', true]);
+    else if (buffer.slice(0, 2).equals(new Buffer([255, 254]))) {
+        type = 'utf-16le';
     }
-    else if(buffer.slice(0,4).equals(new Buffer([0, 0, 254, 255]))) {
-        throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32BE', 'UTF-32BE'));
+    else if (buffer.slice(0, 4).equals(new Buffer([0, 0, 254, 255]))) {
+        type = 'UTF-32BE';
     }
-    tl.debug('Unable to detect File encoding using BOM');
-    return null;
+    else {
+        tl.debug('Unable to detect File encoding using BOM');
+        return null;
+    }
+    return new fileEncoding(type, true);
 }
 
 function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding without BOM');
-
     var typeCode = 0;
-    for(var index = 0; index < 4; index++) {
+    var type: string;
+    for (var index = 0; index < 4; index++) {
         typeCode = typeCode << 1;
         typeCode = typeCode | (buffer[index] > 0 ? 1 : 0);
     }
-    switch(typeCode) {
+    switch (typeCode) {
         case 1:
-            throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32BE', 'UTF-32BE'));
+            type = 'UTF-32BE';
+            break;
         case 5:
-            throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-16BE', 'UTF-16BE'));
+            type = 'UTF-16BE';
+            break;
         case 8:
-            throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32LE', 'UTF-32LE'));
+            type = 'UTF-32LE';
+            break;
         case 10:
-            return new detectionResult(['utf-16le', false]);
+            type = 'utf-16le';
+            break;
         case 15:
-            return new detectionResult(['utf-8', false]);
+            type = 'utf-8';
+            break;
         default:
-            throw Error(tl.loc('UnknownFileEncodeError', fileName, typeCode));
+            return null;
     }
+    return new fileEncoding(type, false);
 }
-export function detectFileEncoding(fileName: string, buffer: Buffer): detectionResult {
-    if(buffer.length < 4) {
+export function detectFileEncoding(fileName: string, buffer: Buffer): fileEncoding {
+    if (buffer.length < 4) {
         throw Error(tl.loc('ShortFileBufferError', fileName));
     }
-    var fileEncoding: detectionResult = detectFileEncodingWithBOM(fileName, buffer);
-    if(!!fileEncoding)
+    var fileEncoding: fileEncoding = detectFileEncodingWithBOM(fileName, buffer);
+    if (!!fileEncoding)
         fileEncoding = detectFileEncodingWithoutBOM(fileName, buffer);
+    if (!!fileEncoding) {
+        throw new Error(tl.loc("CouldNotDetectEncoding"));
+    }
     return fileEncoding;
 }
 
+export function readFileContentsAsText(fileName: string): string {
+    var buffer = fs.readFileSync(fileName);
+    var supportedFileEncodings = ["utf-8", "utf-16le"]
+    var fileEncoding = detectFileEncoding(fileName, buffer);
+    if (supportedFileEncodings.indexOf(fileEncoding.type) < 0) {
+        throw new Error(tl.loc('EncodingNotSupported', fileEncoding.type, fileName));
+    }
+    return buffer.toString(fileEncoding.type);
+}
