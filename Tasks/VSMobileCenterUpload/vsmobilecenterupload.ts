@@ -165,7 +165,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
 /**
  * If the input is a single file, upload this file without any processing.
  * If the input is a single folder, zip it's content. The archive name is the folder's name
- * If the input is a set of folders, zip the folders so they appear on the root of the archive. The archive name is the parent folder's name.
+ * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
 function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> { 
     tl.debug("-- Prepare symbols");
@@ -287,9 +287,9 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
                 }
             }
         })
-    } else if (symbolsType === "Windows") {
+    } else if (symbolsType === "UWP") {
         // User can specifay a symbols path pattern that selects 
-        // multiple PDB paths for Windows application.
+        // multiple PDB paths for UWP application.
         let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
         pdbPaths.forEach(pdbFile => {
@@ -350,7 +350,7 @@ async function run() {
             case "AndroidJava":
                 symbolVariableName = "mappingTxtPath";
                 break;
-            case "Windows":
+            case "UWP":
                 symbolVariableName = "pdbPath";
                 break;
             default:

@@ -17,7 +17,7 @@ tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'Windows');
+tmr.setInput('symbolsType', 'UWP');
 tmr.setInput('pdbPath', 'a/**/*.pdb');
 
 /*
@@ -70,7 +70,7 @@ nock('https://example.test')
 //begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
-        symbol_type: 'Windows'
+        symbol_type: 'UWP'
     })
     .reply(201, {
         symbol_upload_id: 100,
