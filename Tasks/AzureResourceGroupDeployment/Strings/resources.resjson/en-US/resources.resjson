@@ -160,6 +160,5 @@
   "loc.messages.TimeoutWhileWaiting": "Timed out while waiting",
   "loc.messages.InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
   "loc.messages.EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
-  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
-  "loc.messages.ShortFileBufferError": "Short file buffer error on file '%s'"
+  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'"
 }
