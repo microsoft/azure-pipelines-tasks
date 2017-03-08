@@ -60,7 +60,8 @@
         "type": "shell",
         "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
         "inline": [
-            "ls /deployTemp",
+            "cd /deployTemp",
+            "ls",
             "chmod +x /deployTemp/{{user `script_name`}}",
             "/deployTemp/{{user `script_name`}}"
         ]
