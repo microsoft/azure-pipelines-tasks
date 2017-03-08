@@ -369,7 +369,6 @@
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
-    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
-    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
+    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding"
   }
 }

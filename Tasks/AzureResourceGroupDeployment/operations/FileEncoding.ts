@@ -20,16 +20,16 @@ function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
         type = 'utf-8';
     }
     else if (buffer.slice(0, 4).equals(new Buffer([255, 254, 0, 0]))) {
-        type = 'UTF-32LE';
+        type = 'utf-32le';
     }
     else if (buffer.slice(0, 2).equals(new Buffer([254, 255]))) {
-        type = 'UTF-16BE';
+        type = 'utf-16be';
     }
     else if (buffer.slice(0, 2).equals(new Buffer([255, 254]))) {
         type = 'utf-16le';
     }
     else if (buffer.slice(0, 4).equals(new Buffer([0, 0, 254, 255]))) {
-        type = 'UTF-32BE';
+        type = 'utf-32be';
     }
     else {
         tl.debug('Unable to detect File encoding using BOM');
@@ -40,41 +40,48 @@ function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
 
 function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding without BOM');
+    if (buffer.length < 4) {
+        tl.debug('Short file buffer error on file ' + fileName + '. length: ' + buffer.length);
+    }
+
     var typeCode = 0;
     var type: string;
-    for (var index = 0; index < 4; index++) {
+    var codeForUtf8 = 0
+    for (var index = 0; index < 4 && index < buffer.length; index++) {
         typeCode = typeCode << 1;
         typeCode = typeCode | (buffer[index] > 0 ? 1 : 0);
+        codeForUtf8 = codeForUtf8 << 1;
+        codeForUtf8++;
     }
     switch (typeCode) {
         case 1:
-            type = 'UTF-32BE';
+            type = 'utf-32be';
             break;
         case 5:
-            type = 'UTF-16BE';
+            type = 'utf-16be';
             break;
         case 8:
-            type = 'UTF-32LE';
+            type = 'utf-32le';
             break;
         case 10:
             type = 'utf-16le';
             break;
-        case 15:
-            type = 'utf-8';
-            break;
         default:
-            return null;
+            if (codeForUtf8 == typeCode) {
+                type = 'utf-8';
+            }
+            else {
+                return null;
+            }
     }
     return new FileEncoding(type, false);
 }
 export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncoding {
-    if (buffer.length < 4) {
-        tl.debug(tl.loc('ShortFileBufferError', fileName))
-        throw Error(tl.loc("CouldNotDetectEncoding", fileName));
-    }
+
     var fileEncoding: FileEncoding = detectFileEncodingWithBOM(fileName, buffer);
-    if (fileEncoding == null)
+    if (fileEncoding == null) {
         fileEncoding = detectFileEncodingWithoutBOM(fileName, buffer);
+    }
 
     if (fileEncoding == null) {
         throw new Error(tl.loc("CouldNotDetectEncoding", fileName));
