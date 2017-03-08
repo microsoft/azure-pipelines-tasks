@@ -345,6 +345,9 @@
         "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
         "RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
         "stdoutFromScript": "Standard output from script: ",
-        "stderrFromScript": "Standard error from script: "
+        "stderrFromScript": "Standard error from script: ",
+        "FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
+        "FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
+        "ScriptStatusTimeout": "Unable to fetch script status due to timeout"
     }
 }

@@ -114,5 +114,8 @@
   "loc.messages.InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
   "loc.messages.RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
   "loc.messages.stdoutFromScript": "Standard output from script: ",
-  "loc.messages.stderrFromScript": "Standard error from script: "
+  "loc.messages.stderrFromScript": "Standard error from script: ",
+  "loc.messages.FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
+  "loc.messages.FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
+  "loc.messages.ScriptStatusTimeout": "Unable to fetch script status due to timeout"
 }
