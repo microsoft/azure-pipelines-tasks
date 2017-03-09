@@ -13,7 +13,7 @@
     },
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [
         "npm"

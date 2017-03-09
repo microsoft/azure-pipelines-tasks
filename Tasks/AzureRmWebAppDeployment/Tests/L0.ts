@@ -467,4 +467,16 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('## mkdir Successful ##') >= 0, 'should have created dir including dest folder');
         done();
     });
+
+    it('Validate webdepoyment-common.utility.runPostDeploymentScript()', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0RunPostDeploymentScript.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have uploaded file');
+        assert(tr.stdout.search('POST:https://mytestappKuduUrl/api/command') >= 0, 'should have executed script');
+        assert(tr.stdout.search('DELETED:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have removed file');
+        done();
+    });
 });
