@@ -40,8 +40,21 @@
       "defaultValue": "nugetAndSharing",
       "required": "true",
       "options": {
-        "nugetAndSharing": "Use NuGet.org and sharing feeds",
-        "nugetConfig": "Use feeds specified in my NuGet.Config"
+        "nugetAndSharing": "Feed(s) I select here",
+        "nugetConfig": "Feeds in my NuGet.Config"
+      }
+    },
+    {
+      "name": "feedPicker",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedPicker",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.feedPicker",
+      "required": "false",
+      "visibleRule": "sources = nugetAndSharing",
+      "options": {
+        "None": "NuGet.org",
+        "FabrikamFiber": "NuGet.org + FabrikamFiber"
       }
     },
     {
