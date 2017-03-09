@@ -41,6 +41,7 @@ export interface DtaEnvironment {
     patToken: string;
     environmentUri: string;
     dtaHostLogFilePath: string;
+    agentName: string;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {

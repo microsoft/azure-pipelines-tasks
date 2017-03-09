@@ -10,7 +10,7 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {

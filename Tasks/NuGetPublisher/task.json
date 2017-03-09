@@ -9,11 +9,11 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 30
+        "Patch": 31
     },
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [
         "Cmd"

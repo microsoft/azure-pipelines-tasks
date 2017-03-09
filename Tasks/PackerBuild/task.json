@@ -1,0 +1,160 @@
+{
+    "id": "845fd4f4-642d-4694-8514-047948a5a556",
+    "name": "PackerBuild",
+    "friendlyName": "Build VMSS images using Packer",
+    "description": "Build VMSS images using Packer",
+    "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
+    "category": "Deploy",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 8
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "Output",
+            "displayName": "Output",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "location",
+            "type": "pickList",
+            "label": "Location",
+            "required": true,
+            "helpMarkDown": "Location for storing the created VHD. This location will also be used to create a temporary VM for the purpose of capturing image. If the resource group already exists in the subscription, then this value will be ignored.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "azureStorageAccount",
+            "type": "pickList",
+            "label": "Storage account",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment."
+        },
+        {
+            "name": "azureResourceGroup",
+            "type": "pickList",
+            "label": "Resource group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the storage account specified above."
+        },
+        {
+            "name": "baseImage",
+            "type": "pickList",
+            "label": "Base image",
+            "required": true,
+            "helpMarkDown": "Base image to used fo creating VHD.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "options": {
+                "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter"
+            }
+        },
+        {
+            "name": "packagePath",
+            "type": "filePath",
+            "label": "Package or folder",
+            "required": true,
+            "helpMarkDown": "Specify the path to deployment package."
+        },
+        {
+            "name": "deployScriptPath",
+            "type": "filePath",
+            "label": "Deployment script",
+            "required": true,
+            "helpMarkDown": "Specify the path to powershell or shell script which deploys application."
+        },
+        {
+            "name": "imageUri",
+            "type": "string",
+            "label": "Image URI",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the variable for output image URI.",
+            "groupName": "Output"
+        },
+        {
+            "name": "imageStorageAccount",
+            "type": "string",
+            "label": "Image storage account location",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the variable for output image storage account location.",
+            "groupName": "Output"            
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "location",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
+        },
+        {
+            "target": "azureStorageAccount",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRM"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        }
+    ],
+    "sourceDefinitions": [],
+    "instanceNameFormat": "Packer build",
+    "execution": {
+        "Node": {
+            "target": "src//main.js"
+        }
+    },
+    "messages": {
+        "OSTypeNotSupported": "This OS type is not supported for image creation: %s. Please use either windows or linux.",
+        "CopyTemplateToTempFailed": "Could not copy built-in template from source %s to temp location %s",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "OriginalTemplateLocation": "Original template location: %s",
+        "CopyingTemplate": "Copying original template from %s to temporary location %s",
+        "TempTemplateLocation": "Copied template file to a temporary location: %s",
+        "CopySourceNotExists": "Source file path does not exist for copying: %s",
+        "CreatingDestinationDir": "Destination for copying does not exist. Creating: %s",
+        "CreatedDestinationDir": "Created destination directory for copying: %s",
+        "ExecutingPackerFix": "Running packer fix command",
+        "ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
+        "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
+        "PackerBuildCompleted": "packer build completed.",
+        "ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
+        "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
+        "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
+        "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
+        "TaskParametersConstructorFailed": "Error happened while initializing task: %s."
+                
+    }
+}

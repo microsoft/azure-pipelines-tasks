@@ -1,0 +1,159 @@
+{
+  "id": "845fd4f4-642d-4694-8514-047948a5a556",
+  "name": "PackerBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "Output",
+      "displayName": "ms-resource:loc.group.displayName.Output",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.location",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "azureStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccount"
+    },
+    {
+      "name": "azureResourceGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup"
+    },
+    {
+      "name": "baseImage",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.baseImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.baseImage",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter"
+      }
+    },
+    {
+      "name": "packagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.packagePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packagePath"
+    },
+    {
+      "name": "deployScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.deployScriptPath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath"
+    },
+    {
+      "name": "imageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageUri",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageUri",
+      "groupName": "Output"
+    },
+    {
+      "name": "imageStorageAccount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageStorageAccount",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageStorageAccount",
+      "groupName": "Output"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "azureStorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    }
+  ],
+  "sourceDefinitions": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//main.js"
+    }
+  },
+  "messages": {
+    "OSTypeNotSupported": "ms-resource:loc.messages.OSTypeNotSupported",
+    "CopyTemplateToTempFailed": "ms-resource:loc.messages.CopyTemplateToTempFailed",
+    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
+    "OriginalTemplateLocation": "ms-resource:loc.messages.OriginalTemplateLocation",
+    "CopyingTemplate": "ms-resource:loc.messages.CopyingTemplate",
+    "TempTemplateLocation": "ms-resource:loc.messages.TempTemplateLocation",
+    "CopySourceNotExists": "ms-resource:loc.messages.CopySourceNotExists",
+    "CreatingDestinationDir": "ms-resource:loc.messages.CreatingDestinationDir",
+    "CreatedDestinationDir": "ms-resource:loc.messages.CreatedDestinationDir",
+    "ExecutingPackerFix": "ms-resource:loc.messages.ExecutingPackerFix",
+    "ExecutingPackerValidate": "ms-resource:loc.messages.ExecutingPackerValidate",
+    "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
+    "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
+    "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
+    "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
+    "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
+    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed"
+  }
+}
