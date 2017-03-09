@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import * as ParameterParser from './parameterparser'
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
@@ -36,6 +37,8 @@ async function run() {
         var inlineScript: string = tl.getInput('InlineScript', false);
         var scriptPath: string = tl.getPathInput('ScriptPath', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+        var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
+        var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -70,9 +73,39 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
+        var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
-        if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+        if (applyFileTransformFlag || generateWebConfig) {
+            var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
+
+            if (generateWebConfig) {
+
+                //Generate the web.config file if it does not already exist.
+                var webConfigPath = path.join(folderPath, "web.config");
+                if (!fs.existsSync(webConfigPath)) {
+
+                    tl.debug(tl.loc('WebConfigDoesNotExist'));
+
+                    //Extract out the appType parameter as it is not to be replaced.
+                    var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+                    var appType: string = webConfigParameters['appType'].value;
+                    delete webConfigParameters['appType'];
+
+                    // Get the template path for the given appType
+                    var webConfigTemplatePath = path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType.toLowerCase());
+
+                    // Create web.config
+                    generateWebConfigFile(webConfigPath, webConfigTemplatePath, webConfigParameters);
+                } else{
+                    tl.debug(tl.loc('WebConfigAlreadyExists'));
+                }
+            }
+
+            if (applyFileTransformFlag) {
+                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+            }
+
+            var output = await utility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
         }
@@ -223,6 +256,25 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     catch(error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
+}
+
+function generateWebConfigFile(webConfigTargetPath: string, webConfigTemplatePath: string, substitutionParameters: any) {
+    try {
+        var webConfigContent: string = fs.readFileSync(webConfigTemplatePath, 'utf8');
+        webConfigContent = replaceMultiple(webConfigContent, substitutionParameters);
+        tl.writeFile(webConfigTargetPath, webConfigContent, { encoding: "utf8" });
+        console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
+    }
+    catch (error) {
+        throw new Error(tl.loc("FailedToGenerateWebConfig", error));
+    }
+}
+
+function replaceMultiple(text: string, substitutions: any): string{
+    for(var key in substitutions){
+        text = text.replace(new RegExp('{' + key + '}', 'g'), substitutions[key].value);
+    }
+    return text;
 }
 
 run();
