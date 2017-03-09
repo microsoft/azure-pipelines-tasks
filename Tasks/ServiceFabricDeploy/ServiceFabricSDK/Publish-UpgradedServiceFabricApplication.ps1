@@ -44,6 +44,9 @@ function Publish-UpgradedServiceFabricApplication
     .PARAMETER CompressPackage
     Indicates whether the application package should be compressed before copying to the image store.
 
+    .PARAMETER SkipUpgradeSameTypeAndVersion
+    Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation.
+
     .EXAMPLE
     Publish-UpgradeServiceFabricApplication -ApplicationPackagePath 'pkg\Debug' -ApplicationParameterFilePath 'AppParameters.Local.xml'
 
