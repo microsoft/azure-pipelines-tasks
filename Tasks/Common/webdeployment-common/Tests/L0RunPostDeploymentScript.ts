@@ -59,7 +59,7 @@ mockery.registerMock('vsts-task-lib/task', {
         return true;
     },
     getVariable: function() {
-        return 'workigDirectory';
+        return 'workingDirectory';
     },
     debug: function(message) {
         console.log('##debug : ' + message);
@@ -68,7 +68,7 @@ mockery.registerMock('vsts-task-lib/task', {
         console.log('##LOC: ' + message + ' : ' + argument);
     },
     writeFile: function(fileName, content) {
-        console.log('## FileWrite: ' + fileName);
+        console.log('##FileWrite: ' + fileName);
     },
     rmRF: function(fileName) {
         console.log('##rmRF: ' + fileName);

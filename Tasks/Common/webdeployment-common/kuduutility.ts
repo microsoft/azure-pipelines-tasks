@@ -379,7 +379,7 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
     }
     try {
         var mainCmdFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'mainFile_local.cmd');
-        tl.writeFile(mainCmdFilePath, "@echo off\ndel script_result.txt /F /Q\ncall kuduPostDeploymentScript_" + uniqueID + ".cmd" +
+        tl.writeFile(mainCmdFilePath, "@echo off\ncall kuduPostDeploymentScript_" + uniqueID + ".cmd" +
                     " > stdout_" + uniqueID + ".txt 2> stderr_" + uniqueID + ".txt\n" +
                     "echo %errorlevel% > script_result_" + uniqueID + ".txt"
         );
