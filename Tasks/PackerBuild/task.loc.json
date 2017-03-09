@@ -45,15 +45,15 @@
       }
     },
     {
-      "name": "azureStorageAccount",
+      "name": "storageAccountName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.azureStorageAccount",
+      "label": "ms-resource:loc.input.label.storageAccountName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.storageAccountName"
     },
     {
       "name": "azureResourceGroup",
@@ -117,17 +117,25 @@
     {
       "target": "location",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations"
+      "dataSourceName": "AzureLocations2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
     },
     {
-      "target": "azureStorageAccount",
+      "target": "storageAccountName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureStorageAccountRM"
+      "dataSourceName": "AzureRMStorageAccountByLocation",
+      "parameters": {
+        "location": "$(location)"
+      }
     },
     {
       "target": "azureResourceGroup",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroups"
+      "dataSourceName": "AzureRMStorageAccountIdByName",
+      "parameters": {
+        "storageAccountName": "$(storageAccountName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
     }
   ],
   "sourceDefinitions": [],

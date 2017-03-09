@@ -6,7 +6,7 @@ let taskPath = path.join(__dirname, '..\\src\\main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('azureResourceGroup', 'testrg');
-tr.setInput('azureStorageAccount', 'teststorage');
+tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImage', 'Canonical:UbuntuServer:14.04.4-LTS:linux');
 tr.setInput('location', 'South India');
 tr.setInput('packagePath', '/packer-user-scripts/dummy.tar.gz');
