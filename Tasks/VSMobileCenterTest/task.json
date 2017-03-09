@@ -1,7 +1,7 @@
 {
     "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
     "name": "VSMobileCenterTest",
-    "friendlyName": "Visual Studio Mobile Center Test",
+    "friendlyName": "Mobile Center Test",
     "description": "Test mobile app packages with Visual Studio Mobile Center.",
     "helpMarkDown": "Test mobile app packages with Visual Studio Mobile Center.",
     "category": "Test",
@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 112,
-        "Patch": 2
+        "Minor": 114,
+        "Patch": 0
     },
     "groups": [
         {

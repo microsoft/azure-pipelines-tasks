@@ -9,13 +9,13 @@
     "Release"
   ],
   "runsOn": [
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 12
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",

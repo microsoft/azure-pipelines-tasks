@@ -40,11 +40,6 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
         return 1801
     }
 
-    if($ProductVersion -eq "15.0") {
-        $sdir = Join-Path $env:SystemDrive "TestAgent2017Setup"
-        $SetupPath = Join-Path $sdir "vstf_testagent.exe"
-    }
-
     $versionToInstall = ((Get-Item $SetupPath).VersionInfo.ProductVersion) 
     $versionInstalled = Get-TestAgentInstalledVersion -ProductVersion $ProductVersion # Get installed test agent version as per user requested version
 

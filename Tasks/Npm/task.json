@@ -9,11 +9,11 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 21
+        "Patch": 22
     },
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [
         "npm"

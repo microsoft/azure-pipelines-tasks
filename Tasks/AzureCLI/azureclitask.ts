@@ -5,23 +5,25 @@ import util = require("util");
 import os = require("os");
 
 export class azureclitask {
-    public static async runMain() {
+    public static checkIfAzurePythonSdkIsInstalled() {
+        return !!tl.which("az", true);
+    }
 
+    public static async runMain() {
         var toolExecutionError = null;
         try {
-            tl.setResourcePath(path.join( __dirname, "task.json"));
+            tl.setResourcePath(path.join(__dirname, "task.json"));
 
             var tool;
-            if(os.type() != "Windows_NT")
-            {
+            if (os.type() != "Windows_NT") {
                 tool = tl.tool(tl.which("bash", true));
             }
 
-            var scriptLocation:string = tl.getInput("scriptLocation");
-            var scriptPath:string = null;
-            var cwd:string = tl.getPathInput("cwd", true, false);
+            var scriptLocation: string = tl.getInput("scriptLocation");
+            var scriptPath: string = null;
+            var cwd: string = tl.getPathInput("cwd", true, false);
 
-            if(scriptLocation === "scriptPath") {
+            if (scriptLocation === "scriptPath") {
                 scriptPath = tl.getPathInput("scriptPath", true, true);
                 // if user didn"t supply a cwd (advanced), then set cwd to folder script is in.
                 // All "script" tasks should do this
@@ -31,7 +33,7 @@ export class azureclitask {
             }
             else {
                 var script: string = tl.getInput("inlineScript", true);
-                if(os.type() != "Windows_NT") {
+                if (os.type() != "Windows_NT") {
                     scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".sh");
                 }
                 else {
@@ -49,21 +51,20 @@ export class azureclitask {
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
-            if(os.type() != "Windows_NT") {
+            if (os.type() != "Windows_NT") {
                 tool.arg(scriptPath);
             }
             else {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
 
-            var connectedServiceNameSelector = tl.getInput("connectedServiceNameSelector", true);
-            this.loginAzure(connectedServiceNameSelector);
+            this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
             await tool.exec({ failOnStdErr: failOnStdErr });
         }
         catch (err) {
-            if(err.stderr){
+            if (err.stderr) {
                 toolExecutionError = err.stderr;
             }
             else {
@@ -72,13 +73,12 @@ export class azureclitask {
             //go to finally and logout of azure and set task result
         }
         finally {
-            if(scriptLocation === "inlineScript")
-            {
+            if (scriptLocation === "inlineScript") {
                 this.deleteFile(scriptPath);
             }
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
-                this.logoutAzure(connectedServiceNameSelector);
+                this.logoutAzure();
             }
 
             //set the task result to either succeeded or failed based on error was thrown or not
@@ -91,131 +91,53 @@ export class azureclitask {
         }
     }
 
-    private static isLoggedIn:boolean = false;
+    private static isLoggedIn: boolean = false;
 
-    private static loginAzure(connectedServiceNameSelector:string)
-    {
-        var connectedService:string;
-        if(connectedServiceNameSelector === "connectedServiceNameARM")
-        {
-            connectedService = tl.getInput("connectedServiceNameARM", true);
-            this.loginAzureRM(connectedService);
-        }
-        else {
-            connectedService = tl.getInput("connectedServiceName", true);
-            this.loginAzureClassic(connectedService);
-        }
+    private static loginAzure() {
+        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+        this.loginAzureRM(connectedService);
     }
 
-    private static loginAzureRM(connectedService:string): void {
+    private static loginAzureRM(connectedService: string): void {
         var endpointAuth = tl.getEndpointAuthorization(connectedService, true);
-        var servicePrincipalId:string = endpointAuth.parameters["serviceprincipalid"];
-        var servicePrincipalKey:string = endpointAuth.parameters["serviceprincipalkey"];
-        var tenantId:string = endpointAuth.parameters["tenantid"];
-        var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-        //set the azure mode to arm to use azureRM commands
-        this.throwIfError(tl.execSync("azure", "config mode arm"));
+        var servicePrincipalId: string = endpointAuth.parameters["serviceprincipalid"];
+        var servicePrincipalKey: string = endpointAuth.parameters["serviceprincipalkey"];
+        var tenantId: string = endpointAuth.parameters["tenantid"];
+        var subscriptionName: string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
         //login using svn
-        this.throwIfError(tl.execSync("azure", "login -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\" --service-principal"));
+        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\""));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("azure", "account set \"" + subscriptionName + "\""));
+        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionName + "\""));
     }
 
-    private static loginAzureClassic(connectedService):void {
-        var endpointAuth = tl.getEndpointAuthorization(connectedService, true);
-        var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-        //set the azure mode to asm to use azureRM commands
-        this.throwIfError(tl.execSync("azure", "config mode asm"));
-        if (endpointAuth.scheme === "Certificate") {
-            var bytes = endpointAuth.parameters["certificate"];
-            var subscriptionId:string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            var serviceManagementUrl:string = tl.getEndpointUrl(connectedService, false);
-            const publishSettingFileName:string = path.join(os.tmpdir() ,"subscriptions" + new Date().getTime() + ".publishsettings");
-            this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, serviceManagementUrl, publishSettingFileName);
-            var resultOfToolExecution = tl.execSync("azure", "account import \"" + publishSettingFileName + "\"");
-            this.deleteFile(publishSettingFileName);
-            this.throwIfError(resultOfToolExecution);
-            this.isLoggedIn = true;
-            //set the subscription imported to the current subscription
-            this.throwIfError( tl.execSync("azure", "account set \"" + subscriptionName + "\""));
-        }
-        else if (endpointAuth.scheme === "UsernamePassword") {
-            var username:string = endpointAuth.parameters["username"];
-            var passwd:string = endpointAuth.parameters["password"];
-            this.throwIfError(tl.execSync("azure", "login -u \"" + username + "\" -p \"" + passwd + "\""));
-            this.isLoggedIn = true;
-            //set the subscription imported to the current subscription
-            this.throwIfError(tl.execSync("azure", "account set \"" + subscriptionName + "\""));
-        }
-        else {
-            var err;
-            err.stderr = tl.loc("UnsupportedEndpointScheme");
-            throw(err);
-        }
-    }
-
-    private static logoutAzure(connectedServiceNameSelector:string)
-    {
+    private static logoutAzure() {
         try {
-            var connectedService:string;
-            if (connectedServiceNameSelector === "connectedServiceNameARM") {
-                connectedService = tl.getInput("connectedServiceNameARM", true);
-                this.logoutAzureRM(connectedService);
-            }
-            else {
-                connectedService = tl.getInput("connectedServiceName", true);
-                this.logoutAzureClassic(connectedService);
-            }
+            tl.execSync("az", " account clear");
         }
-        catch(err){
+        catch (err) {
             // task should not fail if logout doesn`t occur
+            tl.warning(tl.loc("FailedToLogout"));
         }
     }
 
-    private static logoutAzureRM(connectedService:string)
-    {
-        var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-        tl.execSync("azure", " account clear -s \"" + subscriptionName + "\"");
-    }
-
-    private static logoutAzureClassic(connectedService:string)
-    {
-        var endpointAuth = tl.getEndpointAuthorization(connectedService, true);
-        if(endpointAuth["scheme"] === "usernamePassword")
-        {
-            var username:string = endpointAuth.parameters["username"];
-            tl.execSync("azure", "logout -u \"" + username + "\"");
-        }
-        else {
-            var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-            tl.execSync("azure", " account clear -s \"" + subscriptionName + "\"");
-        }
-    }
-
-    private static throwIfError(resultOfToolExecution):void {
+    private static throwIfError(resultOfToolExecution): void {
         if (resultOfToolExecution.stderr) {
             throw resultOfToolExecution;
         }
     }
 
-    private static createPublishSettingFile(subscriptionName:string, subscriptionId:string, certificate:string, serviceManagementUrl:string, publishSettingFileName:string): void  {
-        //writing the data to the publishsetting file
-        this.createFile(publishSettingFileName, util.format('<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="%s" Id="%s" Name="%s" ManagementCertificate="%s" /> </PublishProfile></PublishData>',serviceManagementUrl, subscriptionId, subscriptionName, certificate));
-    }
-
-    private static createFile (filePath:string, data:string)
-    {
+    private static createFile(filePath: string, data: string) {
         try {
             fs.writeFileSync(filePath, data);
         }
-        catch(err) {
+        catch (err) {
             this.deleteFile(filePath);
             throw err;
         }
     }
 
-    private static deleteFile(filePath:string): void {
+    private static deleteFile(filePath: string): void {
         if (fs.existsSync(filePath)) {
             try {
                 //delete the publishsetting file created earlier
@@ -227,6 +149,10 @@ export class azureclitask {
             }
         }
     }
-
 }
+
+if (!azureclitask.checkIfAzurePythonSdkIsInstalled()) {
+    tl.setResult(tl.TaskResult.Failed, tl.loc("AzureSDKNotFound"));
+}
+
 azureclitask.runMain();

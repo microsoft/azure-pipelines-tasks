@@ -3,9 +3,7 @@
 
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
-import psm = require('../../lib/psRunner');
 import path = require('path');
-import shell = require('shelljs');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -21,13 +19,13 @@ describe('Publish Test Results Suite', function () {
     });
 
     after(function () {
-
+        //do nothing
     });
 
     it('Publish test results with resultFiles filter that does not match with any files', (done) => {
+        setResponseFile('response.json');
 
         let tr = new trm.TaskRunner('PublishTestResults');
-
         tr.setInput('testRunner', 'JUnit');
         tr.setInput('testResultsFiles', '/invalid/*pattern');
 
@@ -40,15 +38,16 @@ describe('Publish Test Results Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Publish test results with resultFiles filter that matches with some files', (done) => {
+        setResponseFile('response.json');
 
         let tr = new trm.TaskRunner('PublishTestResults');
-        let pattern = path.join(__dirname, 'data', '*TEST.xml');
-
+        let pattern = ('**\\TEST-*.xml');
         tr.setInput('testRunner', 'JUnit');
         tr.setInput('testResultsFiles', pattern);
         tr.setInput('mergeTestResults', 'true');
@@ -61,15 +60,16 @@ describe('Publish Test Results Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Publish test results with resultFiles as file path', (done) => {
+        setResponseFile('response.json');
 
         let tr = new trm.TaskRunner('PublishTestResults');
-        let pattern = path.join(__dirname, 'data', 'jUnit1TEST.xml');
-
+        let pattern = ('TEST.xml');
         tr.setInput('testRunner', 'JUnit');
         tr.setInput('testResultsFiles', pattern);
 
@@ -81,11 +81,13 @@ describe('Publish Test Results Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Publish test results when test result files input is not provided', (done) => {
+        setResponseFile('response.json');
 
         let tr = new trm.TaskRunner('PublishTestResults');
         tr.setInput('testRunner', 'Junit');
@@ -101,14 +103,16 @@ describe('Publish Test Results Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Publish test results when test runner type input is not provided', (done) => {
+        setResponseFile('response.json');
 
         let tr = new trm.TaskRunner('PublishTestResults');
-        tr.setInput('testResultsFiles', '/file.xml');
+        tr.setInput('testResultsFiles', '**\\TEST-*.xml');
 
         tr.run()
             .then(() => {
@@ -121,7 +125,8 @@ describe('Publish Test Results Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 });

@@ -11,7 +11,7 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "demands": [
@@ -19,8 +19,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 113,
-    "Patch": 0
+    "Minor": 114,
+    "Patch": 1
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
