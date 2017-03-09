@@ -25,7 +25,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tp = path.join(__dirname, 'L0WindowsDefault.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            
+
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             var expectedOut = 'Updated history to kudu'; 
@@ -469,7 +469,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Validate webdepoyment-common.utility.runPostDeploymentScript()', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0RunPostDeploymentScript.js');
+        let tp = path.join(__dirname, 'L0RunPostDeploymentScript.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 

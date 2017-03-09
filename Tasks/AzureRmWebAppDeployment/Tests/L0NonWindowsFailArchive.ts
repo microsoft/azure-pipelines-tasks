@@ -173,7 +173,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/kuduutility.js', {
+tr.registerMock('./kuduutility.js', {
     getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {
         // construct URL depending on virtualApplication or root of webapplication 
         var physicalPath = "/site/wwwroot";

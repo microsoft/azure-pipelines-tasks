@@ -108,5 +108,5 @@ var mockPublishProfile = {
     webSystem: 'WebSites' 
 };
 
-var kuduUtility = require('webdeployment-common/kuduutility.js');
+var kuduUtility = require('../kuduutility.js');
 kuduUtility.runPostDeploymentScript(mockPublishProfile, "File Path", null, 'myscript.cmd', false);

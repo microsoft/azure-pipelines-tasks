@@ -4,7 +4,8 @@ import path = require("path");
 import fs = require("fs");
 import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var fileEncoding = require('./fileencoding.js');
+var fileEncoding = require('webdeployment-common/fileencoding.js');
+var azureUtility = require('azurerest-common/utility.js');
 
 /**
  * Finds out virtual path and corresponding physical path mapping.
@@ -369,7 +370,7 @@ function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
 
 export async function runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, appOfflineFlag) {
     var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
-    var uniqueID = Date.now();
+    var uniqueID = azureUtility.generateDeploymentId();
 
     var deleteLogFiles = false;
     if(appOfflineFlag) {
