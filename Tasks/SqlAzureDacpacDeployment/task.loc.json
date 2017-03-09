@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "sqlpackage"
@@ -236,9 +236,9 @@
   "sourceDefinitions": [
     {
       "target": "IpDetectionMethod",
-      "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods",
+      "endpoint": "_apis/Release/ipAddress/ipDetectionMethods",
       "selector": "jsonpath:$.value[*]",
-      "authKey": "tfs:DevTestLabs"
+      "authKey": "tfs:releasemanagement"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

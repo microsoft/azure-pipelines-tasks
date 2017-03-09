@@ -18,14 +18,14 @@ function Get-AgentStartIPAddress
     if ($vssUri.IndexOf("visualstudio.com", [System.StringComparison]::OrdinalIgnoreCase) -ne -1) {
         # This hack finds the DTL uri for a hosted account. Note we can't support devfabric since the
         # there subdomain is not used for DTL endpoint
-        $vssUri = $vssUri.Replace("visualstudio.com", "vsdtl.visualstudio.com")
+        $vssUri = $vssUri.Replace("visualstudio.com", "vsrm.visualstudio.com")
     }
 
     Write-Verbose "Querying VSTS uri '$vssUri' to get external ip address"
 
     # Getting start ip address from dtl service
     Write-Verbose "Getting external ip address by making call to dtl service"
-    $vssUri = $vssUri + "/_apis/vslabs/ipaddress"
+    $vssUri = $vssUri + "_apis/Release/ipAddress"
     $username = ""
     $password = $vssCredential
 
