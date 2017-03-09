@@ -8,9 +8,8 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
-tr.setInput('AddWebConfig','true');
-tr.setInput('AppType','Node');
-tr.setInput('WebConfigParameters','{\"StartupFile\":\"server.js\"}');
+tr.setInput('GenerateWebConfig','true');
+tr.setInput('WebConfigParameters','-appType node -Handler iisnode -NodeStartFile server.js');
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
@@ -222,6 +221,28 @@ tr.registerMock('webdeployment-common/utility.js', {
     }
 });
 
+tr.registerMock('webdeployment-common/generatewebconfig.js', {
+    generateWebConfigFile: function(filePath, templatePath, data) {
+        return;
+    }
+});
+
+tr.registerMock('./parameterparser', {
+    parse: function (data) {
+        return {
+            "appType": {
+                "value": "node"
+            },
+            "Handler": {
+                "value": "iisnode"
+            },
+            "NodeStartFile": {
+                "value": "server.js"
+            }
+        }
+    }
+});
+
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
@@ -236,7 +257,6 @@ tr.registerMock('fs', {
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,
     readFileSync: function(webConfigPath,options) {
-        console.log("reading the error file");
         return "";
     },
     openSync: function (fd, options) {

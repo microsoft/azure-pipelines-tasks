@@ -10,6 +10,7 @@ var utility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('webdeployment-common/kuduutility.js');
+var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
 
 async function run() {
     try {
@@ -93,9 +94,14 @@ async function run() {
 
                     // Get the template path for the given appType
                     var webConfigTemplatePath = path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType.toLowerCase());
-
-                    // Create web.config
-                    generateWebConfigFile(webConfigPath, webConfigTemplatePath, webConfigParameters);
+                    try {
+                        // Create web.config
+                        generateWebConfigUtil.generateWebConfigFile(webConfigPath, webConfigTemplatePath, webConfigParameters);
+                        console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
+                    }
+                    catch (error) {
+                        throw new Error(tl.loc("FailedToGenerateWebConfig", error));
+                    }
                 } else{
                     tl.debug(tl.loc('WebConfigAlreadyExists'));
                 }
@@ -256,25 +262,6 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     catch(error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
-}
-
-function generateWebConfigFile(webConfigTargetPath: string, webConfigTemplatePath: string, substitutionParameters: any) {
-    try {
-        var webConfigContent: string = fs.readFileSync(webConfigTemplatePath, 'utf8');
-        webConfigContent = replaceMultiple(webConfigContent, substitutionParameters);
-        tl.writeFile(webConfigTargetPath, webConfigContent, { encoding: "utf8" });
-        console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
-    }
-    catch (error) {
-        throw new Error(tl.loc("FailedToGenerateWebConfig", error));
-    }
-}
-
-function replaceMultiple(text: string, substitutions: any): string{
-    for(var key in substitutions){
-        text = text.replace(new RegExp('{' + key + '}', 'g'), substitutions[key].value);
-    }
-    return text;
 }
 
 run();

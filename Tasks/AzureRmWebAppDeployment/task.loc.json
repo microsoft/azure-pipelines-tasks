@@ -121,7 +121,7 @@
       "label": "ms-resource:loc.input.label.GenerateWebConfig",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfig"
     },
     {
@@ -131,7 +131,7 @@
       "required": true,
       "defaultValue": "-appType Node -Handler iisnode -NodeStartFile server.js",
       "visibleRule": "GenerateWebConfig == true",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
