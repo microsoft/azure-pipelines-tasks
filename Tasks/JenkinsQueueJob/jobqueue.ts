@@ -248,7 +248,11 @@ export class JobQueue {
 
             // Top level pipeline job status
             let jobContent = '<ul style="padding-left: 0">';
-            jobContent += '[' + taskOptions.jobName + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString());
+            let jobName = taskOptions.jobName;
+            if (taskOptions.isMultibranchPipelineJob) {
+                jobName = `${jobName}/${taskOptions.multibranchPipelineBranch}`;
+            }
+            jobContent += '[' + jobName + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString());
             if (job.getResultString() !== 'succeeded') {
                 jobContent += ` ([console](${job.executableUrl}/console))`
             }

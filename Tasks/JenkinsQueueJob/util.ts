@@ -217,7 +217,7 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
             url: taskOptions.teamJobQueueUrl,
             form: {
                 json: JSON.stringify({
-                    "team-build": getTeamParameters(),
+                    "team-build": getTeamParameters(taskOptions),
                     "parameter": parseJobParametersTeamBuild(taskOptions.jobParameters)
                 })
             },
@@ -367,7 +367,7 @@ function parseJobParametersTeamBuild(jobParameters: string[]): any {
     return jsonArray;
 }
 
-function getTeamParameters(): any {
+function getTeamParameters(taskOptions: TaskOptions): any {
     var formData = {};
     allTeamBuildVariables.forEach(variableName => {
         let paramValue = tl.getVariable(variableName);
@@ -375,6 +375,12 @@ function getTeamParameters(): any {
             formData[variableName] = paramValue;
         }
     });
+
+    // add task specific options
+    if (taskOptions.isMultibranchPipelineJob) {
+        formData['QueueJobTask.MultibranchPipelineBranch'] = taskOptions.multibranchPipelineBranch;
+    }
+
     return formData;
 }
 

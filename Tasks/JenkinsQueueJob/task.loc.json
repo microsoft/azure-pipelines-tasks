@@ -42,6 +42,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.jobName"
     },
     {
+      "name": "isMultibranchJob",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isMultibranchJob",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isMultibranchJob"
+    },
+    {
+      "name": "multibranchPipelineBranch",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.multibranchPipelineBranch",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "isMultibranchJob = true",
+      "helpMarkDown": "ms-resource:loc.input.help.multibranchPipelineBranch"
+    },
+    {
       "name": "captureConsole",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.captureConsole",
