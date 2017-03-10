@@ -35,6 +35,8 @@ export class TaskOptions {
     // jobParameters are only possible if parameterizedJob is enabled
     jobParameters: string[];
 
+    additionalLinks: string[];
+
     jobQueueUrl: string;
     teamJobQueueUrl: string;
     teamPluginUrl: string;
@@ -66,6 +68,9 @@ export class TaskOptions {
         this.parameterizedJob = tl.getBoolInput('parameterizedJob', true);
         // jobParameters are only possible if parameterizedJob is enabled
         this.jobParameters = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
+
+        //additional links to be published
+        this.additionalLinks = tl.getDelimitedInput('addLinks','\n',true) || []; 
 
         this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
         tl.debug('jobQueueUrl=' + this.jobQueueUrl);

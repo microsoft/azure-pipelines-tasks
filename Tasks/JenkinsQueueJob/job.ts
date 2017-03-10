@@ -8,6 +8,8 @@ import shell = require('shelljs');
 // node js modules
 var request = require('request');
 
+let trxGen = require('node-trx');
+
 import jobsearch = require('./jobsearch');
 import JobSearch = jobsearch.JobSearch;
 import jobqueue = require('./jobqueue');
@@ -23,19 +25,21 @@ import * as Util from './util';
 // New →            Locating, Streaming, Joined, Cut
 // Locating →       Streaming, Joined, Cut
 // Streaming →      Finishing
-// Finishing →      Downloading, Queued, Done
+// Finishing →      TestResults, Queued
+// TestResults →    Downloading, Done
 // Downloading →    Done
 // TERMINAL STATES: Done, Queued, Joined, Cut
 export enum JobState {
-    New,       // 0 - The job is yet to begin
-    Locating,  // 1 - The job is being located
-    Streaming, // 2 - The job is running and its console output is streaming
-    Finishing, // 3 - The job has run and is "finishing"
-    Done,      // 4 - The job has run and is done
-    Joined,    // 5 - The job is considered complete because it has been joined to the execution of another matching job execution
-    Queued,    // 6 - The job was queued and will not be tracked for completion (as specified by the "Capture..." task setting)
-    Cut,       // 7 - The job was cut from execution by the pipeline
-    Downloading// 8 - The job has run and its results are being downloaded (occurs when the TFS Plugin for Jenkins is installed)
+    New,        // 0 - The job is yet to begin
+    Locating,   // 1 - The job is being located
+    Streaming,  // 2 - The job is running and its console output is streaming
+    Finishing,  // 3 - The job has run and is "finishing"
+    Done,       // 4 - The job has run and is done
+    Joined,     // 5 - The job is considered complete because it has been joined to the execution of another matching job execution
+    Queued,     // 6 - The job was queued and will not be tracked for completion (as specified by the "Capture..." task setting)
+    Cut,        // 7 - The job was cut from execution by the pipeline
+    Downloading,// 8 - The job has run and its results are being downloaded (occurs when the TFS Plugin for Jenkins is installed)
+    TestResults // 9 - The job has run and its test results are being downloaded
 }
 
 export class Job {
@@ -60,6 +64,9 @@ export class Job {
     workDelay: number = 0;
 
     parsedExecutionResult: any; // set during state Finishing
+
+    //testResults files
+    testResults : string[] = [];
 
     constructor(jobQueue: JobQueue, parent: Job, taskUrl: string, executableUrl: string, executableNumber: number, name: string) {
         this.parent = parent;
@@ -107,7 +114,9 @@ export class Job {
             } else if (oldState == JobState.Streaming) {
                 validStateChange = (newState == JobState.Finishing);
             } else if (oldState == JobState.Finishing) {
-                validStateChange = (newState == JobState.Downloading || newState == JobState.Queued || newState == JobState.Done);
+                validStateChange = (newState == JobState.Queued || newState == JobState.TestResults);
+            } else if(oldState == JobState.TestResults) {
+                validStateChange = (newState == JobState.Downloading || newState == JobState.Done );
             } else if (oldState == JobState.Downloading) {
                 validStateChange = (newState == JobState.Done);
             } else if (oldState == JobState.Done || oldState == JobState.Joined || oldState == JobState.Cut) {
@@ -133,6 +142,8 @@ export class Job {
                     this.downloadResults();
                 } else if (this.state == JobState.Finishing) {
                     this.finish();
+                } else if(this.state == JobState.TestResults) {
+                    this.publishTestResults();
                 } else {
                     // usually do not get here, but this can happen if another callback caused this job to be joined
                     this.stopWork(this.queue.taskOptions.pollIntervalMillis, null);
@@ -157,6 +168,7 @@ export class Job {
             this.state == JobState.Locating ||
             this.state == JobState.Streaming ||
             this.state == JobState.Downloading ||
+            this.state == JobState.TestResults ||
             this.state == JobState.Finishing
     }
 
@@ -290,7 +302,7 @@ export class Job {
     /**
      * Checks the success of the job
      * 
-     * JobState = Finishing, transition to Downloading, Done, or Queued possible
+     * JobState = Finishing, transition to TestResults or Queued possible
      */
     finish(): void {
         var thisJob: Job = this;
@@ -313,11 +325,7 @@ export class Job {
                     thisJob.debug("parsedBody for: " + resultUrl + ": " + JSON.stringify(parsedBody));
                     if (parsedBody.result) {
                         thisJob.setParsedExecutionResult(parsedBody);
-                        if (thisJob.queue.taskOptions.teamBuildPluginAvailable) {
-                            thisJob.stopWork(0, JobState.Downloading);
-                        } else {
-                            thisJob.stopWork(0, JobState.Done);
-                        }
+                        thisJob.stopWork(0,JobState.TestResults);
                     } else {
                         // result not updated yet -- keep trying
                         thisJob.stopWork(thisJob.queue.taskOptions.pollIntervalMillis, thisJob.state);
@@ -475,4 +483,79 @@ export class Job {
         fullMessage += ')';
         return fullMessage;
     }
+    
+    publishTestResults() : void {
+        var thisJob = this;
+        var fullUrl: string = Util.addUrlSegment(this.executableUrl, '/testReport/api/json');
+        request.get({ url: fullUrl, strictSSL: this.queue.taskOptions.strictSSL },(error, response,body) => {
+            if (error) {
+                Util.handleConnectionResetError(error); // something went bad
+                this.stopWork(this.queue.taskOptions.pollIntervalMillis, this.state);
+                return;
+            } else if (response.statusCode == 200) {
+                //publish results
+                var testResults = JSON.parse(body);
+                var repind:number=1;
+                var queuelen=0;
+                for(var rep of testResults.childReports) {
+                    queuelen++;
+                    request.get({ url: rep.child.url+'/testReport/api/json', strictSSL: this.queue.taskOptions.strictSSL },(error, response,body) => {
+                        if(!error) {
+                            var repBody = JSON.parse(body);
+                            thisJob.readAndPublishTestChildReport(repBody,repind++);
+                            queuelen--;
+                        } else queuelen--;
+                    }).auth(thisJob.queue.taskOptions.username, thisJob.queue.taskOptions.password, true);
+                }
+                //wait until allresults are fetched and then switch to the next state
+                let waitTestResultsComplete = () => {
+                    if(queuelen==0) {
+                        if (thisJob.queue.taskOptions.teamBuildPluginAvailable) thisJob.stopWork(0, JobState.Downloading);
+                        else thisJob.stopWork(0, JobState.Done);
+                        return;
+                    }
+                    tl.debug('wait for test results processing complete..., queuelen='+queuelen);
+                    setTimeout(waitTestResultsComplete,thisJob.queue.taskOptions.pollIntervalMillis);
+                };
+                waitTestResultsComplete();
+            }
+        }).auth(thisJob.queue.taskOptions.username, thisJob.queue.taskOptions.password, true);
+    }
+
+    readAndPublishTestChildReport(repBody:any,repindex:number) : void {
+        let statusMap = {"PASSED": "Passes", "FAILED": "Failed","REGRESSION": "FAILED","FIXED": "Passed","SKIPPED": "NotExecuted"}
+        var curDate:Date = new Date(); 
+        var startDate = new Date(curDate.getTime()-Number.parseFloat(repBody.duration)*1000)
+        var run = new trxGen.TestRun({name: this.name+"_"+repindex,
+            times: {creation: startDate.toISOString(),
+                    start: startDate.toISOString(),
+                    queuing: startDate.toISOString(), 
+                    finish: curDate.toISOString()
+                }});
+        try {
+            for(var suite of repBody.suites) {
+                for(var tres of suite.cases) {
+                    run.addResult({test: new trxGen.UnitTest({
+                            name: tres.name,
+                            methodName: tres.name,
+                            methodCodeBase: tres.name,
+                            methodClassName: tres.className
+                        }),
+                        computerName: "undefined",
+                        outcome: statusMap[tres.status] || 'Failed',
+                        duration: new Date(tres.duration*1000).toTimeString(),
+                        errorMessage: tres.errorDetails,
+                        errorStackTrace: tres.errorStackTrace,
+                    });
+                }
+                var filepath = path.join(tl.getVariable("Agent.BuildDirectory"),`${this.name}_${repindex}.trx`);
+                fs.writeFileSync(filepath,run.toXml());
+                this.testResults.push(filepath);
+            } 
+            tl.debug(`results for ${this.name}_${repindex} were published`);
+        } catch(err) {
+            tl.debug(`error occured while publishing results:` + err);
+        }
+    }
+    
 }

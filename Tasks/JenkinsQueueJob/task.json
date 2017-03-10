@@ -80,6 +80,19 @@
                 "resizable": "true",
                 "rows": "4"
             }
+        },
+        {
+            "name": "addLinks",
+            "type": "multiLine",
+            "label": "Job Links",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify additional links to be published in the Jenkins result section of the build summary page. E.g. links to the additional reports. Links are relative to the jobUrl",
+            "groupName": "advanced",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
         }
     ],
     "execution": {
