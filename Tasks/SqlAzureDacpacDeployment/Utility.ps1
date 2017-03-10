@@ -20,7 +20,7 @@ function Get-AgentIPRange
     [hashtable] $IPRange = @{}
     $sqlCmdArgs = "-S $serverName -U $sqlUsername -P $sqlPassword -Q `"select getdate()`""
 
-    Write-Verbose "Executing sqlcmd.exe with arguments $sqlCmdArgs"
+    Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
     $ErrorActionPreference = 'Continue' 
     ( Invoke-Expression "&sqlcmd.exe --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null
