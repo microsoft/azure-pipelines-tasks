@@ -47,7 +47,7 @@
             "label": "Job is of Multibranch Pipeline type",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "This job is of Multibranch Pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4."
+            "helpMarkDown": "This job is of Multibranch Pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
         },
         {
             "name": "multibranchPipelineBranch",
@@ -56,7 +56,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "isMultibranchJob = true",
-            "helpMarkDown": "Queue this Multibranch Pipeline job on the specified branch. Requires Team Foundation Server Plugin for Jenkins v5.3.4."
+            "helpMarkDown": "Queue this Multibranch Pipeline job on the specified branch. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
         },
         {
             "name": "captureConsole",
@@ -106,7 +106,19 @@
         }
     },
     "messages": {
+        "FailedToGenerateSummary": "Failed to generate build summary.",
+        "succeeded": "succeeded",
+        "unstable": "unstable",
+        "failed": "failed",
+        "notbuilt": "not built",
+        "aborted": "aborted",
+        "unknown": "unknown",
+        "console": "console",
+        "JenkinsPipelineComplete": "Jenkins pipeline complete",
+        "JenkinsJobComplete": "Jenkins job complete",
         "JenkinsJobQueued": "Jenkins job queued",
-        "FailedToGenerateSummary": "Failed to generate build summary."
+        "JenkinsPipelineFailed": "Jenkins pipeline failed",
+        "JenkinsJobFailed": "Jenkins job failed",
+        "JenkinsJobFailedtoQueue": "Jenkins job failed to queue"
     }
 }

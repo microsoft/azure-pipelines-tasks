@@ -184,7 +184,7 @@ export class JobQueue {
         let colorize = (s) => {
             // 'Success' is green, everything else is red
             let color = 'red';
-            if (s === 'succeeded') {
+            if (s === tl.loc('succeeded')) {
                 color = 'green';
             }
 
@@ -198,9 +198,9 @@ export class JobQueue {
             job = findWorkingJob(job);
 
             if (job.executableNumber == -1) {
-                jobContents += indent + job.name + ' ' + colorize(job.getResultString()) + '<br>\n';
+                jobContents += indent + job.name + ' ' + colorize(job.getResultString()) + '<br />\n';
             } else {
-                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString()) + '<br>\n';
+                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString()) + '<br />\n';
             }
 
             var childContents = "";
@@ -240,7 +240,7 @@ export class JobQueue {
             let convertStatus = (s) => {
                 let status = s.toLowerCase();
                 if (status === 'success') {
-                    status = 'succeeded';
+                    status = tl.loc('succeeded');
                 }
 
                 return status;
@@ -253,16 +253,16 @@ export class JobQueue {
                 jobName = `${jobName}/${taskOptions.multibranchPipelineBranch}`;
             }
             jobContent += '[' + jobName + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString());
-            if (job.getResultString() !== 'succeeded') {
-                jobContent += ` ([console](${job.executableUrl}/console))`
+            if (job.getResultString() !== tl.loc('succeeded')) {
+                jobContent += ` ([${tl.loc('console')}](${job.executableUrl}/console))`
             }
-            jobContent += '<br>';
+            jobContent += '<br />';
 
             // For each stage, write its status
             let stageContents = '';
             for (let stage of report['stages']) {
                 let stageUrl = getStageUrl(authority, stage);
-                stageContents += '[' + stage["name"] + '](' + stageUrl + ') ' + colorize(convertStatus(stage.status))+'<br>';
+                stageContents += '[' + stage["name"] + '](' + stageUrl + ') ' + colorize(convertStatus(stage.status))+'<br />';
             }
 
             if (stageContents) {
@@ -320,20 +320,20 @@ export class JobQueue {
                 var message: string = null;
                 if (complete) {
                     if (thisQueue.taskOptions.capturePipeline) {
-                        message = 'Jenkins pipeline complete';
+                        message = tl.loc('JenkinsPipelineComplete');
                     } else if (thisQueue.taskOptions.captureConsole) {
-                        message = 'Jenkins job complete';
+                        message = tl.loc('JenkinsJobCompletee');
                     } else {
-                        message = 'Jenkins job queued';
+                        message = tl.loc('JenkinsJobQueued');
                     }
                     tl.setResult(tl.TaskResult.Succeeded, message);
                 } else {
                     if (thisQueue.taskOptions.capturePipeline) {
-                        message = 'Jenkins pipeline failed';
+                        message = tl.loc('JenkinsPipelineFailed');
                     } else if (thisQueue.taskOptions.captureConsole) {
-                        message = 'Jenkins job failed';
+                        message = tl.loc('JenkinsJobFailed');
                     } else {
-                        message = 'Jenkins job failed to queue';
+                        message = tl.loc('JenkinsJobFailedtoQueue');
                     }
                     tl.setResult(tl.TaskResult.Failed, message);
                 }

@@ -249,19 +249,19 @@ export class Job {
             var resultCode: string = this.parsedExecutionResult.result.toUpperCase();
             // codes map to fields in http://hudson-ci.org/javadoc/hudson/model/Result.html
             if (resultCode == 'SUCCESS') {
-                return 'succeeded';
+                return tl.loc('succeeded');
             } else if (resultCode == 'UNSTABLE') {
-                return 'unstable';
+                return tl.loc('unstable');
             } else if (resultCode == 'FAILURE') {
-                return 'failed';
+                return tl.loc('failed');
             } else if (resultCode == 'NOT_BUILT') {
-                return 'not built';
+                return tl.loc('notbuilt');
             } else if (resultCode == 'ABORTED') {
-                return 'aborted';
+                return tl.loc('aborted');
             } else {
                 return resultCode;
             }
-        } else return 'Unknown';
+        } else return tl.loc('unknown');
     }
 
     initialize() {
