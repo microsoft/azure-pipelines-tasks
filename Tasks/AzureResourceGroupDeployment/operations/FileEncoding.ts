@@ -13,7 +13,7 @@ export class FileEncoding {
     }
 }
 
-function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
+function detectFileEncodingWithBOM(buffer: Buffer) {
     tl.debug('Detecting file encoding using BOM');
     var type: string;
     if (buffer.slice(0, 3).equals(new Buffer([239, 187, 191]))) {
@@ -38,11 +38,8 @@ function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
     return new FileEncoding(type, true);
 }
 
-function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
+function detectFileEncodingWithoutBOM(buffer: Buffer) {
     tl.debug('Detecting file encoding without BOM');
-    if (buffer.length < 4) {
-        tl.debug('Short file buffer error on file ' + fileName + '. length: ' + buffer.length);
-    }
 
     var typeCode = 0;
     var type: string;
@@ -77,10 +74,12 @@ function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
     return new FileEncoding(type, false);
 }
 export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncoding {
-
-    var fileEncoding: FileEncoding = detectFileEncodingWithBOM(fileName, buffer);
+    var fileEncoding: FileEncoding = detectFileEncodingWithBOM(buffer);
     if (fileEncoding == null) {
-        fileEncoding = detectFileEncodingWithoutBOM(fileName, buffer);
+        if (buffer.length < 4) {
+            tl.debug('Short file buffer error on file' + fileName + '. length: ' + buffer.length);
+        }
+        fileEncoding = detectFileEncodingWithoutBOM(buffer);
     }
 
     if (fileEncoding == null) {
