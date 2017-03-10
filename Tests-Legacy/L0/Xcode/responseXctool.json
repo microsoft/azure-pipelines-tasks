@@ -11,22 +11,13 @@
     "build.sourcesDirectory": "/user/build",
     "HOME": "/users/test"
   },
-  "glob": {
+  "findMatch": {
     "**/*.xcodeproj/*.xcworkspace": [
       "/user/build/fun.xcodeproj/project.xcworkspace"
     ],
-    "/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app": [
+    "**/*.app": [
       "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app"
-    ]
-  },
-  "find": {
-    "/user/build": [
-      "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app",
-      "/user/build/test1/test-results.xml",
-      "/user/build/test2/testresults.xml"
-    ]
-  },
-  "match": {
+    ],
     "/user/build/**/*test*.xml": [
       "/user/build/test1/test-results.xml",
       "/user/build/test2/testresults.xml"
