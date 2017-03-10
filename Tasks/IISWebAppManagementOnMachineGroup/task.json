@@ -15,7 +15,7 @@
 	"demands": [],
 	"version": {
 		"Major": 0,
-		"Minor": 1,
+		"Minor": 2,
 		"Patch": 2
 	},
 	"minimumAgentVersion": "2.111.0",
@@ -29,19 +29,31 @@
 		},
 		{
 			"name": "ApplicationPoolForWebsite",
-			"displayName": "IIS application pool",
+			"displayName": "IIS Application pool",
 			"isExpanded": true,
 			"visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && CreateOrUpdateAppPoolForWebsite = true"
 		},
 		{
 			"name": "ApplicationPool",
-			"displayName": "IIS application pool",
+			"displayName": "IIS Application pool",
 			"isExpanded": true,
 			"visibleRule": "ActionIISApplicationPool = CreateOrUpdateAppPool"
 		},
 		{
+			"name": "WebApplication", 
+			"displayName": "IIS Application", 
+			"isExpanded": true,
+			"visibleRule": "IISDeploymentType = IISWebApplication"
+		},
+		{
+			"name": "VirtualDirectory", 
+			"displayName": "IIS Virtual directory", 
+			"isExpanded": true,
+			"visibleRule": "IISDeploymentType = IISVirtualDirectory"
+		},
+		{
 			"name": "ApplicationPoolForApplication",
-			"displayName": "IIS application pool",
+			"displayName": "IIS Application pool",
 			"isExpanded": true,
 			"visibleRule": "IISDeploymentType = IISWebApplication && CreateOrUpdateAppPoolForApplication = true"
 		},
@@ -56,7 +68,7 @@
 			"name": "IISDeploymentType",
 			"type": "pickList",
 			"label": "Configuration type",
-			"required": false,
+			"required": true,
 			"defaultValue": "IISWebsite",
 			"options": {
 				"IISWebsite": "IIS Website",
@@ -75,8 +87,8 @@
 			"visibleRule": "IISDeploymentType = IISWebsite",
 			"options": {
 				"CreateOrUpdateWebsite": "Create Or Update",
-				"StartWebsite": "Start Website",
-				"StopWebsite": "Stop Website"
+				"StartWebsite": "Start",
+				"StopWebsite": "Stop"
 			},
 			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS website. \n\n\"Create Or Update\" will create a website or update an existing website.\n\n Start, Stop will start or stop the website respectively."
 		},
@@ -89,9 +101,9 @@
 			"defaultValue": "CreateOrUpdateAppPool",
 			"options": {
 				"CreateOrUpdateAppPool": "Create Or Update",
-				"StartAppPool": "Start Application Pool",
-				"StopAppPool": "Stop Applcation Pool",
-				"RecycleAppPool": "Recycle Application Pool"
+				"StartAppPool": "Start",
+				"StopAppPool": "Stop",
+				"RecycleAppPool": "Recycle"
 			},
 			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS Application Pool. \n\n\"Create Or Update\" will create app-pool or update an existing one.\n\nStart, Stop, Recycle will start, stop or recycle the application pool respectively."
 		},
@@ -153,7 +165,7 @@
 			"groupName": "Website",
 			"defaultValue": "",
 			"visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path."
+			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>" 
 		},
 		{
 			"name": "AddBinding",
@@ -326,7 +338,7 @@
 			"defaultValue": "",
 			"required": false,
 			"groupName": "ApplicationPoolForWebsite",
-			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. ",
+			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>",
 			"visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
 		},	
 		{
@@ -335,7 +347,7 @@
 			"label": "Parent website name",
 			"defaultValue": "",
 			"required": true,
-			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
+			"groupName": "VirtualDirectory",
 			"helpMarkDown": "Provide the name of the parent Website of the virtual directory."
 		},
 		{
@@ -344,7 +356,7 @@
 			"label": "Virtual path",
 			"defaultValue": "",
 			"required": true,
-			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
+			"groupName": "VirtualDirectory",
 			"helpMarkDown": "Provide the virtual path of the virtual directory. \n\nExample: To create a virtual directory Site/Application/VDir enter /Application/Vdir. The parent website and application should be already existing."
 		},
 		{
@@ -353,7 +365,7 @@
 			"label": "Physical path",
 			"defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
 			"required": true,
-			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
+			"groupName": "VirtualDirectory",
 			"helpMarkDown": "Provide the physical path where the virtual directory's content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
 		},
 		{
@@ -361,7 +373,7 @@
 			"type": "pickList",
 			"label": "Physical path authentication",
 			"required": false,
-			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
+			"groupName": "VirtualDirectory",
 			"defaultValue": "Application User (Pass-through)",
 			"options": {
 				"VDUserPassThrough": "Application User (Pass-through)",
@@ -375,6 +387,7 @@
 			"label": "Username",
 			"required": true,
 			"defaultValue": "",
+			"groupName": "VirtualDirectory",
 			"visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
 			"helpMarkDown": "Provide the user name that will be used to access the virtual directory's physical path."
 		},
@@ -384,8 +397,9 @@
 			"label": "Password",
 			"required": false,
 			"defaultValue": "",
+			"groupName": "VirtualDirectory",
 			"visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the virtual directory's physical path."
+			"helpMarkDown": "Provide the user's password that will be used to access the virtual directory's physical path. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
 		},
 		{
 			"name": "ParentWebsiteNameForApplication",
@@ -393,7 +407,7 @@
 			"label": "Parent website name",
 			"defaultValue": "",
 			"required": true,
-			"visibleRule": "IISDeploymentType = IISWebApplication",
+			"groupName": "WebApplication",
 			"helpMarkDown": "Provide the name of the parent Website under which the application will be created or updated."
 		},
 		{
@@ -402,7 +416,7 @@
 			"label": "Virtual path",
 			"defaultValue": "",
 			"required": true,
-			"visibleRule": "IISDeploymentType = IISWebApplication",
+			"groupName": "WebApplication",
 			"helpMarkDown": "Provide the virtual path of the application. \n\nExample: To create an application Site/Application enter /Application. The parent website should be already existing." 
 		},
 		{
@@ -411,7 +425,7 @@
 			"label": "Physical path",
 			"defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
 			"required": true,
-			"visibleRule": "IISDeploymentType = IISWebApplication",
+			"groupName": "WebApplication",
 			"helpMarkDown": "Provide the physical path where the application's content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
 		},
 		{
@@ -419,7 +433,7 @@
 			"type": "pickList",
 			"label": "Physical path authentication",
 			"required": false,
-			"visibleRule": "IISDeploymentType = IISWebApplication",
+			"groupName": "WebApplication",
 			"defaultValue": "Application User (Pass-through)",
 			"options": {
 				"ApplicationUserPassThrough": "Application User (Pass-through)",
@@ -433,6 +447,7 @@
 			"label": "Username",
 			"required": true,
 			"defaultValue": "",
+			"groupName": "WebApplication",
 			"visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
 			"helpMarkDown": "Provide the user name that will be used to access the application's physical path."
 		},
@@ -442,8 +457,9 @@
 			"label": "Password",
 			"required": false,
 			"defaultValue": "",
+			"groupName": "WebApplication",
 			"visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the application's physical path."
+			"helpMarkDown": "Provide the user's password that will be used to access the application's physical path. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
 		},
 		{
 			"name": "CreateOrUpdateAppPoolForApplication",
@@ -451,7 +467,7 @@
 			"label": "Create or update app pool",
 			"required": false,
 			"defaultValue": "false",
-			"visibleRule": "IISDeploymentType = IISWebApplication",
+			"groupName": "WebApplication",
 			"helpMarkDown": "Select the option to create or update an application pool. If checked, the application will be created in the specified app pool."
 		},
 		{
@@ -524,7 +540,7 @@
 			"required": false,
 			"groupName": "ApplicationPoolForApplication",			
 			"visibleRule": "AppPoolIdentityForApplication = SpecificUser",
-			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'."
+			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
 		},
 		{
 			"name": "AppPoolName",
@@ -596,7 +612,7 @@
 			"required": false,
 			"groupName": "ApplicationPool",
 			"visibleRule": "AppPoolIdentity = SpecificUser",
-			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'."
+			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
 		},
 		{
 			"name": "StartStopRecycleAppPoolName",
@@ -625,7 +641,10 @@
 	"messages": {
 		"InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
 		"InvalidVirtualPath": "Virtual path should begin with a /",
-		"InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}"
+		"InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}",
+		"InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
+		"InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool.",
+		"SSLCertWarningInvalidCharacters": "SSL Certificate thumbprint contains non-hexadecimal characters. Trimming all non-hexadecimal characters."
 	}
 
 }
