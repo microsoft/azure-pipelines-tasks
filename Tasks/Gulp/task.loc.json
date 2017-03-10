@@ -43,7 +43,7 @@
   "inputs": [
     {
       "name": "gulpFile",
-      "type": "filePath",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.gulpFile",
       "defaultValue": "gulpfile.js",
       "required": true,

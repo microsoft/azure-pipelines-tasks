@@ -43,7 +43,11 @@ export var gulpGlobalGood: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         ],
         "**/*.js": [
             "/test/test.js"
-        ]
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
+        ],
+        "/invalid/input": []
     },
     "getVariable": {
         "System.DefaultWorkingDirectory": "/user/build"
@@ -81,6 +85,9 @@ export var gulpLocalGood: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
         ]
     },
     "getVariable": {
@@ -123,6 +130,9 @@ export var gulpNoGulpFile: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "gulpfile.js": false,
         "**/build/test/*.js": true
     },
+    "findMatch": {
+        "gulpfile.js": []
+    },
     "exist": {
         "/usr/local/bin/gulp": true
     }
@@ -145,6 +155,9 @@ export var gulpNoGulp: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
         ]
     }
 }
@@ -185,6 +198,9 @@ export var npmFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         ],
         "**/*.js": [
             "/test/test.js"
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
         ]
     },
     "getVariable": {
@@ -225,6 +241,9 @@ export var gulpFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
         ]
     }
 }
@@ -275,6 +294,9 @@ export var istanbulFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         ],
         "**/*.js": [
             "/test/test.js"
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
         ]
     },
     "getVariable": {
@@ -328,6 +350,9 @@ export var invalidTestSource: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         ],
         "**/*.js": [
             "/test/test.js"
+        ],
+        "gulpfile.js": [
+            "gulpfile.js"
         ]
     },
     "getVariable": {

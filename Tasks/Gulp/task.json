@@ -43,7 +43,7 @@
     "inputs": [
         {
             "name": "gulpFile",
-            "type": "filePath",
+            "type": "multiLine",
             "label": "Gulp File Path",
             "defaultValue": "gulpfile.js",
             "required": true,

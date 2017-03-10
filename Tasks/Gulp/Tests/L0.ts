@@ -148,7 +148,7 @@ describe('Gulp Task', function () {
         tr.run();
 
         assert(tr.failed, 'should have failed');
-        var expectedErr = 'Error: Not found gulpfile.js';
+        var expectedErr = 'Error: loc_mock_NoGulpFileFound gulpfile.js';
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
