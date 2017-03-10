@@ -1,5 +1,7 @@
 export var BuiltInTemplateOSTypeWindows = "windows";
 export var BuiltInWindowsTemplateName =  "default.windows.template.json";
+export var BuiltInTemplateOSTypeLinux = "linux";
+export var BuiltInLinuxTemplateName =  "default.linux.template.json";
 
 export var OsTypeInputName = "osType";
 export var ResourceGroupInputName = "azureResourceGroup";
