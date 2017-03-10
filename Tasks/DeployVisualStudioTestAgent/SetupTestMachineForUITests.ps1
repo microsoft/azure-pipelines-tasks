@@ -24,7 +24,7 @@ function Set-EnableAutoLogon($TestUserDomain, $TestUserName, $TestUserPassword) 
     Write-Verbose -Message "Enabling auto logon"
 
     # If the type has already been loaded once, then it is not loaded again.
-        Add-Type -Language CSharp -TypeDefinition @'
+    Add-Type -Language CSharp -TypeDefinition @'
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -455,6 +455,7 @@ namespace MS.VS.TestTools.Config
 '@
 
     try {
+
         Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoAdminLogon -Value 1 -ErrorAction SilentlyContinue
         Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultUserName -Value $TestUserName -ErrorAction SilentlyContinue
         Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultDomainName -Value $TestUserDomain -ErrorAction SilentlyContinue
@@ -470,38 +471,148 @@ namespace MS.VS.TestTools.Config
     }
 }
 
-# Getting rid of old Session check. WTSEnumerateSessions spits out if there are any active sessions are available
-# And we are not checking if the active session belongs to the test user. if not, then the machine should get rebooted
-# Most importantly, WTSEnumerateSessions throws all sort of sessions [Remote PS, RDP, Pings from remote machines]
-# For UI testing, we need active local users logged in instead of sessions check
-function IsTestUserCurrentlyLoggedIn($TestUserName)
+# Adding check for whether the test user has the active session or not.
+# Previously we were checking for any active session which doesn't reflect to test user active sessions
+function IsTestUserCurrentlyLoggedIn($TestUserDomain, $TestUserName)
 {
-    $computer = $env:COMPUTERNAME
-    try {
-        $quserOut = quser.exe /SERVER:$computer 2>&1
-    }
-    catch {
-        return $false
-    }
-    
-    if ($quserOut -match "No user exists")
-    {
-        Write-Verbose "No users logged in" -Verbose
-        return $false
-    }
+    Add-Type -Language CSharp -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
 
-    $users = $quserOut -replace '\s{2,}', ',' | ConvertFrom-CSV -Header 'username', 'sessionname', 'id', 'state', 'idleTime', 'logonTime'
-    $users = $users[1..$users.count]
-
-    foreach ($user in $users)
+namespace MS.VS.TestTools.Config
+{
+    public static class EnumerateUsers
     {
-        Write-Verbose "Logged in user: $($user.username) $($user.state)" -Verbose
-        if(($user.username -ieq $TestUserName) -and ($user.state -ieq 'active')) {
-            Write-Verbose "User $TestUserName has active session" -Verbose
-            return $true
+        [DllImport("wtsapi32.dll")]
+        static extern IntPtr WTSOpenServer([MarshalAs(UnmanagedType.LPStr)] String pServerName);
+
+        [DllImport("wtsapi32.dll")]
+        static extern void WTSCloseServer(IntPtr hServer);
+
+        [DllImport("wtsapi32.dll")]
+        static extern Int32 WTSEnumerateSessions(
+            IntPtr hServer,
+            [MarshalAs(UnmanagedType.U4)] Int32 Reserved,
+            [MarshalAs(UnmanagedType.U4)] Int32 Version,
+            ref IntPtr ppSessionInfo,
+            [MarshalAs(UnmanagedType.U4)] ref Int32 pCount);
+
+        [DllImport("wtsapi32.dll")]
+        static extern void WTSFreeMemory(IntPtr pMemory);
+
+        [DllImport("Wtsapi32.dll")]
+        static extern bool WTSQuerySessionInformation(
+            System.IntPtr hServer, int sessionId, WTS_INFO_CLASS wtsInfoClass, out System.IntPtr ppBuffer, out uint pBytesReturned);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct WTS_SESSION_INFO
+        {
+            public Int32 SessionID;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public String pWinStationName;
+
+            public WTS_CONNECTSTATE_CLASS State;
+        }
+
+        public enum WTS_INFO_CLASS
+        {
+            WTSInitialProgram,
+            WTSApplicationName,
+            WTSWorkingDirectory,
+            WTSOEMId,
+            WTSSessionId,
+            WTSUserName,
+            WTSWinStationName,
+            WTSDomainName,
+            WTSConnectState,
+            WTSClientBuildNumber,
+            WTSClientName,
+            WTSClientDirectory,
+            WTSClientProductId,
+            WTSClientHardwareId,
+            WTSClientAddress,
+            WTSClientDisplay,
+            WTSClientProtocolType
+        }
+        public enum WTS_CONNECTSTATE_CLASS
+        {
+            WTSActive,
+            WTSConnected,
+            WTSConnectQuery,
+            WTSShadow,
+            WTSDisconnected,
+            WTSIdle,
+            WTSListen,
+            WTSReset,
+            WTSDown,
+            WTSInit
+        }
+
+        public static IntPtr OpenServer(String Name)
+        {
+            IntPtr server = WTSOpenServer(Name);
+            return server;
+        }
+        public static void CloseServer(IntPtr ServerHandle)
+        {
+            WTSCloseServer(ServerHandle);
+        }
+        public static bool IsActiveSessionExists(string testUserDomain, string testUsername)
+        {
+            var serverHandle = IntPtr.Zero;
+            serverHandle = OpenServer(Environment.MachineName);
+            var SessionInfoPtr = IntPtr.Zero;
+
+            try
+            {
+                var userPtr = IntPtr.Zero;
+                var domainPtr = IntPtr.Zero;
+                var sessionCount = 0;
+                var retVal = WTSEnumerateSessions(serverHandle, 0, 1, ref SessionInfoPtr, ref sessionCount);
+                var dataSize = Marshal.SizeOf(typeof(WTS_SESSION_INFO));
+                var currentSession = SessionInfoPtr;
+
+                if (retVal != 0)
+                {
+                    for (var i = 0; i < sessionCount; i++)
+                    {
+                        uint bytes = 0;
+                        var si = (WTS_SESSION_INFO)Marshal.PtrToStructure(currentSession, typeof(WTS_SESSION_INFO));
+                        currentSession += dataSize;
+
+                        WTSQuerySessionInformation(serverHandle, si.SessionID, WTS_INFO_CLASS.WTSUserName, out userPtr, out bytes);
+                        WTSQuerySessionInformation(serverHandle, si.SessionID, WTS_INFO_CLASS.WTSDomainName, out domainPtr, out bytes);
+
+                        var domain = Marshal.PtrToStringAnsi(domainPtr);
+                        var username = Marshal.PtrToStringAnsi(userPtr);
+
+                        Console.WriteLine("Domain : " + domain + "; Username: " + username + "; State: " + si.State);
+
+                        if (testUserDomain.Equals(domain, StringComparison.OrdinalIgnoreCase) &&
+                            testUsername.Equals(username, StringComparison.OrdinalIgnoreCase) &&
+                            si.State == WTS_CONNECTSTATE_CLASS.WTSActive)
+                        {
+                            WTSFreeMemory(userPtr);
+                            WTSFreeMemory(domainPtr);
+                            return true;
+                        }
+                        WTSFreeMemory(userPtr);
+                        WTSFreeMemory(domainPtr);
+                    }
+                }
+            }
+            finally
+            {
+                WTSFreeMemory(SessionInfoPtr);
+                CloseServer(serverHandle);
+            }
+            return false;
         }
     }
-    return $false
+}
+'@
+    return [MS.VS.TestTools.Config.EnumerateUsers]::IsActiveSessionExists($TestUserDomain, $TestUserName)
 }
 
 function SetupTestMachine($TestUserName, $TestUserPassword) {
@@ -517,13 +628,13 @@ function SetupTestMachine($TestUserName, $TestUserPassword) {
         $TestUser = $TestUserName
     }
 
-    Write-Verbose -Message "Test username $TestUser" -Verbose
-    Write-Verbose -Message "Test user domain $Domain" -Verbose
+    Write-Verbose -Message "Test User $TestUser" -Verbose
+    Write-Verbose -Message "Test UserDomain $Domain" -Verbose
 
     Set-DisableScreenSaverReg | Out-Null
     ConfigurePowerOptions | Out-Null
     
-    $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserName $TestUser
+    $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserDomain $Domain -TestUserName $TestUser
     if(-not $isTestUserLogged)
     {
         Write-Verbose "Currently test user is not logged in. Rebooting machine." -Verbose
