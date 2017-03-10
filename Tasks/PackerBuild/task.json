@@ -45,7 +45,7 @@
             }
         },
         {
-            "name": "azureStorageAccount",
+            "name": "storageAccountName",
             "type": "pickList",
             "label": "Storage account",
             "defaultValue": "",
@@ -117,17 +117,25 @@
         {
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureLocations"
+            "dataSourceName": "AzureLocations2",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
         },
         {
-            "target": "azureStorageAccount",
+            "target": "storageAccountName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureStorageAccountRM"
+            "dataSourceName": "AzureRMStorageAccountByLocation",
+            "parameters": {
+                "location": "$(location)"
+            }
         },
         {
             "target": "azureResourceGroup",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups"
+            "dataSourceName": "AzureRMStorageAccountIdByName",
+            "parameters": {
+                "storageAccountName": "$(storageAccountName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
         }
     ],
     "sourceDefinitions": [],

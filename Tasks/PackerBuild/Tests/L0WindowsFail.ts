@@ -6,7 +6,7 @@ let taskPath = path.join(__dirname, '..\\src\\main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('azureResourceGroup', 'testrg');
-tr.setInput('azureStorageAccount', 'teststorage');
+tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImage', !!process.env["__ostype__"] ? 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:' + process.env["__ostype__"] : 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows');
 tr.setInput('location', 'South India');
 tr.setInput('packagePath', 'C:\\dummy.zip');
