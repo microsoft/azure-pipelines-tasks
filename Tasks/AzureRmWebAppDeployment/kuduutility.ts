@@ -153,7 +153,7 @@ async function uploadFiletoKudu(publishingProfile, physicalPath: string, fileNam
             defer.reject(tl.loc('failedtoUploadFileToKuduError', fileName, kuduDeploymentURL));
         }
         else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
-            tl.debug('file: ' + fileName + ' uploaded at path: ' + physicalPath);
+            tl.debug('Uploaded file: ' + fileName + ' at path: ' + physicalPath);
             defer.resolve('file uploaded to Kudu');
         }
         else {
@@ -176,7 +176,7 @@ async function deleteFileFromKudu(publishingProfile, physicalPath: string, fileN
     tl.debug('Removing file: ' + fileName + ' using publishUrl: ' + kuduDeploymentURL);
     httpObj.get('DELETE', kuduDeploymentURL, headers, (error, response, contents) => {
         if(response.statusCode === 200 || response.statusCode === 204) {
-            tl.debug('file: ' + fileName + ' removed from path: ' + physicalPath);
+            tl.debug('Removed file: ' + fileName + ' from path: ' + physicalPath);
             defer.resolve('file removed from kudu');
         }
         else if(error) {
@@ -242,24 +242,52 @@ async function getFileContent(publishingProfile, physicalPath, fileName) {
     });
     return defer.promise;
 }
-
-async function pollForFile(publishingProfile, physicalPath, fileName) {
+/**
+ * Poll for a file in Kudu
+ * @param publishingProfile publishing profile of App Service (contains credentials for web deploy)
+ * @param physicalPath Path where to look for file
+ * @param fileName File name
+ * @param noOfRetry max. no. of retry.
+ * @param checkForFileExists If set, then poll until the file exists else poll until the file is removed by other process
+ */
+async function pollForFile(publishingProfile, physicalPath: string, fileName: string, noOfRetry: number, fileAction: string) {
     var defer = Q.defer();
-    var attempts = 0;
-    tl.debug('Polling started for file: ' + fileName);
+    var attempts: number = 0;
+    if(tl.getVariable('appservicedeploy.retrytimeout')) {
+        noOfRetry = Number(tl.getVariable('appservicedeploy.retrytimeout')) * 6;
+        tl.debug('Retry timeout provided by user: ' + noOfRetry);
+    }
+    tl.debug('Polling started for file: ' + fileName + ' to ' + fileAction);
     var poll = async function () {
-        if (attempts < 180) {
+        if (attempts < noOfRetry) {
             attempts += 1;
-            var fileContent;
             try {
-                fileContent = await getFileContent(publishingProfile, physicalPath, fileName);
-                tl.debug('Found file:  ' + fileName);
-                defer.resolve('');
+                var fileContent = (await getFileContent(publishingProfile, physicalPath, fileName))['content'];
+                if(fileAction  === 'CheckFileExists') {
+                    tl.debug('Found file:  ' + fileName);
+                    defer.resolve(fileContent);
+                }
+                else if(fileAction === 'CheckFileNotExists') {
+                    tl.debug('File: ' + fileName + 'found. retry after 10 seconds. Attempt: ' + attempts);
+                    setTimeout(poll, 10000);
+                }
+                else {
+                    defer.reject(tl.loc('InvalidPollOption', fileAction));
+                }
             }
             catch(error) {
                 if(error.statusCode === 404) {
-                    tl.debug('File ' + fileName + ' not found. rerty after 10 seconds. Attempt : ' + attempts);
-                    setTimeout(poll, 10000);
+                    if(fileAction  === 'CheckFileExists') {
+                        tl.debug('File ' + fileName + ' not found. rerty after 10 seconds. Attempt : ' + attempts);
+                        setTimeout(poll, 10000);
+                    }
+                    else if(fileAction === 'CheckFileNotExists') {
+                        tl.debug('File: ' + fileName + 'not found.');
+                        defer.resolve();
+                    }
+                    else {
+                        defer.reject(tl.loc('InvalidPollOption', fileAction));
+                    }
                 }
                 else {
                     if(error.error) {
@@ -272,6 +300,7 @@ async function pollForFile(publishingProfile, physicalPath, fileName) {
             }
         }
         else {
+            tl.warning(tl.loc('PollingForFileTimeOut'));
             defer.reject(tl.loc('ScriptStatusTimeout'));
         }
     }
@@ -288,26 +317,37 @@ async function getPostDeploymentScriptLogs(publishingProfile, physicalPath, uniq
     try {
         var stdoutLog = (await getFileContentUtility(publishingProfile, physicalPath, 'stdout_' + uniqueID + '.txt'));
         var stderrLog = (await getFileContentUtility(publishingProfile, physicalPath, 'stderr_' + uniqueID + '.txt'));
-        var scriptReturnCode = (await getFileContentUtility(publishingProfile, physicalPath, 'script_result_' + uniqueID + '.txt')).trim();
+        var scriptReturnCode = ((await getFileContentUtility(publishingProfile, physicalPath, 'script_result_' + uniqueID + '.txt')).trim());
     }
     catch(error) {
         throw Error(error);
     }
-    if(stdoutLog) {
+   if(stdoutLog) {
         console.log(tl.loc('stdoutFromScript'));
         console.log(stdoutLog);
     }
     if(stderrLog) {
         console.log(tl.loc('stderrFromScript'));
-        console.log(stderrLog);
         if(scriptReturnCode != '0') {
             tl.error(stderrLog);
-            throw Error(tl.loc('SciptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
+            throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
+        }
+        else {
+            console.log(stderrLog);
         }
     }
 }
-async function runCommandOnKudu(publishingProfile, physicalPath: string, command: string, uniqueID) {
-    var defer = Q.defer<string>();
+/**
+ * Run given command on Kudu
+ * @param publishingProfile Publishing profile
+ * @param physicalPath Path where to run the command
+ * @param command command to run
+ * @param timeout if timeOut is 0, then runs command synchronously, else run command async and polls for given file [within the time limit (in Minutes)]
+ * @param pollFile poll for file if command runs async 
+ * @returns {ExitCode, Stdout, Stderr} for sync and {pollFileContent} for async call
+ */
+async function runCommandOnKudu(publishingProfile, physicalPath: string, command: string, timeOut: number, pollFile: string) {
+    var defer = Q.defer();
     var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/command";
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
     var headers = {
@@ -320,23 +360,36 @@ async function runCommandOnKudu(publishingProfile, physicalPath: string, command
         'dir': physicalPath
     };
 
-    tl.debug('Executing Script on Kudu: ' + kuduDeploymentURL + '. Command: ' + command);
+    tl.debug('Executing Script on Kudu: ' + kuduDeploymentURL + '. Command: ' + command + '. runAsync : ' + (timeOut > 0));
     httpObj.send('POST', kuduDeploymentURL, JSON.stringify(jsonData), headers, async (error, response, body) => {
         if(error) {
-            if(error.toString().indexOf('Request timeout: /api/command') != -1) {
-                tl.debug('Request timeout occurs. Trying to poll for file: script_result.txt');
+            if(timeOut > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
+                tl.debug('Request timeout occurs. Trying to poll for file: ' + pollFile);
                 try {
-                    await pollForFile(publishingProfile, physicalPath, 'script_result_' + uniqueID + '.txt');
-                    defer.resolve('');
+                    defer.resolve( {
+                        'pollFileContent': await pollForFile(publishingProfile, physicalPath, pollFile, timeOut * 6, 'CheckFileExists')
+                    });
                 }
-                catch(error) {
-                    defer.reject(error);
+                catch(pollError) {
+                    defer.reject(pollError);
                 }
             }
             defer.reject(tl.loc('FailedToRunScriptOnKuduError', kuduDeploymentURL, error));
         }
         else if(response.statusCode === 200) {
-            defer.resolve(tl.loc('SciptExecutionOnKuduSuccess'));
+            tl.debug('successfully executed script on kudu');
+            if(timeOut > 0) {
+                tl.debug('Async command execution completed. polling for file: ' + pollFile);
+                try {
+                    defer.resolve( {
+                        'pollFileContent': await pollForFile(publishingProfile, physicalPath, pollFile, timeOut * 6, 'CheckFileExists')
+                    });
+                }
+                catch(pollError) {
+                    defer.reject(pollError);
+                }
+            }
+            defer.resolve(JSON.parse(body));
         }
         else {
             defer.reject(tl.loc('FailedToRunScriptOnKudu', kuduDeploymentURL, response.statusCode, response.statusMessage));
@@ -347,6 +400,7 @@ async function runCommandOnKudu(publishingProfile, physicalPath: string, command
 
 function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
     if(scriptType === 'Inline Script') {
+        tl.debug('creating kuduPostDeploymentScript_local file');
         var scriptFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'),'kuduPostDeploymentScript_local.cmd');
         tl.writeFile(scriptFilePath, inlineScript);
         tl.debug('Created temporary script file : ' + scriptFilePath);
@@ -362,6 +416,7 @@ function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
     if(scriptExtension != '.bat' && scriptExtension != '.cmd') {
         throw Error(tl.loc('InvalidScriptFile', scriptPath));
     }
+    tl.debug('postDeployment script path to execute : ' + scriptPath);
     return {
         filePath: scriptPath,
         isCreated: false
@@ -371,23 +426,21 @@ function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
 export async function runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, appOfflineFlag) {
     var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
     var uniqueID = azureUtility.generateDeploymentId();
-
+    tl.debug('Deployment ID : ' + uniqueID);
     var deleteLogFiles = false;
+
     if(appOfflineFlag) {
         var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_local.htm');
         tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
         await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', appOfflineFilePath);
     }
     try {
-        var mainCmdFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'mainFile_local.cmd');
-        tl.writeFile(mainCmdFilePath, "@echo off\ncall kuduPostDeploymentScript_" + uniqueID + ".cmd" +
-                    " > stdout_" + uniqueID + ".txt 2> stderr_" + uniqueID + ".txt\n" +
-                    "echo %errorlevel% > script_result_" + uniqueID + ".txt"
-        );
+        var mainCmdFilePath = path.join(__dirname, 'postDeploymentScript', 'mainCmdFile.cmd');
         await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', mainCmdFilePath);
         await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript_' + uniqueID + '.cmd', scriptFile.filePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
-        console.log(await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', uniqueID));
+        await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile_' + uniqueID + '.cmd ' + uniqueID, 180, 'script_result_' +  uniqueID + '.txt');
+        console.log(tl.loc('ScriptExecutionOnKuduSuccess'));
         deleteLogFiles = true;
         await getPostDeploymentScriptLogs(publishingProfile, 'site/wwwroot', uniqueID);
     }
@@ -398,13 +451,14 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
         if(scriptFile.isCreated) {
             tl.rmRF(scriptFile.filePath, true);
         }
-        tl.rmRF(mainCmdFilePath, true);
-        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', true);
-        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript_' + uniqueID + '.cmd', true);
-        if(deleteLogFiles) {
-            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'stdout_' + uniqueID + '.txt', true);
-            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'stderr_' + uniqueID + '.txt', true);
-            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'script_result_' + uniqueID + '.txt', true);
+
+        try {
+            await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'delete_log_file_' + uniqueID + '.cmd', path.join(__dirname, 'postDeploymentScript', 'deleteLogFile.cmd'));
+            var commandResult = await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'delete_log_file_' + uniqueID + '.cmd ' + uniqueID, 0, null);
+            tl.debug(JSON.stringify(commandResult));
+        }
+        catch(error) {
+            tl.debug('Unable to delete log files : ' + error);
         }
         if(appOfflineFlag) {
             await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', false);
