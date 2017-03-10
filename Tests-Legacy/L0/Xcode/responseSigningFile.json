@@ -21,7 +21,7 @@
     "build.sourcesDirectory": "/user/build",
     "HOME": "/users/test"
   },
-  "glob": {
+  "findMatch": {
     "**/*.xcodeproj/*.xcworkspace": [
       "/user/build/fun.xcodeproj/project.xcworkspace"
     ]

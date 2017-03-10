@@ -346,6 +346,12 @@
       "argumentFormat": ""
     }
   },
+  "postjobexecution": {
+    "Node": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    }
+  },
   "messages": {
     "SignIdNotFound": "ms-resource:loc.messages.SignIdNotFound",
     "TempKeychainSetupFailed": "ms-resource:loc.messages.TempKeychainSetupFailed",
