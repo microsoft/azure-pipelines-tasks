@@ -83,7 +83,7 @@ try {
         }
 }
 finally {
-    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
+    if ((Get-Variable -Name __vstsAzPSInlineScriptPath -ErrorAction SilentlyContinue) -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
 }
