@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 115,
+    "Patch": 0
   },
   "groups": [
     {
@@ -58,7 +58,8 @@
         "Apple": "Apple",
         "AndroidJava": "Android (Java)",
         "AndroidNative": "Android (native C/C++)",
-        "Windows": "Windows"
+        "Windows": "Windows 8.1",
+        "UWP": "Universal Windows Platform (UWP)"
       }
     },
     {
@@ -68,7 +69,17 @@
       "groupName": "symbols",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.symbolsPath",
-      "visibleRule": "symbolsType = Windows || symbolsType == AndroidNative"
+      "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
+    },
+    {
+      "name": "pdbPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.pdbPath",
+      "defaultValue": "**/*.pdb",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pdbPath",
+      "visibleRule": "symbolsType = UWP"
     },
     {
       "name": "dsymPath",
@@ -147,6 +158,7 @@
     "Succeeded": "ms-resource:loc.messages.Succeeded",
     "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
-    "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile"
+    "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
+    "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
   }
 }

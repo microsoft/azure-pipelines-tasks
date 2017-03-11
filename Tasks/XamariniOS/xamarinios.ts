@@ -11,6 +11,7 @@ async function run() {
         // Get build inputs
         var solutionPath = tl.getPathInput('solution', true, true);
         var configuration = tl.getInput('configuration', true);
+        var clean = tl.getBoolInput('clean');
         var args = tl.getInput('args');
         var packageApp = tl.getBoolInput('packageApp');
         var buildForSimulator = tl.getBoolInput('forSimulator');
@@ -18,6 +19,7 @@ async function run() {
         tl.debug('device: ' + device);
         var xbuildLocation = tl.getInput('mdtoolLocation', false);
         var cwd = tl.getInput('cwd');
+        let runNugetRestore : boolean = tl.getBoolInput('runNugetRestore');
 
         // Get path to xbuild
         var xbuildToolPath = undefined;
@@ -28,19 +30,27 @@ async function run() {
             xbuildToolPath = tl.which('xbuild', true);
         }
 
-        // Find location of nuget
-        var nugetPath = tl.which('nuget', true);
+        if(clean) {
+            var xbuildRunner = tl.tool(xbuildToolPath);
+            xbuildRunner.arg(solutionPath);
+            xbuildRunner.argIf(configuration, '/p:Configuration=' + configuration);
+            xbuildRunner.argIf(device, '/p:Platform=' + device);
+            xbuildRunner.arg('/t:Clean');
+            await xbuildRunner.exec();
+        }
 
-        // Restore NuGet packages of the solution
-        var nugetRunner = tl.tool(nugetPath);
-        nugetRunner.arg(['restore', solutionPath]);
-        await nugetRunner.exec();
+        if(runNugetRestore) {
+            // Find location of nuget
+            var nugetPath = tl.which('nuget', true);
+
+            // Restore NuGet packages of the solution
+            var nugetRunner = tl.tool(nugetPath);
+            nugetRunner.arg(['restore', solutionPath]);
+            await nugetRunner.exec();
+        }
 
         //Process working directory
-        var cwd = cwd
-            || tl.getVariable('build.sourceDirectory')
-            || tl.getVariable('build.sourcesDirectory')
-            || tl.getVariable('System.DefaultWorkingDirectory');
+        var cwd = cwd || tl.getVariable('System.DefaultWorkingDirectory');
         tl.cd(cwd);
 
         var signMethod:string = tl.getInput('signMethod', false);

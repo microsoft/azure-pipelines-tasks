@@ -27,7 +27,32 @@ if (matchedFiles.length > 0) {
     // clean target folder if required
     if (cleanTargetFolder) {
         console.log(tl.loc('CleaningTargetFolder', targetFolder));
-        tl.rmRF(targetFolder);
+
+        // stat the targetFolder path
+        let targetFolderStats: tl.FsStats;
+        try {
+            targetFolderStats = tl.stats(targetFolder);
+        }
+        catch (err) {
+            if (err.code != 'ENOENT') {
+                throw err;
+            }
+        }
+
+        if (targetFolderStats) {
+            if (targetFolderStats.isDirectory()) {
+                // delete the child items
+                fs.readdirSync(targetFolder)
+                    .forEach((item: string) => {
+                        let itemPath = path.join(targetFolder, item);
+                        tl.rmRF(itemPath);
+                    });
+            }
+            else {
+                // targetFolder is not a directory. delete it.
+                tl.rmRF(targetFolder);
+            }
+        }
     }
 
     // make sure the target folder exists
@@ -59,7 +84,7 @@ if (matchedFiles.length > 0) {
 
             // stat the target
             let targetStats: tl.FsStats;
-            if (!cleanTargetFolder) { // optimization - no need to check if target exists when CleanTargetFolder=true
+            if (!cleanTargetFolder) { // optimization - no need to check if relative target exists when CleanTargetFolder=true
                 try {
                     targetStats = tl.stats(targetPath);
                 }

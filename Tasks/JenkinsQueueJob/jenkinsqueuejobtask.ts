@@ -24,6 +24,8 @@ export class TaskOptions {
     password: string;
 
     jobName: string;
+    isMultibranchPipelineJob: boolean;
+    multibranchPipelineBranch: string;
 
     captureConsole: boolean;
     // capturePipeline is only possible if captureConsole mode is enabled
@@ -56,6 +58,10 @@ export class TaskOptions {
         this.password = this.serverEndpointAuth['parameters']['password'];
 
         this.jobName = tl.getInput('jobName', true);
+        this.isMultibranchPipelineJob = tl.getBoolInput('isMultibranchJob', false);
+        if (this.isMultibranchPipelineJob) {
+            this.multibranchPipelineBranch = tl.getInput('multibranchPipelineBranch', true);
+        }
 
         this.captureConsole = tl.getBoolInput('captureConsole', true);
         // capturePipeline is only possible if captureConsole mode is enabled
@@ -96,12 +102,12 @@ export class TaskOptions {
 async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        
+
         var taskOptions: TaskOptions = new TaskOptions();
 
         var jobQueue: JobQueue = new JobQueue(taskOptions);
         var queueUri = await util.pollSubmitJob(taskOptions);
-        console.log('Jenkins job queued');
+        console.log(tl.loc('JenkinsJobQueued'));
         var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
         jobQueue.start();

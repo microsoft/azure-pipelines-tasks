@@ -14,11 +14,17 @@ function Write-Telemetry
     [Parameter(Mandatory=$True,Position=1)]
     [string]$codeKey,
 
-    [Parameter(Mandatory=$True,Position=2)]
+    [Parameter(Position=2)]
     [string]$errorMsg
     )
   
   $erroCodeMsg = $telemetryCodes[$codeKey]
+  
+  ## If no error is passed mark it as not available
+  if([string]::IsNullOrEmpty($errorMsg))
+  {
+    $errorMsg = "No error details available"
+  }
   $erroCode = ('"{0}":{1}' -f $erroCodeMsg, $errorMsg)
   ## Form errorcode as json string 
   $erroCode = '{' + $erroCode + '}'

@@ -6,7 +6,7 @@
   "loc.group.displayName.deployment": "Развертывание",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.EnvironmentName": "Компьютеры",
-  "loc.input.help.EnvironmentName": "Укажите разделенный запятыми список IP-адресов компьютеров или полных доменных имен вместе с портами. Порт по умолчанию выбирается исходя из используемого протокола. <br>Например: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Или укажите выходную переменную из других задач. Например: $(variableName)",
+  "loc.input.help.EnvironmentName": "Укажите разделенный запятыми список IP-адресов или полных доменных имен компьютеров вместе с портами. Порт по умолчанию выбирается на основе используемого протокола. <br>Например: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986. <br>Также можно указать выходную переменную других задач, например $(variableName). <br>Если используется протокол HTTPS, имя или IP-адрес компьютера должны совпадать с общим именем (CN) в сертификате.",
   "loc.input.label.AdminUserName": "Имя для входа администратора",
   "loc.input.help.AdminUserName": "Имя для входа администратора для целевых компьютеров.",
   "loc.input.label.AdminPassword": "Пароль",

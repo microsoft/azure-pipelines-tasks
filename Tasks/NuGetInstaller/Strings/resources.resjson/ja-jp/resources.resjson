@@ -38,7 +38,7 @@
   "loc.messages.NGCommon_SpsNotFound": "'%s' [%s] の領域が見つかりません。Team Foundation Server のインストールで問題が発生した可能性があります。",
   "loc.messages.NGCommon_AreaNotFoundInSps": "'%s' [%s] 領域を特定できません。この領域を含むサービスは、ご利用の地域では提供されません。",
   "loc.messages.NGCommon_NuGetConfigIsPackagesConfig": "%s で NuGet.config ファイルが想定されていますが、そのコンテンツは packages.config のようです。%s タスクの設定をチェックし、packages.config ではなく NuGet.config を選択したことを確認してください。",
-  "loc.messages.NGCommon_NuGetConfigIsInvalid": "%s  の NuGet.config が無効です。",
+  "loc.messages.NGCommon_NuGetConfigIsInvalid": "%s の NuGet.config が無効です。",
   "loc.messages.NGCommon_RemovingSources": "NuGet.config での資格情報の設定準備",
   "loc.messages.NGCommon_AddingSources": "NuGet.config での資格証明の設定",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "%s の NuGet.config ファイルでパッケージ ソースが見つかりません",

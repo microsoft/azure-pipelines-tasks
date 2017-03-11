@@ -44,7 +44,7 @@ function getUriForServiceDefinition(serviceDefinition: locationApi.ServiceDefini
 
     let publicAccessMapping
         = locationMappings.find(mapping => mapping.accessMappingMoniker.toUpperCase() === "PUBLICACCESSMAPPING");
-    if (serverAccessMapping) {
+    if (publicAccessMapping) {
         return publicAccessMapping.location;
     }
 

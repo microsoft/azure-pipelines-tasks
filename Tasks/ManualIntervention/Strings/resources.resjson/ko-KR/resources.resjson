@@ -4,5 +4,7 @@
   "loc.description": "배포를 일시 중지하고 작업을 대기합니다.",
   "loc.instanceNameFormat": "수동 작업",
   "loc.input.label.instructions": "지침",
-  "loc.input.help.instructions": "이 지침은 사용자가 수동 작업을 다시 시작하거나 거부하려는 경우 표시됩니다. 사용자는 이러한 지침에 따라 이 수동 작업을 합리적으로 결정하게 됩니다."
+  "loc.input.help.instructions": "이 지침은 사용자가 수동 작업을 다시 시작하거나 거부하려는 경우 표시됩니다. 사용자는 이러한 지침에 따라 이 수동 작업을 합리적으로 결정하게 됩니다.",
+  "loc.input.label.emailRecipients": "사용자 알림",
+  "loc.input.help.emailRecipients": "수동 작업 보류 중 전자 메일을 특정 사용자나 그룹에 보냅니다. 배포 관리 권한이 있는 사용자만 수동 작업을 수행할 수 있습니다."
 }

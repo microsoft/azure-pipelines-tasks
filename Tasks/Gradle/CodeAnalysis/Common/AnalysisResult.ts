@@ -1,4 +1,4 @@
-import {IAnalysisTool} from './IAnalysisTool';
+import { IAnalysisTool } from './IAnalysisTool';
 
 /**
  * Data class that describes code analysis results
@@ -7,7 +7,5 @@ import {IAnalysisTool} from './IAnalysisTool';
  * @class AnalysisResult
  */
 export class AnalysisResult {
-    constructor(public originatingTool: IAnalysisTool, public moduleName: string, public resultFiles: string[], public violationCount: number, public affectedFileCount: number) {
-
-    }
+    constructor(public originatingTool: IAnalysisTool, public moduleName: string, public resultFiles: string[], public violationCount: number, public affectedFileCount: number) { }
 }

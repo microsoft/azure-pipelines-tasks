@@ -43,14 +43,11 @@ try {
     # Resolve match patterns.
     $solutionFiles = Get-SolutionFiles -Solution $Solution
 
-    # Only search Willow installs if 15.0 was explicitly chosen.
-    $searchCom = $vsVersion -eq "15.0"
-
     # Resolve a VS version.
-    $vsVersion = Select-VSVersion -PreferredVersion $vsVersion -SearchCom:$searchCom
+    $vsVersion = Select-VSVersion -PreferredVersion $vsVersion
 
     # Resolve the corresponding MSBuild location.
-    $msBuildLocation = Select-MSBuildLocation -VSVersion $vsVersion -Architecture $msBuildArchitecture -SearchCom:$searchCom
+    $msBuildLocation = Select-MSBuildLocation -VSVersion $vsVersion -Architecture $msBuildArchitecture
 
     # Format the MSBuild args.
     $MSBuildArgs = Format-MSBuildArguments -MSBuildArguments $MSBuildArgs -Platform $Platform -Configuration $Configuration -VSVersion $VSVersion -MaximumCpuCount:$maximumCpuCount

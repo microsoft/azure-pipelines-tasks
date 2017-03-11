@@ -19,6 +19,8 @@
   "loc.input.help.nuGetVersion": "Versión de NuGet que se va a usar o versión personalizada.",
   "loc.input.label.nuGetPath": "Ruta de acceso a NuGet.exe",
   "loc.input.help.nuGetPath": "Proporcione opcionalmente la ruta de acceso a NuGet.exe. Se invalida la selección de versión.",
+  "loc.input.label.continueOnEmptyNupkgMatch": "Continuar si ningún paquete coincide con la \"ruta de acceso o el patrón para nupkg\"",
+  "loc.input.help.continueOnEmptyNupkgMatch": "Continue instead of fail if no packages match the \"Path/Pattern to nupkg\".",
   "loc.messages.Warning_NoConfigForOldNuGet": "Para conectarse a las fuentes NuGet hospedadas en la cuenta de Team Services o la colección de proyectos de TFS con NuGet 3.1 o versiones anteriores, edite la definición de compilación para especificar una ruta de acceso a un archivo NuGet.config que contenga los orígenes del paquete que desea usar.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Para conectarse a las fuentes NuGet hospedadas en la cuenta de Team Services o la colección de proyectos de TFS de este agente de compilación, edite la definición de compilación para especificar una ruta de acceso a un archivo NuGet.config que contenga los orígenes del paquete que desea usar.",
   "loc.messages.Warning_ConflictingNuGetPreference": "Se seleccionó NuGet 3.3, pero se proporcionó una ruta de acceso personalizada de NuGet. Se preferirá la ruta de acceso personalizada. Para resolver esta advertencia, edite la tarea de compilación y seleccione \"Personalizada\" para la versión de NuGet en Opciones avanzadas.",

@@ -1,23 +1,22 @@
 import Q = require('q');
 
-import {SonarQubeRunSettings} from './run-settings';
-import {SonarQubeMetrics} from './metrics';
-import {SonarQubeMeasurementUnit} from './metrics';
-import {SonarQubeFailureCondition} from './metrics';
+import { SonarQubeRunSettings } from './run-settings';
+import { SonarQubeMetrics } from './metrics';
+import { SonarQubeMeasurementUnit } from './metrics';
+import { SonarQubeFailureCondition } from './metrics';
 
 import tl = require('vsts-task-lib/task');
 
 export class SonarQubeReportBuilder {
-
-    private taskMetrics:SonarQubeMetrics;
-    private sqRunSettings:SonarQubeRunSettings;
+    private taskMetrics: SonarQubeMetrics;
+    private sqRunSettings: SonarQubeRunSettings;
 
     /**
      * Creates a new SonarQubeReportBuilder, which creates Markdown-formatted reports for SonarQube analyses.
      * @param sqRunSettings SonarQubeRunSettings object for the applicable run
      * @param taskMetrics   SonarQube metrics for the applicable run
      */
-    constructor(sqRunSettings:SonarQubeRunSettings, taskMetrics:SonarQubeMetrics) {
+    constructor(sqRunSettings: SonarQubeRunSettings, taskMetrics: SonarQubeMetrics) {
         if (!sqRunSettings) {
             // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
             throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
@@ -30,9 +29,9 @@ export class SonarQubeReportBuilder {
     /**
      * Creates a Markdown-formatted build summary, fetching appropriate data (as configured by the user) to do so.
      */
-    public fetchMetricsAndCreateReport(waitForAnalysis:boolean):Q.Promise<string> {
+    public fetchMetricsAndCreateReport(waitForAnalysis: boolean): Q.Promise<string> {
         // Start asynchronous processing of all report sections at once, assembling them at the end.
-        var reportSectionPromises:Q.Promise<string>[] = [
+        let reportSectionPromises: Q.Promise<string>[] = [
             // Quality gate status
             this.fetchQualityGateStatusAndCreateReport(waitForAnalysis),
             // Quality gate failure details (if applicable)
@@ -41,11 +40,11 @@ export class SonarQubeReportBuilder {
             Q.when<string>(this.createLinkToSonarQubeDashboard())
         ];
 
-        // Resolve them all and return the finished build summary. Rejectionss fail fast.
+        // Resolve them all and return the finished build summary. Rejections fail fast.
         return Q.all<string>(reportSectionPromises)
-            .then((reportSections:string[]) => {
+            .then((reportSections: string[]) => {
                 // Put the build summary sections together with the Markdown newline
-                var buildSummary:string = reportSections.join('  \r\n').trim();
+                let buildSummary: string = reportSections.join('  \r\n').trim();
                 tl.debug('Build summary:');
                 tl.debug(buildSummary);
                 return buildSummary;
@@ -58,7 +57,7 @@ export class SonarQubeReportBuilder {
      */
     private createLinkToSonarQubeDashboard(): string {
         // Looks like: Detailed SonarQube report
-        var linkText:string = tl.loc('sqAnalysis_BuildSummary_LinkText');
+        let linkText: string = tl.loc('sqAnalysis_BuildSummary_LinkText');
         // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
         return `[${linkText} >](${this.sqRunSettings.dashboardUrl} \"${this.sqRunSettings.projectKey} Dashboard\")`;
     }
@@ -68,21 +67,21 @@ export class SonarQubeReportBuilder {
      * Returns null if this.taskMetrics is null.
      * @returns {Promise<string>} A promise, resolving to a string of a Markdown-formatted report of the quality gate status
      */
-    private fetchQualityGateStatusAndCreateReport(waitForAnalysis:boolean):Q.Promise<string> {
+    private fetchQualityGateStatusAndCreateReport(waitForAnalysis: boolean): Q.Promise<string> {
         if (!waitForAnalysis) {
             // Do not create a quality gate status section if not waiting for the server to analyse the build
             console.log(tl.loc('sqCommon_NotWaitingForAnalysis'));
             return Q.when<string>(null);
         }
         if (!this.taskMetrics) {
-            tl.debug("SQTaskMetrics was null in SQReportBuilder, returning null for quality gate status");
+            tl.debug('SQTaskMetrics was null in SQReportBuilder, returning null for quality gate status');
             return Q.when<string>(null);
         }
 
         return this.taskMetrics.fetchQualityGateStatus()
-            .then((qualityGateStatus:string) => {
-                return SonarQubeReportBuilder.createBuildSummaryQualityGateSection(qualityGateStatus)
-            })
+            .then((qualityGateStatus: string) => {
+                return SonarQubeReportBuilder.createBuildSummaryQualityGateSection(qualityGateStatus);
+            });
     }
 
     /**
@@ -90,14 +89,14 @@ export class SonarQubeReportBuilder {
      * Returns null if this.taskMetrics is null or the quality gate passed.
      * @returns {Promise<string>} A promise, resolving to a string of a Markdown-formatted report of the quality gate status
      */
-    private fetchQualityGateFailureDetails(waitForAnalysis:boolean):Q.Promise<string> {
+    private fetchQualityGateFailureDetails(waitForAnalysis: boolean): Q.Promise<string> {
         if (!waitForAnalysis) {
             // Do not create a quality gate detail section if not waiting for the server to analyse the build
             console.log(tl.loc('sqCommon_NotWaitingForAnalysis'));
             return Q.when<string>(null);
         }
         if (!this.taskMetrics) {
-            tl.debug("SQTaskMetrics was null in SQReportBuilder, returning null for quality gate status");
+            tl.debug('SQTaskMetrics was null in SQReportBuilder, returning null for quality gate status');
             return Q.when<string>(null);
         }
 
@@ -118,13 +117,13 @@ export class SonarQubeReportBuilder {
      * @param analysisDetails JSON object representation of the task details
      * @returns {string}      A Markdown report of the reasons why the quality gate failed, or null if the quality gate passed or analysisDetails was null
      */
-    private createBuildSummaryQualityGateDetailsSection(analysisDetails:any):Q.Promise<string> {
-        if (analysisDetails == undefined || analysisDetails == null) {
+    private createBuildSummaryQualityGateDetailsSection(analysisDetails: any): Q.Promise<string> {
+        if (!analysisDetails) {
             return null;
         }
 
-        var failureReasons:SonarQubeFailureCondition[] = SonarQubeMetrics.getFailedConditions(analysisDetails);
-        var failureSubsectionPromises = []; // An array of promises, each resolving to one subsection
+        let failureReasons: SonarQubeFailureCondition[] = SonarQubeMetrics.getFailedConditions(analysisDetails);
+        let failureSubsectionPromises = []; // An array of promises, each resolving to one subsection
 
         failureReasons.forEach((failureReason:SonarQubeFailureCondition) => {
             failureSubsectionPromises.push(this.createQualityGateDetailsSubsection(failureReason));
@@ -132,18 +131,18 @@ export class SonarQubeReportBuilder {
 
         // Resolve all subsection promises
         return Q.all(failureSubsectionPromises)
-            .then((failureSubsections:string[]) => {
+            .then((failureSubsections: string[]) => {
                 // remove any null values
-                failureSubsections = failureSubsections.filter((n:string) => {
+                failureSubsections = failureSubsections.filter((n: string) => {
                         return n != null;
                     });
 
-                var subsections:string[] = [];
+                let subsections: string[] = [];
                 subsections.push('<table border="0" style="border-top: 1px solid #eee;border-collapse: separate;border-spacing: 0 2px;">');
                 subsections.push(failureSubsections.join('  \r\n').trim());
-                subsections.push("</table>");
+                subsections.push('</table>');
 
-                var qualityGateDetailsSection:string = subsections.join('  \r\n').trim();
+                let qualityGateDetailsSection: string = subsections.join('  \r\n').trim();
                 return qualityGateDetailsSection;
             });
     }
@@ -169,58 +168,58 @@ export class SonarQubeReportBuilder {
      * @returns {Promise<string>} A markdown-formatted subsection that shows the user one reason why the quality gate failed,
      * or null if there was a problem
      */
-    private createQualityGateDetailsSubsection(failureReason:SonarQubeFailureCondition):Q.Promise<string> {
+    private createQualityGateDetailsSubsection(failureReason: SonarQubeFailureCondition): Q.Promise<string> {
         // Some lines involve promises, resolve them first then template relevant variables into the return
         return Q.all([
             this.getMeasurementUnit(failureReason.metricKey),
             this.getValueLabel(failureReason),
-            this.getThresholdLabel(failureReason),
+            this.getThresholdLabel(failureReason)
         ])
-            .then((fulfilledPromiseStrings:any[]) => { // untyped because of multiple types in the array
+            .then((fulfilledPromiseStrings: any[]) => { // untyped because of multiple types in the array
                 //if any fulfilled promise values were null, return null
                 if (fulfilledPromiseStrings.indexOf(null) > -1) {
                     return null;
                 }
 
-                var backgroundColor:string = SonarQubeReportBuilder.getBackgroundColour(failureReason.status);
-                var comparator:string = SonarQubeReportBuilder.getComparatorSymbol(failureReason.comparator);
-                var measurementDisplayName:string = (fulfilledPromiseStrings[0] as SonarQubeMeasurementUnit).name;
-                var valueLabel:string = <string> fulfilledPromiseStrings[1];
-                var thresholdLabel:string = <string> fulfilledPromiseStrings[2];
+                let backgroundColor: string = SonarQubeReportBuilder.getBackgroundColour(failureReason.status);
+                let comparator: string = SonarQubeReportBuilder.getComparatorSymbol(failureReason.comparator);
+                let measurementDisplayName: string = (fulfilledPromiseStrings[0] as SonarQubeMeasurementUnit).name;
+                let valueLabel: string = <string> fulfilledPromiseStrings[1];
+                let thresholdLabel: string = <string> fulfilledPromiseStrings[2];
 
                 return `<tr>
     <td><span style="padding-right:4px;">${measurementDisplayName}</span></td>
     <td style="text-align: center; background-color:${backgroundColor}; color:#fff;"><span style="padding:0px 2px">${valueLabel}</span></td>
     <td>&nbsp;${comparator} ${thresholdLabel}</td>
 </tr>`;
-            })
+            });
     }
 
-    private getValueLabel(failureReason:SonarQubeFailureCondition):Q.Promise<string> {
-        var failureValue:string = failureReason.actualValue;
+    private getValueLabel(failureReason: SonarQubeFailureCondition): Q.Promise<string> {
+        let failureValue: string = failureReason.actualValue;
         return this.getMeasurementLabel(failureReason, failureValue);
     }
 
-    private getThresholdLabel(failureReason:SonarQubeFailureCondition):Q.Promise<string> {
-        var thresholdValue:string = SonarQubeReportBuilder.getDisplayThreshold(failureReason);
+    private getThresholdLabel(failureReason: SonarQubeFailureCondition): Q.Promise<string> {
+        let thresholdValue: string = SonarQubeReportBuilder.getDisplayThreshold(failureReason);
         return this.getMeasurementLabel(failureReason, thresholdValue);
     }
 
-    private getMeasurementLabel(failureReason:SonarQubeFailureCondition, valueString:string):Q.Promise<string> {
-        if (failureReason == undefined || failureReason == null) {
+    private getMeasurementLabel(failureReason: SonarQubeFailureCondition, valueString: string): Q.Promise<string> {
+        if (!failureReason) {
             tl.debug('[SQ] Cannot get measurement label: failureReason was null');
             return null;
-        } else if ((valueString == undefined || valueString == null)) {
+        } else if (!valueString) {
             tl.debug('[SQ] Cannot get measurement label: valueString was null');
             return null;
         }
 
         return this.getMeasurementUnit(failureReason.metricKey)
-            .then((measurementUnit:SonarQubeMeasurementUnit) => {
-                var value:number = Number(valueString);
+            .then((measurementUnit: SonarQubeMeasurementUnit) => {
+                let value: number = Number(valueString);
 
-                var roundedValue:number = Math.floor(value);
-                var roundedValueString = String(roundedValue);
+                let roundedValue: number = Math.floor(value);
+                let roundedValueString = String(roundedValue);
 
                 switch (measurementUnit.type.toUpperCase()) {
                     case 'WORK_DUR':
@@ -241,18 +240,18 @@ export class SonarQubeReportBuilder {
      * @param measurementKey Identifies the display name that will be looked up.
      * @returns User-visible display name.
      */
-    private getMeasurementUnit(measurementKey:string):Q.Promise<SonarQubeMeasurementUnit> {
+    private getMeasurementUnit(measurementKey: string): Q.Promise<SonarQubeMeasurementUnit> {
         return this.taskMetrics.fetchMeasurementDetails()
             .then((measurementUnits:SonarQubeMeasurementUnit[]) => {
-                if ((measurementUnits == undefined || measurementUnits == null) ||
-                    (measurementKey == undefined || measurementKey == null)) {
+                if ((measurementUnits === undefined || measurementUnits === null) ||
+                    (measurementKey === undefined || measurementKey === null)) {
                     tl.debug('Cannot get unit display name ');
                     return null;
                 }
 
                 // Filter: return the results where the measurement unit key matches the argument.
-                var matchingUnits:SonarQubeMeasurementUnit[] = measurementUnits.filter(
-                    (measurementUnit) => {return measurementUnit.key == measurementKey}
+                let matchingUnits: SonarQubeMeasurementUnit[] = measurementUnits.filter(
+                    (measurementUnit) => { return measurementUnit.key === measurementKey; }
                 );
 
                 if (matchingUnits.length > 1) {
@@ -278,17 +277,17 @@ export class SonarQubeReportBuilder {
      * @param totalMinutes Number of minutes in the work duration
      * @returns {string} The work duration as a complete string e.g. "1h 27min"
      */
-    private getWorkDurationLabel(totalMinutes:number):string {
-        var hours:number = Math.floor(totalMinutes / 60);
-        var minutes:number = totalMinutes % 60;
+    private getWorkDurationLabel(totalMinutes: number): string {
+        let hours: number = Math.floor(totalMinutes / 60);
+        let minutes: number = totalMinutes % 60;
 
-        var hoursString:string = '';
-        var minutesString:string = '';
+        let hoursString: string = '';
+        let minutesString: string = '';
 
         if (hours > 0) {
             hoursString = `${hours}h`;
         }
-        if (minutes > 0 || hoursString == '') { // if totalMinutes == 0, result should be '0min'
+        if (minutes > 0 || hoursString === '') { // if totalMinutes == 0, result should be '0min'
             minutesString = `${minutes}min`;
         }
 
@@ -300,13 +299,13 @@ export class SonarQubeReportBuilder {
      * @param qualityGateStatus A string identifying the quality gate status
      * @returns {string}        A Markdown report for the given quality gate status, or null if qualityGateStatus is null.
      */
-    private static createBuildSummaryQualityGateSection(qualityGateStatus:string):string {
-        if (qualityGateStatus == undefined || qualityGateStatus == null) {
+    private static createBuildSummaryQualityGateSection(qualityGateStatus: string): string {
+        if (!qualityGateStatus) {
             return null;
         }
 
-        var visualColor:string = SonarQubeReportBuilder.getBackgroundColour(qualityGateStatus);
-        var visualLabel:string;
+        let visualColor: string = SonarQubeReportBuilder.getBackgroundColour(qualityGateStatus);
+        let visualLabel: string;
         switch (qualityGateStatus.toUpperCase()) {
             case 'OK':
                 visualLabel = 'Passed';
@@ -327,7 +326,7 @@ export class SonarQubeReportBuilder {
         }
 
         // ES6 template literal usage to streamline creating this section.
-        var reportContents:string  = `<div style="padding:5px 0px">
+        let reportContents: string  = `<div style="padding:5px 0px">
             <span>Quality Gate</span>
         <span style="padding:4px 10px; margin-left: 5px; background-color:${visualColor}; color:#fff; display:inline-block">${visualLabel}</span>
             </div>`;
@@ -339,13 +338,13 @@ export class SonarQubeReportBuilder {
      * @param failureReason Details of the failure, a subsection of the analysis details
      * @returns {any}       Violated threshold, or null if failure status was null
      */
-    private static getDisplayThreshold(failureReason:SonarQubeFailureCondition):string {
-        if (failureReason.status == undefined || failureReason.status == null) {
+    private static getDisplayThreshold(failureReason: SonarQubeFailureCondition): string {
+        if (failureReason.status === undefined || failureReason.status === null) {
             tl.debug(`[SQ] Cannot get display threshold: failureReason is ${failureReason.status}`);
             return null;
         }
 
-        var status = failureReason.status.toUpperCase();
+        let status: string = failureReason.status.toUpperCase();
         switch (status) {
             case 'WARN':
                 return failureReason.warningThreshold;
@@ -365,8 +364,8 @@ export class SonarQubeReportBuilder {
      * @param fieldStatus A string describing the status of the field
      * @returns {string}  A colour code for visual representation of the given status, or null if fieldStatus was null
      */
-    private static getBackgroundColour(fieldStatus:string):string {
-        if (fieldStatus == undefined || fieldStatus == null) {
+    private static getBackgroundColour(fieldStatus: string): string {
+        if (!fieldStatus) {
             tl.debug(`[SQ] Cannot get field background color: fieldStatus is ${fieldStatus}`);
             return null;
         }
@@ -390,20 +389,19 @@ export class SonarQubeReportBuilder {
      * @param comparatorString String representation of a comparator symbol
      * @returns {any}          Symbol represented by the given string, or null if comparatorString was null or unrecognised
      */
-    private static getComparatorSymbol(comparatorString:string):string {
-        if (comparatorString == undefined || comparatorString == null) {
+    private static getComparatorSymbol(comparatorString: string): string {
+        if (!comparatorString) {
             return null;
         }
 
-        switch (comparatorString.toUpperCase())
-        {
-            case "EQ":
+        switch (comparatorString.toUpperCase()) {
+            case 'EQ':
                 return '&#61;';
-            case "GT":
+            case 'GT':
                 return '&#62;';
-            case "LT":
+            case 'LT':
                 return '&#60;';
-            case "NE":
+            case 'NE':
                 return '&#8800;';
             default:
                 tl.warning(tl.loc('sqAnalysis_UnknownComparatorString', comparatorString));

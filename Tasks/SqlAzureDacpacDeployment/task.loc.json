@@ -10,14 +10,13 @@
     "Release"
   ],
   "runsOn": [
-    "Agent",
-    "MachineGroup"
+    "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 3
+    "Patch": 9
   },
   "demands": [
     "sqlpackage"
@@ -201,7 +200,11 @@
       "label": "ms-resource:loc.input.label.IpDetectionMethod",
       "required": true,
       "groupName": "firewall",
-      "defaultValue": "IPAddressRange",
+      "defaultValue": "AutoDetect",
+      "options": {
+        "AutoDetect": "AutoDetect",
+        "IPAddressRange": "IPAddressRange"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.IpDetectionMethod"
     },
     {
@@ -234,14 +237,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
     }
   ],
-  "sourceDefinitions": [
-    {
-      "target": "IpDetectionMethod",
-      "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods",
-      "selector": "jsonpath:$.value[*]",
-      "authKey": "tfs:DevTestLabs"
-    }
-  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
@@ -258,6 +253,7 @@
     "SAD_InvalidSqlFile": "ms-resource:loc.messages.SAD_InvalidSqlFile",
     "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
     "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",
-    "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat"
+    "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat",
+    "SAD_AzureSQLDacpacTaskFailed": "ms-resource:loc.messages.SAD_AzureSQLDacpacTaskFailed"
   }
 }

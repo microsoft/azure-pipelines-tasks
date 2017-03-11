@@ -21,31 +21,31 @@ tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
 
 //prepare upload
 nock('https://example.test')
-    .post('/v0.1/apps/testuser/testapp/package_uploads')
+    .post('/v0.1/apps/testuser/testapp/release_uploads')
     .reply(201, {
         upload_id: 1,
-        upload_url: 'https://example.upload.test/package_upload'
+        upload_url: 'https://example.upload.test/release_upload'
     });
 
 //upload 
 nock('https://example.upload.test')
-    .post('/package_upload')
+    .post('/release_upload')
     .reply(201, {
         status: 'success'
     });
 
 //finishing upload, commit the package
 nock('https://example.test')
-    .patch("/v0.1/apps/testuser/testapp/package_uploads/1", {
+    .patch("/v0.1/apps/testuser/testapp/release_uploads/1", {
         status: 'committed'
     })
     .reply(200, {
-        package_url: 'my_package_location' 
+        release_url: 'my_release_location' 
     });
 
 //make it available
 nock('https://example.test')
-    .patch("/my_package_location", {
+    .patch("/my_release_location", {
         status: "available",
         distribution_group_id:"00000000-0000-0000-0000-000000000000",
         release_notes:"my release notes"
@@ -80,21 +80,21 @@ nock('https://example.test')
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
-        "/test/path/to/my.ipa": true
+        "/test/path/to/my.ipa": true,
+        "/test/path/to/mappings.txt": true
+    },
+    "glob" : {
+        "/test/path/to/mappings.txt": [
+            "/test/path/to/mappings.txt"
+        ],
+        "/test/path/to/my.ipa": [
+            "/test/path/to/my.ipa"
+        ]
     }
 };
 tmr.setAnswers(a);
 
-tmr.registerMock('./utils.js', {
-    resolveSinglePath: function(s) {
-        return s ? s : null;
-    },
-    checkAndFixFilePath: function(p, name) {
-        return p;
-    }
-});
-
-fs.createReadStream = (s) => {
+fs.createReadStream = (s: string) => {
     let stream = new Readable;
     stream.push(s);
     stream.push(null);
@@ -102,11 +102,16 @@ fs.createReadStream = (s) => {
     return stream;
 };
 
-fs.statSync = (s) => {
+fs.statSync = (s: string) => {
     let stat = new Stats;
+    
     stat.isFile = () => {
-        return true;
+        return !s.toLowerCase().endsWith(".dsym");
     }
+    stat.isDirectory = () => {
+        return s.toLowerCase().endsWith(".dsym");
+    }
+    stat.size = 100;
 
     return stat;
 }

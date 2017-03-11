@@ -1,6 +1,6 @@
 import Q = require('q');
 import request = require('request');
-import {SonarQubeEndpoint} from './endpoint';
+import { SonarQubeEndpoint } from './endpoint';
 
 import tl = require('vsts-task-lib/task');
 
@@ -14,7 +14,6 @@ export interface ISonarQubeServer {
 }
 
 export class SonarQubeServer implements ISonarQubeServer {
-
     private endpoint: SonarQubeEndpoint;
 
     constructor(endpoint: SonarQubeEndpoint) {
@@ -22,44 +21,41 @@ export class SonarQubeServer implements ISonarQubeServer {
     }
 
     public invokeApiCall(path: string): Q.Promise<Object> {
-
         tl.debug(`[SQ] Invoking API at: ${path}`);
 
-        var deferred = Q.defer<Object>();
+        let deferred = Q.defer<Object>();
+        let authUser: string = this.endpoint.Username || '';
+        let authPass: string = this.endpoint.Password || '';
 
-        var authUser = this.endpoint.Username || '';
-        var authPass = this.endpoint.Password || '';
+        request.get(
+            {
+                method: 'GET',
+                baseUrl: this.endpoint.Url,
+                uri: path,
+                json: true,
+                'auth': {
+                    'user': authUser,
+                    'pass': authPass
+                }
+            },
+            (error, response, body) => {
+                if (error) {
+                    tl.debug(`Request failed because of error: ${error}`);
+                    deferred.reject(error);
+                }
 
-        request.get({
-            method: 'GET',
-            baseUrl: this.endpoint.Url,
-            uri: path,
-            json: true,
-            'auth': {
-                'user': authUser,
-                'pass': authPass,
-            }            
-        }, (error, response, body) => {
-            if (error) {
-                tl.debug(`Request failed because of error: ${error}`);
-                deferred.reject(error);
-            }
+                if (response.statusCode < 200 || response.statusCode >= 300) {
+                    tl.debug(`Request failed because the status code was: ${response.statusCode}`);
+                    deferred.reject(new Error(`Request failed because the status code was: ${response.statusCode}`));
+                }
 
-            if (response.statusCode < 200 || response.statusCode >= 300) {
-                tl.debug(`Request failed because the status code was: ${response.statusCode}`);
-                deferred.reject(new Error(`Request failed because the status code was: ${response.statusCode}`));
-            }
-
-            if (!body || body.length < 1) {
-                deferred.resolve({});
-            } else {
-                deferred.resolve(body);
-            }
-        });
-
+                if (!body || body.length < 1) {
+                    deferred.resolve({});
+                } else {
+                    deferred.resolve(body);
+                }
+            });
 
         return deferred.promise;
-      
     }
-
 }

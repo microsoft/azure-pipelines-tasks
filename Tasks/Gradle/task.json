@@ -8,15 +8,15 @@
     "visibility": [
         "Build"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 72
+        "Minor": 113,
+        "Patch": 1
     },
     "demands": [
         "java"

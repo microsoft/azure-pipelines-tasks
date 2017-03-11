@@ -18,7 +18,6 @@ function readHeader(xmlContent) {
     var index = xmlContent.indexOf('\n');
     if(index > -1) {
         var firstLine = xmlContent.substring(0,index).trim();
-        console.log(firstLine);
         if(firstLine.startsWith("<?") && firstLine.endsWith("?>")) {
             headerContent = firstLine;
         }

@@ -12,13 +12,13 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 5
+    "Minor": 114,
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -30,12 +30,49 @@
   ],
   "inputs": [
     {
+      "name": "credsType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.credsType",
+      "defaultValue": "serviceEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.credsType",
+      "options": {
+        "serviceEndpoint": "FTP Service Endpoint",
+        "inputs": "Enter Credentials"
+      }
+    },
+    {
       "name": "serverEndpoint",
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.serverEndpoint",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint"
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint",
+      "visibleRule": "credsType = serviceEndpoint"
+    },
+    {
+      "name": "serverUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.serverUrl",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
     },
     {
       "name": "rootFolder",
@@ -107,5 +144,15 @@
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
+    "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
+    "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
+    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
+    "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
+    "Disconnected": "ms-resource:loc.messages.Disconnected",
+    "ConnectPort": "ms-resource:loc.messages.ConnectPort"
   }
 }

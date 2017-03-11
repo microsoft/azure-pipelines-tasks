@@ -19,6 +19,8 @@
   "loc.input.help.nuGetVersion": "要使用的 NuGet 版本，或自訂版本。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
   "loc.input.help.nuGetPath": "選擇性地提供 NuGet.exe 的路徑。將覆寫版本選取項目。",
+  "loc.input.label.continueOnEmptyNupkgMatch": "若沒有套件符合「nupkg 的路徑/模式」即繼續。",
+  "loc.input.help.continueOnEmptyNupkgMatch": "若沒有套件符合「nupkg 的路徑/模式」，即不要失敗並繼續。",
   "loc.messages.Warning_NoConfigForOldNuGet": "若要連線到使用 NuGet 3.1 或更低版本裝載於 Team Services 帳戶/TFS 專案集合中的 NuGet 摘要，請編輯您的組建定義以指定路徑，連到包含您要使用之套件來源的 NuGet.config。",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "若要連線到裝載於此組建代理程式上 Team Services 帳戶/TFS 專案集合中的 NuGet 摘要，請編輯您的組建定義以指定路徑，連到包含您要使用之套件來源的 NuGet.config。",
   "loc.messages.Warning_ConflictingNuGetPreference": "選取了 NuGet 3.3，但提供的是自訂 NuGet 路徑。慣用自訂路徑。若要解決此警告，請編輯您的組建工作，然後選取 [進階] 下 NuGet 版本的 [自訂]。",

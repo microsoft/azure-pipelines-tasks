@@ -5,7 +5,5 @@
  * @class ModuleOutput
  */
 export class ModuleOutput {
-    constructor(public moduleName: string, public moduleRoot: string) {
-
-    }
+    constructor(public moduleName: string, public moduleRoot: string) { }
 }

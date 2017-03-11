@@ -1,0 +1,13 @@
+{
+    "findMatch": {
+        "**\\TEST-*.xml": [
+            "jUnit1TEST.xml",
+            "jUnit2TEST.xml"
+        ],
+        "/invalid/*pattern": [
+        ],
+        "TEST.xml": [
+            "jUnit1TEST.xml"
+        ]
+    }
+}

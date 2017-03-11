@@ -124,19 +124,29 @@ Try
     # Getting endpoint used for the task
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
-    # Getting start and end IP address for agent machine
-    $ipAddress = Get-AgentIPAddress -startIPAddress $StartIpAddress -endIPAddress $EndIpAddress -ipDetectionMethod $IpDetectionMethod
-    Write-Verbose ($ipAddress | Format-List | Out-String)
+    # Test and get IPRange for autoDetect IpDetectionMethod
+    $ipAddressRange = @{}
+    if($IpDetectionMethod -eq "AutoDetect")
+    {
+        $ipAddressRange = Get-AgentIPRange -serverName $ServerName -sqlUsername $SqlUsername -sqlPassword $SqlPassword
+    }
+    else 
+    {
+        $ipAddressRange.StartIPAddress = $StartIpAddress
+        $ipAddressRange.EndIPAddress = $EndIpAddress
+    }
 
-    $startIp =$ipAddress.StartIPAddress
-    $endIp = $ipAddress.EndIPAddress
+    Write-Verbose ($ipAddressRange | Format-List | Out-String)
 
-    # creating firewall rule for agent on sql server
-    $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -endpoint $endpoint
-    Write-Verbose ($firewallSettings | Format-List | Out-String)
+    # creating firewall rule for agent on sql server, if it is not able to connect or iprange is selected
+    if($ipAddressRange.Count -ne 0)
+    {
+        $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $ipAddressRange.StartIPAddress -endIP $ipAddressRange.EndIPAddress -serverName $serverFriendlyName -endpoint $endpoint
+        Write-Verbose ($firewallSettings | Format-List | Out-String)
 
-    $firewallRuleName = $firewallSettings.RuleName
-    $isFirewallConfigured = $firewallSettings.IsConfigured
+        $firewallRuleName = $firewallSettings.RuleName
+        $isFirewallConfigured = $firewallSettings.IsConfigured
+    }
 
     if ($TaskNameSelector -eq "DacpacTask")
     {
@@ -165,7 +175,7 @@ Try
 
         Write-Verbose "Executing : $commandToBeLogged"
 
-        Run-Command $SqlPackageCommand
+        Execute-Command -FileName $SqlPackagePath -Arguments $scriptArgument
     }
     else
     {
@@ -202,12 +212,26 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
     }
 
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    if($_.Exception.Message) 
+    {
+        Write-Error ($_.Exception.Message)
+    }
+    else 
+    {
+        Write-Error ($_.Exception)
+    }
     throw
 }
 Catch [Exception]
 {
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    if($_.Exception.Message) 
+    {
+        Write-Error ($_.Exception.Message)
+    }
+    else 
+    {
+        Write-Error ($_.Exception)
+    }
     throw
 }
 Finally

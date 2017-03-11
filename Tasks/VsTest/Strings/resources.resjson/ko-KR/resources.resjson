@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Visual Studio 테스트",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Visual Studio Test Runner로 테스트 실행",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "테스트 어셈블리",
   "loc.group.displayName.executionOptions": "실행 옵션",
   "loc.group.displayName.tiaOptions": "테스트 영향 분석",
   "loc.group.displayName.advancedExecutionOptions": "고급 실행 옵션",
   "loc.group.displayName.reportingOptions": "보고 옵션",
-  "loc.input.label.testAssemblyVer2": "Test Assembly",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.input.label.searchFolder": "Search Folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.testAssemblyVer2": "테스트 어셈블리",
+  "loc.input.help.testAssemblyVer2": "지정된 파일에서 테스트를 실행합니다. 파일 경로는 검색 폴더를 기준으로 합니다. 여러 줄의 minimatch 패턴을 지원합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.label.searchFolder": "검색 폴더",
+  "loc.input.help.searchFolder": "테스트 어셈블리를 검색할 폴더입니다. 기본값은 $(System.DefaultWorkingDirectory)입니다.",
   "loc.input.label.testFiltercriteria": "테스트 필터 조건",
   "loc.input.help.testFiltercriteria": "테스트 어셈블리에서 테스트를 필터링할 추가 조건입니다. 예: `Priority=1|Name=MyTestMethod`",
   "loc.input.label.runSettingsFile": "실행 설정 파일",
@@ -68,5 +68,5 @@
   "loc.messages.UnexpectedVersionString": "vstest.console.exe에 대해 예기치 않은 버전 문자열이 검색되었습니다. %s.",
   "loc.messages.UnexpectedVersionNumber": "vstest.console.exe에 대해 예기치 않은 버전 번호가 검색되었습니다. %s.",
   "loc.messages.VstestDiagNotSupported": "vstest.console.exe 버전에서 /diag 플래그를 지원하지 않습니다. exe.config 파일을 통해 진단을 사용하도록 설정하세요.",
-  "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
+  "loc.messages.NoIncludePatternFound": "포함 패턴을 찾을 수 없습니다. 테스트 어셈블리를 검색하려면 포함 패턴을 하나 이상 지정하세요."
 }

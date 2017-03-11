@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Archivdateien",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkId=809083)",
-  "loc.description": "Archivieren Sie Dateien mithilfe verschiedener Komprimierungsformate, z. B. 7z, RAR, TAR.GZ und ZIP.",
+  "loc.description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip.",
   "loc.instanceNameFormat": "Archivdateien $(message)",
   "loc.group.displayName.archive": "Archiv",
   "loc.input.label.rootFolder": "Zu archivierender Stammordner (oder Datei)",
@@ -11,9 +11,16 @@
   "loc.input.label.archiveType": "Archivtyp",
   "loc.input.help.archiveType": "Geben Sie das verwendete Komprimierungsschema an. Wenn Sie z. B. <b>\"foo.jar\"</b> erstellen möchten, wählen Sie <b>\"zip\"</b> als Komprimierungsoption aus und geben <b>\"foo.jar\"</b> als zu erstellende Archivdatei an. Wählen Sie <b>\"tar\"</b> für alle TAR-Dateien (einschließlich komprimierter Dateien) aus.",
   "loc.input.label.tarCompression": "TAR-Komprimierung",
-  "loc.input.help.tarCompression": "Wählen Sie optional das Komprimierungsschema aus, oder wählen Sie <b>\"Ohne\"</b> aus, um eine nicht komprimierte TAR-Datei zu erstellen.",
+  "loc.input.help.tarCompression": "Optionally choose a compression scheme, or choose <b>`None`</b> to create an uncompressed tar file.",
   "loc.input.label.archiveFile": "Zu erstellende Archivdatei",
-  "loc.input.help.archiveFile": "Geben Sie den Namen der zu erstellenden Archivdatei an. Wenn Sie z. B. <b>\"foo.tgz\"</b> erstellen möchten, wählen Sie den Archivtyp <b>\"tar\"</b> sowie <b>\"gz\"</b> für TAR-Komprimierung aus.",
+  "loc.input.help.archiveFile": "Specify the name of the archive file to create.  For example, to create <b>`foo.tgz`</b>, select the <b>`tar`</b> archive type and <b>`gz`</b> for tar compression.",
   "loc.input.label.replaceExistingArchive": "Vorhandenes Archiv ersetzen",
-  "loc.input.help.replaceExistingArchive": "Wenn bereits ein Archiv vorhanden ist, geben Sie an, ob es überschrieben werden soll. Andernfalls werden ihm Dateien hinzugefügt."
+  "loc.input.help.replaceExistingArchive": "Wenn bereits ein Archiv vorhanden ist, geben Sie an, ob es überschrieben werden soll. Andernfalls werden ihm Dateien hinzugefügt.",
+  "loc.messages.Filename": "files=%s",
+  "loc.messages.TarExists": "Die temporäre TAR-Datei \"%s\" ist bereits vorhanden. Es wird versucht, ihr Dateien hinzuzufügen.",
+  "loc.messages.RemoveBeforeCreation": "Die vorhandene Archivdatei wird vor dem Erstellen entfernt: %s",
+  "loc.messages.AlreadyExists": "Die Archivdatei \"%s\" ist bereits vorhanden. Es wird versucht, ihr Dateien hinzuzufügen.",
+  "loc.messages.ArchiveCreationFailedWithError": "Fehler beim Erstellen des Archivs für die Archivdatei: %s \nCode: %d \nstdout: %s \nstderr: %s \nFehler: %s;",
+  "loc.messages.ArchiveFileExistsButNotAFile": "Die angegebene Archivdatei \"%s\" ist bereits vorhanden und ist keine Datei.",
+  "loc.messages.FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s"
 }

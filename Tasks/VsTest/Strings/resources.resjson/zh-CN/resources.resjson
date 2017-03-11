@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Visual Studio 测试",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "使用 Visual Studio 测试运行器运行测试",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "测试程序集",
   "loc.group.displayName.executionOptions": "执行选项",
   "loc.group.displayName.tiaOptions": "测试影响分析",
   "loc.group.displayName.advancedExecutionOptions": "高级执行选项",
   "loc.group.displayName.reportingOptions": "报告选项",
-  "loc.input.label.testAssemblyVer2": "Test Assembly",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.input.label.searchFolder": "Search Folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.testAssemblyVer2": "测试程序集",
+  "loc.input.help.testAssemblyVer2": "从指定的文件中运行测试。文件路径相对于搜索文件夹。支持多行最小匹配模式。[详细信息](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.label.searchFolder": "搜索文件夹",
+  "loc.input.help.searchFolder": "用于搜索测试程序集的文件夹。默认为 $(System.DefaultWorkingDirectory)。",
   "loc.input.label.testFiltercriteria": "测试筛选器标准",
   "loc.input.help.testFiltercriteria": "用于从测试程序集中筛选测试的其他条件。例如: \"Priority=1|Name=MyTestMethod\"",
   "loc.input.label.runSettingsFile": "运行设置文件",
@@ -68,5 +68,5 @@
   "loc.messages.UnexpectedVersionString": "检测到 vstest.console.exe 的意外版本字符串: %s。",
   "loc.messages.UnexpectedVersionNumber": "检测到 vstest.console.exe 的意外版本号: %s。",
   "loc.messages.VstestDiagNotSupported": "vstest.console.exe 版本不支持 /diag 标记。请通过 exe.config 文件启用诊断",
-  "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
+  "loc.messages.NoIncludePatternFound": "找不到包含模式。请指定至少一个包含模式以搜索测试程序集。"
 }

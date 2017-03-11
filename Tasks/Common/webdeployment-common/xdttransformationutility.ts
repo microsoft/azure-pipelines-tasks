@@ -2,8 +2,8 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import path = require('path');
 
-export function expandWildcardPattern(wildcardPattern : string) {
-    var matchingFiles = tl.glob(wildcardPattern);
+export function expandWildcardPattern(folderPath: string, wildcardPattern : string) {
+    var matchingFiles = tl.findMatch(folderPath, wildcardPattern);
     var filesList = {};
     for (let i = 0; i < matchingFiles.length; i++) {
         matchingFiles[i] = matchingFiles[i].replace(/\//g, '\\');
@@ -40,8 +40,8 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 * @param    transformConfigs  The array of transform config names, ex : ["Release.config", "EnvName.config"]
 * 
 */
-export function basicXdtTransformation(sourcePattern, transformConfigs) {
-    var sourceXmlFiles = expandWildcardPattern(sourcePattern);
+export function basicXdtTransformation(rootFolder, transformConfigs) {
+    var sourceXmlFiles = expandWildcardPattern(rootFolder, '**/*.config');
     Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
         var sourceBasename = path.win32.basename(sourceXmlFile, ".config");    
         transformConfigs.forEach( function(transformConfig) {

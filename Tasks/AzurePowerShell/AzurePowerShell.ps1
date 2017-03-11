@@ -26,12 +26,15 @@ try {
 
     # Trace the expression as it will be invoked.
     If ($scriptType -eq "InlineScript") {
-        $tempFileName = [guid]::NewGuid().ToString() + ".ps1";
-        $scriptPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $tempFileName);
-        ($scriptInline | Out-File $scriptPath)
+        $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
+        ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
+        $scriptPath = $__vstsAzPSInlineScriptPath
     }
 
     $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
+    Remove-Variable -Name scriptType
+    Remove-Variable -Name scriptPath
+    Remove-Variable -Name scriptInline
     Remove-Variable -Name scriptArguments
 
     # Remove all commands imported from VstsTaskSdk, other than Out-Default.
@@ -48,6 +51,11 @@ try {
     # preference to continue. An implication of changing the preference to Continue,
     # is that Invoke-VstsTaskScript will no longer handle setting the result to failed.
     $global:ErrorActionPreference = 'Continue'
+
+    # Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
+    # Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
+    # the agent when System.Debug is not set.
+    $global:__vstsNoOverrideVerbose = $true
 
     # Run the user's script. Redirect the error pipeline to the output pipeline to enable
     # a couple goals due to compatibility with the legacy handler implementation:
@@ -74,10 +82,8 @@ try {
             }
         }
 }
-Finally {
-    If ($scriptType -eq "InlineScript" -and (Test-Path $scriptPath) -eq $true ) {
-        Remove-Item $scriptPath -ErrorAction 'SilentlyContinue'
+finally {
+    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
+        Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
-
-    Remove-Variable -Name scriptPath
 }

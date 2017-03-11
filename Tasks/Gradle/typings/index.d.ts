@@ -6,3 +6,4 @@
 /// <reference path="globals/request/index.d.ts" />
 /// <reference path="globals/shelljs/index.d.ts" />
 /// <reference path="globals/xml2js/index.d.ts" />
+/// <reference path="globals/mocha/index.d.ts" />

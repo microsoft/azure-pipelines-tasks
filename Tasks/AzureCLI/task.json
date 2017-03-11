@@ -12,15 +12,15 @@
     ],
     "runsOn": [
         "Agent",
-		"MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [],
     "version": {
-        "Major": 0,
-        "Minor": 2,
-        "Patch": 5
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
     "groups": [
         {
@@ -31,34 +31,12 @@
     ],
     "inputs": [
         {
-            "name": "connectedServiceNameSelector",
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "defaultValue": "connectedServiceNameARM",
-            "required": true,
-            "helpMarkDown": "Select the Azure connection type for the Deployment",
-            "options": {
-                "connectedServiceName": "Azure Classic",
-                "connectedServiceNameARM": "Azure Resource Manager"
-            }
-        },
-        {
             "name": "connectedServiceNameARM",
             "type": "connectedService:AzureRM",
-            "label": "AzureRM Subscription",
+            "label": "Azure subscription",
             "defaultValue": "",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment"
-        },
-        {
-            "name": "connectedServiceName",
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceName",
-            "required": true,
-            "helpMarkDown": "Select the Azure Classic subscription for the deployment"
+            "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
         },
         {
             "name": "scriptLocation",
@@ -66,10 +44,10 @@
             "label": "Script Location",
             "defaultValue": "scriptPath",
             "required": true,
-            "helpMarkDown": "Type of script: File Path or Inline Script",
+            "helpMarkDown": "Type of script: File path or Inline script",
             "options": {
-                "inlineScript": "Inline Script",
-                "scriptPath": "Script Path"
+                "inlineScript": "Inline script",
+                "scriptPath": "Script path"
             }
         },
         {
@@ -88,7 +66,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = inlineScript",
-            "helpMarkDown": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: azure --version || azure account show \n\n example for batch: call  azure --version || call azure account show",
+            "helpMarkDown": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
@@ -131,6 +109,8 @@
     "messages": {
         "ScriptReturnCode": "Script exited with return code: %d",
         "ScriptFailed": "Script failed with error: %s",
-        "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Certificate and Username Password for Azure Classic and Service Principal for AzureRM"
+        "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Service Principal for AzureRM",
+        "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
+        "FailedToLogout": "The following error occured while logging out: %s"
     }
 }

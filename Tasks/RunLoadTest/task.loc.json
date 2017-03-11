@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 18
   },
   "demands": [
     "msbuild",
@@ -26,7 +26,6 @@
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
