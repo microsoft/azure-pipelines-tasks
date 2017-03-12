@@ -349,7 +349,7 @@
         "FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
         "FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
-        "PollingForFileTimeOut": "Unable to fetch script status due to timeout. Please increase the timeout limit by setting 'appservice.retrytimeout' variable to no. of minutes required",
+        "PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
         "InvalidPollOption": "Invalid polling option provided: %s."
     }
 }

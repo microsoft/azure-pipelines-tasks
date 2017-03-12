@@ -118,6 +118,6 @@
   "loc.messages.FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
   "loc.messages.FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
   "loc.messages.ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
-  "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. Please increase the timeout limit by setting 'appservice.retrytimeout' variable to no. of minutes required",
+  "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
   "loc.messages.InvalidPollOption": "Invalid polling option provided: %s."
 }

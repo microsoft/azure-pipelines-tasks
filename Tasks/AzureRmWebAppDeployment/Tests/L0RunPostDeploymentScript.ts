@@ -20,7 +20,8 @@ mockery.registerMock('vso-node-api/HttpClient', {
                 url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
                 var urlArray = [
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
-                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd'
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd',
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/delete_log_file.cmd'
                 ];
 
                 if (verb == 'PUT' && urlArray.indexOf(url) != -1) {
