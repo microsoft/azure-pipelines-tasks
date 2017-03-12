@@ -24,7 +24,7 @@ mockery.registerMock('vso-node-api/HttpClient', {
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/delete_log_file.cmd'
                 ];
 
-                if (verb == 'PUT' && urlArray.indexOf(url) != -1) {
+                if(verb == 'PUT' && urlArray.indexOf(url) != -1) {
                     console.log('PUT:' + url);
                     return;
                 }
