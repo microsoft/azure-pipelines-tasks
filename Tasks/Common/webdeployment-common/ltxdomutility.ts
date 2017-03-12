@@ -37,7 +37,7 @@ function buildLookUpTable(node) {
         if(nodeName){
             nodeName = nodeName.toLowerCase();
             var listOfNodes = xmlDomLookUpTable[nodeName];
-            if(listOfNodes == null ){
+            if(listOfNodes == null || typeof listOfNodes === 'function') {
                 listOfNodes = [];
                 xmlDomLookUpTable[nodeName] = listOfNodes;
             }

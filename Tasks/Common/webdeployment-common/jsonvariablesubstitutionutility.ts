@@ -19,7 +19,7 @@ export function createEnvTree(envVariables) {
         var envVariableNameArray = (envVariable.name).split('.');
         
         for(let variableName of envVariableNameArray) {
-            if(envVarTreeIterator.child[variableName] === undefined) {
+            if(envVarTreeIterator.child[variableName] === undefined || typeof envVarTreeIterator.child[variableName] === 'function') {
                 envVarTreeIterator.child[variableName] = {
                     value: null,
                     isEnd: false,
@@ -38,7 +38,7 @@ function checkEnvTreePath(jsonObjectKey, index, jsonObjectKeyLength, envVarTree)
     if(index == jsonObjectKeyLength) {
         return envVarTree;
     }
-    if(envVarTree.child[ jsonObjectKey[index] ] === undefined) {
+    if(envVarTree.child[ jsonObjectKey[index] ] === undefined || typeof envVarTree.child[ jsonObjectKey[index] ] === 'function') {
         return undefined;
    }
     return checkEnvTreePath(jsonObjectKey, index + 1, jsonObjectKeyLength, envVarTree.child[ jsonObjectKey[index] ]);
@@ -65,7 +65,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
         tl.debug('JSON variable substitution for ' + jsonSubFile);
         var matchFiles = utility.findfiles(path.join(absolutePath, jsonSubFile));
         if(matchFiles.length === 0) {
-            throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern'));
+            throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern', jsonSubFile));
         }
         for(let file of matchFiles) {
             if(path.extname(file) !== '.json') {

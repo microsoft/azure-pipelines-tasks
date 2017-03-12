@@ -431,7 +431,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
         assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
         assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
-        assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON variables with dot character validation error');
+        assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes vaidated') > 0, 'JSON inbuilt variable substitution validation error');
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });
