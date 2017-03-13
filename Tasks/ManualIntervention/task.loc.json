@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": 8,
-    "Minor": 1,
+    "Minor": 2,
     "Patch": 3
   },
   "inputs": [
@@ -38,7 +38,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
-    }
+    },
+	{
+	"name": "resumeOnTimeout",
+	"type": "boolean",
+	"label": "ms-resource:loc.input.label.resumeOnTimeout",
+	"defaultValue": false,
+	"required": false,
+	"helpMarkDown": "ms-resource:loc.input.help.resumeOnTimeout"
+	}
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
