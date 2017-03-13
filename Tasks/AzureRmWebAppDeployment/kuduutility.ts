@@ -128,7 +128,7 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
         await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', mainCmdFilePath);
         await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript_' + uniqueID + '.cmd', scriptFile.filePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
-        await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile_' + uniqueID + '.cmd ' + uniqueID, 180, 'script_result_' +  uniqueID + '.txt');
+        await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile_' + uniqueID + '.cmd ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
         console.log(tl.loc('ScriptExecutionOnKuduSuccess'));
         deleteLogFiles = true;
         await getPostDeploymentScriptLogs(publishingProfile, 'site/wwwroot', uniqueID);
