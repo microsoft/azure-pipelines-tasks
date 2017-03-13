@@ -29,6 +29,21 @@ export function getVirtualAndPhysicalPaths(virtualApplication: string, virtualAp
     return [virtualPath, physicalPath];
 }
 
+export async function appOfflineKuduService(publishingProfile, physicalPath: string, enableFeature: boolean) {
+    if(enableFeature) {
+        tl.debug('Trying to enable app offline mode.');
+        var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_temp.htm');
+        tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
+        await uploadFiletoKudu(publishingProfile, '/site/wwwroot', 'app_offline.htm', appOfflineFilePath);
+        tl.debug('App Offline mode enabled.');
+    }
+    else {
+        tl.debug('Trying to disable app offline mode.');
+        await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', false);
+        tl.debug('App Offline mode disabled.');
+    }
+}
+
 /**
  *  Deploys a zip based webapp package.
  * 
@@ -48,11 +63,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         'If-Match': '*'
     };
     if(takeAppOfflineFlag) {
-        tl.debug('Trying to enable app offline mode.');
-        var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_temp.htm');
-        tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
-        await uploadFiletoKudu(publishingProfile, '/site/wwwroot', 'app_offline.htm', appOfflineFilePath);
-        tl.debug('App Offline mode enabled.');
+        await appOfflineKuduService(publishingProfile, physicalPath, true);
     }
     console.log(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var webAppReadStream = fs.createReadStream(webAppPackage);
@@ -65,7 +76,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
             if(takeAppOfflineFlag) {
                 tl.debug('Trying to disable app offline mode.');
                 try {
-                    await deleteFileFromKudu(publishingProfile, physicalPath, 'app_offline.htm', false);
+                    await appOfflineKuduService(publishingProfile, physicalPath, false);
                     tl.debug('App Offline mode disabled.');
                 }
                 catch(error) {
@@ -119,9 +130,7 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
     var deleteLogFiles = false;
 
     if(appOfflineFlag) {
-        var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_local.htm');
-        tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
-        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', appOfflineFilePath);
+        await appOfflineKuduService(publishingProfile, 'site/wwwroot', true);
     }
     try {
         var mainCmdFilePath = path.join(__dirname, 'postDeploymentScript', 'mainCmdFile.cmd');
@@ -150,8 +159,7 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
             tl.debug('Unable to delete log files : ' + error);
         }
         if(appOfflineFlag) {
-            await deleteFileFromKudu(publishingProfile, 'site/wwwroot', 'app_offline.htm', false);
-            tl.rmRF(appOfflineFilePath, true);
+            await appOfflineKuduService(publishingProfile, 'site/wwwroot', false);
         }
     }
 }
@@ -244,7 +252,7 @@ async function deleteFileFromKudu(publishingProfile, physicalPath: string, fileN
 
     tl.debug('Removing file: ' + fileName + ' using publishUrl: ' + kuduDeploymentURL);
     httpObj.get('DELETE', kuduDeploymentURL, headers, (error, response, contents) => {
-        if(response.statusCode === 200 || response.statusCode === 204) {
+        if(response.statusCode === 200 || response.statusCode === 204 || response.statusCode === 404) {
             tl.debug('Removed file: ' + fileName + ' from path: ' + physicalPath);
             defer.resolve('file removed from kudu');
         }
