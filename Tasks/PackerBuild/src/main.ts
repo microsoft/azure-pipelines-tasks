@@ -49,13 +49,9 @@ function cleanup(host: packerHost): void {
     fileProvider.cleanup();
 }
 
-try {
-    tl.setResourcePath(path.join(__dirname, "..//task.json"));
-}
-catch (err) {
-    tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));
-    process.exit();
-}
+var taskManifestPath = path.join(__dirname, "..//task.json");
+tl.debug("Setting resource path to " + taskManifestPath);
+tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
     tl.setResult(tl.TaskResult.Succeeded, "")

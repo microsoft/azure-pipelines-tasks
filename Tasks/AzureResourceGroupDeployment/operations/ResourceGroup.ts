@@ -15,6 +15,7 @@ import winRM = require("./WinRMExtensionHelper");
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
+import fileEncoding = require('./FileEncoding');
 
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -190,7 +191,7 @@ export class ResourceGroup {
         var template: Object;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(fs.readFileSync(this.taskParameters.csmFile, 'UTF-8'));
+            template = JSON.parse(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile));
             tl.debug("Loaded CSM File");
         }
         catch (error) {
@@ -202,9 +203,9 @@ export class ResourceGroup {
             if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
                 if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
                     tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
+                    var parameterFile = JSON.parse(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile));
                     tl.debug("Loaded Parameters File");
-                    parameters = JSON.parse(parameterFile).parameters;
+                    parameters = parameterFile["parameters"];
                 }
             }
         }

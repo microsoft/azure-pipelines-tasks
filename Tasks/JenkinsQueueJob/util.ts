@@ -15,6 +15,8 @@ import Job = job.Job;
 import jobqueue = require('./jobqueue');
 import JobQueue = jobqueue.JobQueue;
 
+import url = require('url');
+
 export function getFullErrorMessage(httpResponse, message: string): String {
     var fullMessage = message +
         '\nHttpResponse.statusCode=' + httpResponse.statusCode +
@@ -60,6 +62,50 @@ export function addUrlSegment(baseUrl: string, segment: string): string {
         resultUrl = baseUrl + '/' + segment;
     }
     return resultUrl;
+}
+
+export function isPipelineJob(job: Job, taskOptions: TaskOptions): Q.Promise<boolean> {
+    let deferred = Q.defer<boolean>();
+    let wfapiUrl = `${job.taskUrl}/wfapi`;
+    request.get({ url: wfapiUrl, strictSSL: taskOptions.strictSSL }, (err, response, body) => {
+        if (response.statusCode === 200) {
+            deferred.resolve(true);
+        } else {
+            deferred.resolve(false);
+        }
+    });
+
+    return deferred.promise;
+}
+
+export function getPipelineReport(job: Job, taskOptions: TaskOptions): Q.Promise<any> {
+    let deferred = Q.defer<any>();
+    let wfapiUrl = `${job.taskUrl}/${job.executableNumber}/wfapi/describe`;
+    request.get({ url: wfapiUrl, strictSSL: taskOptions.strictSSL }, (err, response, body) => {
+        if (response.statusCode === 200) {
+            deferred.resolve(body);
+        } else {
+            deferred.reject(err);
+        }
+    });
+
+    return deferred.promise;
+}
+
+export function getUrlAuthority(myUrl: string): string {
+    let parsed: url.Url = url.parse(myUrl);
+
+    let result = '';
+    if (parsed.auth) {
+        result += parsed.auth;
+    } else {
+        if (parsed.protocol && parsed.host) {
+            result = `${parsed.protocol}//${parsed.host}`;
+        }
+    }
+
+    return result;
+
 }
 
 export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions): Q.Promise<Job> {
@@ -171,7 +217,7 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
             url: taskOptions.teamJobQueueUrl,
             form: {
                 json: JSON.stringify({
-                    "team-build": getTeamParameters(),
+                    "team-build": getTeamParameters(taskOptions),
                     "parameter": parseJobParametersTeamBuild(taskOptions.jobParameters)
                 })
             },
@@ -241,7 +287,7 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
     let defer: Q.Deferred<string> = Q.defer<string>();
     let crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
-    request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function(err, httpResponse, body) {
+    request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function (err, httpResponse, body) {
         if (err) {
             if (err.code == 'ECONNRESET') {
                 tl.debug(err);
@@ -288,11 +334,11 @@ export class StringWritable extends stream.Writable {
 
 /**
  * Supported parameter types: boolean, string, choice, password
- * 
+ *
  * - If a parameter is not defined by Jenkins it is fine to pass it anyway
  * - Anything passed to a boolean parameter other than 'true' (case insenstive) becomes false.
  * - Invalid choice parameters result in a 500 response.
- * 
+ *
  */
 function parseJobParameters(jobParameters: string[]): any {
     var formData = {};
@@ -321,7 +367,7 @@ function parseJobParametersTeamBuild(jobParameters: string[]): any {
     return jsonArray;
 }
 
-function getTeamParameters(): any {
+function getTeamParameters(taskOptions: TaskOptions): any {
     var formData = {};
     allTeamBuildVariables.forEach(variableName => {
         let paramValue = tl.getVariable(variableName);
@@ -329,6 +375,12 @@ function getTeamParameters(): any {
             formData[variableName] = paramValue;
         }
     });
+
+    // add task specific options
+    if (taskOptions.isMultibranchPipelineJob) {
+        formData['QueueJobTask.MultibranchPipelineBranch'] = taskOptions.multibranchPipelineBranch;
+    }
+
     return formData;
 }
 

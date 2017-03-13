@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [
         "sqlpackage"
@@ -200,8 +200,12 @@
             "label": "Specify Firewall Rules Using",
             "required": true,
             "groupName": "firewall",
-            "defaultValue": "IPAddressRange",
-            "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Provide the IP Address range of the automation agents, or select to auto-detect in case of hosted automation agent."
+            "defaultValue": "AutoDetect",
+            "options": {
+                "AutoDetect": "AutoDetect",
+                "IPAddressRange": "IPAddressRange"
+            },
+            "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly."
         },
         {
             "name": "StartIpAddress",
@@ -231,14 +235,6 @@
             "groupName": "firewall",
             "defaultValue": "true",
             "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure SQL Server's Firewall."
-        }
-    ],
-    "sourceDefinitions": [
-        {
-            "target": "IpDetectionMethod",
-            "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods",
-            "selector": "jsonpath:$.value[*]",
-            "authKey": "tfs:DevTestLabs"
         }
     ],
     "instanceNameFormat": "Execute Azure SQL : $(TaskNameSelector)",

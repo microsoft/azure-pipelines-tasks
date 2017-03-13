@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "sqlpackage"
@@ -200,7 +200,11 @@
       "label": "ms-resource:loc.input.label.IpDetectionMethod",
       "required": true,
       "groupName": "firewall",
-      "defaultValue": "IPAddressRange",
+      "defaultValue": "AutoDetect",
+      "options": {
+        "AutoDetect": "AutoDetect",
+        "IPAddressRange": "IPAddressRange"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.IpDetectionMethod"
     },
     {
@@ -231,14 +235,6 @@
       "groupName": "firewall",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
-    }
-  ],
-  "sourceDefinitions": [
-    {
-      "target": "IpDetectionMethod",
-      "endpoint": "/_apis/vslabs/ipAddress/ipDetectionMethods",
-      "selector": "jsonpath:$.value[*]",
-      "authKey": "tfs:DevTestLabs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

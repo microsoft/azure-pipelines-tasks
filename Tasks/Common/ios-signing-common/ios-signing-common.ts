@@ -32,6 +32,10 @@ export async function installCertInTemporaryKeychain(keychainPath : string, keyc
 
     //import p12 cert into the keychain
     var importP12Command : ToolRunner = tl.tool(tl.which('security', true));
+    if (!p12Pwd) {
+        // if password is null or not defined, set it to empty
+        p12Pwd = '';
+    }
     importP12Command.arg(['import', p12CertPath, '-P', p12Pwd, '-A', '-t', 'cert', '-f', 'pkcs12', '-k', keychainPath]);
     await importP12Command.exec();
 
