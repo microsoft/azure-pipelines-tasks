@@ -7,28 +7,28 @@ import utils = require('./helpers');
 var regedit = require('regedit');
 var xml2js = require('xml2js');
 
-export function locateVSTestConsole(testConfig): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
-    locateTestWindow(testConfig).
-        then( function(exeInfo) {
-            var vstestConsoleInfo = exeInfo;
-            if(exeInfo){
-                vstestConsoleInfo.location = path.join(exeInfo.location, "vstest.console.exe");
-            }            
-            deferred.resolve(vstestConsoleInfo);
-        });
+export async function locateVSTestConsole(testConfig): Promise<string> {
+    let deferred = Q.defer<string>();
+    let vstestExeFolder = await locateTestWindow(testConfig);
+        
+    var vstestExePath = vstestExeFolder;
+    if(vstestExeFolder){
+        vstestExePath = path.join(vstestExeFolder, "vstest.console.exe");
+    }
+
+    deferred.resolve(vstestExePath);
     return deferred.promise;
 }
 
-export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
+export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promise<string> {
+    let deferred = Q.defer<string>();
     let vsVersion: number = parseFloat(testConfig.vsTestVersion);
     if(testConfig.vsTestLocationMethod === utils.Constants.vsTestLocationString) {
         if (utils.Helper.pathExistsAsFile(testConfig.vsTestLocation)) {
-            deferred.resolve({ version: null, location: path.join(testConfig.vsTestLocation,"..")});
+            deferred.resolve(path.join(testConfig.vsTestLocation,".."));
         } else if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
-            deferred.resolve({ version: null, location: testConfig.vsTestLocation});
+            deferred.resolve(testConfig.vsTestLocation);
         } else {
             throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
         }
@@ -38,7 +38,7 @@ export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promi
             tl.debug('Searching for latest Visual Studio');
             let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
             if (vstestconsole15Path) {
-                deferred.resolve({ version: 15.0, location: vstestconsole15Path });
+                deferred.resolve(vstestconsole15Path);
             } else {
                 // fallback
                 tl.debug('Unable to find an instance of Visual Studio 2017');
@@ -47,21 +47,21 @@ export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promi
         } else if (vsVersion === 15.0) {
             let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
             if (vstestconsole15Path) {
-                deferred.resolve({ version: 15.0, location: vstestconsole15Path });
+                deferred.resolve(vstestconsole15Path);
             } else {
                 throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
             }
         }
         else {
             tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-            deferred.resolve({ version: vsVersion, location: getVSTestLocation(vsVersion) });
+            deferred.resolve(getVSTestLocation(vsVersion));
         }
     }
     return deferred.promise;
 }
 
-function getLatestVSTestConsolePathFromRegistry(): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
+function getLatestVSTestConsolePathFromRegistry(): Q.Promise<string> {
+    let deferred = Q.defer<string>();
     let regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
     regedit.list(regPath).on('data', (entry) => {
         let subkeys = entry.data.keys;
@@ -70,7 +70,7 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<models.ExecutabaleI
             versions.sort((a, b) => a - b);
             let selectedVersion = versions[versions.length - 1];
             tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
-            deferred.resolve({ version: selectedVersion, location: getVSTestLocation(selectedVersion) });
+            deferred.resolve(getVSTestLocation(selectedVersion));
         } else {
             deferred.resolve(null);
         }
@@ -123,5 +123,6 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
             }
         }
     }
+    
     return outputArray;
 }
