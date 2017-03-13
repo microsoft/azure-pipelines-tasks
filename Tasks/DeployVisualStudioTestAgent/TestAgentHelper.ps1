@@ -214,7 +214,7 @@ function Remove-Service([String] $ServiceName)
         {
             $service.StopService()
             $deleteServiceCode = $service.Delete()
-            if($deleteServiceCode -eq 0)
+            if($deleteServiceCode -ne 0)
             {
                 Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
             }
