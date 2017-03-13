@@ -51,12 +51,12 @@ if(jsonObject['&pl']['ch@r@cter.k^y'] === '*.config') {
     console.log('JSON - special variables validated');
 }
 if(jsonObject['user.profile']['name.first'] === 'firstName') {
-    console.log('JSON - varaibles with dot character validated');
+    console.log('JSON - variables with dot character validated');
 }
 if(jsonObject['User.Profile'] === 'do_not_replace') {
     console.log('JSON - case sensitive variables validated');
 }
 if(jsonObject['constructor.name'] === 'newConstructorName' && 
     jsonObject['constructor']['name'] === 'newConstructorName' && jsonObject['constructor']['valueOf'] === 'constructorNewValue') {
-        console.log('JSON - substitute inbuilt JSON attributes vaidated');
+        console.log('JSON - substitute inbuilt JSON attributes validated');
 }
