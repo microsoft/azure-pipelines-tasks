@@ -112,7 +112,7 @@
             "required": false,
             "groupName": "sign",
             "defaultValue": "file",
-            "helpMarkDown": "If the build should use a different signing or provisioning method than is installed on the build agent, choose that method here. Choose 'File Contents' to use a P12 certificate and provisioning profile. Choose 'Identifiers' to retrieve pre-installed signing settings from the Keychain. Leave the corresponding fields blank if you do not wish to override default settings on the build agent.",
+            "helpMarkDown": "If the build should use a signing or provisioning method that is different than the default, choose that method here. Choose 'File Contents' to use a P12 certificate and provisioning profile. Choose 'Identifiers' to retrieve signing settings from the default Keychain and pre-installed profiles. Leave the corresponding fields blank if you do not wish to override default build settings.",
             "options": {
                 "file": "File Contents",
                 "id": "Identifiers"
