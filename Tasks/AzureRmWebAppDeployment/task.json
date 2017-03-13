@@ -116,6 +116,28 @@
             "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
+            "name": "GenerateWebConfig",
+            "type": "boolean",
+            "label": "Generate Web.config",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469)."
+        },
+        {
+            "name": "WebConfigParameters",
+            "type": "multiLine",
+            "label": "Edit Web.config parameters",
+            "required": true,
+            "defaultValue": "-appType Node -Handler iisnode -NodeStartFile server.js",
+            "visibleRule": "GenerateWebConfig == true",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+            }
+        },
+        {
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
@@ -345,6 +367,10 @@
         "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
         "RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
         "stdoutFromScript": "Standard output from script: ",
-        "stderrFromScript": "Standard error from script: "
+        "stderrFromScript": "Standard error from script: ",
+        "WebConfigAlreadyExists": "web.config file already exists. Not generating.",
+        "WebConfigDoesNotExist": "web.config file does not exist. Generating.",
+        "SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
+        "FailedToGenerateWebConfig": "Failed to generate web.config. %s"
     }
 }

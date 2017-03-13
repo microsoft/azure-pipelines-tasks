@@ -7,19 +7,7 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, webDeployPkg: string) {
-
-    var tempPackagePath;
-    var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
-        
-    if(isFolderBasedDeployment) {
-        tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
-        utility.copyDirectory(webDeployPkg, folderPath);
-        tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
-    }
-    else {
-        await zipUtility.unzip(webDeployPkg, folderPath);
-    }
+export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string) {
 
     if(xmlTransformation) {
         var environmentName = tl.getVariable('Release.EnvironmentName');
@@ -45,20 +33,4 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
         jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
         console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
     }
-
-    if(isFolderBasedDeployment) {
-        tempPackagePath = folderPath;
-        webDeployPkg = folderPath;
-    }
-    else {
-        var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
-        webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
-        tempPackagePath = webDeployPkg;
-        tl.rmRF(folderPath, true);
-    }
-
-    return {
-        "webDeployPkg": webDeployPkg,
-        "tempPackagePath": tempPackagePath
-    };
 }
