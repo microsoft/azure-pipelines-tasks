@@ -9,9 +9,6 @@ async function executeTask() {
 		tl.setResourcePath(path.join(__dirname, 'task.json'));
 		var gulpFilePath = tl.getDelimitedInput('gulpFile', '\n', true);
 		var gulp = tl.which('gulp', false);
-		var isCodeCoverageEnabled = tl.getBoolInput('enableCodeCoverage');
-		var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
-		var testResultsFiles = tl.getInput('testResultsFiles', publishJUnitResults);
 		var cwd = tl.getPathInput('cwd', true, false);
 		tl.mkdirP(cwd);
 		tl.cd(cwd);
@@ -33,28 +30,6 @@ async function executeTask() {
 			var gt = tl.tool(gulp);
 		}
 
-		if (isCodeCoverageEnabled) {
-			var npm = tl.tool(tl.which('npm', true));
-			npm.line('install istanbul');
-			var testFramework = tl.getInput('testFramework', true);
-			var srcFiles = tl.getInput('srcFiles', false);
-			var testSrc = tl.getPathInput('testFiles', true, false);
-			var istanbul = tl.tool(tl.which('node', true));
-			istanbul.arg('./node_modules/istanbul/lib/cli.js');
-			istanbul.line('cover --report cobertura --report html');
-			if (srcFiles) {
-				istanbul.line('-i .' + path.sep + path.join(srcFiles));
-			}
-			if (testFramework.toLowerCase() == 'jasmine') {
-				istanbul.line('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
-			} else {
-				istanbul.arg('./node_modules/mocha/bin/_mocha');
-			}
-			istanbul.arg(testSrc);
-			var summaryFile = path.join(cwd, 'coverage/cobertura-coverage.xml');
-			var reportDirectory = path.join(cwd, 'coverage/');
-		}
-
 		// optional - no targets will concat nothing
 		gt.arg(tl.getDelimitedInput('targets', ' ', false));
 		gt.arg('--gulpfile');
@@ -66,27 +41,8 @@ async function executeTask() {
 		for (var gulpFile of getGulpFiles(gulpFilePath)) {
 			substituteGulpFilePath(gt, gulpFile);
 			await gt.exec().then(function (code) {
-				publishTestResults(publishJUnitResults, testResultsFiles);
-				if (isCodeCoverageEnabled) {
-					return npm.exec().then(function () {
-						return istanbul.exec().then(function (code) {
-							publishCodeCoverage(summaryFile, reportDirectory);
-							console.log(tl.loc('GulpReturnCode', code));
-						}, function (err) {
-							publishCodeCoverage(summaryFile, reportDirectory);
-							tl.debug('taskRunner fail');
-							throw new Error(tl.loc('IstanbulFailed', err.message));
-						})
-					}, function (err) {
-						tl.debug('taskRunner fail');
-						throw new Error(tl.loc('NpmFailed', err.message));
-					})
-				}
-				else {
-					console.log(tl.loc('GulpReturnCode', code));
-				}
+				console.log(tl.loc('GulpReturnCode', code));
 			}, function (err) {
-				publishTestResults(publishJUnitResults, testResultsFiles);
 				tl.debug('taskRunner fail');
 				throw new Error(tl.loc('GulpFailed', err.message));
 			})
@@ -94,33 +50,6 @@ async function executeTask() {
 	}
 	catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
-	}
-}
-
-function publishTestResults(publishJUnitResults, testResultsFiles: string) {
-	if (publishJUnitResults) {
-
-		var matchingTestResultsFiles = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory'), testResultsFiles, null, { matchBase: true });
-		if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
-			tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
-			return 0;
-		}
-		var tp = new tl.TestPublisher("JUnit");
-		try {
-			tp.publish(matchingTestResultsFiles, true, "", "", "", true);
-		} catch (error) {
-			tl.warning(error);
-		}
-	}
-}
-
-function publishCodeCoverage(summaryFile, reportDirectory) {
-	try {
-		var ccPublisher = new tl.CodeCoveragePublisher();
-		ccPublisher.publish('cobertura', summaryFile, reportDirectory, "");
-	} catch (error) {
-		tl.warning(error);
-		throw error;
 	}
 }
 

@@ -10,9 +10,6 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "/user/build";
 
 tr.setInput('gulpFile', '**/gulpfile.js');
-tr.setInput('publishJUnitResults', 'true');
-tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-tr.setInput('enableCodeCoverage', 'false');
 if (os.type().match(/^Win/)) {
     tr.setInput('cwd', 'c:/fake/wd');
 }

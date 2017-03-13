@@ -19,7 +19,7 @@ describe('Gulp Task', function () {
         tr.run();
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
-        assert(tr.invokedToolCount == 1, 'should have only run Gulp');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -35,7 +35,7 @@ describe('Gulp Task', function () {
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/one/gulpfile.js'), 'it should have run Gulp in directory, one');
         assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/two/gulpfile.js'), 'it should have run Gulp in directory, two');
-        assert(tr.invokedToolCount == 2, 'should have only run Gulp for two gulp files');
+        assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -54,38 +54,7 @@ describe('Gulp Task', function () {
         else {
             assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
         }
-        assert(tr.invokedToolCount == 1, 'should have only run gulp');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
-    it("runs gulp when code coverage is enabled", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0GulpCodeCoverage.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
-        assert(tr.invokedToolCount == 3, 'should have run npm, Gulp and istanbul');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
-    it("runs a gulpfile when publishJUnitTestResults is false", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0PublishResultFalse.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
-        assert(tr.invokedToolCount == 1, 'should have only run Gulp');
-
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -155,7 +124,7 @@ describe('Gulp Task', function () {
         done();
     });
 
-    it("fails if gulp no exist globally and locally", (done: MochaDone) => {
+    it("fails if no gulp exist globally and locally", (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'L0NoGulp.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -168,23 +137,6 @@ describe('Gulp Task', function () {
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.invokedToolCount == 0, 'should exit before running Gulp');
         
-        assert(tr.failed, 'task should have failed');
-
-        done();
-    });
-
-    it("fails if npm fails", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0NpmFail.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.invokedToolCount == 2, 'should have exited before running gulp');
-
-        var expectedErr = 'Error: loc_mock_NpmFailed /usr/local/bin/npm failed with return code: 1';
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -207,83 +159,4 @@ describe('Gulp Task', function () {
 
         done();
     });
-
-    it("fails if istanbul fails", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0IstanbulFail.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
-        assert(tr.invokedToolCount == 3, 'should have run npm, gulp and istanbul');
-        var expectedErr = 'Error: loc_mock_IstanbulFailed /usr/local/bin/node failed with return code: 1';
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
-        assert(tr.failed, 'task should have failed');
-
-        done();
-    });
-
-    it("Fails when test result files input is not provided", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0TestResultFileAbsent.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        var expectedErr = 'Error: Input required: testResultsFiles';
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
-        assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 0, 'should exit before running gulp');
-
-        done();
-    });
-
-    it("gives warning and runs when test result files input does not match any file", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0TestResultFileNoMatch.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.invokedToolCount == 1, 'should run completely');
-        assert(tr.stdout.search('No pattern found in testResultsFiles parameter') >= 0, 'should give a warning for test file pattern not matched.');
-
-        done();
-    });
-
-    it("Fails when test source files input is not provided for coverage", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0TestSourceFileAbsent.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        var expectedErr = 'Error: Input required: testFiles';
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
-        assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 0, 'should exit before running gulp');
-        done();
-    });
-
-    it("fails when test source files input does not match any file", (done: MochaDone) => {
-        this.timeout(1000);
-        let tp = path.join(__dirname, 'L0TestSourceFileNoMatch.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        var expectedErr = 'Error: loc_mock_IstanbulFailed /usr/local/bin/node failed with return code: 1';
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
-        assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
-        done();
-    });
-
 });
