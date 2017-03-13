@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 115,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "Xamarin.iOS"
@@ -112,7 +112,7 @@
             "required": false,
             "groupName": "sign",
             "defaultValue": "file",
-            "helpMarkDown": "Indicates that the build should use different signing and/or mobile provisioning settings than are installed on the build server. Leave fields blank if you do not wish to override.",
+            "helpMarkDown": "If the build should use a different signing or provisioning method than is installed on the build agent, choose that method here. Choose 'File Contents' to use a P12 certificate and provisioning profile. Choose 'Identifiers' to retrieve pre-installed signing settings from the Keychain. Leave the corresponding fields blank if you do not wish to override default settings on the build agent.",
             "options": {
                 "file": "File Contents",
                 "id": "Identifiers"
