@@ -29,6 +29,7 @@ try {
     $copyPackageTimeoutSec = Get-VstsInput -Name copyPackageTimeoutSec
     $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
+    $skipUpgrade =  [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
 
     $clusterConnectionParameters = @{}
 
@@ -131,6 +132,7 @@ try {
         $publishParameters['Action'] = "RegisterAndUpgrade"
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $true
+        $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }
