@@ -25,6 +25,7 @@ try {
     Initialize-Azure
 
     # Trace the expression as it will be invoked.
+    $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
         $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
         ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
@@ -83,7 +84,7 @@ try {
         }
 }
 finally {
-    if ((Get-Variable -Name __vstsAzPSInlineScriptPath -ErrorAction SilentlyContinue) -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
+    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
 }
