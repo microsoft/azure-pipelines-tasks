@@ -5,6 +5,8 @@ import * as constants from "./constants";
 import * as utils from "./utilities";
 
 export default class TaskParameters {
+    public templateType: string;
+    public customTemplateLocation: string;
     public serviceEndpoint: string;
 
     public resourceGroup: string;
@@ -26,20 +28,26 @@ export default class TaskParameters {
 
     constructor() {
         try {
-            this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
-            this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
-            this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
-            this.location = tl.getInput(constants.LocationInputName, true);
+            this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
+            
+            if(this.templateType === "custom") {
+                this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
+            } else {               
+                this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
+                this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
+                this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
+                this.location = tl.getInput(constants.LocationInputName, true);
 
-            this.baseImage = tl.getInput(constants.BaseImageInputName, true);
-            this._extractImageDetails();
+                this.baseImage = tl.getInput(constants.BaseImageInputName, true);
+                this._extractImageDetails();
 
-            this.deployScriptPath = tl.getInput(constants.DeployScriptPathInputName, true);
-            this.packagePath = this._getPackagePath();
-            this.deployScriptArguments = tl.getPathInput(constants.DeployScriptArgumentsInputName, false);
+                this.deployScriptPath = tl.getPathInput(constants.DeployScriptPathInputName, true, true);
+                this.packagePath = this._getPackagePath();
+                this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
-            this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
-            this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
+                this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
+                this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
+            }
         } 
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error.message));

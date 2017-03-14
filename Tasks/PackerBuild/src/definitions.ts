@@ -3,7 +3,7 @@ import TaskParameters from "./taskParameters"
 
 export enum TemplateFileProviderTypes {
     BuiltIn = 0,
-    User = 1
+    Custom = 1
 }
 
 export enum VariablesProviderTypes {
