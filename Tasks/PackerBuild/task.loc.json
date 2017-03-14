@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 10
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -95,6 +95,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath"
     },
     {
+      "name": "deployScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployScriptArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptArguments"
+    },
+    {
       "name": "imageUri",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageUri",
@@ -163,6 +171,8 @@
     "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
-    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed"
+    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed",
+    "PackerFixFailed": "ms-resource:loc.messages.PackerFixFailed",
+    "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed"
   }
 }

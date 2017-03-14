@@ -11,6 +11,7 @@ tr.setInput('baseImage', 'Canonical:UbuntuServer:14.04.4-LTS:linux');
 tr.setInput('location', 'South India');
 tr.setInput('packagePath', '/packer-user-scripts/dummy.tar.gz');
 tr.setInput('deployScriptPath', '/packer-user-scripts/deploy.sh');
+tr.setInput('deployScriptArguments', "\"subdir 1\" false");
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
@@ -33,13 +34,13 @@ let a: any = <any>{
     "exec": {
         "packer fix -validate=false /tmp/tempdir/100/default.linux.template.json": {
             "code": 0,
-            "stdout": "Executed Successfully"
+            "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
         },
@@ -47,11 +48,11 @@ let a: any = <any>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
         }
@@ -75,6 +76,9 @@ tr.registerMock('./utilities', {
     StringWritable: ut.StringWritable,
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
+    },
+    writeFile: function(filePath: string, content: string) {
+        console.log("writing to file " + filePath + " content: " + content);
     },
     getCurrentTime: function() {
         return 100;

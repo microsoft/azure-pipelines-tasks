@@ -35,13 +35,13 @@ let a: any = <any>{
     "exec": {
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": process.env["__packer_fix_fails__"] === "true" ? 1 : 0,
-            "stdout": process.env["__packer_fix_fails__"] === "true" ? "packer fix failed\r\nsome error" : "Executed Successfully",
+            "stdout": process.env["__packer_fix_fails__"] === "true" ? "packer fix failed\r\nsome error" : "{ \"some-key\": \"some-value\" }",
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_path=C:\\deploy.ps1 -var script_name=deploy.ps1 -var package_path=C:\\dummy.zip -var package_name=dummy.zip -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_path=C:\\deploy.ps1 -var script_name=deploy.ps1 -var package_path=C:\\dummy.zip -var package_name=dummy.zip -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": process.env["__packer_validate_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_validate_fails__"] === "true" ? "packer validate failed\r\nsome error" : "Executed Successfully",
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_path=C:\\deploy.ps1 -var script_name=deploy.ps1 -var package_path=C:\\dummy.zip -var package_name=dummy.zip -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_path=C:\\deploy.ps1 -var script_name=deploy.ps1 -var package_path=C:\\dummy.zip -var package_name=dummy.zip -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : (process.env["__packer_build_no_output__"] === "true" ? "Executed Successfully but output search will fail" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"),
         },
@@ -62,6 +62,9 @@ tr.registerMock('./utilities', {
     StringWritable: ut.StringWritable,
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
+    },
+    writeFile: function(filePath: string, content: string) {
+        console.log("writing to file " + filePath + " content: " + content);
     },
     getCurrentTime: function() {
         return 100;

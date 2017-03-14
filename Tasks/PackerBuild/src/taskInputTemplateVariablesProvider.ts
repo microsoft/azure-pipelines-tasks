@@ -4,6 +4,7 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
+import * as utils from "./utilities"
 
 // provider for all template variables which are derived from task input(apart from azure subscription input which is read by AzureSpnVariablesProvider)
 export default class TaskInputTemplateVariablesProvider implements definitions.ITemplateVariablesProvider {
@@ -41,6 +42,10 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariableScriptName, path.basename(deployScriptPath));
         this._templateVariables.set(constants.TemplateVariablePackagePathName, packagePath);
         this._templateVariables.set(constants.TemplateVariablePackageName, path.basename(packagePath));
+        if(!utils.IsNullOrEmpty(taskParameters.deployScriptArguments)) {
+            this._templateVariables.set(constants.TemplateVariableScriptArgumentsName, taskParameters.deployScriptArguments);            
+        }
+
         
         return this._templateVariables;
     }

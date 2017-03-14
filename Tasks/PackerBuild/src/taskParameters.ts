@@ -18,6 +18,7 @@ export default class TaskParameters {
 
     public packagePath: string;
     public deployScriptPath: string;
+    public deployScriptArguments: string;
 
     public imageUri: string;
     public storageAccountLocation: string;
@@ -34,6 +35,7 @@ export default class TaskParameters {
 
             this.deployScriptPath = tl.getInput(constants.DeployScriptPathInputName, true);
             this.packagePath = tl.getInput(constants.DeployPackageInputName, true);
+            this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
             this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
