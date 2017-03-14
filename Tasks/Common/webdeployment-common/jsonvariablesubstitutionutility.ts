@@ -6,7 +6,7 @@ var varUtility = require ('./variableutility.js');
 var fileEncoding = require('./fileencoding.js');
 var utility = require('./utility.js');
 export function createEnvTree(envVariables) {
-    // __proto__ is marked as null, so that custom object can be assgined to the same.
+    // __proto__ is marked as null, so that custom object can be assgined.
     // This replacement do not affect the JSON object, as no inbuilt JSON function is referenced.
     var envVarTree = {
         value: null,
