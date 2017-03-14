@@ -67,7 +67,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {
     	"webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "temp_web_package_random_path/web.config": false
     }, 
     "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
@@ -267,9 +268,6 @@ tr.registerMock('fs', {
     },
     fsyncSync: function(fd) {
         return true;
-    },
-    existsSync: function(fd) {
-        return false;
     }
 });
 

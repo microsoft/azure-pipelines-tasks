@@ -18,7 +18,7 @@ mockery.registerMock('fs', {
 });
 
 var generateWebConfig = require('webdeployment-common/generatewebconfig.js');
-generateWebConfig.generateWebConfigFile('MyApp/web.config',
+generateWebConfig.generateWebConfigFile('node',
     'TemplatePath/node',
     {
         "Handler": {

@@ -80,31 +80,7 @@ async function run() {
             var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
 
             if (generateWebConfig) {
-
-                //Generate the web.config file if it does not already exist.
-                var webConfigPath = path.join(folderPath, "web.config");
-                if (!fs.existsSync(webConfigPath)) {
-
-                    tl.debug(tl.loc('WebConfigDoesNotExist'));
-
-                    //Extract out the appType parameter as it is not to be replaced.
-                    var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
-                    var appType: string = webConfigParameters['appType'].value;
-                    delete webConfigParameters['appType'];
-
-                    // Get the template path for the given appType
-                    var webConfigTemplatePath = path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType.toLowerCase());
-                    try {
-                        // Create web.config
-                        generateWebConfigUtil.generateWebConfigFile(webConfigPath, webConfigTemplatePath, webConfigParameters);
-                        console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
-                    }
-                    catch (error) {
-                        throw new Error(tl.loc("FailedToGenerateWebConfig", error));
-                    }
-                } else{
-                    tl.debug(tl.loc('WebConfigAlreadyExists'));
-                }
+                addWebConfigFile(folderPath, webConfigParametersStr);
             }
 
             if (applyFileTransformFlag) {
@@ -261,6 +237,31 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
     catch(error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
+    }
+}
+
+function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
+    //Generate the web.config file if it does not already exist.
+    var webConfigPath = path.join(folderPath, "web.config");
+    if (!tl.exist(webConfigPath)) {
+
+        tl.debug(tl.loc('WebConfigDoesNotExist'));
+
+        //Extract out the appType parameter as it is not to be replaced.
+        var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+        var appType: string = webConfigParameters['appType'].value;
+        delete webConfigParameters['appType'];
+        
+        try {
+            // Create web.config
+            generateWebConfigUtil.generateWebConfigFile(webConfigPath, appType, webConfigParameters);
+            console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
+        }
+        catch (error) {
+            throw new Error(tl.loc("FailedToGenerateWebConfig", error));
+        }
+    } else {
+        tl.debug(tl.loc('WebConfigAlreadyExists'));
     }
 }
 
