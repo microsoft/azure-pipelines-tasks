@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -85,7 +85,8 @@
             "type": "filePath",
             "label": "Package or folder",
             "required": true,
-            "helpMarkDown": "Specify the path to deployment package."
+            "defaultValue": "**//*.zip",
+            "helpMarkDown": "Specify the path for deployment package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern."
         },
         {
             "name": "deployScriptPath",
@@ -173,6 +174,8 @@
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
         "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
         "PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
-        "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version."                
+        "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
+        "DeployPackagePathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
+        "ResolvedDeployPackgePath": "Resolved deploy package path: %s."    
     }
 }

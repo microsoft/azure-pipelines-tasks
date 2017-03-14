@@ -22,6 +22,10 @@ export function writeFile(filePath: string, content: string): void {
     tl.writeFile(filePath, content);
 }
 
+export function findMatch(root: string, patterns: string[] | string): string[] {
+    return tl.findMatch(root, patterns);
+}
+
 export function getTempDirectory(): string {
     return os.tmpdir();
 }

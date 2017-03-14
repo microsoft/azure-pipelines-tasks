@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 13
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -85,6 +85,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.packagePath",
       "required": true,
+      "defaultValue": "**//*.zip",
       "helpMarkDown": "ms-resource:loc.input.help.packagePath"
     },
     {
@@ -173,6 +174,8 @@
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
     "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed",
     "PackerFixFailed": "ms-resource:loc.messages.PackerFixFailed",
-    "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed"
+    "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed",
+    "DeployPackagePathNotFound": "ms-resource:loc.messages.DeployPackagePathNotFound",
+    "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath"
   }
 }

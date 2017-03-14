@@ -15,7 +15,7 @@
   "loc.input.label.baseImage": "Base image",
   "loc.input.help.baseImage": "Base image to used fo creating VHD.",
   "loc.input.label.packagePath": "Package or folder",
-  "loc.input.help.packagePath": "Specify the path to deployment package.",
+  "loc.input.help.packagePath": "Specify the path for deployment package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
   "loc.input.label.deployScriptPath": "Deployment script",
   "loc.input.help.deployScriptPath": "Specify the path to powershell or shell script which deploys application.",
   "loc.input.label.deployScriptArguments": "Deployment script arguments",
@@ -43,5 +43,7 @@
   "loc.messages.CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
   "loc.messages.TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
   "loc.messages.PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
-  "loc.messages.PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version."
+  "loc.messages.PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
+  "loc.messages.DeployPackagePathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
+  "loc.messages.ResolvedDeployPackgePath": "Resolved deploy package path: %s."
 }

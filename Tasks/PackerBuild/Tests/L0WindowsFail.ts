@@ -66,6 +66,13 @@ tr.registerMock('./utilities', {
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
     },
+    findMatch: function(root: string, patterns: string[] | string) {
+        if(process.env["__deploy_package_found__"] === "false") {
+            return [];
+        } else {
+            return ["C:\\dummy.zip"];            
+        }
+    },
     getCurrentTime: function() {
         return 100;
     },

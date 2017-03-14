@@ -2,6 +2,7 @@
 
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
+import * as utils from "./utilities";
 
 export default class TaskParameters {
     public serviceEndpoint: string;
@@ -34,8 +35,8 @@ export default class TaskParameters {
             this._extractImageDetails();
 
             this.deployScriptPath = tl.getInput(constants.DeployScriptPathInputName, true);
-            this.packagePath = tl.getInput(constants.DeployPackageInputName, true);
-            this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
+            this.packagePath = this._getPackagePath();
+            this.deployScriptArguments = tl.getPathInput(constants.DeployScriptArgumentsInputName, false);
 
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
             this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
@@ -52,5 +53,18 @@ export default class TaskParameters {
         this.imageOffer = parts[1];
         this.imageSku = parts[2];
         this.osType = parts[3];
+    }
+
+    private _getPackagePath() {
+        var packagePath = tl.getInput(constants.DeployPackageInputName, true);
+        var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+
+        var matchingFiles = utils.findMatch(rootFolder, packagePath);
+        if(!utils.HasItems(matchingFiles)) {
+            throw tl.loc("DeployPackagePathNotFound", packagePath, rootFolder);
+        }
+
+        console.log(tl.loc("ResolvedDeployPackgePath", matchingFiles[0]));
+        return matchingFiles[0];
     }
 }
