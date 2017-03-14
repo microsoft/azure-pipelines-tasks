@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
@@ -337,14 +337,19 @@
     "ExecuteScriptOnKudu": "ms-resource:loc.messages.ExecuteScriptOnKudu",
     "FailedToRunScriptOnKuduError": "ms-resource:loc.messages.FailedToRunScriptOnKuduError",
     "FailedToRunScriptOnKudu": "ms-resource:loc.messages.FailedToRunScriptOnKudu",
-    "SciptExecutionOnKuduSuccess": "ms-resource:loc.messages.SciptExecutionOnKuduSuccess",
-    "SciptExecutionOnKuduFailed": "ms-resource:loc.messages.SciptExecutionOnKuduFailed",
+    "ScriptExecutionOnKuduSuccess": "ms-resource:loc.messages.ScriptExecutionOnKuduSuccess",
+    "ScriptExecutionOnKuduFailed": "ms-resource:loc.messages.ScriptExecutionOnKuduFailed",
     "FailedtoDeleteFileFromKudu": "ms-resource:loc.messages.FailedtoDeleteFileFromKudu",
     "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError",
     "ScriptFileNotFound": "ms-resource:loc.messages.ScriptFileNotFound",
     "InvalidScriptFile": "ms-resource:loc.messages.InvalidScriptFile",
     "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
     "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
-    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript"
+    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript",
+    "FailedToGetKuduFileContent": "ms-resource:loc.messages.FailedToGetKuduFileContent",
+    "FailedToGetKuduFileContentError": "ms-resource:loc.messages.FailedToGetKuduFileContentError",
+    "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
+    "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
+    "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption"
   }
 }
