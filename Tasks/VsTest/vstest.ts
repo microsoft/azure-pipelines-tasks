@@ -119,10 +119,10 @@ function getVsTestRunnerDetails(vstestexeLocation: string): VSTestVersion {
 
     switch (majorVersion) {
         case 14:
-            return new Dev14VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
+            return new Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
 
         case 15:
-            return new Dev15VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
+            return new Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
     }
 
     return new VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
@@ -965,8 +965,8 @@ class VSTestVersion {
 
 
 class Dev14VSTestVersion extends VSTestVersion {
-    constructor(runnerLocation: string, majorVersion: number, minorVersion: number, patchNumber: number) {
-        super(runnerLocation, majorVersion, minorVersion, patchNumber);
+    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
+        super(runnerLocation, 14, minorVersion, patchNumber);
     }
 
     isTestImpactSupported(): boolean {
@@ -983,8 +983,8 @@ class Dev14VSTestVersion extends VSTestVersion {
 }
 
 class Dev15VSTestVersion extends VSTestVersion {
-    constructor(runnerLocation: string, majorVersion: number, minorVersion: number, patchNumber: number) {
-        super(runnerLocation, majorVersion, minorVersion, patchNumber);
+    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
+        super(runnerLocation, 15, minorVersion, patchNumber);
     }
 
     isTestImpactSupported(): boolean {
