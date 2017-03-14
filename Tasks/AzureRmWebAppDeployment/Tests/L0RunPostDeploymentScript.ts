@@ -110,4 +110,4 @@ var mockPublishProfile = {
 };
 
 var kuduUtility = require('../kuduutility.js');
-kuduUtility.runPostDeploymentScript(mockPublishProfile, "File Path", null, 'myscript.cmd', false);
+kuduUtility.runPostDeploymentScript(mockPublishProfile, 'site/wwwroot', "File Path", null, 'myscript.cmd', false);
