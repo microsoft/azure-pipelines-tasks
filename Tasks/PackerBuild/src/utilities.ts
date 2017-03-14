@@ -18,6 +18,10 @@ export function copyFile(sourceFile: string, destinationFolder: string): void {
     tl.cp(sourceFile, destinationFolder, "-f")
 }
 
+export function writeFile(filePath: string, content: string): void {
+    tl.writeFile(filePath, content);
+}
+
 export function getTempDirectory(): string {
     return os.tmpdir();
 }

@@ -5,7 +5,7 @@ import * as util from "util";
 import * as tl from "vsts-task-lib/task";
 import packerHost from "../packerHost";
 
-export function run(packerHost: packerHost): Q.Promise<any> {
+export function run(packerHost: packerHost): void {
     var command = packerHost.createPackerTool();
     command.arg("validate");
 
@@ -21,5 +21,9 @@ export function run(packerHost: packerHost): Q.Promise<any> {
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
 
     console.log(tl.loc("ExecutingPackerValidate"));
-    return packerHost.execTool(command);
+    var result = command.execSync();
+
+    if(result.code != 0) {
+        throw tl.loc("PackerValidateFailed");
+    }
 }

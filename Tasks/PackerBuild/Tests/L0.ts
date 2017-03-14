@@ -104,6 +104,18 @@ describe('PackerBuild Suite', function() {
         done();
     });
 
+    it('Should write output of packer fix to updated template file', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0Windows.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("packer fix -validate=false") != -1, "packer fix command not called");
+        assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json content: { \"some-key\": \"some-value\" }") != -1, "packer validate command not called");
+        done();
+    });
+
     it('Should cleanup temp template folder', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0Windows.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -173,7 +185,8 @@ describe('PackerBuild Suite', function() {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 1, 'should not invoke packer validate and build commands. actual: ' + tr.invokedToolCount);        
-        assert(tr.stdout.indexOf("packer fix failed\r\nsome error") != -1, "error message should be right");               
+        assert(tr.stdout.indexOf("packer fix failed\r\nsome error") != -1, "error message should be right");
+        assert(tr.stdout.indexOf("loc_mock_PackerFixFailed") != -1, "error message should be right");                            
         done();
     });
 
@@ -186,7 +199,8 @@ describe('PackerBuild Suite', function() {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 2, 'should not invoke packer build command. actual: ' + tr.invokedToolCount);        
-        assert(tr.stdout.indexOf("packer validate failed\r\nsome error") != -1, "error message should be right");               
+        assert(tr.stdout.indexOf("packer validate failed\r\nsome error") != -1, "error message should be right");
+        assert(tr.stdout.indexOf("loc_mock_PackerValidateFailed") != -1, "error message should be right");                                                 
         done();
     });
 

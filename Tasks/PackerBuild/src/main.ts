@@ -19,8 +19,8 @@ async function run(): Promise<any> {
 
     // run packer commands
     try {
-        await packerFix.run(host);
-        await packerValidate.run(host);
+        packerFix.run(host);
+        packerValidate.run(host);
         await packerBuild.run(host);
         console.log(tl.loc("PackerBuildCompleted"));
     }

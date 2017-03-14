@@ -13,6 +13,7 @@ export var ImageSkuInputName = "imageSku";
 export var LocationInputName = "location";
 export var DeployScriptPathInputName = "deployScriptPath";
 export var DeployPackageInputName = "packagePath";
+export var DeployScriptArgumentsInputName = "deployScriptArguments";
 export var ConnectedServiceInputName = "ConnectedServiceName";
 
 export var TemplateVariableResourceGroupName = "resource_group";
@@ -24,6 +25,7 @@ export var TemplateVariableLocationName = "location";
 export var TemplateVariableCapturePrefixName = "capture_name_prefix";
 export var TemplateVariableScriptPathName = "script_path";
 export var TemplateVariableScriptName = "script_name";
+export var TemplateVariableScriptArgumentsName = "script_arguments";
 export var TemplateVariablePackagePathName = "package_path";
 export var TemplateVariablePackageName = "package_name";
 export var TemplateVariableSubscriptionIdName = "subscription_id";

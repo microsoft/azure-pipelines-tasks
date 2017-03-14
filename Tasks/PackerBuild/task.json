@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -95,6 +95,14 @@
             "helpMarkDown": "Specify the path to powershell or shell script which deploys application."
         },
         {
+            "name": "deployScriptArguments",
+            "type": "string",
+            "label": "Deployment script arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Specify the arguments to be passed to deployment script."
+        },
+        {
             "name": "imageUri",
             "type": "string",
             "label": "Image URI",
@@ -163,7 +171,8 @@
         "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
-        "TaskParametersConstructorFailed": "Error happened while initializing task: %s."
-                
+        "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
+        "PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
+        "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version."                
     }
 }
