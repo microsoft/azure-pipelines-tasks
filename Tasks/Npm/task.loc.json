@@ -7,8 +7,8 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 3,
+    "Major": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "runsOn": [
@@ -23,7 +23,7 @@
   "inputs": [
     {
       "name": "cwd",
-      "type": "filePath",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,

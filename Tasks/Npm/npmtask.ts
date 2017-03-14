@@ -16,26 +16,28 @@ executeTask();
 async function executeTask() {
 
     try {
-        var filePath = tl.getPathInput('cwd', true, false);
-        var dirList = [], filesList = [];
-        if (/[\*?+@\[\]{}!]/.test(filePath)) {
-            filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
+        // cwd is a multiline input containing glob patterns
+        var cwdPattern = tl.getDelimitedInput('cwd', '\n', false);
+        var dirList = [];
+        if(!cwdPattern || cwdPattern.length === 0) {
+            dirList.push(tl.getVariable("System.DefaultWorkingDirectory"));
+        }
+        else {
+            var filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), cwdPattern);
             tl.debug("number of files matching filePath: " + filesList.length);
             if(filesList.length === 0) {
-                tl.warning(tl.loc("NoDirectoryMatchingPattern", filePath));
+                tl.warning(tl.loc("NoDirectoryMatchingPattern"));
                 return;
             }
-            for (var workingDir of filesList) {
-                if (tl.stats(workingDir).isFile()) {
-                    workingDir = path.dirname(workingDir);
+            for (var file of filesList) {
+                var workingDir = file;
+                if (tl.stats(file).isFile()) {
+                    workingDir = path.dirname(file);
                 }
                 if (dirList.indexOf(workingDir) === -1) {
                     dirList.push(workingDir);
                 }
             }
-        }
-        else {
-            dirList.push(filePath);
         }
     }
     catch (error) {

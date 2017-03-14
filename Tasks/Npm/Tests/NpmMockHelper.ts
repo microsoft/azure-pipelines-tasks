@@ -122,10 +122,20 @@ export class NpmMockHelper {
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\one"] = true;
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\two"] = true;
         this.answers.findMatch = {
-            "**\\package.json": 
+            "**\\package.json":
                 ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"],
             "package(s)*.json":
-                []
+                [],
+            "fake\\wd":
+                ["fake\\wd"]
+        }
+        this.answers.rmRF[`${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`] = {
+            "success": true
+        }
+        this.answers['stats'] = {
+            "fake\\wd": {
+                isFile: false
+            }
         }
     }
 
@@ -136,14 +146,14 @@ export class NpmMockHelper {
 
     private setProjectNpmrcExists() {
         this.answers.exist[path.join(NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
+        this.answers.exist[`${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`] = true;
         this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "two", '.npmrc')] = true;
         this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "one", '.npmrc')] = true;
     }
 
     public setStats(stats: any) {
-        if(!this.answers["stats"]) {
-            this.answers["stats"]={};
+        for(var key in stats) {
+            this.answers['stats'][key] = stats[key];
         }
-        this.answers["stats"] = stats;
     }
 }

@@ -4,7 +4,7 @@
   "loc.description": "Run an npm command",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "working folder",
-  "loc.input.help.cwd": "Working directory where the npm command is run. Defaults to the root of the repo.",
+  "loc.input.help.cwd": "Working directory where the npm command is run. Defaults to the root of the repo. Wildcards can be used to run the command in all the sub folders which contain package.json file. For example, **\\package.json for all package.json files in all the sub folders.",
   "loc.input.label.command": "npm command",
   "loc.input.label.arguments": "arguments",
   "loc.input.help.arguments": "Additional arguments passed to npm.",
