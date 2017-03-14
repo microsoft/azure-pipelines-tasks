@@ -45,7 +45,7 @@
             }
         },
         {
-            "name": "azureStorageAccount",
+            "name": "storageAccountName",
             "type": "pickList",
             "label": "Storage account",
             "defaultValue": "",
@@ -76,7 +76,8 @@
                 "EditableOptions": "True"
             },
             "options": {
-                "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter"
+                "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
+                "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
             }
         },
         {
@@ -116,17 +117,25 @@
         {
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureLocations"
+            "dataSourceName": "AzureLocations2",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
         },
         {
-            "target": "azureStorageAccount",
+            "target": "storageAccountName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureStorageAccountRM"
+            "dataSourceName": "AzureRMStorageAccountByLocation",
+            "parameters": {
+                "location": "$(location)"
+            }
         },
         {
             "target": "azureResourceGroup",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups"
+            "dataSourceName": "AzureRMStorageAccountIdByName",
+            "parameters": {
+                "storageAccountName": "$(storageAccountName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
         }
     ],
     "sourceDefinitions": [],

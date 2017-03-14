@@ -63,7 +63,8 @@
         {
             "type": "powershell",
             "inline": [
-                "ls \"C:\\DeployTemp\"",
+                "cd \"C:\\DeployTemp\"",
+                "ls",
                 "C:\\DeployTemp\\{{user `script_name`}}"
             ]
         },

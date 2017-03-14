@@ -23,8 +23,33 @@ describe('PackerBuild Suite', function() {
         done();
     });
 
+    it('Runs successfully for linux template', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0Linux.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it('Creates output variables from packer log', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0Windows.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Creates output variables from packer log for linux', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0Linux.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
@@ -45,6 +70,23 @@ describe('PackerBuild Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "built-in template should be copied to temp location");
+        done();
+    });
+
+    it('Should copy builtin template to temp location for linux template', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0Linux.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        if(!tl.osType().match(/^Win/)) 
+        {
+            assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.linux.template.json to /tmp/tempdir/100") != -1, "built-in template should be copied to temp location");            
+        } else {
+            assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.linux.template.json to \\tmp\\tempdir\\100") != -1, "built-in template should be copied to temp location");
+        }
         done();
     });
 
@@ -69,6 +111,20 @@ describe('PackerBuild Suite', function() {
         
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("rmRF F:\\somedir\\tempdir\\100") != -1, "rmRF should be called on temp template folder");
+        done();
+    });
+
+    it('Should cleanup temp template folder on linux', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0Linux.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.succeeded, 'task should have succeeded');
+        if(!tl.osType().match(/^Win/)) {
+            assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
+        } else {
+            assert(tr.stdout.indexOf("rmRF \\tmp\\tempdir\\100") != -1, "rmRF should be called on temp template folder");
+        }
         done();
     });
 
