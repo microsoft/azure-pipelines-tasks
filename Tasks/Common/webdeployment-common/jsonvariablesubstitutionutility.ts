@@ -50,6 +50,7 @@ export function substituteJsonVariable(jsonObject, envObject) {
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
         if(resultNode != undefined) {
             if(resultNode.isEnd && typeof jsonObject[jsonChild] !== "object") {
+                tl.debug('substituting value on key: ' + jsonChild);
                 jsonObject[jsonChild] = resultNode.value;
             }
             else {
