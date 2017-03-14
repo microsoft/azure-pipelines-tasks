@@ -26,5 +26,11 @@
                 "dest": "./"
             }
         ]
-    }
+    },
+    "cp": [
+        {
+            "source": "postDeploymentScript",
+            "options": "-R"
+        }
+    ]
 }

@@ -167,7 +167,12 @@ async function getAzureRMWebAppID(endpoint, webAppName: string, url: string, hea
             if(webAppIDDetails.value.length === 0) {
                 if(webAppIDDetails.nextLink) {
                     tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
-                    deferred.resolve(await getAzureRMWebAppID(endpoint, webAppName, webAppIDDetails.nextLink, headers));
+                    try {
+                        deferred.resolve(await getAzureRMWebAppID(endpoint, webAppName, webAppIDDetails.nextLink, headers));
+                    }
+                    catch(error) {
+                        deferred.reject(error);
+                    }
                 }
                 deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
             }

@@ -106,13 +106,18 @@
   "loc.messages.ExecuteScriptOnKudu": "Executing given script on Kudu: %s",
   "loc.messages.FailedToRunScriptOnKuduError": "Unable to run the script on Kudu: %s. Error: %s",
   "loc.messages.FailedToRunScriptOnKudu": "Unable to run the script on Kudu: %s. Status Code: %s (%s)",
-  "loc.messages.SciptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
-  "loc.messages.SciptExecutionOnKuduFailed": "Executed script returned '%s' as return code. Error: %s",
+  "loc.messages.ScriptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
+  "loc.messages.ScriptExecutionOnKuduFailed": "Executed script returned '%s' as return code. Error: %s",
   "loc.messages.FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s (%s)",
   "loc.messages.FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
   "loc.messages.ScriptFileNotFound": "Script file '%s' not found.",
   "loc.messages.InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
   "loc.messages.RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
   "loc.messages.stdoutFromScript": "Standard output from script: ",
-  "loc.messages.stderrFromScript": "Standard error from script: "
+  "loc.messages.stderrFromScript": "Standard error from script: ",
+  "loc.messages.FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
+  "loc.messages.FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
+  "loc.messages.ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
+  "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
+  "loc.messages.InvalidPollOption": "Invalid polling option provided: %s."
 }
