@@ -45,7 +45,7 @@
             "label": "Resume on timeout",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+            "helpMarkDown": "Resume this manual intervention automatically after it is pending for the specified timeout or 30 days, whichever is earlier."
         }
     ],
     "instanceNameFormat": "Manual Intervention",

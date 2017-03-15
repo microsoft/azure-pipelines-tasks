@@ -8,5 +8,5 @@
   "loc.input.label.emailRecipients": "Notify users",
   "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention.",
   "loc.input.label.resumeOnTimeout": "Resume on timeout",
-  "loc.input.help.resumeOnTimeout": "Resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+  "loc.input.help.resumeOnTimeout": "Resume this manual intervention automatically after it is pending for the specified timeout or 30 days, whichever is earlier."
 }
