@@ -129,7 +129,10 @@ async function run() {
 
         }
         if(scriptType) {
-            await kuduUtility.runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+            azureWebAppDetails = (azureWebAppDetails) ? azureWebAppDetails: await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var kuduWorkingDirectory = virtualApplication ? (kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings))[1] : 'site/wwwroot';
+            await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
         await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         

@@ -123,24 +123,24 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
     return defer.promise;
 }
 
-export async function runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, appOfflineFlag) {
+export async function runPostDeploymentScript(publishingProfile, physicalPath, scriptType, inlineScript, scriptPath, appOfflineFlag) {
     var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
     var uniqueID = azureUtility.generateDeploymentId();
     tl.debug('Deployment ID : ' + uniqueID);
     var deleteLogFiles = false;
 
     if(appOfflineFlag) {
-        await appOfflineKuduService(publishingProfile, 'site/wwwroot', true);
+        await appOfflineKuduService(publishingProfile, physicalPath, true);
     }
     try {
         var mainCmdFilePath = path.join(__dirname, 'postDeploymentScript', 'mainCmdFile.cmd');
-        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'mainCmdFile_' + uniqueID + '.cmd', mainCmdFilePath);
-        await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'kuduPostDeploymentScript_' + uniqueID + '.cmd', scriptFile.filePath);
+        await uploadFiletoKudu(publishingProfile, physicalPath, 'mainCmdFile_' + uniqueID + '.cmd', mainCmdFilePath);
+        await uploadFiletoKudu(publishingProfile, physicalPath, 'kuduPostDeploymentScript_' + uniqueID + '.cmd', scriptFile.filePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
-        await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'mainCmdFile_' + uniqueID + '.cmd ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
+        await runCommandOnKudu(publishingProfile, physicalPath, 'mainCmdFile_' + uniqueID + '.cmd ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
         console.log(tl.loc('ScriptExecutionOnKuduSuccess'));
         deleteLogFiles = true;
-        await getPostDeploymentScriptLogs(publishingProfile, 'site/wwwroot', uniqueID);
+        await getPostDeploymentScriptLogs(publishingProfile, physicalPath, uniqueID);
     }
     catch(Exception) {
         throw Error(Exception);
@@ -149,17 +149,16 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
         if(scriptFile.isCreated) {
             tl.rmRF(scriptFile.filePath, true);
         }
-
         try {
-            await uploadFiletoKudu(publishingProfile, 'site/wwwroot', 'delete_log_file_' + uniqueID + '.cmd', path.join(__dirname, 'postDeploymentScript', 'deleteLogFile.cmd'));
-            var commandResult = await runCommandOnKudu(publishingProfile, 'site\\wwwroot', 'delete_log_file_' + uniqueID + '.cmd ' + uniqueID, 0, null);
+            await uploadFiletoKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + '.cmd', path.join(__dirname, 'postDeploymentScript', 'deleteLogFile.cmd'));
+            var commandResult = await runCommandOnKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + '.cmd ' + uniqueID, 0, null);
             tl.debug(JSON.stringify(commandResult));
         }
         catch(error) {
             tl.debug('Unable to delete log files : ' + error);
         }
         if(appOfflineFlag) {
-            await appOfflineKuduService(publishingProfile, 'site/wwwroot', false);
+            await appOfflineKuduService(publishingProfile, physicalPath, false);
         }
     }
 }
