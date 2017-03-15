@@ -39,14 +39,18 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
     },
-	{
-	"name": "resumeOnTimeout",
-	"type": "boolean",
-	"label": "ms-resource:loc.input.label.resumeOnTimeout",
-	"defaultValue": false,
-	"required": false,
-	"helpMarkDown": "ms-resource:loc.input.help.resumeOnTimeout"
-	}
+    {
+      "name": "onTimeout",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.onTimeout",
+      "defaultValue": "Reject",
+      "required": true,
+      "options": {
+        "Reject": "Reject",
+        "Resume": "Resume"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
+    }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
