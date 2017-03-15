@@ -177,6 +177,18 @@ describe('PackerBuild Suite', function() {
         done();
     });
 
+    it('should fail if deploy package path cannot be globbed', (done:MochaDone) => {
+        process.env["__deploy_package_found__"] = "false";
+        let tp = path.join(__dirname, 'L0WindowsFail.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();     
+        process.env["__deploy_package_found__"] = null;
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf("##vso[task.complete result=Failed;]loc_mock_TaskParametersConstructorFailed") != -1, "error message should be right");               
+        done();
+    });
+
     it('should fail if packer fix exits with non zero code', (done:MochaDone) => {
         process.env["__packer_fix_fails__"] = "true";
         let tp = path.join(__dirname, 'L0WindowsFail.js');

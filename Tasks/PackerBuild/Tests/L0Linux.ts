@@ -80,6 +80,9 @@ tr.registerMock('./utilities', {
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
     },
+    findMatch: function(root: string, patterns: string[] | string) {
+        return ["/packer-user-scripts/dummy.tar.gz"];
+    },
     getCurrentTime: function() {
         return 100;
     },

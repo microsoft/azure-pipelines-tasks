@@ -60,6 +60,9 @@ tr.registerMock('./utilities', {
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
     },
+    findMatch: function(root: string, patterns: string[] | string) {
+        return ["C:\\dummy.zip"];
+    },
     getCurrentTime: function() {
         return 100;
     },

@@ -9,7 +9,7 @@ tr.setInput('azureResourceGroup', 'testrg');
 tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImage', 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows');
 tr.setInput('location', 'South India');
-tr.setInput('packagePath', 'C:\\dummy.zip');
+tr.setInput('packagePath', '**/*.zip');
 tr.setInput('deployScriptPath', 'C:\\deploy.ps1');
 tr.setInput('deployScriptArguments', "-target \"subdir 1\" -shouldFail false");
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -64,6 +64,9 @@ tr.registerMock('./utilities', {
     },
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
+    },
+    findMatch: function(root: string, patterns: string[] | string) {
+        return ["C:\\dummy.zip"];
     },
     getCurrentTime: function() {
         return 100;
