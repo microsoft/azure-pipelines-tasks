@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 17
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -45,8 +45,8 @@
             "required": true,
             "helpMarkDown": "Select whether task will use a built-in packer template or a custom user-provided template.",
             "options": {
-                "custom": "custom",
-                "builtin": "Task generated"
+                "builtin": "Task generated",                
+                "custom": "Custom"
             },
             "defaultValue": "builtin"
         },
