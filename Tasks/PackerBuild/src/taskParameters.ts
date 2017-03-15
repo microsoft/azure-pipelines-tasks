@@ -29,7 +29,7 @@ export default class TaskParameters {
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
-            
+
             if(this.templateType === "custom") {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
             } else {               
@@ -44,10 +44,10 @@ export default class TaskParameters {
                 this.deployScriptPath = tl.getPathInput(constants.DeployScriptPathInputName, true, true);
                 this.packagePath = this._getPackagePath();
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
+            }                
 
-                this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
-                this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
-            }
+            this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
+            this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
         } 
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error.message));

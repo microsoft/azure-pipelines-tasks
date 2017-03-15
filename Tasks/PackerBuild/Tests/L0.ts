@@ -35,6 +35,18 @@ describe('PackerBuild Suite', function() {
         done();
     });
 
+    it('Runs successfully for custom template', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0CustomTemplate.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it('Creates output variables from packer log', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0Windows.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -50,6 +62,19 @@ describe('PackerBuild Suite', function() {
 
     it('Creates output variables from packer log for linux', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0Linux.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Creates output variables from packer log for custom template', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0CustomTemplate.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
@@ -87,6 +112,18 @@ describe('PackerBuild Suite', function() {
         } else {
             assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.linux.template.json to \\tmp\\tempdir\\100") != -1, "built-in template should be copied to temp location");
         }
+        done();
+    });
+
+    it('Should copy custom template to temp location', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0CustomTemplate.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("copying C:\\custom.template.json to F:\\somedir\\tempdir\\100") != -1, "custom template should be copied to temp location");
         done();
     });
 
@@ -149,6 +186,18 @@ describe('PackerBuild Suite', function() {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf("Not found basedir\\DefaultTemplates\\default.windows.template.json") != -1, "error message should be right");               
+        done();
+    });
+
+    it('should fail if custom template copy fails', (done:MochaDone) => {
+        process.env["__copy_fails__"] = "true";
+        let tp = path.join(__dirname, 'L0CustomTemplate.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__copy_fails__"] = "false";
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf("copy failed") != -1, "error message should be right");               
         done();
     });
 
@@ -220,6 +269,32 @@ describe('PackerBuild Suite', function() {
         process.env["__packer_validate_fails__"] = "false";  
         process.env["__packer_build_fails__"] = "true";
         let tp = path.join(__dirname, 'L0WindowsFail.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();      
+        process.env["__packer_build_fails__"] = "false";
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.stdout.indexOf("packer build failed\r\nsome error") != -1, "error message should be right");
+        done();
+    });
+
+    it('should fail if packer build exits with non zero code for linux', (done:MochaDone) => {        
+        process.env["__packer_build_fails__"] = "true";
+        let tp = path.join(__dirname, 'L0Linux.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();      
+        process.env["__packer_build_fails__"] = "false";
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.stdout.indexOf("packer build failed\r\nsome error") != -1, "error message should be right");
+        done();
+    });
+
+    it('should fail if packer build exits with non zero code for custom template', (done:MochaDone) => {        
+        process.env["__packer_build_fails__"] = "true";
+        let tp = path.join(__dirname, 'L0CustomTemplate.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();      
         process.env["__packer_build_fails__"] = "false";

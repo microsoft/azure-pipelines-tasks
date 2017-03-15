@@ -5,6 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..\\src\\main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tr.setInput('templateType', process.env["__template_type__"] || 'builtin');
 tr.setInput('azureResourceGroup', 'testrg');
 tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImage', !!process.env["__ostype__"] ? 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:' + process.env["__ostype__"] : 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows');
@@ -30,7 +31,8 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": process.env["__packer_exists__"] === "false" ? false : true,
-        "basedir\\DefaultTemplates\\default.windows.template.json": process.env["__copy_fails__"] === "true" ? false : true
+        "basedir\\DefaultTemplates\\default.windows.template.json": process.env["__copy_fails__"] === "true" ? false : true,
+        "C:\\deploy.ps1": true
     },
     "exec": {
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {

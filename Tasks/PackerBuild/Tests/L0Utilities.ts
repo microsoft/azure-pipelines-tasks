@@ -10,7 +10,8 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        ".\\DefaultTemplates\\default.windows.template.json": process.env["__source_path_exists__"]=== "true" ? true : false
+        ".\\DefaultTemplates\\default.windows.template.json": process.env["__source_path_exists__"]=== "true" ? true : false,
+        "C:\\deploy.ps1": true
     },
     "exist": {
         "F:\\somedir\\tempdir\\100": process.env["__dest_path_exists__"] === "true" ? true : false

@@ -8,6 +8,7 @@ import * as packerFix from "./operations/packerFix";
 import * as packerValidate from "./operations/packerValidate";
 import * as packerBuild from "./operations/packerBuild";
 import builtinTemplateFileProvider from "./builtinTemplateFileProvider";
+import CustomTemplateFileProvider from "./customTemplateFileProvider";
 import azureSpnTemplateVariablesProvider from "./azureSpnTemplateVariablesProvider";
 import TaskInputTemplateVariablesProvider from "./taskInputTemplateVariablesProvider";
 
@@ -34,6 +35,10 @@ function registerProviders(host: packerHost): void {
     // register built-in templates provider. This provider provides built-in packer templates used by task
     var builtInTemplateFileProvider = new builtinTemplateFileProvider();
     builtInTemplateFileProvider.register(host);
+
+    // register built-in templates provider. This provider provides built-in packer templates used by task
+    var customTemplateFileProvider = new CustomTemplateFileProvider();
+    customTemplateFileProvider.register(host);
 
     // register variables provider which will provide task inputs as variables for packer template
     var taskInputTemplateVariablesProvider = new TaskInputTemplateVariablesProvider();
