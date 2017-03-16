@@ -5,6 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..\\src\\main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tr.setInput('templateType', process.env["__template_type__"] || 'builtin');
 tr.setInput('azureResourceGroup', 'testrg');
 tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImage', 'Canonical:UbuntuServer:14.04.4-LTS:linux');
@@ -29,7 +30,8 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        "basedir\\DefaultTemplates\\default.linux.template.json": true
+        "basedir\\DefaultTemplates\\default.linux.template.json": true,
+        "/packer-user-scripts/deploy.sh": true
     },
     "exec": {
         "packer fix -validate=false /tmp/tempdir/100/default.linux.template.json": {
@@ -41,8 +43,8 @@ let a: any = <any>{
             "stdout": "Executed Successfully"
         },
         "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template-fixed.json": {
-            "code": 0,
-            "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
+            "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
+            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
         },
         "packer fix -validate=false \\tmp\\tempdir\\100\\default.linux.template.json": {
             "code": 0,
@@ -53,8 +55,8 @@ let a: any = <any>{
             "stdout": "Executed Successfully"
         },
         "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var script_path=/packer-user-scripts/deploy.sh -var script_name=deploy.sh -var package_path=/packer-user-scripts/dummy.tar.gz -var package_name=dummy.tar.gz -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template-fixed.json": {
-            "code": 0,
-            "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
+            "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
+            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
         }
     },
     "exist": {

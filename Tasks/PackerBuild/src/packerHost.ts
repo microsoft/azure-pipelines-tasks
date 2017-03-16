@@ -46,8 +46,11 @@ export default class PackerHost implements definitions.IPackerHost {
     }
 
     public getTemplateFileProvider(): definitions.ITemplateFileProvider {
-        var templateFileProvider = this._templateFileProviders[definitions.TemplateFileProviderTypes.BuiltIn];
-        return templateFileProvider;
+        if(this._taskParameters.templateType === "custom") {
+            return this._templateFileProviders[definitions.TemplateFileProviderTypes.Custom];
+        } else {
+            return this._templateFileProviders[definitions.TemplateFileProviderTypes.BuiltIn];
+        }
     }
 
     public getTemplateVariablesProviders(): definitions.ITemplateVariablesProvider[] {

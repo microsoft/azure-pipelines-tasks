@@ -22,9 +22,16 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
             return this._templateVariables;
         }
 
+        var taskParameters = packerHost.getTaskParameters();
+
+        // if custom template is used, task input variables are not required
+        if(taskParameters.templateType === "custom") {
+            this._templateVariables = new Map<string, string>();
+            return this._templateVariables;
+        }        
+
         // VM specific variables
         this._templateVariables = new Map<string, string>();
-        var taskParameters = packerHost.getTaskParameters();
         this._templateVariables.set(constants.TemplateVariableResourceGroupName, taskParameters.resourceGroup);
         this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
         this._templateVariables.set(constants.TemplateVariableImagePublisherName, taskParameters.imagePublisher);
