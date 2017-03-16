@@ -43,11 +43,11 @@
       "name": "onTimeout",
       "type": "radio",
       "label": "ms-resource:loc.input.label.onTimeout",
-      "defaultValue": "Reject",
+      "defaultValue": "reject",
       "required": false,
       "options": {
-        "Reject": "Reject",
-        "Resume": "Resume"
+        "reject": "Reject",
+        "resume": "Resume"
       },
       "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
     }
