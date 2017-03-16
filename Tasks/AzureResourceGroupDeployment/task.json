@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -174,7 +174,8 @@
             "groupName": "AdvancedDeploymentOptions",
             "options": {
                 "None": "None",
-                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
+                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
+                "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
             },
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
@@ -199,12 +200,11 @@
             "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
         {
-            "name": "vstsPATToken",
-            "type": "string",
+            "name": "vstsPATTokenEndpoint",
+            "type": "connectedService:ExternalTfs",
             "label": "Personal access token",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
         },
@@ -230,13 +230,15 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureLocations"
         }
-    ],
-    "sourceDefinitions": [
+        ,
         {
             "target": "machineGroupName",
-            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "tfs:teamfoundation"
+            "endpointId": "$(vstsPATTokenEndpoint)",
+            "dataSourceName": "MachineGroups",
+            "parameters": {
+                "project": "$(system.teamProject)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
@@ -367,6 +369,8 @@
         "DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
-        "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'"
+        "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
+        "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
+        "PatTokenCannotBeEmpty": "Pat token must be a non empty string."
     }
 }
