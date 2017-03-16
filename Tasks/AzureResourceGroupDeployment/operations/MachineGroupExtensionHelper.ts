@@ -211,7 +211,7 @@ export class MachineGroupExtensionHelper {
                 Tags: tags
             };
             console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.machineGroupName, JSON.stringify(tags));
-            var protectedSettings = { PATToken: this.taskParameters.vstsPATToken };
+            var protectedSettings = { PATToken: this.taskParameters.tokenCredentials.getPatToken() };
             var parameters = {
                 type: extensionType,
                 location: vmLocation,
