@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": 8,
-    "Minor": 1,
+    "Minor": 2,
     "Patch": 3
   },
   "inputs": [
@@ -38,6 +38,18 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
+    },
+    {
+      "name": "onTimeout",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.onTimeout",
+      "defaultValue": "Reject",
+      "required": false,
+      "options": {
+        "Reject": "Reject",
+        "Resume": "Resume"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

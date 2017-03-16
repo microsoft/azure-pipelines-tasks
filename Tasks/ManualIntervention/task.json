@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": 8,
-        "Minor": 1,
+        "Minor": 2,
         "Patch": 3
     },
     "inputs": [
@@ -38,6 +38,18 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
+        },
+        {
+            "name": "onTimeout",
+            "type": "radio",
+            "label": "On timeout",
+            "defaultValue": "Reject",
+            "required": false,
+            "options": {
+               "Reject": "Reject",
+               "Resume": "Resume"
+            },
+            "helpMarkDown": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
         }
     ],
     "instanceNameFormat": "Manual Intervention",
