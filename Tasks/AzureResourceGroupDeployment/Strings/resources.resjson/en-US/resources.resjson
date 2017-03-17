@@ -33,8 +33,8 @@
   "loc.input.help.machineGroupName": "Select a machine group",
   "loc.input.label.copyAzureVMTags": "Copy Azure VM tags to agents",
   "loc.input.help.copyAzureVMTags": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)",
-  "loc.input.label.vstsPATToken": "Personal access token",
-  "loc.input.help.vstsPATToken": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here.",
+  "loc.input.label.vstsPATTokenEndpoint": "Personal access token",
+  "loc.input.help.vstsPATTokenEndpoint": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here.",
   "loc.input.label.outputVariable": "VM details for WinRM",
   "loc.input.help.outputVariable": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected.",
   "loc.messages.CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
@@ -160,5 +160,7 @@
   "loc.messages.TimeoutWhileWaiting": "Timed out while waiting",
   "loc.messages.InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
   "loc.messages.EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
-  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'"
+  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+  "loc.messages.HostUrlCannotBeEmpty": "Host url must be a non empty string.",
+  "loc.messages.PatTokenCannotBeEmpty": "Pat token must be a non empty string."
 }

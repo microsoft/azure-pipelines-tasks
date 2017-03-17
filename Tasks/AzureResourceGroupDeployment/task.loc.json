@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -174,7 +174,8 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
+        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
+        "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
@@ -199,14 +200,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
     },
     {
-      "name": "vstsPATToken",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vstsPATToken",
+      "name": "vstsPATTokenEndpoint",
+      "type": "connectedService:ExternalTfs",
+      "label": "ms-resource:loc.input.label.vstsPATTokenEndpoint",
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.vstsPATToken"
+      "helpMarkDown": "ms-resource:loc.input.help.vstsPATTokenEndpoint"
     },
     {
       "name": "outputVariable",
@@ -229,14 +229,15 @@
       "target": "location",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureLocations"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
       "target": "machineGroupName",
-      "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:teamfoundation"
+      "endpointId": "$(vstsPATTokenEndpoint)",
+      "dataSourceName": "MachineGroups",
+      "parameters": {
+        "project": "$(system.teamProject)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -369,6 +370,8 @@
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
-    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding"
+    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
+    "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty"
   }
 }

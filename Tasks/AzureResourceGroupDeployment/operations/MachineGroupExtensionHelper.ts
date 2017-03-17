@@ -192,7 +192,7 @@ export class MachineGroupExtensionHelper {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = this.publisher;
             var extensionType: string = this.extensionType;
-            var collectionUri = this.taskParameters.machineGroupCollectionUrl;
+            var collectionUri = this.taskParameters.tokenCredentials.getHostUrl();
             var teamProject = this.taskParameters.machineGroupProjectName;
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] === '/') {

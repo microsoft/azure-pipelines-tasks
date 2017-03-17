@@ -48,7 +48,6 @@ export class AzureRGTaskParameters {
     public subscriptionId: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
-    public machineGroupCollectionUrl = "";
     public machineGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
 
@@ -76,8 +75,6 @@ export class AzureRGTaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials(connectedService);
-            this.machineGroupCollectionUrl = tl.getVariable("__mg__internal__collection__uri") 
-                                            || tl.getVariable('system.TeamFoundationCollectionUri');
             this.machineGroupProjectName = tl.getVariable("__mg__internal__project__name") 
                                             || tl.getVariable('system.teamProject');
         }
