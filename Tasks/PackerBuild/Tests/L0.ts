@@ -16,7 +16,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -28,7 +28,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -40,7 +40,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -52,7 +52,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
@@ -65,7 +65,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
@@ -78,7 +78,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
@@ -91,7 +91,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "built-in template should be copied to temp location");
@@ -103,7 +103,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         if(!tl.osType().match(/^Win/)) 
@@ -120,7 +120,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("copying C:\\custom.template.json to F:\\somedir\\tempdir\\100") != -1, "custom template should be copied to temp location");
@@ -132,7 +132,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("packer fix -validate=false") != -1, "packer fix command not called");
@@ -146,7 +146,7 @@ describe('PackerBuild Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("packer fix -validate=false") != -1, "packer fix command not called");
         assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json content: { \"some-key\": \"some-value\" }") != -1, "packer validate command not called");
@@ -202,27 +202,14 @@ describe('PackerBuild Suite', function() {
     });
 
     it('should fail if os type is not supported', (done:MochaDone) => {
-        process.env["__ostype__"] = "random";
-        process.env["__copy_fails__"] = "false";        
+        process.env["__ostype__"] = "random";      
         let tp = path.join(__dirname, 'L0WindowsFail.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
+        process.env["__ostype__"] = "windows";
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_OSTypeNotSupported") != -1, "error message should be right");               
-        done();
-    });
-
-    it('should fail if packer does not exist', (done:MochaDone) => {
-        process.env["__ostype__"] = "windows";        
-        process.env["__packer_exists__"] = "false";
-        let tp = path.join(__dirname, 'L0WindowsFail.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-        process.env["__packer_exists__"] = null;
-
-        assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.indexOf("##vso[task.complete result=Failed;]Error: Not found packer") != -1, "error message should be right");               
         done();
     });
 
@@ -245,7 +232,7 @@ describe('PackerBuild Suite', function() {
         tr.run();   
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 1, 'should not invoke packer validate and build commands. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 2, 'should not invoke packer validate and build commands. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("packer fix failed\r\nsome error") != -1, "error message should be right");
         assert(tr.stdout.indexOf("loc_mock_PackerFixFailed") != -1, "error message should be right");                            
         done();
@@ -259,7 +246,7 @@ describe('PackerBuild Suite', function() {
         tr.run();      
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 2, 'should not invoke packer build command. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 3, 'should not invoke packer build command. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("packer validate failed\r\nsome error") != -1, "error message should be right");
         assert(tr.stdout.indexOf("loc_mock_PackerValidateFailed") != -1, "error message should be right");                                                 
         done();
@@ -274,7 +261,7 @@ describe('PackerBuild Suite', function() {
         process.env["__packer_build_fails__"] = "false";
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("packer build failed\r\nsome error") != -1, "error message should be right");
         done();
     });
@@ -287,7 +274,7 @@ describe('PackerBuild Suite', function() {
         process.env["__packer_build_fails__"] = "false";
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("packer build failed\r\nsome error") != -1, "error message should be right");
         done();
     });
@@ -300,7 +287,7 @@ describe('PackerBuild Suite', function() {
         process.env["__packer_build_fails__"] = "false";
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("packer build failed\r\nsome error") != -1, "error message should be right");
         done();
     });
@@ -314,7 +301,7 @@ describe('PackerBuild Suite', function() {
         process.env["__packer_build_no_output__"] = "false";
 
         assert(tr.failed, 'task should fail if output is not parsed properly');
-        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]") == -1, "should not try to set output variable");         
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]") == -1, "should not try to set output variable");
         assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_ImageURIOutputVariableNotFound") != -1, "should show proper console message");            
@@ -332,7 +319,7 @@ describe('PackerBuild Suite', function() {
         process.env["__packer_build_no_output__"] = "false";        
 
         assert(tr.succeeded, 'task should not fail if output is not parsed properly');
-        assert(tr.invokedToolCount == 3, 'all 3 commands should have been invoked. actual: ' + tr.invokedToolCount);        
+        assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);        
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]") == -1, "should not try to set output variable");         
         assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]") == -1, "should not try to set output variable");           
         done();
@@ -350,9 +337,6 @@ describe('PackerBuild Suite', function() {
     });
 
     it('copyFiles should not create dest if it exists', (done:MochaDone) => {
-        process.env["__source_path_exists__"] = true;
-        process.env["__dest_path_exists__"] = true;
-        
         let tp = path.join(__dirname, 'L0Utilities.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -363,15 +347,182 @@ describe('PackerBuild Suite', function() {
     });
 
     it('copyFiles should create dest if it does not exist', (done:MochaDone) => {
-        process.env["__source_path_exists__"] = true;
-        process.env["__dest_path_exists__"] = false;
+        process.env["__dest_path_exists__"] = "false";
         
         let tp = path.join(__dirname, 'L0Utilities.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-              
+        process.env["__dest_path_exists__"] = "true";
+      
         assert(tr.stdout.indexOf("creating path: F:\\somedir\\tempdir\\100") != -1, "dest should be created");
         assert(tr.stdout.indexOf("copying .\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "copy should be done");
+        done();
+    });
+
+    it('isGreaterVersion should compare correctly', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0Utilities.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 1 pass") != -1, "isGreaterVersion scenario 1 failed");
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 2 pass") != -1, "isGreaterVersion scenario 2 failed");
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 3 pass") != -1, "isGreaterVersion scenario 3 failed");
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 4 pass") != -1, "isGreaterVersion scenario 4 failed");
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 5 pass") != -1, "isGreaterVersion scenario 5 failed");
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 6 pass") != -1, "isGreaterVersion scenario 6 failed");
+        assert(tr.stdout.indexOf("isGreaterVersion scenario 7 pass") != -1, "isGreaterVersion scenario 7 failed");
+        done();
+    });
+
+    it('Downloads packer for windows agent if packer not exists', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
+        assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_windows_amd64.zip") != -1, "should download from correct url");
+        assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
+        assert(tr.stdout.indexOf("extracting from zip F:\\somedir\\tempdir\\100\\packer.zip to F:\\somedir\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
+        assert(tr.stdout.indexOf("Packer path to be used by task: F:\\somedir\\tempdir\\100\\packer\\packer.exe") != -1, "should show message that packer will be downloaded");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Downloads packer for windows agent if packer of lower version exists', (done:MochaDone) => {
+        process.env["__packer_exists__"] = "true";
+        process.env["__lower_version__"] = "true";
+
+        let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__packer_exists__"] = "false";
+        process.env["__lower_version__"] = "false";
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
+        assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_windows_amd64.zip") != -1, "should download from correct url");
+        assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
+        assert(tr.stdout.indexOf("extracting from zip F:\\somedir\\tempdir\\100\\packer.zip to F:\\somedir\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
+        assert(tr.stdout.indexOf("Packer path to be used by task: F:\\somedir\\tempdir\\100\\packer\\packer.exe") != -1, "should show message that packer will be downloaded");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Should cleanup staging folder on windows agent', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("rmRF F:\\somedir\\tempdir\\100") != -1, "rmRF should be called on temp template folder");
+        done();
+    });
+
+    it('Downloads packer failure should fail the task', (done:MochaDone) => {
+        process.env["__packer_exists__"] = "true";
+        process.env["__lower_version__"] = "true";
+        process.env["__download_fails__"] = "true";
+
+        let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__packer_exists__"] = "false";
+        process.env["__lower_version__"] = "false";
+        process.env["__download_fails__"] = "false";
+        
+        assert(tr.invokedToolCount == 1, 'should have invoked tool only once. actual: ' + tr.invokedToolCount);
+        assert(tr.failed, 'task should fail if download fails');
+        assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer download failed!!") != -1, "error message should be right");
+        done();
+    });
+
+    it('Packer zip extraction failure should fail the task', (done:MochaDone) => {
+        process.env["__extract_fails__"] = "true";
+
+        let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__extract_fails__"] = "false";
+        
+        assert(tr.invokedToolCount == 0, 'should have invoked tool not even once. actual: ' + tr.invokedToolCount);
+        assert(tr.failed, 'task should fail if extraction fails');
+        assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer zip extraction failed!!") != -1, "error message should be right");
+        done();
+    });
+
+    it('Downloads packer for linux agent if packer not exists', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
+        assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip") != -1, "should download from correct url");
+        if(!tl.osType().match(/^Win/)) {
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
+            assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
+            
+        } else {
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to \\tmp\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("extracting from zip \\tmp\\tempdir\\100\\packer.zip to \\tmp\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
+            assert(tr.stdout.indexOf("Packer path to be used by task: \\tmp\\tempdir\\100\\packer\\packer") != -1, "should show message that packer will be downloaded");
+        } 
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Downloads packer for linux agent if packer of lower version exists', (done:MochaDone) => {
+        process.env["__packer_exists__"] = "true";
+        process.env["__lower_version__"] = "true";
+
+        let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__packer_exists__"] = "false";
+        process.env["__lower_version__"] = "false";
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
+        assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip") != -1, "should download from correct url");
+        if(!tl.osType().match(/^Win/)) {
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
+            assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
+            
+        } else {
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to \\tmp\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("extracting from zip \\tmp\\tempdir\\100\\packer.zip to \\tmp\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
+            assert(tr.stdout.indexOf("Packer path to be used by task: \\tmp\\tempdir\\100\\packer\\packer") != -1, "should show message that packer will be downloaded");
+        } 
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Should cleanup staging folder on linux agent', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.succeeded, 'task should have succeeded');
+        if(!tl.osType().match(/^Win/)) {
+            assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
+        } else {
+            assert(tr.stdout.indexOf("rmRF \\tmp\\tempdir\\100") != -1, "rmRF should be called on temp template folder");
+        }
         done();
     });
 });

@@ -34,6 +34,10 @@ let a: any = <any>{
         "C:\\deploy.ps1": true
     },
     "exec": {
+        "packer --version": {
+            "code": 0,
+            "stdout": "0.12.3"
+        },
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
@@ -49,7 +53,8 @@ let a: any = <any>{
     },
     "exist": {
         "F:\\somedir\\tempdir\\100": true,
-        "F:\\somedir\\tempdir\\100\\": true        
+        "F:\\somedir\\tempdir\\100\\": true,
+        "packer": true       
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': true }
@@ -61,6 +66,11 @@ tr.registerMock('./utilities', {
     IsNullOrEmpty : ut.IsNullOrEmpty,
     HasItems : ut.HasItems,
     StringWritable: ut.StringWritable,
+    PackerVersion: ut.PackerVersion,
+    isGreaterVersion: ut.isGreaterVersion,
+    deleteDirectory: function(dir) {
+        console.log("rmRF " + dir);
+    },
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
     },

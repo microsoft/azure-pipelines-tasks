@@ -31,7 +31,9 @@ export default class BuiltInTemplateFileProvider extends TemplateFileProviderBas
         if(this._builtInTemplateFiles.has(osType)) {
             var initialTemplateFileLocation = this._builtInTemplateFiles.get(osType);
             tl.checkPath(initialTemplateFileLocation, tl.loc("BuiltInTemplateNotFoundErrorMessagePathName", osType));
-            this.FinalizeTemplateLocation(initialTemplateFileLocation);
+
+            // move file to a temp folder - this is a cautionary approach so that previous packer execution which still has handle on template does not cause any problem
+            this.moveTemplateFile(initialTemplateFileLocation, packerHost.getStagingDirectory());
             return this._templateFileLocation; 
         }
 

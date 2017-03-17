@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 25
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -45,8 +45,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.templateType",
       "options": {
-        "custom": "Custom",
-        "builtin": "Task generated"
+        "builtin": "Task generated",
+        "custom": "Custom"
       },
       "defaultValue": "builtin"
     },
@@ -217,6 +217,13 @@
     "PackerFixFailed": "ms-resource:loc.messages.PackerFixFailed",
     "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed",
     "DeployPackagePathNotFound": "ms-resource:loc.messages.DeployPackagePathNotFound",
-    "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath"
+    "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
+    "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
+    "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
+    "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",
+    "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
+    "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
+    "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
+    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion"
   }
 }

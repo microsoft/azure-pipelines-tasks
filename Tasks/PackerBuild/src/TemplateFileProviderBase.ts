@@ -9,18 +9,15 @@ import * as utils from "./utilities"
 
 export default class TemplateFileProviderBase {
 
-    public FinalizeTemplateLocation(initialTemplateFileLocation: string): void {
+    public moveTemplateFile(initialTemplateFileLocation: string, dest: string): void {
         console.log(tl.loc("OriginalTemplateLocation", initialTemplateFileLocation));
-
-        // move file to a temp folder - this is a cautionary approach so that previous packer execution which still has handle on template does not cause any problem
-        var tempLocationForTemplate = path.join(utils.getTempDirectory(), utils.getCurrentTime().toString())
-        console.log(tl.loc("CopyingTemplate", initialTemplateFileLocation, tempLocationForTemplate));
-        utils.copyFile(initialTemplateFileLocation, tempLocationForTemplate);
-        console.log(tl.loc("TempTemplateLocation", tempLocationForTemplate));      
+        console.log(tl.loc("CopyingTemplate", initialTemplateFileLocation, dest));
+        utils.copyFile(initialTemplateFileLocation, dest);
+        console.log(tl.loc("TempTemplateLocation", dest));      
         
         // construct new full path for template file
         var templateFileName = path.basename(initialTemplateFileLocation);
-        var tempFileLocation = path.join(tempLocationForTemplate, templateFileName);
+        var tempFileLocation = path.join(dest, templateFileName);
         this._templateFileLocation = tempFileLocation;
         tl.debug("template location: " + tempFileLocation);
     }
@@ -45,13 +42,10 @@ export default class TemplateFileProviderBase {
         if(!this._templateFileLocation) {
             return;
         }
-
+        
         var templateFileDirectory = path.dirname(this._templateFileLocation);    
         try{
-            if(tl.exist(templateFileDirectory)) {
-                tl.debug("Cleaning-up temporary directory " + this._templateFileLocation);
-                tl.rmRF(templateFileDirectory, true);
-            }
+            utils.deleteDirectory(templateFileDirectory);
         }
         catch (err) {
             tl.warning(tl.loc("CouldNotDeleteTemporaryTemplateDirectory", templateFileDirectory));
