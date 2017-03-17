@@ -1,5 +1,7 @@
 "use strict";
 
+import * as path from "path";
+import * as util from "util";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as utils from "./utilities";
@@ -11,10 +13,14 @@ import TaskParameters from "./taskParameters"
 export default class PackerHost implements definitions.IPackerHost {
 
     constructor() {
-        this._packerPath = tl.which("packer", true);
         this._templateFileProviders = {};
         this._templateVariablesProviders = {};
         this._taskParameters = new TaskParameters();
+    }
+
+    public async initialize() {
+        this._packerPath = await this._getPackerPath();
+        tl.debug("Packer path to be used by task: " + this._packerPath);
     }
 
     // Will create and return packer toolrunner
@@ -45,6 +51,20 @@ export default class PackerHost implements definitions.IPackerHost {
         return this._taskParameters;
     }
 
+    public getStagingDirectory(): string {
+        if(!!this._stagingDirectory) {
+            return this._stagingDirectory;
+        }
+
+        this._stagingDirectory = path.join(utils.getTempDirectory(), utils.getCurrentTime().toString());
+        if(!tl.exist(this._stagingDirectory)) {
+            tl.mkdirP(this._stagingDirectory);    
+        }
+
+        console.log(tl.loc("CreatedStagingDirectory", this._stagingDirectory));
+        return this._stagingDirectory;
+    }
+
     public getTemplateFileProvider(): definitions.ITemplateFileProvider {
         if(this._taskParameters.templateType === "custom") {
             return this._templateFileProviders[definitions.TemplateFileProviderTypes.Custom];
@@ -68,8 +88,70 @@ export default class PackerHost implements definitions.IPackerHost {
         this._templateVariablesProviders[providerType] = provider;
     }
 
+    public cleanup(): void {
+        try{
+            utils.deleteDirectory(this._stagingDirectory);
+        }
+        catch (err) {
+            tl.warning(tl.loc("CouldNotDeleteStagingDirectory", this._stagingDirectory));
+        }
+    }
+
+    private async _getPackerPath(): Promise<string> {
+        var installedPackerPath = tl.which("packer", false);
+        var installedPackerVersion = this._getPackerVersion(installedPackerPath);
+        console.log(tl.loc("InstalledPackerVersion", installedPackerVersion));
+        if(!installedPackerVersion || 
+            utils.isGreaterVersion(utils.PackerVersion.convertFromString(constants.CurrentSupportedPackerVersionString), utils.PackerVersion.convertFromString(installedPackerVersion))) {
+
+            console.log(tl.loc("DownloadingPackerRequired", constants.CurrentSupportedPackerVersionString, constants.CurrentSupportedPackerVersionString));
+            var downloadPath = path.join(this.getStagingDirectory(), "packer.zip");
+            var packerDownloadUrl = util.format(constants.PackerDownloadUrlFormat, constants.CurrentSupportedPackerVersionString, constants.CurrentSupportedPackerVersionString, this._getPackerZipNamePrefix());
+            tl.debug("Downloading packer from url: " + packerDownloadUrl);
+            await utils.download(packerDownloadUrl, downloadPath);
+            console.log(tl.loc("DownloadingPackerCompleted", downloadPath));
+            
+            var extractedPackerLocation = path.join(this.getStagingDirectory(), "packer");
+            await utils.unzip(downloadPath, extractedPackerLocation);
+            if(tl.osType().match(/^Win/)) {
+                var packerPath = path.join(extractedPackerLocation, "packer.exe");
+            } else {
+                var packerPath = path.join(extractedPackerLocation, "packer");
+            }
+
+            console.log(tl.loc("ExtractingPackerCompleted", packerPath));            
+            return packerPath;
+        } else {
+            return installedPackerPath;
+        }
+    }
+
+    private _getPackerVersion(packerPath: string): string {
+        if(!!packerPath && tl.exist(packerPath)) {
+            // if failed to get version, do not fail task
+            try {
+                return tl.tool(packerPath).arg("--version").execSync().stdout.trim();
+            } catch (err) {}
+        }
+
+        return null;
+    }
+
+    private _getPackerZipNamePrefix(): string {
+        if(tl.osType().match(/^Win/)) {
+            return 'windows_amd64';
+        } else if(tl.osType().match(/^Linux/)) {
+            return 'linux_amd64';
+        } else if(tl.osType().match(/^Darwin/)) {
+            return 'darwin_amd64';
+        }
+
+        throw tl.loc("OSNotSupportedForRunningPacker");
+    }
+
     private _packerPath: string;
     private _taskParameters: TaskParameters;
+    private _stagingDirectory: string;
     private _templateFileProviders: ObjectDictionary<definitions.ITemplateFileProvider>;
     private _templateVariablesProviders: ObjectDictionary<definitions.ITemplateVariablesProvider>;
 }

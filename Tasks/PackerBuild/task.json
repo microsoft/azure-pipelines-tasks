@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 25
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -217,6 +217,13 @@
         "PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
         "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
         "DeployPackagePathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
-        "ResolvedDeployPackgePath": "Resolved deploy package path: %s."    
+        "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
+        "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
+        "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
+        "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
+        "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
+        "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
+        "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
+        "InstalledPackerVersion": "Current installed packer version is %s."
     }
 }

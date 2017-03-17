@@ -42,3 +42,6 @@ export var PackerLogTokenStorageLocation = "StorageAccountLocation";
 export var OutputVariableImageUri = "imageUri";
 export var OutputVariableImageStorageAccountLocation = "imageStorageAccount";
 
+export var CurrentSupportedPackerVersionString = "0.12.3";
+export var PackerDownloadUrlFormat =  "https://releases.hashicorp.com/packer/%s/packer_%s_%s.zip"
+

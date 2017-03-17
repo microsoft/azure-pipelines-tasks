@@ -52,5 +52,12 @@
   "loc.messages.PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
   "loc.messages.PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
   "loc.messages.DeployPackagePathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
-  "loc.messages.ResolvedDeployPackgePath": "Resolved deploy package path: %s."
+  "loc.messages.ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
+  "loc.messages.OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
+  "loc.messages.DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
+  "loc.messages.DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
+  "loc.messages.ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
+  "loc.messages.CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
+  "loc.messages.CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
+  "loc.messages.InstalledPackerVersion": "Current installed packer version is %s."
 }

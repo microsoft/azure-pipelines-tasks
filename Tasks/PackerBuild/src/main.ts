@@ -14,6 +14,7 @@ import TaskInputTemplateVariablesProvider from "./taskInputTemplateVariablesProv
 
 async function run(): Promise<any> {
     var host: packerHost = new packerHost();
+    await host.initialize();
     
     // register providers
     registerProviders(host);
@@ -52,6 +53,7 @@ function registerProviders(host: packerHost): void {
 function cleanup(host: packerHost): void {
     var fileProvider = host.getTemplateFileProvider();
     fileProvider.cleanup();
+    host.cleanup();
 }
 
 var taskManifestPath = path.join(__dirname, "..//task.json");
