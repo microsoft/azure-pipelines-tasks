@@ -70,8 +70,10 @@ export class AzureRGTaskParameters {
             this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
             this.machineGroupName = tl.getInput("machineGroupName");
             this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
-            var vstsPatTokenEndpointName = tl.getInput("vstsPATTokenEndpoint", true);
-            this.tokenCredentials = this.getVSTSPatToken(vstsPatTokenEndpointName);
+            var vstsPatTokenEndpointName = tl.getInput("vstsPATTokenEndpoint", false);
+            if(vstsPatTokenEndpointName){
+                this.tokenCredentials = this.getVSTSPatToken(vstsPatTokenEndpointName);
+            }
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials(connectedService);
