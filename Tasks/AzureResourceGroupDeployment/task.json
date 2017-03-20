@@ -370,6 +370,6 @@
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
-        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', will be using default parameters instead."
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
     }
 }

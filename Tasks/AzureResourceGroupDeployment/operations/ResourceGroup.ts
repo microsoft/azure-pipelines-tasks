@@ -146,42 +146,40 @@ export class ResourceGroup {
         return depName;
     }
 
-    private parseStringToType(type: string, overrideParameter: Object) {
+    private castToType(overrideParameterValue: string, type: string) {
         switch (type) {
-            case "int": 
-                overrideParameter["value"] = parseInt(overrideParameter["value"]);
-                break;
+            case "int":
+                return parseInt(overrideParameterValue);
             case "object":
-                overrideParameter["value"] = JSON.parse(overrideParameter["value"]);
-                break;
+                return JSON.parse(overrideParameterValue);
             case "secureObject":
-                overrideParameter["value"] = JSON.parse(overrideParameter["value"]);
-                break;
+                return JSON.parse(overrideParameterValue);
             case "array":
-                overrideParameter["value"] = JSON.parse(overrideParameter["value"]);
-                break;
+                return JSON.parse(overrideParameterValue);
             case "bool":
-                overrideParameter["value"] = overrideParameter["value"] === "true";
-                break;
+                return overrideParameterValue === "true";
             default:
                 // Sending as string
                 break;
         }
-        return overrideParameter;
+        return overrideParameterValue;
     }
 
     private updateOverrideParameters(template: Object, parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
-        var override = parameterParser(this.taskParameters.overrideParameters);
-        for (var key in override) {
+        var overrideParameters = parameterParser(this.taskParameters.overrideParameters);
+        for (var key in overrideParameters) {
             tl.debug("Overriding key: " + key);
             try {
-                parameters[key] = this.parseStringToType(override[key], template["parameters"][key]["type"]);
+                overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
             } catch (error) {
                 // Adding parameter which isn't present in the template file
-                tl.warning(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+                if (error.name === "SyntaxError")
+                    tl.warning(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
+            parameters[key] = overrideParameters[key];
+            
         }
         return parameters;
     }
