@@ -146,23 +146,23 @@ export class ResourceGroup {
         return depName;
     }
 
-    private castToType(overrideParameterValue: string, type: string) {
+    private castToType(value: string, type: string) {
         switch (type) {
             case "int":
-                return parseInt(overrideParameterValue);
+                return parseInt(value);
             case "object":
-                return JSON.parse(overrideParameterValue);
+                return JSON.parse(value);
             case "secureObject":
-                return JSON.parse(overrideParameterValue);
+                return JSON.parse(value);
             case "array":
-                return JSON.parse(overrideParameterValue);
+                return JSON.parse(value);
             case "bool":
-                return overrideParameterValue === "true";
+                return value === "true";
             default:
                 // Sending as string
                 break;
         }
-        return overrideParameterValue;
+        return value;
     }
 
     private updateOverrideParameters(template: Object, parameters: Object): Object {
@@ -179,7 +179,7 @@ export class ResourceGroup {
                     tl.warning(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
             parameters[key] = overrideParameters[key];
-            
+
         }
         return parameters;
     }
@@ -201,13 +201,13 @@ export class ResourceGroup {
         return new Promise<string>((resolve, reject) => {
             httpObj.get("GET", url, {}, (error, result, contents) => {
                 if (error) {
-                    return reject(tl.loc("FileFetchFailed", error));
+                    return reject(tl.loc("FileFetchFailed", url, error));
                 }
                 if (result.statusCode === 200)
                     resolve(contents);
                 else {
                     var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
-                    return reject(tl.loc("FileFetchFailed", errorMessage));
+                    return reject(tl.loc("FileFetchFailed", url, errorMessage));
                 }
             });
         });
