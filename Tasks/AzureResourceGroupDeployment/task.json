@@ -254,7 +254,7 @@
         "CreatedRG": "Resource Group created successfully.",
         "CreatingTemplateDeployment": "Creating deployment parameters.",
         "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
-        "FileFetchFailed": "Failed to download the file. URL: %s Error: %s",
+        "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
         "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
         "StartingDeployment": "Starting Deployment.",
         "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
