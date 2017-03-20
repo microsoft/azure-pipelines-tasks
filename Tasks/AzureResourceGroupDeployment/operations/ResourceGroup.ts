@@ -174,9 +174,7 @@ export class ResourceGroup {
             try {
                 overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
             } catch (error) {
-                // Adding parameter which isn't present in the template file
-                if (error.name === "SyntaxError")
-                    tl.warning(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
             parameters[key] = overrideParameters[key];
 
