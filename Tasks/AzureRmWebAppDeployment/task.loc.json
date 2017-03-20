@@ -16,9 +16,8 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
-  "preview": "true",
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -116,6 +115,40 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "defaultValue": "",
+      "options": {
+        "": "Select deployment script type (inline or file)",
+        "Inline Script": "Inline Script",
+        "File Path": "Script File Path"
+      },
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
+    },
+    {
+      "name": "InlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScript",
+      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "ScriptType == Inline Script",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "ScriptType == File Path"
+    },
+    {
       "name": "TakeAppOfflineFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
@@ -182,40 +215,6 @@
       "visibleRule": "UseWebDeploy == true",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
-    },
-    {
-      "name": "ScriptType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ScriptType",
-      "defaultValue": "",
-      "options": {
-        "": "Select deployment script type",
-        "Inline Script": "Inline Script",
-        "File Path": "Script File Path"
-      },
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
-    },
-    {
-      "name": "InlineScript",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.InlineScript",
-      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "ScriptType == Inline Script",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "500"
-      }
-    },
-    {
-      "name": "ScriptPath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.ScriptPath",
-      "required": true,
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "ScriptType == File Path"
     },
     {
       "name": "XmlTransformation",
