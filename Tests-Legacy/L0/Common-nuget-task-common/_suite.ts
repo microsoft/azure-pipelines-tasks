@@ -132,6 +132,13 @@ describe("Common-NuGetTaskCommon Suite", () => {
                 quirks: new Set([
                     NuGetQuirkName.NoTfsOnPremAuthConfig
                 ])
+            },
+            {
+                version: new VersionInfoVersion(4, 0, 0, 2283),
+                displayVersion: "4.0.0.2283",
+                quirks: new Set([
+                    NuGetQuirkName.NoTfsOnPremAuthConfig
+                ])
             }
         ]
 
