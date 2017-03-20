@@ -232,8 +232,7 @@ param (
     finally
     {
         if($machineShare)
-        {
-            
+        {            
             $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
         }
     }
