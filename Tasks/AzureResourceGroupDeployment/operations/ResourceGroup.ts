@@ -146,6 +146,30 @@ export class ResourceGroup {
         return depName;
     }
 
+    private parseStringToType(type: string, overrideParameter: Object) {
+        switch (type) {
+            case "int": 
+                overrideParameter["value"] = parseInt(overrideParameter["value"]);
+                break;
+            case "object":
+                overrideParameter["value"] = JSON.parse(overrideParameter["value"]);
+                break;
+            case "secureObject":
+                overrideParameter["value"] = JSON.parse(overrideParameter["value"]);
+                break;
+            case "array":
+                overrideParameter["value"] = JSON.parse(overrideParameter["value"]);
+                break;
+            case "bool":
+                overrideParameter["value"] = overrideParameter["value"] === "true";
+                break;
+            default:
+                // Sending as string
+                break;
+        }
+        return overrideParameter;
+    }
+
     private updateOverrideParameters(template: Object, parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
@@ -153,17 +177,12 @@ export class ResourceGroup {
         for (var key in override) {
             tl.debug("Overriding key: " + key);
             try {
-                if (template["parameters"][key]["type"] == "int") {
-                    override[key]["value"] = parseInt(override[key]["value"]);
-                }
+                parameters[key] = this.parseStringToType(override[key], template["parameters"][key]["type"]);
             } catch (error) {
                 // Adding parameter which isn't present in the template file
-                tl.debug(error.toString());
+                tl.warning(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
-
-            parameters[key] = override[key];
         }
-
         return parameters;
     }
 

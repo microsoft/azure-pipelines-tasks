@@ -369,6 +369,7 @@
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
-    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding"
+    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter"
   }
 }
