@@ -160,7 +160,7 @@ export class ResourceGroup {
                 // Adding parameter which isn't present in the template file
                 tl.debug(error.toString());
             }
-            
+
             parameters[key] = override[key];
         }
 
@@ -255,8 +255,16 @@ export class ResourceGroup {
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
+            tl.debug("Downloading CSM Template File.. " + this.taskParameters.csmFileLink);
             var templateFile = await this.downloadFile(this.taskParameters.csmFileLink);
-            var template = JSON.parse(templateFile);
+            var template;
+            try {
+                var template = JSON.parse(templateFile);
+                tl.debug("Loaded CSM File");
+            }
+            catch (error) {
+                throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+            }
             parameters = this.updateOverrideParameters(template, parameters);
             deployment.properties["parameters"] = parameters;
         }
