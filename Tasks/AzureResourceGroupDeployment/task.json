@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -254,7 +254,7 @@
         "CreatedRG": "Resource Group created successfully.",
         "CreatingTemplateDeployment": "Creating deployment parameters.",
         "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
-        "ParametersFileFetchFailed": "Failed to download the parameters file. Error: %s",
+        "FileFetchFailed": "Failed to download the parameters file. Error: %s",
         "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
         "StartingDeployment": "Starting Deployment.",
         "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",

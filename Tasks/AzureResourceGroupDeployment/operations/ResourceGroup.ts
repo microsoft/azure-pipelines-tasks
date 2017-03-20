@@ -146,12 +146,21 @@ export class ResourceGroup {
         return depName;
     }
 
-    private updateOverrideParameters(parameters: Object): Object {
+    private updateOverrideParameters(template: Object, parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
         var override = parameterParser(this.taskParameters.overrideParameters);
         for (var key in override) {
             tl.debug("Overriding key: " + key);
+            try {
+                if (template["parameters"][key]["type"] == "int") {
+                    override[key]["value"] = parseInt(override[key]["value"]);
+                }
+            } catch (error) {
+                // Adding parameter which isn't present in the template file
+                tl.debug(error.toString());
+            }
+            
             parameters[key] = override[key];
         }
 
@@ -171,17 +180,17 @@ export class ResourceGroup {
         });
     }
 
-    private downloadParametersFile(url): Promise<string> {
+    private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             httpObj.get("GET", url, {}, (error, result, contents) => {
                 if (error) {
-                    return reject(tl.loc("ParametersFileFetchFailed", error));
+                    return reject(tl.loc("FileFetchFailed", error));
                 }
                 if (result.statusCode === 200)
                     resolve(contents);
                 else {
                     var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
-                    return reject(tl.loc("ParametersFileFetchFailed", errorMessage));
+                    return reject(tl.loc("FileFetchFailed", errorMessage));
                 }
             });
         });
@@ -214,7 +223,7 @@ export class ResourceGroup {
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(parameters);
+            parameters = this.updateOverrideParameters(template, parameters);
         }
 
         var deployment = new Deployment({
@@ -235,7 +244,7 @@ export class ResourceGroup {
 
         if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
             if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-                var contents = await this.downloadParametersFile(this.taskParameters.csmParametersFileLink)
+                var contents = await this.downloadFile(this.taskParameters.csmParametersFileLink);
                 parameters = JSON.parse(contents).parameters;
             }
             else {
@@ -246,7 +255,9 @@ export class ResourceGroup {
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(parameters);
+            var templateFile = await this.downloadFile(this.taskParameters.csmFileLink);
+            var template = JSON.parse(templateFile);
+            parameters = this.updateOverrideParameters(template, parameters);
             deployment.properties["parameters"] = parameters;
         }
 
