@@ -30,6 +30,7 @@ try {
     $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
     $skipUpgrade =  [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
+    $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
 
     $clusterConnectionParameters = @{}
 
@@ -124,6 +125,11 @@ try {
     if ($registerPackageTimeoutSec)
     {
         $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
+    }
+
+    if ($skipValidation)
+    {
+        $publishParameters['SkipPackageValidation'] = $skipValidation
     }
 
     # Do an upgrade if configured to do so and the app actually exists
