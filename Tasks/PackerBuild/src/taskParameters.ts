@@ -13,7 +13,9 @@ export default class TaskParameters {
     public location: string;
     public storageAccount: string;
 
-    public baseImage: string;
+    public baseImageSource: string;
+    public builtinBaseImage: string;
+    public customBaseImageUrl: string;
     public imagePublisher: string;
     public imageOffer: string;
     public imageSku: string;
@@ -30,16 +32,22 @@ export default class TaskParameters {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
 
-            if(this.templateType === "custom") {
+            if(this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
             } else {               
                 this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
-                this.location = tl.getInput(constants.LocationInputName, true);
-
-                this.baseImage = tl.getInput(constants.BaseImageInputName, true);
-                this._extractImageDetails();
+                this.location = tl.getInput(constants.LocationInputName, true);  
+                
+                this.baseImageSource = tl.getInput(constants.BaseImageSourceInputName, true);
+                if(this.baseImageSource === constants.BaseImageSourceCustomVhd) {
+                    this.customBaseImageUrl = tl.getInput(constants.CustomImageUrlInputName, true);
+                    this.osType = tl.getInput(constants.CustomImageOsTypeInputName, true);
+                } else {
+                    this.builtinBaseImage = tl.getInput(constants.BuiltinBaseImageInputName, true);
+                    this._extractImageDetails();
+                }              
 
                 this.deployScriptPath = tl.getPathInput(constants.DeployScriptPathInputName, true, true);
                 this.packagePath = this._getPackagePath();
@@ -56,7 +64,7 @@ export default class TaskParameters {
 
     // extract image details from base image e.g. "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows"
     private _extractImageDetails() {
-        var parts = this.baseImage.split(':');
+        var parts = this.builtinBaseImage.split(':');
         this.imagePublisher = parts[0];
         this.imageOffer = parts[1];
         this.imageSku = parts[2];
