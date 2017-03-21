@@ -50,7 +50,7 @@
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "Create or update app pool",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Select the option to create or update an application pool. If checked, the website will be created in the specified app pool.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Configure authentication",
-  "loc.input.help.ConfigureAuthenticationForWebsite": "Select the option to enable authentication for website. If selected, the website will be enabled with specified authentication methods.",
+  "loc.input.help.ConfigureAuthenticationForWebsite": "Select the option to enable authentication for website. If selected, the website will be enabled with specified authentication methods, otherwise default is anonymous authentication.",
   "loc.input.label.AppPoolNameForWebsite": "Name",
   "loc.input.help.AppPoolNameForWebsite": "Provide the name of the IIS application pool to create or update.",
   "loc.input.label.DotNetVersionForWebsite": ".NET version",

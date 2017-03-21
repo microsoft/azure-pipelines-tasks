@@ -282,7 +282,7 @@
             "required": false,
             "groupName": "Website",
             "defaultValue": "false",
-            "helpMarkDown": "Select the option to enable authentication for website. If selected, the website will be enabled with specified authentication methods."
+            "helpMarkDown": "Select the option to enable authentication for website. If selected, the website will be enabled with specified authentication methods, otherwise default is anonymous authentication."
         },
         {
             "name": "AppPoolNameForWebsite",
