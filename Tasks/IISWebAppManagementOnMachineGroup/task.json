@@ -37,7 +37,7 @@
             "name": "IISWebsiteAuthentication",
             "displayName": "IIS Authentication",
             "isExpanded": true,
-            "visibleRule" : "ConfigureAuthenticationForWebsite = true"
+            "visibleRule" : "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && ConfigureAuthenticationForWebsite = true"
         },
         {
             "name": "ApplicationPool",

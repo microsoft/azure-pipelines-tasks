@@ -37,7 +37,7 @@
       "name": "IISWebsiteAuthentication",
       "displayName": "ms-resource:loc.group.displayName.IISWebsiteAuthentication",
       "isExpanded": true,
-      "visibleRule": "ConfigureAuthenticationForWebsite = true"
+      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && ConfigureAuthenticationForWebsite = true"
     },
     {
       "name": "ApplicationPool",
