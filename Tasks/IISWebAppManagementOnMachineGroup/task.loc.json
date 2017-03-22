@@ -15,8 +15,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 2
+    "Minor": 3,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -32,6 +32,12 @@
       "displayName": "ms-resource:loc.group.displayName.ApplicationPoolForWebsite",
       "isExpanded": true,
       "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && CreateOrUpdateAppPoolForWebsite = true"
+    },
+    {
+      "name": "IISWebsiteAuthentication",
+      "displayName": "ms-resource:loc.group.displayName.IISWebsiteAuthentication",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && ConfigureAuthenticationForWebsite = true"
     },
     {
       "name": "ApplicationPool",
@@ -270,6 +276,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.CreateOrUpdateAppPoolForWebsite"
     },
     {
+      "name": "ConfigureAuthenticationForWebsite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ConfigureAuthenticationForWebsite",
+      "required": false,
+      "groupName": "Website",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigureAuthenticationForWebsite"
+    },
+    {
       "name": "AppPoolNameForWebsite",
       "type": "string",
       "label": "ms-resource:loc.input.label.AppPoolNameForWebsite",
@@ -340,6 +355,33 @@
       "groupName": "ApplicationPoolForWebsite",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolPasswordForWebsite",
       "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
+    },
+    {
+      "name": "AnonymousAuthenticationForWebsite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AnonymousAuthenticationForWebsite",
+      "required": false,
+      "groupName": "IISWebsiteAuthentication",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.AnonymousAuthenticationForWebsite"
+    },
+    {
+      "name": "BasicAuthenticationForWebsite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.BasicAuthenticationForWebsite",
+      "required": false,
+      "groupName": "IISWebsiteAuthentication",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.BasicAuthenticationForWebsite"
+    },
+    {
+      "name": "WindowsAuthenticationForWebsite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.WindowsAuthenticationForWebsite",
+      "required": false,
+      "groupName": "IISWebsiteAuthentication",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.WindowsAuthenticationForWebsite"
     },
     {
       "name": "ParentWebsiteNameForVD",
@@ -644,6 +686,7 @@
     "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType",
     "InvalidActionIISWebsite": "ms-resource:loc.messages.InvalidActionIISWebsite",
     "InvalidActionIISAppPool": "ms-resource:loc.messages.InvalidActionIISAppPool",
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
     "SSLCertWarningInvalidCharacters": "ms-resource:loc.messages.SSLCertWarningInvalidCharacters"
   }
 }
