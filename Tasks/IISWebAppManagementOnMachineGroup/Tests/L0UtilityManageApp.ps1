@@ -24,14 +24,14 @@ $appCmdCommands = ""
 
 # Test 1 
 
-Register-Mock Execute-Main { }
+Register-Mock Invoke-Main { }
 
 Set-IISWebApplication -parentWebsiteName $parentWebsiteNameForApplication -virtualPath $virtualPathForApplication -physicalPath $physicalPathForApplication -physicalPathAuth $applicationPhysicalPathAuth -physicalPathAuthUserName $applicationAuthUserName -physicalPathAuthUserPassword $applicationAuthUserPassword `
     -createOrUpdateAppPool $createOrUpdateAppPoolForApplication -appPoolName $appPoolNameForApplication -dotNetVersion $dotNetVersionForApplication -pipeLineMode $pipeLineModeForApplication -appPoolIdentity $appPoolIdentityForApplication -appPoolUsername $appPoolUsernameForApplication -appPoolPassword $appPoolPasswordForApplication `
     -appCmdCommands $appCmdCommands
 
-Assert-WasCalled Execute-Main -Times 1 
-Assert-WasCalled Execute-Main -- -CreateApplication "True" -WebsiteName "Sample Web Site" -VirtualPath "/Application" -PhysicalPath "Drive:/Physical Path" -PhysicalPathAuth "ApplicationUserPassThrough" -PhysicalPathAuthCredentials $null -AppCmdCommands ""
+Assert-WasCalled Invoke-Main -Times 1 
+Assert-WasCalled Invoke-Main -- -CreateApplication "True" -WebsiteName "Sample Web Site" -VirtualPath "/Application" -PhysicalPath "Drive:/Physical Path" -PhysicalPathAuth "ApplicationUserPassThrough" -PhysicalPathAuthCredentials $null -AppCmdCommands ""
 
 # Test 2 
 
@@ -41,9 +41,9 @@ $appPoolIdentityForApplication = "SpecificUser"
 $appPoolUsernameForApplication = ""
 $appPoolPasswordForApplication = ""
 
-Unregister-Mock Execute-Main
+Unregister-Mock Invoke-Main
 
-Register-Mock Execute-Main { }
+Register-Mock Invoke-Main { }
 Register-Mock Get-CustomCredentials { return "CustomCredentialsObject" }
 
 Set-IISWebApplication -parentWebsiteName $parentWebsiteNameForApplication -virtualPath $virtualPathForApplication -physicalPath $physicalPathForApplication -physicalPathAuth $applicationPhysicalPathAuth -physicalPathAuthUserName $applicationAuthUserName -physicalPathAuthUserPassword $applicationAuthUserPassword `
@@ -51,8 +51,8 @@ Set-IISWebApplication -parentWebsiteName $parentWebsiteNameForApplication -virtu
     -appCmdCommands $appCmdCommands
 
 Assert-WasCalled Get-CustomCredentials -Times 2
-Assert-WasCalled Execute-Main -Times 1 
-Assert-WasCalled Execute-Main -- -CreateApplication "True" -WebsiteName "Sample Web Site" -VirtualPath "/Application" -PhysicalPath "Drive:/Physical Path" -PhysicalPathAuth "ApplicationWindowsAuth" -PhysicalPathAuthCredentials "CustomCredentialsObject" -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName "Sample App Pool" -DotNetVersion "v4.0" -PipeLineMode "Integrated" -AppPoolIdentity "SpecificUser" -AppPoolCredentials "CustomCredentialsObject" -AppCmdCommands ""
+Assert-WasCalled Invoke-Main -Times 1 
+Assert-WasCalled Invoke-Main -- -CreateApplication "True" -WebsiteName "Sample Web Site" -VirtualPath "/Application" -PhysicalPath "Drive:/Physical Path" -PhysicalPathAuth "ApplicationWindowsAuth" -PhysicalPathAuthCredentials "CustomCredentialsObject" -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName "Sample App Pool" -DotNetVersion "v4.0" -PipeLineMode "Integrated" -AppPoolIdentity "SpecificUser" -AppPoolCredentials "CustomCredentialsObject" -AppCmdCommands ""
 
 # Test 3
 
