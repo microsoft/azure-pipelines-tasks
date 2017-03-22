@@ -239,6 +239,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             
+            console.log(tr.stdout);
+            console.log(tr);
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
