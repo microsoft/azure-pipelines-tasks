@@ -77,7 +77,7 @@ Try
     if ($taskType -eq "dacpac")
     {
         $dacpacFile = Get-SingleFile -pattern $dacpacFile
-        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        Invoke-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
     {
@@ -89,11 +89,11 @@ Try
         if ($taskType -eq "sqlQuery")
         {
             $sqlFile = Get-SingleFile -pattern $sqlFile
-        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+        Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
         }
         else 
         {
-            Execute-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
         }
     }
 }
