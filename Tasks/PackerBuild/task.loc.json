@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports baking images for both windows and linux. These images can be used to deploy Azure VMSS.",
   "visibility": [
     "Build",
     "Release"
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 39
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -45,8 +45,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.templateType",
       "options": {
-        "builtin": "Task generated",
-        "custom": "Custom"
+        "builtin": "Auto generated",
+        "custom": "User provided"
       },
       "defaultValue": "builtin"
     },
@@ -94,13 +94,22 @@
       "name": "azureResourceGroup",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.azureResourceGroup",
-      "defaultValue": "",
       "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
       "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
       "groupName": "AzureDetails"
+    },
+    {
+      "name": "baseImageSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.baseImageSource",
+      "required": true,
+      "defaultValue": "default",
+      "helpMarkDown": "ms-resource:loc.input.help.baseImageSource",
+      "options": {
+        "default": "Gallery",
+        "customVhd": "Custom"
+      },
+      "groupName": "DeploymentInputs"
     },
     {
       "name": "baseImage",
@@ -115,6 +124,29 @@
         "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
         "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
       },
+      "visibleRule": "baseImageSource = default",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "customImageUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customImageUrl",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customImageUrl",
+      "visibleRule": "baseImageSource = customVhd",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "customImageOSType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.customImageOSType",
+      "required": true,
+      "defaultValue": "windows",
+      "options": {
+        "windows": "Windows",
+        "linux": "Linux"
+      },
+      "visibleRule": "baseImageSource = customVhd",
       "groupName": "DeploymentInputs"
     },
     {
@@ -150,15 +182,6 @@
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
-      "groupName": "Output"
-    },
-    {
-      "name": "imageStorageAccount",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.imageStorageAccount",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.imageStorageAccount",
       "groupName": "Output"
     }
   ],
@@ -209,15 +232,15 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
-    "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
     "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
     "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed",
     "PackerFixFailed": "ms-resource:loc.messages.PackerFixFailed",
     "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed",
-    "DeployPackagePathNotFound": "ms-resource:loc.messages.DeployPackagePathNotFound",
+    "ResolvedPathNotFound": "ms-resource:loc.messages.ResolvedPathNotFound",
     "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
+    "ResolvedDeployScriptPath": "ms-resource:loc.messages.ResolvedDeployScriptPath",
     "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
     "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
     "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",

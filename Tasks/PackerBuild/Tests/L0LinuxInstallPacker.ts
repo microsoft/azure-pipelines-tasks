@@ -10,6 +10,7 @@ process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
 tr.setInput('templateType', process.env["__template_type__"] || 'builtin');
 tr.setInput('azureResourceGroup', 'testrg');
 tr.setInput('storageAccountName', 'teststorage');
+tr.setInput('baseImageSource', 'default');
 tr.setInput('baseImage', 'Canonical:UbuntuServer:14.04.4-LTS:linux');
 tr.setInput('location', 'South India');
 tr.setInput('packagePath', '/packer-user-scripts/dummy.tar.gz');
@@ -110,7 +111,7 @@ tr.registerMock('./utilities', {
         console.log("writing to file " + filePath + " content: " + content);
     },
     findMatch: function(root: string, patterns: string[] | string) {
-        return ["/packer-user-scripts/dummy.tar.gz"];
+        return [patterns];
     },
     getCurrentTime: function() {
         return 100;

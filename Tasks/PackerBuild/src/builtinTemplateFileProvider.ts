@@ -13,8 +13,10 @@ export default class BuiltInTemplateFileProvider extends TemplateFileProviderBas
     constructor() {
         super();
         this._builtInTemplateFiles = new Map<string, string>();
-        this._builtInTemplateFiles.set(constants.BuiltInTemplateOSTypeWindows, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInWindowsTemplateName));
-        this._builtInTemplateFiles.set(constants.BuiltInTemplateOSTypeLinux, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInLinuxTemplateName));        
+        this._builtInTemplateFiles.set(constants.BuiltinWindowsDefaultImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInWindowsDefaultImageTemplateName));
+        this._builtInTemplateFiles.set(constants.BuiltinWindowsCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInWindowsCustomImageTemplateName));
+        this._builtInTemplateFiles.set(constants.BuiltinLinuxDefaultImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInLinuxDefaultImageTemplateName));        
+        this._builtInTemplateFiles.set(constants.BuiltinLinuxCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInLinuxCustomImageTemplateName));        
     }
 
     public register(packerHost: definitions.IPackerHost): void {
@@ -27,10 +29,13 @@ export default class BuiltInTemplateFileProvider extends TemplateFileProviderBas
             return this._templateFileLocation;
         }
 
-        var osType = packerHost.getTaskParameters().osType;
-        if(this._builtInTemplateFiles.has(osType)) {
-            var initialTemplateFileLocation = this._builtInTemplateFiles.get(osType);
-            tl.checkPath(initialTemplateFileLocation, tl.loc("BuiltInTemplateNotFoundErrorMessagePathName", osType));
+        var taskParameters = packerHost.getTaskParameters();
+        var osType = taskParameters.osType;
+        var imageType = taskParameters.baseImageSource;
+        var templateKey = util.format("%s-%s", osType, imageType);
+        if(this._builtInTemplateFiles.has(templateKey)) {
+            var initialTemplateFileLocation = this._builtInTemplateFiles.get(templateKey);
+            tl.checkPath(initialTemplateFileLocation, tl.loc("BuiltInTemplateNotFoundErrorMessagePathName", templateKey));
 
             // move file to a temp folder - this is a cautionary approach so that previous packer execution which still has handle on template does not cause any problem
             this.moveTemplateFile(initialTemplateFileLocation, packerHost.getStagingDirectory());
