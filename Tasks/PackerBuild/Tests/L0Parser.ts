@@ -74,7 +74,11 @@ tr.registerMock('./utilities', {
         console.log("writing to file " + filePath + " content: " + content);
     },
     findMatch: function(root: string, patterns: string[] | string) {
-        return ["C:\\dummy.zip"];
+        if(patterns === '**/*.zip') {
+            return ["C:\\dummy.zip"];
+        }
+
+        return [patterns];
     },
     getCurrentTime: function() {
         return 100;

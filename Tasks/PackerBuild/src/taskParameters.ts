@@ -26,7 +26,6 @@ export default class TaskParameters {
     public deployScriptArguments: string;
 
     public imageUri: string;
-    public storageAccountLocation: string;
 
     constructor() {
         try {
@@ -39,7 +38,7 @@ export default class TaskParameters {
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
                 this.location = tl.getInput(constants.LocationInputName, true);  
-                
+
                 this.baseImageSource = tl.getInput(constants.BaseImageSourceInputName, true);
                 if(this.baseImageSource === constants.BaseImageSourceCustomVhd) {
                     this.customBaseImageUrl = tl.getInput(constants.CustomImageUrlInputName, true);
@@ -49,13 +48,14 @@ export default class TaskParameters {
                     this._extractImageDetails();
                 }              
 
-                this.deployScriptPath = tl.getPathInput(constants.DeployScriptPathInputName, true, true);
-                this.packagePath = this._getPackagePath();
+                this.deployScriptPath = this._getResolvedPath(tl.getInput(constants.DeployScriptPathInputName, true));
+                console.log(tl.loc("ResolvedDeployPackgePath", this.deployScriptPath));
+                this.packagePath = this._getResolvedPath(tl.getInput(constants.DeployPackageInputName, true));
+                console.log(tl.loc("ResolvedDeployScriptPath", this.packagePath));
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
             }                
 
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
-            this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
         } 
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error.message));
@@ -71,16 +71,14 @@ export default class TaskParameters {
         this.osType = parts[3];
     }
 
-    private _getPackagePath() {
-        var packagePath = tl.getInput(constants.DeployPackageInputName, true);
+    private _getResolvedPath(inputPath: string) {
         var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
-        var matchingFiles = utils.findMatch(rootFolder, packagePath);
+        var matchingFiles = utils.findMatch(rootFolder, inputPath);
         if(!utils.HasItems(matchingFiles)) {
-            throw tl.loc("DeployPackagePathNotFound", packagePath, rootFolder);
+            throw tl.loc("ResolvedPathNotFound", inputPath, rootFolder);
         }
 
-        console.log(tl.loc("ResolvedDeployPackgePath", matchingFiles[0]));
         return matchingFiles[0];
     }
 }

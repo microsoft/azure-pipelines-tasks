@@ -1,11 +1,11 @@
 {
     "id": "845fd4f4-642d-4694-8514-047948a5a556",
     "name": "PackerBuild",
-    "friendlyName": "Build VMSS images using Packer",
-    "description": "Build VMSS images using Packer",
+    "friendlyName": "Bake immutable machine image",
+    "description": "Bake immutable machine image using Packer tool. This image can be used for Azure VMSS deployment",
     "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
     "category": "Deploy",
-    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports baking images for both windows and linux. These images can be used to deploy Azure VMSS.",
     "visibility": [
         "Build",
         "Release"
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 39
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -43,10 +43,10 @@
             "type": "pickList",
             "label": "Packer template",
             "required": true,
-            "helpMarkDown": "Select whether task will use a built-in packer template or a custom user-provided template.",
+            "helpMarkDown": "Select whether you want the task to auto generate Packer template or use custom template provided by you.",
             "options": {
-                "builtin": "Task generated",                
-                "custom": "Custom"
+                "builtin": "Auto generated",                
+                "custom": "User provided"
             },
             "defaultValue": "builtin"
         },
@@ -64,7 +64,7 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for baking and storing the machine image.",
             "groupName": "AzureDetails"
         },
         {
@@ -72,7 +72,7 @@
             "type": "pickList",
             "label": "Location",
             "required": true,
-            "helpMarkDown": "Location for storing the created VHD. This location will also be used to create a temporary VM for the purpose of capturing image. If the resource group already exists in the subscription, then this value will be ignored.",
+            "helpMarkDown": "Location for storing the baked machine image. This location will also be used to create a temporary VM for the purpose of baking image.",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -87,19 +87,15 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment.",
+            "helpMarkDown": "Storage account for storing the baked machine image. This storage account must be pre-existing in the location selected.",
             "groupName": "AzureDetails"
         },
         {
             "name": "azureResourceGroup",
             "type": "pickList",
             "label": "Resource group",
-            "defaultValue": "",
             "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the Azure Resource group that contains the storage account specified above.",
+            "helpMarkDown": "Azure Resource group that contains the selected storage account.",
             "groupName": "AzureDetails"
         },
         {
@@ -108,22 +104,19 @@
             "label": "Base image source",
             "required": true,
             "defaultValue": "default",
-            "helpMarkDown": "Select the source for base image.",
-            "properties": {
-                "EditableOptions": "True"
-            },
+            "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide url of your custom image.",
             "options": {
-                "default": "Builtin",
-                "customVhd": "Custom VHD"
+                "default": "Gallery",
+                "customVhd": "Custom"
             },
             "groupName": "DeploymentInputs"
         },
         {
             "name": "baseImage",
             "type": "pickList",
-            "label": "Builtin base image",
+            "label": "Base image",
             "required": true,
-            "helpMarkDown": "Builtin base image to used for creating VHD.",
+            "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -137,33 +130,32 @@
         {
             "name": "customImageUrl",
             "type": "string",
-            "label": "Custom VHD url",
+            "label": "Base image URL",
             "required": true,
-            "helpMarkDown": "Url of custom VHD which will be used for creating VHD.",
+            "helpMarkDown": "Specify url of base image. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
             "visibleRule": "baseImageSource = customVhd",            
             "groupName": "DeploymentInputs"
         },
         {
             "name": "customImageOSType",
             "type": "pickList",
-            "label": "OS Type",
+            "label": "Base image OS",
             "required": true,
             "defaultValue": "windows",            
             "options": {
                 "windows": "Windows",
                 "linux": "Linux"
             },
-            "helpMarkDown": "OS type of custom image VHD.",
             "visibleRule": "baseImageSource = customVhd",            
             "groupName": "DeploymentInputs"
         },
         {
             "name": "packagePath",
             "type": "filePath",
-            "label": "Package or folder",
+            "label": "Application Package/folder",
             "required": true,
             "defaultValue": "**//*.zip",
-            "helpMarkDown": "Specify the path for deployment package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
+            "helpMarkDown": "Specify the path for application package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
             "groupName": "DeploymentInputs"
         },
         {
@@ -171,7 +163,7 @@
             "type": "filePath",
             "label": "Deployment script",
             "required": true,
-            "helpMarkDown": "Specify the path to powershell or shell script which deploys application.",
+            "helpMarkDown": "Specify the path to powershell or shell script which deploys provided application package. Path should be relative to relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
             "groupName": "DeploymentInputs"
         },
         {
@@ -186,20 +178,11 @@
         {
             "name": "imageUri",
             "type": "string",
-            "label": "Image URI",
+            "label": "Image URL",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a name for the variable for output image URI.",
+            "helpMarkDown": "Provide a name for the output variable which will store generated machine image url.",
             "groupName": "Output"
-        },
-        {
-            "name": "imageStorageAccount",
-            "type": "string",
-            "label": "Image storage account location",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Provide a name for the variable for output image storage account location.",
-            "groupName": "Output"            
         }
     ],
     "dataSourceBindings": [
@@ -228,7 +211,7 @@
         }
     ],
     "sourceDefinitions": [],
-    "instanceNameFormat": "Packer build",
+    "instanceNameFormat": "Bake immutable image",
     "execution": {
         "Node": {
             "target": "src//main.js"
@@ -249,15 +232,15 @@
         "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
         "PackerBuildCompleted": "packer build completed.",
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
-        "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
         "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
         "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
         "PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
         "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
-        "DeployPackagePathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
+        "ResolvedPathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
         "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
+        "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
         "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
         "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
         "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",

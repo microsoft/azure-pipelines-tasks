@@ -83,7 +83,11 @@ tr.registerMock('./utilities', {
         if(process.env["__deploy_package_found__"] === "false") {
             return [];
         } else {
-            return ["C:\\dummy.zip"];            
+            if(patterns === '**/*.zip') {
+                return ["C:\\dummy.zip"];
+            }
+
+            return [patterns];         
         }
     },
     getCurrentTime: function() {

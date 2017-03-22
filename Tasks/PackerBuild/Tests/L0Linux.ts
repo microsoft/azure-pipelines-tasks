@@ -94,7 +94,7 @@ tr.registerMock('./utilities', {
         console.log("writing to file " + filePath + " content: " + content);
     },
     findMatch: function(root: string, patterns: string[] | string) {
-        return ["/packer-user-scripts/dummy.tar.gz"];
+        return [patterns];
     },
     getCurrentTime: function() {
         return 100;
