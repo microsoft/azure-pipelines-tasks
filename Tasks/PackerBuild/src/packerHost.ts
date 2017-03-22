@@ -66,7 +66,7 @@ export default class PackerHost implements definitions.IPackerHost {
     }
 
     public getTemplateFileProvider(): definitions.ITemplateFileProvider {
-        if(this._taskParameters.templateType === "custom") {
+        if(this._taskParameters.templateType === constants.TemplateTypeCustom) {
             return this._templateFileProviders[definitions.TemplateFileProviderTypes.Custom];
         } else {
             return this._templateFileProviders[definitions.TemplateFileProviderTypes.BuiltIn];

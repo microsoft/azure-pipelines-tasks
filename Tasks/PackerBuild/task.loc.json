@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 31
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -103,6 +103,22 @@
       "groupName": "AzureDetails"
     },
     {
+      "name": "baseImageSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.baseImageSource",
+      "required": true,
+      "defaultValue": "default",
+      "helpMarkDown": "ms-resource:loc.input.help.baseImageSource",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "default": "Builtin",
+        "customVhd": "Custom VHD"
+      },
+      "groupName": "DeploymentInputs"
+    },
+    {
       "name": "baseImage",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.baseImage",
@@ -115,6 +131,30 @@
         "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
         "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
       },
+      "visibleRule": "baseImageSource = default",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "customImageUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customImageUrl",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customImageUrl",
+      "visibleRule": "baseImageSource = customVhd",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "customImageOSType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.customImageOSType",
+      "required": true,
+      "defaultValue": "windows",
+      "options": {
+        "windows": "Windows",
+        "linux": "Linux"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.customImageOSType",
+      "visibleRule": "baseImageSource = customVhd",
       "groupName": "DeploymentInputs"
     },
     {

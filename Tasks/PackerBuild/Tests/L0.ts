@@ -47,6 +47,30 @@ describe('PackerBuild Suite', function() {
         done();
     });
 
+    it('Runs successfully for windows custom image', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('Runs successfully for linux custom image', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it('Creates output variables from packer log', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0Windows.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -75,6 +99,32 @@ describe('PackerBuild Suite', function() {
 
     it('Creates output variables from packer log for custom template', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0CustomTemplate.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Creates output variables from packer log for custom windows base image', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageStorageAccount;secret=false;]SouthIndia") != -1, "imageStorageAccount location output variable not set");
+        done();
+    });
+
+    it('Creates output variables from packer log for custom linuxbase image', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
@@ -124,6 +174,18 @@ describe('PackerBuild Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("copying C:\\custom.template.json to F:\\somedir\\tempdir\\100") != -1, "custom template should be copied to temp location");
+        done();
+    });
+
+    it('Should copy builtin template to temp location for windows template', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\custom.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "custom image template should be copied to temp location");
         done();
     });
 
@@ -198,6 +260,30 @@ describe('PackerBuild Suite', function() {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf("copy failed") != -1, "error message should be right");               
+        done();
+    });
+
+    it('should fail if custom windows base image template does not exist or copy fails', (done:MochaDone) => {
+        process.env["__copy_fails__"] = "true";
+        let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__copy_fails__"] = "false";
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf("copy failed while copying from basedir\\DefaultTemplates\\custom.windows.template.json") != -1, "error message should be right");               
+        done();
+    });
+
+    it('should fail if custom linux base image template does not exist or copy fails', (done:MochaDone) => {
+        process.env["__copy_fails__"] = "true";
+        let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        process.env["__copy_fails__"] = "false";
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf("copy failed while copying from basedir\\DefaultTemplates\\custom.linux.template.json") != -1, "error message should be right");               
         done();
     });
 

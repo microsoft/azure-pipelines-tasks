@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 31
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -103,11 +103,27 @@
             "groupName": "AzureDetails"
         },
         {
+            "name": "baseImageSource",
+            "type": "pickList",
+            "label": "Base image source",
+            "required": true,
+            "defaultValue": "default",
+            "helpMarkDown": "Select the source for base image.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "options": {
+                "default": "Builtin",
+                "customVhd": "Custom VHD"
+            },
+            "groupName": "DeploymentInputs"
+        },
+        {
             "name": "baseImage",
             "type": "pickList",
-            "label": "Base image",
+            "label": "Builtin base image",
             "required": true,
-            "helpMarkDown": "Base image to used fo creating VHD.",
+            "helpMarkDown": "Builtin base image to used for creating VHD.",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -115,6 +131,30 @@
                 "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
                 "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
             },
+            "visibleRule": "baseImageSource = default",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "customImageUrl",
+            "type": "string",
+            "label": "Custom VHD url",
+            "required": true,
+            "helpMarkDown": "Url of custom VHD which will be used for creating VHD.",
+            "visibleRule": "baseImageSource = customVhd",            
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "customImageOSType",
+            "type": "pickList",
+            "label": "OS Type",
+            "required": true,
+            "defaultValue": "windows",            
+            "options": {
+                "windows": "Windows",
+                "linux": "Linux"
+            },
+            "helpMarkDown": "OS type of custom image VHD.",
+            "visibleRule": "baseImageSource = customVhd",            
             "groupName": "DeploymentInputs"
         },
         {
