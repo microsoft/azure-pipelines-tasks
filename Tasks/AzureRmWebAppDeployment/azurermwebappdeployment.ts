@@ -9,7 +9,7 @@ var zipUtility = require('webdeployment-common/ziputility.js');
 var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
-var kuduUtility = require('webdeployment-common/kuduutility.js');
+var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
 
 async function run() {
