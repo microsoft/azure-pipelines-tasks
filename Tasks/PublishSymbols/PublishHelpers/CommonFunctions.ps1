@@ -2,15 +2,14 @@
 # Private functions.
 ########################################
 function Get-SymStorePath {
-    $symstorePath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\symstore\symstore.exe"
-    $legacySymstorePath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\Symstore\symstore.exe"
-    if (!([System.IO.File]::Exists($symstorePath)) -and		
-        ([System.IO.File]::Exists($legacySymstorePath)))		
-    {		
-        $symstorePath = $legacySymstorePath		
-    }
+    [CmdletBinding()]
+    param()
     
+    Trace-VstsEnteringInvocation $MyInvocation -Parameter @()
+    $symstorePath = [System.IO.Path]::GetFullPath("$PSScriptRoot\..\symstore.exe")
     Assert-VstsPath -LiteralPath $symstorePath -PathType Leaf -PassThru
+    Trace-VstsLeavingInvocation $MyInvocation
+    return $symstorePath
 }
 
 function Get-ValidValue {

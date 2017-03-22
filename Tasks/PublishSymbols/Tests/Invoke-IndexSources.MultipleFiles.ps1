@@ -5,18 +5,16 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\IndexHelpers\IndexFunctions.ps1
 foreach ($treatNotIndexedAsWarning in @($false, $true)) {
-    Unregister-Mock Assert-VstsPath
     Unregister-Mock Push-Location
     Unregister-Mock Add-DbghelpLibrary
+    Unregister-Mock Get-PdbstrPath
     Unregister-Mock Get-SourceProvider
     Unregister-Mock Get-SourceFilePaths
-    Unregister-Mock Get-VstsTaskVariable
     Unregister-Mock New-SrcSrvIniContent
     Unregister-Mock Add-SourceServerStream
     Unregister-Mock Remove-DbghelpLibrary
-    $script:pdbstrExePath = 'SomeDrive:\SomeDir\pdbstr.exe'
-    Register-Mock Get-VstsTaskVariable { 'SomeDrive:\AgentHome' } -- -Name Agent.HomeDirectory -Require
-    Register-Mock Assert-VstsPath { $script:pdbstrExePath } -- -LiteralPath "SomeDrive:\AgentHome\Externals\Pdbstr\pdbstr.exe" -PathType Leaf -PassThru
+    $script:pdbstrExePath = "SomeDrive:\AgentHome\tasks\PublishSymbols\Version\pdbstr.exe"
+    Register-Mock Get-PdbstrPath { $pdbstrExePath }
     Register-Mock Push-Location
     $script:libraryHandle = -1234
     Register-Mock Add-DbghelpLibrary { $script:libraryHandle }
