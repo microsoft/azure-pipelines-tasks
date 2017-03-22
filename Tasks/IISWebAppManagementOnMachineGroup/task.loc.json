@@ -10,7 +10,7 @@
     "Release"
   ],
   "runsOn": [
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "demands": [],
   "version": {
