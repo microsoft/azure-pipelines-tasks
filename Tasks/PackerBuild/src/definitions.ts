@@ -3,7 +3,7 @@ import TaskParameters from "./taskParameters"
 
 export enum TemplateFileProviderTypes {
     BuiltIn = 0,
-    User = 1
+    Custom = 1
 }
 
 export enum VariablesProviderTypes {
@@ -24,11 +24,13 @@ export interface IPackerHost {
     registerTemplateFileProvider(providerType: TemplateFileProviderTypes, provider: ITemplateFileProvider);
     registerTemplateVariablesProvider(providerType: VariablesProviderTypes, provider: ITemplateVariablesProvider);
     getTaskParameters(): TaskParameters;
+    getStagingDirectory(): string;
 }
 
 export interface ITemplateFileProvider {
     register(packerHost: IPackerHost): void;
     getTemplateFileLocation(packerHost: IPackerHost): string;
+    updateTemplateFile(content: string): void;
     cleanup(): void;
 }
 

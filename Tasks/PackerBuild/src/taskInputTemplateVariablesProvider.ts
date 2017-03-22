@@ -4,6 +4,7 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
 import * as definitions from "./definitions"
+import * as utils from "./utilities"
 
 // provider for all template variables which are derived from task input(apart from azure subscription input which is read by AzureSpnVariablesProvider)
 export default class TaskInputTemplateVariablesProvider implements definitions.ITemplateVariablesProvider {
@@ -21,9 +22,16 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
             return this._templateVariables;
         }
 
+        var taskParameters = packerHost.getTaskParameters();
+
+        // if custom template is used, task input variables are not required
+        if(taskParameters.templateType === "custom") {
+            this._templateVariables = new Map<string, string>();
+            return this._templateVariables;
+        }        
+
         // VM specific variables
         this._templateVariables = new Map<string, string>();
-        var taskParameters = packerHost.getTaskParameters();
         this._templateVariables.set(constants.TemplateVariableResourceGroupName, taskParameters.resourceGroup);
         this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
         this._templateVariables.set(constants.TemplateVariableImagePublisherName, taskParameters.imagePublisher);
@@ -41,6 +49,10 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariableScriptName, path.basename(deployScriptPath));
         this._templateVariables.set(constants.TemplateVariablePackagePathName, packagePath);
         this._templateVariables.set(constants.TemplateVariablePackageName, path.basename(packagePath));
+        if(!utils.IsNullOrEmpty(taskParameters.deployScriptArguments)) {
+            this._templateVariables.set(constants.TemplateVariableScriptArgumentsName, taskParameters.deployScriptArguments);            
+        }
+
         
         return this._templateVariables;
     }

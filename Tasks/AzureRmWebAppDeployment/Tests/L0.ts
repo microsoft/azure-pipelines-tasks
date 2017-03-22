@@ -25,7 +25,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tp = path.join(__dirname, 'L0WindowsDefault.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            
+
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             var expectedOut = 'Updated history to kudu'; 
@@ -431,7 +431,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
         assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
         assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
-        assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON variables with dot character validation error');
+        assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });
@@ -469,14 +470,17 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Validate webdepoyment-common.utility.runPostDeploymentScript()', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0RunPostDeploymentScript.js');
+        let tp = path.join(__dirname, 'L0RunPostDeploymentScript.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have uploaded file');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have uploaded file: kuduPostDeploymentScript.cmd');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd') >= 0, 'should have uploaded file: mainCmdFile.cmd');
         assert(tr.stdout.search('POST:https://mytestappKuduUrl/api/command') >= 0, 'should have executed script');
-        assert(tr.stdout.search('DELETED:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have removed file');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt') >= 0, 'should have retrieved file content: stdout.txt');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt') >= 0, 'should have retrieved file content: stderr.txt');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt') >= 0, 'should have retrieved file content: script_result.txt');
         done();
     });
 });

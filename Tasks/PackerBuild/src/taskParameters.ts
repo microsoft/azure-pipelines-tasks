@@ -2,8 +2,11 @@
 
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
+import * as utils from "./utilities";
 
 export default class TaskParameters {
+    public templateType: string;
+    public customTemplateLocation: string;
     public serviceEndpoint: string;
 
     public resourceGroup: string;
@@ -18,22 +21,30 @@ export default class TaskParameters {
 
     public packagePath: string;
     public deployScriptPath: string;
+    public deployScriptArguments: string;
 
     public imageUri: string;
     public storageAccountLocation: string;
 
     constructor() {
         try {
-            this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
-            this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
-            this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
-            this.location = tl.getInput(constants.LocationInputName, true);
+            this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
 
-            this.baseImage = tl.getInput(constants.BaseImageInputName, true);
-            this._extractImageDetails();
+            if(this.templateType === "custom") {
+                this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
+            } else {               
+                this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
+                this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
+                this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
+                this.location = tl.getInput(constants.LocationInputName, true);
 
-            this.deployScriptPath = tl.getInput(constants.DeployScriptPathInputName, true);
-            this.packagePath = tl.getInput(constants.DeployPackageInputName, true);
+                this.baseImage = tl.getInput(constants.BaseImageInputName, true);
+                this._extractImageDetails();
+
+                this.deployScriptPath = tl.getPathInput(constants.DeployScriptPathInputName, true, true);
+                this.packagePath = this._getPackagePath();
+                this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
+            }                
 
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
             this.storageAccountLocation = tl.getInput(constants.OutputVariableImageStorageAccountLocation, false);
@@ -50,5 +61,18 @@ export default class TaskParameters {
         this.imageOffer = parts[1];
         this.imageSku = parts[2];
         this.osType = parts[3];
+    }
+
+    private _getPackagePath() {
+        var packagePath = tl.getInput(constants.DeployPackageInputName, true);
+        var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+
+        var matchingFiles = utils.findMatch(rootFolder, packagePath);
+        if(!utils.HasItems(matchingFiles)) {
+            throw tl.loc("DeployPackagePathNotFound", packagePath, rootFolder);
+        }
+
+        console.log(tl.loc("ResolvedDeployPackgePath", matchingFiles[0]));
+        return matchingFiles[0];
     }
 }

@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 111,
-        "Patch": 1
+        "Minor": 115,
+        "Patch": 0
     },
     "demands": [
         "JDK",
@@ -22,7 +22,7 @@
     "groups": [
         {
             "name": "jarsignerOptions",
-            "displayName": "Jarsigner Options",
+            "displayName": "Signing Options",
             "isExpanded": true
         },
         {
@@ -47,7 +47,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "jarsignerOptions",
-            "helpMarkDown": "Select if you want to sign the APK with a provided keystore file."
+            "helpMarkDown": "Select this option to sign the APK with a provided keystore file. Unsigned APKs can only run in an emulator. APKs must be signed to run on a device."
         },
         {
             "name": "keystoreFile",
@@ -57,7 +57,7 @@
             "required": true,
             "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions",
-            "helpMarkDown": "The keystore file should be entered as a file path. It can either be checked into source control or placed on the build machine directly by an administrator. It is recommended to encrypt the keystore file in source control and use the 'Decrypt File' task to decrypt the file during the build."
+            "helpMarkDown": "Enter the file path to the keystore file that should be used to sign the APK. It can either be checked into source control or placed on the build machine directly by an administrator. It is recommended to encrypt the keystore file in source control and use the 'Decrypt File' task to decrypt the file during the build."
         },
         {
             "name": "keystorePass",
@@ -67,7 +67,7 @@
             "required": false,
             "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions",
-            "helpMarkDown": "Enter the password for the provided keystore file. We recommend that you put this value in a secret variable."
+            "helpMarkDown": "Enter the password for the provided keystore file. Use a new variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
             "name": "keystoreAlias",
@@ -77,7 +77,7 @@
             "required": false,
             "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions",
-            "helpMarkDown": "Enter the alias used for the keystore file."
+            "helpMarkDown": "Enter the alias that identifies the public/private key pair to be used in the keystore file."
         },
         {
             "name": "keyPass",
@@ -87,7 +87,7 @@
             "required": false,
             "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions",
-            "helpMarkDown": "Enter the key password for the alias and keystore file. We recommend that you put this value in a secret variable."
+            "helpMarkDown": "Enter the key password for the alias and keystore file. Use a new variable with its lock enabled on the Variables tab to encrypt this value."
         },
         {
             "name": "jarsignerArguments",
