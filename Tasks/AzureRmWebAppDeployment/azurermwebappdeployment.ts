@@ -252,6 +252,9 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
 
         //Extract out the appType parameter as it is not to be replaced.
         var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+        if(!webConfigParameters || !webConfigParameters['appType']) {
+            throw new Error(tl.loc("FailedToGenerateWebConfig", tl.loc("MissingWebConfigParameters")));
+        }
         var appType: string = webConfigParameters['appType'].value;
         delete webConfigParameters['appType'];
         

@@ -24,7 +24,7 @@
   "loc.input.help.WebAppUri": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks.",
   "loc.input.label.GenerateWebConfig": "Generate Web.config",
   "loc.input.help.GenerateWebConfig": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
-  "loc.input.label.WebConfigParameters": "Edit Web.config parameters",
+  "loc.input.label.WebConfigParameters": "Web.config parameters",
   "loc.input.help.WebConfigParameters": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully.",
@@ -127,5 +127,6 @@
   "loc.messages.FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
   "loc.messages.ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
   "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
-  "loc.messages.InvalidPollOption": "Invalid polling option provided: %s."
+  "loc.messages.InvalidPollOption": "Invalid polling option provided: %s.",
+  "loc.messages.MissingWebConfigParameters": "Some web.config parameters are missing"
 }

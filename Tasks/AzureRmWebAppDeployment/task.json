@@ -127,9 +127,9 @@
         {
             "name": "WebConfigParameters",
             "type": "multiLine",
-            "label": "Edit Web.config parameters",
+            "label": "Web.config parameters",
             "required": true,
-            "defaultValue": "-appType Node -Handler iisnode -NodeStartFile server.js",
+            "defaultValue": "",
             "visibleRule": "GenerateWebConfig == true",
             "groupName": "FileTransformsAndVariableSubstitution",
             "helpMarkDown": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
@@ -376,6 +376,7 @@
         "FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
         "PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
-        "InvalidPollOption": "Invalid polling option provided: %s."
+        "InvalidPollOption": "Invalid polling option provided: %s.",
+        "MissingWebConfigParameters": "Some web.config parameters are missing"
     }
 }

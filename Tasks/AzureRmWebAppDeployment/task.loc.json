@@ -129,7 +129,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.WebConfigParameters",
       "required": true,
-      "defaultValue": "-appType Node -Handler iisnode -NodeStartFile server.js",
+      "defaultValue": "",
       "visibleRule": "GenerateWebConfig == true",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
@@ -376,6 +376,7 @@
     "FailedToGetKuduFileContentError": "ms-resource:loc.messages.FailedToGetKuduFileContentError",
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
-    "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption"
+    "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
+    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters"
   }
 }
