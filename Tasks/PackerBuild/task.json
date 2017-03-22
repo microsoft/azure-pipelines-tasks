@@ -14,11 +14,23 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 25
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
     "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true,
+            "visibleRule": "templateType = builtin"            
+        },
+        {
+            "name": "DeploymentInputs",
+            "displayName": "Deployment Inputs",
+            "isExpanded": true,
+            "visibleRule": "templateType = builtin"
+        },
         {
             "name": "Output",
             "displayName": "Output",
@@ -27,12 +39,33 @@
     ],
     "inputs": [
         {
+            "name": "templateType",
+            "type": "pickList",
+            "label": "Packer template",
+            "required": true,
+            "helpMarkDown": "Select whether task will use a built-in packer template or a custom user-provided template.",
+            "options": {
+                "builtin": "Task generated",                
+                "custom": "Custom"
+            },
+            "defaultValue": "builtin"
+        },
+        {
+            "name": "customTemplateLocation",
+            "type": "filePath",
+            "label": "Packer template location",
+            "required": false,
+            "helpMarkDown": "Path to a custom user-provided template.",
+            "visibleRule": "templateType = custom"            
+        },
+        {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "groupName": "AzureDetails"
         },
         {
             "name": "location",
@@ -42,7 +75,8 @@
             "helpMarkDown": "Location for storing the created VHD. This location will also be used to create a temporary VM for the purpose of capturing image. If the resource group already exists in the subscription, then this value will be ignored.",
             "properties": {
                 "EditableOptions": "True"
-            }
+            },
+            "groupName": "AzureDetails"
         },
         {
             "name": "storageAccountName",
@@ -53,7 +87,8 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment."
+            "helpMarkDown": "Storage account for storing the created VHD. Storage account must exist prior to deployment.",
+            "groupName": "AzureDetails"
         },
         {
             "name": "azureResourceGroup",
@@ -64,7 +99,8 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the Azure Resource group that contains the storage account specified above."
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the storage account specified above.",
+            "groupName": "AzureDetails"
         },
         {
             "name": "baseImage",
@@ -78,21 +114,34 @@
             "options": {
                 "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
                 "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
-            }
+            },
+            "groupName": "DeploymentInputs"
         },
         {
             "name": "packagePath",
             "type": "filePath",
             "label": "Package or folder",
             "required": true,
-            "helpMarkDown": "Specify the path to deployment package."
+            "defaultValue": "**//*.zip",
+            "helpMarkDown": "Specify the path for deployment package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
+            "groupName": "DeploymentInputs"
         },
         {
             "name": "deployScriptPath",
             "type": "filePath",
             "label": "Deployment script",
             "required": true,
-            "helpMarkDown": "Specify the path to powershell or shell script which deploys application."
+            "helpMarkDown": "Specify the path to powershell or shell script which deploys application.",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "deployScriptArguments",
+            "type": "string",
+            "label": "Deployment script arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Specify the arguments to be passed to deployment script.",
+            "groupName": "DeploymentInputs"
         },
         {
             "name": "imageUri",
@@ -162,8 +211,19 @@
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
         "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
+        "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
-        "TaskParametersConstructorFailed": "Error happened while initializing task: %s."
-                
+        "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
+        "PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
+        "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
+        "DeployPackagePathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
+        "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
+        "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
+        "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
+        "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
+        "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
+        "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
+        "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
+        "InstalledPackerVersion": "Current installed packer version is %s."
     }
 }

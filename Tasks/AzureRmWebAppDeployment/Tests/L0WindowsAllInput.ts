@@ -116,7 +116,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common/kuduutility.js', {
+tr.registerMock('./kuduutility.js', {
     getVirtualAndPhysicalPaths : function() {
         return ["/virtualApp", "/test/path"]
     },

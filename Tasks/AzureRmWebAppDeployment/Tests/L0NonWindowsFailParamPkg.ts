@@ -172,7 +172,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/kuduutility.js', {
+tr.registerMock('./kuduutility.js', {
     deployWebAppPackage: function(webAppPackage, webAppZipFile) {
         throw new Error('Folder Archiving Failed');
     },
