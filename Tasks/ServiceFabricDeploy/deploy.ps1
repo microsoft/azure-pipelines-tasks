@@ -29,6 +29,8 @@ try {
     $copyPackageTimeoutSec = Get-VstsInput -Name copyPackageTimeoutSec
     $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
+    $skipUpgrade =  [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
+    $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
 
     $clusterConnectionParameters = @{}
 
@@ -125,12 +127,18 @@ try {
         $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
     }
 
+    if ($skipValidation)
+    {
+        $publishParameters['SkipPackageValidation'] = $skipValidation
+    }
+
     # Do an upgrade if configured to do so and the app actually exists
     if ($isUpgrade -and $app)
     {
         $publishParameters['Action'] = "RegisterAndUpgrade"
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $true
+        $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }

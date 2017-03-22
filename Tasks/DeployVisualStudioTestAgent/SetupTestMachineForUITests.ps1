@@ -6,103 +6,7 @@
     }
 }
 
-function IsAnySessionActive()
-{
-    $wtssig = @'
-    namespace mystruct
-    {
-        using System;
-        using System.Runtime.InteropServices;
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct WTS_SESSION_INFO
-        {
-            public Int32 SessionID;
-
-            [MarshalAs(UnmanagedType.LPStr)]
-            public String pWinStationName;
-
-            public WTS_CONNECTSTATE_CLASS State;
-        }
-
-        public enum WTS_CONNECTSTATE_CLASS
-        {
-            WTSActive,
-            WTSConnected,
-            WTSConnectQuery,
-            WTSShadow,
-            WTSDisconnected,
-            WTSIdle,
-            WTSListen,
-            WTSReset,
-            WTSDown,
-            WTSInit
-        }
-    }
-'@
-
-    $wtsenumsig = @'
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        public static extern int WTSEnumerateSessions(
-            System.IntPtr hServer,
-            int Reserved,
-            int Version,
-            ref System.IntPtr ppSessionInfo,
-            ref int pCount);
-'@
-
-    $wtsopensig = @'
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        public static extern IntPtr WTSOpenServer(string pServerName);
-'@
-
-    $wtsSendMessagesig = @'
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        public static extern bool WTSSendMessage(
-            IntPtr hServer,
-            [MarshalAs(UnmanagedType.I4)] int SessionId,
-            String pTitle,
-            [MarshalAs(UnmanagedType.U4)] int TitleLength,
-            String pMessage,
-            [MarshalAs(UnmanagedType.U4)] int MessageLength,
-            [MarshalAs(UnmanagedType.U4)] int Style,
-            [MarshalAs(UnmanagedType.U4)] int Timeout,
-            [MarshalAs(UnmanagedType.U4)] out int pResponse,
-            bool bWait);
-'@
-
-    add-type  $wtssig
-    $wtsenum = add-type -MemberDefinition $wtsenumsig -Name PSWTSEnumerateSessions -Namespace GetLoggedOnUsers -PassThru
-    $wtsOpen = add-type -MemberDefinition $wtsopensig -name PSWTSOpenServer -Namespace GetLoggedOnUsers -PassThru
-    $wtsmessage = Add-Type -MemberDefinition $wtsSendMessagesig -name PSWTSSendMessage -Namespace GetLoggedOnUsers -PassThru
-
-    [long]$count = 0
-    [long]$ppSessionInfo = 0
-
-    $server = $wtsOpen::WTSOpenServer("localhost")
-    [long]$retval = $wtsenum::WTSEnumerateSessions($server, 0, 1, [ref]$ppSessionInfo,[ref]$count)
-    $datasize = [system.runtime.interopservices.marshal]::SizeOf([System.Type][mystruct.WTS_SESSION_INFO])
-
-    [bool]$activeSession = $false
-
-    if ($retval -ne 0)
-    {
-        for ($i = 0; $i -lt $count; $i++)
-        {
-            $element = [system.runtime.interopservices.marshal]::PtrToStructure($ppSessionInfo + ($datasize* $i), [System.type][mystruct.WTS_SESSION_INFO])
-            Write-Verbose -Message("{0} : {1}" -f $element.pWinStationName, $element.State.ToString()) -Verbose
-            if ($element.State.ToString().Equals("WTSActive"))
-            {
-                $activeSession = $true
-            }
-        }
-    }
-
-    return $activeSession
-}
-
-function ConfigurePowerOptions([System.Management.Automation.PSCredential] $MachineCredential)  
-{
+function ConfigurePowerOptions {
     Try
     {
         Write-Verbose -Message ("Executing command : {0} " -f "powercfg.exe /Change monitor-timeout-ac 0 ; powercfg.exe /Change monitor-timeout-dc 0") -Verbose
@@ -117,9 +21,10 @@ function ConfigurePowerOptions([System.Management.Automation.PSCredential] $Mach
 }
 
 function Set-EnableAutoLogon($TestUserDomain, $TestUserName, $TestUserPassword) {
+    Write-Verbose -Message "Enabling auto logon"
 
     # If the type has already been loaded once, then it is not loaded again.
-        Add-Type -Language CSharp -TypeDefinition @'
+    Add-Type -Language CSharp -TypeDefinition @'
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -248,18 +153,18 @@ namespace MS.VS.TestTools.Config
 
         [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr CreateService(
-            IntPtr serviceHandle, 
-            string serviceName, 
+            IntPtr serviceHandle,
+            string serviceName,
             string serviceDisplayName,
-            ServiceAccessRights desiredAccess, 
-            int type, 
-            int startType, 
-            int errorControl, 
+            ServiceAccessRights desiredAccess,
+            int type,
+            int startType,
+            int errorControl,
             string binaryPathName,
-            string loadOrderGroup, 
-            string tagId, 
-            string dependencies, 
-            string accountName, 
+            string loadOrderGroup,
+            string tagId,
+            string dependencies,
+            string accountName,
             string password);
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -278,7 +183,7 @@ namespace MS.VS.TestTools.Config
             );
 
         [DllImport("advapi32.dll", SetLastError = true, EntryPoint = "ChangeServiceConfig2", CharSet = CharSet.Unicode)]
-        public static extern int ChangeServiceDescription(IntPtr serviceHandle, ServiceConfig2InfoLevel dwInfoLevel, 
+        public static extern int ChangeServiceDescription(IntPtr serviceHandle, ServiceConfig2InfoLevel dwInfoLevel,
             [MarshalAs(UnmanagedType.Struct)] ref SERVICE_DESCRIPTION serviceDescription);
 
         [DllImport("advapi32.dll", SetLastError = true, EntryPoint = "ChangeServiceConfig2")]
@@ -326,7 +231,7 @@ namespace MS.VS.TestTools.Config
             public IntPtr SecurityDescriptor;
             public IntPtr SecurityQualityOfService;
         }
-    
+
         [DllImport("advapi32.dll", SetLastError = true, PreserveSig = true)]
         public static extern uint LsaOpenPolicy(
            ref LSA_UNICODE_STRING SystemName,
@@ -390,7 +295,7 @@ namespace MS.VS.TestTools.Config
         [DllImportAttribute("advapi32.dll", EntryPoint = "OpenProcessToken")]
         [return: MarshalAsAttribute(UnmanagedType.Bool)]
         public static extern bool OpenProcessToken(
-            [InAttribute()] 
+            [InAttribute()]
             System.IntPtr ProcessHandle,
             uint DesiredAccess,
             out System.IntPtr TokenHandle);
@@ -415,7 +320,7 @@ namespace MS.VS.TestTools.Config
             public String lpPolicyPath;
             public IntPtr hProfile;
         }
-   }
+    }
 
     internal class LsaPolicy : IDisposable
     {
@@ -458,7 +363,7 @@ namespace MS.VS.TestTools.Config
             };
 
             IntPtr handle = IntPtr.Zero;
-            uint hr = NativeMethods.LsaOpenPolicy(ref system, ref attrib, (uint) access, out handle);
+            uint hr = NativeMethods.LsaOpenPolicy(ref system, ref attrib, (uint)access, out handle);
             if (hr != 0 || handle == IntPtr.Zero)
             {
                 throw new Exception("OpenLsaFailed");
@@ -496,7 +401,7 @@ namespace MS.VS.TestTools.Config
             uint winErrorCode = NativeMethods.LsaNtStatusToWinError(result);
             if (winErrorCode != 0)
             {
-                throw new Exception("FailedLsaStoreData: "+ winErrorCode);
+                throw new Exception("FailedLsaStoreData: " + winErrorCode);
             }
         }
 
@@ -536,8 +441,10 @@ namespace MS.VS.TestTools.Config
         POLICY_NOTIFICATION = 0x00001000L
     }
 
-    public static class RegHelper {
-        public static void SetAutoLogonPassword(string password){
+    public static class RegHelper
+    {
+        public static void SetAutoLogonPassword(string password)
+        {
             using (LsaPolicy lsaPolicy = new LsaPolicy(LSA_AccessPolicy.POLICY_CREATE_SECRET))
             {
                 lsaPolicy.SetSecretData(LsaPolicy.DefaultPassword, password);
@@ -547,36 +454,196 @@ namespace MS.VS.TestTools.Config
 }
 '@
 
-    Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoAdminLogon -Value 1 -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name ForceAutoLogon -Value 1 -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultUserName -Value $TestUserName -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultDomainName -Value $TestUserDomain -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Reliability' -Name ShutdownReasonOn -Value 0 -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Reliability' -Name ShutdownReasonUI -Value 0 -ErrorAction SilentlyContinue
-    
-    Remove-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -ErrorAction SilentlyContinue
-    Remove-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultPassword -ErrorAction SilentlyContinue
-    [MS.VS.TestTools.Config.RegHelper]::SetAutoLogonPassword($TestUserPassword)
+    try {
+
+        Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoAdminLogon -Value 1 -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultUserName -Value $TestUserName -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultDomainName -Value $TestUserDomain -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Reliability' -Name ShutdownReasonOn -Value 0 -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Reliability' -Name ShutdownReasonUI -Value 0 -ErrorAction SilentlyContinue
+        Remove-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoLogonCount -ErrorAction SilentlyContinue
+        Remove-ItemProperty -Path 'REGISTRY::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultPassword -ErrorAction SilentlyContinue
+
+        [MS.VS.TestTools.Config.RegHelper]::SetAutoLogonPassword($TestUserPassword)
+    }
+    catch {
+        Write-Warning "Unable to set auto logon: $_"
+    }
+}
+
+# Adding check for whether the test user has the active session or not.
+# Previously we were checking for any active session which doesn't reflect to test user active sessions
+function IsTestUserCurrentlyLoggedIn($TestUserDomain, $TestUserName)
+{
+    Add-Type -Language CSharp -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+
+namespace MS.VS.TestTools.Config
+{
+    public static class EnumerateUsers
+    {
+        [DllImport("wtsapi32.dll")]
+        static extern IntPtr WTSOpenServer([MarshalAs(UnmanagedType.LPStr)] String pServerName);
+
+        [DllImport("wtsapi32.dll")]
+        static extern void WTSCloseServer(IntPtr hServer);
+
+        [DllImport("wtsapi32.dll")]
+        static extern Int32 WTSEnumerateSessions(
+            IntPtr hServer,
+            [MarshalAs(UnmanagedType.U4)] Int32 Reserved,
+            [MarshalAs(UnmanagedType.U4)] Int32 Version,
+            ref IntPtr ppSessionInfo,
+            [MarshalAs(UnmanagedType.U4)] ref Int32 pCount);
+
+        [DllImport("wtsapi32.dll")]
+        static extern void WTSFreeMemory(IntPtr pMemory);
+
+        [DllImport("Wtsapi32.dll")]
+        static extern bool WTSQuerySessionInformation(
+            System.IntPtr hServer, int sessionId, WTS_INFO_CLASS wtsInfoClass, out System.IntPtr ppBuffer, out uint pBytesReturned);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct WTS_SESSION_INFO
+        {
+            public Int32 SessionID;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public String pWinStationName;
+
+            public WTS_CONNECTSTATE_CLASS State;
+        }
+
+        public enum WTS_INFO_CLASS
+        {
+            WTSInitialProgram,
+            WTSApplicationName,
+            WTSWorkingDirectory,
+            WTSOEMId,
+            WTSSessionId,
+            WTSUserName,
+            WTSWinStationName,
+            WTSDomainName,
+            WTSConnectState,
+            WTSClientBuildNumber,
+            WTSClientName,
+            WTSClientDirectory,
+            WTSClientProductId,
+            WTSClientHardwareId,
+            WTSClientAddress,
+            WTSClientDisplay,
+            WTSClientProtocolType
+        }
+        public enum WTS_CONNECTSTATE_CLASS
+        {
+            WTSActive,
+            WTSConnected,
+            WTSConnectQuery,
+            WTSShadow,
+            WTSDisconnected,
+            WTSIdle,
+            WTSListen,
+            WTSReset,
+            WTSDown,
+            WTSInit
+        }
+
+        public static IntPtr OpenServer(String Name)
+        {
+            IntPtr server = WTSOpenServer(Name);
+            return server;
+        }
+        public static void CloseServer(IntPtr ServerHandle)
+        {
+            WTSCloseServer(ServerHandle);
+        }
+        public static bool IsActiveSessionExists(string testUserDomain, string testUsername)
+        {
+            var serverHandle = IntPtr.Zero;
+            serverHandle = OpenServer(Environment.MachineName);
+            var SessionInfoPtr = IntPtr.Zero;
+
+            try
+            {
+                var userPtr = IntPtr.Zero;
+                var domainPtr = IntPtr.Zero;
+                var sessionCount = 0;
+                var retVal = WTSEnumerateSessions(serverHandle, 0, 1, ref SessionInfoPtr, ref sessionCount);
+                var dataSize = Marshal.SizeOf(typeof(WTS_SESSION_INFO));
+                var currentSession = SessionInfoPtr;
+
+                if (retVal != 0)
+                {
+                    for (var i = 0; i < sessionCount; i++)
+                    {
+                        uint bytes = 0;
+                        var si = (WTS_SESSION_INFO)Marshal.PtrToStructure(currentSession, typeof(WTS_SESSION_INFO));
+                        currentSession += dataSize;
+
+                        WTSQuerySessionInformation(serverHandle, si.SessionID, WTS_INFO_CLASS.WTSUserName, out userPtr, out bytes);
+                        WTSQuerySessionInformation(serverHandle, si.SessionID, WTS_INFO_CLASS.WTSDomainName, out domainPtr, out bytes);
+
+                        var domain = Marshal.PtrToStringAnsi(domainPtr);
+                        var username = Marshal.PtrToStringAnsi(userPtr);
+
+                        Console.WriteLine("Domain : " + domain + "; Username: " + username + "; State: " + si.State);
+
+                        if (testUserDomain.Equals(domain, StringComparison.OrdinalIgnoreCase) &&
+                            testUsername.Equals(username, StringComparison.OrdinalIgnoreCase) &&
+                            si.State == WTS_CONNECTSTATE_CLASS.WTSActive)
+                        {
+                            WTSFreeMemory(userPtr);
+                            WTSFreeMemory(domainPtr);
+                            return true;
+                        }
+                        WTSFreeMemory(userPtr);
+                        WTSFreeMemory(domainPtr);
+                    }
+                }
+            }
+            finally
+            {
+                WTSFreeMemory(SessionInfoPtr);
+                CloseServer(serverHandle);
+            }
+            return false;
+        }
+    }
+}
+'@
+    return [MS.VS.TestTools.Config.EnumerateUsers]::IsActiveSessionExists($TestUserDomain, $TestUserName)
 }
 
 function SetupTestMachine($TestUserName, $TestUserPassword) {
+
     # For UI Test scenarios, we need to disable the screen saver and enable auto logon
-    $domainUser = $TestUserName.Split("\")
-    $domain = "."
-    if($domainUser.Length -gt 1){
-        $domain = $domainUser[0]
+    $DomainUser = $TestUserName.Split("\")
+    $Domain = "."
+    if($DomainUser.Length -gt 1) 
+    {
+        $Domain = $DomainUser[0]
+        $TestUser = $DomainUser[1]
+    } else {
+        $TestUser = $TestUserName
     }
 
-    Set-EnableAutoLogon($domain, $TestUserName, $TestUserPassword)
-    Set-DisableScreenSaverReg
+    Write-Verbose -Message "Test User $TestUser" -Verbose
+    Write-Verbose -Message "Test UserDomain $Domain" -Verbose
 
-    $isSessionActive = IsAnySessionActive
-    if (-not ($isSessionActive))
+    Set-DisableScreenSaverReg | Out-Null
+    ConfigurePowerOptions | Out-Null
+    
+    $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserDomain $Domain -TestUserName $TestUser
+    if(-not $isTestUserLogged)
     {
-        Write-Verbose -Message("Value returned {0}" -f $isSessionActive) -Verbose
-        Write-Verbose "No desktop session was found active, marking the machine for reboot"
+        Write-Verbose "Currently test user is not logged in. Rebooting machine." -Verbose
+        Set-EnableAutoLogon -TestUserDomain $Domain -TestUserName $TestUser -TestUserPassword $TestUserPassword
         return 3010
     }
+
+    Write-Verbose "Configuration for UI testing is completed" -Verbose
+    return 0
 }
 
 return SetupTestMachine -TestUserName $testUserName -TestUserPassword $testUserPassword

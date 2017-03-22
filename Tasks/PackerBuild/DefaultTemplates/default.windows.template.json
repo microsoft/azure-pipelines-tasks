@@ -13,6 +13,7 @@
     "location": "",
     "script_path": "",
     "script_name": "",
+    "script_arguments": "",
     "package_path": "",
     "package_name": "",
     "capture_name_prefix": ""
@@ -63,8 +64,9 @@
         {
             "type": "powershell",
             "inline": [
-                "ls \"C:\\DeployTemp\"",
-                "C:\\DeployTemp\\{{user `script_name`}}"
+                "cd \"C:\\DeployTemp\"",
+                "ls",
+                "C:\\DeployTemp\\{{user `script_name`}} {{user `script_arguments`}}"
             ]
         },
         {

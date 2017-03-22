@@ -183,7 +183,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
         assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
         assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
-        assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });

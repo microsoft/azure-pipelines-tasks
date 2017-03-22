@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "Geographical region to generate the load from. See help for more details.",
   "loc.input.label.machineType": "Run load test using",
   "loc.input.label.avgResponseTimeThreshold": "Fail test if Avg.Response Time(ms) exceeds",
-  "loc.input.help.avgResponseTimeThreshold": "Load test run duration in seconds."
+  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
 }

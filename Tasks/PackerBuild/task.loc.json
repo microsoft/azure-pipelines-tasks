@@ -14,11 +14,23 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 25
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
+      "isExpanded": true,
+      "visibleRule": "templateType = builtin"
+    },
+    {
+      "name": "DeploymentInputs",
+      "displayName": "ms-resource:loc.group.displayName.DeploymentInputs",
+      "isExpanded": true,
+      "visibleRule": "templateType = builtin"
+    },
     {
       "name": "Output",
       "displayName": "ms-resource:loc.group.displayName.Output",
@@ -27,12 +39,33 @@
   ],
   "inputs": [
     {
+      "name": "templateType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.templateType",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.templateType",
+      "options": {
+        "builtin": "Task generated",
+        "custom": "Custom"
+      },
+      "defaultValue": "builtin"
+    },
+    {
+      "name": "customTemplateLocation",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.customTemplateLocation",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customTemplateLocation",
+      "visibleRule": "templateType = custom"
+    },
+    {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "groupName": "AzureDetails"
     },
     {
       "name": "location",
@@ -42,18 +75,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.location",
       "properties": {
         "EditableOptions": "True"
-      }
+      },
+      "groupName": "AzureDetails"
     },
     {
-      "name": "azureStorageAccount",
+      "name": "storageAccountName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.azureStorageAccount",
+      "label": "ms-resource:loc.input.label.storageAccountName",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccount"
+      "helpMarkDown": "ms-resource:loc.input.help.storageAccountName",
+      "groupName": "AzureDetails"
     },
     {
       "name": "azureResourceGroup",
@@ -64,7 +99,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup"
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "groupName": "AzureDetails"
     },
     {
       "name": "baseImage",
@@ -76,22 +112,36 @@
         "EditableOptions": "True"
       },
       "options": {
-        "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter"
-      }
+        "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
+        "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
+      },
+      "groupName": "DeploymentInputs"
     },
     {
       "name": "packagePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.packagePath",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packagePath"
+      "defaultValue": "**//*.zip",
+      "helpMarkDown": "ms-resource:loc.input.help.packagePath",
+      "groupName": "DeploymentInputs"
     },
     {
       "name": "deployScriptPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.deployScriptPath",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath"
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "deployScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployScriptArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptArguments",
+      "groupName": "DeploymentInputs"
     },
     {
       "name": "imageUri",
@@ -116,17 +166,25 @@
     {
       "target": "location",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations"
+      "dataSourceName": "AzureLocations2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
     },
     {
-      "target": "azureStorageAccount",
+      "target": "storageAccountName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureStorageAccountRM"
+      "dataSourceName": "AzureRMStorageAccountByLocation",
+      "parameters": {
+        "location": "$(location)"
+      }
     },
     {
       "target": "azureResourceGroup",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroups"
+      "dataSourceName": "AzureRMStorageAccountIdByName",
+      "parameters": {
+        "storageAccountName": "$(storageAccountName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
     }
   ],
   "sourceDefinitions": [],
@@ -153,7 +211,19 @@
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
     "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
+    "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
-    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed"
+    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed",
+    "PackerFixFailed": "ms-resource:loc.messages.PackerFixFailed",
+    "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed",
+    "DeployPackagePathNotFound": "ms-resource:loc.messages.DeployPackagePathNotFound",
+    "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
+    "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
+    "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
+    "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",
+    "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
+    "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
+    "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
+    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion"
   }
 }

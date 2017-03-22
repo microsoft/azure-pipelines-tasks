@@ -16,6 +16,8 @@ Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPack
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
 Register-Mock Get-VstsInput { "false" } -- -Name compressPackage
 Register-Mock Get-VstsInput { $overwriteBehavior } -- -Name overwriteBehavior
+Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion
+Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath

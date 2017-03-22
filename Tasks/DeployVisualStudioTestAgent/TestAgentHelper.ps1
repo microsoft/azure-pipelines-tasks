@@ -204,5 +204,24 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
     }
 }
 
-
-
+function Remove-Service([String] $ServiceName)
+{
+    if(Get-Service $ServiceName -ErrorAction SilentlyContinue)
+    {
+        $service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'")
+        Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose
+        if($service)
+        {
+            $service.StopService()
+            $deleteServiceCode = $service.Delete()
+            if($deleteServiceCode -ne 0)
+            {
+                Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
+            }
+        }
+    }
+    else
+    {
+        Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
+    }
+}

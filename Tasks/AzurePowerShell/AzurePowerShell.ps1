@@ -25,6 +25,7 @@ try {
     Initialize-Azure
 
     # Trace the expression as it will be invoked.
+    $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
         $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
         ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)

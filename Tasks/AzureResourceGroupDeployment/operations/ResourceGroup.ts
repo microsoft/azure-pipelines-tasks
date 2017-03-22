@@ -15,6 +15,7 @@ import winRM = require("./WinRMExtensionHelper");
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
+import fileEncoding = require('./FileEncoding');
 
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -145,15 +146,39 @@ export class ResourceGroup {
         return depName;
     }
 
-    private updateOverrideParameters(parameters: Object): Object {
+    private castToType(value: string, type: string) {
+        switch (type) {
+            case "int":
+                return parseInt(value);
+            case "object":
+                return JSON.parse(value);
+            case "secureObject":
+                return JSON.parse(value);
+            case "array":
+                return JSON.parse(value);
+            case "bool":
+                return value === "true";
+            default:
+                // Sending as string
+                break;
+        }
+        return value;
+    }
+
+    private updateOverrideParameters(template: Object, parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
-        var override = parameterParser(this.taskParameters.overrideParameters);
-        for (var key in override) {
+        var overrideParameters = parameterParser(this.taskParameters.overrideParameters);
+        for (var key in overrideParameters) {
             tl.debug("Overriding key: " + key);
-            parameters[key] = override[key];
-        }
+            try {
+                overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
+            } catch (error) {
+                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+            }
+            parameters[key] = overrideParameters[key];
 
+        }
         return parameters;
     }
 
@@ -170,17 +195,17 @@ export class ResourceGroup {
         });
     }
 
-    private downloadParametersFile(url): Promise<string> {
+    private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             httpObj.get("GET", url, {}, (error, result, contents) => {
                 if (error) {
-                    return reject(tl.loc("ParametersFileFetchFailed", error));
+                    return reject(tl.loc("FileFetchFailed", url, error));
                 }
                 if (result.statusCode === 200)
                     resolve(contents);
                 else {
                     var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
-                    return reject(tl.loc("ParametersFileFetchFailed", errorMessage));
+                    return reject(tl.loc("FileFetchFailed", url, errorMessage));
                 }
             });
         });
@@ -190,7 +215,7 @@ export class ResourceGroup {
         var template: Object;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(fs.readFileSync(this.taskParameters.csmFile, 'UTF-8'));
+            template = JSON.parse(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile));
             tl.debug("Loaded CSM File");
         }
         catch (error) {
@@ -202,9 +227,9 @@ export class ResourceGroup {
             if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
                 if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
                     tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
+                    var parameterFile = JSON.parse(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile));
                     tl.debug("Loaded Parameters File");
-                    parameters = JSON.parse(parameterFile).parameters;
+                    parameters = parameterFile["parameters"];
                 }
             }
         }
@@ -213,7 +238,7 @@ export class ResourceGroup {
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(parameters);
+            parameters = this.updateOverrideParameters(template, parameters);
         }
 
         var deployment = new Deployment({
@@ -234,7 +259,7 @@ export class ResourceGroup {
 
         if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
             if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-                var contents = await this.downloadParametersFile(this.taskParameters.csmParametersFileLink)
+                var contents = await this.downloadFile(this.taskParameters.csmParametersFileLink);
                 parameters = JSON.parse(contents).parameters;
             }
             else {
@@ -245,7 +270,17 @@ export class ResourceGroup {
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(parameters);
+            tl.debug("Downloading CSM Template File.. " + this.taskParameters.csmFileLink);
+            var templateFile = await this.downloadFile(this.taskParameters.csmFileLink);
+            var template;
+            try {
+                var template = JSON.parse(templateFile);
+                tl.debug("Loaded CSM File");
+            }
+            catch (error) {
+                throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+            }
+            parameters = this.updateOverrideParameters(template, parameters);
             deployment.properties["parameters"] = parameters;
         }
 

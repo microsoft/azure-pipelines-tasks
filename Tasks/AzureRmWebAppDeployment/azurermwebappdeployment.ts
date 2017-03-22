@@ -5,10 +5,10 @@ import fs = require('fs');
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
-var utility = require('webdeployment-common/utility.js');
+var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
-var kuduUtility = require('webdeployment-common/kuduutility.js');
+var kuduUtility = require('./kuduutility.js');
 
 async function run() {
     try {
@@ -59,7 +59,7 @@ async function run() {
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
-        var availableWebPackages = utility.findfiles(webDeployPkg);
+        var availableWebPackages = deployUtility.findfiles(webDeployPkg);
         if(availableWebPackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
         }
@@ -69,7 +69,7 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
-        var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
+        var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
             var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
@@ -97,7 +97,7 @@ async function run() {
             }
         }
 
-        if(utility.canUseWebDeploy(useWebDeploy)) {
+        if(deployUtility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
@@ -129,7 +129,10 @@ async function run() {
 
         }
         if(scriptType) {
-            await kuduUtility.runPostDeploymentScript(publishingProfile, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+            azureWebAppDetails = (azureWebAppDetails) ? azureWebAppDetails: await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var kuduWorkingDirectory = virtualApplication ? (kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings))[1] : 'site/wwwroot';
+            await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
         await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         
@@ -172,11 +175,11 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            tempPackagePath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
+            tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
             webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, "", tempPackagePath);
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
-            if (await utility.isMSDeployPackage(webAppZipFile)) {
+            if (await deployUtility.isMSDeployPackage(webAppZipFile)) {
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
             }
         }

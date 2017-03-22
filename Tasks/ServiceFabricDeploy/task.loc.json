@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [
     "Cmd"
@@ -108,6 +108,24 @@
       },
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
+    },
+    {
+      "name": "skipUpgradeSameTypeAndVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipUpgradeSameTypeAndVersion",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
+    },
+    {
+      "name": "skipPackageValidation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipPackageValidation",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
     },
     {
       "name": "overridePublishProfileSettings",
@@ -317,6 +335,7 @@
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
     "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
-    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning"
+    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
+    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning"
   }
 }
