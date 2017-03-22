@@ -113,12 +113,12 @@ async function getNode(versionSpec: string, onlyLTS: boolean) {
         toolLib.debug('download ' + version);
 
         // a tool installer intimately knows how to get that tools (and construct urls)
-        let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + os.arch() :
-                                            'node-v' + version + '-' + osPlat + '-' + os.arch();  
+        let fileName: string = osPlat == 'win32'? 'node-' + version + '-win-' + os.arch() :
+                                            'node-' + version + '-' + osPlat + '-' + os.arch();  
         let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
                                                      fileName + '.tar.gz';  
 
-        let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName; 
+        let downloadUrl = 'https://nodejs.org/dist/' + version + '/' + urlFileName; 
 
         let downloadPath: string = await toolLib.downloadTool(downloadUrl);
 

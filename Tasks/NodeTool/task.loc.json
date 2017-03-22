@@ -15,6 +15,7 @@
     "Minor": 5,
     "Patch": 0
   },
+  "preview": true,
   "capabilities": [
     "Node"
   ],
