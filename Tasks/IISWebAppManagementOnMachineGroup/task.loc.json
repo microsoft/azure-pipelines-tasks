@@ -357,6 +357,15 @@
       "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
     },
     {
+      "name": "AnonymousAuthenticationForWebsite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AnonymousAuthenticationForWebsite",
+      "required": false,
+      "groupName": "IISWebsiteAuthentication",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.AnonymousAuthenticationForWebsite"
+    },
+    {
       "name": "BasicAuthenticationForWebsite",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.BasicAuthenticationForWebsite",
@@ -371,7 +380,7 @@
       "label": "ms-resource:loc.input.label.WindowsAuthenticationForWebsite",
       "required": false,
       "groupName": "IISWebsiteAuthentication",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.WindowsAuthenticationForWebsite"
     },
     {

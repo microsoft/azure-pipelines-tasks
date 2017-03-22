@@ -282,7 +282,7 @@
             "required": false,
             "groupName": "Website",
             "defaultValue": "false",
-            "helpMarkDown": "Select the option to enable authentication for website. If selected, the website will be enabled with specified authentication methods, otherwise default is anonymous authentication."
+            "helpMarkDown": "Select the option to configure authentication for website."
         },
         {
             "name": "AppPoolNameForWebsite",
@@ -357,6 +357,15 @@
             "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
         },
         {
+            "name": "AnonymousAuthenticationForWebsite",
+            "type": "boolean",
+            "label": "Anonymous authentication",
+            "required": false,
+            "groupName": "IISWebsiteAuthentication",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to enable anonymous authentication for website."
+        },
+        {
             "name": "BasicAuthenticationForWebsite",
             "type": "boolean",
             "label": "Basic authentication",
@@ -371,7 +380,7 @@
             "label": "Windows authentication",
             "required": false,
             "groupName": "IISWebsiteAuthentication",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "helpMarkDown": "Select the option to enable windows authentication for website."
         },
         {

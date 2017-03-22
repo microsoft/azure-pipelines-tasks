@@ -35,6 +35,7 @@ $appPoolUsernameForWebsite = Get-VstsInput -Name "AppPoolUsernameForWebsite"
 $appPoolPasswordForWebsite = Get-VstsInput -Name "AppPoolPasswordForWebsite"
 
 $configureAuthenticationForWebsite = Get-VstsInput -Name "ConfigureAuthenticationForWebsite"
+$anonymousAuthenticationForWebsite = Get-VstsInput -Name "AnonymousAuthenticationForWebsite"
 $basicAuthenticationForWebsite = Get-VstsInput -Name "BasicAuthenticationForWebsite"
 $windowsAuthenticationForWebsite = Get-VstsInput -Name "WindowsAuthenticationForWebsite"
 
@@ -87,7 +88,7 @@ try {
                 -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
                 -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
                 -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
-                -configureAuthentication $configureAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
+                -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
         }
         "IISWebApplication" 
         {
