@@ -81,15 +81,10 @@ Try
     }
     else
     {
-
-        $connectionString = Escape-SpecialChars -str $connectionString
-        $sqlPassword = Escape-SpecialChars -str $sqlPassword
-        $additionalArguments = Escape-SpecialChars -str $additionalArguments
-        $databaseName = Escape-SpecialChars -str $databaseName
         if ($taskType -eq "sqlQuery")
         {
             $sqlFile = Get-SingleFile -pattern $sqlFile
-        Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
         }
         else 
         {
