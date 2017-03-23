@@ -149,7 +149,14 @@ async function run() {
         // contents is a multiline input containing glob patterns
         var contents:string[] = tl.getDelimitedInput('contents', '\n', true);
         var sourceFolder:string = tl.getPathInput('sourceFolder', true, true);
-        var targetFolder:string = tl.getInput('targetFolder', true);
+        var targetFolder:string = tl.getInput('targetFolder');
+
+        if (!targetFolder) {
+            targetFolder = "./"
+        } else {
+            // '~/' is unsupported
+            targetFolder = targetFolder.replace(/^~\//, "./")
+        }
 
         // read the copy options
         var cleanTargetFolder:boolean = tl.getBoolInput('cleanTargetFolder', false);

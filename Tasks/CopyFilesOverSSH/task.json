@@ -59,7 +59,7 @@
             "type": "string",
             "label": "Target folder",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite."
         },
         {
