@@ -77,8 +77,7 @@ export class AzureRGTaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials(connectedService);
-            this.machineGroupProjectName = tl.getVariable("__mg__internal__project__name") 
-                                            || tl.getVariable('system.teamProject');
+            this.machineGroupProjectName = tl.getInput("project");
         }
         catch (error) {
             throw (tl.loc("ARGD_ConstructorFailed", error.message));
@@ -87,14 +86,16 @@ export class AzureRGTaskParameters {
 
     private getVSTSPatToken(vstsPATTokenEndpointName: string): TokenCredentials{
         var endpointAuth = tl.getEndpointAuthorization(vstsPATTokenEndpointName, true);
-        if(endpointAuth.scheme == 'Token'){
+        if(endpointAuth.scheme === 'Token'){
             var hostUrl = tl.getEndpointUrl(vstsPATTokenEndpointName, true);
             var patToken: string = endpointAuth.parameters["apitoken"];
             var credentials = new TokenCredentials(hostUrl, patToken);
             return credentials;
         }
         else{
-            throw("Endpoint authorization type can only be of type PAT token.");
+            var msg = tl.loc("OnlyTokenAuthAllowed");
+            console.log(msg);
+            throw (msg);
         }
     }
 

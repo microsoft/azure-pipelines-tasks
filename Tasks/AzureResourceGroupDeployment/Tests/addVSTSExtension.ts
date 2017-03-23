@@ -15,19 +15,17 @@ tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode","Complete");        
 tr.setInput("csmParametersFile", path.join(__dirname, process.env["csmParametersFile"]));
 tr.setInput("enableDeploymentPrerequisites", process.env["enableDeploymentPrerequisites"]);
+tr.setInput("project", "AzureProj");
 tr.setInput("machineGroupName", "biprasad");
 tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
 tr.setInput("vstsPATTokenEndpoint", "PatEndpoint");
 tr.setInput("outputVariable", process.env["outputVariable"]);
-
-process.env["__mg__internal__project__name"] = "AzureProj";
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
-process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
 process.env["ENDPOINT_URL_PatEndpoint"] = "https://testking123.visualstudio.com";
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));

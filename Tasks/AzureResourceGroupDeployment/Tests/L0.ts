@@ -27,6 +27,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -47,6 +48,57 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
+    it("Task fails when incorrect PAT token endpoint is given - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "IncorrectPat";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been tried to be added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "TeamServicesAgent should have been tried to be deleted from the VM, since the installation failed");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "TeamServicesAgent should have been deleted successfully");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Task fails when PAT service endpoint not of type Token is given  - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "dummy";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Basic\"}";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("loc_mock_OnlyTokenAuthAllowed") > 0, "TeamServicesAgent should not have been added on the VM");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
     it("Successfully removed failed extensions - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
@@ -56,6 +108,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -83,6 +136,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -111,6 +165,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -140,6 +195,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -168,6 +224,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -194,6 +251,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "a";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -219,6 +277,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -247,6 +306,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -268,6 +328,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -289,6 +350,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -311,6 +373,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "noVMs";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -333,6 +396,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "StoppedVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -356,6 +420,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "noVMs";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {

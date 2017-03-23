@@ -180,6 +180,25 @@
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {
+      "name": "vstsPATTokenEndpoint",
+      "type": "connectedService:ExternalTfs",
+      "label": "ms-resource:loc.input.label.vstsPATTokenEndpoint",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.vstsPATTokenEndpoint"
+    },
+    {
+      "name": "project",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.project",
+      "defaultValue": "",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.project"
+    },
+    {
       "name": "machineGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.machineGroupName",
@@ -198,15 +217,6 @@
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
       "defaultValue": true,
       "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
-    },
-    {
-      "name": "vstsPATTokenEndpoint",
-      "type": "connectedService:ExternalTfs",
-      "label": "ms-resource:loc.input.label.vstsPATTokenEndpoint",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.vstsPATTokenEndpoint"
     },
     {
       "name": "outputVariable",
@@ -231,11 +241,17 @@
       "dataSourceName": "AzureLocations"
     },
     {
+      "target": "project",
+      "endpointId": "$(vstsPATTokenEndpoint)",
+      "dataSourceName": "Projects",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
       "target": "machineGroupName",
       "endpointId": "$(vstsPATTokenEndpoint)",
-      "dataSourceName": "MachineGroups",
+      "dataSourceName": "DeploymentGroups",
       "parameters": {
-        "project": "$(system.teamProject)"
+        "project": "$(project)"
       },
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
@@ -372,6 +388,7 @@
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
     "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
     "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
-    "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty"
+    "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty",
+    "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed"
   }
 }

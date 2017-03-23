@@ -180,6 +180,26 @@
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
+            "name": "vstsPATTokenEndpoint",
+            "type": "connectedService:ExternalTfs",
+            "label": "Personal access token",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "required": true,
+            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
+        },
+        {
+            "name": "project",
+            "type": "pickList",
+            "label": "Project",
+            "defaultValue": "",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "required": true,
+            "helpMarkDown": "Select a team project"
+        },
+        
+        {
             "name": "machineGroupName",
             "type": "pickList",
             "label": "Machine group",
@@ -198,15 +218,6 @@
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "defaultValue": true,
             "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
-        },
-        {
-            "name": "vstsPATTokenEndpoint",
-            "type": "connectedService:ExternalTfs",
-            "label": "Personal access token",
-            "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "required": true,
-            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
         },
         {
             "name": "outputVariable",
@@ -229,14 +240,19 @@
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureLocations"
-        }
-        ,
+        },
+        {
+            "target": "project",
+            "endpointId": "$(vstsPATTokenEndpoint)",
+            "dataSourceName": "Projects",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
         {
             "target": "machineGroupName",
             "endpointId": "$(vstsPATTokenEndpoint)",
-            "dataSourceName": "MachineGroups",
+            "dataSourceName": "DeploymentGroups",
             "parameters": {
-                "project": "$(system.teamProject)"
+                "project": "$(project)"
             },
             "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
@@ -373,6 +389,7 @@
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
         "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
-        "PatTokenCannotBeEmpty": "Pat token must be a non empty string."
+        "PatTokenCannotBeEmpty": "Pat token must be a non empty string.",
+        "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only."
     }
 }
