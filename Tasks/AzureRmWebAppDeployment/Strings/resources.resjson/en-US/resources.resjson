@@ -120,7 +120,6 @@
   "loc.messages.stdoutFromScript": "Standard output from script: ",
   "loc.messages.stderrFromScript": "Standard error from script: ",
   "loc.messages.WebConfigAlreadyExists": "web.config file already exists. Not generating.",
-  "loc.messages.WebConfigDoesNotExist": "web.config file does not exist. Generating.",
   "loc.messages.SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
   "loc.messages.FailedToGenerateWebConfig": "Failed to generate web.config. %s",
   "loc.messages.FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",

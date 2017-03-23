@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "preview": "true",
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
@@ -369,7 +369,6 @@
         "stdoutFromScript": "Standard output from script: ",
         "stderrFromScript": "Standard error from script: ",
         "WebConfigAlreadyExists": "web.config file already exists. Not generating.",
-        "WebConfigDoesNotExist": "web.config file does not exist. Generating.",
         "SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
         "FailedToGenerateWebConfig": "Failed to generate web.config. %s",
         "FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",

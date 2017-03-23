@@ -73,6 +73,20 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
+        var azureWebAppDetails = null;
+        var virtualApplicationPhysicalPath = null;
+        if(virtualApplication) {
+            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                virtualApplicationPhysicalPath = pathMappings[1];
+                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+            }
+            else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
         var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
         var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
@@ -80,7 +94,7 @@ async function run() {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
 
             if (generateWebConfig) {
-                addWebConfigFile(folderPath, webConfigParametersStr);
+                addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
             }
 
             if (applyFileTransformFlag) {
@@ -98,18 +112,6 @@ async function run() {
 
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
-        }
-
-        var azureWebAppDetails = null;
-        if(virtualApplication) {
-            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if(pathMappings[1] != null) {
-                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
-            } else {
-                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
-            }
         }
 
         if(deployUtility.canUseWebDeploy(useWebDeploy)) {
@@ -243,13 +245,11 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
 }
 
-function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
+function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootDirectoryPath: string) {
     //Generate the web.config file if it does not already exist.
     var webConfigPath = path.join(folderPath, "web.config");
     if (!tl.exist(webConfigPath)) {
-
-        tl.debug(tl.loc('WebConfigDoesNotExist'));
-
+        tl.debug('web.config file does not exist. Generating.');
         //Extract out the appType parameter as it is not to be replaced.
         var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
         if(!webConfigParameters || !webConfigParameters['appType']) {
@@ -257,7 +257,18 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
         }
         var appType: string = webConfigParameters['appType'].value;
         delete webConfigParameters['appType'];
-        
+        if(appType != "node") {
+            rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
+            tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
+            webConfigParameters['KUDU_WORKING_DIRECTORY'] = {
+                value: rootDirectoryPath
+            };
+            if(!tl.exist(path.join(folderPath, 'ptvs_virtualenv_proxy.py'))) {
+                tl.debug('Copying ptvs_virtualenv_proxy to web package.');
+                tl.cp(path.join(__dirname, 'node_modules', 'webdeployment-common', 'WebConfigTemplates', 'ptvs_virtualenv_proxy.py'), path.join(folderPath, 'ptvs_virtualenv_proxy.py'));
+                tl.debug('copied ptvs_virtualenv_proxy to web package.');
+            }
+        }
         try {
             // Create web.config
             generateWebConfigUtil.generateWebConfigFile(webConfigPath, appType, webConfigParameters);
@@ -266,8 +277,9 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
         catch (error) {
             throw new Error(tl.loc("FailedToGenerateWebConfig", error));
         }
-    } else {
-        tl.debug(tl.loc('WebConfigAlreadyExists'));
+    }
+    else {
+        console.log(tl.loc('WebConfigAlreadyExists'));
     }
 }
 
