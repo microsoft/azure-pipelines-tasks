@@ -21,13 +21,17 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 *
 */
 export function applyXdtTransformation(sourceFile, transformFile) {
-    var cttBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'cttCommand.bat';
+
     var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
-    var cttArgs = ' s:"' + sourceFile + '" t:"' + transformFile + '" d:"' + sourceFile + '" pw';
-    var cttCommand = '"' + cttPath + '" ' + cttArgs + '\n';
-    tl.writeFile(cttBatchFile, cttCommand);
-    tl.debug("Running command" + cttCommand);
-    var cttExecutionResult = tl.execSync("cmd", ['/C', cttBatchFile]);
+    var cttArgsArray= [
+        "s:" + sourceFile,
+        "t:" + transformFile,
+        "d:" + sourceFile,
+        "pw"
+    ];
+    
+    tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
+    var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
         throw new Error(tl.loc("XdtTransformationErrorWhileTransforming", sourceFile, transformFile));
     }

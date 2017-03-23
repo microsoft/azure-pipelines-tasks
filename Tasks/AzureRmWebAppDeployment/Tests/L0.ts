@@ -249,23 +249,18 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
-        it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
+        it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
             let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L1XdtTransform.js");
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
-            if(tl.osType().match(/^Win/)) {
-                var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config')));
-                var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform','Web_Expected.config')));
-                assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
-            }
-            else {
-                tl.warning('Cannot test XDT Transformation in Non Windows Agent');
-            }
+            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config')));
+            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform','Web_Expected.config')));
+            assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
             done();
         });
 
-        it('Runs Successfully with XDT Transformation (Mock)', (done) => {
+        it('Runs Successfully with XML Transformation (Mock)', (done) => {
             this.timeout(1000);
             let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -281,15 +276,15 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
-        it('Fails if XDT Transformation throws error (Mock)', (done) => {
+        it('Fails if XML Transformation throws error (Mock)', (done) => {
             let tp = path.join(__dirname, 'L0WindowsXdtTransformationFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
-            var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming web.config web.Release.config";
+            var expectedErr = 'Error: loc_mock_XdtTransformationErrorWhileTransforming C:\\tempFolder\\web.config C:\\tempFolder\\web.Release.config';
             assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
             assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
-            assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
+            assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'Should have said: ' + expectedErr);
             var expectedOut = 'Failed to update history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             var sampleOut = 'Successfully updated scmType to VSTSRM';
