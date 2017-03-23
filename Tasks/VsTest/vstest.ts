@@ -440,11 +440,15 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     tl.cd(workingDirectory);
     var ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === "true";
-    tl.warning(String(ignoreTestFailures));
-    vstest.exec(<tr.IExecOptions>{  ignoreReturnCode: ignoreTestFailures})
+    vstest.exec(<tr.IExecOptions>{ ignoreReturnCode: ignoreTestFailures, failOnStdErr: false })
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
-            defer.resolve(code);
+            if (ignoreTestFailures === true) {
+                defer.resolve(0); // ignore failures.
+            }
+            else {
+                defer.resolve(code);
+            }
         })
         .fail(function (err) {
             cleanUp(parallelRunSettingsFile);
