@@ -161,6 +161,7 @@ async function run() {
         // read the copy options
         var cleanTargetFolder:boolean = tl.getBoolInput('cleanTargetFolder', false);
         var overwrite:boolean = tl.getBoolInput('overwrite', false);
+        var failOnEmptySource:boolean = tl.getBoolInput('failOnEmptySource', false);
         var flattenFolders:boolean = tl.getBoolInput('flattenFolders', false);
 
         if(!tl.stats(sourceFolder).isDirectory()) {
@@ -218,6 +219,8 @@ async function run() {
                 await sshHelper.uploadFile(fileToCopy, targetPath);
             }
             tl._writeLine(tl.loc('CopyCompleted', filesToCopy.length));
+        } else if(failOnEmptySource) {
+            throw tl.loc('NothingToCopy');
         } else {
             tl.warning(tl.loc('NothingToCopy'));
         }

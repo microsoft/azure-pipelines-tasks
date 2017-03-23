@@ -81,6 +81,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "failOnEmptySource",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnEmptySource",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnEmptySource",
+      "groupName": "advanced"
+    },
+    {
       "name": "flattenFolders",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.flattenFolders",

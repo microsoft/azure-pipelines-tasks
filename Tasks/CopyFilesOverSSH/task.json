@@ -81,6 +81,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "failOnEmptySource",
+            "type": "boolean",
+            "label": "Fail when the Source folder is empty",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fail if the Source folder does not have files to copy.",
+            "groupName": "advanced"
+        },
+        {
             "name": "flattenFolders",
             "type": "boolean",
             "label": "Flatten folders",
