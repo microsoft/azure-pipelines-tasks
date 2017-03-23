@@ -321,7 +321,7 @@ async function getOperationStatus(SPN, url: string) {
     };
     httpObj.get('GET', url, headers, (error, response, body) => {
         if (error) {
-            deferred.reject(response);
+            deferred.reject(error);
         }
         else {
             deferred.resolve(response);
@@ -346,7 +346,8 @@ function monitorSlotSwap(SPN, url) {
                     setTimeout(poll, 5000);
                 }
                 else {
-                    deferred.reject(response);
+                    tl.debug ("Slot swap operation failed. Operation Response: " + JSON.stringify(response));
+                    deferred.reject(response['statusMessage']);
                 }
             }).catch((error) => {
                 deferred.reject(error);
@@ -395,6 +396,7 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
             });
         }
         else {
+            tl.debug ("Slot swap operation failed. Operation Response: " + JSON.stringify(response));
             deferred.reject(response.statusMessage);
         }
     });
