@@ -37,6 +37,7 @@
         "ManualIntervention",
         "Maven",
         "MSBuild",
+        "NodeTool",
         "Npm",
         "NuGetInstaller",
         "NugetPackager",
