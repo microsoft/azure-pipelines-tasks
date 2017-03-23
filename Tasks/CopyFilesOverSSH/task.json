@@ -83,7 +83,7 @@
         {
             "name": "failOnEmptySource",
             "type": "boolean",
-            "label": "Fail when the Source folder is empty",
+            "label": "Fail if no files found to copy",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Fail if the Source folder does not have files to copy.",
