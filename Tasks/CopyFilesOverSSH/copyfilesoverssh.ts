@@ -149,11 +149,19 @@ async function run() {
         // contents is a multiline input containing glob patterns
         var contents:string[] = tl.getDelimitedInput('contents', '\n', true);
         var sourceFolder:string = tl.getPathInput('sourceFolder', true, true);
-        var targetFolder:string = tl.getInput('targetFolder', true);
+        var targetFolder:string = tl.getInput('targetFolder');
+
+        if (!targetFolder) {
+            targetFolder = "./"
+        } else {
+            // '~/' is unsupported
+            targetFolder = targetFolder.replace(/^~\//, "./")
+        }
 
         // read the copy options
         var cleanTargetFolder:boolean = tl.getBoolInput('cleanTargetFolder', false);
         var overwrite:boolean = tl.getBoolInput('overwrite', false);
+        var failOnEmptySource:boolean = tl.getBoolInput('failOnEmptySource', false);
         var flattenFolders:boolean = tl.getBoolInput('flattenFolders', false);
 
         if(!tl.stats(sourceFolder).isDirectory()) {
@@ -211,6 +219,8 @@ async function run() {
                 await sshHelper.uploadFile(fileToCopy, targetPath);
             }
             tl._writeLine(tl.loc('CopyCompleted', filesToCopy.length));
+        } else if(failOnEmptySource) {
+            throw tl.loc('NothingToCopy');
         } else {
             tl.warning(tl.loc('NothingToCopy'));
         }
