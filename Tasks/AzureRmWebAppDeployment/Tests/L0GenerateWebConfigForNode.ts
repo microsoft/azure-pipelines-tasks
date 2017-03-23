@@ -8,8 +8,8 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
-tr.setInput('XmlTransformation', 'true');
-
+tr.setInput('GenerateWebConfig','true');
+tr.setInput('WebConfigParameters','-appType node -Handler iisnode -NodeStartFile server.js');
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
@@ -32,9 +32,7 @@ process.env["AGENT_NAME"] = "author";
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd",
-        "msdeploy": "msdeploy",
-        "DefaultWorkingDirectory/ctt/ctt.exe": "DefaultWorkingDirectory/ctt/ctt.exe"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -45,16 +43,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true,
         "webAppPkg.zip": true,
         "webAppPkg": true,
-        "msdeploy": true,
-        "DefaultWorkingDirectory/ctt/ctt.exe": true
+        "msdeploy": true
     },
-    "exec": {        
-        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw": {
+    "exec": {
+        "msdeploy -verb:getParameters -source:package=\'DefaultWorkingDirectory\\temp_web_package.zip\'": {
             "code": 0,
-            "stdout": "ctt execution successful"
+            "stdout": "Executed Successfully"
         },
         "msdeploy -verb:sync -source:package=\'DefaultWorkingDirectory\\temp_web_package.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
             "code": 0,
@@ -65,20 +61,20 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "temp_web_package_random_path": {
             "success": true
         },
-        "DefaultWorkingDirectory\temp_web_package.zip": {
+        "DefaultWorkingDirectory\\temp_web_package.zip": {
             "success": true
         }
     },
     "exist": {
     	"webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "temp_web_package_random_path/web.config": false
     }, 
-    "findMatch": {
+    "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
-        "webAppPkg": ["webAppPkg"],
-        "**/*.config": ["C:\\tempFolder\\web.config", "C:\\tempFolder\\web.Release.config", "C:\\tempFolder\\web.Debug.config"]
+        "webAppPkg": ["webAppPkg"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -99,11 +95,22 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
 		"agent.name": "agent"
     }
-};
+}
 
 import mockTask = require('vsts-task-lib/mock-task');
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries":[
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -140,16 +147,16 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	var config = { 
-		id: 'appid',
-  		properties: { 
-     		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
-             scmType: "None"
-    	} 
-  	}
+			id: 'appid',
+			properties: { 
+				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
+			} 
+		}
 
-    return config;
-    },
-    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
+		return config;
+	},
+    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess, customMessage) {
         if(isDeploymentSuccess) {
             console.log('Updated history to kudu');
         }
@@ -157,7 +164,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
             console.log('Failed to update history to kudu');
         }
         var webAppPublishKuduUrl = publishingProfile.publishUrl;
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess, customMessage);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
     },
@@ -181,9 +188,6 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 });
 
 tr.registerMock('webdeployment-common/ziputility.js', {
-    unzip: function() {
-
-    },
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries":[
@@ -218,6 +222,28 @@ tr.registerMock('webdeployment-common/utility.js', {
     }
 });
 
+tr.registerMock('webdeployment-common/generatewebconfig.js', {
+    generateWebConfigFile: function(filePath, templatePath, data) {
+        return;
+    }
+});
+
+tr.registerMock('./parameterparser', {
+    parse: function (data) {
+        return {
+            "appType": {
+                "value": "node"
+            },
+            "Handler": {
+                "value": "iisnode"
+            },
+            "NodeStartFile": {
+                "value": "server.js"
+            }
+        }
+    }
+});
+
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
@@ -231,6 +257,9 @@ tr.registerMock('fs', {
     },
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,
+    readFileSync: function(webConfigPath,options) {
+        return "";
+    },
     openSync: function (fd, options) {
         return true;
     },
@@ -242,23 +271,5 @@ tr.registerMock('fs', {
     }
 });
 
-tr.registerMock('path', {
-    win32: {
-        basename: function(filePath, extension) {
-            return path.win32.basename(filePath, extension);
-        }
-    },
-    join: function() {
-        if(arguments[arguments.length -1] === 'ctt.exe') {
-            return 'DefaultWorkingDirectory/ctt/ctt.exe';
-        }
-        var args = [];
-        for(var i=0; i < arguments.length; i += 1) {
-            args.push(arguments[i]);
-        }
-        return args.join('\\');
-    },
-    dirname: path.dirname
-});
 tr.setAnswers(a);
 tr.run();

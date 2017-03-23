@@ -36,6 +36,23 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
+        it('Runs successfully with default inputs and add web.config for node is selected', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0GenerateWebConfigForNode.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+            
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            var expectedOut = "loc_mock_SuccessfullyGeneratedWebConfig";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = 'Updated history to kudu'; 
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = 'Successfully updated scmType to VSTSRM';
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            assert(tr.succeeded, 'task should have succeeded');
+            done();
+        });
+
         it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
             this.timeout(1000);
             let tp = path.join(__dirname, 'L0WindowsDefault.js');
@@ -476,6 +493,15 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt') >= 0, 'should have retrieved file content: stdout.txt');
         assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt') >= 0, 'should have retrieved file content: stderr.txt');
         assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt') >= 0, 'should have retrieved file content: script_result.txt');
+        done();
+    });
+
+    it('Validate webdeployment-common.generatewebconfig.generateWebConfigFile()', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0GenerateWebConfig.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('web.config contents: server.js;iisnode') >=0, 'should have replaced web config parameters');
         done();
     });
 });

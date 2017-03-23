@@ -25,7 +25,7 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         var taskParameters = packerHost.getTaskParameters();
 
         // if custom template is used, task input variables are not required
-        if(taskParameters.templateType === "custom") {
+        if(taskParameters.templateType === constants.TemplateTypeCustom) {
             this._templateVariables = new Map<string, string>();
             return this._templateVariables;
         }        
@@ -34,10 +34,16 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables = new Map<string, string>();
         this._templateVariables.set(constants.TemplateVariableResourceGroupName, taskParameters.resourceGroup);
         this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
-        this._templateVariables.set(constants.TemplateVariableImagePublisherName, taskParameters.imagePublisher);
-        this._templateVariables.set(constants.TemplateVariableImageOfferName, taskParameters.imageOffer);
-        this._templateVariables.set(constants.TemplateVariableImageSkuName, taskParameters.imageSku);
-        this._templateVariables.set(constants.TemplateVariableLocationName, taskParameters.location);
+
+        if(taskParameters.baseImageSource === constants.BaseImageSourceCustomVhd) {
+            this._templateVariables.set(constants.TemplateVariableImageUrlName, taskParameters.customBaseImageUrl);            
+        } else {
+            this._templateVariables.set(constants.TemplateVariableImagePublisherName, taskParameters.imagePublisher);
+            this._templateVariables.set(constants.TemplateVariableImageOfferName, taskParameters.imageOffer);
+            this._templateVariables.set(constants.TemplateVariableImageSkuName, taskParameters.imageSku);
+        }
+
+        this._templateVariables.set(constants.TemplateVariableLocationName, taskParameters.location);        
 
         var capturePrefix = tl.getVariable('release.releaseName') || tl.getVariable('build.buildnumber') || "vstscapture";
         this._templateVariables.set(constants.TemplateVariableCapturePrefixName, capturePrefix);        

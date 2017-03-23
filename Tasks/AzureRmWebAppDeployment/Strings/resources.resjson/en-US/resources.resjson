@@ -22,6 +22,10 @@
   "loc.input.help.Package": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.WebAppUri": "App Service URL",
   "loc.input.help.WebAppUri": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks.",
+  "loc.input.label.GenerateWebConfig": "Generate Web.config",
+  "loc.input.help.GenerateWebConfig": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
+  "loc.input.label.WebConfigParameters": "Web.config parameters",
+  "loc.input.help.WebConfigParameters": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.ScriptType": "Deployment script type",
   "loc.input.help.ScriptType": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471).",
   "loc.input.label.InlineScript": "Inline Script",
@@ -115,9 +119,14 @@
   "loc.messages.RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
   "loc.messages.stdoutFromScript": "Standard output from script: ",
   "loc.messages.stderrFromScript": "Standard error from script: ",
+  "loc.messages.WebConfigAlreadyExists": "web.config file already exists. Not generating.",
+  "loc.messages.WebConfigDoesNotExist": "web.config file does not exist. Generating.",
+  "loc.messages.SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
+  "loc.messages.FailedToGenerateWebConfig": "Failed to generate web.config. %s",
   "loc.messages.FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
   "loc.messages.FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
   "loc.messages.ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
   "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
-  "loc.messages.InvalidPollOption": "Invalid polling option provided: %s."
+  "loc.messages.InvalidPollOption": "Invalid polling option provided: %s.",
+  "loc.messages.MissingWebConfigParameters": "Some web.config parameters are missing"
 }

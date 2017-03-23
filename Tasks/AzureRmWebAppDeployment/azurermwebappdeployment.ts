@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import * as ParameterParser from './parameterparser'
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
@@ -9,6 +10,7 @@ var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('./kuduutility.js');
+var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
 
 async function run() {
     try {
@@ -36,6 +38,8 @@ async function run() {
         var inlineScript: string = tl.getInput('InlineScript', false);
         var scriptPath: string = tl.getPathInput('ScriptPath', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+        var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
+        var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -70,9 +74,20 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
+        var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
-        if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+        if (applyFileTransformFlag || generateWebConfig) {
+            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
+
+            if (generateWebConfig) {
+                addWebConfigFile(folderPath, webConfigParametersStr);
+            }
+
+            if (applyFileTransformFlag) {
+                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+            }
+
+            var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
         }
@@ -225,6 +240,34 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
     catch(error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
+    }
+}
+
+function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
+    //Generate the web.config file if it does not already exist.
+    var webConfigPath = path.join(folderPath, "web.config");
+    if (!tl.exist(webConfigPath)) {
+
+        tl.debug(tl.loc('WebConfigDoesNotExist'));
+
+        //Extract out the appType parameter as it is not to be replaced.
+        var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+        if(!webConfigParameters || !webConfigParameters['appType']) {
+            throw new Error(tl.loc("FailedToGenerateWebConfig", tl.loc("MissingWebConfigParameters")));
+        }
+        var appType: string = webConfigParameters['appType'].value;
+        delete webConfigParameters['appType'];
+        
+        try {
+            // Create web.config
+            generateWebConfigUtil.generateWebConfigFile(webConfigPath, appType, webConfigParameters);
+            console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
+        }
+        catch (error) {
+            throw new Error(tl.loc("FailedToGenerateWebConfig", error));
+        }
+    } else {
+        tl.debug(tl.loc('WebConfigAlreadyExists'));
     }
 }
 

@@ -35,7 +35,6 @@ export async function run(packerHost: packerHost): Promise<any> {
 
 function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>): void {
     var imageUri = outputs.get(constants.PackerLogTokenImageUri);
-    var imageStorageAccount = outputs.get(constants.PackerLogTokenStorageLocation);
     var taskParameters = packerHost.getTaskParameters();
 
     if(!utils.IsNullOrEmpty(taskParameters.imageUri)) {
@@ -44,15 +43,6 @@ function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>
             tl.setVariable(taskParameters.imageUri, imageUri);
         } else {
             throw tl.loc("ImageURIOutputVariableNotFound");
-        }
-    }
-
-    if(!utils.IsNullOrEmpty(taskParameters.storageAccountLocation)) {
-        if(!utils.IsNullOrEmpty(imageStorageAccount)) {
-            tl.debug("Setting image storage location variable to: " + imageStorageAccount);
-            tl.setVariable(taskParameters.storageAccountLocation, imageStorageAccount);
-        } else {
-            throw tl.loc("StorageAccountLocationOutputVariableNotFound");
         }
     }
 }

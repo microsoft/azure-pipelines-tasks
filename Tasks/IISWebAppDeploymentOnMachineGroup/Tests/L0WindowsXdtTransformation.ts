@@ -96,12 +96,6 @@ tr.registerMock('./msdeployutility.js', {
 }); 
 
 tr.registerMock('webdeployment-common/ziputility.js', {
-    unzip: function() {
-
-    },
-    archiveFolder: function() {
-        return "DefaultWorkingDirectory\\temp_web_package.zip"
-    },
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [
@@ -125,8 +119,14 @@ tr.registerMock('webdeployment-common/utility.js', {
     findfiles: function() {
         return ['webDeployPkg']    
     },
-    generateTemporaryFolderOrZipPath: function() {
+    generateTemporaryFolderForDeployment: function() {
         return 'temp_web_package_random_path';
+    },
+    archiveFolderForDeployment: function() {
+        return {
+            "webDeployPkg": "DefaultWorkingDirectory\\temp_web_package.zip",
+            "tempPackagePath": "DefaultWorkingDirectory\\temp_web_package.zip"
+        };
     }
 });
 
