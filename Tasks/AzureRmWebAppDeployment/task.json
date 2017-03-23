@@ -15,10 +15,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 1,
-        "Patch": 2
+        "Minor": 2,
+        "Patch": 0
     },
-    "preview": "true",
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -116,6 +115,40 @@
             "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
+            "name": "ScriptType",
+            "type": "pickList",
+            "label": "Deployment script type",
+            "defaultValue": "",
+            "options": {
+                "": "Select deployment script type (inline or file)",
+                "Inline Script": "Inline Script",
+                "File Path": "Script File Path"
+            },
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
+        },
+        {
+            "name": "InlineScript",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "ScriptType == Inline Script",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "500"
+            }
+        },
+        {
+            "name": "ScriptPath",
+            "type": "filePath",
+            "label": "Deployment script path",
+            "required": true,
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "ScriptType == File Path"
+        },
+        {
             "name": "GenerateWebConfig",
             "type": "boolean",
             "label": "Generate Web.config",
@@ -204,40 +237,6 @@
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
-        },
-        {
-            "name": "ScriptType",
-            "type": "pickList",
-            "label": "Deployment script type",
-            "defaultValue": "",
-            "options": {
-                "": "Select deployment script type",
-                "Inline Script": "Inline Script",
-                "File Path": "Script File Path"
-            },
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
-        },
-        {
-            "name": "InlineScript",
-            "type": "multiLine",
-            "label": "Inline Script",
-            "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "ScriptType == Inline Script",
-            "properties": {
-                "resizable": "true",
-                "rows": "10",
-                "maxLength": "500"
-            }
-        },
-        {
-            "name": "ScriptPath",
-            "type": "filePath",
-            "label": "Deployment script path",
-            "required": true,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "ScriptType == File Path"
         },
         {
             "name": "XmlTransformation",
