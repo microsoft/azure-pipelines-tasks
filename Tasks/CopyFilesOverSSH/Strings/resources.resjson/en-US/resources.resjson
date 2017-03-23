@@ -17,7 +17,7 @@
   "loc.input.label.overwrite": "Overwrite",
   "loc.input.help.overwrite": "Replace existing files in the target folder.",
   "loc.input.label.failOnEmptySource": "Fail if no files found to copy",
-  "loc.input.help.failOnEmptySource": "Fail if the Source folder does not have files to copy.",
+  "loc.input.help.failOnEmptySource": "Fail if the source folder does not have files to copy.",
   "loc.input.label.flattenFolders": "Flatten folders",
   "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder on the remote machine.",
   "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",

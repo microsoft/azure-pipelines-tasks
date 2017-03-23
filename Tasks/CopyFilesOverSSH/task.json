@@ -86,7 +86,7 @@
             "label": "Fail if no files found to copy",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Fail if the Source folder does not have files to copy.",
+            "helpMarkDown": "Fail if no matching files to be copied are found under the source folder.",
             "groupName": "advanced"
         },
         {
