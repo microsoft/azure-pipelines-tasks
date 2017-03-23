@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -185,7 +185,7 @@
         "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
         "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
-        "FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Error: %s",
+        "FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Response: %s",
         "SlotSwapOperationNotCompleted": "Slot swap operation was not completed for Azure Web App: %s",
         "Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
         "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
