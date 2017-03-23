@@ -2,10 +2,8 @@ function Get-PdbstrPath {
     [CmdletBinding()]
     param()
 
-    Trace-VstsEnteringInvocation $MyInvocation -Parameter @()
     $pdbstrPath = [System.IO.Path]::GetFullPath("$PSScriptRoot\..\pdbstr.exe")
-    Assert-VstsPath -LiteralPath $pdbstrPath -PathType Leaf -PassThru
-    Trace-VstsLeavingInvocation $MyInvocation
+    Assert-VstsPath -LiteralPath $pdbstrPath -PathType Leaf
     return $pdbstrPath
 }
 

@@ -2,10 +2,8 @@ function Get-DbghelpPath {
     [CmdletBinding()]
     param()
 
-    Trace-VstsEnteringInvocation $MyInvocation -Parameter @()
     $dbghelpPath = [System.IO.Path]::GetFullPath("$PSScriptRoot\..\dbghelp.dll")
-    Assert-VstsPath -LiteralPath $dbghelpPath -PathType Leaf -PassThru
-    Trace-VstsLeavingInvocation $MyInvocation
+    Assert-VstsPath -LiteralPath $dbghelpPath -PathType Leaf
     return $dbghelpPath
 }
 

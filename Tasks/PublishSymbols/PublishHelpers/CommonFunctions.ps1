@@ -5,10 +5,8 @@ function Get-SymStorePath {
     [CmdletBinding()]
     param()
     
-    Trace-VstsEnteringInvocation $MyInvocation -Parameter @()
     $symstorePath = [System.IO.Path]::GetFullPath("$PSScriptRoot\..\symstore.exe")
-    Assert-VstsPath -LiteralPath $symstorePath -PathType Leaf -PassThru
-    Trace-VstsLeavingInvocation $MyInvocation
+    Assert-VstsPath -LiteralPath $symstorePath -PathType Leaf
     return $symstorePath
 }
 
