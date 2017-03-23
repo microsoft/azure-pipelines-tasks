@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Node Tool Installer",
+  "loc.helpMarkDown": "",
+  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
+  "loc.instanceNameFormat": "Use Node $(versionSpec)",
+  "loc.input.label.versionSpec": "Version Spec",
+  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.ltsOnly": "LTS Only",
+  "loc.input.help.ltsOnly": "Specifies whether the version resolution will filter to LTS only versions.",
+  "loc.messages.ToolFailed": "Tool install failed: %s"
+}
