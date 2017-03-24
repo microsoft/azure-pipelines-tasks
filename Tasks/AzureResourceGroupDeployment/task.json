@@ -182,7 +182,7 @@
         {
             "name": "deploymentGroupEndpoint",
             "type": "connectedService:ExternalTfs",
-            "label": "Deployment group endpoint",
+            "label": "Deployment Group endpoint",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
@@ -191,21 +191,21 @@
         {
             "name": "project",
             "type": "pickList",
-            "label": "Project",
+            "label": "Team Project",
             "defaultValue": "",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Select a team project"
+            "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​"
         },
         
         {
             "name": "deploymentGroupName",
             "type": "pickList",
-            "label": "Deployment group",
+            "label": "Deployment Group",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-            "helpMarkDown": "Select a Deployment Group",
+            "helpMarkDown": "Specify the Deployment Group against which the Agent(s) will be registered",
             "properties": {
                 "DisableManageLink": "True"
             }
