@@ -311,8 +311,6 @@ export async function deleteProvisioningProfile(uuid: string) {
     var provProfilePath : string = getProvisioningProfilePath(uuid);
     tl.warning('Deleting provisioning profile: ' + provProfilePath);
     if(fs.existsSync(provProfilePath)) {
-        tl.warning('Deleting provisioning profile: ' + provProfilePath);
-
         var deleteProfileCommand : ToolRunner = tl.tool(tl.which('rm', true));
         deleteProfileCommand.arg(['-f', provProfilePath]);
         await deleteProfileCommand.exec();
