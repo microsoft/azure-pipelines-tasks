@@ -1,3 +1,4 @@
+import os = require('os');
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
@@ -94,6 +95,18 @@ async function run() {
                 tl.debug('Copying script to remote machine.');
                 await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
 
+                //change the line encodings
+                var isWin = os.type().match(/^Win/);
+                var windowsEncodedRemoteScriptPath = remoteScriptPath;
+                if (isWin) {
+                    remoteScriptPath = remoteScriptPath + ".unix";
+                    tl.debug('Fixing the line endings in case the file was created in windows');
+                    tl._writeLine('tr -d \'\\015\' <' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath);
+                    await sshHelper.runCommandOnRemoteMachine(
+                        'tr -d \'\\015\' < ' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath, 
+                        sshClientConnection, remoteCmdOptions);
+                }
+
                 //set execute permissions on the script
                 tl.debug('Setting execute permisison on script copied to remote machine');
                 tl._writeLine('chmod +x ' + remoteScriptPath);
@@ -108,6 +121,9 @@ async function run() {
 
                 //setup command to clean up script file
                 cleanUpScriptCmd = 'rm -f ' + remoteScriptPath;
+                if (isWin) {
+                    cleanUpScriptCmd = 'rm -f \'' + remoteScriptPath +'\' \'' + windowsEncodedRemoteScriptPath + '\'';
+                }
 
                 tl._writeLine(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
