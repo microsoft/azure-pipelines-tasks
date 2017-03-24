@@ -17,7 +17,7 @@ async function run() {
         await getNode(versionSpec, onlyLTS);
     }
     catch (error) {
-        console.error('ERR:' + error.message);
+        taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
 }
 
@@ -65,7 +65,7 @@ async function getNode(versionSpec: string, onlyLTS: boolean) {
         //
         if (toolLib.isExplicitVersion(versionSpec)) {
             // given exact version to get
-            toolLib.debug('explicit match', versionSpec);
+            toolLib.debug('explicit match ' + versionSpec);
             version = versionSpec;
         }
         else {
@@ -77,7 +77,8 @@ async function getNode(versionSpec: string, onlyLTS: boolean) {
             switch (osPlat) {
                 case "linux": dataFileName = "linux-" + osArch; break;
                 case "darwin": dataFileName = "osx-" + osArch + '-tar'; break;
-                case "win32": dataFileName = "win-" + osArch; break;
+                case "win32": dataFileName = "win-" + osArch + '-exe'; break;
+                default: throw new Error(`Unexpected OS '${osPlat}'`);
             }
 
             let dataUrl = "https://nodejs.org/dist/index.json";
@@ -103,7 +104,11 @@ async function getNode(versionSpec: string, onlyLTS: boolean) {
             // get the latest version that matches the version spec
             //
             version = toolLib.evaluateVersions(versions, versionSpec);
-            toolLib.debug('version from index.json', version);
+            if (!version) {
+                throw new Error(`Unable to find Node version '${versionSpec}' for platform ${osPlat} and architecture ${osArch}.`);
+            }
+
+            toolLib.debug('version from index.json ' + version);
             toolLib.debug('isLTS:' + ltsMap[version]);
         }
 
@@ -125,7 +130,20 @@ async function getNode(versionSpec: string, onlyLTS: boolean) {
         //
         // Extract the tar and install it into the local tool cache
         //
-        let extPath = await toolLib.extractTar(downloadPath);
+        let extPath: string;
+        if (osPlat == 'win32') {
+            taskLib.assertAgent('2.115.0');
+            extPath = taskLib.getVariable('Agent.TempDirectory');
+            if (!extPath) {
+                throw new Error('Expected Agent.TempDirectory to be set');
+            }
+
+            extPath = path.join(extPath, 'n'); // use as short a path as possible due to nested node_modules folders
+            extPath = await toolLib.extract7z(downloadPath, extPath);
+        }
+        else {
+            extPath = await toolLib.extractTar(downloadPath);
+        }
 
         // node extracts with a root folder that matches the fileName downloaded
         let toolRoot = path.join(extPath, fileName);
@@ -137,11 +155,14 @@ async function getNode(versionSpec: string, onlyLTS: boolean) {
 
     //
     // a tool installer initimately knows details about the layout of that tool
-    // for example, node binary is in the bin folder after the extract.
+    // for example, node binary is in the bin folder after the extract on Mac/Linux.
     // layouts could change by version, by platform etc... but that's the tool installers job
-    //    
-    let toolPath: string = toolLib.findLocalTool('node', version);    
-    toolPath = path.join(toolPath, 'bin');
+    //
+    let toolPath: string = toolLib.findLocalTool('node', version);
+    if (osPlat != 'win32') {
+        toolPath = path.join(toolPath, 'bin');
+    }
+
     console.log('using tool path: ' + toolPath);
 
     //
