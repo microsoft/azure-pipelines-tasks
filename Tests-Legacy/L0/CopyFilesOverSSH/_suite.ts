@@ -149,6 +149,7 @@ describe('CopyFilesOverSSH Suite', function() {
                 done(err);
             });
     })
+    /*
     it('Fails for missing target folder', (done) => {
         setResponseFile('responseEndpoint.json');
 
@@ -168,6 +169,7 @@ describe('CopyFilesOverSSH Suite', function() {
                 done(err);
             });
     })
+    */
     it('Fails for missing contents', (done) => {
         setResponseFile('responseEndpoint.json');
 
