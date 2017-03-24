@@ -72,6 +72,7 @@ async function run() {
 
         if(sshClientConnection) {
             //SSH connection successful
+            tl._writeLine(tl.loc('SshConnectionSuccessful'));
             if (runOptions === 'commands') {
                 //run commands specified by the user
                 for (var i:number = 0; i < commands.length; i++) {
