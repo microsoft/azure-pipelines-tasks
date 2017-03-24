@@ -64,17 +64,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "isFile": false
         }
     },
-    "glob": {
+    "findMatch": {
         "**/*.xcodeproj/*.xcworkspace": [
             "/user/build/fun.xcodeproj/project.xcworkspace"
         ],
-        "/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app": [
+        "**/*.app": [
             "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app"
         ],
-        "/user/build/**/*.xcarchive": [
+        "**/*.xcarchive": [
             "/user/build/testScheme.xcarchive"
         ],
-        "/user/build/testScheme.xcarchive/**/embedded.mobileprovision": [
+        "**/embedded.mobileprovision": [
             "/user/build/testScheme.xcarchive/Products/testScheme.app/embedded.mobileprovision"
         ]
     },

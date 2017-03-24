@@ -11,8 +11,8 @@
     "build.sourcesDirectory": "/user/build",
     "HOME": "/users/test"
   },
-  "glob": {
-    "/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app": [
+  "findMatch": {
+    "**/*.app": [
       "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app"
     ]
   },
