@@ -4,8 +4,6 @@
 -->
 <configuration>
   <appSettings>
-    <add key="WSGI_ALT_VIRTUALENV_HANDLER" value="{WSGI_ALT_VIRTUAL_HANDLER}" />
-    <add key="WSGI_ALT_VIRTUALENV_ACTIVATE_THIS" value="{KUDU_WORKING_DIRECTORY}\{VIRTUAL_ENVIRONMENT_NAME}\Scripts\activate_this.py" />
     <add key="WSGI_HANDLER" value="{WSGI_HANDLER}" />
     <add key="PYTHONPATH" value="{KUDU_WORKING_DIRECTORY}" />
   </appSettings>
@@ -15,7 +13,8 @@
   <system.webServer>
     <modules runAllManagedModulesForAllRequests="true" />
     <handlers>
-      <add name="Python FastCGI" path="handler.fcgi" verb="*" modules="FastCgiModule" scriptProcessor="{PYTHON_PATH}\python.exe|{PYTHON_PATH}\Scripts\wfastcgi.py" 
+      <add name="Python FastCGI" path="handler.fcgi" verb="*" modules="FastCgiModule" 
+          scriptProcessor="{PYTHON_PATH}|{PYTHON_WFASTCGI_PATH}" 
           resourceType="Unspecified" requireAccess="Script" />
     </handlers>
     <rewrite>
@@ -23,7 +22,7 @@
         <rule name="Configure Python" stopProcessing="true">
           <match url="(.*)" ignoreCase="false" />
           <conditions>
-            <add input="{REQUEST_URI}" pattern="^/{STATIC_FOLDER_PATH}/.*" ignoreCase="true" negate="true" />
+            <add input="{REQUEST_URI}" pattern="^/static/.*" ignoreCase="true" negate="true" />
           </conditions>
           <action type="Rewrite" url="handler.fcgi/{R:1}" appendQueryString="true" />
         </rule>

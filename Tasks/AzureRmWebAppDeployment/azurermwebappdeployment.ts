@@ -94,9 +94,18 @@ async function run() {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
 
             if (generateWebConfig) {
-                addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
+                var appSetingsVariables = addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
+                if(Object.keys(appSetingsVariables).length != 0 && appSetingsVariables.constructor === Object) {
+                    tl.debug('Updating app settings in Azure App Service from web.config');
+                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                    for(var appSettingVariable in appSetingsVariables) {
+                        tl.debug('Setting appsettings value: ' + appSettingVariable + ' = ' + appSetingsVariables[appSettingVariable]);
+                        appSettings.properties[appSettingVariable] = appSetingsVariables[appSettingVariable];
+                    }
+                    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    tl.debug('Updated app settings value in Azure App Service.');
+                }
             }
-
             if (applyFileTransformFlag) {
                 await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
             }
@@ -146,9 +155,7 @@ async function run() {
 
         }
         if(scriptType) {
-            azureWebAppDetails = (azureWebAppDetails) ? azureWebAppDetails: await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var kuduWorkingDirectory = virtualApplication ? (kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings))[1] : 'site/wwwroot';
+            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
             await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
         await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
@@ -248,6 +255,7 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
 function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootDirectoryPath: string) {
     //Generate the web.config file if it does not already exist.
     var webConfigPath = path.join(folderPath, "web.config");
+    var updateAppServiceAppSettings = { };
     if (!tl.exist(webConfigPath)) {
         tl.debug('web.config file does not exist. Generating.');
         //Extract out the appType parameter as it is not to be replaced.
@@ -263,11 +271,7 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootD
             webConfigParameters['KUDU_WORKING_DIRECTORY'] = {
                 value: rootDirectoryPath
             };
-            if(!tl.exist(path.join(folderPath, 'ptvs_virtualenv_proxy.py'))) {
-                tl.debug('Copying ptvs_virtualenv_proxy to web package.');
-                tl.cp(path.join(__dirname, 'node_modules', 'webdeployment-common', 'WebConfigTemplates', 'ptvs_virtualenv_proxy.py'), path.join(folderPath, 'ptvs_virtualenv_proxy.py'));
-                tl.debug('copied ptvs_virtualenv_proxy to web package.');
-            }
+            updateAppServiceAppSettings['PYTHON_EXT_PATH'] = webConfigParameters['PYTHON_PATH'].value;
         }
         try {
             // Create web.config
@@ -281,6 +285,7 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootD
     else {
         console.log(tl.loc('WebConfigAlreadyExists'));
     }
+    return updateAppServiceAppSettings;
 }
 
 run();
