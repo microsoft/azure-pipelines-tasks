@@ -13,11 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 5
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.1.0",
   "groups": [
     {
       "name": "AzureDetails",
@@ -75,6 +75,14 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "deallocateVMOnStop",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.deallocateVMOnStop",
+      "groupName": "AzureDetails",
+      "visibleRule": "action = Stop virtual machines",
+      "defaultValue": false
     },
     {
       "name": "location",
@@ -273,6 +281,7 @@
     "VM_Start": "ms-resource:loc.messages.VM_Start",
     "VM_Restart": "ms-resource:loc.messages.VM_Restart",
     "VM_Stop": "ms-resource:loc.messages.VM_Stop",
+    "VM_Deallocate": "ms-resource:loc.messages.VM_Deallocate",
     "VM_Delete": "ms-resource:loc.messages.VM_Delete",
     "SucceededOnVMOperation": "ms-resource:loc.messages.SucceededOnVMOperation",
     "FailureOnVMOperation": "ms-resource:loc.messages.FailureOnVMOperation",

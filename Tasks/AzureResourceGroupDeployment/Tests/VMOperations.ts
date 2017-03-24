@@ -6,6 +6,7 @@ let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("action", process.env["operation"]);
+tr.setInput("deallocateVMOnStop", process.env["deallocateVMOnStop"]);
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("resourceGroupName", "dummy");
 

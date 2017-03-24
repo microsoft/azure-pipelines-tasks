@@ -52,6 +52,10 @@ The parameters of the task are described in details, including examples, to show
  
  * **Location**\*: The location where the resource group will be created. If an existing resource group is updated, then this parameter will be ignored.
 
+The following parameter is shown when the selected action is to stop virtual machines:
+
+ * **Deallocate VM**\*: Once the virtual machine is stopped it will be deallocated.
+
 The following parameters are shown when the selected action is to create or update a resource group:
 
  * **Template location**: The location of the Template & the Parameters JSON files. Select "Linked Artifact" if the files are part of the linked code/build artifacts. Select "URL of the file" if the JSON files are located at any publicly accessible http/https URLs. To use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: <blob_storage_url>/template.json?<SAStoken>. To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy task](https://aka.ms/azurefilecopyreadme) or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).

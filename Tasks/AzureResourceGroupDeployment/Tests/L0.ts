@@ -475,15 +475,34 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Stopped VMs', (done) => {
+    it('Stopped VMs without deallocating', (done) => {
         let tp = path.join(__dirname, 'VMOperations.js');
         process.env["operation"] = "Stop";
+        process.env["deallocateVMOnStop"] = "false";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Task should have succeeded");
-            assert(tr.stdout.indexOf("loc_mock_VM_Stop") > 0, "Should have started VM");
+            assert(tr.stdout.indexOf("loc_mock_VM_Stop") > 0, "Should have stopped VM");
             assert(tr.stdout.indexOf("virtualMachines.powerOff is called") > 0, "Should have called virtualMachines.powerOff function from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it('Stopped VMs with deallocating', (done) => {
+        let tp = path.join(__dirname, 'VMOperations.js');
+        process.env["operation"] = "Stop";
+        process.env["deallocateVMOnStop"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_VM_Deallocate") > 0, "Should have deallocated VM");
+            assert(tr.stdout.indexOf("virtualMachines.deallocate is called") > 0, "Should have called virtualMachines.deallocate function from azure-sdk");
             done();
         }
         catch (error) {
