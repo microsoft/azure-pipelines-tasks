@@ -149,27 +149,28 @@ describe('CopyFilesOverSSH Suite', function() {
                 done(err);
             });
     })
-    /*
-    it('Fails for missing target folder', (done) => {
-        setResponseFile('responseEndpoint.json');
+
+    it('Fails if source is a file', (done) => {
+        setResponseFile('responseEndpointSourceIsFile.json');
 
         var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('sourceFolder', '/user/build');
         tr.setInput('contents', '**');
+        tr.setInput('targetFolder', '/home/user');
 
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have run any tools');
-                assert(tr.failed, 'build should have failed');
-                assert(tr.stderr.indexOf('Input required: targetFolder') >= 0, 'wrong error message: "' + tr.stderr + '"');
+                assert(tr.failed, 'task should have failed');
+                assert(tr.stderr.indexOf('Source folder has to be a valid folder path.') >= 0, 'wrong error message: "' + tr.stderr + '"');
                 done();
             })
             .fail((err) => {
                 done(err);
             });
     })
-    */
+
     it('Fails for missing contents', (done) => {
         setResponseFile('responseEndpoint.json');
 
