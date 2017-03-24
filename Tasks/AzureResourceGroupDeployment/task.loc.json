@@ -174,8 +174,8 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
-        "ConfigureVMWithDGAgent": "Configure virtual machines with Deployment Group agent"
+        "ConfigureVMwithWinRM": "Configure with WinRM",
+        "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
