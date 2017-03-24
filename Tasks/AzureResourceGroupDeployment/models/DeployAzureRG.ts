@@ -42,13 +42,13 @@ export class AzureRGTaskParameters {
     public csmParametersFileLink: string;
     public overrideParameters: string;
     public enableDeploymentPrerequisites: string;
-    public machineGroupName: string;
+    public deploymentGroupName: string;
     public copyAzureVMTags: boolean;
     public outputVariable: string;
     public subscriptionId: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
-    public machineGroupProjectName = "";
+    public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
 
     constructor() {
@@ -68,31 +68,38 @@ export class AzureRGTaskParameters {
             }
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
-            this.machineGroupName = tl.getInput("machineGroupName");
+            this.deploymentGroupName = tl.getInput("deploymentGroupName");
             this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
-            var vstsPatTokenEndpointName = tl.getInput("vstsPATTokenEndpoint", false);
-            if(vstsPatTokenEndpointName){
-                this.tokenCredentials = this.getVSTSPatToken(vstsPatTokenEndpointName);
+            var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
+            if(deploymentGroupEndpointName){
+                this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials(connectedService);
-            this.machineGroupProjectName = tl.getInput("project");
+            this.deploymentGroupProjectName = tl.getInput("project");
         }
         catch (error) {
             throw (tl.loc("ARGD_ConstructorFailed", error.message));
         }
     }
 
-    private getVSTSPatToken(vstsPATTokenEndpointName: string): TokenCredentials{
-        var endpointAuth = tl.getEndpointAuthorization(vstsPATTokenEndpointName, true);
-        if(endpointAuth.scheme === 'Token'){
-            var hostUrl = tl.getEndpointUrl(vstsPATTokenEndpointName, true);
+    private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
+        var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
+        if (endpointAuth.scheme === 'Token') {
+            var hostUrl = tl.getEndpointUrl(deploymentGroupEndpointName, true);
             var patToken: string = endpointAuth.parameters["apitoken"];
+            if (!Boolean(hostUrl) || typeof hostUrl.valueOf() !== 'string') {
+                throw new Error(tl.loc("DeploymentGroupEndpointUrlCannotBeEmpty"));
+            }
+
+            if (!Boolean(patToken) || typeof patToken.valueOf() !== 'string') {
+                throw new Error(tl.loc("DeploymentGroupEndpointPatTokenCannotBeEmpty"));
+            }
             var credentials = new TokenCredentials(hostUrl, patToken);
             return credentials;
         }
-        else{
+        else {
             var msg = tl.loc("OnlyTokenAuthAllowed");
             console.log(msg);
             throw (msg);

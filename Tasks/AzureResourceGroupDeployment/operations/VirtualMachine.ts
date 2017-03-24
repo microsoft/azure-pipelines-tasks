@@ -6,15 +6,15 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 import utils = require("./Utils")
-import mgExtensionHelper = require("./MachineGroupExtensionHelper");
+import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
+    private deploymentGroupExtensionHelper: dgExtensionHelper.DeploymentGroupExtensionHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
+        this.deploymentGroupExtensionHelper = new dgExtensionHelper.DeploymentGroupExtensionHelper(this.taskParameters);
     }
 
     public execute(): Promise<void> {
@@ -47,7 +47,7 @@ export class VirtualMachine {
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
                         case "Delete":
-                            var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromSingleVM(listOfVms[i]);
+                            var extDelPromise = this.deploymentGroupExtensionHelper.deleteExtensionFromSingleVM(listOfVms[i]);
                             var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
                             extDelPromise.then(deleteVM, deleteVM);
                     }

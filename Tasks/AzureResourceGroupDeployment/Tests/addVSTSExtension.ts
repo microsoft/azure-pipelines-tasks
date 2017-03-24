@@ -16,9 +16,9 @@ tr.setInput("deploymentMode","Complete");
 tr.setInput("csmParametersFile", path.join(__dirname, process.env["csmParametersFile"]));
 tr.setInput("enableDeploymentPrerequisites", process.env["enableDeploymentPrerequisites"]);
 tr.setInput("project", "AzureProj");
-tr.setInput("machineGroupName", "biprasad");
+tr.setInput("deploymentGroupName", "biprasad");
 tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
-tr.setInput("vstsPATTokenEndpoint", "PatEndpoint");
+tr.setInput("deploymentGroupEndpoint", "PatEndpoint");
 tr.setInput("outputVariable", process.env["outputVariable"]);
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";

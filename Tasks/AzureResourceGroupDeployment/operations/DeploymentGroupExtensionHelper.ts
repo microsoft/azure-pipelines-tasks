@@ -6,15 +6,15 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("./azure-rest/azureModels");
 import utils = require("./Utils");
 
-export class MachineGroupExtensionHelper {
+export class DeploymentGroupExtensionHelper {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private azureUtils: azure_utils.AzureUtil;
     private computeClient: computeManagementClient.ComputeManagementClient;
     private publisher = "Microsoft.VisualStudio.Services";
     private extensionType = "Microsoft.Compute/virtualMachines/extensions";
-    private mgExtensionNameWindows = "TeamServicesAgent";
+    private dgExtensionNameWindows = "TeamServicesAgent";
     private vmExtensionTypeWindows = "TeamServicesAgent";
-    private mgExtensionNameLinux = "TeamServicesAgentLinux";
+    private dgExtensionNameLinux = "TeamServicesAgentLinux";
     private vmExtensionTypeLinux = "TeamServicesAgentLinux";
     //Whenever major version is modified, modify the task version accordingly.
     private version = "1.0";
@@ -26,7 +26,7 @@ export class MachineGroupExtensionHelper {
     }
 
     public async addExtensionOnResourceGroup() {
-        console.log(tl.loc("AddingMGAgentOnVMs"));
+        console.log(tl.loc("AddingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var extensionAddedOnVMsPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
@@ -34,12 +34,12 @@ export class MachineGroupExtensionHelper {
         }
         await Promise.all(extensionAddedOnVMsPromises);
         if (listOfVms.length > 0) {
-            console.log(tl.loc("MGAgentAddedOnAllVMs"));
+            console.log(tl.loc("DGAgentAddedOnAllVMs"));
         }
     }
 
     public async deleteExtensionFromResourceGroup(): Promise<void> {
-        console.log(tl.loc("DeletingMGAgentOnVMs"));
+        console.log(tl.loc("DeletingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
@@ -47,7 +47,7 @@ export class MachineGroupExtensionHelper {
         }
         await Promise.all(deleteExtensionFromVmPromises);
         if (listOfVms.length > 0) {
-            console.log(tl.loc("MGAgentDeletedFromAllVMs"));
+            console.log(tl.loc("DGAgentDeletedFromAllVMs"));
         }
     }
 
@@ -59,7 +59,7 @@ export class MachineGroupExtensionHelper {
             console.log(tl.loc("DeleteExtension", extensionName, vmName));
             this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, vmName, extensionName, (error, result, request, response) => {
                 if (error) {
-                    tl.warning(tl.loc("DeleteAgentManually", vmName, this.taskParameters.machineGroupName));
+                    tl.warning(tl.loc("DeleteAgentManually", vmName, this.taskParameters.deploymentGroupName));
                     return reject(tl.loc("DeletionFailed", vmName, utils.getError(error)));
                 }
                 console.log(tl.loc("DeletionSucceeded", vmName));
@@ -161,7 +161,7 @@ export class MachineGroupExtensionHelper {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                         await this.tryDeleteFailedExtension(vm);
-                        return reject(tl.loc("MGAgentOperationOnAllVMsFailed", "addition", ""));
+                        return reject(tl.loc("DGAgentOperationOnAllVMsFailed", "addition", ""));
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
                     resolve();
@@ -178,22 +178,22 @@ export class MachineGroupExtensionHelper {
         console.log("Operating system on virtual machine : " + vmOsType);
         var vmLocation = vm.location;
         if (vmOsType === "Windows") {
-            var extensionName = this.mgExtensionNameWindows;
+            var extensionName = this.dgExtensionNameWindows;
             var virtualMachineExtensionType: string = this.vmExtensionTypeWindows;
             var typeHandlerVersion: string = this.version;
         }
         else if (vmOsType === "Linux") {
-            extensionName = this.mgExtensionNameLinux;
+            extensionName = this.dgExtensionNameLinux;
             virtualMachineExtensionType = this.vmExtensionTypeLinux;
             typeHandlerVersion = this.version;
         }
-        console.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
+        console.log(tl.loc("DGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
         if (operation === "add") {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = this.publisher;
             var extensionType: string = this.extensionType;
             var collectionUri = this.taskParameters.tokenCredentials.getHostUrl();
-            var teamProject = this.taskParameters.machineGroupProjectName;
+            var teamProject = this.taskParameters.deploymentGroupProjectName;
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] === '/') {
                 collectionUri = collectionUri.substr(0, uriLength - 1);
@@ -206,11 +206,12 @@ export class MachineGroupExtensionHelper {
             var publicSettings = {
                 VSTSAccountName: collectionUri,
                 TeamProject: teamProject,
-                MachineGroup: this.taskParameters.machineGroupName,
+                MachineGroup: this.taskParameters.deploymentGroupName,
+                DeploymentGroup: this.taskParameters.deploymentGroupName,
                 AgentName: "",
                 Tags: tags
             };
-            console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.machineGroupName, JSON.stringify(tags));
+            console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nDeploymentGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.deploymentGroupName, JSON.stringify(tags));
             var protectedSettings = { PATToken: this.taskParameters.tokenCredentials.getPatToken() };
             var parameters = {
                 type: extensionType,
