@@ -87,6 +87,11 @@ async function run() {
                 //setup script path on remote machine relative to user's $HOME directory
                 var remoteScript = './' + path.basename(scriptFile);
                 var remoteScriptPath = '"' + remoteScript + '"';
+                var windowsEncodedRemoteScriptPath = remoteScriptPath;
+                var isWin = os.type().match(/^Win/);
+                if (isWin) {
+                    remoteScriptPath =  '"' + remoteScript + "._unix" + '"';
+                }
                 tl.debug('remoteScriptPath = ' + remoteScriptPath);
 
                 //copy script file to remote machine
@@ -96,15 +101,11 @@ async function run() {
                 await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
 
                 //change the line encodings
-                var isWin = os.type().match(/^Win/);
-                var windowsEncodedRemoteScriptPath = remoteScriptPath;
                 if (isWin) {
-                    remoteScriptPath = remoteScriptPath + ".unix";
-                    tl.debug('Fixing the line endings in case the file was created in windows');
-                    tl._writeLine('tr -d \'\\015\' <' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath);
-                    await sshHelper.runCommandOnRemoteMachine(
-                        'tr -d \'\\015\' < ' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath, 
-                        sshClientConnection, remoteCmdOptions);
+                    tl.debug('Fixing the line endings in case the file was created in Windows');
+                    var removeLineEndingsCmd = 'tr -d \'\\015\' <' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath;
+                    tl._writeLine(removeLineEndingsCmd);
+                    await sshHelper.runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
                 }
 
                 //set execute permissions on the script
@@ -122,7 +123,7 @@ async function run() {
                 //setup command to clean up script file
                 cleanUpScriptCmd = 'rm -f ' + remoteScriptPath;
                 if (isWin) {
-                    cleanUpScriptCmd = 'rm -f \'' + remoteScriptPath +'\' \'' + windowsEncodedRemoteScriptPath + '\'';
+                    cleanUpScriptCmd = 'rm -f ' + remoteScriptPath + ' ' + windowsEncodedRemoteScriptPath;
                 }
 
                 tl._writeLine(runScriptCmd);
