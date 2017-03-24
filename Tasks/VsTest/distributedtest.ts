@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as Q from 'q';
 import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
@@ -20,7 +19,7 @@ export class DistributedTest {
         this.registerAndConfigureAgent();
     }
 
-   private async registerAndConfigureAgent() {
+    private async registerAndConfigureAgent() {
         tl.debug('Configure the Agent with DTA... Invoking the createAgent REST API');
 
         try {
@@ -28,14 +27,13 @@ export class DistributedTest {
             await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
             try {
-                if(this.dtaPid !== -1) {
+                if (this.dtaPid !== -1) {
                     tl.debug('Trying to kill the Modules/DTAExecutionHost.exe process with pid :' + this.dtaPid);
                     process.kill(this.dtaPid);
                 }
             } catch (error) {
                 tl.warning('Modules/DTAExecutionHost.exe process kill failed, pid: ' + this.dtaPid + ' , error :' + error);
             }
-            tl.debug(fs.readFileSync(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, 'utf-8'));
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
             tl.error(error);
@@ -44,12 +42,6 @@ export class DistributedTest {
     }
 
     private async startDtaExecutionHost(agentId: any) {
-        try {
-            tl.rmRF(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, true);
-        } catch (error) {
-            //Ignore.
-        }
-
         const envVars: { [key: string]: string; } = process.env;
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentId', agentId);
@@ -58,31 +50,41 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
 
-        if(this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+        if (this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         }
 
-        var exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
-        if(exeInfo) {
-            tl.debug("Adding env var DTA.TestWindow.Path = " + exeInfo.location);
+        const exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
+        if (exeInfo) {
+            tl.debug('Adding env var DTA.TestWindow.Path = ' + exeInfo.location);
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exeInfo.location);
         } else {
-            tl.error(tl.loc('VstestNotFound', utils.Helper.getVSVersion( parseFloat(this.dtaTestConfig.vsTestVersion))));
+            tl.error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(parseFloat(this.dtaTestConfig.vsTestVersion))));
         }
 
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process
         // We are not using toolrunner here because it doesn't have option to ignore the IO stream, so directly using spawn
 
-        const proc = ps.spawn(path.join(__dirname, 'Modules/DTAExecutionHost.exe'), [], { env: envVars, stdio: 'ignore' });
+        const proc = ps.spawn(path.join(__dirname, 'Modules/DTAExecutionHost.exe'), [], { env: envVars });
         this.dtaPid = proc.pid;
         tl.debug('Modules/DTAExecutionHost.exe is executing with the process id : ' + this.dtaPid);
 
+        proc.stdout.setEncoding('utf8');
+        proc.stderr.setEncoding('utf8');
+        proc.stdout.on('data', (c) => {
+            tl._writeLine(c.toString());
+        });
+        proc.stderr.on('data', (c) => {
+            tl._writeError(c.toString());
+        });
+
         proc.on('error', (err) => {
-                this.dtaPid = -1;
-                throw new Error('Failed to start Modules/DTAExecutionHost.exe.');
-            });
+            this.dtaPid = -1;
+            throw new Error('Failed to start Modules/DTAExecutionHost.exe.');
+        });
 
         proc.on('close', (code) => {
             if (code !== 0) {
@@ -108,9 +110,11 @@ export class DistributedTest {
         }
 
         //Modify settings file to enable configurations and data collectors.
-        var settingsFile = this.dtaTestConfig.settingsFile;
+        let settingsFile = this.dtaTestConfig.settingsFile;
         try {
-            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, null, false, this.dtaTestConfig.overrideTestrunParameters);
+            settingsFile = await settingsHelper.updateSettingsFileAsRequired
+                (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
+                null, false, this.dtaTestConfig.overrideTestrunParameters);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {
@@ -122,17 +126,17 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'runsettings', settingsFile);
         utils.Helper.addToProcessEnvVars(envVars, 'testdroplocation', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'testrunparams', this.dtaTestConfig.overrideTestrunParameters);
-        utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
         utils.Helper.addToProcessEnvVars(envVars, 'buildconfig', this.dtaTestConfig.buildConfig);
         utils.Helper.addToProcessEnvVars(envVars, 'buildplatform', this.dtaTestConfig.buildPlatform);
         utils.Helper.addToProcessEnvVars(envVars, 'testconfigurationmapping', this.dtaTestConfig.testConfigurationMapping);
         utils.Helper.addToProcessEnvVars(envVars, 'testruntitle', this.dtaTestConfig.testRunTitle);
         utils.Helper.addToProcessEnvVars(envVars, 'testselection', this.dtaTestConfig.testSelection);
         utils.Helper.addToProcessEnvVars(envVars, 'tcmtestrun', this.dtaTestConfig.onDemandTestRunId);
-        utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         if (!utils.Helper.isNullOrUndefined(this.dtaTestConfig.testSuites)) {
             utils.Helper.addToProcessEnvVars(envVars, 'testsuites', this.dtaTestConfig.testSuites.join(','));
         }
+        utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
+        utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
         // In the phases world we will distribute based on number of agents
         utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
@@ -144,14 +148,14 @@ export class DistributedTest {
     }
 
     private async cleanUp(temporarySettingsFile: string) {
-    //cleanup the runsettings file
-    if (temporarySettingsFile && this.dtaTestConfig.settingsFile != temporarySettingsFile) {
-        try {
-            tl.rmRF(temporarySettingsFile, true);
-        } catch (error) {
-            //Ignore.
+        //cleanup the runsettings file
+        if (temporarySettingsFile && this.dtaTestConfig.settingsFile !== temporarySettingsFile) {
+            try {
+                tl.rmRF(temporarySettingsFile, true);
+            } catch (error) {
+                //Ignore.
+            }
         }
-    }
     }
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
