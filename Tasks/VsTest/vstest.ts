@@ -144,7 +144,9 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             });
         }
         else {
-            tl.warning(tl.loc("InvalidSettingsFile", settingsFile));
+            if (!tl.exist(settingsFile)) {
+                tl.warning(tl.loc("InvalidSettingsFile", settingsFile));
+            }
         }
     }
 
