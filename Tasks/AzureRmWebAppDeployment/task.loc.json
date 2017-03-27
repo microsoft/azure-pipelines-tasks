@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
@@ -368,7 +368,6 @@
     "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
     "stderrFromScript": "ms-resource:loc.messages.stderrFromScript",
     "WebConfigAlreadyExists": "ms-resource:loc.messages.WebConfigAlreadyExists",
-    "WebConfigDoesNotExist": "ms-resource:loc.messages.WebConfigDoesNotExist",
     "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
     "FailedToGenerateWebConfig": "ms-resource:loc.messages.FailedToGenerateWebConfig",
     "FailedToGetKuduFileContent": "ms-resource:loc.messages.FailedToGetKuduFileContent",

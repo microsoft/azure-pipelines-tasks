@@ -73,6 +73,20 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
+        var azureWebAppDetails = null;
+        var virtualApplicationPhysicalPath = null;
+        if(virtualApplication) {
+            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                virtualApplicationPhysicalPath = pathMappings[1];
+                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+            }
+            else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
         var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
         var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
@@ -80,9 +94,18 @@ async function run() {
             var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
 
             if (generateWebConfig) {
-                addWebConfigFile(folderPath, webConfigParametersStr);
+                var appSetingsVariables = addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
+                if(Object.keys(appSetingsVariables).length != 0 && appSetingsVariables.constructor === Object) {
+                    tl.debug('Updating app settings in Azure App Service from web.config');
+                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                    for(var appSettingVariable in appSetingsVariables) {
+                        tl.debug('Setting appsettings value: ' + appSettingVariable + ' = ' + appSetingsVariables[appSettingVariable]);
+                        appSettings.properties[appSettingVariable] = appSetingsVariables[appSettingVariable];
+                    }
+                    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    tl.debug('Updated app settings value in Azure App Service.');
+                }
             }
-
             if (applyFileTransformFlag) {
                 await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
             }
@@ -98,18 +121,6 @@ async function run() {
 
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
-        }
-
-        var azureWebAppDetails = null;
-        if(virtualApplication) {
-            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if(pathMappings[1] != null) {
-                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
-            } else {
-                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
-            }
         }
 
         if(deployUtility.canUseWebDeploy(useWebDeploy)) {
@@ -144,9 +155,7 @@ async function run() {
 
         }
         if(scriptType) {
-            azureWebAppDetails = (azureWebAppDetails) ? azureWebAppDetails: await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var kuduWorkingDirectory = virtualApplication ? (kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings))[1] : 'site/wwwroot';
+            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
             await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
         await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
@@ -243,13 +252,12 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
 }
 
-function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
+function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootDirectoryPath: string) {
     //Generate the web.config file if it does not already exist.
     var webConfigPath = path.join(folderPath, "web.config");
+    var updateAppServiceAppSettings = { };
     if (!tl.exist(webConfigPath)) {
-
-        tl.debug(tl.loc('WebConfigDoesNotExist'));
-
+        tl.debug('web.config file does not exist. Generating.');
         //Extract out the appType parameter as it is not to be replaced.
         var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
         if(!webConfigParameters || !webConfigParameters['appType']) {
@@ -257,7 +265,14 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
         }
         var appType: string = webConfigParameters['appType'].value;
         delete webConfigParameters['appType'];
-        
+        if(appType != "node") {
+            rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
+            tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
+            webConfigParameters['KUDU_WORKING_DIRECTORY'] = {
+                value: rootDirectoryPath
+            };
+            updateAppServiceAppSettings['PYTHON_EXT_PATH'] = webConfigParameters['PYTHON_PATH'].value;
+        }
         try {
             // Create web.config
             generateWebConfigUtil.generateWebConfigFile(webConfigPath, appType, webConfigParameters);
@@ -266,9 +281,11 @@ function addWebConfigFile(folderPath: any, webConfigParametersStr: string) {
         catch (error) {
             throw new Error(tl.loc("FailedToGenerateWebConfig", error));
         }
-    } else {
-        tl.debug(tl.loc('WebConfigAlreadyExists'));
     }
+    else {
+        console.log(tl.loc('WebConfigAlreadyExists'));
+    }
+    return updateAppServiceAppSettings;
 }
 
 run();
