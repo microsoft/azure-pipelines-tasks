@@ -2,7 +2,7 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..\\src\\main.js');
+let taskPath = path.join(__dirname, '..', 'src', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
@@ -33,7 +33,7 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        "basedir\\DefaultTemplates\\default.linux.template.json": true,
+        "/basedir/DefaultTemplates/default.linux.template.json": true,
         "/packer-user-scripts/deploy.sh": true
     },
     "exec": {
@@ -120,7 +120,7 @@ tr.registerMock('./utilities', {
         return "/tmp/tempdir"
     },
     getCurrentDirectory: function() {
-        return "basedir\\currdir";
+        return "/basedir/currdir";
     }
 });
 
