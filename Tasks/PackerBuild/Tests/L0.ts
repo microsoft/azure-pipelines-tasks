@@ -84,18 +84,6 @@ describe('PackerBuild Suite', function() {
             done();
         });
 
-        it('Creates output variables from packer log for custom linuxbase image', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
-            
-            assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
-            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
-            done();
-        });
-
         it('Should copy builtin template to temp location for windows template', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -442,7 +430,7 @@ describe('PackerBuild Suite', function() {
             done();
         });
 
-    } //else {
+    } else {
         it('Runs successfully for linux template', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -614,5 +602,5 @@ console.log(tr.stdout);
             }
             done();
         });
-    //}
+    }
 });

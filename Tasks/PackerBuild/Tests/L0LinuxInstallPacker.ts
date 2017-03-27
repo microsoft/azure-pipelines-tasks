@@ -33,7 +33,7 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        "basedir\\DefaultTemplates\\default.linux.template.json": true,
+        "/basedir/DefaultTemplates/default.linux.template.json": true,
         "/packer-user-scripts/deploy.sh": true
     },
     "exec": {
@@ -120,7 +120,7 @@ tr.registerMock('./utilities', {
         return "/tmp/tempdir"
     },
     getCurrentDirectory: function() {
-        return "basedir\\currdir";
+        return "/basedir/currdir";
     }
 });
 
