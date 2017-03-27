@@ -152,10 +152,10 @@ async function run() {
         var targetFolder:string = tl.getInput('targetFolder');
 
         if (!targetFolder) {
-            targetFolder = "./"
+            targetFolder = "./";
         } else {
             // '~/' is unsupported
-            targetFolder = targetFolder.replace(/^~\//, "./")
+            targetFolder = targetFolder.replace(/^~\//, "./");
         }
 
         // read the copy options

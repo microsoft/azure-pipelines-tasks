@@ -10,8 +10,9 @@ export function generateWebConfigFile(webConfigTargetPath: string, appType: stri
     tl.writeFile(webConfigTargetPath, webConfigContent, { encoding: "utf8" });
 }
 
-function replaceMultiple(text: string, substitutions: any): string{
-    for(var key in substitutions){
+function replaceMultiple(text: string, substitutions: any): string {
+    for(var key in substitutions) {
+        tl.debug('Replacing: ' + '{' + key + '} with: ' + substitutions[key].value);
         text = text.replace(new RegExp('{' + key + '}', 'g'), substitutions[key].value);
     }
     return text;
