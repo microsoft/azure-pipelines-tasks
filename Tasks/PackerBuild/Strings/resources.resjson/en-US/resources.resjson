@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Bake immutable machine image",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
+  "loc.friendlyName": "Bake immutable machine image (PREVIEW)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Bake immutable machine image using Packer tool. This image can be used for Azure VMSS deployment",
   "loc.instanceNameFormat": "Bake immutable image",
   "loc.group.displayName.AzureDetails": "Azure Details",
@@ -12,7 +12,7 @@
   "loc.input.help.customTemplateLocation": "Path to a custom user-provided template.",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for baking and storing the machine image.",
-  "loc.input.label.location": "Location",
+  "loc.input.label.location": "Location of bake",
   "loc.input.help.location": "Location for storing the baked machine image. This location will also be used to create a temporary VM for the purpose of baking image.",
   "loc.input.label.storageAccountName": "Storage account",
   "loc.input.help.storageAccountName": "Storage account for storing the baked machine image. This storage account must be pre-existing in the location selected.",
