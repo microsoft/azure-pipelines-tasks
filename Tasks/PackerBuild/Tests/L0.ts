@@ -435,7 +435,6 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
             
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -448,7 +447,7 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -460,7 +459,7 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -472,7 +471,7 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -484,7 +483,7 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -497,7 +496,7 @@ describe('PackerBuild Suite', function() {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
             done();
@@ -509,7 +508,7 @@ describe('PackerBuild Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             process.env["__copy_fails__"] = "false";
-console.log(tr.stdout);
+
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf("copy failed while copying from /basedir/DefaultTemplates/custom.linux.template.json") != -1, "error message should be right");               
             done();
@@ -521,7 +520,7 @@ console.log(tr.stdout);
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();      
             process.env["__packer_build_fails__"] = "false";
-console.log(tr.stdout);
+
             assert(tr.failed, 'task should have failed');
             assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);        
             assert(tr.stdout.indexOf("packer build failed\r\nsome error") != -1, "error message should be right");
@@ -532,22 +531,15 @@ console.log(tr.stdout);
             let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip") != -1, "should download from correct url");
-            if(!tl.osType().match(/^Win/)) {
-                assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
-                assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
-                assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
-                
-            } else {
-                assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to \\tmp\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
-                assert(tr.stdout.indexOf("extracting from zip \\tmp\\tempdir\\100\\packer.zip to \\tmp\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
-                assert(tr.stdout.indexOf("Packer path to be used by task: \\tmp\\tempdir\\100\\packer\\packer") != -1, "should show message that packer will be downloaded");
-            } 
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
+            assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
@@ -561,22 +553,15 @@ console.log(tr.stdout);
             tr.run();
             process.env["__packer_exists__"] = "false";
             process.env["__lower_version__"] = "false";
-            console.log(tr.stdout);
+
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip") != -1, "should download from correct url");
-            if(!tl.osType().match(/^Win/)) {
-                assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
-                assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
-                assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
-                
-            } else {
-                assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to \\tmp\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
-                assert(tr.stdout.indexOf("extracting from zip \\tmp\\tempdir\\100\\packer.zip to \\tmp\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
-                assert(tr.stdout.indexOf("Packer path to be used by task: \\tmp\\tempdir\\100\\packer\\packer") != -1, "should show message that packer will be downloaded");
-            } 
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
+            assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded"); 
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;secret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
@@ -585,13 +570,9 @@ console.log(tr.stdout);
             let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            console.log(tr.stdout);
+
             assert(tr.succeeded, 'task should have succeeded');
-            if(!tl.osType().match(/^Win/)) {
-                assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
-            } else {
-                assert(tr.stdout.indexOf("rmRF \\tmp\\tempdir\\100") != -1, "rmRF should be called on temp template folder");
-            }
+            assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
             done();
         });
     }
