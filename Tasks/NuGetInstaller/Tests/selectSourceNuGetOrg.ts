@@ -8,18 +8,20 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
-tmr.setInput('solution', 'single.sln');
-tmr.setInput('nuGetPath', 'c:\\custompath\\nuget.exe');
+tmr.setInput('solution', 'packages.config');
+tmr.setInput('selectOrConfig', 'select');
+tmr.setInput('includeNuGetOrg', 'True');
+
+
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
-        "c:\\custompath\\nuget.exe": true,
-        "c:\\agent\\home\\directory\\single.sln": true
+        "c:\\agent\\home\\directory\\packages.config": true
     },
     "which": {},
     "exec": {
-        "c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://www.nuget.org/api/v2/ -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -27,14 +29,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {},
     "stats": {
-        "c:\\agent\\home\\directory\\single.sln": {
+        "c:\\agent\\home\\directory\\packages.config": {
             "isFile": true
         }
     }
 };
 nmh.setAnswers(a);
 
-nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
+nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 

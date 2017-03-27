@@ -17,11 +17,20 @@ export class NugetMockHelper {
     }
     
     public setNugetVersionInputDefault() {
-        this.tmr.setInput('nuGetVersion', this.defaultNugetVersion);
+        this.tmr.setInput('versionSpec', this.defaultNugetVersion);
     }
     
     public registerDefaultNugetVersionMock() {
         this.registerNugetVersionMock(this.defaultNugetVersion, this.defaultNugetVersionInfo);
+        this.registerNugetToolGetterMock();
+    }
+
+    public registerNugetToolGetterMock() {
+        this.tmr.registerMock('nuget-task-common/NuGetToolGetter', {
+            getNuGet: function(versionSpec) {
+                return "c:\\from\\tool\\installer\\nuget.exe";
+            },
+        } )
     }
     
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
@@ -69,6 +78,7 @@ export class NugetMockHelper {
     public setAnswers(a) {
         a.osType["osType"] = "Windows_NT";
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
+        a.exist["c:\\from\\tool\\installer\\nuget.exe"] = true;
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
     }
