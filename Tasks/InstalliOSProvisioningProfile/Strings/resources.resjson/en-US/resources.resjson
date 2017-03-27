@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Install an iOS provisioning profile",
+  "loc.helpMarkDown": "",
+  "loc.description": "Install an iOS provisioning profile requried to build an iOS app on the Mac build server",
+  "loc.instanceNameFormat": "Download and install the provisioning profile",
+  "loc.input.label.provisioningProfile": "Provisioning Profile",
+  "loc.input.help.provisioningProfile": "Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac build agent.",
+  "loc.input.label.removeProfile": "Remove Profile After Build",
+  "loc.input.help.removeProfile": "Select to specify that the Provisioning Profile should be removed from the build agent after the build is complete."
+}
