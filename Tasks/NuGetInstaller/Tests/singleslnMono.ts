@@ -9,6 +9,7 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'single.sln');
+tmr.setInput('selectOrConfig', 'config');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {
@@ -22,7 +23,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "mono":"/usr/bin/mono"
     },
     "exec": {
-        "/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore -NonInteractive ~/myagent/_work/1/s/single.sln": {
+        "/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

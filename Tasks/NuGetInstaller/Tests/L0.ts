@@ -15,11 +15,11 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -31,13 +31,13 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
@@ -50,11 +50,11 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should have run NuGet');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });   
@@ -66,27 +66,11 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -NoCache'), 'it should have run NuGet');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NoCache -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
-        assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        done();
-    });
-	
-    it('restore single solution with extra args', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, 'singleslnExtraArgs.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -98,12 +82,12 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained("adding package source uri: mockFeedUri"), "should have added content to temp config");
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -115,11 +99,11 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.ran('c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\custompath\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -131,12 +115,12 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet on single.sln');
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\double\\double.sln'), 'it should have run NuGet on double.sln');
+        assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet on single.sln');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive'), 'it should have run NuGet on double.sln');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -148,10 +132,55 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore -NonInteractive ~/myagent/_work/1/s/single.sln'), 'it should have run NuGet with mono');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive'), 'it should have run NuGet with mono');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore select vsts source', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'selectSourceVsts.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://codesharing-su0.pkgs.visualstudio.com/_packaging/NuGetFeed/nuget/v3/index.json -NonInteractive'), 'it should have run NuGet with a vsts source');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+        it('restore select nuget.org source', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'selectSourceNuGetOrg.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://www.nuget.org/api/v2/ -NonInteractive'), 'it should have run NuGet with nuget.org source');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore select multiple sources', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'selectSourceMultiple.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://codesharing-su0.pkgs.visualstudio.com/_packaging/NuGetFeed/nuget/v3/index.json;https://www.nuget.org/api/v2/ -NonInteractive'), 'it should have run NuGet with multiple sources');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });

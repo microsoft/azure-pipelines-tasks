@@ -9,6 +9,7 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'single.sln');
+tmr.setInput('selectOrConfig', 'config');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
@@ -17,7 +18,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
+        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

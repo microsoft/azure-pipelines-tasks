@@ -9,6 +9,7 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'single.sln');
+tmr.setInput('selectOrConfig', 'config');
 tmr.setInput('nuGetPath', 'c:\\custompath\\nuget.exe');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -19,7 +20,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
+        "c:\\custompath\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
