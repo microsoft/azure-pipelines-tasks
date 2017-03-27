@@ -75,7 +75,14 @@ export class DistributedTest {
         proc.stdout.setEncoding('utf8');
         proc.stderr.setEncoding('utf8');
         proc.stdout.on('data', (c) => {
-            tl._writeLine(c.toString());
+            // this is bit hacky way to fix the web method logging as it's not configurable currently
+            // and writes info to stdout directly
+            const data = c.toString();
+            if (data.startsWith('Web method')) {
+                tl.debug(data);
+            } else {
+                tl._writeLine(c.toString());
+            }
         });
         proc.stderr.on('data', (c) => {
             tl._writeError(c.toString());
