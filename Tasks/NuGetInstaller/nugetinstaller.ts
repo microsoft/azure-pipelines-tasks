@@ -10,14 +10,18 @@ import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
 import * as nutil from "nuget-task-common/Utility";
 
+"use strict";
+
+const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
+
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
-        public restoreMode: string,
         public nuGetPath: string,
         public configFile: string,
         public noCache: boolean,
         public verbosity: string,
-        public extraArgs: string,
+        public packagesDirectory: string,
+        public source: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings
     ) { }
 }
@@ -43,21 +47,33 @@ async function main(): Promise<void> {
         });
 
         let noCache = tl.getBoolInput("noCache");
-        let nuGetRestoreArgs = tl.getInput("nuGetRestoreArgs");
         let verbosity = tl.getInput("verbosity");
 
-        let restoreMode = tl.getInput("restoreMode") || "Restore";
-        // normalize the restore mode for display purposes, and ensure it's a known one
-        let normalizedRestoreMode = ["restore", "install"].find(x => restoreMode.toUpperCase() === x.toUpperCase());
-        if (!normalizedRestoreMode) {
-            throw new Error(tl.loc("UnknownRestoreMode", restoreMode));
+        let packagesDirectory = tl.getPathInput("packagesDirectory");
+
+        if (!tl.filePathSupplied("packagesDirectory")) {
+            packagesDirectory = null;
         }
 
-        restoreMode = normalizedRestoreMode;
-
-        let nugetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
-        if (!tl.filePathSupplied("nugetConfigPath")) {
-            nugetConfigPath = null;
+        let source : string = null;
+        let nuGetConfigPath : string = null;
+        let selectOrConfig = tl.getInput("selectOrConfig");
+        if (selectOrConfig === "select" ) {
+            let feeds : Array<string> = [];
+            let feed = tl.getInput("feed");
+            if (feed) {
+                feeds.push(feed);
+            }
+            let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+            if (includeNuGetOrg) {
+                feeds.push(NUGET_ORG_V2_URL); // todo: use v3 endpoint if nuget version >= 3.2
+            }
+            source = feeds.join(";");
+        } else /*"config"*/ {
+            nuGetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
+            if (!tl.filePathSupplied("nugetConfigPath")) {
+                nuGetConfigPath = null;
+            }
         }
 
         let nugetUxOption = tl.getInput('nuGetVersion');
@@ -116,13 +132,13 @@ async function main(): Promise<void> {
             extensionsDisabled: !userNuGetProvided
         };
 
-        let configFile = nugetConfigPath;
+        let configFile = nuGetConfigPath;
         let credCleanup = () => { return; };
         if (useCredConfig) {
-            if (nugetConfigPath) {
+            if (nuGetConfigPath) {
                 let nuGetConfigHelper = new NuGetConfigHelper(
                     nuGetPath,
-                    nugetConfigPath,
+                    nuGetConfigPath,
                     authInfo,
                     environmentSettings);
                 const packageSources = await nuGetConfigHelper.getSourcesFromConfig();
@@ -140,12 +156,12 @@ async function main(): Promise<void> {
 
         try {
             let restoreOptions = new RestoreOptions(
-                restoreMode,
                 nuGetPath,
                 configFile,
                 noCache,
                 verbosity,
-                nuGetRestoreArgs,
+                packagesDirectory,
+                source,
                 environmentSettings);
 
             for (const solutionFile of filesList) {
@@ -171,14 +187,18 @@ main();
 
 function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.Promise<number> {
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment);
-    nugetTool.arg(options.restoreMode);
-    nugetTool.arg("-NonInteractive");
 
+    nugetTool.arg("restore");
     nugetTool.arg(solutionFile);
 
-    if (options.configFile) {
-        nugetTool.arg("-ConfigFile");
-        nugetTool.arg(options.configFile);
+    if (options.packagesDirectory) {
+        nugetTool.arg("-PackagesDirectory");
+        nugetTool.arg(options.packagesDirectory);
+    }
+
+    if (options.source) {
+        nugetTool.arg("-Source");
+        nugetTool.arg(options.source);
     }
 
     if (options.noCache) {
@@ -190,8 +210,11 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
         nugetTool.arg(options.verbosity);
     }
 
-    if (options.extraArgs) {
-        nugetTool.line(options.extraArgs);
+    nugetTool.arg("-NonInteractive");
+
+    if (options.configFile) {
+        nugetTool.arg("-ConfigFile");
+        nugetTool.arg(options.configFile);
     }
 
     return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
