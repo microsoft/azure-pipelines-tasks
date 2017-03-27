@@ -43,7 +43,13 @@ tr.registerMock('fs', {
     },
     fsyncSync: function(fd) {
         return true;
-    }
+    },
+    fstat: fs.fstat,
+    read: fs.read,
+    open: fs.open,
+    writeFile: fs.writeFile,
+    symlink: fs.symlink,
+    stat: fs.stat
 });
 
 tr.setAnswers(a);

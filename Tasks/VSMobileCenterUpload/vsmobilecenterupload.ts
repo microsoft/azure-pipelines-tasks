@@ -74,7 +74,8 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     let headers = {
         "Content-Type": "application/json",
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
     request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -96,7 +97,8 @@ function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Pr
     let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
     let headers = {
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
     let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -118,7 +120,8 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     tl.debug(`---- url: ${commitReleaseUrl}`);
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let commitBody = { "status": "committed" };
@@ -144,7 +147,8 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
 
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let publishBody = {
@@ -205,7 +209,8 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
 
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
@@ -234,7 +239,8 @@ function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Pr
     let headers = {
         "x-ms-blob-type": "BlockBlob",
         "Content-Length": stat.size,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
@@ -254,7 +260,8 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
     tl.debug(`---- url: ${commitSymbolsUrl}`);
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let commitBody = { "status": "committed" };
