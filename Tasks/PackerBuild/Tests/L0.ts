@@ -488,12 +488,8 @@ describe('PackerBuild Suite', function() {
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            if(!tl.osType().match(/^Win/)) 
-            {
-                assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.linux.template.json to /tmp/tempdir/100") != -1, "built-in template should be copied to temp location");            
-            } else {
-                assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.linux.template.json to \\tmp\\tempdir\\100") != -1, "built-in template should be copied to temp location");
-            }
+            assert(tr.stdout.indexOf("copying /basedir/DefaultTemplates/default.linux.template.json to /tmp/tempdir/100") != -1, "built-in template should be copied to temp location");            
+            
             done();
         });
         
@@ -503,11 +499,7 @@ describe('PackerBuild Suite', function() {
             tr.run();
             console.log(tr.stdout);
             assert(tr.succeeded, 'task should have succeeded');
-            if(!tl.osType().match(/^Win/)) {
-                assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
-            } else {
-                assert(tr.stdout.indexOf("rmRF \\tmp\\tempdir\\100") != -1, "rmRF should be called on temp template folder");
-            }
+            assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
             done();
         });
         
@@ -519,7 +511,7 @@ describe('PackerBuild Suite', function() {
             process.env["__copy_fails__"] = "false";
 console.log(tr.stdout);
             assert(tr.failed, 'task should have failed');
-            assert(tr.stdout.indexOf("copy failed while copying from basedir\\DefaultTemplates\\custom.linux.template.json") != -1, "error message should be right");               
+            assert(tr.stdout.indexOf("copy failed while copying from /basedir/DefaultTemplates/custom.linux.template.json") != -1, "error message should be right");               
             done();
         });
         
