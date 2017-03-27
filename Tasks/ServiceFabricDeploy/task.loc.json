@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "Cmd"
@@ -126,6 +126,15 @@
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
+    },
+    {
+      "name": "unregisterUnusedVersions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.unregisterUnusedVersions",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "upgrade",
+      "helpMarkDown": "ms-resource:loc.input.help.unregisterUnusedVersions"
     },
     {
       "name": "overridePublishProfileSettings",
