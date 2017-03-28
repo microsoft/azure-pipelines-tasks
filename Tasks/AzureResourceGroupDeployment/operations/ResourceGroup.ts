@@ -47,7 +47,7 @@ export class ResourceGroup {
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
-        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId, { longRunningOperationRetryTimeout: this.taskParameters.timeout });
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         await this.createResourceGroupIfRequired(armClient);
         await this.createTemplateDeployment(armClient);
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
@@ -58,7 +58,7 @@ export class ResourceGroup {
         return new Promise<void>((resolve, reject) => {
             var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
-                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId, { longRunningOperationRetryTimeout: this.taskParameters.timeout });
+                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
                 armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
                     if (error) {

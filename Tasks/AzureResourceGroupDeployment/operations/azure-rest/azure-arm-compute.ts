@@ -13,7 +13,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         super(credentials, subscriptionId);
 
         this.acceptLanguage = 'en-US';
-        this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.apiVersion = '2016-03-30';
 

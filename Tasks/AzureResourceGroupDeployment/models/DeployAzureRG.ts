@@ -25,7 +25,6 @@ export class AzureRGTaskParameters {
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public machineGroupCollectionUrl = "";
     public machineGroupProjectName = "";
-    public timeout = 2*60;  // Need to make server changes to push the control options, to fetch dynamically.
 
     constructor() {
         try {

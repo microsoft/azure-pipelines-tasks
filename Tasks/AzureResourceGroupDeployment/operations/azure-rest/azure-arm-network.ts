@@ -16,7 +16,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
 
         this.apiVersion = '2016-09-01';
         this.acceptLanguage = 'en-US';
-        this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
 
         if (!options) options = {};

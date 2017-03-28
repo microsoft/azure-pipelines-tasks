@@ -75,7 +75,7 @@ export class ServiceClient {
         this.credentials = credentials;
         this.subscriptionId = subscriptionId
         this.baseUri = this.credentials.armUrl;
-        this.longRunningOperationRetryTimeout = !!timeout ? timeout : 60; // In minutes
+        this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
     }
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
@@ -135,7 +135,7 @@ export class ServiceClient {
     public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
         timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
-
+        var waitIndefinitely = this.longRunningOperationRetryTimeout == 0;
         var request = new WebRequest();
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
@@ -147,7 +147,7 @@ export class ServiceClient {
             response = await this.beginRequest(request);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
                 // If timeout; throw;
-                if (timeout < new Date().getTime()) {
+                if (!waitIndefinitely && timeout < new Date().getTime()) {
                     throw new Error(tl.loc("TimeoutWhileWaiting"));
                 }
 
