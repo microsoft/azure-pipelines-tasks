@@ -135,7 +135,7 @@ export class ServiceClient {
     public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
         timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
-        var waitIndefinitely = this.longRunningOperationRetryTimeout == 0;
+        var waitIndefinitely = timeoutInMinutes == 0;
         var request = new WebRequest();
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
