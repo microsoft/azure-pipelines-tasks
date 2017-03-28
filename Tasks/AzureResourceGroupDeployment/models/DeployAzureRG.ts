@@ -55,7 +55,7 @@ export class AzureRGTaskParameters {
                                             || tl.getVariable('system.teamProject');
         }
         catch (error) {
-            throw (tl.loc("ARGD_ConstructorFailed", error.message));
+            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
         }
     }
 
