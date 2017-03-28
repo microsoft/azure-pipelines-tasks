@@ -15,7 +15,7 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
         this.apiVersion = '2016-07-01';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if (!!options && !!options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
         this.resourceGroups = new ResourceGroups(this);

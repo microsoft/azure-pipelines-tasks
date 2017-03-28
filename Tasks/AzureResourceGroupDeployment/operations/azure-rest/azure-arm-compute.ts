@@ -24,13 +24,13 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
             this.baseUri = baseUri;
         }
 
-        if (options.acceptLanguage != null && options.acceptLanguage != undefined) {
+        if (options.acceptLanguage) {
             this.acceptLanguage = options.acceptLanguage;
         }
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if (options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
+        if (options.generateClientRequestId) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
         this.virtualMachines = new VirtualMachines(this);

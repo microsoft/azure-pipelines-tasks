@@ -25,16 +25,16 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
             this.baseUri = baseUri;
         }
 
-        if (options.apiVersion !== null && options.apiVersion !== undefined) {
+        if (options.apiVersion) {
             this.apiVersion = options.apiVersion;
         }
-        if (options.acceptLanguage !== null && options.acceptLanguage !== undefined) {
+        if (options.acceptLanguage) {
             this.acceptLanguage = options.acceptLanguage;
         }
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if (options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
+        if (options.generateClientRequestId) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
 
