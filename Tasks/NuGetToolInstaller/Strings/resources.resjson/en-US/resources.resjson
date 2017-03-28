@@ -4,14 +4,5 @@
   "loc.description": "Finds or downloads and caches specified version spec of NuGet and adds it to the PATH.",
   "loc.instanceNameFormat": "Use NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor and patch versions MUST match. Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0",
-  "loc.input.label.stableOnly": "Stable Only",
-  "loc.input.help.stableOnly": "Specifies whether the version resolution will filter to stable only versions.",
-  "loc.messages.ToolFailed": "Tool install failed: %s",
-  "loc.messages.Info_AvailableVersions": "The available versions are: %s",
-  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
-  "loc.messages.Info_UsingVersion": "Using version: %s",
-  "loc.messages.Info_UsingToolPath": "Using tool path: %s",
-  "loc.messages.Warning_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
-  "loc.messages.Warning_NoUrlWasFoundWhichMatches": "No download URL was found for %s"
+  "loc.input.help.versionSpec": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. List of available versions obtained from [here](http://dist.nuget.org/tools.json). Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
 }
