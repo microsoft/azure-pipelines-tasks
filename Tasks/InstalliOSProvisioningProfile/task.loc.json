@@ -26,12 +26,34 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "provisioningProfile",
+      "name": "provProfileSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.provProfileSource",
+      "defaultValue": "SecureFile",
+      "required": true,
+      "options": {
+        "SecureFile": "Secure File (Preview)",
+        "Repo": "File in Source Repository"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSource"
+    },
+    {
+      "name": "provProfileSecureFile",
       "type": "secureFile",
-      "label": "ms-resource:loc.input.label.provisioningProfile",
+      "label": "ms-resource:loc.input.label.provProfileSecureFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfile"
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSecureFile",
+      "visibleRule": "provProfileSource == SecureFile"
+    },
+    {
+      "name": "provProfileFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.provProfileFilePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileFilePath",
+      "visibleRule": "provProfileSource == Repo"
     },
     {
       "name": "removeProfile",

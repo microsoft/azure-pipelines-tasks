@@ -2,7 +2,7 @@
     "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
     "name": "InstalliOSProvisioningProfile",
     "friendlyName": "Install an iOS provisioning profile",
-    "description": "Install an iOS provisioning profile requried to build an iOS app on the Mac build server",
+    "description": "Install an iOS provisioning profile required to build an iOS app on a Mac build server",
     "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
@@ -23,15 +23,37 @@
         "xcode"
     ],
     "minimumAgentVersion": "2.115.0",
-    "instanceNameFormat": "Download and install the provisioning profile",
+    "instanceNameFormat": "Install an iOS provisioning profile",
     "inputs": [
         {
-            "name": "provisioningProfile",
+            "name": "provProfileSource",
+            "type": "pickList",
+            "label": "Provisioning Profile Source Location",
+            "defaultValue": "SecureFile",
+            "required": true,
+            "options": {
+                "SecureFile": "Secure File (Preview)",
+                "Repo": "File in Source Repository"
+            },
+            "helpMarkDown": "Provisioning profile can be installed from `Secure File` uploaded to the server or a file in the source repository or a file on the build server."
+        },
+        {
+            "name": "provProfileSecureFile",
             "type": "secureFile",
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac build agent."
+            "helpMarkDown": "Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac build agent.",
+            "visibleRule": "provProfileSource == SecureFile"
+        },
+        {
+            "name": "provProfileFilePath",
+            "type": "filePath",
+            "label": "Provisioning Profile",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Location of Provisioning Profile that should be installed on the Mac build agent.",
+            "visibleRule": "provProfileSource == Repo"
         },
         {
             "name": "removeProfile",

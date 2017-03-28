@@ -8,8 +8,13 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        var provProfile = tl.getInput('provProfile', true);
-
+        var removeProfile = tl.getInput('removeProfile');
+        if (removeProfile) {
+            var UUID = tl.getTaskVariable("INSTALLED_PROV_PROFILE_UUID");
+            if (UUID) {
+                await sign.deleteProvisioningProfile(UUID);
+            }
+        }
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
