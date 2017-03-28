@@ -1,14 +1,16 @@
 {
   "loc.friendlyName": "Install an iOS provisioning profile",
   "loc.helpMarkDown": "",
-  "loc.description": "Install an iOS provisioning profile requried to build an iOS app on a Mac build server",
+  "loc.description": "Install an iOS provisioning profile required to build an iOS app on a Mac agent",
   "loc.instanceNameFormat": "Install an iOS provisioning profile",
   "loc.input.label.provProfileSource": "Provisioning Profile Source Location",
-  "loc.input.help.provProfileSource": "Provisioning profile can be installed from `Secure File` uploaded to the server or a file in the source repository or a file on the build server.",
+  "loc.input.help.provProfileSource": "A Provisioning Profile can be installed from a `Secure File` uploaded to the server or a file in the source repository or a file on the agent.",
   "loc.input.label.provProfileSecureFile": "Provisioning Profile",
-  "loc.input.help.provProfileSecureFile": "Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac build agent.",
+  "loc.input.help.provProfileSecureFile": "The Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac agent.",
   "loc.input.label.provProfileFilePath": "Provisioning Profile",
-  "loc.input.help.provProfileFilePath": "Location of Provisioning Profile that should be installed on the Mac build agent.",
+  "loc.input.help.provProfileFilePath": "Path to the Provisioning Profile that should be installed on the Mac agent.",
   "loc.input.label.removeProfile": "Remove Profile After Build",
-  "loc.input.help.removeProfile": "Select to specify that the Provisioning Profile should be removed from the build agent after the build is complete."
+  "loc.input.help.removeProfile": "Select to specify that the Provisioning Profile should be removed from the agent after the build or release is complete.",
+  "loc.messages.NO_PROVPROFILE_FOUND": "No provisioning profile was found matching %s.",
+  "loc.messages.MULTIPLE_PROVPROFILE_FOUND": "Multiple provisioning profiles were found matching %s. Update the input to match one provisioning profile to install."
 }

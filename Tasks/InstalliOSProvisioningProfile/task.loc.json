@@ -75,5 +75,9 @@
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "NO_PROVPROFILE_FOUND": "ms-resource:loc.messages.NO_PROVPROFILE_FOUND",
+    "MULTIPLE_PROVPROFILE_FOUND": "ms-resource:loc.messages.MULTIPLE_PROVPROFILE_FOUND"
   }
 }

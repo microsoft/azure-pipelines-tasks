@@ -2,7 +2,7 @@
     "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
     "name": "InstalliOSProvisioningProfile",
     "friendlyName": "Install an iOS provisioning profile",
-    "description": "Install an iOS provisioning profile required to build an iOS app on a Mac build server",
+    "description": "Install an iOS provisioning profile required to build an iOS app on a Mac agent",
     "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
@@ -35,7 +35,7 @@
                 "SecureFile": "Secure File (Preview)",
                 "Repo": "File in Source Repository"
             },
-            "helpMarkDown": "Provisioning profile can be installed from `Secure File` uploaded to the server or a file in the source repository or a file on the build server."
+            "helpMarkDown": "A Provisioning Profile can be installed from a `Secure File` uploaded to the server or a file in the source repository or a file on the agent."
         },
         {
             "name": "provProfileSecureFile",
@@ -43,7 +43,7 @@
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac build agent.",
+            "helpMarkDown": "The Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac agent.",
             "visibleRule": "provProfileSource == SecureFile"
         },
         {
@@ -52,7 +52,7 @@
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Location of Provisioning Profile that should be installed on the Mac build agent.",
+            "helpMarkDown": "Path to the Provisioning Profile that should be installed on the Mac agent.",
             "visibleRule": "provProfileSource == Repo"
         },
         {
@@ -61,7 +61,7 @@
             "label": "Remove Profile After Build",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select to specify that the Provisioning Profile should be removed from the build agent after the build is complete."
+            "helpMarkDown": "Select to specify that the Provisioning Profile should be removed from the agent after the build or release is complete."
         }
     ],
     "prejobexecution": {
@@ -75,6 +75,10 @@
             "target": "postinstallprovprofile.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "NO_PROVPROFILE_FOUND": "No provisioning profile was found matching %s.",
+        "MULTIPLE_PROVPROFILE_FOUND": "Multiple provisioning profiles were found matching %s. Update the input to match one provisioning profile to install."
     }
 }
     
