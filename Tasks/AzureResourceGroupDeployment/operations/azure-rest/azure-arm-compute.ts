@@ -13,7 +13,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         super(credentials, subscriptionId);
 
         this.acceptLanguage = 'en-US';
-        this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.apiVersion = '2016-03-30';
 
@@ -24,13 +23,13 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
             this.baseUri = baseUri;
         }
 
-        if (options.acceptLanguage != null && options.acceptLanguage != undefined) {
+        if (options.acceptLanguage) {
             this.acceptLanguage = options.acceptLanguage;
         }
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if (options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
+        if (options.generateClientRequestId) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
         this.virtualMachines = new VirtualMachines(this);
@@ -79,8 +78,8 @@ export class VirtualMachines {
 
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) { 
-                        return new azureServiceClient.ApiResult(nextResult.error); 
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }

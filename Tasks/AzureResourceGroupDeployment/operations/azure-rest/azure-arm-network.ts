@@ -16,7 +16,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
 
         this.apiVersion = '2016-09-01';
         this.acceptLanguage = 'en-US';
-        this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
 
         if (!options) options = {};
@@ -25,16 +24,16 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
             this.baseUri = baseUri;
         }
 
-        if (options.apiVersion !== null && options.apiVersion !== undefined) {
+        if (options.apiVersion) {
             this.apiVersion = options.apiVersion;
         }
-        if (options.acceptLanguage !== null && options.acceptLanguage !== undefined) {
+        if (options.acceptLanguage) {
             this.acceptLanguage = options.acceptLanguage;
         }
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if (options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
+        if (options.generateClientRequestId) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
 
