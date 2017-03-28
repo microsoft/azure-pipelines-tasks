@@ -1,112 +1,65 @@
-/// <reference path="typings/index.d.ts" />
-
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
-//read inputs
-var solution = tl.getPathInput('solution', true, false);
-var platform = tl.getInput('platform');
-var configuration = tl.getInput('configuration');
-var msbuildArguments = tl.getInput('msbuildArguments');
-var clean = tl.getBoolInput('clean');
-var logsolutionEvents = tl.getBoolInput('logsolutionEvents');
-if(logsolutionEvents) {
-    tl.warning('logSolutionEvents property is not supported on the VSTS node agent.');
-}
-var msbuildLocationMethod = tl.getInput('msbuildLocationMethod');
-if(!msbuildLocationMethod) {
-    msbuildLocationMethod = 'version';
-}
+async function run() {
+    try {
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-var xbuildToolPath = tl.which('xbuild'); //ignore msbuild version on non-Windows platforms, use xbuild
-if(msbuildLocationMethod == 'location') {
-    xbuildToolPath = tl.getInput('msbuildLocation');
-}
+        //read inputs
+        let solution = tl.getPathInput('solution', true, false);
+        let platform = tl.getInput('platform');
+        let configuration = tl.getInput('configuration');
+        let msbuildArguments = tl.getInput('msbuildArguments');
+        let clean = tl.getBoolInput('clean');
 
-var runxbuild = function (fn, clean) {
-    return Q.fcall( () => {
-        var xbuild = tl.createToolRunner(xbuildToolPath);
-        xbuild.pathArg(fn);
-        if(clean) {
-            xbuild.arg('/t:Clean');
-        }
-        if (platform) {
-            xbuild.arg('/p:Platform=' + platform);
-        }
-        if (configuration) {
-            xbuild.arg('/p:Configuration=' + configuration);
-        }
-        if (msbuildArguments) {
-            xbuild.argString(msbuildArguments);
+        let logsolutionEvents = tl.getBoolInput('logsolutionEvents');
+        if (logsolutionEvents) {
+            tl.warning(tl.loc('RecordProjectDetailsOnlySupportedOnWindows'));
         }
 
-        return xbuild.exec();
-    });
-}
-
-// Resolve files for the specified value or pattern
-var filesList : string [];
-if (solution.indexOf('*') == -1 && solution.indexOf('?') == -1) {
-    // No pattern found, check literal path to a single file
-    tl.checkPath(solution, 'files');
-
-    // Use the specified single file
-    filesList = [solution];
-
-} else {
-    var firstWildcardIndex = function(str) {
-        var idx = str.indexOf('*');
-
-        var idxOfWildcard = str.indexOf('?');
-        if (idxOfWildcard > -1) {
-            return (idx > -1) ?
-                Math.min(idx, idxOfWildcard) : idxOfWildcard;
+        let createLogFile = tl.getBoolInput('createLogFile');
+        if (createLogFile) {
+            tl.warning(tl.loc('CreateLogFileOnlySupportedOnWindows'));
         }
 
-        return idx;
-    }
+        let msbuildLocationMethod = tl.getInput('msbuildLocationMethod');
+        if (!msbuildLocationMethod) {
+            msbuildLocationMethod = 'version';
+        }
 
-    // Find app files matching the specified pattern
-    tl.debug('Matching glob pattern: ' + solution);
+        var xbuildToolPath = tl.which('xbuild'); //ignore msbuild version on non-Windows platforms, use xbuild
+        if (msbuildLocationMethod == 'location') {
+            xbuildToolPath = tl.getInput('msbuildLocation');
+        }
 
-    // First find the most complete path without any matching patterns
-    var idx = firstWildcardIndex(solution);
-    tl.debug('Index of first wildcard: ' + idx);
-    var findPathRoot = path.dirname(solution.slice(0, idx));
+        let filesList: string[] = tl.findMatch(null, solution, null, { matchBase: true });
+        for (let file of filesList) {
+            if (clean) {
+                let cleanTool: ToolRunner = tl.tool(xbuildToolPath);
+                cleanTool.arg(file);
+                cleanTool.argIf(clean, '/t:Clean');
+                cleanTool.argIf(platform, '/p:Platform=' + platform);
+                cleanTool.argIf(configuration, '/p:Configuration=' + configuration);
+                if (msbuildArguments) {
+                    cleanTool.line(msbuildArguments);
+                }
+                await cleanTool.exec();
+            }
 
-    tl.debug('find root dir: ' + findPathRoot);
-
-    // Now we get a list of all files under this root
-    var allFiles = tl.find(findPathRoot);
-
-    // Now matching the pattern against all files
-    filesList = tl.match(allFiles, solution, {matchBase: true});
-
-    // Fail if no matching .csproj files were found
-    if (!filesList || filesList.length == 0) {
-        tl.error('No matching files were found with search pattern: ' + solution);
-        tl.exit(1);
+            let buildTool: ToolRunner = tl.tool(xbuildToolPath);
+            buildTool.arg(file);
+            buildTool.argIf(platform, '/p:Platform=' + platform);
+            buildTool.argIf(configuration, '/p:Configuration=' + configuration);
+            if (msbuildArguments) {
+                buildTool.line(msbuildArguments);
+            }
+            await buildTool.exec();
+        }
+    } catch (err) {
+        tl.setResult(tl.TaskResult.Failed, err);
     }
 }
 
-var result = Q(<any>{});
-filesList.forEach((fn) => {
-    result = result.then(() => {
-        if (clean) {
-            return runxbuild(fn, true).then( () => {
-                return runxbuild(fn, false);
-            });
-        } else {
-            return runxbuild(fn, false);
-        }
-    })
-})
-result.then(() => {
-    tl.exit(0);
-})
-.fail((err) => {
-    tl.error(err);
-    tl.exit(1);
-});
-
+run();

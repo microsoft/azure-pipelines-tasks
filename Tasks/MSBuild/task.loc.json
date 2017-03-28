@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 113,
+    "Minor": 116,
     "Patch": 0
   },
   "demands": [
@@ -169,6 +169,8 @@
   },
   "messages": {
     "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "ms-resource:loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion",
-    "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent"
+    "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent",
+    "RecordProjectDetailsOnlySupportedOnWindows": "ms-resource:loc.messages.RecordProjectDetailsOnlySupportedOnWindows",
+    "CreateLogFileOnlySupportedOnWindows": "ms-resource:loc.messages.CreateLogFileOnlySupportedOnWindows"
   }
 }
