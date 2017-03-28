@@ -47,7 +47,7 @@ export class ResourceGroup {
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
-        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId, { longRunningOperationRetryTimeout: this.taskParameters.timeout });
         await this.createResourceGroupIfRequired(armClient);
         await this.createTemplateDeployment(armClient);
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
@@ -58,7 +58,7 @@ export class ResourceGroup {
         return new Promise<void>((resolve, reject) => {
             var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
-                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId, { longRunningOperationRetryTimeout: this.taskParameters.timeout });
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
                 armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
                     if (error) {
@@ -86,13 +86,17 @@ export class ResourceGroup {
 
     private writeDeploymentErrors(error) {
         console.log(tl.loc("ErrorsInYourDeployment", error.code));
-        tl.error(error.message);
-        if (error.details) {
-            tl.error(tl.loc("Details"));
-            for (var i = 0; i < error.details.length; i++) {
-                var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
-                tl.error(errorMessage);
+        if (error.message) {
+            tl.error(error.message);
+            if (error.details) {
+                tl.error(tl.loc("Details"));
+                for (var i = 0; i < error.details.length; i++) {
+                    var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                    tl.error(errorMessage);
+                }
             }
+        } else {
+            tl.error(error);
         }
     }
 
@@ -219,7 +223,7 @@ export class ResourceGroup {
             tl.debug("Loaded CSM File");
         }
         catch (error) {
-            throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+            throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
         }
 
         var parameters = {};
@@ -234,7 +238,7 @@ export class ResourceGroup {
             }
         }
         catch (error) {
-            throw (tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
+            throw new Error(tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
@@ -278,7 +282,7 @@ export class ResourceGroup {
                 tl.debug("Loaded CSM File");
             }
             catch (error) {
-                throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+                throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
             }
             parameters = this.updateOverrideParameters(template, parameters);
             deployment.properties["parameters"] = parameters;

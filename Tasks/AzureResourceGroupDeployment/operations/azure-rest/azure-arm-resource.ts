@@ -9,13 +9,15 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     public deployments: Deployments;
     public resourceGroups: ResourceGroups;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials, subscriptionId);
 
         this.apiVersion = '2016-07-01';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
-
+        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+            this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
+        }
         this.resourceGroups = new ResourceGroups(this);
         this.deployments = new Deployments(this);
     }

@@ -79,8 +79,8 @@ export class VirtualMachines {
 
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) { 
-                        return new azureServiceClient.ApiResult(nextResult.error); 
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }

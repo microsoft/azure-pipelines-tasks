@@ -25,6 +25,7 @@ export class AzureRGTaskParameters {
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public machineGroupCollectionUrl = "";
     public machineGroupProjectName = "";
+    public timeout = 2*60;  // Need to make server changes to push the control options, to fetch dynamically.
 
     constructor() {
         try {
@@ -55,7 +56,7 @@ export class AzureRGTaskParameters {
                                             || tl.getVariable('system.teamProject');
         }
         catch (error) {
-            throw (tl.loc("ARGD_ConstructorFailed", error.message));
+            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
         }
     }
 
