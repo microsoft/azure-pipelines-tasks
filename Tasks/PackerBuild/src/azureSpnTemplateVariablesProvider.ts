@@ -20,7 +20,7 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
         var taskParameters = packerHost.getTaskParameters();
 
         // if custom template is used, SPN variables are not required
-        if(taskParameters.templateType === "custom") {
+        if(taskParameters.templateType === constants.TemplateTypeCustom) {
             this._spnVariables = new Map<string, string>();
             return this._spnVariables;
         } 

@@ -7,7 +7,7 @@ import packerHost from "./packerHost";
 import * as packerFix from "./operations/packerFix";
 import * as packerValidate from "./operations/packerValidate";
 import * as packerBuild from "./operations/packerBuild";
-import builtinTemplateFileProvider from "./builtinTemplateFileProvider";
+import builtinTemplateFileProvider from "./builtInTemplateFileProvider";
 import CustomTemplateFileProvider from "./customTemplateFileProvider";
 import azureSpnTemplateVariablesProvider from "./azureSpnTemplateVariablesProvider";
 import TaskInputTemplateVariablesProvider from "./taskInputTemplateVariablesProvider";

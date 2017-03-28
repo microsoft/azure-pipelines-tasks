@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -254,7 +254,7 @@
     "CreatedRG": "ms-resource:loc.messages.CreatedRG",
     "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment",
     "TemplateParsingFailed": "ms-resource:loc.messages.TemplateParsingFailed",
-    "ParametersFileFetchFailed": "ms-resource:loc.messages.ParametersFileFetchFailed",
+    "FileFetchFailed": "ms-resource:loc.messages.FileFetchFailed",
     "ParametersFileParsingFailed": "ms-resource:loc.messages.ParametersFileParsingFailed",
     "StartingDeployment": "ms-resource:loc.messages.StartingDeployment",
     "CreateTemplateDeploymentSucceeded": "ms-resource:loc.messages.CreateTemplateDeploymentSucceeded",
@@ -369,6 +369,7 @@
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
-    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding"
+    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter"
   }
 }

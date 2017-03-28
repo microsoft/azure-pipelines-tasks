@@ -199,6 +199,14 @@ function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictio
     var urlPrefixes : string[] = assumeNpmUriPrefixes(serviceUri);
     tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
+    // Note to readers: This variable will be going away once we have a fix for the location service for
+    // customers behind proxies
+    let testPrefixes = tl.getVariable("NpmTasks.ExtraUrlPrefixesForTesting");
+    if (testPrefixes) {
+        urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
+        tl.debug(`all URL prefixes: ${urlPrefixes}`);
+    }
+
     // These env variables are using NUGET because the credential provider that is being used
     // was built only when NuGet was supported. It is basically using environment variable to
     // pull out the access token, hence can be used in Npm scenario as well.

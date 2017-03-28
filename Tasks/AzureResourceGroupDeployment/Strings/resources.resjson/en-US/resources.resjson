@@ -45,7 +45,7 @@
   "loc.messages.CreatedRG": "Resource Group created successfully.",
   "loc.messages.CreatingTemplateDeployment": "Creating deployment parameters.",
   "loc.messages.TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
-  "loc.messages.ParametersFileFetchFailed": "Failed to download the parameters file. Error: %s",
+  "loc.messages.FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
   "loc.messages.ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
   "loc.messages.StartingDeployment": "Starting Deployment.",
   "loc.messages.CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
@@ -160,5 +160,6 @@
   "loc.messages.TimeoutWhileWaiting": "Timed out while waiting",
   "loc.messages.InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
   "loc.messages.EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
-  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'"
+  "loc.messages.CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
 }

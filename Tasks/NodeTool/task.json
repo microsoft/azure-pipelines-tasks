@@ -1,0 +1,49 @@
+{
+    "id": "31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2",
+    "name": "NodeTool",
+    "friendlyName": "Node Tool Installer",
+    "description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 5,
+        "Patch": 1
+    },
+    "preview": true,
+    "capabilities": ["Node"],
+    "demands": [],
+    "instanceNameFormat": "Use Node $(versionSpec)",
+    "inputs": [
+        {
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version Spec",
+            "defaultValue": "6.x",
+            "required": true,
+            "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0"
+        },
+        {
+            "name": "ltsOnly",
+            "type": "boolean",
+            "label": "LTS Only",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Specifies whether the version resolution will filter to LTS only versions."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "nodetool.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ToolFailed": "Tool install failed: %s"
+    }
+}

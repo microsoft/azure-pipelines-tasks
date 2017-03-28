@@ -32,7 +32,8 @@ process.env["AGENT_NAME"] = "author";
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd"
+        "cmd": "cmd",
+        "DefaultWorkingDirectory/ctt/ctt.exe": "DefaultWorkingDirectory/ctt/ctt.exe"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -45,7 +46,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath": {
         "cmd": true,
         "webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "DefaultWorkingDirectory/ctt/ctt.exe": true
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -56,7 +58,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\cttCommand.bat": {
+        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw": {
             "code": 1,
             "stderr": "ctt execution failed"
         }
@@ -70,7 +72,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
-        "**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
+        "**/*.config": ["C:\\tempFolder\\web.config", "C:\\tempFolder\\web.Release.config", "C:\\tempFolder\\web.Debug.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -172,15 +174,6 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/ziputility.js', {
-    unzip: function() {
-
-    },
-    archiveFolder: function() {
-        return "DefaultWorkingDirectory\\temp_web_package.zip"
-    }
-});
-
 tr.registerMock('webdeployment-common/utility.js', {
     isInputPkgIsFolder: function() {
         return false;    
@@ -194,9 +187,34 @@ tr.registerMock('webdeployment-common/utility.js', {
     findfiles: function() {
         return ['webDeployPkg']    
     },
-    generateTemporaryFolderOrZipPath: function() {
+    generateTemporaryFolderForDeployment: function() {
         return 'temp_web_package_random_path';
+    },
+    archiveFolderForDeployment: function() {
+        return {
+            "webDeployPkg": "DefaultWorkingDirectory\\temp_web_package.zip",
+            "tempPackagePath": "DefaultWorkingDirectory\\temp_web_package.zip"
+        };
     }
+});
+
+tr.registerMock('path', {
+    win32: {
+        basename: function(filePath, extension) {
+            return path.win32.basename(filePath, extension);
+        }
+    },
+    join: function() {
+        if(arguments[arguments.length -1] === 'ctt.exe') {
+            return 'DefaultWorkingDirectory/ctt/ctt.exe';
+        }
+        var args = [];
+        for(var i=0; i < arguments.length; i += 1) {
+            args.push(arguments[i]);
+        }
+        return args.join('\\');
+    },
+    dirname: path.dirname
 });
 
 tr.setAnswers(a);

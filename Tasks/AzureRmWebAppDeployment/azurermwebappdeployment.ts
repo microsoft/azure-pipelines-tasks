@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import * as ParameterParser from './parameterparser'
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
@@ -9,6 +10,7 @@ var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('./kuduutility.js');
+var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
 
 async function run() {
     try {
@@ -36,6 +38,8 @@ async function run() {
         var inlineScript: string = tl.getInput('InlineScript', false);
         var scriptPath: string = tl.getPathInput('ScriptPath', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+        var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
+        var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -69,10 +73,44 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
+        var azureWebAppDetails = null;
+        var virtualApplicationPhysicalPath = null;
+        if(virtualApplication) {
+            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                virtualApplicationPhysicalPath = pathMappings[1];
+                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+            }
+            else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
         var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
+        var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
-        if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+        if (applyFileTransformFlag || generateWebConfig) {
+            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
+
+            if (generateWebConfig) {
+                var appSetingsVariables = addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
+                if(Object.keys(appSetingsVariables).length != 0 && appSetingsVariables.constructor === Object) {
+                    tl.debug('Updating app settings in Azure App Service from web.config');
+                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                    for(var appSettingVariable in appSetingsVariables) {
+                        tl.debug('Setting appsettings value: ' + appSettingVariable + ' = ' + appSetingsVariables[appSettingVariable]);
+                        appSettings.properties[appSettingVariable] = appSetingsVariables[appSettingVariable];
+                    }
+                    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    tl.debug('Updated app settings value in Azure App Service.');
+                }
+            }
+            if (applyFileTransformFlag) {
+                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+            }
+
+            var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
         }
@@ -83,18 +121,6 @@ async function run() {
 
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
-        }
-
-        var azureWebAppDetails = null;
-        if(virtualApplication) {
-            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if(pathMappings[1] != null) {
-                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
-            } else {
-                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
-            }
         }
 
         if(deployUtility.canUseWebDeploy(useWebDeploy)) {
@@ -129,9 +155,7 @@ async function run() {
 
         }
         if(scriptType) {
-            azureWebAppDetails = (azureWebAppDetails) ? azureWebAppDetails: await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var kuduWorkingDirectory = virtualApplication ? (kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings))[1] : 'site/wwwroot';
+            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
             await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
         await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
@@ -226,6 +250,42 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     catch(error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
+}
+
+function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootDirectoryPath: string) {
+    //Generate the web.config file if it does not already exist.
+    var webConfigPath = path.join(folderPath, "web.config");
+    var updateAppServiceAppSettings = { };
+    if (!tl.exist(webConfigPath)) {
+        tl.debug('web.config file does not exist. Generating.');
+        //Extract out the appType parameter as it is not to be replaced.
+        var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+        if(!webConfigParameters || !webConfigParameters['appType']) {
+            throw new Error(tl.loc("FailedToGenerateWebConfig", tl.loc("MissingWebConfigParameters")));
+        }
+        var appType: string = webConfigParameters['appType'].value;
+        delete webConfigParameters['appType'];
+        if(appType != "node") {
+            rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
+            tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
+            webConfigParameters['KUDU_WORKING_DIRECTORY'] = {
+                value: rootDirectoryPath
+            };
+            updateAppServiceAppSettings['PYTHON_EXT_PATH'] = webConfigParameters['PYTHON_PATH'].value;
+        }
+        try {
+            // Create web.config
+            generateWebConfigUtil.generateWebConfigFile(webConfigPath, appType, webConfigParameters);
+            console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
+        }
+        catch (error) {
+            throw new Error(tl.loc("FailedToGenerateWebConfig", error));
+        }
+    }
+    else {
+        console.log(tl.loc('WebConfigAlreadyExists'));
+    }
+    return updateAppServiceAppSettings;
 }
 
 run();

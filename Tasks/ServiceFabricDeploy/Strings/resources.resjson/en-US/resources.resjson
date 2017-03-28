@@ -23,6 +23,8 @@
   "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
   "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
   "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
+  "loc.input.label.skipPackageValidation": "Skip package validation",
+  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
   "loc.input.label.overridePublishProfileSettings": "Override All Publish Profile Upgrade Settings",
   "loc.input.help.overridePublishProfileSettings": "This will override all upgrade settings with either the values specified below or the default value if not specified.",
   "loc.input.label.isUpgrade": "Upgrade the Application",

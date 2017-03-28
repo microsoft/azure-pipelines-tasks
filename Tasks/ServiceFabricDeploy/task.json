@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [
         "Cmd"
@@ -117,6 +117,15 @@
             "required": false,
             "groupname": "advanced",
             "helpMarkDown": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent."
+        },
+        {
+            "name": "skipPackageValidation",
+            "type": "boolean",
+            "label": "Skip package validation",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Indicates whether the package should be validated or not before deployment."
         },
         {
             "name": "overridePublishProfileSettings",

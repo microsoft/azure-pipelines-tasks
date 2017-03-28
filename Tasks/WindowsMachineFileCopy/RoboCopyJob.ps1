@@ -161,16 +161,31 @@ param (
         return ""
     }
     
+    function Get-NetExeCommand
+    {
+        $netExePath = Join-Path -path (get-item env:\windir).value -ChildPath system32\net.exe
+        if(Test-Path $netExePath)
+        {
+            Write-Verbose "Found the net exe path $netExePath. Net command will be $netExePath"
+            return $netExePath
+        }
+        
+        Write-Verbose "Unable to get the path for net.exe. Net command will be 'net'"
+        return 'net'
+    }
+    
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
     
     Validate-Credential $credential
     $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
     $password = $($credential.Password) 
+    
+    $netExeCommand = Get-NetExeCommand
 
     if($machineShare)
     {
-        $command = "net use `"$machineShare`""
+        $command = "$netExeCommand use `"$machineShare`""
         if($userName)
         {
             $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
@@ -217,8 +232,8 @@ param (
     finally
     {
         if($machineShare)
-        {
-            net use $machineShare /D /Y;  
+        {            
+            $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
         }
     }
 }

@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -254,7 +254,7 @@
         "CreatedRG": "Resource Group created successfully.",
         "CreatingTemplateDeployment": "Creating deployment parameters.",
         "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
-        "ParametersFileFetchFailed": "Failed to download the parameters file. Error: %s",
+        "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
         "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
         "StartingDeployment": "Starting Deployment.",
         "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
@@ -369,6 +369,7 @@
         "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
-        "CouldNotDetectEncoding": "Could not detect encoding of file '%s'"
+        "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
     }
 }
