@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 5,
-    "Patch": 1
+    "Minor": 6,
+    "Patch": 0
   },
   "preview": true,
   "satisfies": [
@@ -31,12 +31,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
-      "name": "ltsOnly",
+      "name": "checkLatest",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.ltsOnly",
+      "label": "ms-resource:loc.input.label.checkLatest",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ltsOnly"
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest"
     }
   ],
   "execution": {
