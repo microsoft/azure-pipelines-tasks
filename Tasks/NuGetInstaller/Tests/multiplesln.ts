@@ -18,12 +18,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
         },
-       "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive": {
+       "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

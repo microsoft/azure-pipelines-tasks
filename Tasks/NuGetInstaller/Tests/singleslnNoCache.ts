@@ -19,7 +19,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NoCache -NonInteractive": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NoCache -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

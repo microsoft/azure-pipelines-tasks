@@ -7,10 +7,9 @@ import * as auth from "nuget-task-common/Authentication";
 import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
+import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
 import * as nutil from "nuget-task-common/Utility";
-
-"use strict";
 
 const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
 
@@ -76,44 +75,21 @@ async function main(): Promise<void> {
             }
         }
 
-        let nugetUxOption = tl.getInput('nuGetVersion');
-
-        // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
-        // locateNuGetExe() will strip them and check for existence there.
-        let nuGetPath = tl.getPathInput("nuGetPath", false, false);
-        let userNuGetProvided = false;
-        if(nuGetPath !== null && tl.filePathSupplied("nuGetPath")){
-            nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
-            // True if the user provided their own version of NuGet
-            userNuGetProvided = true;
-            if (nugetUxOption !== "custom"){
-                // For back compat, if a path has already been specificed then use it.
-                // However warn the user in the build of this behavior
-                tl.warning(tl.loc("Warning_ConflictingNuGetPreference"));
-            }
-        }
-        else {
-            if (nugetUxOption === "custom")
-            {
-                throw new Error(tl.loc("NoNuGetSpecified"))
-            }
-            // Pull the pre-installed path for NuGet.
-            nuGetPath = nutil.getBundledNuGetLocation(nugetUxOption);
-        }
-
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
         let credProviderPath = nutil.locateCredentialProvider();
 
+        let versionSpec = tl.getInput('versionSpec', true);
+        let nuGetPath = await nuGetGetter.getNuGet(versionSpec);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
-
         let accessToken = auth.getSystemAccessToken();
+
         let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
@@ -129,11 +105,12 @@ async function main(): Promise<void> {
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
             credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
-            extensionsDisabled: !userNuGetProvided
+            extensionsDisabled: true
         };
 
         let configFile = nuGetConfigPath;
         let credCleanup = () => { return; };
+
         if (useCredConfig) {
             if (nuGetConfigPath) {
                 let nuGetConfigHelper = new NuGetConfigHelper(
@@ -183,8 +160,6 @@ async function main(): Promise<void> {
     }
 }
 
-main();
-
 function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.Promise<number> {
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment);
 
@@ -219,3 +194,5 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
 
     return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
 }
+
+main();

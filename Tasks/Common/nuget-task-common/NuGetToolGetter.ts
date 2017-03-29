@@ -19,7 +19,7 @@ enum NuGetReleaseStage
     "ReleasedAndBlessed"
 }
 
-export async function getNuGet(versionSpec: string) {
+export async function getNuGet(versionSpec: string): Promise<string> {
     if (toolLib.isExplicitVersion(versionSpec)) {
         taskLib.debug('Exact match expected on version: ' + versionSpec);
     }
@@ -77,6 +77,7 @@ export async function getNuGet(versionSpec: string) {
     console.log(taskLib.loc("Info_UsingToolPath", toolPath));
     toolLib.prependPath(toolPath);
     console.log();
+    return toolPath;
 }
 
 function GetRestClientOptions(): restm.IRequestOptions
