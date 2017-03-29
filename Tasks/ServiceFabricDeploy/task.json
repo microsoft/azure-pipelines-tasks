@@ -134,7 +134,7 @@
             "defaultValue": "false",
             "required": false,
             "groupname": "upgrade",
-            "helpMarkDown": "This will remove all unused type versions after deployment."
+            "helpMarkDown": "Indicates whether all unused versions of the application type will be removed after an upgrade."
         },
         {
             "name": "overridePublishProfileSettings",
