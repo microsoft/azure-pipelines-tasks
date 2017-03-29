@@ -1,6 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
-import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'vsts-task-lib/mock-test';
@@ -59,7 +56,7 @@ describe('MSBuild Suite', function () {
     it('Xplat MSBuild: Defaults', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0MSBuildDefaults.js');
+        let tp: string = path.join(__dirname, 'L0MSBuildDefaults.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -78,7 +75,7 @@ describe('MSBuild Suite', function () {
     it('Xplat MSBuild: Clean and Build', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0MSBuildClean.js');
+        let tp: string = path.join(__dirname, 'L0MSBuildClean.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -101,7 +98,7 @@ describe('MSBuild Suite', function () {
     it('Xplat MSBuild: Multiple solutions', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0MSBuildMultipleSolutions.js');
+        let tp: string = path.join(__dirname, 'L0MSBuildMultipleSolutions.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();

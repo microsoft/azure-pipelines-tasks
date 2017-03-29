@@ -1,5 +1,4 @@
 import path = require('path');
-import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
@@ -8,28 +7,28 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         //read inputs
-        let solution = tl.getPathInput('solution', true, false);
-        let platform = tl.getInput('platform');
-        let configuration = tl.getInput('configuration');
-        let msbuildArguments = tl.getInput('msbuildArguments');
-        let clean = tl.getBoolInput('clean');
+        let solution: string = tl.getPathInput('solution', true, false);
+        let platform: string = tl.getInput('platform');
+        let configuration: string = tl.getInput('configuration');
+        let msbuildArguments: string = tl.getInput('msbuildArguments');
+        let clean: boolean = tl.getBoolInput('clean');
 
-        let logsolutionEvents = tl.getBoolInput('logsolutionEvents');
+        let logsolutionEvents: boolean = tl.getBoolInput('logsolutionEvents');
         if (logsolutionEvents) {
             tl.warning(tl.loc('RecordProjectDetailsOnlySupportedOnWindows'));
         }
 
-        let createLogFile = tl.getBoolInput('createLogFile');
+        let createLogFile: boolean = tl.getBoolInput('createLogFile');
         if (createLogFile) {
             tl.warning(tl.loc('CreateLogFileOnlySupportedOnWindows'));
         }
 
-        let msbuildLocationMethod = tl.getInput('msbuildLocationMethod');
+        let msbuildLocationMethod: string = tl.getInput('msbuildLocationMethod');
         if (!msbuildLocationMethod) {
             msbuildLocationMethod = 'version';
         }
 
-        var xbuildToolPath = tl.which('xbuild'); //ignore msbuild version on non-Windows platforms, use xbuild
+        let xbuildToolPath: string = tl.which('xbuild'); //ignore msbuild version on non-Windows platforms, use xbuild
         if (msbuildLocationMethod == 'location') {
             xbuildToolPath = tl.getInput('msbuildLocation');
         }
