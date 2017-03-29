@@ -26,17 +26,9 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "3.5.x",
+      "defaultValue": "4.0.0",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
-    },
-    {
-      "name": "stableOnly",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.stableOnly",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.stableOnly"
     }
   ],
   "execution": {
@@ -45,13 +37,5 @@
       "argumentFormat": ""
     }
   },
-  "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
-    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
-    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
-    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
-    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
-    "Warning_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Warning_NoVersionWasFoundWhichMatches",
-    "Warning_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Warning_NoUrlWasFoundWhichMatches"
-  }
+  "messages": {}
 }
