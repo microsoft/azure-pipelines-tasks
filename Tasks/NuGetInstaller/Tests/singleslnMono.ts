@@ -23,7 +23,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "mono":"/usr/bin/mono"
     },
     "exec": {
-        "/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive": {
+        "/usr/bin/mono c:\\from\\tool\\installer\\nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

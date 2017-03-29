@@ -9,13 +9,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 6
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "1.99.0",
+    "minimumAgentVersion": "1.83.0",
     "groups": [
         {
             "name": "advanced",
@@ -76,18 +76,6 @@
             "visibleRule": "selectOrConfig = config"
         },
         {
-            "name": "restoreMode",
-            "type": "radio",
-            "label": "Installation type",
-            "defaultValue": "restore",
-            "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
-            "required": "true",
-            "options": {
-                "restore": "Restore",
-                "install": "Install"
-            }
-        },
-        {
             "name": "noCache",
             "type": "boolean",
             "label": "Disable local cache",
@@ -100,7 +88,7 @@
             "name": "packagesDirectory",
             "type": "string",
             "label": "Destination directory",
-            "defaultValue": "false",
+            "defaultValue": "",
             "helpMarkDown": "Equivalent to the -PackagesDirectory NuGet.exe command line argument",
             "required": "false",
             "groupName": "advanced"
@@ -121,29 +109,14 @@
             }
         },
         {
-            "name": "nuGetVersion",
-            "type": "radio",
-            "label": "NuGet Version",
-            "defaultValue": "3.3.0",
-            "helpMarkDown": "The version of NuGet to use, or external version.",
-            "required": "true",
-            "groupName": "advanced",
-            "options": {
-                "3.3.0": "3.3.0",
-                "3.5.0.1829": "3.5.0",
-                "4.0.0.2283": "4.0.0",
-                "custom": "Custom"
-            }
-        },
-        {
-            "name": "nuGetPath",
+            "name": "versionSpec",
             "type": "string",
-            "label": "Path to NuGet.exe",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
-            "groupName": "advanced"
-         }
+            "label": "Version Spec",
+            "defaultValue": "4.0.0",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. List of available versions obtained from [here](http://dist.nuget.org/tools.json). Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
+        }
     ],
     "dataSourceBindings": [
         {

@@ -21,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://www.nuget.org/api/v2/ -NonInteractive": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://www.nuget.org/api/v2/ -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
