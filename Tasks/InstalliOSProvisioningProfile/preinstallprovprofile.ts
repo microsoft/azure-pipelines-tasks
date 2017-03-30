@@ -29,7 +29,7 @@ async function run() {
             } else if (profiles.length > 1) {
                 throw tl.loc('MULTIPLE_PROVPROFILES_FOUND');
             } else {
-                provProfilePath = provProfileFilePath;
+                provProfilePath = profiles[0];
             }
         }
 
