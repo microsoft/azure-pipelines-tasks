@@ -1,108 +1,70 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1024"
-   height="1024"
-   id="svg2"
-   version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="icon.svg"
-   inkscape:export-filename="C:\Users\Jamie\Sources\vsts-tasks\Tasks\DeployAzureResourceGroup\icon.png"
-   inkscape:export-xdpi="2.8099999"
-   inkscape:export-ydpi="2.8099999">
-  <defs
-     id="defs10" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="3440"
-     inkscape:window-height="1377"
-     id="namedview8"
-     showgrid="true"
-     inkscape:snap-bbox="true"
-     inkscape:bbox-nodes="true"
-     inkscape:object-nodes="true"
-     inkscape:zoom="0.7186292"
-     inkscape:cx="134.72037"
-     inkscape:cy="378.79866"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2">
-    <inkscape:grid
-       type="xygrid"
-       id="grid4148"
-       spacingx="32"
-       spacingy="32"
-       empspacing="4" />
-  </sodipodi:namedview>
-  <metadata
-     id="metadata4">
-    <rdf:RDF>
-      <cc:Work>
-        <dc:subject>
-                    Compute
-                </dc:subject>
-        <dc:identifier>
-                    virtual-machines
-                </dc:identifier>
-        <dc:title></dc:title>
-        <dc:format>
-                    image/svg+xml
-                </dc:format>
-        <dc:publisher>
-                    Amido Limited
-                </dc:publisher>
-        <dc:creator>
-                    Richard Slater
-                </dc:creator>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <path
-     d="M 512,224 224,337.77778 512,480 800,337.77778 Z"
-     id="path4142"
-     style="fill:#3999c6;fill-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     d="m 224,384 -1e-5,320.63868 L 480,832 480,512 Z"
-     id="path4140"
-     style="fill:#59b4d9;fill-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     d="M 800,384 544,512 544,832 800,704 Z"
-     id="path6"
-     style="fill:#abd9ec;fill-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#424242;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:34.62200165;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
-     d="m 287.72461,190.42969 c -2.72391,-0.0309 -5.41667,0.58138 -7.85938,1.78711 L 128.07617,264.48438 128,768 278.4082,857.74805 c 7.9627,5.44533 18.8401,3.33229 24.18502,-4.69814 5.34492,-8.03044 3.0955,-18.88045 -5.00142,-24.12413 l -134.96875,-79.4707 0.0762,-463.10742 132.04883,-62.8711 c 7.36264,-3.37842 11.39826,-11.41057 9.71422,-19.33434 -1.68403,-7.92377 -8.63744,-13.62043 -16.73766,-13.71253 z"
-     id="path4159"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cccccsccccsc" />
-  <path
-     inkscape:connector-curvature="0"
-     id="path4172"
-     d="m 737.20889,190.42969 c 2.72391,-0.0309 5.41667,0.58138 7.85938,1.78711 L 896.85733,264.48438 896,768 746.5253,857.74805 c -7.9627,5.44533 -18.8401,3.33229 -24.18502,-4.69814 -5.34492,-8.03044 -3.0955,-18.88045 5.00142,-24.12413 l 134.03525,-79.4707 0.85733,-463.10742 -132.04883,-62.8711 c -7.36264,-3.37842 -11.39826,-11.41057 -9.71422,-19.33434 1.68403,-7.92377 8.63744,-13.62043 16.73766,-13.71253 z"
-     style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#424242;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:34.62200165;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
-     sodipodi:nodetypes="cccccsccccsc"
-     inkscape:export-xdpi="2.8099999"
-     inkscape:export-ydpi="2.8099999" />
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 152 117.5" enable-background="new 0 0 152 117.5" xml:space="preserve">
+<g id="Layer_1">
+	<g id="Azure">
+	</g>
+	<g id="BizTalk_Services" transform="translate(37.3575,-2500.2)">
+	</g>
+	<g id="Key_Vault">
+		<g>
+			<path fill="#0078D7" d="M99.2,61.4c0-7.3-3.5-13.7-8.8-17.8c0,0.2,0,0.5,0,0.7c0,2.2-0.6,4.3-1.5,6.1c2.6,2.9,4.2,6.7,4.2,10.9
+				c0,9-7.3,16.3-16.3,16.3s-16.3-7.3-16.3-16.3c0-4.5,1.8-8.5,4.7-11.5c-0.8-1.7-1.3-3.6-1.3-5.6c0-0.4,0-0.9,0.1-1.3
+				c-5.8,4-9.6,10.8-9.6,18.4c0,12.4,10,22.4,22.4,22.4S99.2,73.8,99.2,61.4z"/>
+			<g>
+				<path fill="#0078D7" d="M77.1,33.8c-5.7,0-10.3,4.6-10.3,10.3c0,4.7,3.1,8.6,7.4,9.9v10.2h-4.8v5.2h4.8v3.8h5.7V54
+					c4.3-1.2,7.4-5.2,7.4-9.9C87.4,38.4,82.8,33.8,77.1,33.8z M77.1,39.2c2.7,0,4.9,2.2,4.9,4.9c0,2.7-2.2,4.9-4.9,4.9
+					c-2.7,0-4.9-2.2-4.9-4.9C72.2,41.4,74.4,39.2,77.1,39.2z"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="paths">
+	<g id="Access_control">
+	</g>
+	<g id="Azure_active_directory">
+	</g>
+	<g id="API_Management">
+	</g>
+	<g id="Azure_automation">
+	</g>
+	<g id="Azure_SQL_database">
+	</g>
+	<g id="Azure_subscription">
+	</g>
+	<g id="Backup_service">
+	</g>
+	<g id="Bitbucket_code_source">
+	</g>
+	<g id="Azure_cache">
+	</g>
+	<g id="Content_delivery_network__x28_CDN_x29_">
+	</g>
+	<g id="Cloud_service">
+	</g>
+	<g id="CodePlex">
+	</g>
+	<g id="Dropbox_code_source">
+	</g>
+	<g id="Express_route">
+	</g>
+	<g id="Git_repository">
+	</g>
+	<g id="GitHub_code">
+	</g>
+	<g id="HD_Insight">
+	</g>
+	<g id="Health_monitoring">
+	</g>
+	<g id="Healthy">
+	</g>
+	<g id="BizTalk_hybrid_connection">
+	</g>
+	<g id="Hybrid_connection_manager_for_BizTalk_hybrid_connection">
+	</g>
+	<g id="Hyper-V_recovery_manager">
+	</g>
+</g>
 </svg>
