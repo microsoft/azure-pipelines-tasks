@@ -131,7 +131,7 @@
       "name": "unregisterUnusedVersions",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.unregisterUnusedVersions",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "groupname": "upgrade",
       "helpMarkDown": "ms-resource:loc.input.help.unregisterUnusedVersions"
