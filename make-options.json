@@ -24,6 +24,8 @@
         "DecryptFile",
         "DeleteFiles",
         "DeployVisualStudioTestAgent",
+        "Docker",
+        "DockerCompose",
         "DotNetCoreCLI",
         "ExtractFiles",
         "FtpUpload",

@@ -24,17 +24,9 @@
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",
-            "defaultValue": "3.5.x",
+            "defaultValue": "4.0.0",
             "required": true,
-            "helpMarkDown": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor and patch versions MUST match. Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
-        },
-        {
-            "name": "stableOnly",
-            "type": "boolean",
-            "label": "Stable Only",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Specifies whether the version resolution will filter to stable only versions."
+            "helpMarkDown": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. List of available versions obtained from [here](http://dist.nuget.org/tools.json). Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
         }
     ],
     "execution": {
@@ -43,13 +35,5 @@
             "argumentFormat": ""
         }
     },
-    "messages": {
-        "ToolFailed": "Tool install failed: %s",
-        "Info_AvailableVersions": "The available versions are: %s",
-        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
-        "Info_UsingVersion": "Using version: %s",
-        "Info_UsingToolPath": "Using tool path: %s",
-        "Warning_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
-        "Warning_NoUrlWasFoundWhichMatches": "No download URL was found for %s"
-    }
+    "messages": {}
 }

@@ -5,6 +5,7 @@
     "description": "Run a Shell or Batch script with Azure CLI commands against an azure subscription",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
+    "releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with Xplat agents (Windows, Linux or OSX)\n- For working with Azure CLI 1.0 (node based), switch to task version 0.0\n- Limitations:\n - No support for Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -34,7 +35,6 @@
             "name": "connectedServiceNameARM",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
-            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
         },
@@ -79,7 +79,10 @@
             "label": "Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Arguments passed to the script"
+            "helpMarkDown": "Arguments passed to the script",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
         },
         {
             "name": "cwd",
