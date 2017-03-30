@@ -171,6 +171,11 @@
     "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "ms-resource:loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion",
     "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent",
     "RecordProjectDetailsOnlySupportedOnWindows": "ms-resource:loc.messages.RecordProjectDetailsOnlySupportedOnWindows",
-    "CreateLogFileOnlySupportedOnWindows": "ms-resource:loc.messages.CreateLogFileOnlySupportedOnWindows"
+    "CreateLogFileOnlySupportedOnWindows": "ms-resource:loc.messages.CreateLogFileOnlySupportedOnWindows",
+    "MSB_Build0": "ms-resource:loc.messages.MSB_Build0",
+    "MSB_DetectedNuGetExtensionsLoaderPath0": "ms-resource:loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0",
+    "MSB_SolutionNotFoundUsingSearchPattern0": "ms-resource:loc.messages.MSB_SolutionNotFoundUsingSearchPattern0",
+    "MSB_RestoreNuGetPackagesDeprecated": "ms-resource:loc.messages.MSB_RestoreNuGetPackagesDeprecated",
+    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
   }
 }

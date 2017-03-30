@@ -1,6 +1,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
 
 async function run() {
     try {
@@ -28,15 +29,19 @@ async function run() {
             msbuildLocationMethod = 'version';
         }
 
-        let xbuildToolPath: string = tl.which('xbuild'); //ignore msbuild version on non-Windows platforms, use xbuild
-        if (msbuildLocationMethod == 'location') {
-            xbuildToolPath = tl.getInput('msbuildLocation');
+        let msbuildTool: string;
+        if (msbuildLocationMethod === 'version') {
+            let msbuildVersion: string = tl.getInput('msbuildVersion');
+            msbuildTool = await msbuildHelpers.getMSBuildPath(msbuildVersion);
         }
+        if (msbuildLocationMethod === 'location') {
+            msbuildTool = tl.getInput('msbuildLocation');
+        } 
 
         let filesList: string[] = tl.findMatch(null, solution, null, { matchBase: true });
         for (let file of filesList) {
             if (clean) {
-                let cleanTool: ToolRunner = tl.tool(xbuildToolPath);
+                let cleanTool: ToolRunner = tl.tool(msbuildTool);
                 cleanTool.arg(file);
                 cleanTool.argIf(clean, '/t:Clean');
                 cleanTool.argIf(platform, '/p:Platform=' + platform);
@@ -47,7 +52,7 @@ async function run() {
                 await cleanTool.exec();
             }
 
-            let buildTool: ToolRunner = tl.tool(xbuildToolPath);
+            let buildTool: ToolRunner = tl.tool(msbuildTool);
             buildTool.arg(file);
             buildTool.argIf(platform, '/p:Platform=' + platform);
             buildTool.argIf(configuration, '/p:Configuration=' + configuration);
