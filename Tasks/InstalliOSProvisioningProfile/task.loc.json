@@ -22,7 +22,7 @@
   "demands": [
     "xcode"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.116.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -59,7 +59,7 @@
       "name": "removeProfile",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.removeProfile",
-      "defaultValue": false,
+      "defaultValue": true,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.removeProfile"
     }

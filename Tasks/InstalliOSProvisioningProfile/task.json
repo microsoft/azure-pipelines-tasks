@@ -22,7 +22,7 @@
     "demands": [
         "xcode"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.116.0",
     "instanceNameFormat": "Install an iOS provisioning profile",
     "inputs": [
         {
@@ -59,7 +59,7 @@
             "name": "removeProfile",
             "type": "boolean",
             "label": "Remove Profile After Build",
-            "defaultValue": false,
+            "defaultValue": true,
             "required": false,
             "helpMarkDown": "Select to specify that the Provisioning Profile should be removed from the agent after the build or release is complete."
         }
