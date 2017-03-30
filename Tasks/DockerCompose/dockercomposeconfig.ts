@@ -3,7 +3,7 @@
 import * as fs from "fs";
 import * as tl from "vsts-task-lib/task";
 import * as yaml from "js-yaml";
-import DockerComposeConnection from "./dockerComposeConnection";
+import DockerComposeConnection from "./dockercomposeconnection";
 
 export function run(connection: DockerComposeConnection, imageDigestComposeFile?: string): any {
     return connection.getCombinedConfig(imageDigestComposeFile).then(output => {

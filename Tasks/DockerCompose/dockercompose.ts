@@ -1,7 +1,7 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import DockerComposeConnection from "./dockerComposeConnection";
+import DockerComposeConnection from "./dockercomposeconnection";
 
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));

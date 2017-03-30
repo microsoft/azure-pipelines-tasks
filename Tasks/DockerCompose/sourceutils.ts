@@ -1,7 +1,7 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import * as gitUtils from "./gitUtils";
+import * as gitUtils from "./gitutils";
 
 export function getSourceTags(): string[] {
     var tags: string[];
