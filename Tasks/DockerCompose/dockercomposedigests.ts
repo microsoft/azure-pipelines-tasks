@@ -3,8 +3,8 @@
 import * as fs from "fs";
 import * as tl from "vsts-task-lib/task";
 import * as yaml from "js-yaml";
-import DockerComposeConnection from "./dockerComposeConnection";
-import * as imageUtils from "./dockerImageUtils";
+import DockerComposeConnection from "./dockercomposeconnection";
+import * as imageUtils from "./dockerimageutils";
 
 function dockerPull(connection: DockerComposeConnection, imageName: string, imageDigests: any, serviceName: string) {
     var command = connection.createCommand();

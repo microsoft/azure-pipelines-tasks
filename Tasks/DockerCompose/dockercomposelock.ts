@@ -3,9 +3,9 @@
 import * as del from "del";
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import DockerComposeConnection from "./dockerComposeConnection";
-import { createImageDigestComposeFile } from "./dockerComposeDigests";
-import { run as runDockerComposeConfig } from "./dockerComposeConfig";
+import DockerComposeConnection from "./dockercomposeconnection";
+import { createImageDigestComposeFile } from "./dockercomposedigests";
+import { run as runDockerComposeConfig } from "./dockercomposeconfig";
 
 export function run(connection: DockerComposeConnection): any {
     var agentDirectory = tl.getVariable("Agent.HomeDirectory"),

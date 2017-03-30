@@ -1,9 +1,9 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import DockerComposeConnection from "./dockerComposeConnection";
-import * as sourceUtils from "./sourceUtils";
-import * as imageUtils from "./dockerImageUtils";
+import DockerComposeConnection from "./dockercomposeconnection";
+import * as sourceUtils from "./sourceutils";
+import * as imageUtils from "./dockerimageutils";
 
 function dockerPush(connection: DockerComposeConnection, imageName: string) {
     var command = connection.createCommand();

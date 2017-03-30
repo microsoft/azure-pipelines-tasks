@@ -1,7 +1,7 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import DockerConnection from "./dockerConnection";
+import DockerConnection from "./dockerconnection";
 
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
@@ -14,10 +14,10 @@ connection.open(tl.getInput("dockerHostEndpoint"), tl.getInput("dockerRegistryEn
 var action = tl.getInput("action", true);
 /* tslint:disable:no-var-requires */
 require({
-    "Build an image": "./dockerBuild",
-    "Push an image": "./dockerPush",
-    "Run an image": "./dockerRun",
-    "Run a Docker command": "./dockerCommand"
+    "Build an image": "./dockerbuild",
+    "Push an image": "./dockerpush",
+    "Run an image": "./dockerrun",
+    "Run a Docker command": "./dockercommand"
 }[action]).run(connection)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {

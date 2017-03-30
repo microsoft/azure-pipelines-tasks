@@ -2,9 +2,9 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import DockerConnection from "./dockerConnection";
-import * as sourceUtils from "./sourceUtils";
-import * as imageUtils from "./dockerImageUtils";
+import DockerConnection from "./dockerconnection";
+import * as sourceUtils from "./sourceutils";
+import * as imageUtils from "./dockerimageutils";
 
 export function run(connection: DockerConnection): any {
     var command = connection.createCommand();

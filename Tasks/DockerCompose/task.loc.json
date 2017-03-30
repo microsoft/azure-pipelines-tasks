@@ -265,7 +265,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "dockerCompose.js",
+      "target": "dockercompose.js",
       "argumentFormat": ""
     }
   }

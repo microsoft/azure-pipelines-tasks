@@ -6,7 +6,7 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as yaml from "js-yaml";
-import DockerConnection from "./dockerConnection";
+import DockerConnection from "./dockerconnection";
 
 export default class DockerComposeConnection extends DockerConnection {
     private dockerComposePath: string;
