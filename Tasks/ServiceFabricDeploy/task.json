@@ -131,7 +131,7 @@
             "name": "unregisterUnusedVersions",
             "type": "boolean",
             "label": "Unregister Unused Versions",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "groupname": "upgrade",
             "helpMarkDown": "Indicates whether all unused versions of the application type will be removed after an upgrade."
