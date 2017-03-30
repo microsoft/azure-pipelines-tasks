@@ -42,7 +42,8 @@
         "Swap Slots": "Swap Slots",
         "Start Azure App Service": "Start App Service",
         "Stop Azure App Service": "Stop App Service",
-        "Restart Azure App Service": "Restart App Service"
+        "Restart Azure App Service": "Restart App Service",
+        "Install Extensions": "Install Extensions"
       }
     },
     {
@@ -127,6 +128,21 @@
       },
       "required": true,
       "visibleRule": "Action != Swap Slots && SpecifySlot = true"
+    },
+    {
+      "name": "ExtensionsList",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ExtensionsList",
+      "defaultValue": "",
+      "properties": {
+        "MultiSelectFlatList": "True"
+      },
+      "options": {
+        "ComposerExtension": "Composer",
+        "python2713x86": "Python 2.7.13 (X86)"
+      },
+      "required": "True",
+      "visibleRule": "Action = Install Extensions"
     }
   ],
   "dataSourceBindings": [
@@ -207,6 +223,13 @@
     "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
-    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot"
+    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",
+    "ExtensionInstallFailedError": "ms-resource:loc.messages.ExtensionInstallFailedError",
+    "ExtensionInstallFailedResponseError": "ms-resource:loc.messages.ExtensionInstallFailedResponseError",
+    "ExtensionInstallSuccess": "ms-resource:loc.messages.ExtensionInstallSuccess",
+    "ExtensionAlreadyAvaiable": "ms-resource:loc.messages.ExtensionAlreadyAvaiable",
+    "ExtensionListFailedError": "ms-resource:loc.messages.ExtensionListFailedError",
+    "ExtensionListFailedResponseError": "ms-resource:loc.messages.ExtensionListFailedResponseError",
+    "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension"
   }
 }
