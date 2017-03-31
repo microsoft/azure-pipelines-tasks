@@ -54,7 +54,7 @@
             "label": "MSBuild Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on Mac)."
+            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on macOS)."
         },
         {
             "name": "clean",
@@ -119,7 +119,7 @@
             "required": false,
             "groupName": "advanced",
             "defaultValue": "15.0",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild(Mono) will be used.",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
             "visibleRule": "msbuildLocationMethod = version",
             "options": {
                 "latest": "Latest",
@@ -176,6 +176,6 @@
         "MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
         "MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
         "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
-        "MSB_BuildToolNotFound": "MSBuild or xbuild(Mono) were not found on the Mac/Linux agent"
+        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent"
     }
 }
