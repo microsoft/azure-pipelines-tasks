@@ -64,7 +64,7 @@ function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
     }
     var domContent = (fileEncodeType[1] ? '\uFEFF' : '') + ltxdomutility.getContentWithHeader(xmlDocument);
     for(var paramFileReplacableValue in paramFileReplacableValues) {
-        tl.debug('Parameters file - Replacing value for temp_name: ' + paramFileReplacableValue + ' with: ' + paramFileReplacableValues[paramFileReplacableValue]);
+        tl.debug('Parameters file - Replacing value for temp_name: ' + paramFileReplacableValue);
         domContent = domContent.replace(paramFileReplacableValue, paramFileReplacableValues[paramFileReplacableValue]);
     }
     tl.writeFile(parameterFilePath, domContent, fileEncodeType[0]);
@@ -178,7 +178,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues) 
         var attributeNameValue = (attributeName === "key") ? xmlDomNodeAttributes[attributeName] : attributeName;
         var attributeName = (attributeName === "key") ? "value" : attributeName;
         if(variableMap[attributeNameValue]) {
-            var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeName + ')';
+            var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
             tl.debug('Updating value for key=' + attributeNameValue + 'with token_value: ' + ConfigFileAppSettingsTokenName);
             xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
             replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
