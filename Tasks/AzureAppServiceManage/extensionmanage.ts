@@ -66,6 +66,7 @@ export async function installExtension(publishingProfile, extension: string) {
 
 export async function installExtensions(publishingProfile, extensions: Array<string>) {
     var InstalledExtensions = await getInstalledExtensions(publishingProfile);
+    var anyExtensionInstalled = false;
     for(var extension of extensions) {
         extension = extension.trim();
         if(InstalledExtensions[extension]) {
@@ -75,6 +76,8 @@ export async function installExtensions(publishingProfile, extensions: Array<str
             tl.debug("Extension '" + extension + "' not installed. Installing...");
             await installExtension(publishingProfile, extension);
             tl.debug('Extension ' + extension + ' installed successfully');
+            anyExtensionInstalled = true;
         }
     }
+    return anyExtensionInstalled;
 }

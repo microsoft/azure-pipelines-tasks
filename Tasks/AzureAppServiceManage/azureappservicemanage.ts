@@ -68,6 +68,16 @@ async function run() {
                 console.log(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
+            case "Install Extensions": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                tl.debug('Retrieved publishing Profile');
+                var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, extensionList.split(','));
+                if(!anyExtensionInstalled) {
+                    tl.debug('No new extension installed. Skipping Restart App Service.');
+                    break;
+                }
+            }
             case "Restart Azure App Service": {
                 console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
@@ -81,13 +91,6 @@ async function run() {
                     throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
                 }
                 await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
-                break;
-            }
-            case "Install Extensions": {
-                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
-                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
-                tl.debug('Retrieved publishing Profile');
-                await extensionManage.installExtensions(publishingProfile, extensionList.split(','));
                 break;
             }
             default:
