@@ -3,7 +3,7 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'vsts-task-lib/mock-test';
 
-describe('InstalliOSProvisioningProfile Suite', function () {
+describe('InstallAppleProvisioningProfile Suite', function () {
     this.timeout(20000);
     before(() => {
     });

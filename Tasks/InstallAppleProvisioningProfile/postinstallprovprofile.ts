@@ -8,11 +8,11 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        var removeProfile = tl.getInput('removeProfile');
+        let removeProfile: boolean = tl.getBoolInput('removeProfile');
         if (removeProfile) {
-            var UUID = tl.getTaskVariable("INSTALLED_PROV_PROFILE_UUID");
-            if (UUID) {
-                await sign.deleteProvisioningProfile(UUID);
+            let profileUUID: string = tl.getTaskVariable("INSTALLED_PROV_PROFILE_UUID");
+            if (profileUUID) {
+                await sign.deleteProvisioningProfile(profileUUID);
             }
         }
     } catch (err) {

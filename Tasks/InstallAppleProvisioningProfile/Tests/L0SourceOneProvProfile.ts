@@ -9,7 +9,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('provProfileSource', 'Repo');
 tr.setInput('provProfileFilePath', '**/*.mobileprovision');
 
-process.env['AGENT_VERSION'] = '2.115.0';
+process.env['AGENT_VERSION'] = '2.116.0';
 process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 
 tr.registerMock('fs', {

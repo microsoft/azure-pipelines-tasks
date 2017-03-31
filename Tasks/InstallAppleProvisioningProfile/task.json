@@ -1,8 +1,8 @@
 {
     "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
     "name": "InstalliOSProvisioningProfile",
-    "friendlyName": "Install an iOS provisioning profile",
-    "description": "Install an iOS provisioning profile required to build an iOS app on a Mac agent",
+    "friendlyName": "Install Apple Provisioning Profile",
+    "description": "Install an apple provisioning profile required to build on a macOS agent",
     "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
@@ -23,19 +23,19 @@
         "xcode"
     ],
     "minimumAgentVersion": "2.116.0",
-    "instanceNameFormat": "Install an iOS provisioning profile",
+    "instanceNameFormat": "Install an apple provisioning profile",
     "inputs": [
         {
             "name": "provProfileSource",
             "type": "pickList",
-            "label": "Provisioning Profile Source Location",
+            "label": "Provisioning Profile Location",
             "defaultValue": "SecureFile",
             "required": true,
             "options": {
                 "SecureFile": "Secure File (Preview)",
                 "Repo": "File in Source Repository"
             },
-            "helpMarkDown": "A Provisioning Profile can be installed from a `Secure File` uploaded to the server or a file in the source repository or a file on the agent."
+            "helpMarkDown": "A provisioning profile can be installed from an uploaded `Secure File`, or a file in the source repository or a file on the agent."
         },
         {
             "name": "provProfileSecureFile",
@@ -43,7 +43,7 @@
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The Provisioning Profile uploaded to `Secure Files` on Visual Studio Team Services that should be installed on the Mac agent.",
+            "helpMarkDown": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
             "visibleRule": "provProfileSource == SecureFile"
         },
         {
@@ -52,7 +52,7 @@
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path to the Provisioning Profile that should be installed on the Mac agent.",
+            "helpMarkDown": "Select the path to the provisioning profile to install on the macOS agent.",
             "visibleRule": "provProfileSource == Repo"
         },
         {
@@ -61,7 +61,7 @@
             "label": "Remove Profile After Build",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "Select to specify that the Provisioning Profile should be removed from the agent after the build or release is complete."
+            "helpMarkDown": "Select to specify that the provisioning profile should be removed from the agent after the build or release is complete."
         }
     ],
     "prejobexecution": {

@@ -8,7 +8,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('removeProfile', 'true');
 
-process.env['AGENT_VERSION'] = '2.115.0';
+process.env['AGENT_VERSION'] = '2.116.0';
 process.env['VSTS_TASKVARIABLE_INSTALLED_PROV_PROFILE_UUID'] = 'testuuid';
 
 tr.registerMock('fs', {

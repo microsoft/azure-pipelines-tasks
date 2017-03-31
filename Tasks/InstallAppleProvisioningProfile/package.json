@@ -1,8 +1,8 @@
 {
-  "name": "vsts-tasks-xcode",
+  "name": "vsts-tasks-installappleprovisioningprofile",
   "version": "1.0.0",
-  "description": "VSTS Xcode Task",
-  "main": "xcode.js",
+  "description": "VSTS InstallAppleProvisioningProfile Task",
+  "main": "preinstallprovprofile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
