@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 39
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -54,7 +54,7 @@
       "name": "customTemplateLocation",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.customTemplateLocation",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.customTemplateLocation",
       "visibleRule": "templateType = custom"
     },
@@ -62,7 +62,6 @@
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
       "groupName": "AzureDetails"
@@ -73,20 +72,13 @@
       "label": "ms-resource:loc.input.label.location",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
-      "properties": {
-        "EditableOptions": "True"
-      },
       "groupName": "AzureDetails"
     },
     {
       "name": "storageAccountName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.storageAccountName",
-      "defaultValue": "",
       "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
       "helpMarkDown": "ms-resource:loc.input.help.storageAccountName",
       "groupName": "AzureDetails"
     },
@@ -94,8 +86,8 @@
       "name": "azureResourceGroup",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.azureResourceGroup",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "required": true,
       "groupName": "AzureDetails"
     },
     {
@@ -122,8 +114,22 @@
       },
       "options": {
         "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
-        "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS"
+        "MicrosoftWindowsServer:WindowsServer:2016-Datacenter": "Windows 2016-Datacenter",
+        "MicrosoftWindowsServer:WindowsServer:2012-Datacenter": "Windows 2012-Datacenter",
+        "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1": "Windows 2008-R2-SP1",
+        "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
+        "Canonical:UbuntuServer:16.04-LTS": "Ubuntu 16.04-LTS",
+        "RedHat:RHEL:7.2": "RHEL 7.2",
+        "RedHat:RHEL:6.8": "RHEL 6.8",
+        "OpenLogic:CentOS:7.2": "CentOS 7.2",
+        "OpenLogic:CentOS:6.8": "CentOS 6.8",
+        "credativ:Debian:8": "Debian 8",
+        "credativ:Debian:7": "Debian 7",
+        "SUSE:openSUSE-Leap:42.2": "openSUSE-Leap 42.2",
+        "SUSE:SLES:12-SP2": "SLES 12-SP2",
+        "SUSE:SLES:11-SP4": "SLES 11-SP4"
       },
+      "defaultValue": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows",
       "visibleRule": "baseImageSource = default",
       "groupName": "DeploymentInputs"
     },

@@ -57,7 +57,7 @@ export class AzureRGTaskParameters {
             this.deallocateVMOnStop = tl.getBoolInput("deallocateVMOnStop");
         }
         catch (error) {
-            throw (tl.loc("ARGD_ConstructorFailed", error.message));
+            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
         }
     }
 

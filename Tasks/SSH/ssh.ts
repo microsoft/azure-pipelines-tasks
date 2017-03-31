@@ -1,3 +1,4 @@
+import os = require('os');
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
@@ -86,6 +87,11 @@ async function run() {
                 //setup script path on remote machine relative to user's $HOME directory
                 var remoteScript = './' + path.basename(scriptFile);
                 var remoteScriptPath = '"' + remoteScript + '"';
+                var windowsEncodedRemoteScriptPath = remoteScriptPath;
+                var isWin = os.type().match(/^Win/);
+                if (isWin) {
+                    remoteScriptPath =  '"' + remoteScript + "._unix" + '"';
+                }
                 tl.debug('remoteScriptPath = ' + remoteScriptPath);
 
                 //copy script file to remote machine
@@ -93,6 +99,14 @@ async function run() {
                 scpConfig.path = remoteScript;
                 tl.debug('Copying script to remote machine.');
                 await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
+
+                //change the line encodings
+                if (isWin) {
+                    tl.debug('Fixing the line endings in case the file was created in Windows');
+                    var removeLineEndingsCmd = 'tr -d \'\\015\' <' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath;
+                    tl._writeLine(removeLineEndingsCmd);
+                    await sshHelper.runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
+                }
 
                 //set execute permissions on the script
                 tl.debug('Setting execute permisison on script copied to remote machine');
@@ -108,6 +122,9 @@ async function run() {
 
                 //setup command to clean up script file
                 cleanUpScriptCmd = 'rm -f ' + remoteScriptPath;
+                if (isWin) {
+                    cleanUpScriptCmd = 'rm -f ' + remoteScriptPath + ' ' + windowsEncodedRemoteScriptPath;
+                }
 
                 tl._writeLine(runScriptCmd);
                 await sshHelper.runCommandOnRemoteMachine(
