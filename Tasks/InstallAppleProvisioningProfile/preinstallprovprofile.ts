@@ -19,7 +19,7 @@ async function run() {
             // file stored on server, download decrypted contents
             secureFileId = tl.getInput('provProfileSecureFile', true);
             secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
-            provProfilePath = secureFileHelpers.downloadSecureFile(secureFileId);
+            provProfilePath = await secureFileHelpers.downloadSecureFile(secureFileId);
         } else if (provProfileSource === 'Repo') {
             // file stored in repository or build server
             let provProfileFilePath: string = tl.getPathInput('provProfileFilePath', true);

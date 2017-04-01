@@ -1,6 +1,6 @@
 {
   "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
-  "name": "InstalliOSProvisioningProfile",
+  "name": "InstallAppleProvisioningProfile",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",

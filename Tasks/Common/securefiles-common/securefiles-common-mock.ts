@@ -6,7 +6,7 @@ export class SecureFileHelpers {
         tl.debug('Mock SecureFileHelpers constructor');
     }
 
-    downloadSecureFile(secureFileId: string): string {
+    async downloadSecureFile(secureFileId: string) {
         tl.debug('Mock downloadSecureFile with id = ' + secureFileId);
         let fileName: string = secureFileId + '.filename';
         let tempDownloadPath: string = tl.resolve(tl.getVariable('Agent.TempDirectory'), fileName);

@@ -19,15 +19,20 @@ export class SecureFileHelpers {
      * Download secure file contents to a temporary location for the build
      * @param secureFileId 
      */
-    downloadSecureFile(secureFileId: string): string {
-        let stream: Promise<NodeJS.ReadableStream> = this.serverConnection.getTaskAgentApi().downloadSecureFile(
-            tl.getVariable('SYSTEM_TEAMPROJECT'),
-            secureFileId,
-            tl.getSecureFileTicket(secureFileId));
-
+    async downloadSecureFile(secureFileId: string) {
         let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId);
+
         tl.debug('Downloading secure file contents to: ' + tempDownloadPath);
-        fs.writeFileSync(tempDownloadPath, stream);
+        let file: NodeJS.WritableStream = fs.createWriteStream(tempDownloadPath);
+
+        let stream = (await this.serverConnection.getTaskAgentApi().downloadSecureFile(
+            tl.getVariable('SYSTEM.TEAMPROJECT'), secureFileId, tl.getSecureFileTicket(secureFileId), false)).pipe(file);
+        let defer = Q.defer();
+        stream.on('finish', () => {
+            defer.resolve();
+        });
+        await defer.promise;
+        tl.debug('Downloaded secure file contents to: ' + tempDownloadPath);
         return tempDownloadPath;
     }
 
