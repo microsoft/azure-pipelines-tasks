@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 30
+    "Patch": 31
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -79,6 +79,7 @@
     }
   },
   "messages": {
-    "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux"
+    "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
+    "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported"
   }
 }
