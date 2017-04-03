@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "Search pattern",
   "loc.input.help.SearchPattern": "The pattern used to discover the pdb files to publish.",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is the configured source folder.",
+  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SkipIndexing": "Skip indexing",
   "loc.input.help.SkipIndexing": "Indicates whether to skip injecting source server information into the PDB files.",
   "loc.input.label.TreatNotIndexedAsWarning": "Warn if not indexed",
