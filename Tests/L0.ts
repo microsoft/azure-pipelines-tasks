@@ -104,7 +104,7 @@ describe('General Suite', function () {
             var taskjson = path.join(taskFolder, 'task.json');
             var task = JSON.parse(fs.readFileSync(taskjson).toString());
 
-            if (task.execution['Node']) {
+            if (task.execution && task.execution['Node']) {
 
                 var jsFiles = fs.readdirSync(taskFolder).filter(file => {
                     return file.search(/\.js$/) > 0;
