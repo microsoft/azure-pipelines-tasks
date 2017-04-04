@@ -1,9 +1,9 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
-import DockerConnection from "./dockerconnection";
+import ContainerConnection from "./containerconnection";
 
-export function run(connection: DockerConnection): any {
+export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
     command.line(tl.getInput("customCommand", true));
     return connection.execCommand(command);

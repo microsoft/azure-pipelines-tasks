@@ -2,9 +2,9 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import DockerConnection from "./dockerconnection";
+import ContainerConnection from "./containerconnection";
 
-export function run(connection: DockerConnection): any {
+export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
     command.arg("run");
 
