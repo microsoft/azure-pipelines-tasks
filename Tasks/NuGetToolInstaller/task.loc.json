@@ -16,7 +16,7 @@
     "Patch": 0
   },
   "preview": true,
-  "capabilities": [
+  "satisfies": [
     "NuGet"
   ],
   "demands": [],

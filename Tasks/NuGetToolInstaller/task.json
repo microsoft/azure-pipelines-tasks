@@ -16,19 +16,17 @@
         "Patch": 0
     },
     "preview": true,
-    "capabilities": ["NuGet"],
+    "satisfies": ["NuGet"],
     "demands": [],
     "instanceNameFormat": "Use NuGet $(versionSpec)",
-    "inputs": [
-        {
-            "name": "versionSpec",
-            "type": "string",
-            "label": "Version Spec",
-            "defaultValue": "4.0.0",
-            "required": true,
-            "helpMarkDown": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. List of available versions obtained from [here](http://dist.nuget.org/tools.json). Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
-        }
-    ],
+    "inputs": [{
+        "name": "versionSpec",
+        "type": "string",
+        "label": "Version Spec",
+        "defaultValue": "4.0.0",
+        "required": true,
+        "helpMarkDown": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. List of available versions obtained from [here](http://dist.nuget.org/tools.json). Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
+    }],
     "execution": {
         "Node": {
             "target": "nugettoolinstaller.js",
