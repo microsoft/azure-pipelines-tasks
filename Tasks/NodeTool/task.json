@@ -16,11 +16,10 @@
         "Patch": 1
     },
     "preview": true,
-    "capabilities": ["Node"],
+    "satisfies": ["Node"],
     "demands": [],
     "instanceNameFormat": "Use Node $(versionSpec)",
-    "inputs": [
-        {
+    "inputs": [{
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",

@@ -16,7 +16,7 @@
     "Patch": 1
   },
   "preview": true,
-  "capabilities": [
+  "satisfies": [
     "Node"
   ],
   "demands": [],
