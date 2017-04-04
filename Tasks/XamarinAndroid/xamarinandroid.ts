@@ -72,7 +72,7 @@ async function run() {
         if (!buildToolPath) {
             throw tl.loc('MSB_BuildToolNotFound');
         }
-        tl.debug('Build tool path = ' + buildToolLocation);
+        tl.debug('Build tool path = ' + buildToolPath);
 
         // Resolve files for the specified value or pattern
         let filesList: string[] = tl.findMatch(null, project);
