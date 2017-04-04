@@ -51,13 +51,13 @@ export async function installExtension(publishingProfile, extension: string) {
             defer.reject(tl.loc('ExtensionInstallFailedError', extension, error.toString()));
         }
         else if(response.statusCode === 200) {
-            console.log(tl.loc('ExtensionInstallSuccess', extension));
             tl.debug(body);
+            console.log(tl.loc('ExtensionInstallSuccess', extension));
             defer.resolve(JSON.parse(body));
         }
         else {
             console.log(body);
-            defer.reject(tl.loc('ExtensionInstallFailedResponseError', response.statusCode, response.statusMessage));
+            defer.reject(tl.loc('ExtensionInstallFailedResponseError', extension, response.statusCode, response.statusMessage));
         }
 
     });
@@ -75,7 +75,6 @@ export async function installExtensions(publishingProfile, extensions: Array<str
         else {
             tl.debug("Extension '" + extension + "' not installed. Installing...");
             await installExtension(publishingProfile, extension);
-            tl.debug('Extension ' + extension + ' installed successfully');
             anyExtensionInstalled = true;
         }
     }

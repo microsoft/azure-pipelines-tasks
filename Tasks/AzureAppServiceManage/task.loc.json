@@ -135,14 +135,26 @@
       "label": "ms-resource:loc.input.label.ExtensionsList",
       "defaultValue": "",
       "properties": {
+        "EditableOptions": "True",
         "MultiSelectFlatList": "True"
       },
       "options": {
+        "Microsoft.ApplicationInsights.AzureWebSites": "Application Insights",
         "ComposerExtension": "Composer",
-        "python2713x86": "Python 2.7.13 (X86)"
+        "python2712x64": "Python 2.7.12 x64",
+        "python2712x86": "Python 2.7.12 x86",
+        "python2713x64": "Python 2.7.13 x64",
+        "python2713x86": "Python 2.7.13 x86",
+        "python353x64": "Python 3.5.3 x64",
+        "python353x86": "Python 3.5.3 x86",
+        "python360x86": "Python 3.6.0 x86",
+        "python360x64": "Python 3.6.0 x64",
+        "python361x86": "Python 3.6.1 x86",
+        "python361x64": "Python 3.6.1 x64"
       },
       "required": "True",
-      "visibleRule": "Action = Install Extensions"
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "ms-resource:loc.input.help.ExtensionsList"
     }
   ],
   "dataSourceBindings": [
