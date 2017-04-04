@@ -21,7 +21,7 @@ const testSettingsExt = ".testsettings";
 
 let vstestConfig: models.VsTestConfigurations = undefined;
 let tiaConfig: models.TiaConfiguration = undefined;
-let vstestRunnerDetails: VSTestVersion = undefined;
+let vstestRunnerDetails: versionFinder.VSTestVersion = undefined;
 const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
@@ -88,7 +88,7 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-function getVsTestRunnerDetails(vstestexeLocation: string): VSTestVersion {
+function getVsTestRunnerDetails(vstestexeLocation: string): versionFinder.VSTestVersion {
     let vstestLocationEscaped = vstestexeLocation.replace(/\\/g, "\\\\");
     let wmicTool = tl.tool("wmic");
     let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
@@ -119,13 +119,13 @@ function getVsTestRunnerDetails(vstestexeLocation: string): VSTestVersion {
 
     switch (majorVersion) {
         case 14:
-            return new Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+            return new versionFinder.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
 
         case 15:
-            return new Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+            return new versionFinder.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
     }
 
-    return new VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
+    return new versionFinder.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
@@ -939,59 +939,4 @@ function isNullOrWhitespace(input) {
         return true;
     }
     return input.replace(/\s/g, '').length < 1;
-}
-
-class VSTestVersion {
-
-    constructor(public vstestExeLocation: string, public majorVersion: number, public minorversion: number, public patchNumber: number) {
-    }
-
-    isTestImpactSupported(): boolean {
-        return (this.majorVersion > 15);
-    }
-
-    vstestDiagSupported(): boolean {
-        return (this.majorVersion > 15);
-    }
-
-    isPrivateDataCollectorNeededForTIA(): boolean {
-        return false;
-    }
-
-    isRunInParallelSupported(): boolean {
-        return (this.majorVersion > 15);
-    }
-}
-
-
-class Dev14VSTestVersion extends VSTestVersion {
-    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
-        super(runnerLocation, 14, minorVersion, patchNumber);
-    }
-
-    isTestImpactSupported(): boolean {
-        return (this.patchNumber >= 25420);
-    }
-
-    isRunInParallelSupported(): boolean {
-        return (this.patchNumber >= 25420);
-    }
-
-    isPrivateDataCollectorNeededForTIA(): boolean {
-        return true;
-    }
-}
-
-class Dev15VSTestVersion extends VSTestVersion {
-    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
-        super(runnerLocation, 15, minorVersion, patchNumber);
-    }
-
-    isTestImpactSupported(): boolean {
-        return (this.patchNumber >= 25727);
-    }
-
-    vstestDiagSupported(): boolean {
-        return (this.patchNumber > 25428);
-    }
 }
