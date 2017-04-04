@@ -105,7 +105,7 @@
       "defaultValue": "xbuild",
       "options": {
         "xbuild": "xbuild (Xamarin Studio)",
-        "MSBuild": "MSBuild (Visual Studio for Mac)"
+        "msbuild": "MSBuild (Visual Studio for Mac)"
       }
     },
     {
