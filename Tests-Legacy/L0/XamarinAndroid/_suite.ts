@@ -100,7 +100,7 @@ describe('XamarinAndroid Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-			assert(tr.stdout.indexOf('##vso[task.issue type=error;]No matching files were found with search pattern:') >= 0, 'wrong error message: "' + tr.stderr + '"');			
+			assert(tr.stderr.indexOf('No files were found matching: **/home*.csproj') >= 0, 'wrong error message: "' + tr.stderr + '"');			
 			done();
 		})
 		.fail((err) => {
@@ -158,7 +158,7 @@ describe('XamarinAndroid Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-			assert(tr.stderr.indexOf('not found files: /user/build/fun/project2.csproj') >= 0, 'wrong error message: "' + tr.stderr + '"');			
+			assert(tr.stderr.indexOf('No files were found matching: /user/build/fun/project2.csproj.') >= 0, 'wrong error message: "' + tr.stderr + '"');			
 			done();
 		})
 		.fail((err) => {
@@ -279,7 +279,7 @@ describe('XamarinAndroid Suite', function() {
 			assert(tr.resultWasSet, 'task should have set a result');
 			assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stdout.indexOf('##vso[task.issue type=error;]xbuild was not found in the path') >= 0, 'JAVA_HOME set?');
+            assert(tr.stdout.indexOf('xbuild was not found in the path') >= 0, 'error message should include xbuild path not set');
 			done();
 		})
 		.fail((err) => {

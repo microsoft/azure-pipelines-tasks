@@ -34,5 +34,10 @@
   "loc.input.label.jdkArchitecture": "JDK Architecture",
   "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK.",
   "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.",
+  "loc.messages.JDKNotFound": "Failed to find specified JDK version. Please make sure environment variable %s exists and is set to the location of a corresponding JDK.",
+  "loc.messages.XbuildNotFound": "xbuild was not found in the path.",
+  "loc.messages.NoMatchingProjects": "No files were found matching: %s.",
+  "loc.messages.XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
+  "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors."
 }
