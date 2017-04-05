@@ -99,7 +99,7 @@
             "required": false,
             "groupName": "msbuildOptions",
             "defaultValue": "15.0",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On macOS xbuild (Mono) or MSBuild (Visual Studio for Mac) will be used.",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On macOS, xbuild (Mono) or MSBuild (Visual Studio for Mac) will be used.",
             "options": {
                 "latest": "Latest",
                 "15.0": "MSBuild 15.0",
