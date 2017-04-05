@@ -99,7 +99,7 @@
             "required": false,
             "groupName": "msbuildOptions",
             "defaultValue": "15.0",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On macOS, xbuild (Mono) or MSBuild (Visual Studio for Mac) will be used.",
             "options": {
                 "latest": "Latest",
                 "15.0": "MSBuild 15.0",
@@ -115,7 +115,7 @@
             "label": "MSBuild Location",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+            "helpMarkDown": "Optionally supply the path to MSBuild (on Windows) or xbuild (on macOS).",
             "groupName": "msbuildOptions",
             "visibleRule": "msbuildLocationMethod = location"
         },
@@ -130,7 +130,8 @@
             "options": {
                 "x86": "MSBuild x86",
                 "x64": "MSBuild x64"
-            }
+            },
+            "visibleRule": "msbuildLocationMethod = version"
         },
         {
             "name": "msbuildArguments",
@@ -138,7 +139,7 @@
             "label": "Additional Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) or xbuild (on Mac).",
+            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) or xbuild (on macOS).",
             "groupName": "msbuildOptions"
         },
         {
@@ -211,9 +212,13 @@
         "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
         "MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.",
         "JDKNotFound": "Failed to find specified JDK version. Please make sure environment variable %s exists and is set to the location of a corresponding JDK.",
-        "XbuildNotFound": "xbuild was not found in the path.",
         "NoMatchingProjects": "No files were found matching: %s.",
         "XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
-        "XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors."
+        "XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",
+        "MSB_Build0" : "Build {0}",
+        "MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
+        "MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
+        "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
+        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
     }
 }

@@ -1,6 +1,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
 
 async function run() {
     try {
@@ -13,7 +14,6 @@ async function run() {
         let configuration: string = tl.getInput('configuration');
         let createAppPackage: boolean = tl.getBoolInput('createAppPackage');
         let clean: boolean = tl.getBoolInput('clean');
-        let xbuildLocation: string = tl.getPathInput('msbuildLocation');
         let msbuildArguments: string = tl.getInput('msbuildArguments');
 
         // find jdk to be used during the build
@@ -23,12 +23,12 @@ async function run() {
         }
         let specifiedJavaHome = null;
 
-        if (jdkSelection == 'JDKVersion') {
+        if (jdkSelection === 'JDKVersion') {
             tl.debug('Using JDK version to find JDK path');
             let jdkVersion: string = tl.getInput('jdkVersion');
             let jdkArchitecture: string = tl.getInput('jdkArchitecture');
 
-            if (jdkVersion != 'default') {
+            if (jdkVersion !== 'default') {
                 // jdkVersion should be in the form of 1.7, 1.8, or 1.10
                 // jdkArchitecture is either x64 or x86
                 // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
@@ -45,18 +45,34 @@ async function run() {
             specifiedJavaHome = jdkUserInputPath;
         }
 
-        //find xbuild location to use
-        let xbuildToolPath: string = tl.which('xbuild');
-        if (xbuildLocation) {
-            xbuildToolPath = path.join(xbuildLocation, 'xbuild');
-            if (!tl.exist(xbuildToolPath)) {
-                xbuildToolPath = path.join(xbuildLocation, 'xbuild.exe');
+        //find build tool path to use
+        let buildToolPath: string;
+
+        let buildLocationMethod: string = tl.getInput('msbuildLocationMethod');
+        if (!buildLocationMethod) {
+            buildLocationMethod = 'version';
+        }
+
+        let buildToolLocation: string = tl.getPathInput('msbuildLocation');
+        if (buildToolLocation) {
+            // msbuildLocation was specified, use it for back compat
+            if (buildToolLocation.endsWith('xbuild') || buildToolLocation.endsWith('msbuild')) {
+                buildToolPath = buildToolLocation;
+            } else {
+                // use xbuild for back compat if tool folder path is specified
+                buildToolPath = path.join(buildToolLocation, 'xbuild');
             }
-            tl.checkPath(xbuildToolPath, 'xbuild');
+            tl.checkPath(buildToolPath, 'build tool');
+        } else if (buildLocationMethod === 'version') {
+            // msbuildLocation was not specified, look up by version
+            let msbuildVersion: string = tl.getInput('msbuildVersion');
+            buildToolPath = await msbuildHelpers.getMSBuildPath(msbuildVersion);
         }
-        if (!xbuildToolPath) {
-            throw tl.loc('XbuildNotFound');
+
+        if (!buildToolPath) {
+            throw tl.loc('MSB_BuildToolNotFound');
         }
+        tl.debug('Build tool path = ' + buildToolPath);
 
         // Resolve files for the specified value or pattern
         let filesList: string[] = tl.findMatch(null, project);
@@ -69,19 +85,19 @@ async function run() {
         for (let file of filesList) {
             try {
                 // run the build for each matching project
-                let xbuild: ToolRunner = tl.tool(xbuildToolPath);
-                xbuild.arg(file);
-                xbuild.argIf(clean, '/t:Clean');
-                xbuild.argIf(target, '/t:' + target);
-                xbuild.argIf(createAppPackage, '/t:PackageForAndroid');
+                let buildRunner: ToolRunner = tl.tool(buildToolPath);
+                buildRunner.arg(file);
+                buildRunner.argIf(clean, '/t:Clean');
+                buildRunner.argIf(target, '/t:' + target);
+                buildRunner.argIf(createAppPackage, '/t:PackageForAndroid');
                 if (msbuildArguments) {
-                    xbuild.line(msbuildArguments);
+                    buildRunner.line(msbuildArguments);
                 }
-                xbuild.argIf(outputDir, '/p:OutputPath=' + outputDir);
-                xbuild.argIf(configuration, '/p:Configuration=' + configuration);
-                xbuild.argIf(specifiedJavaHome, '/p:JavaSdkDirectory=' + specifiedJavaHome);
+                buildRunner.argIf(outputDir, '/p:OutputPath=' + outputDir);
+                buildRunner.argIf(configuration, '/p:Configuration=' + configuration);
+                buildRunner.argIf(specifiedJavaHome, '/p:JavaSdkDirectory=' + specifiedJavaHome);
 
-                await xbuild.exec();
+                await buildRunner.exec();
             } catch (err) {
                 throw tl.loc('XamarinAndroidBuildFailed', err);
             }
