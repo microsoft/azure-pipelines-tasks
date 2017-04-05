@@ -23,7 +23,7 @@ describe('Azure App Service Manage Suite', function() {
         assert(tr.stdOutContained('ExtensionListFailedResponseError'), 'Should have failed when extension list failed.');
         done();
     });
-    it('Return error when List Extension fails', (done:MochaDone) => {
+    it('Return error when Extension install fails', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0ExtensionManageInstallFail.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
