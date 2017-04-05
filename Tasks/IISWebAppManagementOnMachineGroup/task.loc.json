@@ -14,8 +14,8 @@
   ],
   "demands": [],
   "version": {
-    "Major": 0,
-    "Minor": 3,
+    "Major": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "minimumAgentVersion": "2.111.0",
@@ -26,6 +26,12 @@
       "displayName": "ms-resource:loc.group.displayName.Website",
       "isExpanded": true,
       "visibleRule": "ActionIISWebsite = CreateOrUpdateWebsite"
+    },
+    {
+      "name": "IISBindings",
+      "displayName": "ms-resource:loc.group.displayName.IISBindings",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true "
     },
     {
       "name": "ApplicationPoolForWebsite",
@@ -183,88 +189,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.AddBinding"
     },
     {
-      "name": "Protocol",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.Protocol",
+      "name": "Bindings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Bindings",
       "required": true,
-      "groupName": "Website",
-      "visibleRule": "AddBinding = true",
-      "defaultValue": "http",
-      "options": {
-        "https": "https",
-        "http": "http"
+      "groupName": "IISBindings",
+      "properties": {
+        "resizable": "true",
+        "rows": 4,
+        "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
+        "displayFormat": "{{#bindings}} {{protocol}}:{{ipAddress}}:{{port}}:{{hostname}} \n{{/bindings}}"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.Protocol"
-    },
-    {
-      "name": "IPAddress",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.IPAddress",
-      "required": true,
-      "groupName": "Website",
-      "visibleRule": "AddBinding = true",
-      "defaultValue": "All Unassigned",
-      "helpMarkDown": "ms-resource:loc.input.help.IPAddress"
-    },
-    {
-      "name": "Port",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Port",
-      "required": true,
-      "visibleRule": "AddBinding = true",
-      "groupName": "Website",
-      "defaultValue": "80",
-      "helpMarkDown": "ms-resource:loc.input.help.Port"
-    },
-    {
-      "name": "ServerNameIndication",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ServerNameIndication",
-      "required": false,
-      "groupName": "Website",
-      "defaultValue": "false",
-      "visibleRule": "Protocol = https",
-      "helpMarkDown": "ms-resource:loc.input.help.ServerNameIndication"
-    },
-    {
-      "name": "HostNameWithOutSNI",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.HostNameWithOutSNI",
-      "required": false,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "ServerNameIndication = false",
-      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithOutSNI"
-    },
-    {
-      "name": "HostNameWithHttp",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.HostNameWithHttp",
-      "required": false,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "Protocol = http",
-      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithHttp"
-    },
-    {
-      "name": "HostNameWithSNI",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.HostNameWithSNI",
-      "required": true,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "ServerNameIndication = true",
-      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithSNI"
-    },
-    {
-      "name": "SSLCertThumbPrint",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.SSLCertThumbPrint",
-      "required": true,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "Protocol = https",
-      "helpMarkDown": "ms-resource:loc.input.help.SSLCertThumbPrint"
+      "helpMarkDown": "ms-resource:loc.input.help.Bindings"
     },
     {
       "name": "CreateOrUpdateAppPoolForWebsite",
@@ -681,12 +617,14 @@
     }
   },
   "messages": {
-    "InvalidSslThumbprint": "ms-resource:loc.messages.InvalidSslThumbprint",
     "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath",
     "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType",
     "InvalidActionIISWebsite": "ms-resource:loc.messages.InvalidActionIISWebsite",
     "InvalidActionIISAppPool": "ms-resource:loc.messages.InvalidActionIISAppPool",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
-    "SSLCertWarningInvalidCharacters": "ms-resource:loc.messages.SSLCertWarningInvalidCharacters"
+    "MissingMandatoryInputInBinding": "ms-resource:loc.messages.MissingMandatoryInputInBinding",
+    "SSLCertificateThumbprintMissingInHttpsBinding": "ms-resource:loc.messages.SSLCertificateThumbprintMissingInHttpsBinding",
+    "InvalidSslThumbprintInBinding": "ms-resource:loc.messages.InvalidSslThumbprintInBinding",
+    "SSLCertWarningInvalidCharactersInBinding": "ms-resource:loc.messages.SSLCertWarningInvalidCharactersInBinding"
   }
 }

@@ -14,14 +14,7 @@ $websitePhysicalPathAuth = "WebsiteUserPassThrough"
 $websiteAuthUserName = ""
 $websiteAuthUserPassword = ""
 $addBinding = "true"
-$protocol = "http"
-$ipAddress = "All Unassigned"
-$port = "8080"
-$serverNameIndication = "false"
-$hostNameWithOutSNI = ""
-$hostNameWithHttp = ""
-$hostNameWithSNI = ""
-$sslCertThumbPrint = ""
+$bindings = "bindingsString"
 $createOrUpdateAppPoolForWebsite = "false"
 $appPoolNameForWebsite = "Sample App Pool"
 $dotNetVersionForWebsite = "v4.0"
@@ -38,34 +31,19 @@ $appCmdCommands = ""
 # Test 1
 
 Register-Mock Invoke-Main { }
+Register-Mock Validate-Bindings { return "bindingsArray" }
 
 Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-    -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
+    -addBinding $addBinding -bindings $bindings `
     -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
     -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
 
 Assert-WasCalled Invoke-Main -Times 1
-Assert-WasCalled Invoke-Main -- -ActionIISWebsite "CreateOrUpdateWebsite" -WebsiteName "Sample Web Site" -PhysicalPath "Drive:\Physical Path" -PhysicalPathAuth "WebsiteUserPassThrough" -PhysicalPathAuthCredentials $null -AddBinding "true" -Protocol "http" -IpAddress "All Unassigned" -Port "8080" -HostNameWithOutSNI "" -HostNameWithHttp "" -HostNameWithSNI "" -ServerNameIndication "false" -SslCertThumbPrint "" -configureAuthentication "true" -anonymousAuthentication "false" -basicAuthentication "true" -windowsAuthentication "true" -AppCmdCommands ""
+Assert-WasCalled Invoke-Main -- -ActionIISWebsite "CreateOrUpdateWebsite" -WebsiteName "Sample Web Site" -PhysicalPath "Drive:\Physical Path" -PhysicalPathAuth "WebsiteUserPassThrough" -PhysicalPathAuthCredentials "" -AddBinding "true" -bindings "bindingsArray" -configureAuthentication "true" -anonymousAuthentication "false" -basicAuthentication "true" -windowsAuthentication "true" -AppCmdCommands "" 
 
-# Test 2 
+#Test 2 
 
 $createOrUpdateAppPoolForWebsite = "true"
-
-Unregister-Mock Invoke-Main 
-Register-Mock Invoke-Main { }
-
-Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-    -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
-    -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
-    -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
-
-Assert-WasCalled Invoke-Main -Times 1
-Assert-WasCalled Invoke-Main -- -ActionIISWebsite "CreateOrUpdateWebsite" -WebsiteName "Sample Web Site" -PhysicalPath "Drive:\Physical Path" -PhysicalPathAuth "WebsiteUserPassThrough" -PhysicalPathAuthCredentials $null -AddBinding "true" -Protocol "http" -IpAddress "All Unassigned" -Port "8080" -HostNameWithOutSNI "" -HostNameWithHttp "" -HostNameWithSNI "" -ServerNameIndication "false" -SslCertThumbPrint "" -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName "Sample App Pool" -DotNetVersion "v4.0" -PipeLineMode "Integrated" -AppPoolIdentity "ApplicationPoolIdentity" -AppPoolCredentials $null -configureAuthentication "true" -anonymousAuthentication "false" -basicAuthentication "true" -windowsAuthentication "true" -AppCmdCommands "" 
-
-# Test 3 
-
 $websitePhysicalPathAuth = "WebsiteWindowsAuth"
 $websiteAuthUserName = "name"
 $websiteAuthUserPassword = "pass"
@@ -80,16 +58,15 @@ Register-Mock Invoke-Main { }
 Register-Mock Get-CustomCredentials { return "CustomCredentialsObject" }
 
 Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-    -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
+    -addBinding $addBinding -bindings $bindings `
     -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
     -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
 
 Assert-WasCalled Invoke-Main -Times 1
 Assert-WasCalled Get-CustomCredentials -Times 2
-Assert-WasCalled Invoke-Main -- -ActionIISWebsite "CreateOrUpdateWebsite" -WebsiteName "Sample Web Site" -PhysicalPath "Drive:\Physical Path" -PhysicalPathAuth "WebsiteWindowsAuth" -PhysicalPathAuthCredentials "CustomCredentialsObject" -AddBinding "true" -Protocol "http" -IpAddress "All Unassigned" -Port "8080" -HostNameWithOutSNI "" -HostNameWithHttp "" -HostNameWithSNI "" -ServerNameIndication "false" -SslCertThumbPrint "" -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName "Sample App Pool" -DotNetVersion "v4.0" -PipeLineMode "Integrated" -AppPoolIdentity "SpecificUser" -AppPoolCredentials "CustomCredentialsObject" -configureAuthentication "true" -anonymousAuthentication "false" -basicAuthentication "true" -windowsAuthentication "true" -AppCmdCommands "" 
+Assert-WasCalled Invoke-Main -- -ActionIISWebsite "CreateOrUpdateWebsite" -WebsiteName "Sample Web Site" -PhysicalPath "Drive:\Physical Path" -PhysicalPathAuth "WebsiteWindowsAuth" -PhysicalPathAuthCredentials "CustomCredentialsObject" -AddBinding "true" -bindings "bindingsArray" -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName "Sample App Pool" -DotNetVersion "v4.0" -PipeLineMode "Integrated" -AppPoolIdentity "SpecificUser" -AppPoolCredentials "CustomCredentialsObject" -configureAuthentication "true" -anonymousAuthentication "false" -basicAuthentication "true" -windowsAuthentication "true" -AppCmdCommands "" 
 
-# Test 4 
+# Test 3
 
 $actionIISWebsite = "StartWebsite"
 $startStopWebsiteName = "Sample Web Site"
@@ -98,15 +75,14 @@ Unregister-Mock Invoke-Main
 Register-Mock Invoke-Main { }
 
 Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-    -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
+    -addBinding $addBinding -bindings $bindings `
     -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
     -appCmdCommands $appCmdCommands
 
 Assert-WasCalled Invoke-Main -Times 1
 Assert-WasCalled Invoke-Main -- -ActionIISWebsite "StartWebsite" -WebsiteName "Sample Web Site" -AppCmdCommands ""
 
-# Test 5
+# Test 4
 
 $actionIISWebsite = "StopWebsite"
 $startStopWebsiteName = "Sample Web Site"
@@ -115,37 +91,20 @@ Unregister-Mock Invoke-Main
 Register-Mock Invoke-Main { }
 
 Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-    -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-    -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
+    -addBinding $addBinding -bindings $bindings `
     -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
     -appCmdCommands $appCmdCommands
 
 Assert-WasCalled Invoke-Main -Times 1
 Assert-WasCalled Invoke-Main -- -ActionIISWebsite "StopWebsite" -WebsiteName "Sample Web Site" -AppCmdCommands ""
 
-# Test 6 
-
-$actionIISWebsite = "CreateOrUpdateWebsite"
-$addBinding = "true"
-$protocol = "https"
-$sslCertThumbPrint = "lessthan40charsstring"
-
-Assert-Throws {
-    Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-        -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-        -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
-        -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
-        -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
-} -MessagePattern "InvalidSslThumbprint"
-
-# Test 7
+# Test 5
 
 $actionIISWebsite = "InvalidOption"
 
 Assert-Throws {
     Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-        -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
-        -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
+        -addBinding $addBinding -bindings $bindings `
         -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
         -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands
-} -MessagePattern "InvalidActionIISWebsite InvalidOption"
+} -MessagePattern "InvalidActionIISWebsite InvalidOption" 
