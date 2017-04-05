@@ -144,7 +144,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     var domContent = ( fileEncodeType[1]? '\uFEFF' : '' ) + ltxdomutility.getContentWithHeader(xmlDocument);
     for(var replacableTokenValue in replacableTokenValues) {
         tl.debug('Substituting original value in place of temp_name: ' + replacableTokenValue);
-        domContent = domContent.replace(replacableTokenValue, replacableTokenValues[replacableTokenValue]);
+        domContent = domContent.split(replacableTokenValue).join(replacableTokenValues[replacableTokenValue]);
     }
     tl.writeFile(configFile, domContent, fileEncodeType[0]);
     tl.debug("Config file " + configFile + " updated.");
