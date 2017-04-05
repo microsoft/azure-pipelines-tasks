@@ -36,6 +36,7 @@ async function run() {
         if (tl.exist(provProfilePath)) {
             let UUID: string = await sign.getProvisioningProfileUUID(provProfilePath);
             tl.setTaskVariable("INSTALLED_PROV_PROFILE_UUID", UUID);
+            tl.setVariable("APPLE_PROVPROFILE_UUID", UUID);
         }
 
     } catch (err) {
