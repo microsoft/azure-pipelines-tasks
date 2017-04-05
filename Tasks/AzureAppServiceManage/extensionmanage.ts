@@ -13,14 +13,14 @@ export async function getInstalledExtensions(publishingProfile) {
         'If-Match': "*"
     };
     var installedExtensionsList = {};
-    tl.debug('Request to retrieve list of extensions already available in Azure App Service');
+    tl.debug('Request to retrieve list of extensions already available in Azure App Service: ' + kuduPhysicalpathUrl);
     httpObj.get('GET', kuduPhysicalpathUrl, headers, (error, response, body) => {
         if(error) {
             console.log(body);
             defer.reject(tl.loc('ExtensionListFailedError', error.toString()));
         }
         else if(response.statusCode === 200) {
-            tl.debug('Retrieved list of extensions already available in Auzre App Service.');
+            tl.debug('Retrieved list of extensions already available in Azure App Service.');
             var extensionsList = JSON.parse(body);
             for(var extension of extensionsList) {
                 tl.debug('* ' + extension['id']);
