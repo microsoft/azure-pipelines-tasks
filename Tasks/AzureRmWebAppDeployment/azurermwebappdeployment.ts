@@ -123,6 +123,16 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
+        if(publishingProfile && publishingProfile.destinationAppUrl) {
+            try{
+                await azureRESTUtility.warmupAzureAppService(publishingProfile.destinationAppUrl);
+                console.log(tl.loc("appServiceWarmupedUpSuccessfully"));
+            } catch (error) {
+                console.log(tl.loc('failedToWarmupAppService'));
+                tl.debug("Warmup of app service failed with error" + error.message);
+            }
+        }
+
         if(deployUtility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));

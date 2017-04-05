@@ -16,12 +16,11 @@
     "version": {
         "Major": 3,
         "Minor": 2,
-        "Patch": 1
+        "Patch": 2
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
-    "groups": [
-        {
+    "groups": [{
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false
@@ -37,8 +36,7 @@
             "isExpanded": true
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
@@ -266,8 +264,7 @@
             "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNames"
@@ -375,6 +372,8 @@
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
         "PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
         "InvalidPollOption": "Invalid polling option provided: %s.",
-        "MissingWebConfigParameters": "Some web.config parameters are missing"
+        "MissingWebConfigParameters": "Some web.config parameters are missing",
+        "appServiceWarmupedUpSuccessfully": "Successfully warmed up azure app service.",
+        "failedToWarmupAppService": "Failed to warm up azure app service."
     }
 }

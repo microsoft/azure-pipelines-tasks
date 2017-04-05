@@ -107,8 +107,9 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
         else if(response.statusCode === 200) {
             parseString(body, (error, result) => {
                 for (var index in result.publishData.publishProfile) {
-                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
+                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
                         deferred.resolve(result.publishData.publishProfile[index].$);
+                    }
                 }
                 deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
             });
@@ -487,6 +488,26 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
         else {
             tl.error(response.statusMessage);
             deferred.reject(tl.loc("FailedtoRestartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
+export async function warmupAzureAppService(webAppUrl) {
+    var deferred = Q.defer();
+    var headers = {};
+    httpObj.get('GET', webAppUrl, headers, (error, response, body) => {
+        if (error) {
+            tl.debug("Failed to warm up azure app service, error : " + error);
+            deferred.reject(error);
+        } else {
+            if(response.statusCode === 200) {
+                tl.debug("Successfully warmed up azure app service");
+                deferred.resolve("SUCCESS");
+            } else {
+                tl.debug("Failed to warm up azure app service, Status code : " + response.statusCode);
+                deferred.reject(error);
+            }
         }
     });
     return deferred.promise;

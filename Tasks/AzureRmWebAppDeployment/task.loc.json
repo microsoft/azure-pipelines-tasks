@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 2,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
@@ -375,6 +375,8 @@
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
-    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters"
+    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters",
+    "appServiceWarmupedUpSuccessfully": "ms-resource:loc.messages.appServiceWarmupedUpSuccessfully",
+    "failedToWarmupAppService": "ms-resource:loc.messages.failedToWarmupAppService"
   }
 }
