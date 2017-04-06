@@ -491,3 +491,36 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     });
     return deferred.promise;
 }
+
+export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
+    var deferred = Q.defer<any>();
+
+    var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
+    tl.debug('Requesting Azure Contianer Registry Creds: ' + url);
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+
+    httpObj.get('POST', url, headers, async (error, response, body) => {
+        if(error) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            try {
+                var credentials = JSON.parse(body);
+                deferred.resolve(credentials);
+            }
+            catch (error) {
+                deferred.reject(error);
+            }
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject("Unable to resolve creds for the registry");
+        }
+    });
+
+    return deferred.promise;
+}

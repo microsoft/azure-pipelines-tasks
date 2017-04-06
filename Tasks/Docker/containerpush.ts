@@ -2,11 +2,11 @@
 
 import * as fs from "fs";
 import * as tl from "vsts-task-lib/task";
-import DockerConnection from "./dockerconnection";
+import ContainerConnection from "./containerconnection";
 import * as sourceUtils from "./sourceutils";
-import * as imageUtils from "./dockerimageutils";
+import * as imageUtils from "./contianerimageutils";
 
-function dockerPush(connection: DockerConnection, imageName: string, imageDigestFile?: string): any {
+function dockerPush(connection: ContainerConnection, imageName: string, imageDigestFile?: string): any {
     var command = connection.createCommand();
     command.arg("push");
     command.arg(imageName);
@@ -30,7 +30,7 @@ function dockerPush(connection: DockerConnection, imageName: string, imageDigest
     });
 }
 
-export function run(connection: DockerConnection): any {
+export function run(connection: ContainerConnection): any {
     var images = [];
     var imageName = tl.getInput("imageName", true);
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
