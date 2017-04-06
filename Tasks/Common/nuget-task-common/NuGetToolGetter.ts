@@ -1,6 +1,7 @@
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as taskLib from 'vsts-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
+import * as path from "path";
 
 interface INuGetTools {
     nugetexe: INuGetVersionInfo[]
@@ -19,7 +20,7 @@ enum NuGetReleaseStage
     "ReleasedAndBlessed"
 }
 
-export async function getNuGet(versionSpec: string) {
+export async function getNuGet(versionSpec: string): Promise<string> {
     if (toolLib.isExplicitVersion(versionSpec)) {
         taskLib.debug('Exact match expected on version: ' + versionSpec);
     }
@@ -77,6 +78,7 @@ export async function getNuGet(versionSpec: string) {
     console.log(taskLib.loc("Info_UsingToolPath", toolPath));
     toolLib.prependPath(toolPath);
     console.log();
+    return path.join(toolPath, "nuget.exe");
 }
 
 function GetRestClientOptions(): restm.IRequestOptions

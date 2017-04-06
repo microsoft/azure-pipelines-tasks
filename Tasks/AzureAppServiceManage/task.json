@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 5
+        "Patch": 6
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -42,7 +42,8 @@
                 "Swap Slots": "Swap Slots",
                 "Start Azure App Service": "Start App Service",
                 "Stop Azure App Service": "Stop App Service",
-                "Restart Azure App Service": "Restart App Service"
+                "Restart Azure App Service": "Restart App Service",
+                "Install Extensions": "Install Extensions"
             }
         },
         {
@@ -127,6 +128,33 @@
             },
             "required": true,
             "visibleRule": "Action != Swap Slots && SpecifySlot = true"
+        },
+        {
+            "name": "ExtensionsList",
+            "type": "pickList",
+            "label": "Install Extensions",
+            "defaultValue": "",
+            "properties": {
+                "EditableOptions": "True",
+                "MultiSelectFlatList": "True"
+            },
+            "options": {
+                "Microsoft.ApplicationInsights.AzureWebSites": "Application Insights",
+                "ComposerExtension": "Composer",
+                "python2712x64": "Python 2.7.12 x64",
+                "python2712x86": "Python 2.7.12 x86",
+                "python2713x64": "Python 2.7.13 x64",
+                "python2713x86": "Python 2.7.13 x86",
+                "python353x64": "Python 3.5.3 x64",
+                "python353x86": "Python 3.5.3 x86",
+                "python360x86": "Python 3.6.0 x86",
+                "python360x64": "Python 3.6.0 x64",
+                "python361x86": "Python 3.6.1 x86",
+                "python361x64": "Python 3.6.1 x64"
+            },
+            "required": "True",
+            "visibleRule": "Action = Install Extensions",
+            "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
         }
     ],
     "dataSourceBindings": [
@@ -207,6 +235,13 @@
         "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
         "WebAppDoesntExist": "Webapp '%s' doesn't exist.",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
-        "StartingSwapSlot": "Requesting swap slot for Web App : %s"
+        "StartingSwapSlot": "Requesting swap slot for Web App : %s",
+        "ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
+        "ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s (%s)",
+        "ExtensionInstallSuccess": "Successfully installed extension '%s' in Azure App Service.",
+        "ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
+        "ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
+        "ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
+        "InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
     }
 }

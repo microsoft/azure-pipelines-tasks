@@ -59,14 +59,25 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
 
-        if(this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+        if (this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         }
 
-        var vstestFolder = await versionFinder.locateTestWindow(this.dtaTestConfig);
-        if(vstestFolder) {
-            tl.debug("Adding env var DTA.TestWindow.Path = " + vstestFolder);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', vstestFolder);
+        const exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
+        if (exeInfo) {
+            tl.debug('Adding env var DTA.TestWindow.Path = ' + exeInfo.location);
+
+            // Split the TestWindow path out of full path - if we can't find it, will assume
+            // that this is nuget/xcopyable package where the dlls are present in test window folder
+            const testWindowRelativeDir = 'CommonExtensions\\Microsoft\\TestWindow';
+            if (exeInfo.location && exeInfo.location.indexOf(testWindowRelativeDir) !== -1) {
+                const ideLocation = exeInfo.location.split(testWindowRelativeDir)[0];
+                tl.debug('Adding env var DTA.VisualStudio.Path = ' + ideLocation);
+                utils.Helper.addToProcessEnvVars(envVars, 'DTA.VisualStudio.Path', ideLocation);
+            } else {
+                utils.Helper.addToProcessEnvVars(envVars, 'DTA.VisualStudio.Path', exeInfo.location);
+            }
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exeInfo.location);
         } else {
             tl.error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(parseFloat(this.dtaTestConfig.vsTestVersion))));
         }

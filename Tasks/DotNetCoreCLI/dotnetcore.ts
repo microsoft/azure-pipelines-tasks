@@ -49,11 +49,17 @@ export class dotNetExe {
                     dotnet.arg(output);
                 }
 
-                var result = dotnet.execSync();
-                if (result.code != 0) {
-                    var error = result.stderr.replace("\r", "%0D");
-                    tl.error(error.replace("\n", "%0A"));
-                    tl.setResult(result.code, tl.loc("dotnetCommandFailed", result.code));
+                let error = '';
+                dotnet.on('stderr', function (data) {
+                    error += (data || '').toString();
+                });
+                var result = await dotnet.exec();
+                if (result != 0) {
+                    if (error) {
+                        tl.error(error.replace("\r", "%0D").replace("\n", "%0A"));
+                    }
+
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("dotnetCommandFailed", result));
                 }
 
                 await this.zipAfterPublishIfRequired(projectFile);

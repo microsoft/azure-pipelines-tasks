@@ -7,7 +7,7 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string) {
+export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string) {
 
     if(xmlTransformation) {
         var environmentName = tl.getVariable('Release.EnvironmentName');
@@ -25,7 +25,7 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
     }
 
     if(xmlVariableSubstitution) {
-        await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment);
+        xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment);
         console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
     }
 

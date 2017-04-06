@@ -17,11 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-<<<<<<< HEAD
-    "Patch": 23
-=======
-    "Patch": 22
->>>>>>> master
+    "Patch": 25
   },
   "demands": [
     "vstest"

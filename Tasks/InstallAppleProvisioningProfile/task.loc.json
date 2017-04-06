@@ -78,6 +78,6 @@
   },
   "messages": {
     "NO_PROVPROFILE_FOUND": "ms-resource:loc.messages.NO_PROVPROFILE_FOUND",
-    "MULTIPLE_PROVPROFILE_FOUND": "ms-resource:loc.messages.MULTIPLE_PROVPROFILE_FOUND"
+    "MULTIPLE_PROVPROFILES_FOUND": "ms-resource:loc.messages.MULTIPLE_PROVPROFILES_FOUND"
   }
 }

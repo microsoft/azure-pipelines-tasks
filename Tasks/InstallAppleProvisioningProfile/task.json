@@ -78,7 +78,7 @@
     },
     "messages": {
         "NO_PROVPROFILE_FOUND": "No provisioning profile was found matching %s.",
-        "MULTIPLE_PROVPROFILE_FOUND": "Multiple provisioning profiles were found matching %s. Update the input to match one provisioning profile to install."
+        "MULTIPLE_PROVPROFILES_FOUND": "Multiple provisioning profiles were found matching %s. Update the input to match one provisioning profile to install."
     }
 }
     
