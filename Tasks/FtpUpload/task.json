@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 114,
-        "Patch": 1
+        "Minor": 116,
+        "Patch": 0
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [
