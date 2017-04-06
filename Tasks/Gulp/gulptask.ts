@@ -10,8 +10,6 @@ async function executeTask() {
 		var gulpFilePath = tl.getDelimitedInput('gulpFile', '\n', true);
 		var gulp = tl.which('gulp', false);
 		var cwd = tl.getPathInput('cwd', true, false);
-		tl.mkdirP(cwd);
-		tl.cd(cwd);
 
 		tl.debug('check path : ' + gulp);
 		if (!tl.exist(gulp)) {
@@ -36,6 +34,12 @@ async function executeTask() {
 
 		//temp path to gulpfile.js, it will get overridden later
 		gt.arg("temp/gulpfile.js");
+
+		if(path.relative(cwd, tl.getVariable("System.DefaultWorkingDirectory")) != "") {
+			gt.arg("--cwd");
+			gt.arg(cwd);
+		}
+		
 		gt.line(tl.getInput('arguments', false));
 
 		for (var gulpFile of getGulpFiles(gulpFilePath)) {

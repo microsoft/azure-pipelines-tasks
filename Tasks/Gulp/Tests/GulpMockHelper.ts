@@ -5,6 +5,10 @@ export var gulpGlobalGood: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "node": "/usr/local/bin/node"
     },
     "exec": {
+        "/usr/local/bin/gulp --gulpfile gulpfile.js --cwd c:/fake/wd": {
+            "code": 0,
+            "stdout": "gulp output here"
+        },
         "/usr/local/bin/gulp --gulpfile gulpfile.js": {
             "code": 0,
             "stdout": "gulp output here"
@@ -37,11 +41,11 @@ export var gulpLocalGood: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "node": "/usr/local/bin/node"
     },
     "exec": {
-        "/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js": {
+        "/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js --cwd /fake/wd": {
             "code": 0,
             "stdout": "gulp output here"
         },
-        "/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js": {
+        "/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js --cwd c:/fake/wd": {
             "code": 0,
             "stdout": "gulp output here"
         }
@@ -70,7 +74,7 @@ export var gulpNoGulpFile: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "node": "/usr/local/bin/node"
     },
     "exec": {
-        "/usr/local/bin/gulp --gulpfile gulpfile.js": {
+        "/usr/local/bin/gulp --gulpfile gulpfile.js --cwd c:/fake/wd": {
             "code": 0,
             "stdout": "gulp output here"
         }
@@ -109,7 +113,7 @@ export var gulpFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "node": "/usr/local/bin/node"
     },
     "exec": {
-        "/usr/local/bin/gulp --gulpfile gulpfile.js": {
+        "/usr/local/bin/gulp --gulpfile gulpfile.js --cwd c:/fake/wd": {
             "code": 1,
             "stdout": "gulp output here",
             "stderr": "gulp failed with this output"
@@ -136,11 +140,11 @@ export var gulpMultipleGulpFiles: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "node": "/usr/local/bin/node"
     },
     "exec": {
-        "/usr/local/bin/gulp --gulpfile /user/build/one/gulpfile.js": {
+        "/usr/local/bin/gulp --gulpfile /user/build/one/gulpfile.js --cwd c:/fake/wd": {
             "code": 0,
             "stdout": "gulp output here"
         },
-        "/usr/local/bin/gulp --gulpfile /user/build/two/gulpfile.js": {
+        "/usr/local/bin/gulp --gulpfile /user/build/two/gulpfile.js --cwd c:/fake/wd": {
             "code": 0,
             "stdout": "gulp output here"
         }

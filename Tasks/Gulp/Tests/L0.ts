@@ -18,6 +18,21 @@ describe('Gulp Task', function () {
 
         tr.run();
 
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js --cwd c:/fake/wd'), 'it should have run Gulp');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it("runs a gulpfile through global gulp and cwd is same as Default working directory", (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'L0CwdEqualsDefaultDirectory.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
         assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -33,8 +48,8 @@ describe('Gulp Task', function () {
 
         tr.run();
 
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/one/gulpfile.js'), 'it should have run Gulp in directory, one');
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/two/gulpfile.js'), 'it should have run Gulp in directory, two');
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/one/gulpfile.js --cwd c:/fake/wd'), 'it should have run Gulp in directory, one');
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/two/gulpfile.js --cwd c:/fake/wd'), 'it should have run Gulp in directory, two');
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -49,10 +64,10 @@ describe('Gulp Task', function () {
 
         tr.run();
         if (os.type().match(/^Win/)) {
-            assert(tr.ran('/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
+            assert(tr.ran('/usr/local/bin/node c:\\fake\\wd\\node_modules\\gulp\\gulp.js --gulpfile gulpfile.js --cwd c:/fake/wd'), 'it should have run gulp');
         }
         else {
-            assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js'), 'it should have run gulp');
+            assert(tr.ran('/usr/local/bin/node /fake/wd/node_modules/gulp/gulp.js --gulpfile gulpfile.js --cwd /fake/wd'), 'it should have run gulp');
         }
         assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -149,7 +164,7 @@ describe('Gulp Task', function () {
 
         tr.run();
 
-        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js --cwd c:/fake/wd'), 'it should have run gulp');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
 
         var expectedErr = 'Error: loc_mock_GulpFailed /usr/local/bin/gulp failed with return code: 1';
