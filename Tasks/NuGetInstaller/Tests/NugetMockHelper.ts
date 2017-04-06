@@ -34,10 +34,23 @@ export class NugetMockHelper {
     }
     
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
+        this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
         this.tmr.registerMock('./pe-parser', {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
+                result.strings['ProductVersion'] = productVersion;
+                return result;
+            }
+        })
+    }
+
+    private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
+        this.tmr.registerMock('nuget-task-common/pe-parser/index', {
+            getFileVersionInfoAsync: function(nuGetExePath) {
+                let result: VersionInfo = { strings: {} };
+                result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
+                result.productVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
                 result.strings['ProductVersion'] = productVersion;
                 return result;
             }
@@ -73,6 +86,27 @@ export class NugetMockHelper {
     public registerToolRunnerMock() {
         var mtt = require('vsts-task-lib/mock-toolrunner');
         this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
+    }
+
+    public RegisterLocationServiceMocks() {
+        this.tmr.registerMock('vso-node-api/WebApi', {
+            getBearerHandler: function(token){
+                return {};
+            }, 
+            WebApi: function(url, handler){
+                return {
+                    getCoreApi: function() {
+                        return { 
+                            vsoClient: {
+                                getVersioningData: function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) { 
+                                    return { requestUrl:"foobar" }
+                                }
+                            }
+                        };
+                    }
+                };
+            }
+        })
     }
     
     public setAnswers(a) {

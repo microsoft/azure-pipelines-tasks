@@ -21,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://codesharing-su0.pkgs.visualstudio.com/_packaging/NuGetFeed/nuget/v3/index.json -NonInteractive": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -36,8 +36,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
+process.env["NuGet_ForceEnableCredentialConfig"] = "false";
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetConfigMock();
+nmh.RegisterLocationServiceMocks();
 
 tmr.run();

@@ -361,7 +361,7 @@ declare module 'nuget-task-common/NuGetConfigHelper' {
 	    tempNugetConfigPath: string;
 	    constructor(nugetPath: string, nugetConfigPath: string, authInfo: auth.NuGetAuthInfo, environmentSettings: ngToolRunner.NuGetEnvironmentSettings);
 	    ensureTempConfigCreated(): void;
-	    setSources(packageSources: IPackageSource[]): void;
+	    setSources(packageSources: IPackageSource[], includeAuth: boolean): void;
 	    getSourcesFromConfig(): Q.Promise<IPackageSource[]>;
 	    private removeSourcesInNugetConfig(packageSources);
 	    private addSourcesInNugetConfig(packageSources);

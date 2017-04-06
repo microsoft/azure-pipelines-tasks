@@ -12,8 +12,6 @@ tmr.setInput('solution', 'packages.config');
 tmr.setInput('selectOrConfig', 'select');
 tmr.setInput('includeNuGetOrg', 'True');
 
-
-
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
@@ -21,7 +19,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -Source https://www.nuget.org/api/v2/ -NonInteractive": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -34,10 +32,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     }
 };
+
 nmh.setAnswers(a);
 
+process.env["NuGet_ForceEnableCredentialConfig"] = "false";
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetConfigMock();
 
 tmr.run();
