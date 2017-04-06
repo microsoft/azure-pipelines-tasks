@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "NuGet Tool Installer",
+  "loc.helpMarkDown": "",
+  "loc.description": "Finds or downloads and caches specified version spec of NuGet and adds it to the PATH.",
+  "loc.instanceNameFormat": "Use NuGet $(versionSpec)",
+  "loc.input.label.versionSpec": "Version Spec",
+  "loc.input.help.versionSpec": "Version spec of version to get. If you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. List of available versions obtained from [here](http://dist.nuget.org/tools.json). Examples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
+}

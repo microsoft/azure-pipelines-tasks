@@ -16,19 +16,19 @@ $appCmdCommands = ""
 
 # Test 1 
 
-Register-Mock Execute-Main { }
+Register-Mock Invoke-Main { }
 
-Manage-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
+Set-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
                 -physicalPathAuthUserName $vdAuthUserName -physicalPathAuthUserPassword $vdAuthUserPassword -appCmdCommands $appCmdCommands
 
-Assert-WasCalled Execute-Main -Times 1
-Assert-WasCalled Execute-Main -- -CreateVirtualDirectory "True" -WebsiteName "Sample Web Site" -VirtualPath "/App/Vdir" -PhysicalPath "Drive:/Physical path" -PhysicalPathAuth "VDUserPassThrough" -PhysicalPathAuthCredentials $null -AppCmdCommands ""
+Assert-WasCalled Invoke-Main -Times 1
+Assert-WasCalled Invoke-Main -- -CreateVirtualDirectory "True" -WebsiteName "Sample Web Site" -VirtualPath "/App/Vdir" -PhysicalPath "Drive:/Physical path" -PhysicalPathAuth "VDUserPassThrough" -PhysicalPathAuthCredentials $null -AppCmdCommands ""
 
 # Test 2 
 
 $virtualPathForVD = "App/Vdir"
 Assert-Throws {
-    Manage-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
+    Set-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
         -physicalPathAuthUserName $vdAuthUserName -physicalPathAuthUserPassword $vdAuthUserPassword -appCmdCommands $appCmdCommands
 } -MessagePattern "InvalidVirtualPath"
 
@@ -39,13 +39,13 @@ $vdPhysicalPathAuth = "VDWindowsAuth"
 $vdAuthUserName = "name"
 $vdAuthUserPassword = "pass"
 
-Unregister-Mock Execute-Main 
-Register-Mock Execute-Main { }
+Unregister-Mock Invoke-Main 
+Register-Mock Invoke-Main { }
 
 Register-Mock Get-CustomCredentials { return "CustomCredentialsObject" }
 
-Manage-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
+Set-IISVirtualDirectory -parentWebsiteName $parentWebsiteNameForVD -virtualPath $virtualPathForVD -physicalPath $physicalPathForVD -PhysicalPathAuth  $vdPhysicalPathAuth `
     -physicalPathAuthUserName $vdAuthUserName -physicalPathAuthUserPassword $vdAuthUserPassword -appCmdCommands $appCmdCommands
 
-Assert-WasCalled Execute-Main -Times 1
-Assert-WasCalled Execute-Main -- -CreateVirtualDirectory "True" -WebsiteName "Sample Web Site" -VirtualPath "/App/Vdir" -PhysicalPath "Drive:/Physical path" -PhysicalPathAuth "VDWindowsAuth" -PhysicalPathAuthCredentials "CustomCredentialsObject" -AppCmdCommands ""
+Assert-WasCalled Invoke-Main -Times 1
+Assert-WasCalled Invoke-Main -- -CreateVirtualDirectory "True" -WebsiteName "Sample Web Site" -VirtualPath "/App/Vdir" -PhysicalPath "Drive:/Physical path" -PhysicalPathAuth "VDWindowsAuth" -PhysicalPathAuthCredentials "CustomCredentialsObject" -AppCmdCommands ""

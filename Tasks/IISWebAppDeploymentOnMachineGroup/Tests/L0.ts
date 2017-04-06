@@ -135,7 +135,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming web.config web.Release.config";
+        var expectedErr = 'Error: loc_mock_XdtTransformationErrorWhileTransforming C:\\tempFolder\\web.config C:\\tempFolder\\web.Release.config';
         assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);

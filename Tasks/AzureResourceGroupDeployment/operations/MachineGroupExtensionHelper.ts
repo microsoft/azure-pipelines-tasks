@@ -81,7 +81,7 @@ export class MachineGroupExtensionHelper {
             await this.addExtensionOnRunningVm(vm);
         }
         else {
-            throw (tl.loc("VMTransitioningSkipExtensionAddition", vmName));
+            throw new Error(tl.loc("VMTransitioningSkipExtensionAddition", vmName));
         }
     }
 

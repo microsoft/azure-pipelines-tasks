@@ -136,15 +136,21 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             tl.debug("Ignoring TestCaseFilter because Test Impact is enabled");
         }
     }
-    if (settingsFile && pathExistsAsFile(settingsFile)) {
-        argsArray.push("/Settings:" + settingsFile);
-        utils.Helper.readFileContents(settingsFile, "utf-8").then(function (settings) {
-        tl.debug("Running VsTest with settings : " + settings);
-        });
+    if (settingsFile) {
+        if (pathExistsAsFile(settingsFile)) {
+            argsArray.push("/Settings:" + settingsFile);
+            utils.Helper.readFileContents(settingsFile, "utf-8").then(function (settings) {
+                tl.debug("Running VsTest with settings : " + settings);
+            });
+        }
+        else {
+            tl.warning(tl.loc("InvalidSettingsFile", settingsFile));
+        }
     }
+
     if (vstestConfig.codeCoverageEnabled) {
         argsArray.push("/EnableCodeCoverage");
-    }    
+    }
     if (vstestConfig.runTestsInIsolation) {
         argsArray.push("/InIsolation");
     }
@@ -434,10 +440,15 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     tl.cd(workingDirectory);
     var ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === "true";
-    vstest.exec(<tr.IExecOptions>{ failOnStdErr: !ignoreTestFailures })
+    vstest.exec(<tr.IExecOptions>{ ignoreReturnCode: ignoreTestFailures, failOnStdErr: false })
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
-            defer.resolve(code);
+            if (ignoreTestFailures === true) {
+                defer.resolve(0); // ignore failures.
+            }
+            else {
+                defer.resolve(code);
+            }
         })
         .fail(function (err) {
             cleanUp(parallelRunSettingsFile);
@@ -493,7 +504,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     let vstest = tl.tool(vsVersionDetails.location);
 
-    if(vsVersion === 14.0) {
+    if (vsVersion === 14.0) {
         tl.debug("Visual studio 2015 selected. Selecting vstest.console.exe in task ");
         let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe") // Use private vstest as the changes to discover tests are not there in update3
         vstest = tl.tool(vsTestPath);
@@ -733,7 +744,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === "latest") {
         vstestConfig.vsTestVersion = null;
     }
-    
+
     let vsVersion = vsVersionDetails.version;
     try {
         let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
@@ -744,12 +755,12 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
             vsTestVersionForTIA = getVsTestVersion();
 
-            if (tiaConfig.tiaEnabled && 
-                (vsTestVersionForTIA === null || 
-                (vsTestVersionForTIA[0] < 14 || 
-                (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
-                // VS 2015 U3
-                (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
+            if (tiaConfig.tiaEnabled &&
+                (vsTestVersionForTIA === null ||
+                    (vsTestVersionForTIA[0] < 14 ||
+                        (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) ||
+                        // VS 2015 U3
+                        (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
                 tl.warning(tl.loc("VstestTIANotSupported"));
                 tiaConfig.tiaEnabled = false;
             }
@@ -761,25 +772,25 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     // We need to use private data collector dll
-    if(vsTestVersionForTIA !== null && vsTestVersionForTIA[0] === 14) {
+    if (vsTestVersionForTIA !== null && vsTestVersionForTIA[0] === 14) {
         tiaConfig.useNewCollector = true;
     }
 
-      
+
     setRunInParallellIfApplicable(vsVersion);
     var newSettingsFile = vstestConfig.settingsFile;
     try {
         settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersionDetails.version, false, vstestConfig.overrideTestrunParameters).
-        then(function(ret) {
-            newSettingsFile = ret;            
-            runVStest(testResultsDirectory, newSettingsFile, vsVersion)
-            .then(function (code) {
-                defer.resolve(code);
+            then(function (ret) {
+                newSettingsFile = ret;
+                runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+                    .then(function (code) {
+                        defer.resolve(code);
+                    })
+                    .fail(function (code) {
+                        defer.resolve(code);
+                    });
             })
-            .fail(function (code) {
-                defer.resolve(code);
-            });            
-        })                               
     } catch (error) {
         tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
         tl.debug(error);
@@ -863,7 +874,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
                 }
             }
         });
-    } catch(error) {
+    } catch (error) {
         //In case of error return default directory.
         tl.debug(error);
         return resultDirectory;
