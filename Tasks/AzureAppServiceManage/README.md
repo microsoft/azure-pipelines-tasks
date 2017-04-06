@@ -27,12 +27,6 @@ For Azure MSDN accounts, one can either use a [Service Principal](https://go.mic
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
 2. Add that user and password in the service connections in Team Services and deployments will work with that account.
 
-
-##### Azure PowerShell
-
-The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.3.0](https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016).
-
-
 ## Parameters of the task
 
 The task is used to manage an existing Azure App Service. The mandatory fields are highlighted with a *.
