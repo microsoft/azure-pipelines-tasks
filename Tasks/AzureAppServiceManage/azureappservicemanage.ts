@@ -3,6 +3,7 @@ import Q = require('q');
 import path = require('path');
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
+var extensionManage = require('./extensionmanage.js');
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
@@ -40,6 +41,7 @@ async function run() {
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
+        var extensionList = tl.getInput('ExtensionsList', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var taskResult = true;
@@ -65,6 +67,16 @@ async function run() {
             case "Stop Azure App Service": {
                 console.log(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
+            }
+            case "Install Extensions": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                tl.debug('Retrieved publishing Profile');
+                var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, extensionList.split(','));
+                if(!anyExtensionInstalled) {
+                    tl.debug('No new extension installed. Skipping Restart App Service.');
+                    break;
+                }
             }
             case "Restart Azure App Service": {
                 console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
