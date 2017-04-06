@@ -135,7 +135,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming web.config web.Release.config";
+        var expectedErr = 'Error: loc_mock_XdtTransformationErrorWhileTransforming C:\\tempFolder\\web.config C:\\tempFolder\\web.Release.config';
         assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
@@ -183,7 +183,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
         assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
         assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
-        assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });

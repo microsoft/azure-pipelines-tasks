@@ -62,7 +62,7 @@
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
   "loc.messages.Configfiledoesntexists": "Configuration file %s doesn't exist.",
   "loc.messages.Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
-  "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
+  "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
   "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",

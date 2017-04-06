@@ -64,7 +64,7 @@ export class ServiceClient {
     protected longRunningOperationRetryTimeout: number;
     protected generateClientRequestId: boolean;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, timeout?: number) {
         if (!credentials) {
             throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
@@ -75,7 +75,7 @@ export class ServiceClient {
         this.credentials = credentials;
         this.subscriptionId = subscriptionId
         this.baseUri = this.credentials.armUrl;
-        this.longRunningOperationRetryTimeout = 60; // In minutes
+        this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
     }
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
@@ -135,20 +135,20 @@ export class ServiceClient {
     public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
         timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
-
+        var waitIndefinitely = timeoutInMinutes == 0;
         var request = new WebRequest();
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
         if (!request.uri) {
-            throw (tl.loc("InvalidResponseLongRunningOperation"));
+            throw new Error(tl.loc("InvalidResponseLongRunningOperation"));
         }
 
         while (true) {
             response = await this.beginRequest(request);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
                 // If timeout; throw;
-                if (timeout < new Date().getTime()) {
-                    throw (tl.loc("TimeoutWhileWaiting"));
+                if (!waitIndefinitely && timeout < new Date().getTime()) {
+                    throw new Error(tl.loc("TimeoutWhileWaiting"));
                 }
 
                 // Retry after given interval.
@@ -199,7 +199,7 @@ export class ServiceClient {
             }
         }
     }
-    
+
     private toWebResponse(response, body): WebResponse {
         var res = new WebResponse();
 

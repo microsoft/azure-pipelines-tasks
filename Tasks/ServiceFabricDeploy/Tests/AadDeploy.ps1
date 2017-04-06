@@ -24,6 +24,7 @@ Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectio
 Register-Mock Get-VstsInput { "false" } -- -Name compressPackage
 Register-Mock Get-VstsInput { $overwriteBehavior } -- -Name overwriteBehavior
 Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion
+Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -36,7 +37,7 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 $vstsEndpoint = @{
     "url" = $connectionEndpointFullUrl
     "Auth" = @{
-        "Scheme" = "UserNamePassword" 
+        "Scheme" = "UserNamePassword"
         "Parameters" = @{
             "ServerCertThumbprint" = $serverCertThumbprint
             "Username" = $userName
@@ -89,7 +90,7 @@ Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$
 Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
 
 $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
-Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs 
+Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1

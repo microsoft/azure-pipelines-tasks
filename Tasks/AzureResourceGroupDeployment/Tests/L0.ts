@@ -372,7 +372,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    /*it('Successfully triggered createOrUpdate deployment', (done) => {
+    it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
@@ -558,7 +558,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Enabling winrm for virtual machine") > 0, "Should add Custom Script Extension to the virual machine");
             assert(tr.stdout.indexOf("virtualMachineExtensions.get is called on vm customVM") > 0, "Should try getting the extension on the virtual machine");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should call createOrUpdate of virtual Machine extensions");
-            assert(tr.stdout.indexOf("Addition of extension completed for vmcustomVM") > 0, "Should be able to add the extension");
+            assert(tr.stdout.indexOf("Addition of extension completed for vm: customVM") > 0, "Should be able to add the extension");
             assert(tr.stdout.indexOf("Provisioning of CustomScriptExtension on vm customVM is in Succeeded State") > 0, "Provisioning of the Custom Script Extension should be in succeeded state");
             assert(tr.stdout.indexOf("Trying to add a network security group rule") <= 0, "Shouldn't try adding NSG rule");
             done();
@@ -975,5 +975,5 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });*/
+    });
 });

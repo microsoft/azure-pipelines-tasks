@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.helpMarkDown": "",
+  "loc.description": "Install an apple provisioning profile required to build on a macOS agent",
+  "loc.instanceNameFormat": "Install an apple provisioning profile",
+  "loc.input.label.provProfileSource": "Provisioning Profile Location",
+  "loc.input.help.provProfileSource": "A provisioning profile can be installed from an uploaded `Secure File`, or a file in the source repository or a file on the agent.",
+  "loc.input.label.provProfileSecureFile": "Provisioning Profile",
+  "loc.input.help.provProfileSecureFile": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
+  "loc.input.label.provProfileFilePath": "Provisioning Profile",
+  "loc.input.help.provProfileFilePath": "Select the path to the provisioning profile to install on the macOS agent.",
+  "loc.input.label.removeProfile": "Remove Profile After Build",
+  "loc.input.help.removeProfile": "Select to specify that the provisioning profile should be removed from the agent after the build or release is complete.",
+  "loc.messages.NO_PROVPROFILE_FOUND": "No provisioning profile was found matching %s.",
+  "loc.messages.MULTIPLE_PROVPROFILE_FOUND": "Multiple provisioning profiles were found matching %s. Update the input to match one provisioning profile to install."
+}

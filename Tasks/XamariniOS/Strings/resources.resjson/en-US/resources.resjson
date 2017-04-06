@@ -21,10 +21,11 @@
   "loc.input.help.args": "Additional command line arguments that should be used to build.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory in which builds will run. When empty, the root of the repository is used.",
-  "loc.input.label.mdtoolLocation": "Xbuild Path",
-  "loc.input.help.mdtoolLocation": "Optionally supply the path to xbuild, the Xamarin Studio mono build tool. When empty, the default xbuild path is used.",
+  "loc.input.label.buildTool": "Build Tool",
+  "loc.input.label.mdtoolLocation": "Build Tool Path",
+  "loc.input.help.mdtoolLocation": "Optionally supply the path to xbuild (the Xamarin Studio mono build tool) or MSBuild (the Visual Studio for Mac build tool). When empty, the default xbuild or MSBuild path is used.",
   "loc.input.label.signMethod": "Override Using",
-  "loc.input.help.signMethod": "Indicates that the build should use different signing and/or mobile provisioning settings than are installed on the build server. Leave fields blank if you do not wish to override.",
+  "loc.input.help.signMethod": "If the build should use a signing or provisioning method that is different than the default, choose that method here. Choose 'File Contents' to use a P12 certificate and provisioning profile. Choose 'Identifiers' to retrieve signing settings from the default Keychain and pre-installed profiles. Leave the corresponding fields blank if you do not wish to override default build settings.",
   "loc.input.label.iosSigningIdentity": "Signing Identity",
   "loc.input.help.iosSigningIdentity": "Optionally override the signing identity that will be used to sign the build. If nothing is entered, the setting in the Xcode project will be used. You may need to select 'Unlock Default Keychain' if you use this option.",
   "loc.input.label.unlockDefaultKeychain": "Unlock Default Keychain",
@@ -48,5 +49,10 @@
   "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
   "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
   "loc.messages.XamariniOSSucceeded": "Xamarin.iOS task execution completed with no errors.",
-  "loc.messages.XamariniOSFailed": "Xamarin.iOS task failed with error %s. For guidance on setting up the build definition, see https://go.microsoft.com/fwlink/?LinkId=760847."
+  "loc.messages.XamariniOSFailed": "Xamarin.iOS task failed with error %s. For guidance on setting up the build definition, see https://go.microsoft.com/fwlink/?LinkId=760847.",
+  "loc.messages.MSB_Build0": "Build {0}",
+  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
+  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

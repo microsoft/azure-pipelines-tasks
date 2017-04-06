@@ -37,7 +37,7 @@
   "loc.input.label.teamId": "Team ID",
   "loc.input.help.teamId": "Specify the 10 digit developer Team ID. This is required if you are a member of multiple development teams.",
   "loc.input.label.signMethod": "Override Using",
-  "loc.input.help.signMethod": "Indicates that the build should use different signing and/or mobile provisioning settings than are present in the workspace. Leave fields blank if you do not wish to override.",
+  "loc.input.help.signMethod": "If the build should use a signing or provisioning method that is different than the default, choose that method here. Choose 'File Contents' to use a P12 certificate and provisioning profile. Choose 'Identifiers' to retrieve signing settings from the default Keychain and pre-installed profiles. Leave the corresponding fields blank if you do not wish to override default build settings.",
   "loc.input.label.iosSigningIdentity": "Signing Identity",
   "loc.input.help.iosSigningIdentity": "Optional signing identity override that should be used to sign the build. Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
   "loc.input.label.unlockDefaultKeychain": "Unlock Default Keychain",

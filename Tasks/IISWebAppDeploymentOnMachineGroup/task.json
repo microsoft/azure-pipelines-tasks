@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 14
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
@@ -171,7 +171,7 @@
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
         "Configfiledoesntexists": "Configuration file %s doesn't exist.",
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
-        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
+        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",

@@ -13,6 +13,7 @@
     "location": "",
     "script_path": "",
     "script_name": "",
+    "script_arguments": "",
     "package_path": "",
     "package_name": "",
     "capture_name_prefix": ""
@@ -65,7 +66,7 @@
             "inline": [
                 "cd \"C:\\DeployTemp\"",
                 "ls",
-                "C:\\DeployTemp\\{{user `script_name`}}"
+                "C:\\DeployTemp\\{{user `script_name`}} {{user `script_arguments`}}"
             ]
         },
         {

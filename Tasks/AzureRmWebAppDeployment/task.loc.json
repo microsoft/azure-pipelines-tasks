@@ -15,10 +15,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 1,
-    "Patch": 0
+    "Minor": 2,
+    "Patch": 1
   },
-  "preview": "true",
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -116,6 +115,62 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "defaultValue": "",
+      "options": {
+        "": "Select deployment script type (inline or file)",
+        "Inline Script": "Inline Script",
+        "File Path": "Script File Path"
+      },
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
+    },
+    {
+      "name": "InlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScript",
+      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "ScriptType == Inline Script",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "ScriptType == File Path"
+    },
+    {
+      "name": "GenerateWebConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.GenerateWebConfig",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfig"
+    },
+    {
+      "name": "WebConfigParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.WebConfigParameters",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "GenerateWebConfig == true",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+      }
+    },
+    {
       "name": "TakeAppOfflineFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
@@ -182,40 +237,6 @@
       "visibleRule": "UseWebDeploy == true",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
-    },
-    {
-      "name": "ScriptType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ScriptType",
-      "defaultValue": "",
-      "options": {
-        "": "Select deployment script type",
-        "Inline Script": "Inline Script",
-        "File Path": "Script File Path"
-      },
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
-    },
-    {
-      "name": "InlineScript",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.InlineScript",
-      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "ScriptType == Inline Script",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "500"
-      }
-    },
-    {
-      "name": "ScriptPath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.ScriptPath",
-      "required": true,
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "ScriptType == File Path"
     },
     {
       "name": "XmlTransformation",
@@ -337,14 +358,23 @@
     "ExecuteScriptOnKudu": "ms-resource:loc.messages.ExecuteScriptOnKudu",
     "FailedToRunScriptOnKuduError": "ms-resource:loc.messages.FailedToRunScriptOnKuduError",
     "FailedToRunScriptOnKudu": "ms-resource:loc.messages.FailedToRunScriptOnKudu",
-    "SciptExecutionOnKuduSuccess": "ms-resource:loc.messages.SciptExecutionOnKuduSuccess",
-    "SciptExecutionOnKuduFailed": "ms-resource:loc.messages.SciptExecutionOnKuduFailed",
+    "ScriptExecutionOnKuduSuccess": "ms-resource:loc.messages.ScriptExecutionOnKuduSuccess",
+    "ScriptExecutionOnKuduFailed": "ms-resource:loc.messages.ScriptExecutionOnKuduFailed",
     "FailedtoDeleteFileFromKudu": "ms-resource:loc.messages.FailedtoDeleteFileFromKudu",
     "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError",
     "ScriptFileNotFound": "ms-resource:loc.messages.ScriptFileNotFound",
     "InvalidScriptFile": "ms-resource:loc.messages.InvalidScriptFile",
     "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
     "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
-    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript"
+    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript",
+    "WebConfigAlreadyExists": "ms-resource:loc.messages.WebConfigAlreadyExists",
+    "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
+    "FailedToGenerateWebConfig": "ms-resource:loc.messages.FailedToGenerateWebConfig",
+    "FailedToGetKuduFileContent": "ms-resource:loc.messages.FailedToGetKuduFileContent",
+    "FailedToGetKuduFileContentError": "ms-resource:loc.messages.FailedToGetKuduFileContentError",
+    "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
+    "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
+    "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
+    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters"
   }
 }

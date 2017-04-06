@@ -18,6 +18,7 @@
   "loc.input.help.failOnStdErr": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
   "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
   "loc.messages.SettingUpSshConnection": "Trying to setup SSH connection to %s@%s:%s",
+  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
   "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. Error: %s.",
   "loc.messages.RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
   "loc.messages.RemoteCmdExecutionErr": "Command failed with errors on remote machine.",

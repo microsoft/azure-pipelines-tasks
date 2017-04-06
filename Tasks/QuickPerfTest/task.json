@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [
         "msbuild",
@@ -114,7 +114,7 @@
             "name": "avgResponseTimeThreshold",
             "type": "string",
             "label": "Fail test if Avg.Response Time(ms) exceeds",
-            "helpMarkDown": "Load test run duration in seconds.",
+            "helpMarkDown": "Average response time above which the load test outcome is considered unsuccessful.",
             "defaultValue": "0"
         }
     ],

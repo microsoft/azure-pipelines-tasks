@@ -13,6 +13,7 @@
     "location": "",
     "script_path": "",
     "script_name": "",
+    "script_arguments": "",
     "package_path": "",
     "package_name": "",
     "capture_name_prefix": ""
@@ -63,7 +64,7 @@
             "cd /deployTemp",
             "ls",
             "chmod +x /deployTemp/{{user `script_name`}}",
-            "/deployTemp/{{user `script_name`}}"
+            "/deployTemp/{{user `script_name`}} {{user `script_arguments`}}"
         ]
     },
     {

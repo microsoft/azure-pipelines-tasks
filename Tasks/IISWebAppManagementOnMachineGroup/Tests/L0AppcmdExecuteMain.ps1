@@ -42,7 +42,7 @@ $appCmdCommands = ""
 Register-Mock Test-Path { return $true } 
 Register-Mock Add-And-Update-Website { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -61,7 +61,7 @@ Unregister-Mock Add-And-Update-Website
 Register-Mock Add-And-Update-Website { }
 Register-Mock Add-And-Update-AppPool { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -84,7 +84,7 @@ Register-Mock Add-And-Update-Website { }
 Register-Mock Add-SslCert { }
 Register-Mock Enable-SNI { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -101,7 +101,7 @@ Assert-WasCalled Enable-SNI -Times 1
 $actionIISWebsite = "StartWebsite"
 Register-Mock Start-Stop-Website { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -116,7 +116,7 @@ $actionIISWebsite = "StopWebsite"
 Unregister-Mock Start-Stop-Website
 Register-Mock Start-Stop-Website { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -132,7 +132,7 @@ $actionIISApplicationPool = "StartAppPool"
 
 Register-Mock Start-Stop-Recycle-ApplicationPool { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -149,7 +149,7 @@ $actionIISApplicationPool = "StopAppPool"
 Unregister-Mock Start-Stop-Recycle-ApplicationPool
 Register-Mock Start-Stop-Recycle-ApplicationPool { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -166,7 +166,7 @@ $actionIISApplicationPool = "RecycleAppPool"
 Unregister-Mock Start-Stop-Recycle-ApplicationPool
 Register-Mock Start-Stop-Recycle-ApplicationPool { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -181,7 +181,7 @@ $CreateApplication = "true"
 
 Register-Mock Add-And-Update-Application { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `
@@ -196,7 +196,7 @@ $CreateVirtualDirectory = "true"
 
 Register-Mock Add-And-Update-VirtualDirectory { }
 
-Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
+Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -virtualPath $virtualPath -actionIISApplicationPool $actionIISApplicationPool -createVirtualDirectory $createVirtualDirectory -createApplication $createApplication -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth `
     -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress `
     -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI `
     -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint `

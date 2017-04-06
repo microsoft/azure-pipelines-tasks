@@ -27,7 +27,6 @@ const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
 let resultsDirectory = null;
 
-
 export async function startTest() {
     try {
         vstestConfig = taskInputParser.getvsTestConfigurations();
@@ -148,12 +147,18 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             tl.debug("Ignoring TestCaseFilter because Test Impact is enabled");
         }
     }
-    if (settingsFile && pathExistsAsFile(settingsFile)) {
-        argsArray.push("/Settings:" + settingsFile);
-        utils.Helper.readFileContents(settingsFile, "utf-8").then(function (settings) {
-            tl.debug("Running VsTest with settings : " + settings);
-        });
+    if (settingsFile) {
+        if (pathExistsAsFile(settingsFile)) {
+            argsArray.push("/Settings:" + settingsFile);
+            utils.Helper.readFileContents(settingsFile, "utf-8").then(function (settings) {
+                tl.debug("Running VsTest with settings : " + settings);
+            });
+        }
+        else {
+            tl.warning(tl.loc("InvalidSettingsFile", settingsFile));
+        }
     }
+
     if (vstestConfig.codeCoverageEnabled) {
         argsArray.push("/EnableCodeCoverage");
     }
@@ -454,10 +459,15 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     tl.cd(workingDirectory);
     var ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === "true";
-    vstest.exec(<tr.IExecOptions>{ failOnStdErr: !ignoreTestFailures })
+    vstest.exec(<tr.IExecOptions>{ ignoreReturnCode: ignoreTestFailures, failOnStdErr: false })
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
-            defer.resolve(code);
+            if (ignoreTestFailures === true) {
+                defer.resolve(0); // ignore failures.
+            }
+            else {
+                defer.resolve(code);
+            }
         })
         .fail(function (err) {
             cleanUp(parallelRunSettingsFile);
