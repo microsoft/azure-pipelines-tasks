@@ -3,7 +3,7 @@
 import * as tl from "vsts-task-lib/task";
 import RegistryAuthenticationToken from "./registryauthenticationtoken"
 import AuthenticationTokenProvider from "./authenticationtokenprovider"
-var azureRmUtil = require('azurerest-common/azurerestutility');
+var azureRmUtil = require('azurerest-common/azurerestutility.js');
 import Q = require('q');
 
 export default class ACRAuthenticationTokenProvider extends AuthenticationTokenProvider{
