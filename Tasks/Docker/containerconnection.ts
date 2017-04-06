@@ -7,7 +7,7 @@ import * as url from "url";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as imageUtils from "./contianerimageutils";
-import AuthenticationToken from "./registryauthenticationprovider/RegistryAuthenticationToken"
+import AuthenticationToken from "./registryauthenticationprovider/registryauthenticationtoken"
 
 export default class ContainerConnection {
     private dockerPath: string;
