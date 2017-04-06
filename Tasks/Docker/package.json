@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "del": "^2.2.0",
-    "js-yaml": "^3.6.1",
-    "vsts-task-lib" : "2.0.1-preview"
+    "js-yaml": "^3.6.1"
   }
 }

@@ -2,7 +2,7 @@
 	"common": [{
 		"module": "../Common/azurerest-common",
 		"type": "node",
-		"dest" : "./azurerest-common",
+		"dest" : "./",
 		"compile" : true
 	}]
 }
