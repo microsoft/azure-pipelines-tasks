@@ -265,7 +265,7 @@
     "instanceNameFormat": "$(action)",
     "execution": {
         "Node": {
-            "target": "dockerCompose.js",
+            "target": "dockercompose.js",
             "argumentFormat": ""
         }
     }

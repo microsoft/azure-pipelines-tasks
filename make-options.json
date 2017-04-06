@@ -41,6 +41,7 @@
         "MSBuild",
         "NodeTool",
         "Npm",
+        "NuGet",
         "NuGetInstaller",
         "NugetPackager",
         "NuGetPublisher",

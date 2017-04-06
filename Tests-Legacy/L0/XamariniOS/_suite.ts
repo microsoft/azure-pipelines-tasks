@@ -69,6 +69,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
+        tr.setInput('buildTool', 'xbuild');
         tr.setInput('mdtoolLocation', '/home/bin2/');
         tr.setInput('runNugetRestore', 'true'); //boolean
         tr.setInput('unlockDefaultKeychain', ''); //boolean
@@ -246,6 +247,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
+        tr.setInput('buildTool', 'xbuild');
         tr.setInput('mdtoolLocation', '/user/bin/');
         tr.setInput('unlockDefaultKeychain', ''); //boolean
         tr.setInput('defaultKeychainPassword', '');
@@ -262,7 +264,7 @@ describe('XamariniOS Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.indexOf('not found xbuild: /user/bin/xbuild') >= 0, 'wrong error message');            
+            assert(tr.stderr.indexOf('not found build tool: /user/bin/xbuild') >= 0, 'wrong error message');            
             done();
         })
         .fail((err) => {
@@ -282,6 +284,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
+        tr.setInput('buildTool', 'xbuild');
         tr.setInput('mdtoolLocation', '/home/bin2');
         tr.setInput('runNugetRestore', 'true'); //boolean
         tr.setInput('unlockDefaultKeychain', ''); //boolean
