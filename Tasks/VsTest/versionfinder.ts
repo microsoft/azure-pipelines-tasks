@@ -186,5 +186,3 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
     
     return outputArray;
 }
-
-
