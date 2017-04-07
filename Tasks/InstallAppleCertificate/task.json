@@ -58,7 +58,7 @@
                 "temp": "Temporary Keychain",
                 "custom": "Custom Keychain"
             },
-            "helpMarkDown": "Select the keychain in which to install the Apple certificate. A temporary keychain will always be cleaned up after the build or release is complete.",
+            "helpMarkDown": "Select the keychain in which to install the Apple certificate. A temporary keychain will always be deleted after the build or release is complete.",
             "groupName": "advanced"
         },
         {
