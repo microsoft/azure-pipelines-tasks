@@ -53,13 +53,17 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : s
     var resolvedPath: string = pathInput;
 
     // Does the pathInput value contain wildcards?
-    if (containsWildcard(pathInput)) {
+    if (pathInput && containsWildcard(pathInput)) {
         // Resolve matches of the pathInput pattern
         var pathMatches: string[] = tl.findMatch(workingDirectory, pathInput);
         tl.debug(tl.loc('FoundNMatchesForPattern', pathMatches.length, pathInput));
 
-        // Select the path to be used from the matches
-        if (pathMatches.length > 0) {
+        // Were any matches found?
+        if (pathMatches.length == 0) {
+            resolvedPath = undefined;
+        }
+        else {
+            // Select the path to be used from the matches
             resolvedPath = pathMatches[0];
 
             // If more than one path matches, use the first and issue a warning
