@@ -32,6 +32,10 @@ export class VSTestVersion {
         return (this.majorVersion >= 15);
     }
 
+    vstestDiagSupported(): boolean {
+        return (this.majorVersion > 15);
+    }
+
     isPrivateDataCollectorNeededForTIA(): boolean {
         return false;
     }
