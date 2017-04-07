@@ -42,19 +42,19 @@ export async function getNuGet(versionSpec: string): Promise<string> {
         let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller');
         
         let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(versionsUrl, GetRestClientOptions())).result;
-        let availableVersions: INuGetVersionInfo[] = nugetVersions.filter(x => x.stage !== NuGetReleaseStage.EarlyAccessPreview);
-        let filteredVersions: string[] = availableVersions.map(x => x.version);
+        // x.stage is the string representation of the enum, NuGetReleaseStage.Value = number, NuGetReleaseStage[NuGetReleaseStage.Value] = string, NuGetReleaseStage[x.stage] = number
+        let availableVersions: INuGetVersionInfo[] = nugetVersions.filter(x => x.stage.toString() !== NuGetReleaseStage[NuGetReleaseStage.EarlyAccessPreview]);
+        let versionStringsFromDist: string[] = availableVersions.map(x => x.version);
         let versionUrlMap: Map<string, string> = new Map<string, string>();
         availableVersions.forEach((versionInfo:INuGetVersionInfo) => {
             versionUrlMap[versionInfo.version.toLowerCase()] = versionInfo.url;
         });
 
-        version = toolLib.evaluateVersions(filteredVersions, versionSpec);
+        version = toolLib.evaluateVersions(versionStringsFromDist, versionSpec);
         if(!version)
         {
             taskLib.error(taskLib.loc("Error_NoVersionWasFoundWhichMatches", versionSpec)); 
-            taskLib.error(taskLib.loc("Info_AvailableVersions"));
-            taskLib.error(availableVersions.map(x => x.version).join(";"));
+            taskLib.error(taskLib.loc("Info_AvailableVersions", availableVersions.map(x => x.version).join("; ")));
             throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", "NuGet"));
         }
         taskLib.debug('Found the following version from the list: ' + version);
