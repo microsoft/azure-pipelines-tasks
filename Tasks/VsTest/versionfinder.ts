@@ -25,11 +25,11 @@ export class VSTestVersion {
     }
 
     isTestImpactSupported(): boolean {
-        return (this.majorVersion > 15);
+        return (this.majorVersion >= 15);
     }
 
     vstestDiagSupported(): boolean {
-        return (this.majorVersion > 15);
+        return (this.majorVersion >= 15);
     }
 
     isPrivateDataCollectorNeededForTIA(): boolean {
@@ -37,7 +37,7 @@ export class VSTestVersion {
     }
 
     isRunInParallelSupported(): boolean {
-        return (this.majorVersion > 15);
+        return (this.majorVersion >= 15);
     }
 }
 
