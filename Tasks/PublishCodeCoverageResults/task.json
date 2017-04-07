@@ -40,7 +40,7 @@
             "label": "Summary File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Enter the path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
+            "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
         },
         {
             "name": "reportDirectory",
@@ -48,7 +48,7 @@
             "label": "Report Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter the path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
+            "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
         },
         {
             "name": "additionalCodeCoverageFiles",
@@ -56,7 +56,7 @@
             "label": "Additional Files",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Enter a file path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/**/*.exec`"
+            "helpMarkDown": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/**/*.exec`"
         }
     ],
     "execution": {
@@ -67,6 +67,6 @@
     },
     "messages": {
         "FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
-        "MultipleSummaryFilesFound": "Multiple matching code coverage summary files were found. Using the first match: %s"
+        "MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s"
     }
 }
