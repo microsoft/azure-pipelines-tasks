@@ -426,7 +426,7 @@ describe('VsTest Suite', function () {
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
-                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update1 or higher requirement');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update3 or higher requirement');
                 done();
             })
             .fail((err) => {
@@ -453,10 +453,11 @@ describe('VsTest Suite', function () {
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
-                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update1 or higher requirement');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update1 or higher requirement');
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
     })
@@ -480,15 +481,17 @@ describe('VsTest Suite', function () {
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
-                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update1 or higher requirement');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update3 or higher requirement');
                 done();
             })
             .fail((err) => {
+                console.log(tr.stderr);
+                console.log(tr.stdout);
                 done(err);
             });
     })
 
-    it('Vstest task with run in parallel and vs 2015 update1 or higher', (done) => {
+    it('Vstest task with run in parallel and vs 2015 update3 or higher', (done) => {
 
         let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
         setResponseFile('vstestRunInParallel.json');
@@ -507,7 +510,7 @@ describe('VsTest Suite', function () {
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
-                assert(tr.stdout.search(/Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update1 or higher requirement.');
+                assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update3 or higher requirement.');
                 done();
             })
             .fail((err) => {
@@ -788,6 +791,8 @@ describe('VsTest Suite', function () {
                 done();
             })
             .fail((err) => {
+				console.log(tr.stdout);
+				console.log(err);
                 done(err);
             });
     });
