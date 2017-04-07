@@ -26,7 +26,16 @@ async function main(): Promise<void> {
     let versionSpec: string = tl.getInput("versionSpec", true);
     let command: string = tl.getInput("command", true);
     let args: string = tl.getInput("arguments", false);
-    let nuGetPath: string = await nuGetGetter.getNuGet(versionSpec);
+
+    let nuGetPath: string = undefined;
+    try {
+        nuGetPath = await nuGetGetter.getNuGet(versionSpec);
+    }
+    catch (error) {
+        console.error('ERR:' + error.message);
+        tl.setResult(tl.TaskResult.Failed, "");
+    }
+
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))
     {
