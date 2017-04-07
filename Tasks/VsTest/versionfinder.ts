@@ -19,7 +19,62 @@ export async function locateVSTestConsole(testConfig): Promise<string> {
     return Promise.resolve(vstestExePath);
 }
 
-export function locateTestWindow(testConfig: models.TestConfigurations): Promise<string> {
+export class VSTestVersion {
+
+    constructor(public vstestExeLocation: string, public majorVersion: number, public minorversion: number, public patchNumber: number) {
+    }
+
+    isTestImpactSupported(): boolean {
+        return (this.majorVersion > 15);
+    }
+
+    vstestDiagSupported(): boolean {
+        return (this.majorVersion > 15);
+    }
+
+    isPrivateDataCollectorNeededForTIA(): boolean {
+        return false;
+    }
+
+    isRunInParallelSupported(): boolean {
+        return (this.majorVersion > 15);
+    }
+}
+
+
+export class Dev14VSTestVersion extends VSTestVersion {
+    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
+        super(runnerLocation, 14, minorVersion, patchNumber);
+    }
+
+    isTestImpactSupported(): boolean {
+        return (this.patchNumber >= 25420);
+    }
+
+    isRunInParallelSupported(): boolean {
+        return (this.patchNumber >= 25420);
+    }
+
+    isPrivateDataCollectorNeededForTIA(): boolean {
+        return true;
+    }
+}
+
+export class Dev15VSTestVersion extends VSTestVersion {
+    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
+        super(runnerLocation, 15, minorVersion, patchNumber);
+    }
+
+    isTestImpactSupported(): boolean {
+        return (this.patchNumber >= 25727);
+    }
+
+    vstestDiagSupported(): boolean {
+        return (this.patchNumber > 25428);
+    }
+}
+
+function locateTestWindow(testConfig: models.TestConfigurations): Promise<string> {
     let deferred = Q.defer<string>();
     let vsVersion: number = parseFloat(testConfig.vsTestVersion);
     if(testConfig.vsTestLocationMethod === utils.Constants.vsTestLocationString) {
@@ -35,31 +90,31 @@ export function locateTestWindow(testConfig: models.TestConfigurations): Promise
         throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
     } 
 
-        if (isNaN(vsVersion)) {
-            // latest
-            tl.debug('Searching for latest Visual Studio');
-            let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
-            if (vstestconsole15Path) {
-                return Promise.resolve(vstestconsole15Path);
-            } 
+    if (isNaN(vsVersion)) {
+        // latest
+        tl.debug('Searching for latest Visual Studio');
+        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        if (vstestconsole15Path) {
+            return Promise.resolve(vstestconsole15Path);
+        } 
 
-            // fallback
-            tl.debug('Unable to find an instance of Visual Studio 2017');
-            return getLatestVSTestConsolePathFromRegistry();
-        }
-        
-         if (vsVersion === 15.0) {
-            let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
-            if (vstestconsole15Path) {
-                return Promise.resolve(vstestconsole15Path);
-            } 
+        // fallback
+        tl.debug('Unable to find an instance of Visual Studio 2017');
+        return getLatestVSTestConsolePathFromRegistry();
+    }
+    
+        if (vsVersion === 15.0) {
+        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        if (vstestconsole15Path) {
+            return Promise.resolve(vstestconsole15Path);
+        } 
 
-            throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
-        }
-        
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+    
 
-        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-        return Promise.resolve(getVSTestLocation(vsVersion));
+    tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+    return Promise.resolve(getVSTestLocation(vsVersion));
 }
 
 function getLatestVSTestConsolePathFromRegistry(): Promise<string> {
@@ -132,57 +187,4 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
     return outputArray;
 }
 
-export class VSTestVersion {
 
-    constructor(public vstestExeLocation: string, public majorVersion: number, public minorversion: number, public patchNumber: number) {
-    }
-
-    isTestImpactSupported(): boolean {
-        return (this.majorVersion > 15);
-    }
-
-    vstestDiagSupported(): boolean {
-        return (this.majorVersion > 15);
-    }
-
-    isPrivateDataCollectorNeededForTIA(): boolean {
-        return false;
-    }
-
-    isRunInParallelSupported(): boolean {
-        return (this.majorVersion > 15);
-    }
-}
-
-
-export class Dev14VSTestVersion extends VSTestVersion {
-    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
-        super(runnerLocation, 14, minorVersion, patchNumber);
-    }
-
-    isTestImpactSupported(): boolean {
-        return (this.patchNumber >= 25420);
-    }
-
-    isRunInParallelSupported(): boolean {
-        return (this.patchNumber >= 25420);
-    }
-
-    isPrivateDataCollectorNeededForTIA(): boolean {
-        return true;
-    }
-}
-
-export class Dev15VSTestVersion extends VSTestVersion {
-    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
-        super(runnerLocation, 15, minorVersion, patchNumber);
-    }
-
-    isTestImpactSupported(): boolean {
-        return (this.patchNumber >= 25727);
-    }
-
-    vstestDiagSupported(): boolean {
-        return (this.patchNumber > 25428);
-    }
-}
