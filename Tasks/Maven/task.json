@@ -19,8 +19,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 114,
-        "Patch": 1
+        "Minor": 116,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -250,6 +250,33 @@
             "label": "SonarQube Endpoint",
             "required": true,
             "helpMarkDown": "The SonarQube server generic endpoint",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectName",
+            "type": "string",
+            "label": "SonarQube Project Name",
+            "required": false,
+            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectKey",
+            "type": "string",
+            "label": "SonarQube Project Key",
+            "required": false,
+            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqProjectVersion",
+            "type": "string",
+            "label": "SonarQube Project Version",
+            "required": false,
+            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
