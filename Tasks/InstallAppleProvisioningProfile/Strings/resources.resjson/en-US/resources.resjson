@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Install Apple ProvProfile (Preview)",
   "loc.helpMarkDown": "",
-  "loc.description": "Install an apple provisioning profile required to build on a macOS agent",
-  "loc.instanceNameFormat": "Install an apple provisioning profile",
+  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
+  "loc.instanceNameFormat": "Install an Apple provisioning profile",
   "loc.input.label.provProfileSecureFile": "Provisioning Profile",
   "loc.input.help.provProfileSecureFile": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
   "loc.input.label.removeProfile": "Remove Profile After Build",

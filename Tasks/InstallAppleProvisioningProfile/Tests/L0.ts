@@ -27,22 +27,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('Install from source: one profile match', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp: string = path.join(__dirname, 'L0SourceOneProvProfile.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.ran('/usr/bin/security cms -D -i /user/build/myProvProfile.mobileprovision'),
-            'provisioning profile should have been installed.')
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
     it('Remove profile during post execution', (done: MochaDone) => {
         this.timeout(1000);
 
