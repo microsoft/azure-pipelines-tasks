@@ -45,16 +45,12 @@ The parameters of the task are described in details, including examples, to show
  * **Action**\*: Select the action to be performed on the resource group. Following actions are available:
     - Create or Update Resource Group: creates a new resource group or to update an existing one (using [Azure Resource Manager templates](https://azure.microsoft.com/en-in/documentation/articles/resource-group-template-deploy/)).
     - Select Resource Group: reads the Resource Group information from Azure and creates an Output Variable with the VMs in the Resource Group. Read more about Output Variables [here](#output-variables).
-    - Start, Stop, Restart, Delete Virtual Machines
+    - Start, Stop, Deallocate, Restart, Delete Virtual Machines
     - Delete Resource Group
 
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
  
  * **Location**\*: The location where the resource group will be created. If an existing resource group is updated, then this parameter will be ignored.
-
-The following parameter is shown when the selected action is to stop virtual machines:
-
- * **Deallocate VM**\*: Once the virtual machine is stopped it will be deallocated.
 
 The following parameters are shown when the selected action is to create or update a resource group:
 

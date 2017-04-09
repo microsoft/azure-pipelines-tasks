@@ -60,6 +60,7 @@
         "Select Resource Group": "Select resource group",
         "Start": "Start virtual machines",
         "Stop": "Stop virtual machines",
+        "StopWithDeallocate": "Stop and deallocate virtual machines",
         "Restart": "Restart virtual machines",
         "Delete": "Delete virtual machines",
         "DeleteRG": "Delete resource group"
@@ -75,14 +76,6 @@
       "properties": {
         "EditableOptions": "True"
       }
-    },
-    {
-      "name": "deallocateVMOnStop",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.deallocateVMOnStop",
-      "groupName": "AzureDetails",
-      "visibleRule": "action = Stop virtual machines",
-      "defaultValue": false
     },
     {
       "name": "location",

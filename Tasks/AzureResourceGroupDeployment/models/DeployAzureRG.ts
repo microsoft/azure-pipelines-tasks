@@ -22,7 +22,6 @@ export class AzureRGTaskParameters {
     public outputVariable: string;
     public subscriptionId: string;
     public deploymentMode: string;
-    public deallocateVMOnStop: boolean;
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public machineGroupCollectionUrl = "";
     public machineGroupProjectName = "";
@@ -54,7 +53,6 @@ export class AzureRGTaskParameters {
                                             || tl.getVariable('system.TeamFoundationCollectionUri');
             this.machineGroupProjectName = tl.getVariable("__mg__internal__project__name") 
                                             || tl.getVariable('system.teamProject');
-            this.deallocateVMOnStop = tl.getBoolInput("deallocateVMOnStop");
         }
         catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));

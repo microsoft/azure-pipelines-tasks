@@ -12,7 +12,6 @@
   "loc.input.help.action": "Action to be performed on the Azure resources or resource group.",
   "loc.input.label.resourceGroupName": "Resource group",
   "loc.input.help.resourceGroupName": "Provide the name of a resource group.",
-  "loc.input.label.deallocateVMOnStop": "Deallocate VM",
   "loc.input.label.location": "Location",
   "loc.input.help.location": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
   "loc.input.label.templateLocation": "Template location",

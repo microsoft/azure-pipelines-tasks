@@ -475,10 +475,9 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Stopped VMs without deallocating', (done) => {
+    it('Stopped VMs', (done) => {
         let tp = path.join(__dirname, 'VMOperations.js');
         process.env["operation"] = "Stop";
-        process.env["deallocateVMOnStop"] = "false";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -495,8 +494,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it('Stopped VMs with deallocating', (done) => {
         let tp = path.join(__dirname, 'VMOperations.js');
-        process.env["operation"] = "Stop";
-        process.env["deallocateVMOnStop"] = "true";
+        process.env["operation"] = "StopWithDeallocate";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
