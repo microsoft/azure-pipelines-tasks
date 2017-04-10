@@ -8,6 +8,8 @@
   "loc.input.help.arguments": "Arguments",
   "loc.input.label.versionSpec": "Version Spec",
   "loc.input.help.versionSpec": "Version spec of version to get.\n\nIf you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match.\n\nList of available versions obtained from [here](http://dist.nuget.org/tools.json).\n\nNote: Only versions >=3.5.0 are supported by this task.\n\nExamples: 4.x, 3.5.x, >=4.0.0-0.",
+  "loc.input.label.checkLatest": "Check for Latest Version",
+  "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
   "loc.messages.NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
   "loc.messages.Info_NuGetSupportedAfter3_5": "The NuGet version being used is %s and only versions >= 3.5.0 are suported by this task. ",
   "loc.messages.BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
@@ -18,5 +20,6 @@
   "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
-  "loc.messages.Error_NuGetToolInstallerFailer": "Tool install failed: %s"
+  "loc.messages.Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
 }

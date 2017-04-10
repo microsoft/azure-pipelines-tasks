@@ -24,12 +24,13 @@ async function main(): Promise<void> {
     let buildIdentityAccount: string = null;
     
     let versionSpec: string = tl.getInput("versionSpec", true);
+    let checkLatest = tl.getBoolInput('checkLatest', false);
     let command: string = tl.getInput("command", true);
     let args: string = tl.getInput("arguments", false);
 
     let nuGetPath: string = undefined;
     try {
-        nuGetPath = await nuGetGetter.getNuGet(versionSpec);
+        nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest);
     }
     catch (error) {
         console.error('ERR:' + error.message);

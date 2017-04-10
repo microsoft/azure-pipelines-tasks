@@ -59,9 +59,10 @@ async function main(): Promise<void> {
         // Getting NuGet
         tl.debug('Getting NuGet');
         let versionSpec = tl.getInput('versionSpec', true);
+        let checkLatest = tl.getBoolInput('checkLatest', false);
         let nuGetPath: string = undefined;
         try {
-            nuGetPath = await nuGetGetter.getNuGet(versionSpec);
+            nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest);
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, error.message);

@@ -116,6 +116,15 @@
             "required": true,
             "groupName": "advanced",
             "helpMarkDown": "Version spec of version to get.\n\nIf you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. \n\nList of available versions obtained from [here](http://dist.nuget.org/tools.json).\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
+        },
+        {
+            "name": "checkLatest",
+            "type": "boolean",
+            "label": "Check for Latest Version",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool. Behavior changes or breaking changes might occur as NuGet updates to a new version."
         }
     ],
     "dataSourceBindings": [
@@ -166,6 +175,7 @@
         "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
         "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
         "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
-        "Error_NuGetToolInstallerFailer": "Tool install failed: %s"
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
     }
 }
