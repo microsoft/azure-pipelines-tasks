@@ -379,5 +379,5 @@ declare module 'nuget-task-common/Utility' {
 }
 
 declare module 'nuget-task-common/NuGetToolGetter' {
-	export function getNuGet(versionSpec: string);
+	export function getNuGet(versionSpec: string, checkLatest: boolean);
 }

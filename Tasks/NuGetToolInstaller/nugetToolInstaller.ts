@@ -12,7 +12,8 @@ async function run() {
         taskLib.setResourcePath(path.join(__dirname, "task.json"));
 
         let versionSpec = taskLib.getInput('versionSpec', true);
-        await nuGetGetter.getNuGet(versionSpec);
+        let checkLatest = taskLib.getBoolInput('checkLatest', false);
+        await nuGetGetter.getNuGet(versionSpec, checkLatest);
     }
     catch (error) {
         console.error('ERR:' + error.message);
