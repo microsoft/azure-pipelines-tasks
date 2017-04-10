@@ -40,9 +40,10 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     else {
         if (webAppPackage && webAppPackage.toLowerCase().endsWith('.war')) {
             tl.debug('WAR: webAppPackage = ' + webAppPackage);
-            let warFile = path.basename(webAppPackage.toLowerCase().slice(0, webAppPackage.length - '.war'.length));
+            let warFile = path.basename(webAppPackage.slice(0, webAppPackage.length - '.war'.length));
+            let warExt = webAppPackage.slice(webAppPackage.length - '.war'.length)
             tl.debug('WAR: warFile = ' + warFile);
-            warFile = (virtualApplication) ? warFile + "/" + virtualApplication + '.war' : warFile + '.war';
+            warFile = (virtualApplication) ? warFile + "/" + virtualApplication + warExt : warFile + warExt;
             tl.debug('WAR: warFile = ' + warFile);
             msDeployCmdArgs += " -source:contentPath=\'" + webAppPackage + "\'";
             // tomcat, jetty location on server => /site/webapps/
