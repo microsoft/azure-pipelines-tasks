@@ -9,11 +9,11 @@ class TokenCredentials {
     private patToken: string;
 
     constructor(hostUrl: string, patToken: string){
-        if (!Boolean(hostUrl) || typeof hostUrl.valueOf() !== 'string') {
+        if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
             throw new Error(tl.loc("HostUrlCannotBeEmpty"));
         }
 
-        if (!Boolean(patToken) || typeof patToken.valueOf() !== 'string') {
+        if (typeof patToken.valueOf() !== 'string' || !patToken) {
             throw new Error(tl.loc("PatTokenCannotBeEmpty"));
         }
 
