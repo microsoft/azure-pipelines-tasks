@@ -125,7 +125,7 @@ async function run() {
 
         if(publishingProfile && publishingProfile.destinationAppUrl) {
             try{
-                await azureRESTUtility.warmupAzureAppService(publishingProfile.destinationAppUrl);
+                azureRESTUtility.warmupAzureAppService(publishingProfile.destinationAppUrl);
                 deployUtility.sleep(3000);
             } catch (error) {
                 tl.debug("Warmup of app service failed with error" + error.message);

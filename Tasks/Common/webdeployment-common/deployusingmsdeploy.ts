@@ -79,6 +79,7 @@ export async function executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval
             if(shouldRetry && retryCount-- > 0) {
                 try {
                     await executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval);
+                    deferred.resolve("Azure App service successfully deployed");
                 } catch(error) {
                     msDeployUtility.redirectMSDeployErrorToConsole();
                     deferred.reject(msDeployError);

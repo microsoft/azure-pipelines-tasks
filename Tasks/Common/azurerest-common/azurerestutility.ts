@@ -493,7 +493,7 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     return deferred.promise;
 }
 
-export async function warmupAzureAppService(webAppUrl) {
+export function warmupAzureAppService(webAppUrl) {
     var deferred = Q.defer();
     var headers = {};
     httpObj.get('GET', webAppUrl, headers,async (error, response, body) => {
