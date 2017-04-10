@@ -493,10 +493,10 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     return deferred.promise;
 }
 
-export function warmupAzureAppService(webAppUrl) {
+export async function warmupAzureAppService(webAppUrl) {
     var deferred = Q.defer();
     var headers = {};
-    httpObj.get('GET', webAppUrl, headers,async (error, response, body) => {
+    httpObj.get('GET', webAppUrl, headers, (error, response, body) => {
         if (error) {
             tl.debug("Failed to warm up azure app service, error : " + error);
             deferred.reject(error);

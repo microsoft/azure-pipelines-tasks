@@ -15,12 +15,11 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
-    "groups": [
-        {
+    "groups": [{
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false
@@ -31,8 +30,7 @@
             "isExpanded": true
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "WebSiteName",
             "type": "string",
             "label": "Website Name",

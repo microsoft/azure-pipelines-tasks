@@ -178,8 +178,10 @@ tr.registerMock('fs', {
         return { 
             "isWriteStreamObj": true,
             "on": (name, functionOnFinish) => { retryFunction = functionOnFinish;},
-            "end" : () => { 
-                retryFunction(); 
+            "end" : () => {
+                if(retryFunction != null) {
+                    retryFunction(); 
+                } 
                 return true; 
             }
         };
