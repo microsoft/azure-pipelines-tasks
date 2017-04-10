@@ -193,7 +193,6 @@
       "name": "project",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.project",
-      "defaultValue": "",
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
       "required": true,

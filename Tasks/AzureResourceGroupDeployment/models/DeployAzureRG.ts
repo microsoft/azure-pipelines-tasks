@@ -89,11 +89,11 @@ export class AzureRGTaskParameters {
         if (endpointAuth.scheme === 'Token') {
             var hostUrl = tl.getEndpointUrl(deploymentGroupEndpointName, true);
             var patToken: string = endpointAuth.parameters["apitoken"];
-            if (!Boolean(hostUrl) || typeof hostUrl.valueOf() !== 'string') {
+            if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
                 throw new Error(tl.loc("DeploymentGroupEndpointUrlCannotBeEmpty"));
             }
 
-            if (!Boolean(patToken) || typeof patToken.valueOf() !== 'string') {
+            if (typeof patToken.valueOf() !== 'string' || !patToken) {
                 throw new Error(tl.loc("DeploymentGroupEndpointPatTokenCannotBeEmpty"));
             }
             var credentials = new TokenCredentials(hostUrl, patToken);

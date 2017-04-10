@@ -193,7 +193,6 @@
             "name": "project",
             "type": "pickList",
             "label": "Team project",
-            "defaultValue": "",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
