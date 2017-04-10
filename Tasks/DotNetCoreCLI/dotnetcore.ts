@@ -95,7 +95,7 @@ export class dotNetExe {
                 tl.rmRF(outputSource, true);
             }
             else {
-                tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("noPublishFolderFoundToZip", projectFile));
             }
         }
     }
@@ -111,7 +111,7 @@ export class dotNetExe {
                 resolve(target);
             });
 
-            output.on('error', function(error) {
+            output.on('error', function (error) {
                 reject(error);
             });
 
@@ -133,7 +133,7 @@ export class dotNetExe {
         var escaped = false;
         var arg = '';
         var i = 0;
-        var append = function(c) {
+        var append = function (c) {
             // we only escape double quotes.
             if (escaped && c !== '"') {
                 arg += '\\';
@@ -141,7 +141,7 @@ export class dotNetExe {
             arg += c;
             escaped = false;
         };
-        var nextArg = function() {
+        var nextArg = function () {
             arg = '';
             for (; i < argString.length; i++) {
                 var c = argString.charAt(i);
@@ -201,19 +201,19 @@ export class dotNetExe {
 
         var projectFiles = nutil.resolveFilterSpec(projectPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), true);
         if (!projectFiles || !projectFiles.length) {
-            tl.warning(tl.loc("noProjectFilesFound"));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("noProjectFilesFound"));
             return [];
         }
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function(file, index, files): boolean {
+            projectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
             });
 
             if (!projectFiles.length) {
-                tl.warning(tl.loc("noWebProjctFound"));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("noWebProjctFound"))
             }
         }
 
