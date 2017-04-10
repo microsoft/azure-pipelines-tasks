@@ -20,6 +20,8 @@ class NuGetExecutionOptions {
 }
 
 async function main(): Promise<void> {
+    tl.setResourcePath(path.join(__dirname, "task.json"));
+
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     
@@ -44,8 +46,6 @@ async function main(): Promise<void> {
     }
 
     try {
-        tl.setResourcePath(path.join(__dirname, "task.json"));
-        
         nutil.setConsoleCodePage();
 
         let credProviderPath = nutil.locateCredentialProvider();
