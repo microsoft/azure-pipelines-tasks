@@ -28,7 +28,7 @@
             "label": "Code Coverage Tool",
             "required": true,
             "defaultValue": "JaCoCo",
-            "helpMarkDown": "Select the tool with which code coverage results are generated.",
+            "helpMarkDown": "The tool with which code coverage results are generated.",
             "options": {
                 "Cobertura": "Cobertura",
                 "JaCoCo": "JaCoCo"
@@ -40,7 +40,7 @@
             "label": "Summary File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
+            "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
         },
         {
             "name": "reportDirectory",
@@ -48,7 +48,7 @@
             "label": "Report Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
+            "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
         },
         {
             "name": "additionalCodeCoverageFiles",
@@ -56,7 +56,7 @@
             "label": "Additional Files",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example, `$(System.DefaultWorkingDirectory)/**/*.exec`"
+            "helpMarkDown": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`"
         }
     ],
     "execution": {
