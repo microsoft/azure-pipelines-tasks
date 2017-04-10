@@ -7,61 +7,118 @@ import utils = require('./helpers');
 var regedit = require('regedit');
 var xml2js = require('xml2js');
 
-export function locateVSTestConsole(testConfig): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
-    locateTestWindow(testConfig).
-        then( function(exeInfo) {
-            var vstestConsoleInfo = exeInfo;
-            if(exeInfo){
-                vstestConsoleInfo.location = path.join(exeInfo.location, "vstest.console.exe");
-            }            
-            deferred.resolve(vstestConsoleInfo);
-        });
-    return deferred.promise;
+export async function locateVSTestConsole(testConfig): Promise<string> {
+    let deferred = Q.defer<string>();
+    let vstestExeFolder = await locateTestWindow(testConfig);
+        
+    var vstestExePath = vstestExeFolder;
+    if(vstestExeFolder){
+        vstestExePath = path.join(vstestExeFolder, "vstest.console.exe");
+    }
+
+    return Promise.resolve(vstestExePath);
 }
 
-export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
+export class VSTestVersion {
+
+    constructor(public vstestExeLocation: string, public majorVersion: number, public minorversion: number, public patchNumber: number) {
+    }
+
+    isTestImpactSupported(): boolean {
+        return (this.majorVersion >= 15);
+    }
+
+    vstestDiagSupported(): boolean {
+        return (this.majorVersion >= 15);
+    }
+
+    isPrivateDataCollectorNeededForTIA(): boolean {
+        return false;
+    }
+
+    isRunInParallelSupported(): boolean {
+        return (this.majorVersion >= 15);
+    }
+}
+
+
+export class Dev14VSTestVersion extends VSTestVersion {
+    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
+        super(runnerLocation, 14, minorVersion, patchNumber);
+    }
+
+    isTestImpactSupported(): boolean {
+        return (this.patchNumber >= 25420);
+    }
+
+    isRunInParallelSupported(): boolean {
+        return (this.patchNumber >= 25420);
+    }
+
+    isPrivateDataCollectorNeededForTIA(): boolean {
+        return true;
+    }
+}
+
+export class Dev15VSTestVersion extends VSTestVersion {
+    constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
+        super(runnerLocation, 15, minorVersion, patchNumber);
+    }
+
+    isTestImpactSupported(): boolean {
+        return (this.patchNumber >= 25727);
+    }
+
+    vstestDiagSupported(): boolean {
+        return (this.patchNumber > 25428);
+    }
+}
+
+function locateTestWindow(testConfig: models.TestConfigurations): Promise<string> {
+    let deferred = Q.defer<string>();
     let vsVersion: number = parseFloat(testConfig.vsTestVersion);
     if(testConfig.vsTestLocationMethod === utils.Constants.vsTestLocationString) {
         if (utils.Helper.pathExistsAsFile(testConfig.vsTestLocation)) {
-            deferred.resolve({ version: null, location: path.join(testConfig.vsTestLocation,"..")});
-        } else if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
+            return Promise.resolve(path.join(testConfig.vsTestLocation,".."));
+        } 
+        
+        if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
-            deferred.resolve({ version: null, location: testConfig.vsTestLocation});
-        } else {
-            throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
-        }
-    } else {
-        if (isNaN(vsVersion)) {
-            // latest
-            tl.debug('Searching for latest Visual Studio');
-            let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
-            if (vstestconsole15Path) {
-                deferred.resolve({ version: 15.0, location: vstestconsole15Path });
-            } else {
-                // fallback
-                tl.debug('Unable to find an instance of Visual Studio 2017');
-                return getLatestVSTestConsolePathFromRegistry();
-            }
-        } else if (vsVersion === 15.0) {
-            let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
-            if (vstestconsole15Path) {
-                deferred.resolve({ version: 15.0, location: vstestconsole15Path });
-            } else {
-                throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
-            }
-        }
-        else {
-            tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-            deferred.resolve({ version: vsVersion, location: getVSTestLocation(vsVersion) });
-        }
+            return Promise.resolve(testConfig.vsTestLocation);
+        } 
+
+        throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
+    } 
+
+    if (isNaN(vsVersion)) {
+        // latest
+        tl.debug('Searching for latest Visual Studio');
+        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        if (vstestconsole15Path) {
+            return Promise.resolve(vstestconsole15Path);
+        } 
+
+        // fallback
+        tl.debug('Unable to find an instance of Visual Studio 2017');
+        return getLatestVSTestConsolePathFromRegistry();
     }
-    return deferred.promise;
+    
+        if (vsVersion === 15.0) {
+        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        if (vstestconsole15Path) {
+            return Promise.resolve(vstestconsole15Path);
+        } 
+
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+    
+
+    tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+    return Promise.resolve(getVSTestLocation(vsVersion));
 }
 
-function getLatestVSTestConsolePathFromRegistry(): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
+function getLatestVSTestConsolePathFromRegistry(): Promise<string> {
+    let deferred = Q.defer<string>();
     let regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
     regedit.list(regPath).on('data', (entry) => {
         let subkeys = entry.data.keys;
@@ -70,15 +127,17 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<models.ExecutabaleI
             versions.sort((a, b) => a - b);
             let selectedVersion = versions[versions.length - 1];
             tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
-            deferred.resolve({ version: selectedVersion, location: getVSTestLocation(selectedVersion) });
-        } else {
-            deferred.resolve(null);
-        }
+            return Promise.resolve(getVSTestLocation(selectedVersion));
+        } 
+
+        tl.debug('No Registry entry found under VisualStudio node');
+        return Promise.resolve(null);
     }).on('error', () => {
         tl.debug('Registry entry not found under VisualStudio node');
-        deferred.resolve(null);
+        return Promise.resolve(null);
     });
-    return deferred.promise;
+    
+    return Promise.resolve(null);
 }
 
 function getVSTestConsole15Path(vs15HelperPath: string): string {
@@ -99,7 +158,8 @@ function getVSTestConsole15Path(vs15HelperPath: string): string {
                 vstestconsolePath = null;
             }
         }
-    })
+    });
+
     return vstestconsolePath;
 }
 
@@ -107,9 +167,9 @@ function getVSTestLocation(vsVersion: number): string {
     let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
     if (!vsCommon) {
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
-    } else {
-        return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
-    }
+    } 
+
+    return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
 }
 
 function getFloatsFromStringArray(inputArray: string[]): number[] {
@@ -123,5 +183,6 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
             }
         }
     }
+    
     return outputArray;
 }

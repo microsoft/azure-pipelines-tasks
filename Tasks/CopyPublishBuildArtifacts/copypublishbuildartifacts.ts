@@ -85,7 +85,12 @@ var targetPath: string = tl.getInput('TargetPath');
 var findRoot: string = tl.getPathInput('CopyRoot');
 
 let run = (): void => {
-    if (!artifactName) {
+    let hostType = tl.getVariable('system.hostType');
+    if (hostType && hostType.toUpperCase() != 'BUILD') {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
+        return;
+    }
+    else if (!artifactName) {
         // nothing to do
         tl.warning('Artifact name is not specified.');
     }

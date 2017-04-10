@@ -64,6 +64,7 @@
   "loc.messages.VM_Start": "Starting virtual machine: %s",
   "loc.messages.VM_Restart": "Restarting virtual machine: %s",
   "loc.messages.VM_Stop": "Stopping virtual machine: %s",
+  "loc.messages.VM_Deallocate": "Deallocating virtual machine: %s",
   "loc.messages.VM_Delete": "Deleting virtual machine: %s",
   "loc.messages.SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
   "loc.messages.FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
