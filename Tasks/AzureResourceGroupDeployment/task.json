@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 6
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -60,6 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
+                "StopWithDeallocate":  "Stop and deallocate virtual machines", 
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -273,6 +274,7 @@
         "VM_Start": "Starting virtual machine: %s",
         "VM_Restart": "Restarting virtual machine: %s",
         "VM_Stop": "Stopping virtual machine: %s",
+        "VM_Deallocate": "Deallocating virtual machine: %s",
         "VM_Delete": "Deleting virtual machine: %s",
         "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
         "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
