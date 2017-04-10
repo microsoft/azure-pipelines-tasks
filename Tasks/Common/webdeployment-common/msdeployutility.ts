@@ -187,3 +187,21 @@ export function redirectMSDeployErrorToConsole() {
         tl.rmRF(msDeployErrorFilePath);
     }
 }
+
+export function shouldRetryMSDeploy() {
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    
+    if(tl.exist(msDeployErrorFilePath)) {
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
+
+        if(errorFileContent !== "") {
+            if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
+                tl.warning(errorFileContent);
+                console.log("Retrying to deploy app service.");
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

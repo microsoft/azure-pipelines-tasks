@@ -127,7 +127,5 @@
   "loc.messages.ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
   "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
   "loc.messages.InvalidPollOption": "Invalid polling option provided: %s.",
-  "loc.messages.MissingWebConfigParameters": "Some web.config parameters are missing",
-  "loc.messages.appServiceWarmupedUpSuccessfully": "Successfully warmed up azure app service.",
-  "loc.messages.failedToWarmupAppService": "Failed to warm up azure app service."
+  "loc.messages.MissingWebConfigParameters": "Some web.config parameters are missing"
 }

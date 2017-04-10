@@ -7,7 +7,7 @@ var msDeployUtility = require('./msdeployutility.js');
 var utility = require('./utility.js');
 
 const DEFAULT_RETRY_COUNT = 3;
-const DEFAULT_RETRY_INTERVAL = 1000;
+const DEFAULT_RETRY_INTERVAL = 5000;
 
 /**
  * Executes Web Deploy command
@@ -43,19 +43,11 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFileName, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment,
         useWebDeploy);
 
-    var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
-    var fd = fs.openSync(errorFile, "w");
-    var errObj = fs.createWriteStream("", {fd: fd} );
-
-    errObj.on('finish', () => {
-        msDeployUtility.redirectMSDeployErrorToConsole();
-    });
-
     var retryCountParam = tl.getVariable("appservice.msdeployretrycount");
     var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
-
+    
     try {
-        await executeMSDeploy(msDeployCmdArgs, retryCount, DEFAULT_RETRY_INTERVAL, errObj);
+        await executeMSDeploy(msDeployCmdArgs, retryCount, DEFAULT_RETRY_INTERVAL); 
         if(publishingProfile != null) {
             console.log(tl.loc('PackageDeploymentSuccess'));
         }
@@ -66,7 +58,6 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         throw Error(error.message);
     }
     finally {
-        errObj.end();
         process.env.PATH = pathVar;
         if(setParametersFile != null) {
             tl.rmRF(setParametersFile, true);
@@ -74,23 +65,38 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     }
 }
 
-export async function executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval, errObj) {
+export async function executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval) {
     var deferred = Q.defer();
+
+    var msDeployError = null;
+    var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
+    var fd = fs.openSync(errorFile, "w");
+    var errObj = fs.createWriteStream("", {fd: fd} );
+
+    errObj.on('finish', async () => {
+        if(msDeployError) {
+            var shouldRetry = msDeployUtility.shouldRetryMSDeploy();
+            if(shouldRetry && retryCount-- > 0) {
+                try {
+                    await executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval);
+                } catch(error) {
+                    msDeployUtility.redirectMSDeployErrorToConsole();
+                    deferred.reject(msDeployError);
+                }
+            } else {
+                msDeployUtility.redirectMSDeployErrorToConsole();
+                deferred.reject(msDeployError);
+            }
+        }
+    });
+
     try {
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
         deferred.resolve("Azure App service successfully deployed");
     } catch (error) {
-        if (retryCount-- > 0) {
-             setTimeout(async function() {
-                 try {
-                    await executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval, errObj);
-                 } catch (error) {
-                    deferred.reject(error);
-                 }
-             }, retryInterval);
-        } else {
-             deferred.reject(error);
-        }
+        msDeployError = error;
+    } finally {
+        errObj.end();
     }
     return deferred.promise;
 }

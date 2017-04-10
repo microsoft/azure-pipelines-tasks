@@ -496,13 +496,14 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
 export async function warmupAzureAppService(webAppUrl) {
     var deferred = Q.defer();
     var headers = {};
-    httpObj.get('GET', webAppUrl, headers, (error, response, body) => {
+    
+    httpObj.get('GET', webAppUrl, headers,async (error, response, body) => {
         if (error) {
             tl.debug("Failed to warm up azure app service, error : " + error);
             deferred.reject(error);
         } else {
             if(response.statusCode === 200) {
-                tl.debug("Successfully warmed up azure app service");
+                tl.debug("Azure app service is warmuped successfully.")
                 deferred.resolve("SUCCESS");
             } else {
                 tl.debug("Failed to warm up azure app service, Status code : " + response.statusCode);
@@ -512,3 +513,5 @@ export async function warmupAzureAppService(webAppUrl) {
     });
     return deferred.promise;
 }
+
+

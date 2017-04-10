@@ -375,8 +375,6 @@
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
-    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters",
-    "appServiceWarmupedUpSuccessfully": "ms-resource:loc.messages.appServiceWarmupedUpSuccessfully",
-    "failedToWarmupAppService": "ms-resource:loc.messages.failedToWarmupAppService"
+    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters"
   }
 }
