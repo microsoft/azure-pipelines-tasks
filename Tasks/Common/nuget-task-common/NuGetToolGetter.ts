@@ -53,7 +53,7 @@ export async function getNuGet(versionSpec: string, checkLatest: boolean): Promi
 
         // There is a local version which matches the spec yet we found one on dist.nuget.org
         // which is different, so we're about to change the version which was used
-        if (version !== versionInfo.version) {
+        if (version && version !== versionInfo.version) {
             taskLib.warning(taskLib.loc("Warning_UpdatingNuGetVersion", versionInfo.version, version));
         }
 

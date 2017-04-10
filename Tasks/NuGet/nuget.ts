@@ -35,14 +35,15 @@ async function main(): Promise<void> {
         nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest);
     }
     catch (error) {
-        console.error('ERR:' + error.message);
-        tl.setResult(tl.TaskResult.Failed, "");
+        tl.setResult(tl.TaskResult.Failed, error.message);
+        return;
     }
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))
     {
-        throw new Error(tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
+        tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
+        return;
     }
 
     try {
@@ -89,6 +90,8 @@ async function main(): Promise<void> {
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));
         }
+
+        tl.setResult(tl.TaskResult.Failed, "");
     }
 }
 

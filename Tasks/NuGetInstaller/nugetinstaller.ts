@@ -66,6 +66,7 @@ async function main(): Promise<void> {
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, error.message);
+            return;
         }
         
         const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
