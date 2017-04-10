@@ -175,3 +175,35 @@ export function copyDirectory(sourceDirectory: string, destDirectory: string) {
         }
     }
 }
+
+export async function generateTemporaryFolderForDeployment(isFolderBasedDeployment: boolean, webDeployPkg: string) {
+    var folderPath = generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
+        
+    if(isFolderBasedDeployment) {
+        tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
+        copyDirectory(webDeployPkg, folderPath);
+        tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
+    }
+    else {
+        await zipUtility.unzip(webDeployPkg, folderPath);
+    }
+    return folderPath;
+}
+
+export async function archiveFolderForDeployment(isFolderBasedDeployment: boolean, folderPath: string) {
+    var webDeployPkg;
+
+    if(isFolderBasedDeployment) {
+        webDeployPkg = folderPath;
+    }
+    else {
+        var tempWebPackageZip = generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
+        webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
+        tl.rmRF(folderPath, true);
+    }
+
+    return {
+        "webDeployPkg": webDeployPkg,
+        "tempPackagePath": webDeployPkg
+    };
+}

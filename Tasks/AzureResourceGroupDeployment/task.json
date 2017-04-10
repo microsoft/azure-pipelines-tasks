@@ -60,6 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
+                "StopWithDeallocate":  "Stop and deallocate virtual machines", 
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -272,7 +273,7 @@
         "CreatedRG": "Resource Group created successfully.",
         "CreatingTemplateDeployment": "Creating deployment parameters.",
         "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
-        "ParametersFileFetchFailed": "Failed to download the parameters file. Error: %s",
+        "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
         "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
         "StartingDeployment": "Starting Deployment.",
         "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
@@ -291,6 +292,7 @@
         "VM_Start": "Starting virtual machine: %s",
         "VM_Restart": "Restarting virtual machine: %s",
         "VM_Stop": "Stopping virtual machine: %s",
+        "VM_Deallocate": "Deallocating virtual machine: %s",
         "VM_Delete": "Deleting virtual machine: %s",
         "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
         "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
@@ -392,6 +394,7 @@
         "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
         "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
         "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
-        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty"
+        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
     }
 }

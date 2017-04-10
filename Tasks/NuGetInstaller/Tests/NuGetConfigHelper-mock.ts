@@ -10,7 +10,7 @@ export class NuGetConfigHelper {
         return result;
     }
     
-    setSources(packageSources) {
+    setSources(packageSources, includeAuth) {
         packageSources.forEach((source) => {
             tl.debug(`adding package source uri: ${source.feedUri}`);
         });

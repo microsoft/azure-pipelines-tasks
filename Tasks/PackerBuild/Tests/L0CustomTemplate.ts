@@ -22,6 +22,10 @@ let a: any = <any>{
         "C:\\custom.template.json": true
     },
     "exec": {
+        "packer --version": {
+            "code": 0,
+            "stdout": "0.12.3"
+        },
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\custom.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
@@ -37,7 +41,8 @@ let a: any = <any>{
     },
     "exist": {
         "F:\\somedir\\tempdir\\100": true,
-        "F:\\somedir\\tempdir\\100\\": true        
+        "F:\\somedir\\tempdir\\100\\": true,
+        "packer": true       
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': true }
@@ -49,6 +54,11 @@ tr.registerMock('./utilities', {
     IsNullOrEmpty : ut.IsNullOrEmpty,
     HasItems : ut.HasItems,
     StringWritable: ut.StringWritable,
+    PackerVersion: ut.PackerVersion,
+    isGreaterVersion: ut.isGreaterVersion,
+    deleteDirectory: function(dir) {
+        console.log("rmRF " + dir);
+    },
     copyFile: function(source: string, destination: string) {
         if(process.env["__copy_fails__"] === "true") {
             throw "copy failed";
@@ -60,7 +70,7 @@ tr.registerMock('./utilities', {
         console.log("writing to file " + filePath + " content: " + content);
     },
     findMatch: function(root: string, patterns: string[] | string) {
-        return ["C:\\dummy.zip"];
+        return [patterns];
     },
     getCurrentTime: function() {
         return 100;

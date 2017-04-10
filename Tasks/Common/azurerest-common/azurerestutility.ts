@@ -313,7 +313,7 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
     return deferred.promise;
 }
 
-async function getOperationStatus(SPN, webAppName: string, resourceGroupName: string, slotName: string, url: string) {
+async function getOperationStatus(SPN, url: string) {
     var deferred = Q.defer();
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
@@ -324,27 +324,30 @@ async function getOperationStatus(SPN, webAppName: string, resourceGroupName: st
             deferred.reject(error);
         }
         else {
-            deferred.resolve(response);
+            deferred.resolve({ "response": response, "content": body } );
         }
     });
     return deferred.promise;
 }
 
-function monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetSlot, url) {
+function monitorSlotSwap(SPN, url) {
+    tl.debug("Monitoring slot swap operation status from: "+ url);
     var deferred = Q.defer();
     var attempts = 0;
     var poll = async function() {
         if (attempts < 360) {
             attempts++;
-            await  getOperationStatus(SPN, webAppName, resourceGroupName, sourceSlot, url).then((response) => {
+            tl.debug("Slot swap operation is in progress. Attempt : "+ attempts);
+            await  getOperationStatus(SPN, url).then((status) => {
+                var response = status["response"];
                 if (response['statusCode'] === 200) {
                     deferred.resolve();
                 }
                 else if(response['statusCode'] === 202) {
-                    tl.debug("Slot swap operation is in progress. Attempt : "+ attempts);
                     setTimeout(poll, 5000);
                 }
                 else {
+                    tl.debug ("Slot swap operation failed. Operation Response: " + status["content"]);
                     deferred.reject(response['statusMessage']);
                 }
             }).catch((error) => {
@@ -379,18 +382,22 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
     );
 
     console.log(tl.loc('StartingSwapSlot',webAppName));
-    httpObj.send('POST', url, body, headers, async (error, response, body) => {
+    httpObj.send('POST', url, body, headers, async (error, response, contents) => {
         if(error) {
             deferred.reject(error);
         }
+        else if(response.statusCode === 200) {
+            deferred.resolve();
+        }
         else if(response.statusCode === 202) {
-            await monitorSlotSwap(endpoint, webAppName, resourceGroupName, sourceSlot, targetSlot, response.headers.location).then(() => {
+            await monitorSlotSwap(endpoint, response.headers.location).then(() => {
                 deferred.resolve();
             }).catch((error) => {
                 deferred.reject(error);
             });
         }
         else {
+            tl.debug ("Slot swap operation failed. Operation Response: " + contents);
             deferred.reject(response.statusMessage);
         }
     });
@@ -409,16 +416,18 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to start App Service: ' + url);
     console.log(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestartedsuccessfully', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoStartAppService", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
@@ -437,16 +446,19 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to stop App Service: ' + url);
+    console.log(headers);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestoppedsuccessfully', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoStopAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
@@ -465,9 +477,11 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to restart App Service: ' + url);
     console.log(tl.loc('RestartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
@@ -478,9 +492,42 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
             deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoRestartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
+    return deferred.promise;
+}
+
+export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
+    var deferred = Q.defer<any>();
+
+    var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
+    tl.debug('Requesting Azure Contianer Registry Creds: ' + url);
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+
+    httpObj.get('POST', url, headers, async (error, response, body) => {
+        if(error) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            try {
+                var credentials = JSON.parse(body);
+                deferred.resolve(credentials);
+            }
+            catch (error) {
+                deferred.reject(error);
+            }
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject("Unable to resolve creds for the registry");
+        }
+    });
+
     return deferred.promise;
 }

@@ -7,7 +7,7 @@
   "loc.input.label.serverEndpoint": "Mobile Center Connection",
   "loc.input.help.serverEndpoint": "Select the service endpoint for your Visual Studio Mobile Center connection. To create one, click the Manage link and create a new service endpoint.",
   "loc.input.label.appSlug": "App Slug",
-  "loc.input.help.appSlug": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}",
+  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
   "loc.input.label.app": "Binary File Path",
   "loc.input.help.app": "Relative path from the repo root to the APK or IPA file you want to publish",
   "loc.input.label.symbolsType": "Symbols Type",

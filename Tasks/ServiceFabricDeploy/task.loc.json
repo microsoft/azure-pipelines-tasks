@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
     "Cmd"
@@ -117,6 +117,15 @@
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
+    },
+    {
+      "name": "skipPackageValidation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipPackageValidation",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
     },
     {
       "name": "overridePublishProfileSettings",

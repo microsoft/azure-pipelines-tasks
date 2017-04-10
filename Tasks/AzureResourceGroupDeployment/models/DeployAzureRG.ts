@@ -80,7 +80,7 @@ export class AzureRGTaskParameters {
             this.deploymentGroupProjectName = tl.getInput("project");
         }
         catch (error) {
-            throw (tl.loc("ARGD_ConstructorFailed", error.message));
+            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
         }
     }
 

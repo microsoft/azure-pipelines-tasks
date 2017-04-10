@@ -7,13 +7,14 @@ import packerHost from "./packerHost";
 import * as packerFix from "./operations/packerFix";
 import * as packerValidate from "./operations/packerValidate";
 import * as packerBuild from "./operations/packerBuild";
-import builtinTemplateFileProvider from "./builtinTemplateFileProvider";
+import builtinTemplateFileProvider from "./builtInTemplateFileProvider";
 import CustomTemplateFileProvider from "./customTemplateFileProvider";
 import azureSpnTemplateVariablesProvider from "./azureSpnTemplateVariablesProvider";
 import TaskInputTemplateVariablesProvider from "./taskInputTemplateVariablesProvider";
 
 async function run(): Promise<any> {
     var host: packerHost = new packerHost();
+    await host.initialize();
     
     // register providers
     registerProviders(host);
@@ -52,6 +53,7 @@ function registerProviders(host: packerHost): void {
 function cleanup(host: packerHost): void {
     var fileProvider = host.getTemplateFileProvider();
     fileProvider.cleanup();
+    host.cleanup();
 }
 
 var taskManifestPath = path.join(__dirname, "..//task.json");

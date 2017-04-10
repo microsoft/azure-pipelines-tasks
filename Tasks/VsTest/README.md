@@ -1,9 +1,9 @@
 # Run Tests using Visual Studio task
 
-###Overview
+### Overview
 VSTest task can be used to run tests on Build agent machines. Apart from MSTest based tests, you can also run tests written using test frameworks like NUnit, xUnit, Mocha, Jasmine, etc. using the appropriate test adapters to Visual Studio. The task uses vstest.console.exe to execute tests and the command-line options available are documented [here](https://msdn.microsoft.com/en-us/library/jj155796.aspx) 
 
-####Execution Options
+#### Execution Options
 Use the following options to select tests and control how the tests are run
 
 - **Test Assembly:** This is a required field. Use this to specify one or more test file names from which the tests should be picked. 
@@ -28,7 +28,7 @@ Use the following options to select tests and control how the tests are run
 
 - **Run in Parallel:** If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.
 
-####Test Impact Analysis 
+#### Test Impact Analysis 
 
 - **Run Only Impacted Tests:** If set, then only the relevant set of managed automated tests that need to be run to validate a given code change will be run. 
 
@@ -54,7 +54,7 @@ The feature is presently scoped to the following:
 	- No UWP support.
 
 
-####Advanced Execution Options
+#### Advanced Execution Options
 
 - **VSTest version:** Choose which version of Visual Studio (vstest.console.exe) to run tests with. 
 
@@ -62,7 +62,7 @@ The feature is presently scoped to the following:
 
 - **Other console options:** Other options that can be provided to vstest.console.exe. For example, if you are using VSIX extensions, you can provide “/UseVsixExtensions:true”
 
-####Reporting Options
+#### Reporting Options
 Use the following options to report desired information for the test run that can be used when analyzing runs. 
 
 - **Test Run Title:** Provide a name for the test run. 

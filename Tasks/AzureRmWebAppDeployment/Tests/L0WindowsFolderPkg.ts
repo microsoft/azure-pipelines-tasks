@@ -88,8 +88,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 }
 
-
-import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
@@ -189,7 +187,13 @@ tr.registerMock('fs', {
     },
     fsyncSync: function(fd) {
         return true;
-    }
+    },
+    fstat: fs.fstat,
+    read: fs.read,
+    open: fs.open,
+    writeFile: fs.writeFile,
+    symlink: fs.symlink,
+    stat: fs.stat
 });
 
 tr.setAnswers(a);

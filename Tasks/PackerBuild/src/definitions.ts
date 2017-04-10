@@ -24,6 +24,7 @@ export interface IPackerHost {
     registerTemplateFileProvider(providerType: TemplateFileProviderTypes, provider: ITemplateFileProvider);
     registerTemplateVariablesProvider(providerType: VariablesProviderTypes, provider: ITemplateVariablesProvider);
     getTaskParameters(): TaskParameters;
+    getStagingDirectory(): string;
 }
 
 export interface ITemplateFileProvider {

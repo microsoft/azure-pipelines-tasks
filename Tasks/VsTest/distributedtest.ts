@@ -59,16 +59,28 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
 
-        if(this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+        if (this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         }
 
-        var exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
-        if(exeInfo) {
-            tl.debug("Adding env var DTA.TestWindow.Path = " + exeInfo.location);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exeInfo.location);
+        const exeInfo = await versionFinder.locateVSTestConsole(this.dtaTestConfig);
+        if (exeInfo) {
+            var exelocation = path.dirname(exeInfo)
+            tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
+
+            // Split the TestWindow path out of full path - if we can't find it, will assume
+            // that this is nuget/xcopyable package where the dlls are present in test window folder
+            const testWindowRelativeDir = 'CommonExtensions\\Microsoft\\TestWindow';
+            if (exelocation && exelocation.indexOf(testWindowRelativeDir) !== -1) {
+                const ideLocation = exelocation.split(testWindowRelativeDir)[0];
+                tl.debug('Adding env var DTA.VisualStudio.Path = ' + ideLocation);
+                utils.Helper.addToProcessEnvVars(envVars, 'DTA.VisualStudio.Path', ideLocation);
+            } else {
+                utils.Helper.addToProcessEnvVars(envVars, 'DTA.VisualStudio.Path', exelocation);
+            }
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exelocation);
         } else {
-            tl.error(tl.loc('VstestNotFound', utils.Helper.getVSVersion( parseFloat(this.dtaTestConfig.vsTestVersion))));
+            tl.error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(parseFloat(this.dtaTestConfig.vsTestVersion))));
         }
 
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs

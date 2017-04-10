@@ -1,6 +1,6 @@
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
 
-function Manage-IISWebSite
+function Set-IISWebSite
 {
     param (
         [string] $actionIISWebsite,
@@ -29,6 +29,12 @@ function Manage-IISWebSite
         [string] $appPoolIdentity,
         [string] $appPoolUsername,
         [string] $appPoolPassword,
+
+        [string] $configureAuthentication,
+        [string] $anonymousAuthentication,
+        [string] $basicAuthentication,
+        [string] $windowsAuthentication,
+
         [string] $appCmdCommands
     )
 
@@ -36,8 +42,8 @@ function Manage-IISWebSite
     {
         "CreateOrUpdateWebsite" 
         {
-            Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
-            Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint -protocol $protocol -addBinding $addBinding
+            Repair-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
+            Test-Inputs -sslCertThumbPrint $sslCertThumbPrint -protocol $protocol -addBinding $addBinding
     
             if($physicalPathAuth -ieq "WebsiteWindowsAuth") 
             {
@@ -52,19 +58,19 @@ function Manage-IISWebSite
                 }
 
                 Write-Verbose "Initiating action 'create or update' website with user specified application pool."
-                Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
             }
             else 
             {
                 Write-Verbose "Initiating action 'create or update' website"
-                Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppCmdCommands $appCmdCommands
+                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
             }
         }
         {($_ -eq "StartWebsite") -or ($_ -eq "StopWebsite")}
         {
-            Trim-Inputs -siteName ([ref]$startStopWebsiteName)
+            Repair-Inputs -siteName ([ref]$startStopWebsiteName)
             
-            Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $startStopWebsiteName -AppCmdCommands $appCmdCommands
+            Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $startStopWebsiteName -AppCmdCommands $appCmdCommands
         }
         default 
         {
@@ -73,7 +79,7 @@ function Manage-IISWebSite
     }    
 }
 
-function Manage-IISVirtualDirectory
+function Set-IISVirtualDirectory
 {
     param (
         [string] $parentWebsiteName,
@@ -85,8 +91,8 @@ function Manage-IISVirtualDirectory
         [string] $appCmdCommands
     )
 
-    Trim-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName)
-    Validate-Inputs -virtualPath $virtualPath
+    Repair-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName)
+    Test-Inputs -virtualPath $virtualPath
 
     if ($PhysicalPathAuth -eq "VDWindowsAuth") 
     {
@@ -94,10 +100,10 @@ function Manage-IISVirtualDirectory
     }
 
     Write-Verbose "Initiating action 'create or update' virtual directory."
-    Execute-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $PhysicalPathAuth -PhysicalPathAuthCredentials $PhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+    Invoke-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $PhysicalPathAuth -PhysicalPathAuthCredentials $PhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
 }
 
-function Manage-IISWebApplication 
+function Set-IISWebApplication 
 {
     param (
         [string] $parentWebsiteName,
@@ -117,8 +123,8 @@ function Manage-IISWebApplication
         [string] $appCmdCommands
     )
 
-    Trim-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
-    Validate-Inputs -virtualPath $virtualPath
+    Repair-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
+    Test-Inputs -virtualPath $virtualPath
 
     if ($physicalPathAuth -eq "ApplicationWindowsAuth") 
     {
@@ -133,16 +139,16 @@ function Manage-IISWebApplication
         }
         
         Write-Verbose "Initiating action 'create or update' application with user specified application pool."
-        Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+        Invoke-Main -CreateApplication $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
     }
     else 
     {
         Write-Verbose "Initiating action 'create or update' application."
-        Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+        Invoke-Main -CreateApplication $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
     }
 }
 
-function Manage-IISApplicationPool
+function Set-IISApplicationPool
 {
     param (
         [string] $actionIISApplicationPool,
@@ -160,7 +166,7 @@ function Manage-IISApplicationPool
     {
         "CreateOrUpdateAppPool" 
         {
-            Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
+            Repair-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
 
             if($appPoolIdentity -ieq "SpecificUser") 
             {
@@ -168,13 +174,13 @@ function Manage-IISApplicationPool
             }
 
             Write-Verbose "Initiating action 'create or update' application pool."
-            Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+            Invoke-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
         }
         {($_ -eq "StartAppPool") -or ($_ -eq "StopAppPool") -or ($_ -eq "RecycleAppPool")}
         {
-            Trim-Inputs -poolName ([ref]$startStopRecycleAppPoolName)
+            Repair-Inputs -poolName ([ref]$startStopRecycleAppPoolName)
 
-            Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $startStopRecycleAppPoolName -AppCmdCommands $appCmdCommands
+            Invoke-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $startStopRecycleAppPoolName -AppCmdCommands $appCmdCommands
         }
         default 
         {
@@ -196,7 +202,7 @@ function Get-CustomCredentials {
     return $credentials
 }
 
-function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
+function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
@@ -240,7 +246,7 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
 }
 
-function Validate-Inputs 
+function Test-Inputs
 {
     param (
         [string] $virtualPath,

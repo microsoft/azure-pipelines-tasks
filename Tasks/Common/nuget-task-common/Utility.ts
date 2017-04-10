@@ -149,7 +149,10 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
 
 export function getBundledNuGetLocation(uxOption: string): string {
     let nuGetDir;
-    if (uxOption === "3.5.0.1829") {
+    if (uxOption === "4.0.0.2283") {
+        nuGetDir = "NuGet/4.0.0";
+    }
+    else if (uxOption === "3.5.0.1829") {
         nuGetDir = "NuGet/3.5.0";
     }
     else if (uxOption === "3.3.0") {

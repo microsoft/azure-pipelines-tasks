@@ -48,7 +48,7 @@ The binary folder which will be used may not be directly under the root of the b
 
 Some tools have specific  env vars like M2_HOME.
 
-## Capabilities
+## Satisfies
 
 Tasks typically demand a capability of the agent which demonstrates the tool is found and installed on that agent.  By adding the task to the job, it implicitly adds the demand so the build routes to the proper agent.
 
@@ -68,7 +68,7 @@ Choclatey tool installer task:
 demands: [
     "powershell"
 ],
-capabilities: [
+satisfies: [
     "choclatey"
 ]
 ```

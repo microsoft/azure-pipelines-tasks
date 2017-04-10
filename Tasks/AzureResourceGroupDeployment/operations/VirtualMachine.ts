@@ -42,6 +42,10 @@ export class VirtualMachine {
                             console.log(tl.loc("VM_Stop", vmName));
                             client.virtualMachines.powerOff(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
+                        case "StopWithDeallocate":
+                            console.log(tl.loc("VM_Deallocate", vmName));
+                            client.virtualMachines.deallocate(this.taskParameters.resourceGroupName, vmName, callback(vmName));
+                            break;
                         case "Restart":
                             console.log(tl.loc("VM_Restart", vmName));
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));

@@ -43,11 +43,11 @@
             "name": "onTimeout",
             "type": "radio",
             "label": "On timeout",
-            "defaultValue": "Reject",
+            "defaultValue": "reject",
             "required": false,
             "options": {
-               "Reject": "Reject",
-               "Resume": "Resume"
+               "reject": "Reject",
+               "resume": "Resume"
             },
             "helpMarkDown": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
         }
