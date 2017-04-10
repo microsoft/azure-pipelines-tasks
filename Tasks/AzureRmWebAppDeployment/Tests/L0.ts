@@ -127,7 +127,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            
             var expectedErr = 'Error: msdeploy failed with return code: 1';
             var expectedOut = 'Failed to update history to kudu';
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
@@ -504,4 +503,21 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('web.config contents: server.js;iisnode') >=0, 'should have replaced web config parameters');
         done();
     });
+
+    it('Validate success azurerestutility-common.warmupAzureAppService()', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "azurerest-common", "Tests", 'WebAppWarmupSuccessTest.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.stdout.search('Successfully warmed up azure app service') >=0, 'Failed to warm up application');
+        done();
+    });
+
+    it('validate failure azurerestutility-common.warmupAzureAppService()', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "azurerest-common", "Tests", 'WebAppWarmupFailureTest.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.stdout.search('Failed to warm up azure app service, Status code : 500') >=0, 'Failed to warm up application');
+        done();
+    });
+
 });

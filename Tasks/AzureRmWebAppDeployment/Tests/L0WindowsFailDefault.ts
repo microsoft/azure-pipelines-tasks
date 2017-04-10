@@ -94,7 +94,8 @@ tr.registerMock('webdeployment-common/ziputility.js', {
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
-	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole,
+    shouldRetryMSDeploy: msDeployUtility.shouldRetryMSDeploy,
+    redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole,
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
@@ -173,12 +174,14 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
+        var retryFunction; 
         return { 
             "isWriteStreamObj": true,
-            "on": (event) => {
-                console.log("event: " + event + " has been triggered");
-            },
-            "end" : () => { return true; }
+            "on": (name, functionOnFinish) => { retryFunction = functionOnFinish;},
+            "end" : () => { 
+                retryFunction(); 
+                return true; 
+            }
         };
     },
     ReadStream: fs.ReadStream,
