@@ -15,11 +15,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 19
+    "Minor": 116,
+    "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.90.0",
+  "minimumAgentVersion": "2.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -60,17 +60,13 @@
     }
   ],
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
+    "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound"
   }
 }
