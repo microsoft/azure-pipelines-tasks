@@ -63,7 +63,7 @@ export async function getNuGet(versionSpec: string, checkLatest: boolean): Promi
         if (!versionInfo.url)
         {
             taskLib.error(taskLib.loc("Error_NoUrlWasFoundWhichMatches", version)); 
-            throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", "NuGet"));
+            throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", NUGET_TOOL_NAME));
         }
 
         toolPath = toolLib.findLocalTool(NUGET_TOOL_NAME, version);
@@ -105,11 +105,11 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     let versionStringsFromDist: string[] = releasedVersions.map(x => x.version);
 
     let version: string = toolLib.evaluateVersions(versionStringsFromDist, versionSpec);
-    if(!version)
+    if (!version)
     {
         taskLib.error(taskLib.loc("Error_NoVersionWasFoundWhichMatches", versionSpec)); 
         taskLib.error(taskLib.loc("Info_AvailableVersions", releasedVersions.map(x => x.version).join("; ")));
-        throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", "NuGet"));
+        throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", NUGET_TOOL_NAME));
     }
 
     return releasedVersions.find(x => x.version === version);

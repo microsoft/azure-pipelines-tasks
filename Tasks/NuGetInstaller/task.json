@@ -120,11 +120,11 @@
         {
             "name": "checkLatest",
             "type": "boolean",
-            "label": "Check for Latest Version",
+            "label": "Check for Latest Version of NuGet.exe",
             "defaultValue": "false",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool. Behavior changes or breaking changes might occur as NuGet updates to a new version."
+            "helpMarkDown": "Always checks online for the latest available version of NuGet.exe which satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool. Behavior changes or breaking changes might occur as NuGet updates to a new version."
         }
     ],
     "dataSourceBindings": [
