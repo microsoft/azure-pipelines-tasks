@@ -1,13 +1,6 @@
-﻿function isAutoLogonDisabled([int] $OSType)
+﻿function isAutoLogonDisabled()
 {
-	#check 64 bit or 32 bit
-	if ($OSType -eq 64)
-	{
-		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
-	}
-	else
-	{
-		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+    $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 	}
 
 	if (-not (Test-Path $registryPath))
@@ -56,27 +49,12 @@ function isShowLogonMessagePolicyEnabled([int] $OSType)
 		return $true
 	}
 
-	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticetext
-	if (($legalText) -and ($legalText.Length -gt 0))
-	{
-		Write-Verbose -Message("Registry path {0} found, but legalnoticetext key is set to some value." -f $registryPath) -Verbose
-		return $true
-	}
-
 	return $false
 }
 
-function isShowLogonMessageEnabled([int] $OSType)
+function isShowLogonMessageEnabled()
 {
-	#check 64 bit or 32 bit
-	if ($OSType -eq 64)
-	{
-		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
-	}
-	else
-	{
-		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-	}
+    $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
 	if (-not (Test-Path $registryPath))
 	{
@@ -757,7 +735,7 @@ namespace MS.VS.TestTools.Config
 function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 
 	# checking prerequisites for autologon
-	if(isAutoLogonDisabled(32))
+	if(isAutoLogonDisabled())
     {
 		Write-Verbose -Message ("Admin auto logon is disabled") -Verbose
 	}
@@ -765,9 +743,9 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 	{
 		Write-Verbose -Message ("Show logon message policy is enabled") -Verbose
     }
-	elseif((isShowLogonMessageEnabled(64)) -or (isShowLogonMessageEnabled(32)))
+	elseif(isShowLogonMessageEnabled())
 	{
-		Write-Verbose -Message ("Show logon Message is enabled") -Verbose
+		Write-Verbose -Message ("Show logon message is enabled") -Verbose
 	}
 
     # For UI Test scenarios, we need to disable the screen saver and enable auto logon
