@@ -8,7 +8,7 @@
             "/someDir/someFile1"
         ]
     },
-    "match": {
+    "findMatch": {
         "/some/*pattern": [
             "some/path/one",
             "some/path/two"

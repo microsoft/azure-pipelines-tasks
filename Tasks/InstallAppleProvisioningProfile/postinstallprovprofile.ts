@@ -10,7 +10,7 @@ async function run() {
 
         let removeProfile: boolean = tl.getBoolInput('removeProfile');
         if (removeProfile) {
-            let profileUUID: string = tl.getTaskVariable("INSTALLED_PROV_PROFILE_UUID");
+            let profileUUID: string = tl.getTaskVariable('APPLE_PROV_PROFILE_UUID');
             if (profileUUID) {
                 await sign.deleteProvisioningProfile(profileUUID);
             }

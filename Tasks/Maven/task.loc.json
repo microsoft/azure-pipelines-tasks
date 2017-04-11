@@ -19,8 +19,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 114,
-    "Patch": 1
+    "Minor": 116,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -250,6 +250,33 @@
       "label": "ms-resource:loc.input.label.sqConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectName",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectKey",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectVersion",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },
