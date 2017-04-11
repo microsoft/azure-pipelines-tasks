@@ -6,6 +6,7 @@ import path = require('path');
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
+const ERROR_FILE_NAME = "error.txt";
 
 /**
  * Constructs argument for MSDeploy command
@@ -167,7 +168,7 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
  * 2. Checks if there is file in use error , suggest to try app offline.
  */
 export function redirectMSDeployErrorToConsole() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
     
     if(tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
@@ -189,7 +190,7 @@ export function redirectMSDeployErrorToConsole() {
 }
 
 export function shouldRetryMSDeploy() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
     
     if(tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();

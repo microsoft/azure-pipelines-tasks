@@ -7,7 +7,6 @@ var msDeployUtility = require('./msdeployutility.js');
 var utility = require('./utility.js');
 
 const DEFAULT_RETRY_COUNT = 3;
-const DEFAULT_RETRY_INTERVAL = 5000;
 
 /**
  * Executes Web Deploy command
