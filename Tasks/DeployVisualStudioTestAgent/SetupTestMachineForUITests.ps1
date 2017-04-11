@@ -1,7 +1,6 @@
 ﻿function isAutoLogonDisabled()
 {
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-	}
 
 	if (-not (Test-Path $registryPath))
 	{
@@ -735,7 +734,7 @@ namespace MS.VS.TestTools.Config
 function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 
 	# checking prerequisites for autologon
-	if(isAutoLogonDisabled())
+	if(isAutoLogonDisabled)
     {
 		Write-Verbose -Message ("Admin auto logon is disabled") -Verbose
 	}
@@ -743,7 +742,7 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 	{
 		Write-Verbose -Message ("Show logon message policy is enabled") -Verbose
     }
-	elseif(isShowLogonMessageEnabled())
+	elseif(isShowLogonMessageEnabled)
 	{
 		Write-Verbose -Message ("Show logon message is enabled") -Verbose
 	}
