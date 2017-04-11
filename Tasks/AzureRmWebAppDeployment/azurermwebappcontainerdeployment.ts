@@ -4,12 +4,13 @@ import util = require('util');
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var parameterParser = require("./parameterparser.js").parse;
 
-export async function deployWebAppImage(endPoint, dockerNamespace, resourceGroupName, webAppName) {
+export async function deployWebAppImage(endPoint, resourceGroupName, webAppName) {
     var startupCommand = tl.getInput('StartupCommand', false);
     var appSettings = tl.getInput('AppSettings', false);
     var imageSourceAndTag;
 
     // Construct the image
+    var dockerNamespace = tl.getInput('DockerNamespace', true);
     var dockerRepository = tl.getInput('DockerRepository', true);
     var dockerImageTag = tl.getInput('DockerImageTag', false);
 
@@ -26,9 +27,9 @@ export async function deployWebAppImage(endPoint, dockerNamespace, resourceGroup
         appSettings = appSettings ? appSettings.trim() : "";        
         appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
     
-        // Update web application setting
+        // Update webapp application setting
         var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, false, null);
-        updatedWebAppSettings(appSettings, webAppSettings);
+        mergeAppSettings(appSettings, webAppSettings);
         await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, false, null, webAppSettings);
 
         // Update startup command
@@ -47,9 +48,7 @@ export async function deployWebAppImage(endPoint, dockerNamespace, resourceGroup
     }  
 }
 
-async function updatedWebAppSettings(appSettings, webAppSettings) {
-//    tl.debug(util.format("New web application settings provided by user: %j", appSettings));        
-
+function mergeAppSettings(appSettings, webAppSettings) {
     var parsedAppSettings =  parameterParser(appSettings);
     for (var settingName in parsedAppSettings)
     {
@@ -60,9 +59,7 @@ async function updatedWebAppSettings(appSettings, webAppSettings) {
         if(setting) {
             webAppSettings["properties"][setting] = settingVal;
         }
-    }        
-
-  //  tl.debug(util.format("Updated web application settings: %j", webAppSettings));
+    }
                             
     return webAppSettings;
 }

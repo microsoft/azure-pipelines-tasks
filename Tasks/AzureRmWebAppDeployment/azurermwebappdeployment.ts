@@ -41,7 +41,7 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
-        var dockerNamespace = tl.getInput('DockerNamespace', false);
+        var webAppKind = tl.getInput('WebAppKind', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -62,16 +62,21 @@ async function run() {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
 
-        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
-
         // For container based linux deployment
-        if(dockerNamespace)
+        if(webAppKind && webAppKind === "linux")
         {
-            await deployWebAppImage(endPoint, dockerNamespace, resourceGroupName, webAppName);
+            tl.debug("Performing the deployment of webapp for Linux.");
+
+            await deployWebAppImage(endPoint, resourceGroupName, webAppName);
+            return;
         }
         else
         {
+            tl.debug("Performing the deployment of webapp.");
+
+            var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+
             var availableWebPackages = deployUtility.findfiles(webDeployPkg);
             if(availableWebPackages.length == 0) {
                 throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
