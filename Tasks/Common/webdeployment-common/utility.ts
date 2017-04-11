@@ -207,7 +207,3 @@ export async function archiveFolderForDeployment(isFolderBasedDeployment: boolea
         "tempPackagePath": webDeployPkg
     };
 }
-
-export function sleep(timeInMilliSecond) {
-  return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
-}

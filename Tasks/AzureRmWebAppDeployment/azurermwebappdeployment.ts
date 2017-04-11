@@ -125,10 +125,9 @@ async function run() {
 
         if(publishingProfile && publishingProfile.destinationAppUrl) {
             try{
-                await azureRESTUtility.warmupAzureAppService(publishingProfile.destinationAppUrl);
-                deployUtility.sleep(3000);
+                await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
             } catch (error) {
-                tl.debug("Warmup of app service failed with error" + error.message);
+                tl.debug("Failed to check availability of azure web app, error : " + error.message);
             }
         }
 

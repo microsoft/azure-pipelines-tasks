@@ -5,4 +5,4 @@ nock('http://testwebapp.azurewebsites.net')
     .get("/")
     .reply(500, {});
 
-azureRestUtiltiy.warmupAzureAppService('http://testwebapp.azurewebsites.net')
+azureRestUtiltiy.testAzureWebAppAvailability('http://testwebapp.azurewebsites.net',100);

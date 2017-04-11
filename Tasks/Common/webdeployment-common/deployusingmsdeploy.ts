@@ -47,7 +47,20 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
     
     try {
-        await executeMSDeploy(msDeployCmdArgs, retryCount, DEFAULT_RETRY_INTERVAL); 
+        var shouldContinue = true;
+        while(shouldContinue) {
+            try {
+                 await executeMSDeploy(msDeployCmdArgs);
+                 shouldContinue = false;
+            } catch (error) {
+                shouldContinue = (msDeployUtility.shouldRetryMSDeploy() && retryCount-- > 0);
+                if(!shouldContinue) {
+                    throw error;
+                } else {
+                    console.log("Retrying to deploy app service.");
+                }
+            }
+        }
         if(publishingProfile != null) {
             console.log(tl.loc('PackageDeploymentSuccess'));
         }
@@ -55,6 +68,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     catch (error) {
         tl.error(tl.loc('PackageDeploymentFailed'));
         tl.debug(JSON.stringify(error));
+        msDeployUtility.redirectMSDeployErrorToConsole();
         throw Error(error.message);
     }
     finally {
@@ -65,7 +79,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     }
 }
 
-export async function executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval) {
+export async function executeMSDeploy(msDeployCmdArgs) {
     var deferred = Q.defer();
 
     var msDeployError = null;
@@ -75,19 +89,7 @@ export async function executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval
 
     errObj.on('finish', async () => {
         if(msDeployError) {
-            var shouldRetry = msDeployUtility.shouldRetryMSDeploy();
-            if(shouldRetry && retryCount-- > 0) {
-                try {
-                    await executeMSDeploy(msDeployCmdArgs, retryCount, retryInterval);
-                    deferred.resolve("Azure App service successfully deployed");
-                } catch(error) {
-                    msDeployUtility.redirectMSDeployErrorToConsole();
-                    deferred.reject(msDeployError);
-                }
-            } else {
-                msDeployUtility.redirectMSDeployErrorToConsole();
-                deferred.reject(msDeployError);
-            }
+           deferred.reject(msDeployError);
         }
     });
 

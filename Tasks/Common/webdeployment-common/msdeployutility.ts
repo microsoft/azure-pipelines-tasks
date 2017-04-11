@@ -197,7 +197,6 @@ export function shouldRetryMSDeploy() {
         if(errorFileContent !== "") {
             if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
                 tl.warning(errorFileContent);
-                console.log("Retrying to deploy app service.");
                 return true;
             }
         }

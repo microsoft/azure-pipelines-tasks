@@ -13,6 +13,7 @@ var restObj = new restClient.RestCallbackClient(httpObj);
 
 var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = 'api-version=2016-08-01';
+var defaultWebAppAvailabilityTimeout = 3000;
 
 /**
  * gets the name of the ResourceGroup that contains the webApp
@@ -493,22 +494,28 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     return deferred.promise;
 }
 
-export async function warmupAzureAppService(webAppUrl) {
+export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout) {
     var deferred = Q.defer();
     var headers = {};
-    httpObj.get('GET', webAppUrl, headers, (error, response, body) => {
+    httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
         if (error) {
-            tl.debug("Failed to warm up azure app service, error : " + error);
+            tl.debug("Failed to check avaibality of azure web app, error : " + error);
             deferred.reject(error);
         } else {
             if(response.statusCode === 200) {
-                tl.debug("Successfully warmed up azure app service");
+                tl.debug("Azure web app is available.");
+                var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeout; 
+                await sleep(webAppAvailabilityTimeout);
                 deferred.resolve("SUCCESS");
             } else {
-                tl.debug("Failed to warm up azure app service, Status code : " + response.statusCode);
+                tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
                 deferred.reject(error);
             }
         }
     });
     return deferred.promise;
+}
+
+function sleep(timeInMilliSecond) {
+  return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
 }

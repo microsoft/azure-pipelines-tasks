@@ -508,7 +508,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, "..", "node_modules", "azurerest-common", "Tests", 'WebAppWarmupSuccessTest.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.stdout.search('Successfully warmed up azure app service') >=0, 'Failed to warm up application');
+        assert(tr.stdout.search('Azure web app is available.') >=0, 'Failed to warm up application');
         done();
     });
 
@@ -516,7 +516,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, "..", "node_modules", "azurerest-common", "Tests", 'WebAppWarmupFailureTest.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.stdout.search('Failed to warm up azure app service, Status code : 500') >=0, 'Failed to warm up application');
+        assert(tr.stdout.search('Azure web app in wrong state, status code : 500') >=0, 'Failed to warm up application');
         done();
     });
 
