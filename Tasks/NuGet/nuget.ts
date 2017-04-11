@@ -20,22 +20,33 @@ class NuGetExecutionOptions {
 }
 
 async function main(): Promise<void> {
+    tl.setResourcePath(path.join(__dirname, "task.json"));
+
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     
     let versionSpec: string = tl.getInput("versionSpec", true);
+    let checkLatest = tl.getBoolInput('checkLatest', false);
     let command: string = tl.getInput("command", true);
     let args: string = tl.getInput("arguments", false);
-    let nuGetPath: string = await nuGetGetter.getNuGet(versionSpec);
+
+    let nuGetPath: string = undefined;
+    try {
+        nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest);
+    }
+    catch (error) {
+        tl.setResult(tl.TaskResult.Failed, error.message);
+        return;
+    }
+
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))
     {
-        throw new Error(tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
+        tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
+        return;
     }
 
     try {
-        tl.setResourcePath(path.join(__dirname, "task.json"));
-        
         nutil.setConsoleCodePage();
 
         let credProviderPath = nutil.locateCredentialProvider();
@@ -79,6 +90,8 @@ async function main(): Promise<void> {
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));
         }
+
+        tl.setResult(tl.TaskResult.Failed, "");
     }
 }
 

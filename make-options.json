@@ -45,6 +45,7 @@
         "NuGetInstaller",
         "NugetPackager",
         "NuGetPublisher",
+        "NuGetToolInstaller",
         "PackerBuild",
         "powerShell",
         "PowerShellOnTargetMachines",
