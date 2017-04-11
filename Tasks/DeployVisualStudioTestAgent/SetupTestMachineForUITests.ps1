@@ -1,4 +1,4 @@
-﻿function isAutoLogonDisabled()
+﻿function IsAutoLogonDisabled()
 {
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
@@ -23,7 +23,7 @@
 	return $true
 }
 
-function isShowLogonMessagePolicyEnabled([int] $OSType)
+function IsShowLogonMessagePolicyEnabled([int] $OSType)
 {
 	#check 64 bit or 32 bit
 	if ($OSType -eq 64)
@@ -42,16 +42,17 @@ function isShowLogonMessagePolicyEnabled([int] $OSType)
 	}
 	
 	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticecaption
-	if (($legalCaption) -and ($legalCaption.Length -gt 0))
+	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticetext
+	if (($legalCaption) -and ($legalCaption.Length -gt 0) -and ($legalText) -and ($legalText.Length -gt 0))
 	{
-		Write-Verbose -Message("Registry path {0} found, but legalnoticecaption key is set to some value." -f $registryPath) -Verbose
+		Write-Verbose -Message("Registry path {0} found, but legalnoticecaption and legaltext key is set to some value." -f $registryPath) -Verbose
 		return $true
 	}
 
 	return $false
 }
 
-function isShowLogonMessageEnabled()
+function IsShowLogonMessageEnabled()
 {
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
@@ -62,16 +63,10 @@ function isShowLogonMessageEnabled()
 	}
 	
 	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeCaption
-	if (($legalCaption -ne $null) -and ($legalCaption.Length -gt 0))
+    $legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeText
+	if (($legalCaption) -and ($legalCaption.Length -gt 0) -and ($legalText) -and ($legalText.Length -gt 0))
 	{
-		Write-Verbose -Message("Registry path {0} found, but LegalNoticeCaption is set to some value." -f $registryPath) -Verbose
-		return $true
-	}
-
-	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeText
-	if (($legalText -ne $null) -and ($legalText.Length -gt 0))
-	{
-		Write-Verbose -Message("Registry path {0} found, but LegalNoticeText is set to some value." -f $registryPath) -Verbose
+		Write-Verbose -Message("Registry path {0} found, but LegalNoticeCaption and LegalNoticeText is set to some value." -f $registryPath) -Verbose
 		return $true
 	}
 
@@ -734,15 +729,15 @@ namespace MS.VS.TestTools.Config
 function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 
 	# checking prerequisites for autologon
-	if(isAutoLogonDisabled)
+	if(IsAutoLogonDisabled)
     {
 		Write-Verbose -Message ("Admin auto logon is disabled") -Verbose
 	}
-	if( (isShowLogonMessagePolicyEnabled(64)) -or (isShowLogonMessagePolicyEnabled(32)))
+	if( (IsShowLogonMessagePolicyEnabled(64)) -or (isShowLogonMessagePolicyEnabled(32)))
 	{
 		Write-Verbose -Message ("Show logon message policy is enabled") -Verbose
     }
-	elseif(isShowLogonMessageEnabled)
+	elseif(IsShowLogonMessageEnabled)
 	{
 		Write-Verbose -Message ("Show logon message is enabled") -Verbose
 	}
