@@ -1,4 +1,3 @@
-import { readFileSync } from 'fs';
 var mockery = require('mockery');
 var path = require('path');
 mockery.enable({
