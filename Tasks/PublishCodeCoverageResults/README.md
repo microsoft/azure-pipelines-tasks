@@ -1,14 +1,14 @@
 # Publish Code Coverage Results
 
 ###Overview
-The Publish Code Coverage Results task is used to publish the code coverage results to TFS/Team Services. 
+The Publish Code Coverage Results task is used to publish the code coverage results of a build. 
 
 ###The different parameters of the task are explained below:
 
-- **Code Coverage Tool:**	Required Field. Name of the tool used to generate code coverage summary files.
+- **Code Coverage Tool:**	Required Field. The tool with which code coverage results are generated.
 
-- **Summary File:**		Required Field. Path of code coverage summary file, which has code coverage statistics like line, method, class coverage.
+- **Summary File:**		Required Field. The path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`
 
-- **Report Directory:**		Path of code coverage report directory. The report directory is published as an artifact against the build.
+- **Report Directory:**		The path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`
 
-- **Additional Files:**		Regular expression specifying the additional code coverage files to be published as an artifact against the build.
+- **Additional Files:**		The file path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`

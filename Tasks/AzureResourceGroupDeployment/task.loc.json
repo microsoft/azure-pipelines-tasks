@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 6
+    "Minor": 2,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -60,6 +60,7 @@
         "Select Resource Group": "Select resource group",
         "Start": "Start virtual machines",
         "Stop": "Stop virtual machines",
+        "StopWithDeallocate": "Stop and deallocate virtual machines",
         "Restart": "Restart virtual machines",
         "Delete": "Delete virtual machines",
         "DeleteRG": "Delete resource group"
@@ -174,17 +175,36 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
+        "ConfigureVMwithWinRM": "Configure with WinRM",
+        "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {
-      "name": "machineGroupName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.machineGroupName",
+      "name": "deploymentGroupEndpoint",
+      "type": "connectedService:ExternalTfs",
+      "label": "ms-resource:loc.input.label.deploymentGroupEndpoint",
       "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-      "helpMarkDown": "ms-resource:loc.input.help.machineGroupName",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupEndpoint"
+    },
+    {
+      "name": "project",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.project",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.project"
+    },
+    {
+      "name": "deploymentGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentGroupName",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupName",
       "properties": {
         "DisableManageLink": "True"
       }
@@ -194,19 +214,9 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.copyAzureVMTags",
       "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
       "defaultValue": true,
       "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
-    },
-    {
-      "name": "vstsPATToken",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vstsPATToken",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.vstsPATToken"
     },
     {
       "name": "outputVariable",
@@ -229,14 +239,21 @@
       "target": "location",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureLocations"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
-      "target": "machineGroupName",
-      "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:teamfoundation"
+      "target": "project",
+      "endpointId": "$(deploymentGroupEndpoint)",
+      "dataSourceName": "Projects",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "deploymentGroupName",
+      "endpointId": "$(deploymentGroupEndpoint)",
+      "dataSourceName": "DeploymentGroups",
+      "parameters": {
+        "project": "$(project)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -273,6 +290,7 @@
     "VM_Start": "ms-resource:loc.messages.VM_Start",
     "VM_Restart": "ms-resource:loc.messages.VM_Restart",
     "VM_Stop": "ms-resource:loc.messages.VM_Stop",
+    "VM_Deallocate": "ms-resource:loc.messages.VM_Deallocate",
     "VM_Delete": "ms-resource:loc.messages.VM_Delete",
     "SucceededOnVMOperation": "ms-resource:loc.messages.SucceededOnVMOperation",
     "FailureOnVMOperation": "ms-resource:loc.messages.FailureOnVMOperation",
@@ -352,24 +370,29 @@
     "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
     "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
     "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
-    "MGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.MGAgentOperationOnAllVMsFailed",
-    "MGAgentAddedOnAllVMs": "ms-resource:loc.messages.MGAgentAddedOnAllVMs",
-    "MGAgentDeletedFromAllVMs": "ms-resource:loc.messages.MGAgentDeletedFromAllVMs",
-    "MGAgentHandlerMajorVersion": "ms-resource:loc.messages.MGAgentHandlerMajorVersion",
+    "DGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.DGAgentOperationOnAllVMsFailed",
+    "DGAgentAddedOnAllVMs": "ms-resource:loc.messages.DGAgentAddedOnAllVMs",
+    "DGAgentDeletedFromAllVMs": "ms-resource:loc.messages.DGAgentDeletedFromAllVMs",
+    "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",
     "SkipDeleteExtension": "ms-resource:loc.messages.SkipDeleteExtension",
     "VMStartFailed": "ms-resource:loc.messages.VMStartFailed",
     "VMStarted": "ms-resource:loc.messages.VMStarted",
     "VMTransitioningSkipExtensionAddition": "ms-resource:loc.messages.VMTransitioningSkipExtensionAddition",
     "VMDetailsFetchFailed": "ms-resource:loc.messages.VMDetailsFetchFailed",
     "VMDetailsFetchSucceeded": "ms-resource:loc.messages.VMDetailsFetchSucceeded",
-    "AddingMGAgentOnVMs": "ms-resource:loc.messages.AddingMGAgentOnVMs",
-    "DeletingMGAgentFromVMs": "ms-resource:loc.messages.DeletingMGAgentFromVMs",
-    "DeletingMGAgentOnVMs": "ms-resource:loc.messages.DeletingMGAgentOnVMs",
+    "AddingDGAgentOnVMs": "ms-resource:loc.messages.AddingDGAgentOnVMs",
+    "DeletingDGAgentFromVMs": "ms-resource:loc.messages.DeletingDGAgentFromVMs",
+    "DeletingDGAgentOnVMs": "ms-resource:loc.messages.DeletingDGAgentOnVMs",
     "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
     "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
+    "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty",
+    "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed",
+    "DeploymentGroupEndpointUrlCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty",
+    "DeploymentGroupEndpointPatTokenCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty",
     "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter"
   }
 }

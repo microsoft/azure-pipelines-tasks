@@ -12,31 +12,15 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        let provProfileSource: string = tl.getInput('provProfileSource', true);
-        let provProfilePath: string;
-
-        if (provProfileSource === 'SecureFile') {
-            // file stored on server, download decrypted contents
-            secureFileId = tl.getInput('provProfileSecureFile', true);
-            secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
-            provProfilePath = await secureFileHelpers.downloadSecureFile(secureFileId);
-        } else if (provProfileSource === 'Repo') {
-            // file stored in repository or build server
-            let provProfileFilePath: string = tl.getPathInput('provProfileFilePath', true);
-            let profiles: string[] = tl.findMatch(null, provProfileFilePath, null, null);
-            if (!profiles || profiles.length === 0) {
-                throw tl.loc('NO_PROVPROFILE_FOUND');
-            } else if (profiles.length > 1) {
-                throw tl.loc('MULTIPLE_PROVPROFILES_FOUND');
-            } else {
-                provProfilePath = profiles[0];
-            }
-        }
+        // download decrypted contents
+        secureFileId = tl.getInput('provProfileSecureFile', true);
+        secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+        let provProfilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
         if (tl.exist(provProfilePath)) {
             let UUID: string = await sign.getProvisioningProfileUUID(provProfilePath);
-            tl.setTaskVariable("INSTALLED_PROV_PROFILE_UUID", UUID);
-            tl.setVariable("APPLE_PROVPROFILE_UUID", UUID);
+            tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', UUID);
+            tl.setVariable('APPLE_PROV_PROFILE_UUID', UUID);
         }
 
     } catch (err) {
