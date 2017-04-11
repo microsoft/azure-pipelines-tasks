@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 var mockery = require('mockery');
 var path = require('path');
 mockery.enable({
@@ -92,8 +93,9 @@ mockery.registerMock('fs', {
         return '';
     },
     statSync: fs.statSync,
-    writeFileSync: fs.writeFileSync
-})
+    writeFileSync: fs.writeFileSync,
+    readFileSync: fs.readFileSync
+});
 var mockPublishProfile = {
     profileName: 'mytestapp - Web Deploy',
     publishMethod: 'MSDeploy',
