@@ -1,9 +1,9 @@
 # Publish Code Coverage Results
 
-###Overview
+### Overview
 The Publish Code Coverage Results task is used to publish the code coverage results of a build. 
 
-###The different parameters of the task are explained below:
+### The different parameters of the task are explained below:
 
 - **Code Coverage Tool:**	Required Field. The tool with which code coverage results are generated.
 
