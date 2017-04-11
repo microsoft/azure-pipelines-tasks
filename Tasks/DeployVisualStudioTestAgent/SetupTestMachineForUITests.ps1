@@ -767,12 +767,14 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
     $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserDomain $Domain -TestUserName $TestUser
     if(-not $isTestUserLogged)
     {
-		$rebootCount = Update-RebootCount($EnvironmentURL)
-        if($rebootCount -gt 3)
-        {
-            throw ("Stopping test machine setup as it exceeded maximum number of reboots. If you are running test agent in interactive mode, please make sure that autologon is enabled and no legal notice is displayed on logon in test machines.")
+        if(-not ([string]::IsNullOrEmpty($EnvironmentURL)))
+		{
+            $rebootCount = Update-RebootCount($EnvironmentURL)
+            if($rebootCount -gt 3)
+            {
+                throw ("Stopping test machine setup as it exceeded maximum number of reboots. If you are running test agent in interactive mode, please make sure that autologon is enabled and no legal notice is displayed on logon in test machines.")
+            }
         }
-        
 		Write-Verbose "Currently test user is not logged in. Rebooting machine." -Verbose
         Set-EnableAutoLogon -TestUserDomain $Domain -TestUserName $TestUser -TestUserPassword $TestUserPassword
         return 3010
