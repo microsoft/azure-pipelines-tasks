@@ -128,15 +128,6 @@
             "helpMarkDown": "Indicates whether the package should be validated or not before deployment."
         },
         {
-            "name": "unregisterUnusedVersions",
-            "type": "boolean",
-            "label": "Unregister Unused Versions",
-            "defaultValue": "true",
-            "required": false,
-            "groupname": "upgrade",
-            "helpMarkDown": "Indicates whether all unused versions of the application type will be removed after an upgrade."
-        },
-        {
             "name": "overridePublishProfileSettings",
             "type": "boolean",
             "label": "Override All Publish Profile Upgrade Settings",
@@ -153,6 +144,15 @@
             "required": false,
             "groupname": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true"
+        },
+        {
+            "name": "unregisterUnusedVersions",
+            "type": "boolean",
+            "label": "Unregister Unused Versions",
+            "defaultValue": "true",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "Indicates whether all unused versions of the application type will be removed after an upgrade."
         },
         {
             "name": "upgradeMode",
