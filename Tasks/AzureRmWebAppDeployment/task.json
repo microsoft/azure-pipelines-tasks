@@ -150,7 +150,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
-            "visibleRule": "DeployToSlotFlag = true"            
+            "visibleRule": "DeployToSlotFlag = true"
         },
         {
             "name": "SlotName",
@@ -360,7 +360,7 @@
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNames"
-        },        
+        },
         {
             "target": "ResourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
@@ -396,7 +396,7 @@
                 "ResourceGroupName": "$(ResourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-        }       
+        }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
@@ -476,7 +476,7 @@
         "stderrFromScript": "Standard error from script: ",
         "WebConfigAlreadyExists": "web.config file already exists. Not generating.",
         "SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
-        "FailedToGenerateWebConfig": "Failed to generate web.config. %s",                
+        "FailedToGenerateWebConfig": "Failed to generate web.config. %s",
         "FailedToGetKuduFileContent": "Unable to get file content: %s . Status code: %s (%s)",
         "FailedToGetKuduFileContentError": "Unable to get file content: %s. Error: %s",
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
