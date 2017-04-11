@@ -128,15 +128,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
     },
     {
-      "name": "unregisterUnusedVersions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.unregisterUnusedVersions",
-      "defaultValue": "true",
-      "required": false,
-      "groupname": "upgrade",
-      "helpMarkDown": "ms-resource:loc.input.help.unregisterUnusedVersions"
-    },
-    {
       "name": "overridePublishProfileSettings",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.overridePublishProfileSettings",
@@ -153,6 +144,15 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true"
+    },
+    {
+      "name": "unregisterUnusedVersions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.unregisterUnusedVersions",
+      "defaultValue": "true",
+      "required": false,
+      "groupname": "upgrade",
+      "helpMarkDown": "ms-resource:loc.input.help.unregisterUnusedVersions"
     },
     {
       "name": "upgradeMode",
