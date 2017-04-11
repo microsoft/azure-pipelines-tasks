@@ -89,12 +89,14 @@ export class DistributedTest {
         proc.stdout.on('data', (c) => {
             // this is bit hacky way to fix the web method logging as it's not configurable currently
             // and writes info to stdout directly
-            const data = c.toString();
-            if (data.startsWith('Web method')) {
-                tl.debug(data);
-            } else {
-                tl._writeLine(c.toString());
-            }
+            const lines = c.toString().split('\n');
+            lines.forEach(function (line: string) {
+                if (line.startsWith('Web method')) {
+                    tl.debug(line);
+                } else {
+                    tl._writeLine(c.toString());
+                }
+            });
         });
         proc.stderr.on('data', (c) => {
             tl._writeError(c.toString());
