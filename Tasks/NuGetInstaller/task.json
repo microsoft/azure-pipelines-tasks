@@ -1,22 +1,27 @@
 {
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
-    "name": "NuGetInstaller",
-    "friendlyName": "NuGet Installer",
-    "description": "Restores missing NuGet packages",
+    "name": "NuGetRestore",
+    "friendlyName": "NuGet Restore",
+    "description": "Restores NuGet packages in preparation for a Visual Studio Build step.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "2.115.0",
     "groups": [
+        {
+            "name": "nugetVersion",
+            "displayName": "NuGet version",
+            "isExpanded": false
+        },
         {
             "name": "advanced",
             "displayName": "Advanced",
@@ -30,7 +35,7 @@
             "type": "filePath",
             "label": "Path to solution, packages.config, or project.json",
             "defaultValue": "**/*.sln",
-            "helpMarkDown": "The path to solution, packages.config, or project.json file",
+            "helpMarkDown": "The path to solution, packages.config, or project.json file that references the packages to be restored.",
             "required": "true"
         },
         {
@@ -48,7 +53,7 @@
         {
             "name": "feed",
             "type": "pickList",
-            "label": "Include packages from this VSTS feed",
+            "label": "The feed to include in the generated NuGet.config.",
             "defaultValue": "",
             "helpMarkDown": "",
             "required": "false",
@@ -60,7 +65,7 @@
         {
             "name": "includeNuGetOrg",
             "type": "boolean",
-            "label": "Include packages from NuGet.org",
+            "label": "Include NuGet.org in the generated NuGet.config.",
             "defaultValue": "true",
             "helpMarkDown": "",
             "required": "false",
@@ -71,7 +76,7 @@
             "type": "filePath",
             "label": "Path to NuGet.config",
             "defaultValue": "",
-            "helpMarkDown": "Equivalent to the -ConfigFile NuGet.exe command line argument",
+            "helpMarkDown": "The NuGet.config in your repository that specifies the feeds from which to restore packages.",
             "required": "false",
             "visibleRule": "selectOrConfig = config"
         },
@@ -111,20 +116,20 @@
         {
             "name": "versionSpec",
             "type": "string",
-            "label": "Version Spec",
+            "label": "Version specification",
             "defaultValue": "4.0.0",
             "required": true,
-            "groupName": "advanced",
-            "helpMarkDown": "Version spec of version to get.\n\nIf you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match. \n\nList of available versions obtained from [here](http://dist.nuget.org/tools.json).\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
+            "groupName": "nugetVersion",
+            "helpMarkDown": "A version or version range that specifies the NuGet version to make available on the path. See the [list of available NuGet versions](http://dist.nuget.org/tools.json).\n\nIf you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
         },
         {
             "name": "checkLatest",
             "type": "boolean",
-            "label": "Check for Latest Version of NuGet.exe",
+            "label": "Always download the latest matching version",
             "defaultValue": "false",
             "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Always checks online for the latest available version of NuGet.exe which satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool. Behavior changes or breaking changes might occur as NuGet updates to a new version."
+            "groupName": "nugetVersion",
+            "helpMarkDown": "Always check for and download the latest available version of NuGet.exe which satisfies the version spec. This option will also always incur download time and costs, even if the selected version of NuGet is already cached.\n\nEnabling this option could cause unexpected build breaks when a new version of NuGet is released."
         }
     ],
     "dataSourceBindings": [
