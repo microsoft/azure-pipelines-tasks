@@ -31,6 +31,7 @@ try {
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
     $skipUpgrade =  [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
     $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
+    $unregisterUnusedVersions = [System.Boolean]::Parse((Get-VstsInput -Name unregisterUnusedVersions))
 
     $clusterConnectionParameters = @{}
 
@@ -137,7 +138,7 @@ try {
     {
         $publishParameters['Action'] = "RegisterAndUpgrade"
         $publishParameters['UpgradeParameters'] = $upgradeParameters
-        $publishParameters['UnregisterUnusedVersions'] = $true
+        $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
 
         Publish-UpgradedServiceFabricApplication @publishParameters
