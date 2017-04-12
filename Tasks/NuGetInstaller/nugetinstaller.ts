@@ -252,6 +252,11 @@ async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string, nuGet
     // The second element contains the transformed packaging URL
     let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
     
+    if (!packagingCollectionUrl)
+    {
+        packagingCollectionUrl = collectionUrl;
+    }
+
     const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
     if (overwritePackagingCollectionUrl) {
         tl.debug("Overwriting packaging collection URL");
