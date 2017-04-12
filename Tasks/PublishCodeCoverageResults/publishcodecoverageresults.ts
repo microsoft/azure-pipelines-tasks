@@ -29,7 +29,11 @@ async function run() {
             // Does the 'Additional Files' value contain wildcards?
             if (containsWildcard(additionalFiles)) {
                 // Resolve matches of the 'Additional Files' pattern
-                var additionalFileMatches: string[] = tl.findMatch(workingDirectory, additionalFiles, null, { matchBase: true });
+                var additionalFileMatches: string[] = tl.findMatch(
+                    workingDirectory,
+                    additionalFiles,
+                    { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
+                    { matchBase: true });
                 tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
             }
             else {
@@ -55,7 +59,10 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : s
     // Does the pathInput value contain wildcards?
     if (pathInput && containsWildcard(pathInput)) {
         // Resolve matches of the pathInput pattern
-        var pathMatches: string[] = tl.findMatch(workingDirectory, pathInput);
+        var pathMatches: string[] = tl.findMatch(
+            workingDirectory,
+            pathInput,
+            { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
         tl.debug(tl.loc('FoundNMatchesForPattern', pathMatches.length, pathInput));
 
         // Were any matches found?
