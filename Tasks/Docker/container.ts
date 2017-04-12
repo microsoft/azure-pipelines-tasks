@@ -37,7 +37,15 @@ authenticationProvider.getAuthenticationToken().then(
                 "Push an image": "./containerpush",
                 "Run an image": "./containerrun",
                 "Run a Docker command": "./containercommand"
-            }[action]).run(connection).fin(function cleanup() {
+            }[action]).run(connection)
+            .then((result) => {
+                // Write the output of the command to the configured output variable
+                const outputVariable = tl.getInput("outputVariableName", false);
+                if (outputVariable !== null) {
+                    tl.setVariable(outputVariable, result);
+                    tl.debug(`Set ${outputVariable} to: ${result}`);
+                }
+            }).fin(function cleanup() {
             connection.close();
             }).done();
         }
