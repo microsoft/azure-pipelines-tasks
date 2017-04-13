@@ -17,10 +17,8 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20",
-    "nuget-task-common": "file:../Common/nuget-task-common",
+    "vsts-task-lib": "^2.0.2-preview",
     "q": "^1.4.1",
-    "vso-node-api": "^5.0.5",
     "archiver": "1.2.0"
   }
 }

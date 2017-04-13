@@ -1,7 +1,6 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 import fs = require("fs");
-import nutil = require("nuget-task-common/Utility");
 var archiver = require('archiver');
 
 export class dotNetExe {
@@ -11,7 +10,7 @@ export class dotNetExe {
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
     private outputArgument: string = "";
-    private remainingArguments: string[] = [];
+    private outputArgumentIndex: number = 0;
 
     constructor() {
         this.command = tl.getInput("command");
@@ -39,16 +38,13 @@ export class dotNetExe {
                 var dotnet = tl.tool(dotnetPath);
                 dotnet.arg(this.command);
                 dotnet.arg(projectFile);
-                if (this.remainingArguments.length > 0) {
-                    dotnet.arg(this.remainingArguments);
-                }
 
                 if (this.isPublishCommand() && this.outputArgument) {
                     var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-                    dotnet.arg("--output");
-                    dotnet.arg(output);
+                    this.replaceOutputArgument(output);
                 }
 
+                dotnet.arg(this.arguments);
                 let error = '';
                 dotnet.on('stderr', function (data) {
                     error += (data || '').toString();
@@ -70,6 +66,12 @@ export class dotNetExe {
         }
     }
 
+    private replaceOutputArgument(modifiedOutput: string) {
+        var str = this.arguments;
+        var index = this.outputArgumentIndex;
+        return str.substr(0, index - 1) + str.substr(index).replace(this.outputArgument, modifiedOutput);
+    }
+
     private async zipAfterPublishIfRequired(projectFile: string) {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
@@ -77,8 +79,8 @@ export class dotNetExe {
                 outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
             }
             else {
-                var pattern = path.dirname(projectFile) + "/**/publish";
-                var files = nutil.resolveFilterSpec(pattern, "", true, true);
+                var pattern = "/**/publish";
+                var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
                     if (fs.lstatSync(file).isDirectory) {
@@ -92,7 +94,7 @@ export class dotNetExe {
             if (outputSource) {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
-                tl.rmRF(outputSource, true);
+                tl.rmRF(outputSource);
             }
             else {
                 tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
@@ -111,7 +113,7 @@ export class dotNetExe {
                 resolve(target);
             });
 
-            output.on('error', function(error) {
+            output.on('error', function (error) {
                 reject(error);
             });
 
@@ -133,7 +135,7 @@ export class dotNetExe {
         var escaped = false;
         var arg = '';
         var i = 0;
-        var append = function(c) {
+        var append = function (c) {
             // we only escape double quotes.
             if (escaped && c !== '"') {
                 arg += '\\';
@@ -141,7 +143,7 @@ export class dotNetExe {
             arg += c;
             escaped = false;
         };
-        var nextArg = function() {
+        var nextArg = function () {
             arg = '';
             for (; i < argString.length; i++) {
                 var c = argString.charAt(i);
@@ -179,13 +181,11 @@ export class dotNetExe {
             var tokenUpper = token.toUpperCase();
             if (this.isPublishCommand() && (tokenUpper === "--OUTPUT" || tokenUpper === "-O")) {
                 isOutputOption = true;
+                this.outputArgumentIndex = i;
             }
             else if (isOutputOption) {
                 this.outputArgument = token;
                 isOutputOption = false;
-            }
-            else {
-                this.remainingArguments.push(token);
             }
 
             token = nextArg();
@@ -196,17 +196,17 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = "**/project.json;**/*.csproj;**/*.vbproj";
+            projectPattern = "**/*.csproj;**/*.vbproj";
         }
 
-        var projectFiles = nutil.resolveFilterSpec(projectPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), true);
+        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern.split(/;|\n/));
         if (!projectFiles || !projectFiles.length) {
             tl.warning(tl.loc("noProjectFilesFound"));
             return [];
         }
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function(file, index, files): boolean {
+            projectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
