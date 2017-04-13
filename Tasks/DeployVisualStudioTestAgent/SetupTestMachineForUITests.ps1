@@ -83,10 +83,10 @@ function Update-RebootCount([string] $environmentURL)
     #in case registry key is not found create a new one with required values
     if (-not (Test-Path $testAgentRegPath))
     {
-        New-Item -Path $testAgentRegPath -Force | Out-Null
+        New-Item -Path $testAgentRegPath -Force -ErrorAction SilentlyContinue | Out-Null
         Write-Verbose -Message ("Updating machine reboot count to 1") -Verbose
-        New-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value 1 -PropertyType DWord -Force | Out-Null
-        New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force | Out-Null
+        New-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value 1 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
+        New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force -ErrorAction SilentlyContinue | Out-Null
         return 1;
     }
  
