@@ -13,7 +13,7 @@
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service.",
   "loc.input.label.ServerfarmId": "Serverfarm id",
   "loc.input.label.WebAppKind": "Web app kind",
-  "loc.input.label.DockerNamespace": "Registry\\Namespace",
+  "loc.input.label.DockerNamespace": "Registry (or) Namespace",
   "loc.input.help.DockerNamespace": "Docker repository namespace.",
   "loc.input.label.DockerRepository": "Repository",
   "loc.input.help.DockerRepository": "Docker repository or image name.",

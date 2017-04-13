@@ -42,6 +42,7 @@ async function run() {
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var webAppKind = tl.getInput('WebAppKind', false);
+        var dockerNamespace = tl.getInput('DockerNamespace', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -63,9 +64,9 @@ async function run() {
         }
 
         // For container based linux deployment
-        if(webAppKind && webAppKind === "linux")
+        if(webAppKind && webAppKind === "linux" && dockerNamespace)
         {
-            tl.debug("Performing the deployment of webapp for Linux.");
+            tl.debug("Performing container based deployment.");
 
             await deployWebAppImage(endPoint, resourceGroupName, webAppName);
             return;

@@ -15,10 +15,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 2,
-        "Patch": 3
+        "Minor": 3,
+        "Patch": 0
     },
-    "preview": "true",
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -92,7 +91,7 @@
         {
             "name": "DockerNamespace",
             "type": "string",
-            "label": "Registry\\Namespace",
+            "label": "Registry (or) Namespace",
             "defaultValue": "",
             "required": true,
             "visibleRule": "WebAppKind = linux",
@@ -104,9 +103,6 @@
             "label": "Repository",
             "defaultValue": "",
             "required": true,
-            "properties": {
-                "EditableOptions": "false"
-            },
             "visibleRule": "WebAppKind = linux",
             "helpMarkDown": "Docker repository or image name."
         },
@@ -116,9 +112,6 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "properties": {
-                "EditableOptions": "false"
-            },
             "visibleRule": "WebAppKind = linux",
             "helpMarkDown": "Docker image tag name."
         },        

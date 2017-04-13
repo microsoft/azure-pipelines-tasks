@@ -24,7 +24,7 @@ export async function deployWebAppImage(endPoint, resourceGroupName, webAppName)
     {
         tl.debug("Deploying the image " + imageSourceAndTag + " to the webapp " + webAppName);
         
-        appSettings = appSettings ? appSettings.trim() : "";        
+        appSettings = appSettings ? appSettings.trim() : "";
         appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
     
         // Update webapp application setting
@@ -60,6 +60,4 @@ function mergeAppSettings(appSettings, webAppSettings) {
             webAppSettings["properties"][setting] = settingVal;
         }
     }
-                            
-    return webAppSettings;
 }
