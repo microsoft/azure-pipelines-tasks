@@ -19,7 +19,7 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Get-Command "SqlCmd.exe" -ErrorAction SilentlyContinue
+    $sqlCmd = Get-Command -Name "SqlCmd.exe" -ErrorAction SilentlyContinue
     if ($sqlCmd)
     {
         $sqlCmdArgs = "-S $serverName -U $sqlUsername -P $sqlPassword -Q `"select getdate()`""
