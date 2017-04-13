@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
@@ -36,7 +36,7 @@
         {
             "name": "selectOrConfig",
             "type": "radio",
-            "label": "Feeds (package sources) to use",
+            "label": "Feeds to use",
             "defaultValue": "select",
             "helpMarkDown": "To select one feed from VSTS and/or NuGet.org select them here. For multiple feeds, commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
@@ -48,9 +48,9 @@
         {
             "name": "feed",
             "type": "pickList",
-            "label": "The feed to include in the generated NuGet.config.",
+            "label": "Use packages from this VSTS feed",
             "defaultValue": "",
-            "helpMarkDown": "",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config.",
             "required": "false",
             "visibleRule": "selectOrConfig = select",
             "properties": {
@@ -60,9 +60,9 @@
         {
             "name": "includeNuGetOrg",
             "type": "boolean",
-            "label": "Include NuGet.org in the generated NuGet.config.",
+            "label": "Use packages from NuGet.org",
             "defaultValue": "true",
-            "helpMarkDown": "",
+            "helpMarkDown": "Include NuGet.org in the generated NuGet.config.",
             "required": "false",
             "visibleRule": "selectOrConfig = select"
         },
