@@ -30,12 +30,11 @@ async function main(): Promise<void> {
 
     // Getting NuGet
     tl.debug('Getting NuGet');
-    let versionSpec = "4.0.0";
     let nuGetPath: string = undefined;
     try {
         nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
         if (!nuGetPath){
-            nuGetPath = await nuGetGetter.getNuGet(versionSpec, false);
+            nuGetPath = await nuGetGetter.getNuGet();
         }
     }
     catch (error) {
