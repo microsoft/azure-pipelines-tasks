@@ -5,7 +5,7 @@ var archiver = require('archiver');
 
 export class dotNetExe {
     private command: string;
-    private projects: string;
+    private projects: string[];
     private arguments: string;
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
@@ -14,8 +14,8 @@ export class dotNetExe {
 
     constructor() {
         this.command = tl.getInput("command");
-        this.projects = tl.getInput("projects", false);
-        this.arguments = tl.getInput("arguments", false);
+        this.projects = tl.getDelimitedInput("projects", "\n", false);
+        this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
     }
@@ -31,45 +31,36 @@ export class dotNetExe {
         if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
             projectFiles = this.getProjectFiles();
         }
-
+        var failedProjects: string[] = [];
         for (var fileIndex in projectFiles) {
             var projectFile = projectFiles[fileIndex];
+            var dotnet = tl.tool(dotnetPath);
+            dotnet.arg(this.command);
+            dotnet.arg(projectFile);
+            var dotnetArguments = this.arguments;
+            if (this.isPublishCommand() && this.outputArgument) {
+                var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                dotnetArguments = this.replaceOutputArgument(output);
+            }
+
+            dotnet.arg(dotnetArguments.split(" "));
             try {
-                var dotnet = tl.tool(dotnetPath);
-                dotnet.arg(this.command);
-                dotnet.arg(projectFile);
-
-                if (this.isPublishCommand() && this.outputArgument) {
-                    var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-                    this.replaceOutputArgument(output);
-                }
-
-                dotnet.arg(this.arguments);
-                let error = '';
-                dotnet.on('stderr', function (data) {
-                    error += (data || '').toString();
-                });
                 var result = await dotnet.exec();
-                if (result != 0) {
-                    if (error) {
-                        tl.error(error.replace("\r", "%0D").replace("\n", "%0A"));
-                    }
-
-                    tl.setResult(tl.TaskResult.Failed, tl.loc("dotnetCommandFailed", result));
-                }
-
                 await this.zipAfterPublishIfRequired(projectFile);
+            } catch (err) {
+                tl.error(err);
+                failedProjects.push(projectFile);
             }
-            catch (err) {
-                tl.setResult(1, err.message);
-            }
+        }
+        if (failedProjects.length > 0) {
+            throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
 
     private replaceOutputArgument(modifiedOutput: string) {
         var str = this.arguments;
         var index = this.outputArgumentIndex;
-        return str.substr(0, index - 1) + str.substr(index).replace(this.outputArgument, modifiedOutput);
+        return str.substr(0, index) + str.substr(index).replace(this.outputArgument, modifiedOutput);
     }
 
     private async zipAfterPublishIfRequired(projectFile: string) {
@@ -196,10 +187,10 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = "**/*.csproj;**/*.vbproj";
+            projectPattern = ["**/*.csproj", "**/*.vbproj"];
         }
 
-        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern.split(/;|\n/));
+        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
         if (!projectFiles || !projectFiles.length) {
             tl.warning(tl.loc("noProjectFilesFound"));
             return [];
@@ -230,4 +221,4 @@ export class dotNetExe {
 }
 
 var exe = new dotNetExe();
-exe.execute().catch((reason) => tl.setResult(1, reason));
+exe.execute().catch((reason) => tl.setResult(tl.TaskResult.Failed, reason));
