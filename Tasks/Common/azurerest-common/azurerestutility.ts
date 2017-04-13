@@ -13,7 +13,7 @@ var restObj = new restClient.RestCallbackClient(httpObj);
 
 var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = 'api-version=2016-08-01';
-var defaultWebAppAvailabilityTimeout = 3000;
+var defaultWebAppAvailabilityTimeoutInMS = 3000;
 
 /**
  * gets the name of the ResourceGroup that contains the webApp
@@ -544,7 +544,7 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
         } else {
             if(response.statusCode === 200) {
                 tl.debug("Azure web app is available.");
-                var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeout; 
+                var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeoutInMS; 
                 await sleep(webAppAvailabilityTimeout);
                 deferred.resolve("SUCCESS");
             } else {
