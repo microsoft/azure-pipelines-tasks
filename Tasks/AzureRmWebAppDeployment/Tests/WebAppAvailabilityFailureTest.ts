@@ -1,5 +1,5 @@
 var nock = require('nock');
-var azureRestUtiltiy = require('../azurerestutility.js');
+var azureRestUtiltiy = require('azurerest-common/azurerestutility.js');
 
 nock('http://testwebapp.azurewebsites.net')
     .get("/")
