@@ -12,7 +12,7 @@ import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
-import mgExtensionHelper = require("./MachineGroupExtensionHelper");
+import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
@@ -36,13 +36,13 @@ export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private winRMExtensionHelper: winRM.WinRMExtensionHelper;
-    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
+    private deploymentGroupExtensionHelper: dgExtensionHelper.DeploymentGroupExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
-        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
+        this.deploymentGroupExtensionHelper = new dgExtensionHelper.DeploymentGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
     }
 
@@ -56,7 +56,7 @@ export class ResourceGroup {
 
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromResourceGroup();
+            var extDelPromise = this.deploymentGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
                 var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -86,13 +86,17 @@ export class ResourceGroup {
 
     private writeDeploymentErrors(error) {
         console.log(tl.loc("ErrorsInYourDeployment", error.code));
-        tl.error(error.message);
-        if (error.details) {
-            tl.error(tl.loc("Details"));
-            for (var i = 0; i < error.details.length; i++) {
-                var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
-                tl.error(errorMessage);
+        if (error.message) {
+            tl.error(error.message);
+            if (error.details) {
+                tl.error(tl.loc("Details"));
+                for (var i = 0; i < error.details.length; i++) {
+                    var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                    tl.error(errorMessage);
+                }
             }
+        } else {
+            tl.error(error);
         }
     }
 
@@ -109,8 +113,8 @@ export class ResourceGroup {
         if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM) {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
-        else if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqMG) {
-            await this.machineGroupExtensionHelper.addExtensionOnResourceGroup();
+        else if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqDG) {
+            await this.deploymentGroupExtensionHelper.addExtensionOnResourceGroup();
         }
     }
 
@@ -219,7 +223,7 @@ export class ResourceGroup {
             tl.debug("Loaded CSM File");
         }
         catch (error) {
-            throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+            throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
         }
 
         var parameters = {};
@@ -234,7 +238,7 @@ export class ResourceGroup {
             }
         }
         catch (error) {
-            throw (tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
+            throw new Error(tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
@@ -278,7 +282,7 @@ export class ResourceGroup {
                 tl.debug("Loaded CSM File");
             }
             catch (error) {
-                throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+                throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
             }
             parameters = this.updateOverrideParameters(template, parameters);
             deployment.properties["parameters"] = parameters;
@@ -338,7 +342,7 @@ export class ResourceGroup {
         await this.performAzureDeployment(armClient, deployment);
     }
 
-    private enablePrereqMG = "ConfigureVMWithMGAgent";
+    private enablePrereqDG = "ConfigureVMWithDGAgent";
     private enablePrereqWinRM = "ConfigureVMwithWinRM";
     private enablePrereqNone = "None";
 }

@@ -9,7 +9,6 @@ tr.setInput("action", process.env["action"]);
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("resourceGroupName", process.env["resourceGroupName"]);
 tr.setInput("location", "West US");
-tr.setInput("vstsPATToken", "PAT");
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
@@ -17,8 +16,6 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 
-process.env["__mg__internal__collection__uri"] = "https://testking123.visualstudio.com";
-process.env["__mg__internal__project__name"] = "AzureProj";
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('./azure-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));

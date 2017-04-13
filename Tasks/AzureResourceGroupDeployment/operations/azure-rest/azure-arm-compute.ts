@@ -13,7 +13,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         super(credentials, subscriptionId);
 
         this.acceptLanguage = 'en-US';
-        this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.apiVersion = '2016-03-30';
 
@@ -24,13 +23,13 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
             this.baseUri = baseUri;
         }
 
-        if (options.acceptLanguage != null && options.acceptLanguage != undefined) {
+        if (options.acceptLanguage) {
             this.acceptLanguage = options.acceptLanguage;
         }
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if (options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
+        if (options.generateClientRequestId) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
         this.virtualMachines = new VirtualMachines(this);
@@ -79,8 +78,8 @@ export class VirtualMachines {
 
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) { 
-                        return new azureServiceClient.ApiResult(nextResult.error); 
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
                 }
@@ -258,6 +257,51 @@ export class VirtualMachines {
         httpRequest.method = 'POST';
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/powerOff',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmName}': vmName
+            }
+        );
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            if (statusCode != 202) {
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                    if (operationResponse.body.status == "Succeeded") {
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                    }
+                    else {
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                    }
+                }, (error) => deferred.reject(error));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    public deallocate(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.headers = this.client.setCustomHeaders(null);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/deallocate',
             {
                 '{resourceGroupName}': resourceGroupName,
                 '{vmName}': vmName

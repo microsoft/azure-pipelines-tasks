@@ -13,5 +13,6 @@
   "loc.input.help.ArtifactType": "Choose whether to store the artifact on TFS/Team Services, or to copy it to a file share that must be accessible from the build agent.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The UNC file path location to copy the artifact. It must be accessible from the build agent.",
-  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from OSX or Linux to a file share. You can change 'Artifact Type' to 'Server', use Windows, or use the 'Copy Files', 'Copy Files Over SSH', or 'FTP Upload' task."
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from OSX or Linux to a file share. You can change 'Artifact Type' to 'Server', use Windows, or use the 'Copy Files', 'Copy Files Over SSH', or 'FTP Upload' task.",
+  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
 }

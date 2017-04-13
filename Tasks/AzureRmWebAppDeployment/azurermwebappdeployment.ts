@@ -107,7 +107,7 @@ async function run() {
                 }
             }
             if (applyFileTransformFlag) {
-                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+                fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
             }
 
             var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);

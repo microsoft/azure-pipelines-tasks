@@ -38,14 +38,27 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -source:IisApp=\'" + webAppPackage + "\'";
         msDeployCmdArgs += " -dest:iisApp=\'" + webApplicationDeploymentPath + "\'";
     }
-    else {       
-        msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
+    else {
+        if (webAppPackage && webAppPackage.toLowerCase().endsWith('.war')) {
+            tl.debug('WAR: webAppPackage = ' + webAppPackage);
+            let warFile = path.basename(webAppPackage.slice(0, webAppPackage.length - '.war'.length));
+            let warExt = webAppPackage.slice(webAppPackage.length - '.war'.length)
+            tl.debug('WAR: warFile = ' + warFile);
+            warFile = (virtualApplication) ? warFile + "/" + virtualApplication + warExt : warFile + warExt;
+            tl.debug('WAR: warFile = ' + warFile);
+            msDeployCmdArgs += " -source:contentPath=\'" + webAppPackage + "\'";
+            // tomcat, jetty location on server => /site/webapps/
+            tl.debug('WAR: dest = /site/webapps/' + warFile);
+            msDeployCmdArgs += " -dest:contentPath=\'/site/webapps/" + warFile + "\'";
+        } else {
+            msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
 
-        if(isParamFilePresentInPacakge) {
-            msDeployCmdArgs += " -dest:auto";
-        }
-        else {
-            msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
+            if(isParamFilePresentInPacakge) {
+                msDeployCmdArgs += " -dest:auto";
+            }
+            else {
+                msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
+            }
         }
     }
 

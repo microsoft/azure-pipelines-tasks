@@ -21,6 +21,8 @@
   "loc.input.label.PreserveVnet": "Preserve Vnet",
   "loc.input.help.PreserveVnet": "Preserve the Virtual network settings",
   "loc.input.label.Slot": "Slot",
+  "loc.input.label.ExtensionsList": "Install Extensions",
+  "loc.input.help.ExtensionsList": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect.",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
   "loc.messages.Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
@@ -48,5 +50,12 @@
   "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "Webapp '%s' doesn't exist.",
   "loc.messages.UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
-  "loc.messages.StartingSwapSlot": "Requesting swap slot for Web App : %s"
+  "loc.messages.StartingSwapSlot": "Requesting swap slot for Web App : %s",
+  "loc.messages.ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
+  "loc.messages.ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s (%s)",
+  "loc.messages.ExtensionInstallSuccess": "Successfully installed extension '%s' in Azure App Service.",
+  "loc.messages.ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
+  "loc.messages.ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
+  "loc.messages.ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
+  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
 }

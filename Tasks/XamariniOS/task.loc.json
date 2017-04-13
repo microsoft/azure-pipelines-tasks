@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 115,
-    "Patch": 2
+    "Minor": 116,
+    "Patch": 0
   },
   "demands": [
     "Xamarin.iOS"
@@ -95,6 +95,18 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "buildTool",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.buildTool",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "xbuild",
+      "options": {
+        "xbuild": "xbuild (Xamarin Studio)",
+        "msbuild": "MSBuild (Visual Studio for Mac)"
+      }
     },
     {
       "name": "mdtoolLocation",
@@ -208,6 +220,11 @@
     "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
     "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed",
     "XamariniOSSucceeded": "ms-resource:loc.messages.XamariniOSSucceeded",
-    "XamariniOSFailed": "ms-resource:loc.messages.XamariniOSFailed"
+    "XamariniOSFailed": "ms-resource:loc.messages.XamariniOSFailed",
+    "MSB_Build0": "ms-resource:loc.messages.MSB_Build0",
+    "MSB_DetectedNuGetExtensionsLoaderPath0": "ms-resource:loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0",
+    "MSB_SolutionNotFoundUsingSearchPattern0": "ms-resource:loc.messages.MSB_SolutionNotFoundUsingSearchPattern0",
+    "MSB_RestoreNuGetPackagesDeprecated": "ms-resource:loc.messages.MSB_RestoreNuGetPackagesDeprecated",
+    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
   }
 }
