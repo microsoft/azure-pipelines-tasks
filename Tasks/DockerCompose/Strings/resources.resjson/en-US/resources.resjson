@@ -4,8 +4,14 @@
   "loc.description": "Build, push or run multi-container Docker applications",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Advanced Options",
+  "loc.input.label.containerregistrytype": "Container Registry Type",
+  "loc.input.help.containerregistrytype": "Select a Container Registry Type.",
   "loc.input.label.dockerRegistryEndpoint": "Docker Registry Connection",
   "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+  "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
+  "loc.input.help.azureSubscriptionEndpoint": "Select an Azure subscription",
+  "loc.input.label.azureContainerRegistry": "Azure Container Registry",
+  "loc.input.help.azureContainerRegistry": "Select an Azure Container Registry",
   "loc.input.label.dockerComposeFile": "Docker Compose File",
   "loc.input.help.dockerComposeFile": "Path to the primary Docker Compose file to use.",
   "loc.input.label.additionalDockerComposeFiles": "Additional Docker Compose Files",
@@ -59,5 +65,8 @@
   "loc.input.label.requireAdditionalDockerComposeFiles": "Require Additional Docker Compose Files",
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produces an error if the additional Docker Compose files do not exist. This overrides the default behavior which is to ignore a file if it does not exist.",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Working directory for the Docker Compose command."
+  "loc.input.help.cwd": "Working directory for the Docker Compose command.",
+  "loc.messages.ContainerPatternFound": "Pattern found in dockerfilepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found."
 }

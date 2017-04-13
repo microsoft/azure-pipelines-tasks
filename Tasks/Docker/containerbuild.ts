@@ -4,7 +4,7 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "./containerconnection";
 import * as sourceUtils from "./sourceutils";
-import * as imageUtils from "./contianerimageutils";
+import * as imageUtils from "./containerimageutils";
 
 function findDockerFile(dockerfilepath : string) : string {
 
