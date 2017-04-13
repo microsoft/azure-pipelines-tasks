@@ -25,13 +25,7 @@ const NUGET_EXE_FILENAME: string = 'nuget.exe';
 
 export const NUGET_EXE_TOOL_PATH_ENV_VAR: string = 'NuGetExeToolPath';
 
-export async function getNuGet(versionSpec?: string, checkLatest?: boolean, addNuGetToPath?: boolean): Promise<string> {
-    if (!versionSpec)
-    {
-        versionSpec = "4.0.0";
-    }
-
-
+export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNuGetToPath?: boolean): Promise<string> {
     if (toolLib.isExplicitVersion(versionSpec)) {
         // Check latest doesn't make sense when explicit version
         checkLatest = false; 

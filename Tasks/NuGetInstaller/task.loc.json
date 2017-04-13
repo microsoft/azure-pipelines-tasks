@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -50,7 +50,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feed",
       "defaultValue": "",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feed",
       "required": "false",
       "visibleRule": "selectOrConfig = select",
       "properties": {
@@ -62,7 +62,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeNuGetOrg",
       "defaultValue": "true",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.includeNuGetOrg",
       "required": "false",
       "visibleRule": "selectOrConfig = select"
     },
