@@ -13,7 +13,7 @@ async function run() {
 
         let versionSpec = taskLib.getInput('versionSpec', true);
         let checkLatest = taskLib.getBoolInput('checkLatest', false);
-        await nuGetGetter.getNuGet(versionSpec, checkLatest);
+        await nuGetGetter.getNuGet(versionSpec, checkLatest, true);
     }
     catch (error) {
         console.error('ERR:' + error.message);
