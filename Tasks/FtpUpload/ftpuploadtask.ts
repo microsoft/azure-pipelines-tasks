@@ -62,6 +62,13 @@ function doWork() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
 
     var ftpOptions: FtpOptions = getFtpOptions();
+    if (!ftpOptions.serverEndpointUrl.protocol) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('FTPNoProtocolSpecified'));
+    }
+    if (!ftpOptions.serverEndpointUrl.hostname) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('FTPNoHostSpecified'));
+    }
+
     var ftpClient: any = new Client();
     var ftpHelper: ftputils.FtpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
 

@@ -377,7 +377,3 @@ declare module 'nuget-task-common/Utility' {
 	export function stripLeadingAndTrailingQuotes(path: string): string;
 	export function getBundledNuGetLocation(version: string): string;
 }
-
-declare module 'nuget-task-common/NuGetToolGetter' {
-	export function getNuGet(versionSpec: string);
-}

@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [
         "Cmd"
@@ -144,6 +144,15 @@
             "required": false,
             "groupname": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true"
+        },
+        {
+            "name": "unregisterUnusedVersions",
+            "type": "boolean",
+            "label": "Unregister Unused Versions",
+            "defaultValue": "true",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "Indicates whether all unused versions of the application type will be removed after an upgrade."
         },
         {
             "name": "upgradeMode",

@@ -416,16 +416,18 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to start App Service: ' + url);
     console.log(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestartedsuccessfully', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoStartAppService", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
@@ -444,16 +446,19 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to stop App Service: ' + url);
+    console.log(headers);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestoppedsuccessfully', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoStopAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
@@ -472,9 +477,11 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to restart App Service: ' + url);
     console.log(tl.loc('RestartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
@@ -485,9 +492,42 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
             deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoRestartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
+    return deferred.promise;
+}
+
+export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
+    var deferred = Q.defer<any>();
+
+    var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
+    tl.debug('Requesting Azure Contianer Registry Creds: ' + url);
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+
+    httpObj.get('POST', url, headers, async (error, response, body) => {
+        if(error) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            try {
+                var credentials = JSON.parse(body);
+                deferred.resolve(credentials);
+            }
+            catch (error) {
+                deferred.reject(error);
+            }
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject("Unable to resolve creds for the registry");
+        }
+    });
+
     return deferred.promise;
 }

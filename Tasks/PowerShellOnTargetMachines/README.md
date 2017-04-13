@@ -1,9 +1,9 @@
-#PowerShell on Target Machines 
+# PowerShell on Target Machines 
 
 ### Overview
 The task is used run PowerShell on the target machines. The task can run both PowerShell scripts and PowerShell-DSC scripts. For PowerShell scripts, PowerShell 2.0 is needed on the machines and for PowerShell-DSC scripts [Windows Management Framework 4.0](https://www.microsoft.com/en-in/download/details.aspx?id=40855&40ddd5bd-f9e7-49a6-3526-f86656931a02=True) needs to be installed on the machines. WMF 4.0 ships in-the-box in Windows 8.1 and Windows Server 20012 R2.
 
-###WinRM setup
+### WinRM setup
 This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines.
 
 #### Windows Remote Management (WinRM) Setup for On-premises Physical or Virtual Machines
@@ -18,7 +18,7 @@ Azure virtual machines only work with the WinRM HTTPS protocol. With the WinRM p
 
 To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment task](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup). The task has a checkbox titled - **Enable Deployment Pre-requisites**. Select this option to setup the WinRM HTTPS protocol on the virtual machines, and to open the 5986 port in the Firewall, and to install the test certificate. After this the virtual machines are ready for use in the deployment task.
 
-###The different parameters of the task are explained below: 
+### The different parameters of the task are explained below: 
 
  * **Machines**: Specify comma separated list of machine FQDNs/ip addresses along with port(optional). For example dbserver.fabrikam.com, dbserver_int.fabrikam.com:5986,192.168.34:5986. Port when not specified will be defaulted to WinRM defaults based on the specified protocol. i.e., (For *WinRM 2.0*):  The default HTTP port is 5985, and the default HTTPS port is 5986. 
  * **Admin Login**: Domain/Local administrator of the target host. Format: &lt;Domain or hostname&gt;\ &lt; Admin User&gt;. 

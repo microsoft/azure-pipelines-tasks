@@ -1,8 +1,3 @@
-export interface ExecutabaleInfo {
-    version: number;
-    location: string;
-}
-
 export interface TestConfigurations {
     sourceFilter: string[];
     testcaseFilter: string;

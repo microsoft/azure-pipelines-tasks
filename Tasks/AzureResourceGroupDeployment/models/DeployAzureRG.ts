@@ -4,6 +4,32 @@
 import tl = require("vsts-task-lib/task");
 import msRestAzure = require("./../operations/azure-rest/azure-arm-common");
 
+class TokenCredentials {
+    private hostUrl: string;
+    private patToken: string;
+
+    constructor(hostUrl: string, patToken: string){
+        if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
+            throw new Error(tl.loc("HostUrlCannotBeEmpty"));
+        }
+
+        if (typeof patToken.valueOf() !== 'string' || !patToken) {
+            throw new Error(tl.loc("PatTokenCannotBeEmpty"));
+        }
+
+        this.hostUrl = hostUrl;
+        this.patToken = patToken;
+    }
+
+    public getPatToken(): string{
+        return this.patToken;
+    }
+
+    public getHostUrl(): string{
+        return this.hostUrl;
+    }
+}
+
 export class AzureRGTaskParameters {
 
     public action: string;
@@ -16,15 +42,14 @@ export class AzureRGTaskParameters {
     public csmParametersFileLink: string;
     public overrideParameters: string;
     public enableDeploymentPrerequisites: string;
-    public machineGroupName: string;
+    public deploymentGroupName: string;
     public copyAzureVMTags: boolean;
-    public vstsPATToken: string;
     public outputVariable: string;
     public subscriptionId: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
-    public machineGroupCollectionUrl = "";
-    public machineGroupProjectName = "";
+    public deploymentGroupProjectName = "";
+    public tokenCredentials: TokenCredentials;
 
     constructor() {
         try {
@@ -43,19 +68,41 @@ export class AzureRGTaskParameters {
             }
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
-            this.machineGroupName = tl.getInput("machineGroupName");
+            this.deploymentGroupName = tl.getInput("deploymentGroupName");
             this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
-            this.vstsPATToken = tl.getInput("vstsPATToken");
+            var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
+            if(deploymentGroupEndpointName){
+                this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
+            }
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials(connectedService);
-            this.machineGroupCollectionUrl = tl.getVariable("__mg__internal__collection__uri") 
-                                            || tl.getVariable('system.TeamFoundationCollectionUri');
-            this.machineGroupProjectName = tl.getVariable("__mg__internal__project__name") 
-                                            || tl.getVariable('system.teamProject');
+            this.deploymentGroupProjectName = tl.getInput("project");
         }
         catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
+        }
+    }
+
+    private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
+        var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
+        if (endpointAuth.scheme === 'Token') {
+            var hostUrl = tl.getEndpointUrl(deploymentGroupEndpointName, true);
+            var patToken: string = endpointAuth.parameters["apitoken"];
+            if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
+                throw new Error(tl.loc("DeploymentGroupEndpointUrlCannotBeEmpty"));
+            }
+
+            if (typeof patToken.valueOf() !== 'string' || !patToken) {
+                throw new Error(tl.loc("DeploymentGroupEndpointPatTokenCannotBeEmpty"));
+            }
+            var credentials = new TokenCredentials(hostUrl, patToken);
+            return credentials;
+        }
+        else {
+            var msg = tl.loc("OnlyTokenAuthAllowed");
+            console.log(msg);
+            throw (msg);
         }
     }
 

@@ -21,8 +21,7 @@ const testSettingsExt = ".testsettings";
 
 let vstestConfig: models.VsTestConfigurations = undefined;
 let tiaConfig: models.TiaConfiguration = undefined;
-let vsVersionDetails: models.ExecutabaleInfo = undefined;
-let vsTestVersionForTIA: number[] = null;
+let vstestRunnerDetails: versionFinder.VSTestVersion = undefined;
 const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
@@ -32,10 +31,13 @@ export async function startTest() {
     try {
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tiaConfig = vstestConfig.tiaConfig;
-        vsVersionDetails = await versionFinder.locateVSTestConsole(vstestConfig);
+        var vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
+        vstestRunnerDetails = getVsTestRunnerDetails(vstestlocation);
 
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
+        tl.debug("TestRunResults Directory : " + resultsDirectory);
+
         // clean up old testResults
         tl.rmRF(resultsDirectory, true);
         tl.mkdirP(resultsDirectory);
@@ -80,40 +82,49 @@ function getTestAssemblies(): string[] {
         vstestConfig.testDropLocation = systemDefaultWorkingDirectory;
         tl.debug("Search directory empty, defaulting to " + vstestConfig.testDropLocation);
     }
+
     tl.debug("Searching for test assemblies in: " + vstestConfig.testDropLocation);
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-function getVsTestVersion(): number[] {
-    let vstestLocationEscaped = vsVersionDetails.location.replace(/\\/g, "\\\\");
+function getVsTestRunnerDetails(vstestexeLocation: string): versionFinder.VSTestVersion {
+    let vstestLocationEscaped = vstestexeLocation.replace(/\\/g, "\\\\");
     let wmicTool = tl.tool("wmic");
     let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
     wmicTool.arg(wmicArgs);
     let output = wmicTool.execSync();
+    tl.debug("VSTest Version information: " + output.stdout);
 
     let verSplitArray = output.stdout.split("=");
     if (verSplitArray.length != 2) {
-        tl.warning(tl.loc("ErrorReadingVstestVersion"));
-        return null;
+        tl.error(tl.loc("ErrorReadingVstestVersion"));
+        throw new Error(tl.loc("ErrorReadingVstestVersion"));
     }
 
     let versionArray = verSplitArray[1].split(".");
     if (versionArray.length != 4) {
         tl.warning(tl.loc("UnexpectedVersionString", output.stdout));
-        return null;
+        throw new Error(tl.loc("UnexpectedVersionString", output.stdout));
     }
 
-    let vsVersion: number[] = [];
-    vsVersion[0] = parseInt(versionArray[0]);
-    vsVersion[1] = parseInt(versionArray[1]);
-    vsVersion[2] = parseInt(versionArray[2]);
+    let majorVersion = parseInt(versionArray[0]);
+    let minorVersion = parseInt(versionArray[1]);
+    let patchNumber = parseInt(versionArray[2]);
 
-    if (isNaN(vsVersion[0]) || isNaN(vsVersion[1]) || isNaN(vsVersion[2])) {
+    if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
         tl.warning(tl.loc("UnexpectedVersionNumber", verSplitArray[1]));
-        return null;
+        throw new Error(tl.loc("UnexpectedVersionNumber", verSplitArray[1]));
     }
 
-    return vsVersion;
+    switch (majorVersion) {
+        case 14:
+            return new versionFinder.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+
+        case 15:
+            return new versionFinder.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+    }
+
+    return new versionFinder.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
@@ -166,9 +177,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
 
-    let sysDebug = tl.getVariable("System.Debug");
-    if (sysDebug !== undefined && sysDebug.toLowerCase() === "true") {
-        if (vsTestVersionForTIA !== null && (vsTestVersionForTIA[0] > 15 || (vsTestVersionForTIA[0] === 15 && (vsTestVersionForTIA[1] > 0 || vsTestVersionForTIA[2] > 25428)))) {
+    if (isDebugEnabled()) {
+        if (vstestRunnerDetails != null && vstestRunnerDetails.vstestDiagSupported()) {
             argsArray.push("/diag:" + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc("VstestDiagNotSupported"));
@@ -176,6 +186,15 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     return argsArray;
+}
+
+function isDebugEnabled(): boolean {
+    let sysDebug = tl.getVariable("System.Debug");
+    if (sysDebug == undefined) {
+        return false;
+    }
+
+    return sysDebug.toLowerCase() === "true";
 }
 
 function addVstestArgs(argsArray: string[], vstest: any) {
@@ -430,7 +449,7 @@ function publishCodeChanges(): Q.Promise<string> {
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
-    var vstest = tl.tool(vsVersionDetails.location);
+    var vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
     //Re-calculate the results directory based on final runsettings and clean up again if required.
@@ -502,7 +521,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         argsArray.push("/UseVsixExtensions:true");
     }
 
-    let vstest = tl.tool(vsVersionDetails.location);
+    let vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
 
     if (vsVersion === 14.0) {
         tl.debug("Visual studio 2015 selected. Selecting vstest.console.exe in task ");
@@ -745,25 +764,15 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         vstestConfig.vsTestVersion = null;
     }
 
-    let vsVersion = vsVersionDetails.version;
     try {
         let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
         if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
             tiaConfig.tiaEnabled = false;
         }
-        let sysDebug = tl.getVariable("System.Debug");
-        if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
-            vsTestVersionForTIA = getVsTestVersion();
 
-            if (tiaConfig.tiaEnabled &&
-                (vsTestVersionForTIA === null ||
-                    (vsTestVersionForTIA[0] < 14 ||
-                        (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) ||
-                        // VS 2015 U3
-                        (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
-                tl.warning(tl.loc("VstestTIANotSupported"));
-                tiaConfig.tiaEnabled = false;
-            }
+        if (tiaConfig.tiaEnabled && (vstestRunnerDetails === null || !vstestRunnerDetails.isTestImpactSupported())) {
+            tl.warning(tl.loc("VstestTIANotSupported"));
+            tiaConfig.tiaEnabled = false;
         }
     } catch (e) {
         tl.error(e.message);
@@ -772,15 +781,15 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     // We need to use private data collector dll
-    if (vsTestVersionForTIA !== null && vsTestVersionForTIA[0] === 14) {
-        tiaConfig.useNewCollector = true;
+    if (vstestRunnerDetails !== null) {
+        tiaConfig.useNewCollector = vstestRunnerDetails.isPrivateDataCollectorNeededForTIA();
     }
 
-
-    setRunInParallellIfApplicable(vsVersion);
+    setRunInParallellIfApplicable();
     var newSettingsFile = vstestConfig.settingsFile;
+    var vsVersion = vstestRunnerDetails.majorVersion;
     try {
-        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersionDetails.version, false, vstestConfig.overrideTestrunParameters).
+        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters).
             then(function (ret) {
                 newSettingsFile = ret;
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
@@ -883,50 +892,16 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     return resultDirectory;
 }
 
-function setRunInParallellIfApplicable(vsVersion: number) {
+function setRunInParallellIfApplicable() {
     if (vstestConfig.runInParallel) {
-        if (!isNaN(vsVersion) && vsVersion >= 14) {
-            if (vsVersion >= 15) { // moved away from taef
-                return;
-            }
-
-            // in 14.0 taef parellization needed taef enabled
-            let vs14Common: string = tl.getVariable("VS140COMNTools");
-            if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
-                setRegistryKeyForParallelExecution(vsVersion);
-                return;
-            }
+        if (vstestRunnerDetails != null && vstestRunnerDetails.isRunInParallelSupported()) {
+            return;
         }
-        resetRunInParallel();
+
+        // 2015 Update3 needed for run in parallel.
+        tl.warning(tl.loc('UpdateThreeOrHigherRequired'));
+        vstestConfig.runInParallel = false;
     }
-}
-
-function resetRunInParallel() {
-    tl.warning(tl.loc('UpdateOneOrHigherRequired'));
-    vstestConfig.runInParallel = false;
-}
-
-function setRegistryKeyForParallelExecution(vsVersion: number) {
-    var regKey = "HKCU\\SOFTWARE\\Microsoft\\VisualStudio\\" + vsVersion.toFixed(1) + "_Config\\FeatureFlags\\TestingTools\\UnitTesting\\Taef";
-    regedit.createKey(regKey, function (err) {
-        if (!err) {
-            var values = {
-                [regKey]: {
-                    'Value': {
-                        value: '1',
-                        type: 'REG_DWORD'
-                    }
-                }
-            };
-            regedit.putValue(values, function (err) {
-                if (err) {
-                    tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
-                }
-            });
-        } else {
-            tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
-        }
-    });
 }
 
 function pathExistsAsFile(path: string) {

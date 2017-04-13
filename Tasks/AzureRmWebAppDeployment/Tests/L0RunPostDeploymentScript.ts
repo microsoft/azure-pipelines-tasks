@@ -92,8 +92,9 @@ mockery.registerMock('fs', {
         return '';
     },
     statSync: fs.statSync,
-    writeFileSync: fs.writeFileSync
-})
+    writeFileSync: fs.writeFileSync,
+    readFileSync: fs.readFileSync
+});
 var mockPublishProfile = {
     profileName: 'mytestapp - Web Deploy',
     publishMethod: 'MSDeploy',

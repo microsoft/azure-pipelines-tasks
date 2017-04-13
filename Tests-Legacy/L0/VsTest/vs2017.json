@@ -27,6 +27,10 @@
         "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
             "code": 0,
             "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
+        },
+        "wmic datafile where name='\\\\vs2017\\\\installation\\\\folder\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+			"code": 0,
+			"stdout" : "version=15.0.0.0"
         }
     },
     "rmRF": {

@@ -12,15 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 5,
-        "Patch": 1
+        "Minor": 6,
+        "Patch": 0
     },
     "preview": true,
-    "capabilities": ["Node"],
+    "satisfies": ["Node"],
     "demands": [],
     "instanceNameFormat": "Use Node $(versionSpec)",
-    "inputs": [
-        {
+    "inputs": [{
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",
@@ -29,12 +28,12 @@
             "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0"
         },
         {
-            "name": "ltsOnly",
+            "name": "checkLatest",
             "type": "boolean",
-            "label": "LTS Only",
+            "label": "Check for Latest Version",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Specifies whether the version resolution will filter to LTS only versions."
+            "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
         }
     ],
     "execution": {
