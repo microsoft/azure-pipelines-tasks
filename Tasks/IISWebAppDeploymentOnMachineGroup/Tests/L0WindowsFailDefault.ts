@@ -60,6 +60,7 @@ tr.registerMock('webdeployment-common/ziputility.js', {
 });
 
 tr.registerMock('./msdeployutility.js', {
+    shouldRetryMSDeploy: msDeployUtility.shouldRetryMSDeploy,
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
@@ -71,12 +72,16 @@ tr.registerMock('./msdeployutility.js', {
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
+        var retryFunction;
         return { 
             "isWriteStreamObj": true,
-            "on": (event) => {
-                console.log("event: " + event + " has been triggered");
-            },
-            "end" : () => { return true; }
+            "on": (name, functionOnFinish) => { retryFunction = functionOnFinish;},
+            "end" : () => { 
+                if(retryFunction != null) {
+                    retryFunction(); 
+                }  
+                return true; 
+            }
         };
     },
     readFileSync: function (msDeployErrorFilePath) {
