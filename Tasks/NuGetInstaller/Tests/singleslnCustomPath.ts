@@ -8,20 +8,18 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
-tmr.setInput('solution', 'packages.config');
-tmr.setInput('selectOrConfig', 'select');
-tmr.setInput('feed', 'https://codesharing-su0.pkgs.visualstudio.com/_packaging/NuGetFeed/nuget/v3/index.json');
-
-
+tmr.setInput('solution', 'single.sln');
+tmr.setInput('nuGetPath', 'c:\\custompath\\nuget.exe');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
-        "c:\\agent\\home\\directory\\packages.config": true
+        "c:\\custompath\\nuget.exe": true,
+        "c:\\agent\\home\\directory\\single.sln": true
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
+        "c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -29,18 +27,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {},
     "stats": {
-        "c:\\agent\\home\\directory\\packages.config": {
+        "c:\\agent\\home\\directory\\single.sln": {
             "isFile": true
         }
     }
 };
 nmh.setAnswers(a);
 
-process.env["NuGet_ForceEnableCredentialConfig"] = "false";
-nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
+nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
-nmh.registerNugetConfigMock();
-nmh.RegisterLocationServiceMocks();
 
 tmr.run();

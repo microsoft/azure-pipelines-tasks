@@ -1,9 +1,11 @@
 # Run Tests using Visual Studio task
 
 ### Overview
+
 VSTest task can be used to run tests on Build agent machines. Apart from MSTest based tests, you can also run tests written using test frameworks like NUnit, xUnit, Mocha, Jasmine, etc. using the appropriate test adapters to Visual Studio. The task uses vstest.console.exe to execute tests and the command-line options available are documented [here](https://msdn.microsoft.com/en-us/library/jj155796.aspx) 
 
 #### Execution Options
+
 Use the following options to select tests and control how the tests are run
 
 - **Test Assembly:** This is a required field. Use this to specify one or more test file names from which the tests should be picked. 
