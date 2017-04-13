@@ -19,7 +19,8 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    if (Get-Command "SqlCmd.exe" -ErrorAction SilentlyContinue)
+    $sqlCmd = Get-Command "SqlCmd.exe" -ErrorAction SilentlyContinue
+    if ($sqlCmd)
     {
         $sqlCmdArgs = "-S $serverName -U $sqlUsername -P $sqlPassword -Q `"select getdate()`""
     
@@ -27,7 +28,7 @@ function Get-AgentIPRange
 
         $ErrorActionPreference = 'Continue'
 
-        $sqlCmdPath = ( Get-Command -Name "SqlCmd.exe").Path
+        $sqlCmdPath = $sqlCmd.Path
         ( Invoke-Expression "& '$sqlCmdPath' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
 
         $ErrorActionPreference = 'Stop'
