@@ -3,7 +3,7 @@
 import * as tl from "vsts-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "./sourceutils";
-import * as imageUtils from "./dockerimageutils";
+import * as imageUtils from "./containerimageutils";
 
 function dockerPush(connection: DockerComposeConnection, imageName: string) {
     var command = connection.createCommand();
