@@ -75,7 +75,7 @@ async function run() {
         tl.debug('Build tool path = ' + buildToolPath);
 
         // Resolve files for the specified value or pattern
-        let filesList: string[] = tl.findMatch(null, project);
+        let filesList: string[] = tl.findMatch(null, project, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
 
         // Fail if no matching .csproj files were found
         if (!filesList || filesList.length === 0) {
