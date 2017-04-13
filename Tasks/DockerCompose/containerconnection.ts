@@ -6,9 +6,10 @@ import * as path from "path";
 import * as url from "url";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
-import * as imageUtils from "./dockerimageutils";
+import * as imageUtils from "./containerimageutils";
+import AuthenticationToken from "./registryauthenticationprovider/registryauthenticationtoken"
 
-export default class DockerConnection {
+export default class ContainerConnection {
     private dockerPath: string;
     protected hostUrl: string;
     protected certsDir: string;
@@ -45,42 +46,9 @@ export default class DockerConnection {
         });
     }
 
-    public open(hostEndpoint?: string, registryEndpoint?: string): void {
-        if (hostEndpoint) {
-            this.hostUrl = tl.getEndpointUrl(hostEndpoint, false);
-            if (this.hostUrl.charAt(this.hostUrl.length - 1) == "/") {
-                this.hostUrl = this.hostUrl.substring(0, this.hostUrl.length - 1);
-            }
-
-            this.certsDir = path.join("", ".dockercerts");
-            if (!fs.existsSync(this.certsDir)) {
-                fs.mkdirSync(this.certsDir);
-            }
-
-            var authDetails = tl.getEndpointAuthorization(hostEndpoint, false).parameters;
-
-            this.caPath = path.join(this.certsDir, "ca.pem");
-            fs.writeFileSync(this.caPath, authDetails["cacert"]);
-
-            this.certPath = path.join(this.certsDir, "cert.pem");
-            fs.writeFileSync(this.certPath, authDetails["cert"]);
-
-            this.keyPath = path.join(this.certsDir, "key.pem");
-            fs.writeFileSync(this.keyPath, authDetails["key"]);
-        }
-
-        if (registryEndpoint) {
-            var command = this.createCommand();
-            this.registryAuth = tl.getEndpointAuthorization(registryEndpoint, true).parameters;
-            if (this.registryAuth) {
-                command.arg("login");
-                command.arg(["-u", this.registryAuth["username"]]);
-                command.arg(["-p", this.registryAuth["password"]]);
-                command.arg(this.registryAuth["registry"]);
-                command.execSync();
-                this.registryHost = this.registryAuth["registry"];
-            }
-        }
+    public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): void {
+        this.openHostEndPoint(hostEndpoint);
+        this.openRegistryEndpoint(authenticationToken);
     }
 
     public qualifyImageName(imageName: string) {
@@ -103,6 +71,52 @@ export default class DockerConnection {
         }
         if (this.certsDir && fs.existsSync(this.certsDir)) {
             del.sync(this.certsDir);
+        }
+    }
+    
+    private openHostEndPoint(hostEndpoint?: string): void {
+        if (hostEndpoint) {
+            this.hostUrl = tl.getEndpointUrl(hostEndpoint, false);
+            if (this.hostUrl.charAt(this.hostUrl.length - 1) == "/") {
+                this.hostUrl = this.hostUrl.substring(0, this.hostUrl.length - 1);
+            }
+
+            this.certsDir = path.join("", ".dockercerts");
+            if (!fs.existsSync(this.certsDir)) {
+                fs.mkdirSync(this.certsDir);
+            }
+
+            var authDetails = tl.getEndpointAuthorization(hostEndpoint, false).parameters;
+
+            this.caPath = path.join(this.certsDir, "ca.pem");
+            fs.writeFileSync(this.caPath, authDetails["cacert"]);
+
+            this.certPath = path.join(this.certsDir, "cert.pem");
+            fs.writeFileSync(this.certPath, authDetails["cert"]);
+
+            this.keyPath = path.join(this.certsDir, "key.pem");
+            fs.writeFileSync(this.keyPath, authDetails["key"]);
+        }
+    }
+    
+    protected openRegistryEndpoint(authenticationToken?: AuthenticationToken): void {
+        
+        if (authenticationToken) {     
+            this.registryAuth = {};
+     
+            this.registryAuth["username"] = authenticationToken.getUsername();
+            this.registryAuth["password"] = authenticationToken.getPassword();
+            this.registryAuth["registry"] = authenticationToken.getLoginServerUrl();
+            
+            var command = this.createCommand();
+            if (this.registryAuth) {
+                command.arg("login");
+                command.arg(["-u", this.registryAuth["username"]]);
+                command.arg(["-p", this.registryAuth["password"]]);
+                command.arg(this.registryAuth["registry"]);
+                command.execSync();
+                this.registryHost = this.registryAuth["registry"];
+            }
         }
     }
 }
