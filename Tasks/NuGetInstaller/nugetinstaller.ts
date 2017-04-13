@@ -122,6 +122,8 @@ async function main(): Promise<void> {
                     authInfo,
                     environmentSettings);
         
+        let credCleanup = () => { return; };
+        
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
@@ -151,6 +153,7 @@ async function main(): Promise<void> {
             {
                 tl.debug(`Adding the following sources to the config file: ${sources.map(x => x.feedName).join(';')}`)
                 nuGetConfigHelper.setSources(sources, false);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
                 nuGetConfigPath = nuGetConfigHelper.tempNugetConfigPath;
             }
             else {
@@ -160,7 +163,6 @@ async function main(): Promise<void> {
 
         // Setting creds in the temp NuGet.config if needed
         let configFile = nuGetConfigPath;
-        let credCleanup = () => { return; };
         if (useCredConfig) {
             tl.debug('Config credentials should be used');
             if (nuGetConfigPath) {
