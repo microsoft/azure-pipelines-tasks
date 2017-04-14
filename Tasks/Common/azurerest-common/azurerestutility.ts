@@ -539,7 +539,7 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
     var headers = {};
     httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
         if (error) {
-            tl.debug("Failed to check avaibality of azure web app, error : " + error);
+            tl.debug("Failed to check availability of azure web app, error : " + error);
             deferred.reject(error);
         } else {
             if(response.statusCode === 200) {
@@ -549,7 +549,7 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
                 deferred.resolve("SUCCESS");
             } else {
                 tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
-                deferred.reject(error);
+                deferred.reject("FAILED");
             }
         }
     });
