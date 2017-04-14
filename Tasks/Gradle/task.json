@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 115,
+        "Minor": 116,
         "Patch": 0 
     },
     "demands": [
@@ -137,6 +137,16 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "failIfCoverageEmpty",
+            "type": "boolean",
+            "label": "Fail When Code Coverage Results Are Missing",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Fail the build if code coverage did not produce any results to publish.",
             "visibleRule": "codeCoverageTool != None"
         },
         {
@@ -367,6 +377,7 @@
         "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
         "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
+        "NoCodeCoverage": "No code coverage results were found to publish." 
     }
 }
