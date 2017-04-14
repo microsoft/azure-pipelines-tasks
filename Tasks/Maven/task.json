@@ -412,6 +412,6 @@
         "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
-        "NoCodeCoverage": "No Code Coverage results were found to publish"
+        "NoCodeCoverage": "No code coverage results were found to publish."
     }
 }
