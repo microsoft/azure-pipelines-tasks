@@ -144,7 +144,7 @@
         {
             "name": "failIfCoverageEmpty",
             "type": "boolean",
-            "label": "Fail When Code Coverage Results are Missing",
+            "label": "Fail When Code Coverage Results Are Missing",
             "defaultValue": "false",
             "required": false,
             "groupName": "codeCoverage",
