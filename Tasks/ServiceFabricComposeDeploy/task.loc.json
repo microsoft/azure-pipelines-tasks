@@ -1,0 +1,162 @@
+{
+  "id": "19C02B15-D377-40E0-9EFA-3168506E0933",
+  "name": "ServiceFabricComposeDeploy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 23
+  },
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "repository",
+      "displayName": "ms-resource:loc.group.displayName.repository",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "serviceConnectionName",
+      "type": "connectedService:servicefabric",
+      "label": "ms-resource:loc.input.label.serviceConnectionName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceConnectionName"
+    },
+    {
+      "name": "composeFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.composeFilePath",
+      "defaultValue": "**/docker-compose.yml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.composeFilePath"
+    },
+    {
+      "name": "applicationName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.applicationName",
+      "defaultValue": "fabric:/Application1",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationName"
+    },
+    {
+      "name": "repositoryCredentials",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.repositoryCredentials",
+      "defaultValue": "Endpoint",
+      "required": true,
+      "options": {
+        "Endpoint": "Endpoint",
+        "UsernamePassword": "Username and Password",
+        "None": "None"
+      },
+      "groupname": "repository",
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryCredentials"
+    },
+    {
+      "name": "dockerRegistryEndpointName",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpointName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpointName",
+      "groupname": "repository",
+      "visibleRule": "repositoryCredentials = Endpoint"
+    },
+    {
+      "name": "repositoryUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.repositoryUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryUserName",
+      "groupname": "repository",
+      "visibleRule": "repositoryCredentials = UsernamePassword"
+    },
+    {
+      "name": "repositoryPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.repositoryPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryPassword",
+      "groupname": "repository",
+      "visibleRule": "repositoryCredentials = UsernamePassword"
+    },
+    {
+      "name": "passwordEncrypted",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.passwordEncrypted",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
+      "groupname": "repository",
+      "visibleRule": "repositoryCredentials = UsernamePassword"
+    },
+    {
+      "name": "deployTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.deployTimeoutSec",
+      "groupname": "advanced"
+    },
+    {
+      "name": "removeTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.removeTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeTimeoutSec",
+      "groupname": "advanced"
+    },
+    {
+      "name": "getStatusTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.getStatusTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.getStatusTimeoutSec",
+      "groupname": "advanced"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "ServiceFabricComposeDeploy.ps1"
+    }
+  },
+  "messages": {
+    "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
+    "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
+    "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
+    "FoundPath": "ms-resource:loc.messages.FoundPath",
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "RemovingApplication": "ms-resource:loc.messages.RemovingApplication",
+    "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
+    "CertificateNotFound": "ms-resource:loc.messages.CertificateNotFound",
+    "WaitingForRemoval": "ms-resource:loc.messages.WaitingForRemoval",
+    "CreatingApplication": "ms-resource:loc.messages.CreatingApplication"
+  }
+}
