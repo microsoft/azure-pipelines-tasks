@@ -319,8 +319,9 @@ var downloadArchive = function (url, omitExtensionCheck) {
         throw new Error('Parameter "url" must be set.');
     }
 
-    if (!omitExtensionCheck && !url.match(/\.zip$/)) {
-        throw new Error('Expected .zip');
+    if (!omitExtensionCheck && !url.match(/\.zip$/) && !url.match(/\.tar\.gz$/)) {
+        throw new Error('Expected .zip or .tar.gz');
+
     }
 
     // skip if already downloaded and extracted
@@ -339,8 +340,22 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
         // extract
         mkdir('-p', targetPath);
-        var zip = new admZip(archivePath);
-        zip.extractAllTo(targetPath);
+        if (url.match(/\.tar\.gz$/)) {
+            // .tar.gz
+            var cwd = process.cwd();
+            process.chdir(targetPath);
+            try {
+                run('tar -xzf "' + archivePath + '"');
+            }
+            finally {
+                process.chdir(cwd);
+            }
+        }
+        else {
+            // .zip
+            var zip = new admZip(archivePath);
+            zip.extractAllTo(targetPath);
+        }
 
         // write the completed marker
         fs.writeFileSync(marker, '');
@@ -546,6 +561,38 @@ var getExternals = function (externals, destRoot) {
     }
 }
 exports.getExternals = getExternals;
+
+exports.getTestExternals = function () {
+    // determine the platform
+    var platform = os.platform();
+    if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
+        throw new Error('Unexpected platform: ' + platform);
+    }
+
+    // download the same version of node used by the agent
+    // and add node to the PATH
+    var nodeUrl = 'https://nodejs.org/dist';
+    var nodeVersion = 'v5.10.1';
+    switch (platform) {
+        case 'darwin':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            break;
+        case 'linux':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            break;
+        case 'win32':
+            var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+            var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+            var nodeDirectory = path.join(testPath, 'node');
+            mkdir('-p', nodeDirectory);
+            cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
+            cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
+            addPath(nodeDirectory);
+            break;
+    }
+}
 
 //------------------------------------------------------------------------------
 // task.json functions
