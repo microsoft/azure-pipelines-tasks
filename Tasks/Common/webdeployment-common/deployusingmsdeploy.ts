@@ -78,7 +78,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     }
 }
 
-export async function executeMSDeploy(msDeployCmdArgs) {
+async function executeMSDeploy(msDeployCmdArgs) {
     var deferred = Q.defer();
 
     var msDeployError = null;
