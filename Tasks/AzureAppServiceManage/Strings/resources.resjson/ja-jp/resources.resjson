@@ -21,6 +21,8 @@
   "loc.input.label.PreserveVnet": "Vnet の保持",
   "loc.input.help.PreserveVnet": "仮想ネットワーク設定を保持します",
   "loc.input.label.Slot": "スロット",
+  "loc.input.label.ExtensionsList": "Install Extensions",
+  "loc.input.help.ExtensionsList": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect.",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "エラー: Deploy メソッド MSDeploy が Azure Web アプリにありません: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "%s で Azure Web アプリ %s のスロット スワップ履歴を更新しました",
   "loc.messages.Failedtoupdateslotswaphistory": "Azure Web アプリのスロット スワップ履歴の更新に失敗しました: %s",
@@ -48,5 +50,12 @@
   "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Azure App Service のアクセス トークンをフェッチできませんでした。StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "Web アプリ '%s' が存在しません。",
   "loc.messages.UnabletoretrieveWebAppID": "Azure App Service の接続の詳細を取得できません: '%s'。状態コード: %s",
-  "loc.messages.StartingSwapSlot": "Web アプリに対するスワップ スロットを要求しています: %s"
+  "loc.messages.StartingSwapSlot": "Web アプリに対するスワップ スロットを要求しています: %s",
+  "loc.messages.ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
+  "loc.messages.ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s (%s)",
+  "loc.messages.ExtensionInstallSuccess": "Successfully installed extension '%s' in Azure App Service.",
+  "loc.messages.ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
+  "loc.messages.ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
+  "loc.messages.ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
+  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
 }

@@ -13,5 +13,6 @@
   "loc.input.help.ArtifactType": "Consente di scegliere se archiviare l'artefatto in TFS/Team Services oppure copiarlo in una condivisione file accessibile dall'agente di compilazione.",
   "loc.input.label.TargetPath": "Percorso",
   "loc.input.help.TargetPath": "Percorso di file UNC in cui copiare l'artefatto. Deve essere accessibile dall'agente di compilazione.",
-  "loc.messages.ErrorFileShareLinux": "Non è possibile pubblicare artefatti da OSX o Linux in una condivisione file. È possibile modificare 'Tipo di artefatto' in 'Server', usare Windows oppure usare l'attività 'Copia file', 'Copia file tramite SSH' o 'Caricamento FTP'."
+  "loc.messages.ErrorFileShareLinux": "Non è possibile pubblicare artefatti da OSX o Linux in una condivisione file. È possibile modificare 'Tipo di artefatto' in 'Server', usare Windows oppure usare l'attività 'Copia file', 'Copia file tramite SSH' o 'Caricamento FTP'.",
+  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
 }

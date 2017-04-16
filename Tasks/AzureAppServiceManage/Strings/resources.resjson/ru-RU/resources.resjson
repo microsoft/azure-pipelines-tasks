@@ -21,6 +21,8 @@
   "loc.input.label.PreserveVnet": "Сохранить виртуальную сеть",
   "loc.input.help.PreserveVnet": "Сохранить параметры виртуальной сети",
   "loc.input.label.Slot": "Слот",
+  "loc.input.label.ExtensionsList": "Install Extensions",
+  "loc.input.help.ExtensionsList": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect.",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Ошибка: способ развертывания MSDeploy не существует для веб-приложения Azure: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "Журнал переключения слотов веб-приложения Azure (%s) успешно обновлен: %s",
   "loc.messages.Failedtoupdateslotswaphistory": "Не удалось обновить журнал переключения слотов веб-приложения Azure: %s.",
@@ -48,5 +50,12 @@
   "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Не удалось извлечь токен доступа для службы приложений Azure. Код состояния: %s (%s)",
   "loc.messages.WebAppDoesntExist": "Веб-приложение \"%s\" не существует.",
   "loc.messages.UnabletoretrieveWebAppID": "Не удалось получить данные о подключении для службы приложений Azure: \"%s\". Код состояния: %s.",
-  "loc.messages.StartingSwapSlot": "Запрошено переключение слотов для веб-приложения: %s"
+  "loc.messages.StartingSwapSlot": "Запрошено переключение слотов для веб-приложения: %s",
+  "loc.messages.ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
+  "loc.messages.ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s (%s)",
+  "loc.messages.ExtensionInstallSuccess": "Successfully installed extension '%s' in Azure App Service.",
+  "loc.messages.ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
+  "loc.messages.ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
+  "loc.messages.ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
+  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
 }
