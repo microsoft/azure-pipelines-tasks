@@ -35,7 +35,7 @@
   "loc.input.label.InlineAdditionalArguments": "Дополнительные аргументы Invoke-Sqlcmd",
   "loc.input.help.InlineAdditionalArguments": "Дополнительные аргументы Invoke-Sqlcmd, которые будут применяться при выполнении заданного запроса SQL в Базе данных SQL Azure, например ConnectionTimeout 100 -OutputSqlErrors",
   "loc.input.label.IpDetectionMethod": "Указать правила брандмауэра с помощью",
-  "loc.input.help.IpDetectionMethod": "Для запуска задачи IP-адрес агента автоматизации необходимо добавить в список \"Разрешенные IP-адреса\" в брандмауэре Azure SQL Server. Укажите диапазон IP-адресов агентов автоматизации или выберите автоопределение, если используется размещенный агент автоматизации.",
+  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly.",
   "loc.input.label.StartIpAddress": "Начальный IP-адрес",
   "loc.input.help.StartIpAddress": "Начальный IP-адрес пула машин агента автоматизации, например 196.21.30.50.",
   "loc.input.label.EndIpAddress": "Конечный IP-адрес",

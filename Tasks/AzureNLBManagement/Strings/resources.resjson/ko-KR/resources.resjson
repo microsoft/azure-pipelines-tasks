@@ -15,7 +15,7 @@
   "loc.messages.ConnectingVMtoLB": "Azure 가상 컴퓨터를 부하 분산 장치 %s의 백 엔드 풀에 연결하는 중입니다.",
   "loc.messages.DisconnectingVMfromLB": "부하 분산 장치 %s의 백 엔드 풀에서 Azure 가상 컴퓨터의 연결을 끊는 중입니다.",
   "loc.messages.setNICStatusSuccess": "네트워크 인터페이스 %s을(를) 설정했습니다.",
-  "loc.messages.MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
+  "loc.messages.MaxRetriesExceededForSettingNetworkInterface": "네트워크 인터페이스를 설정하기 위한 최대 다시 시도 횟수를 초과했습니다. %s",
   "loc.messages.ActionCompletedSuccefully": "%s 작업이 가상 컴퓨터 %s 및 부하 분산 장치 %s에 대해 완료되었습니다.",
   "loc.messages.CouldNotFetchAcessToken": "액세스 토큰을 가져올 수 없습니다.\n상태 코드: %s\n상태 메시지: %s\n%s",
   "loc.messages.CouldNotFetchNetworkInterfacesInRg": "리소스 그룹 %s에서 네트워크 인터페이스를 가져올 수 없습니다.\n상태 코드: %s\n상태 메시지: %s\n%s",
