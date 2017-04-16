@@ -39,14 +39,12 @@ export class dotNetExe {
                 var dotnet = tl.tool(dotnetPath);
                 dotnet.arg(this.command);
                 dotnet.arg(projectFile);
-                if (this.remainingArguments.length > 0) {
-                    dotnet.arg(this.remainingArguments);
-                }
 
                 if (this.isPublishCommand() && this.outputArgument) {
                     var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-                    dotnet.arg("--output");
-                    dotnet.arg(output);
+                    dotnet.arg(this.arguments.replace(this.outputArgument, output));
+                } else {
+                    dotnet.arg(this.arguments);
                 }
 
                 let error = '';
