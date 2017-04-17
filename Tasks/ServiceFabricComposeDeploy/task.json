@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 24
     },
     "demands": [
         "Cmd"
@@ -38,7 +38,7 @@
     "inputs": [
         {
             "name": "serviceConnectionName",
-            "type": "connectedService:servicefabric",
+            "type": "connectedService:serviceFabric",
             "label": "Cluster Connection",
             "defaultValue": "",
             "required": true,
@@ -71,16 +71,16 @@
                 "UsernamePassword": "Username and Password",
                 "None": "None"
             },
-            "groupname": "repository",
+            "groupName": "repository",
             "helpMarkDown": "Choose if/how credentials for the docker registry will be provided."
         },
         {
             "name": "dockerRegistryEndpointName",
-            "type": "connectedService:dockerregistry",
+            "type": "connectedService:dockerRegistry",
             "label": "Docker Registry Connection",
             "required": false,
-            "helpMarkDown": "Select a Docker registry connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed, it will be used to encrypt the password; otherwise the password will not be encrypted.",
-            "groupname": "repository",
+            "helpMarkDown": "Select a Docker registry connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "groupName": "repository",
             "visibleRule": "repositoryCredentials = Endpoint"
         },
         {
@@ -90,7 +90,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Username for the Docker registry",
-            "groupname": "repository",
+            "groupName": "repository",
             "visibleRule": "repositoryCredentials = UsernamePassword"
         },
         {
@@ -99,8 +99,8 @@
             "label": "Repository Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recomended that you use a secret variable to store it.",
-            "groupname": "repository",
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
+            "groupName": "repository",
             "visibleRule": "repositoryCredentials = UsernamePassword"
         },
         {
@@ -109,8 +109,8 @@
             "label": "Password Encrypted",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "It is recomended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed, it will be used to encrypt the password; otherwise the password will not be encrypted.",
-            "groupname": "repository",
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "groupName": "repository",
             "visibleRule": "repositoryCredentials = UsernamePassword"
         },
         {
@@ -120,7 +120,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Timeout in seconds for deploying the application.",
-            "groupname": "advanced"
+            "groupName": "advanced"
         },
         {
             "name": "removeTimeoutSec",
@@ -129,7 +129,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Timeout in seconds for removing an existing application.",
-            "groupname": "advanced"
+            "groupName": "advanced"
         },
         {
             "name": "getStatusTimeoutSec",
@@ -138,7 +138,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Timeout in seconds for getting the status of an existing application.",
-            "groupname": "advanced"
+            "groupName": "advanced"
         }
     ],
     "execution": {

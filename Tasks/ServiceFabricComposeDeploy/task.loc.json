@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 24
   },
   "demands": [
     "Cmd"
@@ -38,7 +38,7 @@
   "inputs": [
     {
       "name": "serviceConnectionName",
-      "type": "connectedService:servicefabric",
+      "type": "connectedService:serviceFabric",
       "label": "ms-resource:loc.input.label.serviceConnectionName",
       "defaultValue": "",
       "required": true,
@@ -71,16 +71,16 @@
         "UsernamePassword": "Username and Password",
         "None": "None"
       },
-      "groupname": "repository",
+      "groupName": "repository",
       "helpMarkDown": "ms-resource:loc.input.help.repositoryCredentials"
     },
     {
       "name": "dockerRegistryEndpointName",
-      "type": "connectedService:dockerregistry",
+      "type": "connectedService:dockerRegistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpointName",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpointName",
-      "groupname": "repository",
+      "groupName": "repository",
       "visibleRule": "repositoryCredentials = Endpoint"
     },
     {
@@ -90,7 +90,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.repositoryUserName",
-      "groupname": "repository",
+      "groupName": "repository",
       "visibleRule": "repositoryCredentials = UsernamePassword"
     },
     {
@@ -100,7 +100,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.repositoryPassword",
-      "groupname": "repository",
+      "groupName": "repository",
       "visibleRule": "repositoryCredentials = UsernamePassword"
     },
     {
@@ -110,7 +110,7 @@
       "defaultValue": true,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
-      "groupname": "repository",
+      "groupName": "repository",
       "visibleRule": "repositoryCredentials = UsernamePassword"
     },
     {
@@ -120,7 +120,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.deployTimeoutSec",
-      "groupname": "advanced"
+      "groupName": "advanced"
     },
     {
       "name": "removeTimeoutSec",
@@ -129,7 +129,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.removeTimeoutSec",
-      "groupname": "advanced"
+      "groupName": "advanced"
     },
     {
       "name": "getStatusTimeoutSec",
@@ -138,7 +138,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.getStatusTimeoutSec",
-      "groupname": "advanced"
+      "groupName": "advanced"
     }
   ],
   "execution": {
