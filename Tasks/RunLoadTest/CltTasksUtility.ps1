@@ -149,21 +149,53 @@ function isNumericValue ($str) {
 	return $isNum
 }
 
-function ValidateFiles($inputName, $fileName, $testSettings)
+function ValidateFiles($inputName, $loadtestDrop, $fileName, $testSettings)
 {
-	$file = Get-ChildItem -Path $TestDrop -recurse | where {$_.Name -eq $fileName} | Select -First 1
+	# Upgrade scenario start..
+	if (-Not([System.IO.Path]::IsPathRooted($loadtestDrop)))
+	{
+		$loadtestDrop=[System.IO.Path]::Combine($env:SYSTEM_DEFAULTWORKINGDIRECTORY,$loadtestDrop);
+		Write-Host -NoNewline "Updated test drop location is $loadtestDrop";
+
+		if (-Not([string]::IsNullOrWhiteSpace($testSettings)) -and 
+		    -Not([System.IO.Path]::IsPathRooted($testSettings)))
+		{
+			$testSettings=[System.IO.Path]::Combine($env:SYSTEM_DEFAULTWORKINGDIRECTORY,$testSettings);
+			Write-Host -NoNewline "Updated test settings file is $testSettings";
+		}
+	}
+	# Upgrade scenario end..
+
+	# Validate if the drop folder location is correct...
+	if (-Not (Test-Path $loadtestDrop))
+	{
+		ErrorMessage "The path for the load test files $loadtestDrop does not exist. Please provide a valid path."
+	}
+
 	$loadRunTestSettingsFile = $testSettings;
+	$file = Get-ChildItem -Path $loadtestDrop -recurse | Where-Object {$_.Name -eq $fileName} | Select-Object -First 1
 	if ($file)
 	{
 		# Check for fileName
-		$global:ScopedTestDrop = $file.Directory.FullName
-		Write-Host -NoNewline ("Selected {0} is '{1}' under '{2}'"  -f $inputName, $file.FullName, $global:ScopedTestDrop)
+		$global:ScopedTestDrop = $file.Directory.FullName;
+		$global:RunTestSettingsFile = "";
+		Write-Host -NoNewline ("Selected load test file is '{0}' under '{1}'"  -f $file.FullName, $global:ScopedTestDrop)
 		Write-Host -NoNewline "Test Drop location used for the run is $global:ScopedTestDrop. Please ensure all required files (test dlls, plugin dlls, dependent files) are part of this output folder"
+		if ([string]::IsNullOrWhiteSpace($loadRunTestSettingsFile))
+		{
+			Write-Host -NoNewline "No test settings file specified";
+			return;
+		}
+
 		if (-Not (Test-Path $loadRunTestSettingsFile))
 		{
 			Write-Host -NoNewline "The path for the test settings file $loadRunTestSettingsFile does not exist"
-			$loadRunTestSettingsFile = [System.IO.Path]::Combine($global:ScopedTestDrop,  [System.IO.Path]::GetFileName($loadRunTestSettingsFile));
-			Write-Host -NoNewline "Checking for test settings file $loadRunTestSettingsFile in the drop location"
+			if (-Not([System.IO.Path]::IsPathRooted($loadRunTestSettingsFile)))
+			{
+				$loadRunTestSettingsFile = [System.IO.Path]::Combine($global:ScopedTestDrop,  [System.IO.Path]::GetFileName($loadRunTestSettingsFile));
+				Write-Host -NoNewline "Checking for test settings file $loadRunTestSettingsFile in the drop location"
+			}
+
 			if (Test-Path $loadRunTestSettingsFile)
 			{
 				Write-Host -NoNewline "Test settings file $loadRunTestSettingsFile found in the drop location"
@@ -182,14 +214,9 @@ function ValidateFiles($inputName, $fileName, $testSettings)
 	}
 }
 
-function ValidateInputs($tfsCollectionUrl, $connectedServiceName, $testSettings, $testDrop, $loadtest)
+function ValidateInputs($tfsCollectionUrl, $connectedServiceName, $testSettings, $loadtestDrop, $loadtest)
 {
-	if (-Not (Test-Path $testDrop))
-	{
-		ErrorMessage "The path for the load test files does not exist. Please provide a valid path."
-	}
-
-	ValidateFiles "load test file" $loadTest $testSettings
+	ValidateFiles "load test file" $loadtestDrop $loadTest $testSettings
 }
 
 function Get($headers, $uri)
@@ -251,22 +278,30 @@ function StopTestRun($headers, $run, $CltAccountUrl)
 
 function ComposeTestRunJson($name, $tdid, $machineType)
 {
-	$processPlatform = "x86"
+	$processPlatform = "x64"
 	$setupScript=""
 	$cleanupScript=""
 
-	[xml]$tsxml = Get-Content $global:RunTestSettingsFile
-	if ($tsxml.TestSettings.Scripts.setupScript)
+	if (-Not([string]::IsNullOrWhiteSpace($global:RunTestSettingsFile)))
 	{
-		$setupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.setupScript)
-	}
-	if ($tsxml.TestSettings.Scripts.cleanupScript)
-	{
-		$cleanupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.cleanupScript)
-	}
-	if ($tsxml.TestSettings.Execution.hostProcessPlatform)
-	{
-		$processPlatform = $tsxml.TestSettings.Execution.hostProcessPlatform
+		[xml]$tsxml = Get-Content $global:RunTestSettingsFile
+		if ($tsxml.TestSettings.Scripts.setupScript)
+		{
+			$setupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.setupScript)
+			Write-Host -NoNewline "RunSettings SetupScript : $setupScript"
+		}
+
+		if ($tsxml.TestSettings.Scripts.cleanupScript)
+		{
+			$cleanupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.cleanupScript)
+			Write-Host -NoNewline "RunSettings CleanupScript : $cleanupScript"
+		}
+
+		if ($tsxml.TestSettings.Execution.hostProcessPlatform)
+		{
+			$processPlatform = $tsxml.TestSettings.Execution.hostProcessPlatform
+			Write-Host -NoNewline "RunSettings ProcessPlatform : $cleanupScript"
+		}
 	}
 
 	$trjson = @"

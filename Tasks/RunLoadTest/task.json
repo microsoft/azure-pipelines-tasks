@@ -34,7 +34,7 @@
             "label": "Load test files folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "required": true,
-            "helpMarkDown": "Path where the load test solution build output will be available. eg. $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)"
+            "helpMarkDown": "Output path where the load test and supporting files including plugins and data files are available. <ul><li><b>Build Example:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>Release Example:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />where SourceCI is the source alias and drop is artifact name</li></ul>"
         },
         {
             "name": "LoadTest",
@@ -42,15 +42,15 @@
             "label": "Load test file",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The load test filename to be used under the load test folder specified above."
+            "helpMarkDown": "The load test filename to be used from the load test files folder specified."
         },
         {
             "name": "TestSettings",
             "type": "string",
             "label": "Test settings file",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The testsettings file name to be used under the load test folder specifed above or a full path eg. $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)\\loadtest.testsettings"
+            "required": false,
+            "helpMarkDown": "The testsettings file name to be used from the load test folder specifed above or a full path. <ul><li><b>Build Example:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)\\load.testsettings </li><li><b>Release Example:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release\\load.testsettings <br />where SourceCI is the source alias and drop is artifact name</li></ul>"
         },
         {
             "name": "ThresholdLimit",

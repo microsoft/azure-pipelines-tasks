@@ -9,7 +9,7 @@ $env:BUILD_BUILDID,
 [String] [Parameter(Mandatory = $false)]
 $connectedServiceName,
 
-[String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+[String] [Parameter(Mandatory = $false)]
 $TestSettings,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
 $TestDrop,

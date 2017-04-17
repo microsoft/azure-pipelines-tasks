@@ -78,7 +78,7 @@
             "type": "pickList",
             "label": "Load Location",
             "required": false,
-            "helpMarkDown": "Geographical region to generate the load from. See help for more details.",
+            "helpMarkDown": "Geographical region to generate the load from.",
             "defaultValue": "Default",
             "options": {
                 "Default": "Default",
