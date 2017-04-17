@@ -11,9 +11,9 @@
   ],
   "author": "ms-vscs-rm",
   "version": {
-    "Major": "0",
-    "Minor": "1",
-    "Patch": "0"
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.99.0",
@@ -39,7 +39,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "Select the package to download, only nuget packages are supported currently"
-    },    
+    },
     {
       "name": "version",
       "type": "pickList",
