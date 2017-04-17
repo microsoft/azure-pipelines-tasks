@@ -24,6 +24,7 @@ $MachineType
 $global:userAgent = "CloudLoadTestBuildTask"
 $global:apiVersion = "api-version=1.0"
 $global:ScopedTestDrop = $TestDrop
+$global:RunTestSettingsFile = $TestSettings
 $ThresholdExceeded = $false
 $MonitorThresholds = $false
 
@@ -74,14 +75,14 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
-Write-Output "Test settings = $testSettings"
-Write-Output "Test drop = $testDrop"
-Write-Output "Load test = $loadTest"
-Write-Output "Load generator machine type = $machineType"
+Write-Output "Test settings = $TestSettings"
+Write-Output "Test drop = $TestDrop"
+Write-Output "Load test = $LoadTest"
+Write-Output "Load generator machine type = $MachineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
-ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testSettings $testDrop $loadTest
+ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $TestSettings $TestDrop $LoadTest
 
 #Setting monitoring of Threshold rule appropriately
 if ($ThresholdLimit -and $ThresholdLimit -ge 0)

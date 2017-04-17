@@ -127,7 +127,7 @@ function ComposeAccountUrl($connectedServiceUrl, $headers)
 	#Load all dependent files for execution
 	. $PSScriptRoot/VssConnectionHelper.ps1
 	$connectedServiceUrl = $connectedServiceUrl.TrimEnd('/')
-	Write-Host "Getting Clt Endpoint:"
+	Write-Host -NoNewline "Getting Clt Endpoint:"
 	$elsUrl = Get-CltEndpoint $connectedServiceUrl $headers
 
 	return $elsUrl
@@ -149,34 +149,47 @@ function isNumericValue ($str) {
 	return $isNum
 }
 
-function ValidateFiles($inputName, $fileName)
+function ValidateFiles($inputName, $fileName, $testSettings)
 {
 	$file = Get-ChildItem -Path $TestDrop -recurse | where {$_.Name -eq $fileName} | Select -First 1
+	$loadRunTestSettingsFile = $testSettings;
 	if ($file)
 	{
 		# Check for fileName
 		$global:ScopedTestDrop = $file.Directory.FullName
 		Write-Host -NoNewline ("Selected {0} is '{1}' under '{2}'"  -f $inputName, $file.FullName, $global:ScopedTestDrop)
+		Write-Host -NoNewline "Test Drop location used for the run is $global:ScopedTestDrop. Please ensure all required files (test dlls, plugin dlls, dependent files) are part of this output folder"
+		if (-Not (Test-Path $loadRunTestSettingsFile))
+		{
+			Write-Host -NoNewline "The path for the test settings file $loadRunTestSettingsFile does not exist"
+			$loadRunTestSettingsFile = [System.IO.Path]::Combine($global:ScopedTestDrop,  [System.IO.Path]::GetFileName($loadRunTestSettingsFile));
+			Write-Host -NoNewline "Checking for test settings file $loadRunTestSettingsFile in the drop location"
+			if (Test-Path $loadRunTestSettingsFile)
+			{
+				Write-Host -NoNewline "Test settings file $loadRunTestSettingsFile found in the drop location"
+			}
+			else 
+			{
+				ErrorMessage "TestSettings file $loadRunTestSettingsFile not found"
+			}
+		}
+
+		$global:RunTestSettingsFile = $loadRunTestSettingsFile;
 	}
 	else
 	{
-		ErrorMessage "No $inputName is present in the test drop."
+		ErrorMessage "LoadTest file $inputName is not present in the test drop."
 	}
 }
 
 function ValidateInputs($tfsCollectionUrl, $connectedServiceName, $testSettings, $testDrop, $loadtest)
 {
-	if (-Not (Test-Path $testSettings))
-	{
-		ErrorMessage "The path for the test settings file does not exist. Please provide a valid path."
-	}
-
 	if (-Not (Test-Path $testDrop))
 	{
 		ErrorMessage "The path for the load test files does not exist. Please provide a valid path."
 	}
 
-	ValidateFiles "load test file" $loadTest
+	ValidateFiles "load test file" $loadTest $testSettings
 }
 
 function Get($headers, $uri)
@@ -226,7 +239,7 @@ function StopTestRun($headers, $run, $CltAccountUrl)
 {
 	$stop = @"
 	{
-	"state": "aborted"
+		"state": "aborted"
 	}
 "@
 	$uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $CltAccountUrl, $run.id, $global:apiVersion)
@@ -242,7 +255,7 @@ function ComposeTestRunJson($name, $tdid, $machineType)
 	$setupScript=""
 	$cleanupScript=""
 
-	[xml]$tsxml = Get-Content $TestSettings
+	[xml]$tsxml = Get-Content $global:RunTestSettingsFile
 	if ($tsxml.TestSettings.Scripts.setupScript)
 	{
 		$setupScript = [System.IO.Path]::GetFileName($tsxml.TestSettings.Scripts.setupScript)
