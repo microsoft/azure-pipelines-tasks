@@ -157,6 +157,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         else {
             if (!tl.exist(settingsFile)) { // because this ia filepath input build puts default path in the input. To avoid that we are checking this.
                 tl.warning(tl.loc("InvalidSettingsFile", settingsFile));
+            }
         }
     }
 
