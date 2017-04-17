@@ -42,8 +42,9 @@ export class dotNetExe {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }
-            if(dotnetArguments)
-                dotnet.arg(dotnetArguments.split(" "));
+            if (dotnetArguments) {
+                dotnet.line(dotnetArguments);
+            }
             try {
                 var result = await dotnet.exec();
                 await this.zipAfterPublishIfRequired(projectFile);
