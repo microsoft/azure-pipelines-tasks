@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 112,
-    "Patch": 2
+    "Minor": 117,
+    "Patch": 0
   },
   "demands": [
     "ant"
@@ -140,6 +140,16 @@
       "visibleRule": "codeCoverageTool != None"
     },
     {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
       "name": "antHomeUserInputPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.antHomeUserInputPath",
@@ -210,6 +220,7 @@
   "messages": {
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "DiscontinueAntCodeCoverage": "ms-resource:loc.messages.DiscontinueAntCodeCoverage"
+    "DiscontinueAntCodeCoverage": "ms-resource:loc.messages.DiscontinueAntCodeCoverage",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }
 }
