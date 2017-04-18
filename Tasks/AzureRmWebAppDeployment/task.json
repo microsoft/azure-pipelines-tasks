@@ -20,7 +20,8 @@
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
-    "groups": [{
+    "groups": [
+        {
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
@@ -45,7 +46,8 @@
             "visibleRule": "WebAppKind = linux"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
@@ -93,7 +95,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b><registry or namespace></b>/<repository>:<tag>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
+            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
             "name": "DockerRepository",
@@ -102,7 +104,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '<registry or namespace>/<b><repository></b>:<tag>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
             "name": "DockerImageTag",
@@ -111,7 +113,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '<registry or namespace>/<repository>:<b><tag></b>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
             "name": "StartupCommand",
@@ -346,7 +348,8 @@
             "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppNames"
