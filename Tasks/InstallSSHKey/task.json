@@ -1,0 +1,61 @@
+{
+    "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
+    "name": "InstallSSHKey",
+    "friendlyName": "Install SSH Key (Preview)",
+    "description": "Install an SSH key prior to a build",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "preview": true,
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 117,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [
+        "xcode"
+    ],
+    "minimumAgentVersion": "2.116.0",
+    "instanceNameFormat": "Install an SSH key",
+    "inputs": [
+        {
+            "name": "sshKeySecureFile",
+            "type": "secureFile",
+            "label": "SSH Key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the build agent."
+        },
+        {
+            "name": "removeKey",
+            "type": "boolean",
+            "label": "Remove SSH Key After Build",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "Select to specify that the SSH key should be removed from the agent after the build or release is complete."
+        }
+    ],
+    "prejobexecution": {
+        "Node": {
+            "target": "preinstallsshkey.js",
+            "argumentFormat": ""
+        }
+    },
+    "postjobexecution": {
+        "Node": {
+            "target": "postinstallsshkey.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+    }
+}
+    

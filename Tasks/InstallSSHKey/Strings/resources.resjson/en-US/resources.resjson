@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Install SSH Key (Preview)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Install an SSH key prior to a build",
+  "loc.instanceNameFormat": "Install an SSH key",
+  "loc.input.label.sshKeySecureFile": "SSH Key",
+  "loc.input.help.sshKeySecureFile": "Select the SSH key that was uploaded to `Secure Files` to install on the build agent.",
+  "loc.input.label.removeKey": "Remove SSH Key After Build",
+  "loc.input.help.removeKey": "Select to specify that the SSH key should be removed from the agent after the build or release is complete."
+}
