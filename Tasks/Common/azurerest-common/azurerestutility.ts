@@ -556,18 +556,19 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
     return deferred.promise;
 }
 
-export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string) {
+export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "?" + azureApiVersion;
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-    
-    tl.debug('Request to get App State: ' + url);
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to get App State: ' + webAppNameWithSlot);
     httpObj.send('GET', url, null, headers, (error, response, body) => {
         if(error) {
             console.log(body);
@@ -578,7 +579,7 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
         }
         else {
             console.log(body);
-            deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppName, response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;

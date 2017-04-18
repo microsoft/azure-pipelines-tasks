@@ -243,6 +243,6 @@
         "ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
         "ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
         "InstallingSiteExtension": "Installing site extension '%s' in Azure App Service.",
-        "FailedToFetchAppServiceState": "Failed to fetch App Service State"
+        "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s"
     }
 }
