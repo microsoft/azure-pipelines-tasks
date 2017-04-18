@@ -9,7 +9,7 @@ import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
 import ContainerConnection from "./containerconnection"
-import AuthenticationToken from "./registryauthenticationprovider/registryauthenticationtoken"
+import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
 export default class DockerComposeConnection extends ContainerConnection {
     private dockerComposePath: string;
