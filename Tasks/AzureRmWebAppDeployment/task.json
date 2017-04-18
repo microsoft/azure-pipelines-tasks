@@ -247,7 +247,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationSettings",
-            "helpMarkDown": "Web app application settings.",
+            "helpMarkDown": "Edit web app application settings following the syntax -key value .<br /> Example : -Port 5000 -RequestTimeout 5000",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }

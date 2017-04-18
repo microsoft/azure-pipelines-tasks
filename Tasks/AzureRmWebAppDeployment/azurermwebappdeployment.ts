@@ -54,8 +54,12 @@ async function run() {
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
+        if(webAppKind && webAppKind === "linux") {
+            deployToSlotFlag = false;
+        }
+
         if(deployToSlotFlag) {
-            if (slotName.toLowerCase() === "production" || (webAppKind && webAppKind === "linux" && dockerNamespace)) {
+            if (slotName.toLowerCase() === "production") {
                 deployToSlotFlag = false;
             }
         }
