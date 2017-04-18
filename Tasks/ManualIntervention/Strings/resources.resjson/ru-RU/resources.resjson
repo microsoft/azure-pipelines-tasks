@@ -6,5 +6,7 @@
   "loc.input.label.instructions": "Инструкции",
   "loc.input.help.instructions": "Эти инструкции будут показаны пользователю для возобновления или отклонения вмешательства вручную. На их основе пользователь должен принять взвешенное решение об этом вмешательстве вручную.",
   "loc.input.label.emailRecipients": "Уведомить пользователей",
-  "loc.input.help.emailRecipients": "Отправьте отдельным пользователям или группам письмо о приближающемся ручном вмешательстве. Принять меры для ручного вмешательства могут только пользователи с разрешением на управление развертыванием."
+  "loc.input.help.emailRecipients": "Отправьте отдельным пользователям или группам письмо о приближающемся ручном вмешательстве. Принять меры для ручного вмешательства могут только пользователи с разрешением на управление развертыванием.",
+  "loc.input.label.onTimeout": "On timeout",
+  "loc.input.help.onTimeout": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
 }

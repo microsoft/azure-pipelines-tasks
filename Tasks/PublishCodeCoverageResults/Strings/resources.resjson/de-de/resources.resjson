@@ -1,14 +1,16 @@
 {
   "loc.friendlyName": "Code Coverage-Ergebnisse veröffentlichen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Veröffentlicht Code Coverage-Ergebnisse in VSTS/TFS.",
-  "loc.instanceNameFormat": "Code Coverage-Ergebnisse veröffentlichen $(summaryFileLocation)",
+  "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code Coverage-Tool",
-  "loc.input.help.codeCoverageTool": "Wählen Sie das Tool aus, mit dem die Code Coverage-Zusammenfassungsdateien generiert wurden.",
+  "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
   "loc.input.label.summaryFileLocation": "Zusammenfassungsdatei",
-  "loc.input.help.summaryFileLocation": "Der Pfad der Code Coverage-Zusammenfassungsdatei, die Code Coverage-Statistiken enthält, z. B. Zeile, Methode, Klassenabdeckung. Beispiel \"$(Build.SourcesDirectory)/CodeCoverage/Summary.xml\".",
+  "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.reportDirectory": "Berichtsverzeichnis",
-  "loc.input.help.reportDirectory": "Der Pfad des Verzeichnisses des Code Coverage-Berichts. Das Berichtsverzeichnis wird als ein Artefakt für den Build veröffentlicht. Beispiel\" \"$(Build.SourcesDirectory)/CodeCoverageReport\".",
+  "loc.input.help.reportDirectory": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
   "loc.input.label.additionalCodeCoverageFiles": "Weitere Dateien",
-  "loc.input.help.additionalCodeCoverageFiles": "Ein regulärer Ausdruck, der die zusätzlichen Code Coverage-Dateien angibt, die als ein Artefakt für den Build veröffentlicht werden. Beispiel: \"$(Build.SourcesDirectory)/**/*.exec\"."
+  "loc.input.help.additionalCodeCoverageFiles": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`",
+  "loc.messages.FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
+  "loc.messages.MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s"
 }

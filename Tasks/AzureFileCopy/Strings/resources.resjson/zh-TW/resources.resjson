@@ -87,5 +87,6 @@
   "loc.messages.AFC_AddNetworkSecurityRuleFailed": "無法新增網路安全性規則: {0}",
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "無法為虛擬機器 '{1}' 設定自訂指令碼擴充功能 '{0}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "無法啟用複製必要條件。{0}",
-  "loc.messages.AFC_BlobStorageNotFound": "找不到儲存體帳戶: {0}。請指定現有的儲存體帳戶"
+  "loc.messages.AFC_BlobStorageNotFound": "找不到儲存體帳戶: {0}。請指定現有的儲存體帳戶",
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
 }

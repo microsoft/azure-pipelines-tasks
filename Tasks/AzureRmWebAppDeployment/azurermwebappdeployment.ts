@@ -137,10 +137,18 @@ async function run() {
                 tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
             }
 
-            if(deployUtility.canUseWebDeploy(useWebDeploy)) {
-                if(!tl.osType().match(/^Win/)){
-                    throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
-                }
+        if(publishingProfile && publishingProfile.destinationAppUrl) {
+            try{
+                await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
+            } catch (error) {
+                tl.debug("Failed to check availability of azure web app, error : " + error.message);
+            }
+        }
+
+        if(deployUtility.canUseWebDeploy(useWebDeploy)) {
+            if(!tl.osType().match(/^Win/)){
+                throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
+            }
 
                 var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 if(renameFilesFlag) {

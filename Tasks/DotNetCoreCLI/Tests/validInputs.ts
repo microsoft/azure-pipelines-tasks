@@ -9,8 +9,8 @@ tmr.setInput('command', "restore");
 tmr.setInput('projects', process.env["__projects__"]);
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "which": { "dotnet": "dotnet"},
-    "checkPath": {"dotnet": true},
+    "which": { "dotnet": "dotnet" },
+    "checkPath": { "dotnet": true },
     "exec": {
         "dotnet restore web/project.json": {
             "code": 0,
@@ -42,10 +42,18 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "not restored",
             "stderr": ""
         }
+    },
+    "findMatch": {
+        "**/project.json": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
+        "**/project.json;**/*.csproj" :["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
+        "**/project.json;**/*.csproj;**/*.vbproj" : ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
+        "*fail*/project.json": [],
+        "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
+        "dummy/project.json" : ["dummy/project.json"],
+        "" : [""]
     }
 };
 tmr.setAnswers(a);
 tmr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tmr.registerMock('nuget-task-common/Utility', require('./mock-findfiles'));
 
 tmr.run();

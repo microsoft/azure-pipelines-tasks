@@ -79,7 +79,7 @@
   "loc.messages.AFC_FilteringNoVMResources": "具有以下 {1}“{2}”的资源组“{0}”下不存在计算机。",
   "loc.messages.AFC_CopyStarted": "计算机“{0}”的复制已开始",
   "loc.messages.AFC_CopyCompleted": "复制计算机“{0}”的状态:“{1}”",
-  "loc.messages.AFC_WinRMHelpMessage": "若要修复 WinRM 连接相关的问题，请在任务中选择“启用复制先决条件”选项。如果已经设置，且目标虚拟机受负载平衡器支持，请确保将入站 NAT 规则配置为目标端口(5986)。仅适用于 ARM VM。",
+  "loc.messages.AFC_WinRMHelpMessage": "若要修复 WinRM 连接相关的问题，请在任务中选择“启用复制先决条件”选项。如果已经设置，且目标虚拟机受负载均衡器支持，请确保将入站 NAT 规则配置为目标端口(5986)。仅适用于 ARM VM。",
   "loc.messages.AFC_CopyFailed": "在计算机“{0}”上复制失败并出现以下消息:“{1}”",
   "loc.messages.AFC_ParallelCopyFailed": "未能复制到一个或多个计算机。",
   "loc.messages.AFC_CopySuccessful": "已成功将文件从源路径“{0}”复制到了资源组“{1}”中的目标 Azure VM",
@@ -87,5 +87,6 @@
   "loc.messages.AFC_AddNetworkSecurityRuleFailed": "无法添加网络安全规则: {0}",
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "无法设置虚拟机“{1}”的自定义脚本扩展“{0}”: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "无法启用复制先决条件。{0}",
-  "loc.messages.AFC_BlobStorageNotFound": "未找到存储帐户 {0}。请指定现有的存储帐户"
+  "loc.messages.AFC_BlobStorageNotFound": "未找到存储帐户 {0}。请指定现有的存储帐户",
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
 }

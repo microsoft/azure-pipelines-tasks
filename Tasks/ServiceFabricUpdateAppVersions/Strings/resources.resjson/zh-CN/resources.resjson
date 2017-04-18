@@ -50,5 +50,5 @@
   "loc.messages.FileAdded": "已添加文件“{0}”。",
   "loc.messages.FileChanged": "已更改文件“{0}”。",
   "loc.messages.NoChanges": "找不到任何更改。",
-  "loc.messages.PdbWarning": "此包包括 \"*.pdb\" 文件，它将在每个生成中更改，即时使用了 \"deterministic\" 编译器标记。从包中排除这些文件，以便准确检测包是否已发生更改。"
+  "loc.messages.PdbWarning": "此包包括 \"*.pdb\" 文件，它将在每个生成中更改，即使使用了 \"deterministic\" 编译器标记。从包中排除这些文件，以便准确检测包是否已发生更改。"
 }

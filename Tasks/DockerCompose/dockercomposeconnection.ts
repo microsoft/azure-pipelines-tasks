@@ -6,9 +6,12 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as yaml from "js-yaml";
-import DockerConnection from "./dockerconnection";
+import * as DockerComposeUtils from "./dockercomposeutils";
 
-export default class DockerComposeConnection extends DockerConnection {
+import ContainerConnection from "./containerconnection"
+import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+
+export default class DockerComposeConnection extends ContainerConnection {
     private dockerComposePath: string;
     private dockerComposeFile: string;
     private dockerComposeVersion: string;
@@ -20,7 +23,7 @@ export default class DockerComposeConnection extends DockerConnection {
     constructor() {
         super();
         this.dockerComposePath = tl.which("docker-compose", true);
-        this.dockerComposeFile = tl.globFirst(tl.getInput("dockerComposeFile", true));
+        this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true));
         if (!this.dockerComposeFile) {
             throw new Error("No Docker Compose file matching " + tl.getInput("dockerComposeFile") + " was found.");
         }
@@ -30,8 +33,8 @@ export default class DockerComposeConnection extends DockerConnection {
         this.projectName = tl.getInput("projectName");
     }
 
-    public open(hostEndpoint?: string, registryEndpoint?: string): any {
-        super.open(hostEndpoint, registryEndpoint);
+    public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): any {
+        super.open(hostEndpoint, authenticationToken);
 
         if (this.hostUrl) {
             process.env["DOCKER_HOST"] = this.hostUrl;
