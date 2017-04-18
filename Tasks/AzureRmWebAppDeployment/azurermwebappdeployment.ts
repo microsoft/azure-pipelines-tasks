@@ -63,20 +63,19 @@ async function run() {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
 
+        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+
         // For container based linux deployment
         if(webAppKind && webAppKind === "linux" && dockerNamespace)
         {
             tl.debug("Performing container based deployment.");
-
+            
             await deployWebAppImage(endPoint, resourceGroupName, webAppName);
-            return;
         }
         else
         {
             tl.debug("Performing the deployment of webapp.");
-
-            var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
             var availableWebPackages = deployUtility.findfiles(webDeployPkg);
             if(availableWebPackages.length == 0) {
@@ -174,9 +173,9 @@ async function run() {
                 await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
             }
             await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            
-        } 
-    } 
+
+        }
+    }
     catch (error) {
         isDeploymentSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
@@ -202,7 +201,7 @@ async function run() {
 
 /**
  * Deploys website using Kudu REST API
- * 
+ *
  * @param   webDeployPkg                   Web deploy package
  * @param   webAppName                     Web App Name
  * @param   publishingProfile              Azure RM Connection Details
@@ -221,7 +220,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
             if (await deployUtility.isMSDeployPackage(webAppZipFile)) {
-                throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
+                throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform"));
             }
         }
         var physicalPath = "/site/wwwroot";

@@ -25,19 +25,19 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app"
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app"
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
-            "visibleRule": "WebAppKind = app"
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "ApplicationSettings",
@@ -87,15 +87,15 @@
             "properties": {
                 "EditableOptions": "false"
             }
-        },   
+        },
         {
             "name": "DockerNamespace",
             "type": "string",
-            "label": "Registry (or) Namespace",
+            "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
             "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Docker repository namespace."
+            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b><registry or namespace></b>/<repository>:<tag>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
             "name": "DockerRepository",
@@ -104,7 +104,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Docker repository or image name."
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '<registry or namespace>/<b><repository></b>:<tag>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
             "name": "DockerImageTag",
@@ -113,8 +113,8 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Docker image tag name."
-        },        
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '<registry or namespace>/<repository>:<b><tag></b>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+        },
         {
             "name": "StartupCommand",
             "type": "string",
@@ -131,7 +131,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind = app"
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "ResourceGroupName",
@@ -163,7 +163,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = app",
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -172,7 +172,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = app",
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -247,7 +247,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationSettings",
-            "helpMarkDown": "Webapp application settings.",
+            "helpMarkDown": "Web app application settings.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
@@ -369,7 +369,7 @@
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             },
-            "resultTemplate": "{\"Value\":\"{{{serverFarmId}}}\",\"DisplayValue\":\"{{{serverFarmId}}}\"}"            
+            "resultTemplate": "{\"Value\":\"{{{serverFarmId}}}\",\"DisplayValue\":\"{{{serverFarmId}}}\"}"
         },
         {
             "target": "WebAppKind",
@@ -379,7 +379,7 @@
                 "ServerfarmId": "$(ServerfarmId)"
             },
             "resultTemplate": "{\"Value\":\"{{{kind}}}\",\"DisplayValue\":\"{{{kind}}}\"}"
-        },        
+        },
         {
             "target": "SlotName",
             "endpointId": "$(ConnectedServiceName)",
