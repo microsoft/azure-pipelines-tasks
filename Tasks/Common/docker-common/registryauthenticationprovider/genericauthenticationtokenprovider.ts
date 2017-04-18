@@ -3,7 +3,6 @@
 import RegistryAuthenticationToken from "./registryauthenticationtoken"
 import AuthenticationTokenProvider from "./authenticationtokenprovider"
 import * as tl from "vsts-task-lib/task";
-import Q = require('q');
 
 export default class GenericAuthenticationTokenProvider extends AuthenticationTokenProvider{
 
@@ -17,13 +16,12 @@ export default class GenericAuthenticationTokenProvider extends AuthenticationTo
         }
     }
     
-    public async getAuthenticationToken(): Promise<RegistryAuthenticationToken> {
-        var deferred = Q.defer<RegistryAuthenticationToken>();
+    public getAuthenticationToken(): RegistryAuthenticationToken {
+        
         if(this.registryAuth) {    
-            deferred.resolve (new RegistryAuthenticationToken(this.registryAuth["username"], this.registryAuth["password"], this.registryAuth["registry"]));
+            return new RegistryAuthenticationToken(this.registryAuth["username"], this.registryAuth["password"], this.registryAuth["registry"]);
         }
         
-        deferred.resolve(null);
-        return deferred.promise;
+        return null;
     }
 }
