@@ -1,3 +1,22 @@
+function ExtractAgentArchive ($SetupArchive, $Destination) {
+    Write-Verbose "Extracting the archive $SetupArchive"
+    Try {
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        function Unzip {
+            param([string]$zipfile, [string]$outpath)
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
+        }
+        Unzip $SetupArchive $Destination
+    }
+    Catch {
+        Write-Warning $_
+    }
+}
+
+function FindAgentSetupExe ($SetupPath) {
+    return (Get-ChildItem -Filter "*testagent.exe" -Path $SetupPath -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
+}
+
 function InstallTestAgent2017
 {
     param
@@ -10,6 +29,11 @@ function InstallTestAgent2017
         throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $SetupPath
     }
 
+    # First we need to install the certificates for TA 2017
+    $SetupDir = Split-Path -Path $SetupPath
+    Write-Verbose "Installing test agent certificates"
+    Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Exportable
+
     $p = New-Object System.Diagnostics.Process
     $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
     $Processinfo.CreateNoWindow = $true
@@ -20,27 +44,29 @@ function InstallTestAgent2017
 
     $p.StartInfo = $Processinfo
     $p.Start()
-    
-    # Fish $p.WaitForExit can't be run on remote machines. Wasted time 4hrs. Should have read MSDN
-    do {
-        $waitProcess = Get-Process -Id $($p.Id) -ErrorAction SilentlyContinue
-        Start-Sleep -Seconds 30
-        Write-Verbose -Verbose "Waiting for installtion to finish"
-    } while($waitProcess -and $waitProcess.Name -ilike "*testagent*")
-    
-    return 0
+
+    $p.WaitForExit(1500000) # it shouldn't take more than 25mins. so set time out
+
+    return $p.ExitCode
 }
 
 function Install-Product($SetupPath, $ProductVersion, $Update)
 {
     $exitCode = 0
-    
+
     if(-not (Test-Path $SetupPath)){
-        Write-Verbose "Test Agent path is invalid. Skipping the installation"
+        Write-Verbose "Test Agent path $SetupPath is invalid. Skipping the installation"
         return 1801
     }
 
-    $versionToInstall = ((Get-Item $SetupPath).VersionInfo.ProductVersion) 
+    # Since TA 2017 requires certificates and it's shipped with layout which needs to be archived in order to install offline
+    if ($SetupPath -ilike "*TestAgent.zip") {
+        $SetupDir = Split-Path -Path $SetupPath
+        ExtractAgentArchive -SetupArchive $SetupPath -Destination $SetupDir
+        $SetupPath = FindAgentSetupExe -SetupPath $SetupDir
+    }
+
+    $versionToInstall = ((Get-Item $SetupPath).VersionInfo.ProductVersion)
     $versionInstalled = Get-TestAgentInstalledVersion -ProductVersion $ProductVersion # Get installed test agent version as per user requested version
 
     if($versionToInstall -ne $null) {
@@ -57,37 +83,30 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
     }
     if([version]$versionInstalled -gt ([version]"0.0") -and [version]$versionInstalled -le [version]$versionToInstall)  {
         # Already upto date. Ignore Update flag
-        Write-Verbose -Message ("Test Agent is already upto date") -verbose 
+        Write-Verbose -Message ("Test Agent is already upto date") -verbose
         return $exitCode
-    } 
-    
+    }
+
     if([version]$versionInstalled -eq ([version]"0.0")) {
         # Test Agent is not installed with major version matching. Any other installations are ignored
         Write-Verbose -Message ("Test Agent will be installed") -verbose
     }
     if([version]$versionInstalled -gt ([version]"0.0") -and [version]$versionInstalled -lt [version]$versionToInstall -and $Update -ieq "true") {
-        Write-Verbose -Message ("Test Agent will be updated from: {0} to: {1}" -f $versionInstalled, $versionToInstall) -verbose 
-    } 
+        Write-Verbose -Message ("Test Agent will be updated from: {0} to: {1}" -f $versionInstalled, $versionToInstall) -verbose
+    }
 
     try
     {
         # Invoke the TA installation
         if($ProductVersion -eq "15.0") {
             $tpPath = Join-Path $env:SystemDrive TestAgent2017
-            $exitCode = InstallTestAgent2017 -SetupPath $SetupPath -InstallPath $tpPath
-
-            $configExe = [io.path]::combine($tpPath, 'Common7','IDE','TestAgentConfig.exe')
-            Write-Verbose -Verbose "Configuration Test Agent path: $configExe"
-            if(Test-Path -Path $configExe){
-                try {
-                    Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $configExe, "ConfigureAsService" -ErrorAction SilentlyContinue
-                } catch {
-                    Write-Verbose -Verbose "Starting test agent service $_.Exception.Message"
-                }
+            $retCode = InstallTestAgent2017 -SetupPath $SetupPath -InstallPath $tpPath
+            if($retCode -is [System.Array]) {
+                $exitCode = $retCode[$retCode.Length-1]
             } else {
-                Write-Verbose -Verbose "Unable to find Test Agent configuration"
-                $exitCode = -1
+                $exitCode = $retCode
             }
+            Write-Verbose -Message ("Exit code from installation $exitCode ") -verbose
         } else {
             $argumentsarr = @("/Quiet","/NoRestart")
             Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
@@ -104,7 +123,7 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
         Write-Verbose -Verbose "Caught exception while installing Test Agent"
         throw $_.Exception
     }
-                
+
     if($exitCode -eq -2147185721)
     {
         # pending restart .
@@ -152,7 +171,7 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
         Write-Verbose "Reboot required post test agent installation , return 3010" -Verbose
         return 3010;
     }
-    
+
     return $exitCode
 }
 
