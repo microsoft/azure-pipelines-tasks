@@ -791,6 +791,15 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     setRunInParallellIfApplicable();
     var newSettingsFile = vstestConfig.settingsFile;
     var vsVersion = vstestRunnerDetails.majorVersion;
+
+    if (newSettingsFile) {
+        if (!pathExistsAsFile(newSettingsFile)) {
+            if (!tl.exist(newSettingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
+                throw Error((tl.loc("InvalidSettingsFile", newSettingsFile)));
+            }
+        }
+    }
+
     try {
         settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters).
             then(function (ret) {
