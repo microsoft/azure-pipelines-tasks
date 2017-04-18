@@ -142,7 +142,11 @@ async function doWork() {
     }
 
     async function publishCodeCoverage(codeCoverageOpted: boolean, ccReportTask: string) {
-        if (codeCoverageOpted && ccReportTask) {
+        tl.debug("publishCodeCoverage f=" + failIfCodeCoverageEmpty + " opt=" + codeCoverageOpted + " task=" + ccReportTask);
+        if (failIfCodeCoverageEmpty && codeCoverageOpted && !ccReportTask) {
+            throw tl.loc('NoCodeCoverage'); 
+        }
+        else if (codeCoverageOpted && ccReportTask) {
             tl.debug("Collecting code coverage reports");
             var antRunner = tl.tool(anttool);
             antRunner.arg('-buildfile');
@@ -258,9 +262,9 @@ async function doWork() {
         });
 
         await antb.exec()
-            .then(function (code) {
+            .then(async function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
-                publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
+                await publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
                 tl.setResult(tl.TaskResult.Succeeded, "Task succeeded");
             })
             .fail(function (err) {
