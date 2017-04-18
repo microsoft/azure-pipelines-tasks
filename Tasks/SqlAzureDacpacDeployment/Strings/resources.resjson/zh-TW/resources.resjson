@@ -35,7 +35,7 @@
   "loc.input.label.InlineAdditionalArguments": "其他 Invoke-Sqlcmd 引數",
   "loc.input.help.InlineAdditionalArguments": "在 Azure SQL Database 上執行指定 SQL 查詢時要套用的其他 Invoke-Sqlcmd 引數，例如 -ConnectionTimeout 100 -OutputSqlErrors",
   "loc.input.label.IpDetectionMethod": "使用下列項目指定防火牆規則:",
-  "loc.input.help.IpDetectionMethod": "針對要執行的工作，必須將自動化代理程式的 IP 位址加入 Azure SQL Server 防火牆 [允許的 IP 位址] 中。請提供自動化代理程式的 IP 位址範圍，或在主控自動化代理程式的情況下選取進行自動偵測。",
+  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly.",
   "loc.input.label.StartIpAddress": "起始 IP 位址",
   "loc.input.help.StartIpAddress": "自動化代理程式電腦集區的起始 IP 位址，例如 196.21.30.50。",
   "loc.input.label.EndIpAddress": "結束 IP 位址",

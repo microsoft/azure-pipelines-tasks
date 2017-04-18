@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [],
     "preview": "true",
@@ -26,10 +26,40 @@
     ],
     "inputs": [
         {
+            "name": "containerregistrytype",
+            "type": "pickList",
+            "label": "Container Registry Type",
+            "defaultValue": "Azure Container Registry",
+            "required": true,
+            "options": {
+                "Azure Container Registry": "Azure Container Registry",
+                "Container Registry": "Container Registry"
+            },
+            "helpMarkDown": "Select a Container Registry Type."
+        },
+        {
             "name": "dockerRegistryEndpoint",
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
-            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry."
+            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "visibleRule": "containerregistrytype = Container Registry"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription",
+            "visibleRule": "containerregistrytype = Azure Container Registry",
+            "required": true
+        },
+        {
+            "name": "azureContainerRegistry",
+            "label": "Azure Container Registry",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Container Registry",
+            "visibleRule": "containerregistrytype = Azure Container Registry",
+            "required": true,
+            "defaultValue": ""
         },
         {
             "name": "dockerComposeFile",
@@ -262,11 +292,24 @@
             "groupName": "advanced"
         }
     ],
+    "dataSourceBindings": [
+        {
+            "target": "azureContainerRegistry",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "dataSourceName": "AzureRMContainerRegistries",
+            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+        }
+    ],
     "instanceNameFormat": "$(action)",
     "execution": {
         "Node": {
             "target": "dockercompose.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "ContainerPatternFound": "Pattern found in dockerfilepath parameter",
+        "ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
+        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found."
     }
 }

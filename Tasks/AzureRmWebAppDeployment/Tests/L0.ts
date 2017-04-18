@@ -127,7 +127,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            
             var expectedErr = 'Error: msdeploy failed with return code: 1';
             var expectedOut = 'Failed to update history to kudu';
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
@@ -503,5 +502,22 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
         assert(tr.stdout.search('web.config contents: server.js;iisnode') >=0, 'should have replaced web config parameters');
         done();
+    }); 
+
+    it('Validate success azurerestutility-common.testAzureWebAppAvailability()', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'WebAppAvailabilitySuccessTest.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.stdout.search('Azure web app is available.') >=0, 'Failed while checking azure web app avilability.');
+        done();
     });
+
+    it('validate failure azurerestutility-common.testAzureWebAppAvailability()', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'WebAppAvailabilityFailureTest.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.stdout.search('Azure web app in wrong state, status code : 500') >=0, 'Failed while checking azure web app avilability.');
+        done();
+    });
+
 });

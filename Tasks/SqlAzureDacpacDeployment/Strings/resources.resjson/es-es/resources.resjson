@@ -35,7 +35,7 @@
   "loc.input.label.InlineAdditionalArguments": "Argumentos adicionales de Invoke-Sqlcmd",
   "loc.input.help.InlineAdditionalArguments": "Argumentos adicionales de Invoke-Sqlcmd que se aplicarán cuando se ejecute la consulta de SQL en la base de datos SQL de Azure, como -ConnectionTimeout 100 -OutputSqlErrors",
   "loc.input.label.IpDetectionMethod": "Especificar las reglas de firewall con",
-  "loc.input.help.IpDetectionMethod": "Para que la tarea se ejecute, es preciso agregar la dirección IP del agente de automatización a la lista \"Direcciones IP permitidas\" del firewall de Azure SQL Server. Indique el intervalo de direcciones IP de los agentes de automatización o seleccione la opción de detección automática en el caso de un agente de automatización hospedado.",
+  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly.",
   "loc.input.label.StartIpAddress": "Dirección IP inicial",
   "loc.input.help.StartIpAddress": "Dirección IP inicial del grupo de máquinas del agente de automatización, como 196.21.30.50.",
   "loc.input.label.EndIpAddress": "Dirección IP final",
