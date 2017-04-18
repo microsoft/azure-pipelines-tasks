@@ -55,7 +55,7 @@ async function run() {
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
         if(deployToSlotFlag) {
-            if(slotName.toLowerCase() === "production") {
+            if (slotName.toLowerCase() === "production" || (webAppKind && webAppKind === "linux" && dockerNamespace)) {
                 deployToSlotFlag = false;
             }
         }
@@ -70,7 +70,7 @@ async function run() {
         if(webAppKind && webAppKind === "linux" && dockerNamespace)
         {
             tl.debug("Performing container based deployment.");
-            
+
             await deployWebAppImage(endPoint, resourceGroupName, webAppName);
         }
         else
