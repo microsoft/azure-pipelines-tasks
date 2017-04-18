@@ -5,10 +5,6 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
