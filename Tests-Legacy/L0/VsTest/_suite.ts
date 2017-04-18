@@ -397,8 +397,8 @@ describe('VsTest Suite', function () {
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length != 0, 'should not have written to stderr. error: ' + tr.stderr);
-                assert(tr.failed, 'task should have succeeded');
-                assert(tr.stderr.search(/The specified settings/) >= 0, 'should print warning');
+                assert(tr.failed, 'task should have failed');
+                assert(tr.stderr.search(/The specified settings/) >= 0, 'should print error');
                 done();
             })
             .fail((err) => {
@@ -464,7 +464,7 @@ describe('VsTest Suite', function () {
     it('Vstest task with run in parallel and vs 2017', (done) => {
         setResponseFile('vstestGoodRunInParallel.json');
 
-        let tr = new trm.TaskRunner('VSTest', false, true, true);
+        let tr = new trm.TaskRunner('VSTest', false, true, true); // normalize slash, ignore temp path, enable regex match
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -490,7 +490,7 @@ describe('VsTest Suite', function () {
     it('Vstest task with run in parallel and vs 2015 update3 or higher', (done) => {
         setResponseFile('vstestRunInParallel.json');
 
-        let tr = new trm.TaskRunner('VSTest', false, true, true);
+        let tr = new trm.TaskRunner('VSTest', false, true, true); // normalize slash, ignore temp path, enable regex match
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
