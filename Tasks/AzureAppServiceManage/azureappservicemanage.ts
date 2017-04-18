@@ -63,10 +63,9 @@ async function run() {
             case "Start Azure App Service": {
                 console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 var appServiceDetails = await azureRmUtil.getAppServiceState(endPoint, resourceGroupName, webAppName);
-                while(!(appServiceDetails.State == "Running" || appServiceDetails.State == "running"))
+                while(!(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running"))
                 {
-                    console.log("inside while loop");
-                    appServiceDetails = await azureRmUtil.getAppServiceState(endPoint, resourceGroupName, webAppName);
+                    appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName);
                 }
                 break;
             }

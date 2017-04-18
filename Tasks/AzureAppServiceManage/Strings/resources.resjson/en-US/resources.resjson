@@ -57,5 +57,6 @@
   "loc.messages.ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
   "loc.messages.ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
   "loc.messages.ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
-  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
+  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service.",
+  "loc.messages.FailedToFetchAppServiceState": "Failed to fetch App Service State"
 }

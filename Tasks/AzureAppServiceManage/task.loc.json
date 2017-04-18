@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -242,6 +242,7 @@
     "ExtensionAlreadyAvaiable": "ms-resource:loc.messages.ExtensionAlreadyAvaiable",
     "ExtensionListFailedError": "ms-resource:loc.messages.ExtensionListFailedError",
     "ExtensionListFailedResponseError": "ms-resource:loc.messages.ExtensionListFailedResponseError",
-    "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension"
+    "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
+    "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState"
   }
 }

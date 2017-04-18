@@ -556,10 +556,9 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
     return deferred.promise;
 }
 
-export async function getAppServiceState(endpoint, resourceGroupName: string, webAppName: string) {
+export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string) {
     
     var deferred = Q.defer<any>();
-    //var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + "?" + azureApiVersion;
 
@@ -569,7 +568,6 @@ export async function getAppServiceState(endpoint, resourceGroupName: string, we
     };
     
     tl.debug('Request to get App State: ' + url);
-    //console.log(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('GET', url, null, headers, (error, response, body) => {
         if(error) {
             console.log(body);
@@ -577,7 +575,6 @@ export async function getAppServiceState(endpoint, resourceGroupName: string, we
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(JSON.parse(body));
-            //deferred.resolve(tl.loc('AppServiceStateFetchedSuccessfully', webAppName));
         }
         else {
             console.log(body);
