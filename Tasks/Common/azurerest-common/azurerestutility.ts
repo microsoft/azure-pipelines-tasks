@@ -556,6 +556,37 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
     return deferred.promise;
 }
 
+export async function getAppServiceState(endpoint, resourceGroupName: string, webAppName: string) {
+    
+    var deferred = Q.defer<any>();
+    //var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
+    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                '/providers/Microsoft.Web/sites/' + webAppName + "?" + azureApiVersion;
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+    
+    tl.debug('Request to get App State: ' + url);
+    //console.log(tl.loc('StartingAppService', webAppNameWithSlot));
+    httpObj.send('GET', url, null, headers, (error, response, body) => {
+        if(error) {
+            console.log(body);
+            deferred.reject(error);
+        }
+        if(response.statusCode === 200 || response.statusCode === 204) {
+            deferred.resolve(JSON.parse(body));
+            //deferred.resolve(tl.loc('AppServiceStateFetchedSuccessfully', webAppName));
+        }
+        else {
+            console.log(body);
+            deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppName, response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
 function sleep(timeInMilliSecond) {
   return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
 }
