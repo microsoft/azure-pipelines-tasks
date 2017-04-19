@@ -574,7 +574,7 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
             console.log(body);
             deferred.reject(error);
         }
-        if(response.statusCode === 200 || response.statusCode === 204) {
+        if(response.statusCode === 200) {
             deferred.resolve(JSON.parse(body));
         }
         else {
