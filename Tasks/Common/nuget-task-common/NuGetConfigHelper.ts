@@ -31,7 +31,7 @@ export class NuGetConfigHelper {
 
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
-        tl._writeLine("save nuget.config to temp config file");
+        console.log("save nuget.config to temp config file");
         if (!(fs.existsSync(this.tempNugetConfigDir))) {
             fs.mkdirSync(this.tempNugetConfigDir);
         }
@@ -51,11 +51,11 @@ export class NuGetConfigHelper {
         this.ensureTempConfigCreated();
 
         // remove sources
-        tl._writeLine(tl.loc("NGCommon_RemovingSources"));
+        console.log(tl.loc("NGCommon_RemovingSources"));
         this.removeSourcesInNugetConfig(packageSources);
 
         // add sources
-        tl._writeLine(tl.loc("NGCommon_AddingSources"));
+        console.log(tl.loc("NGCommon_AddingSources"));
         this.addSourcesInNugetConfig(packageSources, includeAuth);
     }
 

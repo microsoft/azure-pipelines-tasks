@@ -152,7 +152,7 @@ async function main(): Promise<void> {
             {
                 tl.debug(`Adding the following sources to the config file: ${sources.map(x => x.feedName).join(';')}`)
                 nuGetConfigHelper.setSources(sources, false);
-                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
                 nuGetConfigPath = nuGetConfigHelper.tempNugetConfigPath;
             }
             else {
@@ -174,7 +174,7 @@ async function main(): Promise<void> {
 
                 if (packageSources.length !== 0) {
                     nuGetConfigHelper.setSources(packageSources, true);
-                    credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                    credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
                     configFile = nuGetConfigHelper.tempNugetConfigPath;
                 }
                 else {
@@ -182,7 +182,7 @@ async function main(): Promise<void> {
                 }
             }
             else {
-                tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
+                console.log(tl.loc("Warning_NoConfigForNoCredentialProvider"));
             }
         }
 
