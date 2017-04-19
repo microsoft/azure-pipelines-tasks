@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 30
     },
     "demands": [
         "vstest"
@@ -150,7 +150,7 @@
             "label": "Run only impacted tests",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
+            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change. [More information](https://aka.ms/tialearnmore)",
             "groupName": "testSelection",
             "visibleRule": "testSelector = testAssemblies"
         },
@@ -238,7 +238,7 @@
             "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://msdn.microsoft.com/library/jj159530.aspx) to learn more about how tests are run in parallel.",
+            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
          },
          {

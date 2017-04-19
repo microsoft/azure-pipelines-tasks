@@ -23,7 +23,7 @@
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
-  "loc.input.help.runOnlyImpactedTests": "Automatically select, and run only the tests needed to validate the code change.",
+  "loc.input.help.runOnlyImpactedTests": "Automatically select, and run only the tests needed to validate the code change. [More information](https://aka.ms/tialearnmore)",
   "loc.input.label.runAllTestsAfterXBuilds": "Number of builds after which all tests should be run",
   "loc.input.help.runAllTestsAfterXBuilds": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
   "loc.input.label.uiTests": "Test mix contains UI tests",
