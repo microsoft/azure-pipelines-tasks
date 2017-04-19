@@ -46,7 +46,7 @@
   "loc.input.label.codeCoverageEnabled": "Code coverage enabled",
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the test run.",
   "loc.input.label.otherConsoleOptions": "Other console options",
-  "loc.input.help.otherConsoleOptions": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
+  "loc.input.help.otherConsoleOptions": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
   "loc.input.label.testRunTitle": "Test run title",
   "loc.input.help.testRunTitle": "Provide a name for the test run.",
   "loc.input.label.platform": "Build platform",
