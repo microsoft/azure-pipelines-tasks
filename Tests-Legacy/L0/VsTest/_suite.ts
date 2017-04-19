@@ -396,10 +396,9 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
-                assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/The specified settings/) >= 0, 'should print warning');
+                assert(tr.stderr.length != 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.failed, 'task should have failed');
+                assert(tr.stderr.search(/The specified settings/) >= 0, 'should print error');
                 done();
             })
             .fail((err) => {
@@ -463,11 +462,9 @@ describe('VsTest Suite', function () {
     })
 
     it('Vstest task with run in parallel and vs 2017', (done) => {
-
-        let vstestCmd = [sysVstest15Location, '/source/dir/someFile1', '/logger:trx'].join(' ');
-        setResponseFile('vstestGood.json');
-
-        let tr = new trm.TaskRunner('VSTest');
+        setResponseFile('vstestGoodRunInParallel.json');
+        let tr = new trm.TaskRunner('VSTest', false, true, true); // normalize slash, ignore temp path, enable regex match
+      
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -479,7 +476,6 @@ describe('VsTest Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
                 assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update3 or higher requirement');
                 done();
@@ -492,11 +488,9 @@ describe('VsTest Suite', function () {
     })
 
     it('Vstest task with run in parallel and vs 2015 update3 or higher', (done) => {
-
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestRunInParallel.json');
 
-        let tr = new trm.TaskRunner('VSTest');
+        let tr = new trm.TaskRunner('VSTest', false, true, true); // normalize slash, ignore temp path, enable regex match
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -508,7 +502,6 @@ describe('VsTest Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
                 assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) < 0, 'should not have given a warning for update3 or higher requirement.');
                 done();

@@ -1,7 +1,7 @@
 {
     "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
     "name": "DotNetCoreCLI",
-    "friendlyName": ".NET Core (PREVIEW)",
+    "friendlyName": ".NET Core",
     "description": "Build, test and publish using dotnet core command-line.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
@@ -15,11 +15,11 @@
     ],
     "demands": [],
     "version": {
-        "Major": 0,
-        "Minor": 4,
-        "Patch": 2
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
     "groups": [],
     "inputs": [
@@ -52,12 +52,12 @@
         },
         {
             "name": "projects",
-            "type": "string",
+            "type": "multiline",
             "label": "Project(s)",
             "defaultValue": "",
             "visibleRule": "command != publish || publishWebProjects = false",
             "required": false,
-            "helpMarkDown": "Relative path of the project.json file(s) from repo root. Wildcards can be used. For example, **/project.json for all project.json files in all the sub folders."
+            "helpMarkDown": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders."
         },
         {
             "name": "arguments",
@@ -86,7 +86,7 @@
     "messages": {
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noWebProjctFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
-        "dotnetCommandFailed": "Dotnet command failed with non-zero exit code: %d.",
+        "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "zipFailed": "Zip failed with error: %s",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s."
     }
