@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 27
+        "Patch": 28
     },
     "demands": [
         "vstest"
@@ -269,6 +269,15 @@
             "groupName": "executionOptions"      
         },
         {
+            "name": "otherConsoleOptions",
+            "type": "string",
+            "label": "Other console options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
+            "groupName": "executionOptions"
+        },
+        {
             "name": "testRunTitle",
             "type": "string",
             "label": "Test run title",
@@ -367,6 +376,7 @@
         "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
         "vs2013NotSupportedInDta": "Running tests using Visual Studio 2013 with multi-agent phase settings is not supported.",
-        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s"
+        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored."
     }
 }

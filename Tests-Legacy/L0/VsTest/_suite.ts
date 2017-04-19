@@ -14,8 +14,8 @@ import shell = require('shelljs');
 
 var ps = shell.which('powershell.exe');
 var psr = null;
-const sysVstestLocation = "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
-const sysVstest15Location = "\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
+const sysVstestLocation = '\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe';
+const sysVstest15Location = '\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe';
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -135,7 +135,7 @@ describe('VsTest Suite', function () {
     }
 
     if (!os.type().match(/^Win/)) {
-        console.log("Skipping vstest tests. Vstest tests run only on windows.")
+        console.log('Skipping vstest tests. Vstest tests run only on windows.')
         return;
     }
   
@@ -157,7 +157,7 @@ describe('VsTest Suite', function () {
     })
     it('Vstest task with test results files filter', (done) => {
 
-        let vstestCmd = [sysVstestLocation, "/source/dir/someFile2 /source/dir/someFile1", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -169,7 +169,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -182,7 +182,7 @@ describe('VsTest Suite', function () {
 
     it('VSTest task with VS2017 installed on build agent and latest option is selected in definition', (done) => {
 
-        let vstestCmd = ["\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe", "/path/to/test.dll", "/logger:trx"].join(" ");
+        let vstestCmd = ['\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe', '/path/to/test.dll', '/logger:trx'].join(' ');
         setResponseFile('vs2017.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -193,7 +193,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result' + tr.stderr + tr.stdout);
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr + tr.stdout);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr + tr.stdout);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest' + tr.stdout + tr.stderr);
                 done();
@@ -205,7 +205,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test results files filter and exclude filter', (done) => {
 
-        let vstestCmd = [sysVstestLocation, "/source/dir/someFile1", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -217,7 +217,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -230,7 +230,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test results files as path', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -242,7 +242,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -255,7 +255,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task when vstest fails', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestFails.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -280,7 +280,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task when vstest is set to ignore test failures', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestSucceedsOnIgnoreFailure.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -292,7 +292,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should have not written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should have not written to stderr. error: ' + tr.stderr);
                 assert(!tr.failed, 'task should not have failed');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish/) < 0, 'should not have published test results.');
@@ -305,7 +305,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test case filter', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/TestCaseFilter:testFilter", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/TestCaseFilter:testFilter', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -318,7 +318,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -331,7 +331,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with enable code coverage', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/EnableCodeCoverage", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/EnableCodeCoverage', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -344,7 +344,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -357,7 +357,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with settings file', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/Settings:settings.runsettings", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:settings.runsettings', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -365,12 +365,12 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', "settings.runsettings");
+        tr.setInput('runSettingsFile', 'settings.runsettings');
 
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -383,7 +383,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with invalid settings file', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -391,12 +391,12 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', "random.runsettings");
+        tr.setInput('runSettingsFile', 'random.runsettings');
 
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/The specified settings/) >= 0, 'should print warning');
@@ -409,7 +409,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2013', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -422,7 +422,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -436,7 +436,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2015 below update1', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -449,7 +449,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -464,7 +464,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2017', (done) => {
 
-        let vstestCmd = [sysVstest15Location, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstest15Location, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -477,7 +477,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -493,7 +493,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2015 update3 or higher', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestRunInParallel.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -506,7 +506,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -520,7 +520,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with custom adapter path', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx", "/TestAdapterPath:path/to/customadapters"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:path/to/customadapters'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -528,12 +528,12 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('pathtoCustomTestAdapters', "path/to/customadapters");
+        tr.setInput('pathtoCustomTestAdapters', 'path/to/customadapters');
 
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -547,7 +547,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with Nuget restored adapter path', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx", "/TestAdapterPath:/source/dir"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:/source/dir'].join(' ');
         setResponseFile('vstestGoodwithNugetAdapter.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -559,7 +559,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
@@ -573,7 +573,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with runsettings file and tia.enabled set to false', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/Settings:settings.runsettings", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:settings.runsettings', '/logger:trx'].join(' ');
         setResponseFile('vstestGoodWithTiaDisabled.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -581,15 +581,15 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', "settings.runsettings");
+        tr.setInput('runSettingsFile', 'settings.runsettings');
 
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                var result = (tr.stdout.search(/No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector/) < 0);
+                let result = (tr.stdout.search(/No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector/) < 0);
                 assert(result, 'should add not test impact collector to runsettings file.');
                 done();
             })
@@ -600,7 +600,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with runsettings file and tia.enabled undefined', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/Settings:settings.runsettings", "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:settings.runsettings', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -608,15 +608,15 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', "settings.runsettings");
+        tr.setInput('runSettingsFile', 'settings.runsettings');
 
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                var result = (tr.stdout.search(/No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector/) < 0);
+                let result = (tr.stdout.search(/No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector/) < 0);
                 assert(result, 'should add not test impact collector to runsettings file.');
                 done();
             })
@@ -629,19 +629,19 @@ describe('VsTest Suite', function () {
     it('Vstest task with results directory as absolute path in run settings file', (done) => {
 
         let settingsFilePath = path.join(__dirname, 'data', 'ResultsDirectoryWithAbsolutePath.runsettings');
-        var resultsDirectory = 'C:\\test'; // settings file has this result directory.
+        let resultsDirectory = 'C:\\test'; // settings file has this result directory.
 
-        var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
-        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+        let responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
+        let responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
         responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
-        var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
+        let newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
 
         setResponseFile(path.basename(newResponseFilePath));
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -650,7 +650,7 @@ describe('VsTest Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.stdout.indexOf("creating path: " + resultsDirectory) >= 0, 'should have created results directory.');
+                assert(tr.stdout.indexOf('creating path: ' + resultsDirectory) >= 0, 'should have created results directory.');
                 done();
             })
             .fail((err) => {
@@ -660,19 +660,19 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with results directory as relative path in run settings file', (done) => {
 
-        let settingsFilePath = path.join(__dirname, 'data', 'ResultsDirectoryWithRelativePath.runsettings');
-        let resultsDirectory = path.join(__dirname, 'data', 'result'); // settings file has this result directory.
+        const settingsFilePath = path.join(__dirname, 'data', 'ResultsDirectoryWithRelativePath.runsettings');
+        const resultsDirectory = path.join(__dirname, 'data', 'result'); // settings file has this result directory.
 
-        let responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
+        const responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         let responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
         responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
-        let newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
+        const newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile(path.basename(newResponseFilePath));
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -682,7 +682,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 //vstest task reads result directory from settings file and creates it.
-                assert(tr.stdout.indexOf("creating path: " + resultsDirectory) >= 0, 'should have created results directory.');
+                assert(tr.stdout.indexOf('creating path: ' + resultsDirectory) >= 0, 'should have created results directory.');
                 done();
             })
             .fail((err) => {
@@ -692,19 +692,19 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with results directory empty in run settings file', (done) => {
 
-        let settingsFilePath = path.join(__dirname, 'data', 'RunSettingsWithoutResultsDirectory.runsettings');
-        let resultsDirectory = '\\source\\dir\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
+        const settingsFilePath = path.join(__dirname, 'data', 'RunSettingsWithoutResultsDirectory.runsettings');
+        const resultsDirectory = '\\source\\dir\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
 
-        let responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
+        const responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         let responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
         responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, [settingsFilePath, resultsDirectory]);
-        let newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
+        const newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile(path.basename(newResponseFilePath));
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');        
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -714,7 +714,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 //vstest task reads result directory from settings file and creates it.
-                assert(tr.stdout.indexOf("creating path: " + resultsDirectory) >= 0, 'should have created results directory.');
+                assert(tr.stdout.indexOf('creating path: ' + resultsDirectory) >= 0, 'should have created results directory.');
                 done();
             })
             .fail((err) => {
@@ -724,10 +724,10 @@ describe('VsTest Suite', function () {
 
     it('Vstest task should not use diag option when system.debug is not set', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');        
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');        
@@ -735,7 +735,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 console.log(tr.stderr.length);
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.indexOf('/diag') < 0, '/diag option should not be used for vstest.console.exe');
@@ -748,10 +748,10 @@ describe('VsTest Suite', function () {
 
     it('Vstest task should not use diag option when system.debug is set to false', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGoodSysDebugFalse.json');
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version'); 
@@ -759,7 +759,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 console.log('The errors are..........' + tr.stderr);
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.indexOf('/diag') < 0, '/diag option should not be used for vstest.console.exe');
@@ -772,10 +772,10 @@ describe('VsTest Suite', function () {
 
     it('Vstest task verify test results are dropped at correct location in case of release', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/artifacts/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/artifacts/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestRM.json');
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');        
         tr.setInput('testAssemblyVer2', '/artifacts/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -784,7 +784,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=\\artifacts\\dir\\TestResults\\a.trx;\]/) >= 0, 'should publish test results.');
@@ -799,10 +799,10 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with serach directory input', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/search/dir/someFile1', "/logger:trx"].join(" ");
+        const vstestCmd = [sysVstestLocation, '/search/dir/someFile1', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
-        let tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/search/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
@@ -810,7 +810,7 @@ describe('VsTest Suite', function () {
         tr.setInput('searchDirectory', '/search/dir')
         tr.run()
             .then(() => {
-                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.indexOf('/diag') < 0, '/diag option should not be used for vstest.console.exe');
@@ -820,4 +820,87 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
+
+    it('Vstest task with single otherConsoleOptions', (done) => {
+
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/UseVsixExtensions'].join(' ');
+        setResponseFile('vstestOtherConsoleOptions.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('otherConsoleOptions', '/UseVsixExtensions');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('running vstest with other console params single..') >= 0, 'should have proper console output.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Vstest task with multiple otherConsoleOptions', (done) => {
+
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/UseVsixExtensions', '/Enablecodecoverage'].join(' ');
+        setResponseFile('vstestOtherConsoleOptions.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('otherConsoleOptions', '/UseVsixExtensions /Enablecodecoverage');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('running vstest with other console params multiple..') >= 0, 'should have proper console output.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Vstest task with /Enablecodecoverage as otherConsoleOptions as well as Code Coverage enabled in UI', (done) => {
+
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/EnableCodeCoverage', '/logger:trx', '/Enablecodecoverage'].join(' ');
+        setResponseFile('vstestOtherConsoleOptions.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('otherConsoleOptions', '/Enablecodecoverage');
+        tr.setInput('codeCoverageEnabled', 'true');
+
+        tr.run()
+            .then(() => {                
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.failed, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('running vstest with other console duplicate params..') >= 0, 'should have proper console output.');                
+                assert(tr.stdout.indexOf('The parameter \"/EnableCodeCoverage\" should be provided only once.') >= 0, 'should have code coverage duplicate issue.');
+                assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: \\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe failed with return code: 1') >= 0, 'should have proper error message.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    })
 });
