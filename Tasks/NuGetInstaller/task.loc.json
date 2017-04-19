@@ -7,9 +7,9 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 2,
-    "Patch": 31
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -34,24 +34,46 @@
       "required": "true"
     },
     {
+      "name": "selectOrConfig",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.selectOrConfig",
+      "defaultValue": "select",
+      "helpMarkDown": "ms-resource:loc.input.help.selectOrConfig",
+      "required": "true",
+      "options": {
+        "select": "Feed(s) I select here",
+        "config": "Feeds in my NuGet.config"
+      }
+    },
+    {
+      "name": "feed",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feed",
+      "defaultValue": "",
+      "helpMarkDown": "",
+      "required": "false",
+      "visibleRule": "selectOrConfig = select",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "includeNuGetOrg",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeNuGetOrg",
+      "defaultValue": "true",
+      "helpMarkDown": "",
+      "required": "false",
+      "visibleRule": "selectOrConfig = select"
+    },
+    {
       "name": "nugetConfigPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.nugetConfigPath",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
-      "required": "false"
-    },
-    {
-      "name": "restoreMode",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.restoreMode",
-      "defaultValue": "restore",
-      "helpMarkDown": "ms-resource:loc.input.help.restoreMode",
-      "required": "true",
-      "options": {
-        "restore": "Restore",
-        "install": "Install"
-      }
+      "required": "false",
+      "visibleRule": "selectOrConfig = config"
     },
     {
       "name": "noCache",
@@ -59,21 +81,23 @@
       "label": "ms-resource:loc.input.label.noCache",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.noCache",
-      "required": "false"
+      "required": "false",
+      "groupName": "advanced"
     },
     {
-      "name": "nuGetRestoreArgs",
+      "name": "packagesDirectory",
       "type": "string",
-      "label": "ms-resource:loc.input.label.nuGetRestoreArgs",
+      "label": "ms-resource:loc.input.label.packagesDirectory",
       "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetRestoreArgs"
+      "helpMarkDown": "ms-resource:loc.input.help.packagesDirectory",
+      "required": "false",
+      "groupName": "advanced"
     },
     {
       "name": "verbosity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosity",
-      "defaultValue": "-",
+      "defaultValue": "Detailed",
       "helpMarkDown": "ms-resource:loc.input.help.verbosity",
       "required": "false",
       "groupName": "advanced",
@@ -85,28 +109,31 @@
       }
     },
     {
-      "name": "nuGetVersion",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.nuGetVersion",
-      "defaultValue": "3.3.0",
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetVersion",
-      "required": "true",
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "defaultValue": "4.0.0",
+      "required": true,
       "groupName": "advanced",
-      "options": {
-        "3.3.0": "3.3.0",
-        "3.5.0.1829": "3.5.0",
-        "4.0.0.2283": "4.0.0",
-        "custom": "Custom"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
-      "name": "nuGetPath",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.nuGetPath",
-      "defaultValue": "",
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatest",
+      "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
-      "groupName": "advanced"
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -138,6 +165,15 @@
     "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
     "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
     "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
-    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion"
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   }
 }
