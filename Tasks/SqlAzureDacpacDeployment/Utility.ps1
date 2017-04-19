@@ -19,45 +19,36 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Get-Command -Name "SqlCmd.exe" -ErrorAction SilentlyContinue
-    if ($sqlCmd)
-    {
-        $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -P `"$sqlPassword`" -Q `"select getdate()`""
+    $sqlCmd = Split-Path -Parent $MyInvocation.MyCommand.Path | Join-Path -ChildPath "sqlcmdfolder\SQLCMD.exe"
+
+    $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -Q `"select getdate()`""
     
-        Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
+    Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
-        $ErrorActionPreference = 'Continue'
+    $ErrorActionPreference = 'Continue'
 
-        $sqlCmdPath = $sqlCmd.Path
-        ( Invoke-Expression "& '$sqlCmdPath' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
+    $sqlCmdPath = $sqlCmd.Path
+    ( Invoke-Expression "& '$sqlCmdPath' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
 
-        $ErrorActionPreference = 'Stop'
+    $ErrorActionPreference = 'Stop'
 
-        if($errors.Count -gt 0)
+    if($errors.Count -gt 0)
+    {
+        $errorMsg = $errors[0].Exception.Message
+        Write-Verbose $errorMsg
+
+        $pattern = "([0-9]+).([0-9]+).([0-9]+)."
+        $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+        if($errorMsg.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($errorMsg) -eq $true)
         {
-            $errorMsg = $errors[0].Exception.Message
-            Write-Verbose $errorMsg
+            $ipRangePrefix = $regex.Match($errorMsg).Groups[0].Value;
+            Write-Verbose "IP Range Prefix $ipRangePrefix"
 
-            $pattern = "([0-9]+).([0-9]+).([0-9]+)."
-            $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-            if($errorMsg.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($errorMsg) -eq $true)
-            {
-                $ipRangePrefix = $regex.Match($errorMsg).Groups[0].Value;
-                Write-Verbose "IP Range Prefix $ipRangePrefix"
-
-                $IPRange.StartIPAddress = $ipRangePrefix + '0'
-                $IPRange.EndIPAddress = $ipRangePrefix + '255'
-            }
+            $IPRange.StartIPAddress = $ipRangePrefix + '0'
+            $IPRange.EndIPAddress = $ipRangePrefix + '255'
         }
     }
-    else
-    {
-        Write-Verbose "SqlCmd.exe is not found in PATH" 
-
-        $IPRange.StartIPAddress = Get-AgentStartIPAddress
-        $IPRange.EndIPAddress = $IPRange.StartIPAddress
-    }    
 
     return $IPRange
 }
