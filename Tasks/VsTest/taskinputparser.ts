@@ -24,6 +24,9 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     if(dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
     }
+    if (dtaConfiguration.otherConsoleOptions) {
+        tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
+    }
 
     dtaConfiguration.numberOfAgentsInPhase = 0;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
@@ -104,6 +107,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     testConfiguration.tiaConfig = getTiaConfiguration();
     testConfiguration.testSelection = tl.getInput('testSelector');
+    testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
 
     if(testConfiguration.testSelection.toLowerCase() === 'testplan') {    
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));

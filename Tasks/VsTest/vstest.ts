@@ -454,6 +454,15 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     var vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
+    // Adding the other console options here
+    //   => Because it should be added as ".line" inorder to pass multiple parameters
+    //   => Parsing will be taken care by .line
+    // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
+
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        vstest.line(vstestConfig.otherConsoleOptions);
+    }
+
     //Re-calculate the results directory based on final runsettings and clean up again if required.
     resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
     tl.rmRF(resultsDirectory, true);
