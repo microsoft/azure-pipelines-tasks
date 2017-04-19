@@ -20,7 +20,7 @@ function Get-AgentIPRange
     [hashtable] $IPRange = @{}
 
     $sqlCmd = Split-Path -Parent $MyInvocation.MyCommand.Path | Join-Path -ChildPath "sqlcmdfolder\SQLCMD.exe"
-
+    $env:SQLCMDPASSWORD = $sqlPassword
     $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -Q `"select getdate()`""
     
     Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
