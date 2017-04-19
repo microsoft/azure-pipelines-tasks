@@ -820,4 +820,87 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
+
+    it('Vstest task with single otherConsoleOptions', (done) => {
+
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/UseVsixExtensions'].join(' ');
+        setResponseFile('vstestOtherConsoleOptions.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('otherConsoleOptions', '/UseVsixExtensions');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('running vstest with other console params single..') >= 0, 'should have proper console output.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Vstest task with multiple otherConsoleOptions', (done) => {
+
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/UseVsixExtensions', '/Enablecodecoverage'].join(' ');
+        setResponseFile('vstestOtherConsoleOptions.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('otherConsoleOptions', '/UseVsixExtensions /Enablecodecoverage');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('running vstest with other console params multiple..') >= 0, 'should have proper console output.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Vstest task with /Enablecodecoverage as otherConsoleOptions as well as Code Coverage enabled in UI', (done) => {
+
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/EnableCodeCoverage', '/logger:trx', '/Enablecodecoverage'].join(' ');
+        setResponseFile('vstestOtherConsoleOptions.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('otherConsoleOptions', '/Enablecodecoverage');
+        tr.setInput('codeCoverageEnabled', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.failed, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('running vstest with other console duplicate params..') >= 0, 'should have proper console output.');                
+                assert(tr.stdout.indexOf('The parameter \"/EnableCodeCoverage\" should be provided only once.') >= 0, 'should have code coverage duplicate issue.');
+                assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: \\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe failed with return code: 1') >= 0, 'should have proper error message.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
 });
