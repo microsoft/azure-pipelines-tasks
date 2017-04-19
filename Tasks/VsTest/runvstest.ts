@@ -1,9 +1,9 @@
-import tl = require('vsts-task-lib/task');
-import models = require('./models')
-import taskInputParser = require('./taskinputparser')
-import localTest = require('./vstest')
-import path = require('path');
-import distributedTest = require('./distributedtest')
+import * as tl from 'vsts-task-lib/task';
+import * as models from './models';
+import * as taskInputParser from './taskinputparser';
+import * as localTest from './vstest';
+import * as path from 'path';
+import * as distributedTest from './distributedtest';
 
 try {
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
@@ -16,8 +16,8 @@ try {
          || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
         tl.debug('Going to the DTA Flow..');
         tl.debug('***********************');
-        
-        var dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
+
+        const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();
@@ -31,15 +31,3 @@ try {
     tl.setResult(tl.TaskResult.Failed, error);
 }
 
-function getDtaInstanceId(): number {
-    const taskInstanceIdString = tl.getVariable('DTA_INSTANCE_ID');
-    let taskInstanceId: number = 1;
-    if (taskInstanceIdString) {
-        const instanceId: number = Number(taskInstanceIdString);
-        if (!isNaN(instanceId)) {
-            taskInstanceId = instanceId + 1;
-        }
-    }
-    tl.setVariable('DTA_INSTANCE_ID', taskInstanceId.toString());
-    return taskInstanceId;
-}

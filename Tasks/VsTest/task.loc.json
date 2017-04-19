@@ -269,6 +269,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "otherConsoleOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.otherConsoleOptions",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "testRunTitle",
       "type": "string",
       "label": "ms-resource:loc.input.label.testRunTitle",
@@ -367,6 +376,7 @@
     "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
     "vs2013NotSupportedInDta": "ms-resource:loc.messages.vs2013NotSupportedInDta",
-    "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed"
+    "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
+    "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported"
   }
 }
