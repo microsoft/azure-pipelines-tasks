@@ -2,23 +2,21 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import util = require('./NugetMockHelper');
-
-let taskPath = path.join(__dirname, '..', 'nugetinstaller.js');
+let taskPath = path.join(__dirname, '..', 'nuget.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
-nmh.setNugetVersionInputDefault();
-tmr.setInput('solution', 'single.sln');
-tmr.setInput('nuGetRestoreArgs', '-Foo');
+tmr.setInput('command', 'testCommand');
+tmr.setInput('arguments', 'testArgument');
+tmr.setInput('versionSpec', '3.0.0');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
-        "c:\\agent\\home\\directory\\single.sln": true
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo": {
+        "c:\\from\\tool\\installer\\nuget.exe testCommand -NonInteractive testArgument": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -26,9 +24,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {},
     "stats": {
-        "c:\\agent\\home\\directory\\single.sln": {
-            "isFile": true
-        }
     }
 };
 nmh.setAnswers(a);
@@ -36,5 +31,6 @@ nmh.setAnswers(a);
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetToolGetterMock();
 
 tmr.run();

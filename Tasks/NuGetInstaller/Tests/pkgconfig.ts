@@ -9,6 +9,7 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'packages.config');
+tmr.setInput('selectOrConfig', 'config');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
@@ -17,7 +18,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config": {
+        "c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

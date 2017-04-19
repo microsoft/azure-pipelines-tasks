@@ -1,0 +1,60 @@
+{
+  "id": "2661B7E5-00F9-4DE1-BA41-04E68D70B528",
+  "name": "NuGet",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "preview": "true",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": "true"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "required": "false"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "nuget.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
+    "Info_NuGetSupportedAfter3_5": "ms-resource:loc.messages.Info_NuGetSupportedAfter3_5",
+    "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+}

@@ -118,9 +118,9 @@ async function main(): Promise<void> {
         if (nuGetFeedType == "internal") {
             if (useCredConfig) {
                 let nuGetConfigHelper = new NuGetConfigHelper(nuGetPath, null, authInfo, environmentSettings);
-                nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
+                nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }], true);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
-                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
             }
 
             apiKey = "VSTS";

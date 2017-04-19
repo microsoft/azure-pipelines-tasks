@@ -1,0 +1,60 @@
+{
+    "id": "2661B7E5-00F9-4DE1-BA41-04E68D70B528",
+    "name": "NuGet",
+    "friendlyName": "NuGet Command",
+    "description": "Runs a NuGet command",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "preview": "true",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "groups": [],
+    "instanceNameFormat": "NuGet $(command)",
+    "inputs": [
+        {
+            "name": "command",
+            "type": "string",
+            "label": "Command",
+            "defaultValue": "",
+            "helpMarkDown": "The NuGet command to run.\n\nExamples: restore, pack",
+            "required": "true"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "helpMarkDown": "Arguments for the provided command",
+            "required": "false"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "nuget.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
+        "Info_NuGetSupportedAfter3_5": "The NuGet version being used is %s and only versions >= 3.5.0 are suported by this task. ",
+        "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+
+        "Info_AvailableVersions": "The available versions are: %s",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_UsingVersion": "Using version: %s",
+        "Info_UsingToolPath": "Using tool path: %s",
+        "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+        "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+        "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+    }
+}

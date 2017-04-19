@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20",
-    "xmlreader": "^0.2.3"
+    "vsts-task-lib": "2.0.2-preview",
+    "xmlreader": "^0.2.3",
+    "vso-node-api": "6.0.1-preview"
   }
 }
