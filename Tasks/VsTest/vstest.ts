@@ -153,8 +153,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ' + settings);
             });
-        }
-        else {
+        } else {
             tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
         }
     }
@@ -459,10 +458,6 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     if (vstestConfig.otherConsoleOptions) {
         vstest.line(vstestConfig.otherConsoleOptions);
     }
-    
-    vstest.args.forEach(function (arr: any) {
-             tl.debug(arr);
-    });
 
     //Re-calculate the results directory based on final runsettings and clean up again if required.
     resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
@@ -476,8 +471,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
             cleanUp(parallelRunSettingsFile);
             if (ignoreTestFailures === true) {
                 defer.resolve(0); // ignore failures.
-            }
-            else {
+            } else {
                 defer.resolve(code);
             }
         })
