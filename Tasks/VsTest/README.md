@@ -55,6 +55,7 @@ The feature is presently scoped to the following:
 	- No xplat support (Windows only).
 	- No UWP support.
 
+	Learn more about Test Impact [here](https://aka.ms/tialearnmore)
 
 
 #### Advanced Execution Options
