@@ -94,14 +94,14 @@ export class DistributedTest {
                 if (line.startsWith('Web method')) {
                     tl.debug(line);
                 } else {
-                    tl._writeLine(c.toString());
+                    tl._writeLine(line.toString());
                 }
             });
         });
         proc.stderr.on('data', (c) => {
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
-               tl._writeError(c.toString());
+               tl._writeError(line.toString());
             });
         });
 
