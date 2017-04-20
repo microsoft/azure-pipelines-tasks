@@ -28,8 +28,8 @@
         ],
         "archivePackages": [
             {
-                "archiveName": "MSDeploy.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
+                "archiveName": "SQLCMD.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/SQLCMD/130/SQLCMD.zip",
                 "dest": "./"
             }
         ]
