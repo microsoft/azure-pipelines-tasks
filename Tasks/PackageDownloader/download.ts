@@ -8,6 +8,7 @@ import * as restm from 'vso-node-api/RestClient';
 import * as tl from 'vsts-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"
+import bearm = require('vso-node-api//handlers/bearertoken');
 
 const ApiVersion = "3.0-preview.1";
 
@@ -23,7 +24,7 @@ async function main(): Promise<void> {
 	var vssConnection = new vsts.WebApi(collectionUrl, credentialHandler);
 	var coreApi = vssConnection.getCoreApi();
 
-	await downloadPackage(coreApi, feedId, packageId, version, downloadPath);
+	await downloadPackage(collectionUrl, credentialHandler, feedId, packageId, version, downloadPath);
 }
 
 function getAuthToken() {
@@ -36,11 +37,18 @@ function getAuthToken() {
 	}
 }
 
-export async function downloadPackage(coreApi: corem.ICoreApi, feedId: string, packageId: string, version: string, downloadPath: string) {
-	var packageUrl = await getNuGetPackageUrl(coreApi.vsoClient, feedId, packageId);
-
+export async function downloadPackage(collectionUrl: string, credentialHandler: bearm.BearerCredentialHandler, feedId: string, packageId: string, version: string, downloadPath: string) {
+	
+	var feedsUrl = collectionUrl.replace(".visualstudio.com",".feeds.visualstudio.com");
+	var feedConnection = new vsts.WebApi(feedsUrl, credentialHandler);
+	
+	var packagesUrl = collectionUrl.replace(".visualstudio.com",".pkgs.visualstudio.com");
+	var packageConnection = new vsts.WebApi(packagesUrl, credentialHandler);
+	
+	var packageUrl = await getNuGetPackageUrl(feedConnection.getCoreApi().vsoClient, feedId, packageId);
+	
 	await new Promise((resolve, reject) => {
-		coreApi.restClient.get(packageUrl, ApiVersion, null, { responseIsCollection: false }, async function (error, status, result) {
+		feedConnection.getCoreApi().restClient.get(packageUrl, ApiVersion, null, { responseIsCollection: false }, async function (error, status, result) {
 			if (!!error && status != 200) {
 				reject(tl.loc("FailedToGetPackageMetadata", error));
 			}
@@ -49,7 +57,7 @@ export async function downloadPackage(coreApi: corem.ICoreApi, feedId: string, p
 			var packageName = result.name;
 
 			if (packageType == "nuget") {
-				var downloadUrl = await getDownloadUrl(coreApi.vsoClient, feedId, packageName, version);
+				var downloadUrl = await getDownloadUrl(packageConnection.getCoreApi().vsoClient, feedId, packageName, version);
 				
 				if (!tl.exist(downloadPath)) {
 					tl.mkdirP(downloadPath);
@@ -59,7 +67,7 @@ export async function downloadPackage(coreApi: corem.ICoreApi, feedId: string, p
 				var unzipLocation = path.join(downloadPath, "");
 
 				console.log(tl.loc("StartingDownloadOfPackage", packageName, zipLocation));
-				await downloadNugetPackage(coreApi, downloadUrl, zipLocation);
+				await downloadNugetPackage(packageConnection.getCoreApi(), downloadUrl, zipLocation);
 				console.log(tl.loc("ExtractingNugetPackage", packageName, unzipLocation));
 				await unzip(zipLocation, unzipLocation);
 				
