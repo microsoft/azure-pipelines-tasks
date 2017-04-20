@@ -175,17 +175,37 @@
             "groupName": "AdvancedDeploymentOptions",
             "options": {
                 "None": "None",
-                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
+                "ConfigureVMwithWinRM": "Configure with WinRM",
+                "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
             },
-            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
-            "name": "machineGroupName",
-            "type": "pickList",
-            "label": "Machine group",
+            "name": "deploymentGroupEndpoint",
+            "type": "connectedService:ExternalTfs",
+            "label": "TFS/VSTS endpoint",
             "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "helpMarkDown": "Select a machine group",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"Add\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​"
+        },
+        {
+            "name": "project",
+            "type": "pickList",
+            "label": "Team project",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​"
+        },
+        
+        {
+            "name": "deploymentGroupName",
+            "type": "pickList",
+            "label": "Deployment Group",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "helpMarkDown": "Specify the Deployment Group against which the Agent(s) will be registered",
             "properties": {
                 "DisableManageLink": "True"
             }
@@ -195,19 +215,9 @@
             "type": "boolean",
             "label": "Copy Azure VM tags to agents",
             "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "defaultValue": true,
-            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
-        },
-        {
-            "name": "vstsPATToken",
-            "type": "string",
-            "label": "Personal access token",
-            "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
         {
             "name": "outputVariable",
@@ -230,14 +240,21 @@
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureLocations"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
-            "target": "machineGroupName",
-            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "tfs:teamfoundation"
+            "target": "project",
+            "endpointId": "$(deploymentGroupEndpoint)",
+            "dataSourceName": "Projects",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "deploymentGroupName",
+            "endpointId": "$(deploymentGroupEndpoint)",
+            "dataSourceName": "DeploymentGroups",
+            "parameters": {
+                "project": "$(project)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
@@ -353,25 +370,30 @@
         "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
         "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
         "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
-        "DeleteAgentManually": "After the task execution completes, if the machine group agent corresponding to the virtual machine %s is present but not active in the machine group %s, then please delete it manually from the machine group.",
-        "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
-        "MGAgentAddedOnAllVMs": "Machine group agent added on all virtual machines of the resource group",
-        "MGAgentDeletedFromAllVMs": "Machine group agent deleted from all virtual machines of the resource group",
-        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is 1",
+        "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
+        "DGAgentOperationOnAllVMsFailed": "Deployment group agent %s did not succeed on all VMs. %s",
+        "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
+        "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
+        "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
         "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
         "VMStarted": "Started virtual machine: %s",
         "VMTransitioningSkipExtensionAddition": "Virtual machine %s is in a transitioning state. Skipping adding extension on it.",
         "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
         "VMDetailsFetchSucceeded": "Fetched details of virtual machine %s.",
-        "AddingMGAgentOnVMs": "Adding machine group agent on the resource group virutal machines.",
-        "DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
-        "DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
+        "AddingDGAgentOnVMs": "Adding deployment group agent on the resource group virtual machines.",
+        "DeletingDGAgentFromVMs": "Deleting deployment group agent from the resource group virtual machines.",
+        "DeletingDGAgentOnVMs": "Deleting deployment group agent on virtual machines",
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+        "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
+        "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
+        "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
+        "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
+        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
         "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
     }
 }

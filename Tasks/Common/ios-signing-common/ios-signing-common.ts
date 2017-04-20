@@ -13,7 +13,7 @@ var userProvisioningProfilesPath = tl.resolve(tl.getVariable('HOME'), 'Library',
  * @param p12CertPath, the P12 cert to be installed in the keychain
  * @param p12Pwd, the password for the P12 cert
  */
-export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean = false) {
+export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean) {
     let setupKeychain: boolean = true;
 
     if (useKeychainIfExists && tl.exist(keychainPath)) {

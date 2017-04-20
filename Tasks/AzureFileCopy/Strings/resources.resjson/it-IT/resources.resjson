@@ -87,5 +87,6 @@
   "loc.messages.AFC_AddNetworkSecurityRuleFailed": "Non è stato possibile aggiungere la regola di sicurezza di rete: {0}",
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Non è possibile impostare l'estensione script personalizzata '{0}' per la macchina virtuale '{1}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Non è stato possibile abilitare i prerequisiti di copia. {0}",
-  "loc.messages.AFC_BlobStorageNotFound": "L'account di archiviazione {0} non è stato trovato. Specificarne uno esistente"
+  "loc.messages.AFC_BlobStorageNotFound": "L'account di archiviazione {0} non è stato trovato. Specificarne uno esistente",
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
 }

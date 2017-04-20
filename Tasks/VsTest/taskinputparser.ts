@@ -1,33 +1,36 @@
-import path = require('path');
-import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
-import models = require('./models');
-import utils = require('./helpers');
+import * as path from 'path';
+import * as Q from 'q';
+import * as tl from 'vsts-task-lib/task';
+import * as tr from 'vsts-task-lib/toolrunner';
+import * as models from './models';
+import * as utils from './helpers';
+import * as os from 'os';
 
-let os = require('os');
-let uuid = require('node-uuid');
+const uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations(): models.DtaTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
 
-    if(dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
+    if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
         throw (tl.loc('vs2013NotSupportedInDta'));
     }
-    
-    if(dtaConfiguration.tiaConfig.tiaEnabled) {
+
+    if (dtaConfiguration.tiaConfig.tiaEnabled) {
         tl.warning(tl.loc('tiaNotSupportedInDta'));
         dtaConfiguration.tiaConfig.tiaEnabled = false;
     }
-    if(dtaConfiguration.runTestsInIsolation) {
+    if (dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
+    }
+    if (dtaConfiguration.otherConsoleOptions) {
+        tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
     }
 
     dtaConfiguration.numberOfAgentsInPhase = 0;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
-    if(!isNaN(totalJobsInPhase)) {
+    if (!isNaN(totalJobsInPhase)) {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
 
@@ -61,8 +64,8 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const taskInstanceId = getDtaInstanceId();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
 
-    if(releaseId) {
-        if(parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
+    if (releaseId) {
+        if (parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
             const jobId = tl.getVariable('System.JobId');
             dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
         } else {
@@ -104,12 +107,13 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     testConfiguration.tiaConfig = getTiaConfiguration();
     testConfiguration.testSelection = tl.getInput('testSelector');
+    testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
 
-    if(testConfiguration.testSelection.toLowerCase() === 'testplan') {    
+    if (testConfiguration.testSelection.toLowerCase() === 'testplan') {
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
         testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
 
-        var testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+        const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
         testConfiguration.testSuites = new Array<number>();
         testSuiteStrings.forEach(element => {
         testConfiguration.testSuites.push(parseInt(element));
@@ -117,11 +121,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
 
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
-    if(testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+    if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
-        if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
+        if (utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
             tl._writeLine('vsTestVersion is null or empty');
-            throw new Error("vsTestVersion is null or empty");
+            throw new Error('vsTestVersion is null or empty');
         }
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
@@ -142,7 +146,7 @@ function getTiaConfiguration() : models.TiaConfiguration {
     tiaConfiguration.tiaRebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
-    tiaConfiguration.tiaFilterPaths = tl.getVariable("TIA_IncludePathFilters");
+    tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
     tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;

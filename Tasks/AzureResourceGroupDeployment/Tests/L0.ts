@@ -22,19 +22,20 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("MGAgentHandlerMajorVersion") > 0, "Since agent major version has been upgraded, modify the task version and also in the loc string; both are in task.json.");
+            assert(tr.stdout.indexOf("DGAgentHandlerMajorVersion") > 0, "Since agent major version has been upgraded, modify the task version and also in the loc string; both are in task.json.");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
@@ -47,15 +48,67 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Successfully removed failed extensions - Create or update RG", (done) => {
+    it("Task fails when incorrect PAT token endpoint is given - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
-        process.env["resourceGroupName"] = "dummy_ProvisioningOfMachineGroupExtensionFailed";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["resourceGroupName"] = "IncorrectPat";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been tried to be added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "TeamServicesAgent should have been tried to be deleted from the VM, since the installation failed");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "TeamServicesAgent should have been deleted successfully");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Task fails when PAT service endpoint not of type Token is given  - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "dummy";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Basic\"}";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("loc_mock_OnlyTokenAuthAllowed") > 0, "TeamServicesAgent should not have been added on the VM");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Successfully removed failed extensions - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "dummy_ProvisioningOfDeploymentGroupExtensionFailed";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -78,17 +131,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "noVMs";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") <= 0, "Deployment group agent should not have been added since there are no VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied since there are no VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") <= 0, "TeamServicesAgent should not have been added since there are no VMs");
@@ -106,17 +160,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "StoppedVM";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all vms");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all vms");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied ");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added");
@@ -135,17 +190,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "TransitioningVM";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.failed, "Should have failed");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "virtualMachineExtensions.createOrUpdate function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added on all vms");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") <= 0, "Deployment group agent should not have been added on all vms");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_VMTransitioningSkipExtensionAddition") > 0, "VM is transitionin. Adding extension should be skipped and task aborted.");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") < 0, "TeamServicesAgent should not have been added on the VM. Task is supposed to abort before that.");
@@ -163,17 +219,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "false";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied because option is not checked");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
@@ -191,15 +248,16 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Select Resource Group";
         process.env["resourceGroupName"] = "dummy";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "a";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
@@ -216,15 +274,16 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "NonWindowsVM";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
@@ -247,11 +306,12 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") <= 0, "Deployment group agent should not have been added on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM, since option was not specified");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
@@ -268,14 +328,15 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have deleted VM");
-            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have been tried to be deleted from VM");
-            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Deployment group agent should have been tried to be deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Deployment group agent should have been deleted from VM");
             done();
         }
         catch (error) {
@@ -289,15 +350,16 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") > 0, "Machine group agent should have been deleted from all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") > 0, "Deployment group agent should have been deleted from all VMs");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have started to be deleted from VM");
-            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Deployment group agent should have started to be deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Deployment group agent should have been deleted from VM");
             done();
         }
         catch (error) {
@@ -311,12 +373,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "noVMs";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted since there are no VMs");
             assert(tr.stdout.indexOf("loc_mock_VM_Delete") <= 0, "Should not have deleted VM since no vms present");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") <= 0, "Should not have called virtualMachines.deleteMethod function from azure-sdk");
@@ -333,12 +396,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "StoppedVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted from all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted from all VMs");
             assert(tr.stdout.indexOf("loc_mock_VM_Delete") > 0, "Should have deleted VM");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Should have tried to deleted extension");
             assert(tr.stdout.indexOf("loc_mock_DeleteAgentManually") > 0, "Deletion warning should have been prompted");
@@ -356,12 +420,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "noVMs";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted since there are not vms");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted since there are not vms");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Delete Resource Group function should have been called");
             done();

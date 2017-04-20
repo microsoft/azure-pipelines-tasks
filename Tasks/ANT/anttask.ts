@@ -4,6 +4,7 @@ import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
 import javacommons = require('java-common/java-common');
+import ccUtils = require('codecoverage-tools/codecoverageutilities');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -140,8 +141,12 @@ async function doWork() {
         return ccEnabler.enableCodeCoverage(buildProps);
     }
 
-    function publishCodeCoverage(codeCoverageOpted: boolean, ccReportTask: string) {
-        if (codeCoverageOpted && ccReportTask) {
+    async function publishCodeCoverage(codeCoverageOpted: boolean, ccReportTask: string) {
+        tl.debug("publishCodeCoverage f=" + failIfCodeCoverageEmpty + " opt=" + codeCoverageOpted + " task=" + ccReportTask);
+        if (failIfCodeCoverageEmpty && codeCoverageOpted && !ccReportTask) {
+            throw tl.loc('NoCodeCoverage'); 
+        }
+        else if (codeCoverageOpted && ccReportTask) {
             tl.debug("Collecting code coverage reports");
             var antRunner = tl.tool(anttool);
             antRunner.arg('-buildfile');
@@ -153,7 +158,10 @@ async function doWork() {
                 antRunner.arg(antBuildFile);
                 antRunner.arg(ccReportTask);
             }
-            antRunner.exec().then(function (code) {
+            antRunner.exec().then(async function (code) {
+                if (failIfCodeCoverageEmpty && await ccUtils.isCodeCoverageFileEmpty(summaryFile, ccTool)) {
+                    throw tl.loc('NoCodeCoverage'); 
+                }
                 if (pathExistsAsFile(summaryFile)) {
                     tl.debug("Summary file = " + summaryFile);
                     tl.debug("Report directory = " + reportDirectory);
@@ -224,6 +232,7 @@ async function doWork() {
 
         var ccTool = tl.getInput('codeCoverageTool');
         var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+        var failIfCodeCoverageEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         var buildRootPath = path.dirname(antBuildFile);
 
         var summaryFile: string = null;
@@ -252,10 +261,10 @@ async function doWork() {
             }
         });
 
-        antb.exec()
-            .then(function (code) {
+        await antb.exec()
+            .then(async function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
-                publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
+                await publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
                 tl.setResult(tl.TaskResult.Succeeded, "Task succeeded");
             })
             .fail(function (err) {

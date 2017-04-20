@@ -1,23 +1,93 @@
+import path = require('path');
 import tl = require('vsts-task-lib/task');
 
-var codeCoverageTool = tl.getInput('codeCoverageTool', true);
-var summaryFileLocation = tl.getInput('summaryFileLocation', true);
-var reportDirectory = tl.getInput('reportDirectory');
-var additionalCodeCoverageFiles = tl.getInput('additionalCodeCoverageFiles');
+// Main entry point of this task.
+async function run() {
+    try {
+        // Initialize localization
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-tl.debug('codeCoverageTool: ' + codeCoverageTool);
-tl.debug('summaryFileLocation: ' + summaryFileLocation);
-tl.debug('reportDirectory: ' + reportDirectory);
-tl.debug('additionalCodeCoverageFiles: ' + additionalCodeCoverageFiles);
+        // Get input values
+        var codeCoverageTool = tl.getInput('codeCoverageTool', true);
+        var summaryFileLocation = tl.getInput('summaryFileLocation', true);
+        var reportDirectory = tl.getInput('reportDirectory');
+        var additionalFiles = tl.getInput('additionalCodeCoverageFiles');
+        var workingDirectory: string = tl.getVariable('System.DefaultWorkingDirectory');
 
-if (additionalCodeCoverageFiles && (additionalCodeCoverageFiles.indexOf('*') >= 0 || additionalCodeCoverageFiles.indexOf('?') >= 0)) {
-  var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-  var allFiles = tl.find(buildFolder);
-  var codeCoverageFiles = tl.match(allFiles, additionalCodeCoverageFiles, { matchBase: true });
+        // Resolve the summary file path.
+        // It may contain wildcards allowing the path to change between builds, such as for:
+        // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage\cobertura.xml
+        var resolvedSummaryFile: string = resolvePathToSingleItem(workingDirectory, summaryFileLocation);
+
+        // Resolve the report directory.
+        // It may contain wildcards allowing the path to change between builds, such as for:
+        // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
+        var resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory);
+
+        // Get any 'Additional Files' to publish as build artifacts
+        if (additionalFiles) {
+            // Does the 'Additional Files' value contain wildcards?
+            if (containsWildcard(additionalFiles)) {
+                // Resolve matches of the 'Additional Files' pattern
+                var additionalFileMatches: string[] = tl.findMatch(
+                    workingDirectory,
+                    additionalFiles,
+                    { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
+                    { matchBase: true });
+                tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
+            }
+            else {
+                // Use the specific additional file (no wildcards)
+                var additionalFileMatches: string[] = [additionalFiles];
+            }
+        }
+
+        // Publish code coverage data
+        var ccPublisher = new tl.CodeCoveragePublisher();
+        ccPublisher.publish(codeCoverageTool, resolvedSummaryFile, resolvedReportDirectory, additionalFileMatches);
+    }
+    catch (err) {
+        tl.setResult(tl.TaskResult.Failed, err);
+    }
 }
-else if (additionalCodeCoverageFiles) {
-  var codeCoverageFiles = [additionalCodeCoverageFiles];
+
+// Resolves the specified path to a single item based on whether it contains wildcards
+function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : string {
+    // Default to using the specific pathInput value
+    var resolvedPath: string = pathInput;
+
+    // Does the pathInput value contain wildcards?
+    if (pathInput && containsWildcard(pathInput)) {
+        // Resolve matches of the pathInput pattern
+        var pathMatches: string[] = tl.findMatch(
+            workingDirectory,
+            pathInput,
+            { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+        tl.debug(tl.loc('FoundNMatchesForPattern', pathMatches.length, pathInput));
+
+        // Were any matches found?
+        if (pathMatches.length == 0) {
+            resolvedPath = undefined;
+        }
+        else {
+            // Select the path to be used from the matches
+            resolvedPath = pathMatches[0];
+
+            // If more than one path matches, use the first and issue a warning
+            if (pathMatches.length > 1) {
+                tl.warning(tl.loc('MultipleSummaryFilesFound', resolvedPath));
+            }
+        }
+    }
+
+    // Return resolved path
+    return resolvedPath;
 }
 
-var ccp = new tl.CodeCoveragePublisher();
-ccp.publish(codeCoverageTool, summaryFileLocation, reportDirectory, codeCoverageFiles);
+// Gets whether the specified input value contains a wildcard character.
+function containsWildcard(inputValue: string) : boolean {
+    return inputValue.indexOf('*') >= 0 ||
+           inputValue.indexOf('?') >= 0;
+}
+
+run();

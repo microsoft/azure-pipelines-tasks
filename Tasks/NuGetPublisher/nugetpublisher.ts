@@ -120,7 +120,7 @@ async function main(): Promise<void> {
                 let nuGetConfigHelper = new NuGetConfigHelper(nuGetPath, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }], true);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
-                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
             }
 
             apiKey = "VSTS";

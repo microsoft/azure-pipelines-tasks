@@ -58,7 +58,7 @@ export class DistributedTest {
 
         const exeInfo = await versionFinder.locateVSTestConsole(this.dtaTestConfig);
         if (exeInfo) {
-            var exelocation = path.dirname(exeInfo)
+            const exelocation = path.dirname(exeInfo);
             tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
 
             // Split the TestWindow path out of full path - if we can't find it, will assume
@@ -99,7 +99,10 @@ export class DistributedTest {
             });
         });
         proc.stderr.on('data', (c) => {
-            tl._writeError(c.toString());
+            const lines = c.toString().split('\n');
+            lines.forEach(function (line: string) {
+               tl._writeError(c.toString());
+            });
         });
 
         proc.on('error', (err) => {

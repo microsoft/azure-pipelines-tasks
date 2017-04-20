@@ -1,6 +1,6 @@
 {
   "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
-  "name": "NuGetInstaller",
+  "name": "NuGetRestore",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -15,7 +15,7 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.115.0",
   "groups": [
     {
       "name": "advanced",
@@ -50,7 +50,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feed",
       "defaultValue": "",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feed",
       "required": "false",
       "visibleRule": "selectOrConfig = select",
       "properties": {
@@ -62,7 +62,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeNuGetOrg",
       "defaultValue": "true",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.includeNuGetOrg",
       "required": "false",
       "visibleRule": "selectOrConfig = select"
     },
@@ -107,15 +107,6 @@
         "Normal": "Normal",
         "Detailed": "Detailed"
       }
-    },
-    {
-      "name": "versionSpec",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "4.0.0",
-      "required": true,
-      "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     }
   ],
   "dataSourceBindings": [
@@ -164,6 +155,7 @@
     "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
     "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
     "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
-    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer"
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   }
 }
