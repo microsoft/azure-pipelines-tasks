@@ -19,11 +19,11 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmdfolder\SQLCMD.exe"
+    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
     $env:SQLCMDPASSWORD = $sqlPassword
     $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -Q `"select getdate()`""
     
-    Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
+    Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
     $ErrorActionPreference = 'Continue'
 
