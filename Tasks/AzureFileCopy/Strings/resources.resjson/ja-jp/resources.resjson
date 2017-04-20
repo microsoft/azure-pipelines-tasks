@@ -87,5 +87,6 @@
   "loc.messages.AFC_AddNetworkSecurityRuleFailed": "ネットワークのセキュリティ規則を追加できませんでした: {0}",
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "仮想マシン '{1}' のカスタム スクリプト拡張機能 '{0}' を設定できません: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "コピーの前提条件を有効にすることができませんでした。{0}",
-  "loc.messages.AFC_BlobStorageNotFound": "ストレージ アカウント {0} は見つかりません。既存のストレージ アカウントを指定してください"
+  "loc.messages.AFC_BlobStorageNotFound": "ストレージ アカウント {0} は見つかりません。既存のストレージ アカウントを指定してください",
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
 }

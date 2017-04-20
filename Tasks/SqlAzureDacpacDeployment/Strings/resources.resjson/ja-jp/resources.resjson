@@ -35,7 +35,7 @@
   "loc.input.label.InlineAdditionalArguments": "追加の Invoke-Sqlcmd 引数",
   "loc.input.help.InlineAdditionalArguments": "指定された SQL クエリを Azure SQL Database で実行するときに適用される追加の Invoke-Sqlcmd 引数 (-ConnectionTimeout 100 -OutputSqlErrors など)",
   "loc.input.label.IpDetectionMethod": "次を使用して、ファイアウォール ルールを指定します",
-  "loc.input.help.IpDetectionMethod": "タスクを実行するには、自動化エージェントの IP アドレス] を Azure SQL Server のファイアウォールの [使用できる IP アドレス] に追加する必要があります。自動化エージェントの IP アドレスの範囲を指定するか、またはホストされた自動化エージェントの場合は自動検出を選びます。",
+  "loc.input.help.IpDetectionMethod": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly.",
   "loc.input.label.StartIpAddress": "開始 IP アドレス",
   "loc.input.help.StartIpAddress": "自動化エージェントのコンピューター プールの開始 IP アドレス (196.21.30.50 など)。",
   "loc.input.label.EndIpAddress": "終了 IP アドレス",

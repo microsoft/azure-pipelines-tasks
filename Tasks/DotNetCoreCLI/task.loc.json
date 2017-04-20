@@ -15,11 +15,11 @@
   ],
   "demands": [],
   "version": {
-    "Major": 0,
-    "Minor": 4,
-    "Patch": 2
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [],
   "inputs": [
@@ -52,7 +52,7 @@
     },
     {
       "name": "projects",
-      "type": "string",
+      "type": "multiline",
       "label": "ms-resource:loc.input.label.projects",
       "defaultValue": "",
       "visibleRule": "command != publish || publishWebProjects = false",

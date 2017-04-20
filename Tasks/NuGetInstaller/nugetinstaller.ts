@@ -58,11 +58,12 @@ async function main(): Promise<void> {
         
         // Getting NuGet
         tl.debug('Getting NuGet');
-        let versionSpec = tl.getInput('versionSpec', true);
-        let checkLatest = tl.getBoolInput('checkLatest', false);
         let nuGetPath: string = undefined;
         try {
-            nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest);
+            nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
+            if (!nuGetPath){
+                nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+            }
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, error.message);
@@ -120,6 +121,8 @@ async function main(): Promise<void> {
                     authInfo,
                     environmentSettings);
         
+        let credCleanup = () => { return; };
+        
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
@@ -149,6 +152,7 @@ async function main(): Promise<void> {
             {
                 tl.debug(`Adding the following sources to the config file: ${sources.map(x => x.feedName).join(';')}`)
                 nuGetConfigHelper.setSources(sources, false);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
                 nuGetConfigPath = nuGetConfigHelper.tempNugetConfigPath;
             }
             else {
@@ -158,7 +162,6 @@ async function main(): Promise<void> {
 
         // Setting creds in the temp NuGet.config if needed
         let configFile = nuGetConfigPath;
-        let credCleanup = () => { return; };
         if (useCredConfig) {
             tl.debug('Config credentials should be used');
             if (nuGetConfigPath) {
@@ -171,7 +174,7 @@ async function main(): Promise<void> {
 
                 if (packageSources.length !== 0) {
                     nuGetConfigHelper.setSources(packageSources, true);
-                    credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                    credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
                     configFile = nuGetConfigHelper.tempNugetConfigPath;
                 }
                 else {
@@ -179,7 +182,7 @@ async function main(): Promise<void> {
                 }
             }
             else {
-                tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
+                console.log(tl.loc("Warning_NoConfigForNoCredentialProvider"));
             }
         }
 
@@ -252,6 +255,11 @@ async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string, nuGet
     // The second element contains the transformed packaging URL
     let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
     
+    if (!packagingCollectionUrl)
+    {
+        packagingCollectionUrl = collectionUrl;
+    }
+
     const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
     if (overwritePackagingCollectionUrl) {
         tl.debug("Overwriting packaging collection URL");

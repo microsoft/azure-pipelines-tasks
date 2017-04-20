@@ -25,14 +25,17 @@ async function main(): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     
-    let versionSpec: string = tl.getInput("versionSpec", true);
-    let checkLatest = tl.getBoolInput('checkLatest', false);
     let command: string = tl.getInput("command", true);
     let args: string = tl.getInput("arguments", false);
 
+    // Getting NuGet
+    tl.debug('Getting NuGet');
     let nuGetPath: string = undefined;
     try {
-        nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest);
+        nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
+        if (!nuGetPath){
+            nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+        }
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);

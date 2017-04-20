@@ -1,8 +1,8 @@
-# Deploy SQL Dacpac Machine Group
+# Deploy SQL Dacpac Deployment Group
 
 ## Overview:
 
-The Deploy SQL Dacpac Machine Group task is used to deploy SQL Server database to an existing SQL Server instance, and the underlying technologies used by the task are [DACPAC](https://msdn.microsoft.com/en-IN/library/ee210546.aspx) and [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080\(v=vs.103\).aspx). DACPACs and SqlPackage.exe provide fine-grained control over database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, around eighty different properties can be set to ensure that the database is created or upgraded properly like:
+The Deploy SQL Dacpac Deployment Group task is used to deploy SQL Server database to an existing SQL Server instance, and the underlying technologies used by the task are [DACPAC](https://msdn.microsoft.com/en-IN/library/ee210546.aspx) and [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080\(v=vs.103\).aspx). DACPACs and SqlPackage.exe provide fine-grained control over database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, around eighty different properties can be set to ensure that the database is created or upgraded properly like:
 
 - Ignore Data Loss - If false, upgrade will fail if it results in a data-loss.
 - Verify Deployment - If true, the deployment is verified and blocked if can fail. For example, foreign keys have not been specified in the DACPAC but exist in the target database.
@@ -10,7 +10,9 @@ The Deploy SQL Dacpac Machine Group task is used to deploy SQL Server database t
 - Rollback on Failure - If true, then the upgrade is rolled back if errors are encountered.
 - Backup Database Before Changes - If true, a backup of the database is taken prior to applying the changes.
 
-The task runs on the automation agent machine, and connects to the target machine(s) using [Windows Remote Management][1] (WinRM), and launches a bootstrapping executable program (VisualStudioRemoteDeployer.exe) on the target machine(s), and the bootstrap executable invokes the PowerShell scripts to locate the sqlpackage.exe on the machine, and creates or updates the SQL Server database using sqlpackage.exe. As the execution happens within the target machine(s), it is important to have the pre-requisites described below, installed properly on the target machine(s).
+
+The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. [Deployment Groups](https://opsstaging.www.visualstudio.com/en-gb/docs/release/getting-started/machine-group-agents?branch=users%2Fahomer%2Frelease-master) are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring a Team Services Release definition, you can specify the deployments targets for a [phase](https://opsstaging.www.visualstudio.com/en-gb/docs/build/concepts/process/phases) using the deployment group. The task launches a bootstrapping executable program (VisualStudioRemoteDeployer.exe) on the deployment machine(s), and the bootstrap executable invokes the PowerShell scripts to locate the sqlpackage.exe on the machine, and creates or updates the SQL Server database using sqlpackage.exe. As the execution happens within the deploymenttarget machine(s), it is important to have the pre-requisites described below, installed properly on the deployment target machine(s).
+
 
 ## Contact Information
 
@@ -35,9 +37,22 @@ SqlPackage.exe is used to create or upgrade the database and it is installed dur
 
 The task [PowerShell on Target Machines](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy SqlPackage.exe to Azure virtual machines or domain-joined/workgroup machines.
 
-#### Specifying Machine Details in the Task
+### Pre-existing Deployment Group
 
-Specify the machine details, wiz. the IP Address or the FDQN, administrator's login, password, WimRM HTTP/HTTPS protocol, and Test Certificate in the task itself. The difference between using the domain-joined/workgroup on-premises physical or virtual machines and the Azure virtual machines is that copying files to them is done by separate tasks. The [Windows Machine File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/WindowsMachineFileCopy) is used for the domain-joined/workgroup machines and the [Azure File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy) is used for the Azure virtual machines. Note that the **WinRM - SQL Server Database Deployment** task expects the web application's package zip files to be available on the target machines or on a UNC path that is accessible by the target machine administrator's login.
+This task requires a Deployment group to execute. If there is no pre-existing Deployment group, you can create one in the Deployment groups hub.
+
+Carry out the following steps to create a Deployment group:
+1. Open your Visual Studio Team Services account in your web browser. 
+2. Open the Deployment groups tab of the Build & Release hub and choose +Deployment group to create a new group
+3. Enter a name for the group in the Details tab and then save the group.
+4. In the Register machines using command line section, choose Regenerate script with PAT.
+5. Choose the icon to copy the script. 
+6. Sign into the Azure virtual machine/physical machine where you wish to execute this task.
+7. Open an Administrator Powershell command prompt and paste the script you copied, then execute it to register the machine with this group.
+8. When prompted to configure tags for the agent, press Y and enter web.
+9. When prompted for the user account, press Return to accept the defaults.
+10.Wait for the script to finish with a message Service vstsagent.account.computername started successfully. 
+11.In the Deployment groups page of the Build & Release hub, open the Machines tab and verify that the agent is running. If the tag named web is not visible, refresh the page.
 
 ## Parameters of the task:
 
@@ -60,5 +75,3 @@ This section of the task is used to deploy SQL Server Database to an existing SQ
   /p:IgnoreAnsiNulls=True /p:IgnoreComments=True
 
   These arguments will override the settings in the Publish profile XML file (if provided). A full list of the arguments that can provided is listed in the ' **Properties**' sub-section of the ' **Publish Parameters, Properties, and SQLCMD Variables**' in the [SqlPackage.exe](https://msdn.microsoft.com/en-us/library/hh550080\(v=vs.103\).aspx) documentation. The SQLCMD variables can be also specified here. This is an optional parameter.
-
-

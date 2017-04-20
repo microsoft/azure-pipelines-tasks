@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 26
+        "Patch": 30
     },
     "demands": [
         "vstest"
@@ -150,7 +150,7 @@
             "label": "Run only impacted tests",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
+            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change. [More information](https://aka.ms/tialearnmore)",
             "groupName": "testSelection",
             "visibleRule": "testSelector = testAssemblies"
         },
@@ -238,7 +238,7 @@
             "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://msdn.microsoft.com/library/jj159530.aspx) to learn more about how tests are run in parallel.",
+            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
          },
          {
@@ -267,6 +267,15 @@
             "required": false,  
             "helpMarkDown": "Collect code coverage information from the test run.",  
             "groupName": "executionOptions"      
+        },
+        {
+            "name": "otherConsoleOptions",
+            "type": "string",
+            "label": "Other console options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "groupName": "executionOptions"
         },
         {
             "name": "testRunTitle",
@@ -344,7 +353,7 @@
         "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
         "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
         "RunInParallelNotSupported": "Running tests in parallel on multi-core machines is not supported with testsettings file. This option will be ignored.",
-        "InvalidSettingsFile": "The specified settings file %s is invalid or does not exist. This file will be ignored.",
+        "InvalidSettingsFile": "The specified settings file %s is invalid or does not exist. Provide a valid settings file or clear the field.",
         "UpdateThreeOrHigherRequired": "Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel.",
         "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
         "ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
@@ -367,6 +376,7 @@
         "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
         "vs2013NotSupportedInDta": "Running tests using Visual Studio 2013 with multi-agent phase settings is not supported.",
-        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s"
+        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored."
     }
 }

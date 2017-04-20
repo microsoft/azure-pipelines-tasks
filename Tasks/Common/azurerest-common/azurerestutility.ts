@@ -13,6 +13,7 @@ var restObj = new restClient.RestCallbackClient(httpObj);
 
 var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = 'api-version=2016-08-01';
+var defaultWebAppAvailabilityTimeoutInMS = 3000;
 
 /**
  * gets the name of the ResourceGroup that contains the webApp
@@ -107,8 +108,9 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
         else if(response.statusCode === 200) {
             parseString(body, (error, result) => {
                 for (var index in result.publishData.publishProfile) {
-                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
+                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
                         deferred.resolve(result.publishData.publishProfile[index].$);
+                    }
                 }
                 deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
             });
@@ -530,4 +532,59 @@ export async function getAzureContainerRegistryCredentials(endpoint, azureContai
     });
 
     return deferred.promise;
+}
+
+export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout) {
+    var deferred = Q.defer();
+    var headers = {};
+    httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
+        if (error) {
+            tl.debug("Failed to check availability of azure web app, error : " + error);
+            deferred.reject(error);
+        } else {
+            if(response.statusCode === 200) {
+                tl.debug("Azure web app is available.");
+                var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeoutInMS; 
+                await sleep(webAppAvailabilityTimeout);
+                deferred.resolve("SUCCESS");
+            } else {
+                tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
+                deferred.reject("FAILED");
+            }
+        }
+    });
+    return deferred.promise;
+}
+
+export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
+    
+    var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
+    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "?" + azureApiVersion;
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to get App State: ' + webAppNameWithSlot);
+    httpObj.send('GET', url, null, headers, (error, response, body) => {
+        if(error) {
+            console.log(body);
+            deferred.reject(error);
+        }
+        if(response.statusCode === 200) {
+            deferred.resolve(JSON.parse(body));
+        }
+        else {
+            console.log(body);
+            deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
+function sleep(timeInMilliSecond) {
+  return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
 }

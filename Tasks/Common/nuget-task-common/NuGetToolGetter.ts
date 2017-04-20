@@ -23,7 +23,9 @@ enum NuGetReleaseStage
 const NUGET_TOOL_NAME: string = 'NuGet';
 const NUGET_EXE_FILENAME: string = 'nuget.exe';
 
-export async function getNuGet(versionSpec: string, checkLatest: boolean): Promise<string> {
+export const NUGET_EXE_TOOL_PATH_ENV_VAR: string = 'NuGetExeToolPath';
+
+export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNuGetToPath?: boolean): Promise<string> {
     if (toolLib.isExplicitVersion(versionSpec)) {
         // Check latest doesn't make sense when explicit version
         checkLatest = false; 
@@ -79,9 +81,16 @@ export async function getNuGet(versionSpec: string, checkLatest: boolean): Promi
 
     console.log(taskLib.loc("Info_UsingVersion", version));
     toolPath= toolLib.findLocalTool('NuGet', version);
-    console.log(taskLib.loc("Info_UsingToolPath", toolPath));
-    toolLib.prependPath(toolPath);
-    return path.join(toolPath, NUGET_EXE_FILENAME);
+
+    if (addNuGetToPath){
+        console.log(taskLib.loc("Info_UsingToolPath", toolPath));
+        toolLib.prependPath(toolPath);
+    }
+
+    let fullNuGetPath: string = path.join(toolPath, NUGET_EXE_FILENAME);
+    taskLib.setVariable(NUGET_EXE_TOOL_PATH_ENV_VAR, fullNuGetPath);
+
+    return fullNuGetPath;
 }
 
 function GetRestClientOptions(): restm.IRequestOptions

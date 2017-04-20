@@ -11,6 +11,7 @@ var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
+var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
 
 async function run() {
     try {
@@ -40,6 +41,8 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
+        var webAppKind = tl.getInput('WebAppKind', false);
+        var dockerNamespace = tl.getInput('DockerNamespace', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -51,8 +54,12 @@ async function run() {
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
+        if(webAppKind && webAppKind === "linux") {
+            deployToSlotFlag = false;
+        }
+
         if(deployToSlotFlag) {
-            if(slotName.toLowerCase() === "production") {
+            if (slotName.toLowerCase() === "production") {
                 deployToSlotFlag = false;
             }
         }
@@ -63,64 +70,83 @@ async function run() {
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
-        var availableWebPackages = deployUtility.findfiles(webDeployPkg);
-        if(availableWebPackages.length == 0) {
-            throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
-        }
+        // For container based linux deployment
+        if(webAppKind && webAppKind === "linux" && dockerNamespace)
+        {
+            tl.debug("Performing container based deployment.");
 
-        if(availableWebPackages.length > 1) {
-            throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'));
+            await deployWebAppImage(endPoint, resourceGroupName, webAppName);
         }
-        webDeployPkg = availableWebPackages[0];
+        else
+        {
+            tl.debug("Performing the deployment of webapp.");
 
-        var azureWebAppDetails = null;
-        var virtualApplicationPhysicalPath = null;
-        if(virtualApplication) {
-            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
-            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if(pathMappings[1] != null) {
-                virtualApplicationPhysicalPath = pathMappings[1];
-                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+            var availableWebPackages = deployUtility.findfiles(webDeployPkg);
+            if(availableWebPackages.length == 0) {
+                throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
             }
-            else {
-                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+
+            if(availableWebPackages.length > 1) {
+                throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'));
             }
-        }
-        var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
-        var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
+            webDeployPkg = availableWebPackages[0];
 
-        if (applyFileTransformFlag || generateWebConfig) {
-            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
-
-            if (generateWebConfig) {
-                var appSetingsVariables = addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
-                if(Object.keys(appSetingsVariables).length != 0 && appSetingsVariables.constructor === Object) {
-                    tl.debug('Updating app settings in Azure App Service from web.config');
-                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                    for(var appSettingVariable in appSetingsVariables) {
-                        tl.debug('Setting appsettings value: ' + appSettingVariable + ' = ' + appSetingsVariables[appSettingVariable]);
-                        appSettings.properties[appSettingVariable] = appSetingsVariables[appSettingVariable];
-                    }
-                    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-                    tl.debug('Updated app settings value in Azure App Service.');
+            var azureWebAppDetails = null;
+            var virtualApplicationPhysicalPath = null;
+            if(virtualApplication) {
+                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+                var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+                if(pathMappings[1] != null) {
+                    virtualApplicationPhysicalPath = pathMappings[1];
+                    await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+                }
+                else {
+                    throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
                 }
             }
-            if (applyFileTransformFlag) {
-                fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+            var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
+            var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
+
+            if (applyFileTransformFlag || generateWebConfig) {
+                var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
+
+                if (generateWebConfig) {
+                    var appSetingsVariables = addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
+                    if(Object.keys(appSetingsVariables).length != 0 && appSetingsVariables.constructor === Object) {
+                        tl.debug('Updating app settings in Azure App Service from web.config');
+                        var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                        for(var appSettingVariable in appSetingsVariables) {
+                            tl.debug('Setting appsettings value: ' + appSettingVariable + ' = ' + appSetingsVariables[appSettingVariable]);
+                            appSettings.properties[appSettingVariable] = appSetingsVariables[appSettingVariable];
+                        }
+                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                        tl.debug('Updated app settings value in Azure App Service.');
+                    }
+                }
+                if (applyFileTransformFlag) {
+                    fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+                }
+
+                var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
+                tempPackagePath = output.tempPackagePath;
+                webDeployPkg = output.webDeployPkg;
             }
 
-            var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
-            tempPackagePath = output.tempPackagePath;
-            webDeployPkg = output.webDeployPkg;
-        }
+            if(virtualApplication) {
+                publishingProfile.destinationAppUrl += "/" + virtualApplication;
+            }
 
-        if(virtualApplication) {
-            publishingProfile.destinationAppUrl += "/" + virtualApplication;
-        }
+            if(webAppUri) {
+                tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
+            }
 
-        if(webAppUri) {
-            tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
+        if(publishingProfile && publishingProfile.destinationAppUrl) {
+            try{
+                await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
+            } catch (error) {
+                tl.debug("Failed to check availability of azure web app, error : " + error.message);
+            }
         }
 
         if(deployUtility.canUseWebDeploy(useWebDeploy)) {
@@ -128,39 +154,41 @@ async function run() {
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
 
-            var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            if(renameFilesFlag) {
-                if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
-                    appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
-                    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                if(renameFilesFlag) {
+                    if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
+                        appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
+                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    }
                 }
-            }
-            else {
-                if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
-                    delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
-                    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                else {
+                    if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
+                        delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
+                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    }
                 }
+                console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
+                console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+                await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+                                excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
+                                additionalArguments, isFolderBasedDeployment, useWebDeploy);
+            } else {
+                tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
+                if(azureWebAppDetails == null) {
+                    azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                }
+                await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+
             }
-            console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
-            console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
-            await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-                            excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
-                            additionalArguments, isFolderBasedDeployment, useWebDeploy);
-        } else {
-            tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
-            if(azureWebAppDetails == null) {
-                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            if(scriptType) {
+                var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
+                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
             }
-            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+            await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
 
         }
-        if(scriptType) {
-            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
-            await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
-        }
-        await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        
-    } catch (error) {
+    }
+    catch (error) {
         isDeploymentSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
     }
@@ -185,7 +213,7 @@ async function run() {
 
 /**
  * Deploys website using Kudu REST API
- * 
+ *
  * @param   webDeployPkg                   Web deploy package
  * @param   webAppName                     Web App Name
  * @param   publishingProfile              Azure RM Connection Details
@@ -204,7 +232,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
             if (await deployUtility.isMSDeployPackage(webAppZipFile)) {
-                throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
+                throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform"));
             }
         }
         var physicalPath = "/site/wwwroot";

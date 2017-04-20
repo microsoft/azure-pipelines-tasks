@@ -1,21 +1,22 @@
 {
     "id": "2661B7E5-00F9-4DE1-BA41-04E68D70B528",
     "name": "NuGet",
-    "friendlyName": "NuGet",
-    "description": "Run a NuGet command",
+    "friendlyName": "NuGet Command",
+    "description": "Runs a NuGet command",
     "category": "Package",
     "author": "Microsoft Corporation",
     "preview": "true",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
     "minimumAgentVersion": "2.115.0",
+    "groups": [],
     "instanceNameFormat": "NuGet $(command)",
     "inputs": [
         {
@@ -23,7 +24,7 @@
             "type": "string",
             "label": "Command",
             "defaultValue": "",
-            "helpMarkDown": "NuGet command to run e.g. restore, pack, etc.",
+            "helpMarkDown": "The NuGet command to run.\n\nExamples: restore, pack",
             "required": "true"
         },
         {
@@ -31,24 +32,8 @@
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",
-            "helpMarkDown": "Arguments",
+            "helpMarkDown": "Arguments for the provided command",
             "required": "false"
-        },
-        {
-            "name": "versionSpec",
-            "type": "string",
-            "label": "Version Spec",
-            "defaultValue": "4.0.0",
-            "required": true,
-            "helpMarkDown": "Version spec of version to get.\n\nIf you want to match a pre-release version, the spec MUST contain a pre-release label and their major, minor, and patch versions MUST match.\n\nList of available versions obtained from [here](http://dist.nuget.org/tools.json).\n\nNote: Only versions >=3.5.0 are supported by this task.\n\nExamples: 4.x, 3.5.x, >=4.0.0-0."
-        },
-        {
-            "name": "checkLatest",
-            "type": "boolean",
-            "label": "Check for Latest Version of NuGet.exe",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Always checks online for the latest available version of NuGet.exe which satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool. Behavior changes or breaking changes might occur as NuGet updates to a new version."
         }
     ],
     "execution": {
