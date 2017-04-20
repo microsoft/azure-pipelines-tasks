@@ -71,7 +71,7 @@
             "type": "pickList",
             "label": "Test Plan",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -84,7 +84,7 @@
             "type": "pickList",
             "label": "Test Suite",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "MultiSelect": "True",
                 "DisableManageLink": "True"
