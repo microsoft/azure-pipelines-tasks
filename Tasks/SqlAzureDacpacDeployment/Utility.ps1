@@ -19,7 +19,7 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Split-Path -Parent $MyInvocation.MyCommand.Path | Join-Path -ChildPath "sqlcmdfolder\SQLCMD.exe"
+    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmdfolder\SQLCMD.exe"
     $env:SQLCMDPASSWORD = $sqlPassword
     $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -Q `"select getdate()`""
     
@@ -27,8 +27,7 @@ function Get-AgentIPRange
 
     $ErrorActionPreference = 'Continue'
 
-    $sqlCmdPath = $sqlCmd.Path
-    ( Invoke-Expression "& '$sqlCmdPath' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
+    ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
 
     $ErrorActionPreference = 'Stop'
 
