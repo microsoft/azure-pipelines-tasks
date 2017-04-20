@@ -49,7 +49,7 @@
         "NuGetPublisher",
         "NuGetToolInstaller",
         "PackerBuild",
-        "PackageDownloader",
+        "DownloadPackage",
         "powerShell",
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",
