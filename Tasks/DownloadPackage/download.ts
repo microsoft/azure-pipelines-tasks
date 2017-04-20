@@ -8,7 +8,7 @@ import * as restm from 'vso-node-api/RestClient';
 import * as tl from 'vsts-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"
-import bearm = require('vso-node-api//handlers/bearertoken');
+import bearm = require('vso-node-api/handlers/bearertoken');
 
 const ApiVersion = "3.0-preview.1";
 
