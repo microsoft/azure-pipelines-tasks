@@ -16,7 +16,7 @@ try {
     # Get inputs.
     $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
-    $composeFilePath= Get-SinglePathOfType (Get-VstsInput -Name composeFilePath -Require) Leaf -Require
+    $composeFilePath = Get-SinglePathOfType (Get-VstsInput -Name composeFilePath -Require) Leaf -Require
     $applicationName = Get-VstsInput -Name applicationName -Require
     $deployTimeoutSec = Get-VstsInput -Name deployTimeoutSec
     $removeTimeoutSec = Get-VstsInput -Name removeTimeoutSec
@@ -33,19 +33,32 @@ try {
         'ApplicationName' = $applicationName
     }
 
+    # Test the compose file
+    Write-Host (Get-VstsLocString -Key CheckingComposeFile)
+    $valid = Test-ServiceFabricApplicationPackage -ComposeFilePath $composeFilePath -ErrorAction Stop
+
     # Connect to the cluster
     $clusterConnectionParameters = @{}
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     $repositoryCredentials = Get-VstsInput -Name repositoryCredentials -Require
     switch ($repositoryCredentials) {
-        "Endpoint"
+        "ContainerRegistryEndpoint"
         {
             $dockerRegistryEndpointName = Get-VstsInput -Name dockerRegistryEndpointName -Require
             $dockerRegistryEndpoint = Get-VstsEndpoint -Name $dockerRegistryEndpointName -Require
             $authParams = $dockerRegistryEndpoint.Auth.Parameters
             $username = $authParams.username
             $password = $authParams.password
+            $isEncrypted = $false
+        }
+        "AzureResourceManagerEndpoint"
+        {
+            $azureSubscriptionEndpointName = Get-VstsInput -Name azureSubscriptionEndpoint -Require
+            $azureSubscriptionEndpoint = Get-VstsEndpoint -Name $azureSubscriptionEndpointName -Require
+            $authParams = $azureSubscriptionEndpoint.Auth.Parameters
+            $username = $authParams.serviceprincipalid
+            $password = $authParams.serviceprincipalkey
             $isEncrypted = $false
         }
         "UsernamePassword"
@@ -93,24 +106,47 @@ try {
         $getStatusParameters['TimeoutSec'] = $getStatusTimeoutSec
     }
 
-    $existingApplication = Get-ServiceFabricDockerComposeApplicationStatusPaged @getStatusParameters
+    $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
     if ($existingApplication -ne $null)
     {
         Write-Host (Get-VstsLocString -Key RemovingApplication -ArgumentList $applicationName)
         $removeParameters['ApplicationName'] = $applicationName
-        Remove-ServiceFabricDockerComposeApplication @removeParameters
+        Remove-ServiceFabricComposeApplication @removeParameters
 
         do
         {
             Write-Host (Get-VstsLocString -Key WaitingForRemoval)
             Start-Sleep -Seconds 3
-            $existingApplication = Get-ServiceFabricDockerComposeApplicationStatusPaged @getStatusParameters
+            $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
         }
         while ($existingApplication -ne $null)
     }
 
     Write-Host (Get-VstsLocString -Key CreatingApplication)
-    New-ServiceFabricDockerComposeApplication @deployParameters
+    New-ServiceFabricComposeApplication @deployParameters
+
+    Write-Host (Get-VstsLocString -Key WaitingForDeploy)
+    $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    while (($newApplication -eq $null) -or `
+           ($newApplication.ComposeApplicationStatus -eq 'Provisioning') -or `
+           ($newApplication.ComposeApplicationStatus -eq 'Creating'))
+    {
+        if ($newApplication -eq $null)
+        {
+            Write-Host (Get-VstsLocString -Key WaitingForDeploy)
+        }
+        else
+        {
+            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
+        }
+        Start-Sleep -Seconds 3
+        $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    }
+
+    if ($newApplication.ComposeApplicationStatus -ne 'Created')
+    {
+        Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.ComposeApplicationStatus.ToString(), $newApplication.StatusDetails))
+    }
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

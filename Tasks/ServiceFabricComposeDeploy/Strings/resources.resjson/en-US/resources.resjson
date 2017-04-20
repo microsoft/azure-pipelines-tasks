@@ -11,10 +11,12 @@
   "loc.input.help.composeFilePath": "Path to the compose file that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.applicationName": "Application Name",
   "loc.input.help.applicationName": "Name of the application being deployed.",
-  "loc.input.label.repositoryCredentials": "Repository Credentials",
+  "loc.input.label.repositoryCredentials": "Repository Credentials Source",
   "loc.input.help.repositoryCredentials": "Choose if/how credentials for the docker registry will be provided.",
   "loc.input.label.dockerRegistryEndpointName": "Docker Registry Connection",
   "loc.input.help.dockerRegistryEndpointName": "Select a Docker registry connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+  "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
+  "loc.input.help.azureSubscriptionEndpoint": "Select an Azure subscription",
   "loc.input.label.repositoryUserName": "Repository User Name",
   "loc.input.help.repositoryUserName": "Username for the Docker registry",
   "loc.input.label.repositoryPassword": "Repository Password",
@@ -37,5 +39,9 @@
   "loc.messages.EncryptingPassword": "Encrypting the password with the Server Certificate.",
   "loc.messages.CertificateNotFound": "The Server Certificate was not found, the password will not be encrypted.",
   "loc.messages.WaitingForRemoval": "Waiting for removal...",
-  "loc.messages.CreatingApplication": "Creating application"
+  "loc.messages.CreatingApplication": "Creating application",
+  "loc.messages.WaitingForDeploy": "Waiting for deploy...",
+  "loc.messages.CurrentStatus": "Current Status: {0}",
+  "loc.messages.DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
+  "loc.messages.CheckingComposeFile": "Checking compose file"
 }

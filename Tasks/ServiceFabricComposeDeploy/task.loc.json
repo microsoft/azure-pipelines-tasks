@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 34
   },
   "demands": [
     "Cmd"
@@ -64,10 +64,11 @@
       "name": "repositoryCredentials",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.repositoryCredentials",
-      "defaultValue": "Endpoint",
+      "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
-        "Endpoint": "Endpoint",
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+        "ContainerRegistryEndpoint": "Container Registry Endpoint",
         "UsernamePassword": "Username and Password",
         "None": "None"
       },
@@ -81,7 +82,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpointName",
       "groupName": "repository",
-      "visibleRule": "repositoryCredentials = Endpoint"
+      "visibleRule": "repositoryCredentials = ContainerRegistryEndpoint"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "groupName": "repository",
+      "visibleRule": "repositoryCredentials = AzureResourceManagerEndpoint",
+      "required": true
     },
     {
       "name": "repositoryUserName",
@@ -157,6 +167,10 @@
     "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
     "CertificateNotFound": "ms-resource:loc.messages.CertificateNotFound",
     "WaitingForRemoval": "ms-resource:loc.messages.WaitingForRemoval",
-    "CreatingApplication": "ms-resource:loc.messages.CreatingApplication"
+    "CreatingApplication": "ms-resource:loc.messages.CreatingApplication",
+    "WaitingForDeploy": "ms-resource:loc.messages.WaitingForDeploy",
+    "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
+    "DeployFailed": "ms-resource:loc.messages.DeployFailed",
+    "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile"
   }
 }
