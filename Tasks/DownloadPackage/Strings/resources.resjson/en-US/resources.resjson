@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Package Downloader",
+  "loc.friendlyName": "Download Package",
   "loc.helpMarkDown": "Needs Package Management extension to be installed",
   "loc.description": "Download a package from a Package Management feed in VSTS or TFS. \r\n Requires the Package Management extension.",
   "loc.instanceNameFormat": "Download Package",
