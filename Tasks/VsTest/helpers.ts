@@ -1,21 +1,23 @@
 import * as fs from 'fs';
+import * as tl from 'vsts-task-lib/task';
+import * as tr from 'vsts-task-lib/toolrunner';
+import * as path from 'path';
+import * as Q from 'q';
+import * as models from './models';
+import * as os from 'os';
 
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
-import path = require('path');
-import Q = require('q');
-import models = require('./models')
 
-var os = require('os');
-var uuid = require('node-uuid');
-var xml2js = require('xml2js');
-var parser = new xml2js.Parser();
-var builder = new xml2js.Builder();
+const uuid = require('node-uuid');
+const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
+const builder = new xml2js.Builder();
 
 export class Constants {
     public static vsTestVersionString = 'version';
     public static vsTestLocationString = 'location';
 }
+
+
 
 export class Helper{
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
@@ -47,14 +49,13 @@ export class Helper{
     }
 
     public static getXmlContents(filePath: string): Q.Promise<any> {
-        var defer=Q.defer<any>();
-        Helper.readFileContents(filePath, "utf-8")
+        const defer = Q.defer<any>();
+        Helper.readFileContents(filePath, 'utf-8')
             .then(function (xmlContents) {
                 parser.parseString(xmlContents, function (err, result) {
                     if (err) {
                         defer.resolve(null);
-                    }
-                    else{
+                    } else {
                         defer.resolve(result);
                     }
                 });
@@ -66,25 +67,24 @@ export class Helper{
     }
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
-        var defer = Q.defer<string>();
-        var tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
+        const defer = Q.defer<string>();
+        const tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
         fs.writeFile(tempFile, fileContents, function (err) {
             if (err) {
                 defer.reject(err);
             }
-            tl.debug("Temporary file created at " + tempFile);
+            tl.debug('Temporary file created at ' + tempFile);
             defer.resolve(tempFile);
         });
         return defer.promise;
     }
 
     public static readFileContents(filePath: string, encoding: string): Q.Promise<string> {
-        var defer = Q.defer<string>();
+        const defer = Q.defer<string>();
         fs.readFile(filePath, encoding, (err, data) => {
             if (err) {
                 defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
-            }
-            else {
+            } else {
                 defer.resolve(data);
             }
         });
@@ -96,8 +96,8 @@ export class Helper{
     }
 
     public static writeXmlFile(result: any, settingsFile: string, fileExt: string): Q.Promise<string> {
-        var defer = Q.defer<string>();
-        var runSettingsForTestImpact = builder.buildObject(result);
+        const defer = Q.defer<string>();
+        const runSettingsForTestImpact = builder.buildObject(result);
         Helper.saveToFile(runSettingsForTestImpact, fileExt)
             .then(function (fileName) {
                 defer.resolve(fileName);
@@ -109,13 +109,12 @@ export class Helper{
         return defer.promise;
     }
 
-    public static getVSVersion(versionNum: number)
-    {
+    public static getVSVersion(versionNum: number) {
         switch (versionNum) {
-            case 12: return "2013";
-            case 14: return "2015";
-            case 15: return "2017";
-            default: return "selected";
+            case 12: return '2013';
+            case 14: return '2015';
+            case 15: return '2017';
+            default: return 'selected';
         }
     }
 }

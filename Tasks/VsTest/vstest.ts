@@ -7,14 +7,15 @@ import taskInputParser = require('./taskinputparser');
 import settingsHelper = require('./settingshelper');
 import versionFinder = require('./versionfinder');
 import * as utils from './helpers';
+import * as outStream from './outputstream';
 
-var os = require('os');
-var regedit = require('regedit');
-var uuid = require('node-uuid');
-var fs = require('fs');
-var xml2js = require('xml2js');
-var perf = require('performance-now');
-var process = require('process');
+let os = require('os');
+let regedit = require('regedit');
+let uuid = require('node-uuid');
+let fs = require('fs');
+let xml2js = require('xml2js');
+let perf = require('performance-now');
+let process = require('process');
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
@@ -29,9 +30,14 @@ let resultsDirectory = null;
 
 export async function startTest() {
     try {
+        tl._writeLine('Run the tests locally using vstest.console.exe....');
+        tl._writeLine('...........................Inputs.......................');
+        tl._writeLine('========================================================');
         vstestConfig = taskInputParser.getvsTestConfigurations();
+        tl._writeLine('========================================================');
+        
         tiaConfig = vstestConfig.tiaConfig;
-        var vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
+        const vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
         vstestRunnerDetails = getVsTestRunnerDetails(vstestlocation);
 
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
@@ -88,28 +94,28 @@ function getTestAssemblies(): string[] {
 }
 
 function getVsTestRunnerDetails(vstestexeLocation: string): versionFinder.VSTestVersion {
-    let vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
-    let wmicTool = tl.tool('wmic');
-    let wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
+    const vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
+    const wmicTool = tl.tool('wmic');
+    const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
     wmicTool.arg(wmicArgs);
-    let output = wmicTool.execSync();
+    const output = wmicTool.execSync();
     tl.debug('VSTest Version information: ' + output.stdout);
 
-    let verSplitArray = output.stdout.split('=');
-    if (verSplitArray.length != 2) {
+    const verSplitArray = output.stdout.split('=');
+    if (verSplitArray.length !== 2) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
         throw new Error(tl.loc('ErrorReadingVstestVersion'));
     }
 
-    let versionArray = verSplitArray[1].split('.');
-    if (versionArray.length != 4) {
+    const versionArray = verSplitArray[1].split('.');
+    if (versionArray.length !== 4) {
         tl.warning(tl.loc('UnexpectedVersionString', output.stdout));
         throw new Error(tl.loc('UnexpectedVersionString', output.stdout));
     }
 
-    let majorVersion = parseInt(versionArray[0]);
-    let minorVersion = parseInt(versionArray[1]);
-    let patchNumber = parseInt(versionArray[2]);
+    const majorVersion = parseInt(versionArray[0]);
+    const minorVersion = parseInt(versionArray[1]);
+    const patchNumber = parseInt(versionArray[2]);
 
     if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
         tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
@@ -128,12 +134,12 @@ function getVsTestRunnerDetails(vstestexeLocation: string): versionFinder.VSTest
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
-    var argsArray: string[] = [];
+    const argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
-        var testAssemblyPath = testAssembly;
+        let testAssemblyPath = testAssembly;
         //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
         if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
+            const expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -153,11 +159,10 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ' + settings);
             });
-        }
-        else {
+        } else {
             if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidSettingsFile", settingsFile));
-                throw Error((tl.loc("InvalidSettingsFile", settingsFile)));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
+                throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
         }
     }
@@ -192,7 +197,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
 }
 
 function isDebugEnabled(): boolean {
-    let sysDebug = tl.getVariable('System.Debug');
+    const sysDebug = tl.getVariable('System.Debug');
     if (sysDebug === undefined) {
         return false;
     }
@@ -207,7 +212,7 @@ function addVstestArgs(argsArray: string[], vstest: any) {
 }
 
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
+    const defer = Q.defer<string>();
     argsArray.forEach(function (arr, i) {
         if (!arr.startsWith('/')) {
             argsArray[i] = '\"' + arr + '\"';
@@ -227,19 +232,18 @@ function getTestSelectorLocation(): string {
 }
 
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
-    var startTime = perf();
-    var endTime;
-    var elapsedTime;
-    var definitionRunId: string;
-    var resultFile: string;
-    var defer = Q.defer<string>();
-    var allFilesInResultsDirectory;
-    var resultFiles;
+    const startTime = perf();
+    let endTime;
+    let elapsedTime;
+    let definitionRunId: string;
+    let resultFile: string;
+    const defer = Q.defer<string>();
+    let resultFiles;
     if (!isNullOrWhitespace(testResultsDirectory)) {
         resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
     }
 
-    var selectortool = tl.tool(getTestSelectorLocation());
+    const selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg('UpdateTestResults');
 
     if (tiaConfig.context === 'CD') {
@@ -470,7 +474,13 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     tl.cd(workingDirectory);
     const ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === 'true';
-    vstest.exec(<tr.IExecOptions>{ ignoreReturnCode: ignoreTestFailures, failOnStdErr: false })
+
+    const execOptions: tr.IExecOptions = <any>{
+        ignoreReturnCode: ignoreTestFailures,
+        failOnStdErr: true,
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+    };
+    vstest.exec(execOptions)
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             if (ignoreTestFailures === true) {
@@ -494,10 +504,10 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 }
 
 function getVstestTestsList(vsVersion: number): Q.Promise<string> {
-    let defer = Q.defer<string>();
-    let tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    const defer = Q.defer<string>();
+    const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tl.debug('Discovered tests listed at: ' + tempFile);
-    let argsArray: string[] = [];
+    const argsArray: string[] = [];
 
     testAssemblyFiles.forEach(function (testAssembly) {
         let testAssemblyPath = testAssembly;
@@ -769,7 +779,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 }
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
-    let defer = Q.defer<number>();
+    const defer = Q.defer<number>();
     if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === 'latest') {
         vstestConfig.vsTestVersion = null;
     }
@@ -803,7 +813,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     if (newSettingsFile) {
         if (!pathExistsAsFile(newSettingsFile)) {
             if (!tl.exist(newSettingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                throw Error((tl.loc("InvalidSettingsFile", newSettingsFile)));
+                throw Error((tl.loc('InvalidSettingsFile', newSettingsFile)));
             }
         }
     }
@@ -838,7 +848,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
-        let resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
+        const resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
 
         if (resultFiles && resultFiles.length !== 0) {
             const tp = new tl.TestPublisher('VSTest');
@@ -862,8 +872,8 @@ function cleanUp(temporarySettingsFile: string) {
 }
 
 function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
-    let allFiles = tl.find(rootDirectory);
-    let adapterFiles = tl.match(allFiles, '**\\packages\\**\\*TestAdapter.dll', { matchBase: true, nocase: true });
+    const allFiles = tl.find(rootDirectory);
+    const adapterFiles = tl.match(allFiles, '**\\packages\\**\\*TestAdapter.dll', { matchBase: true, nocase: true });
 
     if (adapterFiles && adapterFiles.length !== 0) {
         for (let i = 0; i < adapterFiles.length; i++) {
