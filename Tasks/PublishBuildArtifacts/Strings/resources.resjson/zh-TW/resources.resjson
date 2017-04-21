@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "路徑",
   "loc.input.help.TargetPath": "要接受所複製之檔案的檔案共用",
   "loc.messages.ErrorFileShareLinux": "無法將 OSX 或 Linux 代理程式的成品發佈至檔案共用。您可以變更伺服器的成品類型，或使用 Windows 代理程式。",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "此工作只可在建置作業中執行。",
   "loc.messages.PublishBuildArtifactsFailed": "發行組建成品失敗，錯誤為: %s"
 }

@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "Région géographique à partir de laquelle générer la charge. Pour plus de détails, consultez l'aide.",
   "loc.input.label.machineType": "Exécuter le test de charge avec",
   "loc.input.label.avgResponseTimeThreshold": "Échec du test si le temps de réponse moyen (ms) dépasse",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "Temps de réponse moyen au-delà duquel le résultat du test de charge est considéré comme un échec."
 }

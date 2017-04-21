@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Chargement Mobile Center",
   "loc.helpMarkDown": "Télécharger les packages d'applications mobiles dans Visual Studio Mobile Center",
   "loc.description": "Télécharger les packages d'applications mobiles dans Visual Studio Mobile Center",
   "loc.instanceNameFormat": "Déployer $(app) dans Visual Studio Mobile Center",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "Connexion Mobile Center",
   "loc.input.help.serverEndpoint": "Sélectionnez le point de terminaison de service de votre connexion Visual Studio Mobile Center. Pour en créer un, cliquez sur le lien Gérer et créez un point de terminaison de service.",
   "loc.input.label.appSlug": "Champ de données dynamiques de l'application",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "Le champ de données dynamiques de l'application est au format **{nom_utilisateur}/{identificateur_application}**. Pour localiser les éléments **{nom_utilisateur}** et **{identificateur_application}** d'une application, cliquez sur son nom à partir de https://mobile.azure.com/apps. L'URL qui en résulte est au format [https://mobile.azure.com/users/<b>{nom_utilisateur}</b>/apps/<b>{identificateur_application}</b>](https://mobile.azure.com/users/{nom_utilisateur}/apps/{identificateur_application})",
   "loc.input.label.app": "Chemin d'accès au fichier binaire",
   "loc.input.help.app": "Chemin d'accès relatif de la racine de référentiel vers le fichier APK ou IPA que vous souhaitez publier",
   "loc.input.label.symbolsType": "Type de symboles",
   "loc.input.label.symbolsPath": "Chemin d'accès Symboles",
   "loc.input.help.symbolsPath": "Chemin d'accès relatif de la racine de référentiel vers le dossier de symboles.",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "Chemin des symboles (*.pdb)",
+  "loc.input.help.pdbPath": "Chemin relatif de la racine de dépôt vers les fichiers de symboles PDB. Le chemin peut contenir des caractères génériques.",
   "loc.input.label.dsymPath": "Chemin d'accès dSYM",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "Chemin relatif de la racine de dépôt vers le dossier dSYM. Le chemin peut contenir des caractères génériques.",
   "loc.input.label.mappingTxtPath": "Fichier de mappage",
   "loc.input.help.mappingTxtPath": "Chemin d'accès relatif de la racine de référentiel vers le fichier mapping.txt Android.",
   "loc.input.label.packParentFolder": "Inclure tous les éléments dans le dossier parent",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "Impossible de trouver un fichier basé sur %s.",
   "loc.messages.FoundMultipleFiles": "Plusieurs fichiers correspondant à %s ont été trouvés.",
   "loc.messages.FailedToCreateFile": "Impossible de créer %s avec l'erreur : %s.",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "%s est introuvable sur %s."
 }

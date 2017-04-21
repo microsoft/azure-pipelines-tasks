@@ -1,11 +1,11 @@
 {
-  "loc.messages.AadAuthority": "AAD Authority: {0}",
-  "loc.messages.ClientAppId": "Client Application ID: {0}",
-  "loc.messages.ClusterAppId": "Cluster Application ID: {0}",
-  "loc.messages.ConnectedToCluster": "Successfully connected to cluster.",
-  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
-  "loc.messages.ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-  "loc.messages.ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-  "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it."
+  "loc.messages.AadAuthority": "Центр AAD: {0}",
+  "loc.messages.ClientAppId": "Код клиентского приложения: {0}",
+  "loc.messages.ClusterAppId": "Код приложения кластера: {0}",
+  "loc.messages.ConnectedToCluster": "Успешное подключение к кластеру.",
+  "loc.messages.DefaultPortWarning": "Порт \"{0}\", указанный в конечной точке подключения, не соответствует порту конечной точки по умолчанию ClientConnectionEndpoint (19000). Это могло привести к сбою связи с кластером.",
+  "loc.messages.ErrorOnAcquireToken": "При попытке получить маркер Azure Active Directory произошла ошибка. Убедитесь, что конечная точка службы настроена правильно и заданы допустимые учетные данные. Сообщение об ошибке: {0}",
+  "loc.messages.ErrorOnCertificateImport": "При попытке импортировать сертификат произошла ошибка. Убедитесь, что конечная точка службы настроена правильно, задано правильное значение сертификата и, если сертификат защищен паролем, указан допустимый пароль. Сообщение об ошибке: {0}",
+  "loc.messages.ImportedCertificate": "Импортированный клиентский сертификат кластера с отпечатком \"{0}\".",
+  "loc.messages.ServiceFabricSDKNotInstalled": "Пакет SDK Service Fabric не установлен на агенте сборки. Перейдите на страницу https://aka.ms/servicefabric, чтобы скачать и установить его."
 }

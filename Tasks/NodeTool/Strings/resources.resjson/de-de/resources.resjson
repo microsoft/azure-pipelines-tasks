@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "Node Tool-Installationsprogramm",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
-  "loc.instanceNameFormat": "Use Node $(versionSpec)",
-  "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
-  "loc.input.label.checkLatest": "Check for Latest Version",
-  "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
-  "loc.messages.ToolFailed": "Tool install failed: %s"
+  "loc.description": "Findet die angegebene Versionsangabe von Node oder lädt sie herunter, fügt Sie in den Zwischenspeicher ein und fügt sie dem PFAD hinzu.",
+  "loc.instanceNameFormat": "Node $(versionSpec) verwenden",
+  "loc.input.label.versionSpec": "Versionsangabe",
+  "loc.input.help.versionSpec": "Versionsangabe der abzurufenden Version. Beispiele: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.checkLatest": "Auf aktuelle Version überprüfen",
+  "loc.input.help.checkLatest": "Sucht online immer nach der letzten verfügbaren Version, die die Versionsangabe erfüllt. Dies ist in der Regel \"false\", sofern Sie nicht über ein spezifisches Szenario verfügen, bei dem Sie immer die aktuelle Version abrufen. Dadurch entstehen Downloadkosten, die unter Umständen nicht erforderlich sind, insbesondere beim gehosteten Buildpool.",
+  "loc.messages.ToolFailed": "Fehler bei der Toolinstallation: %s"
 }

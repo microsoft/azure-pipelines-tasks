@@ -3,5 +3,5 @@
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "NuGet 확장 로드 경로가 검색되었습니다. 환경 변수 NUGET_EXTENSIONS_PATH는 '{0}'(으)로 설정되어 있습니다.",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "검색 패턴 '{0}'을(를) 사용하여 솔루션을 찾을 수 없습니다.",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "'NuGet 패키지 복원' 옵션은 사용되지 않습니다. 빌드에서 NuGet 패키지를 복원하려면 빌드 정의에 NuGet 설치 관리자 작업을 추가하세요.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild(Mono) were not found on the Mac/Linux agent."
+  "loc.messages.MSB_BuildToolNotFound": "Mac/Linux 에이전트에서 MSBuild 또는 xbuild(Mono)를 찾을 수 없습니다."
 }

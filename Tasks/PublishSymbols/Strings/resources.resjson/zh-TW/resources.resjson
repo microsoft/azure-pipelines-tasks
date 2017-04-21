@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "搜尋模式",
   "loc.input.help.SearchPattern": "探索要發行之 pdb 檔案使用的模式。",
   "loc.input.label.SymbolsFolder": "符號資料夾的路徑",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
+  "loc.input.help.SymbolsFolder": "搜尋符號檔案所在資料夾的路徑。預設值為 $(Build.SourcesDirectory)。否則請指定根路徑。例如: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SkipIndexing": "略過編製索引",
   "loc.input.help.SkipIndexing": "表示是否略過將來源伺服器資訊插入 PDB 檔案的過程。",
   "loc.input.label.TreatNotIndexedAsWarning": "若未編制索引則警告",

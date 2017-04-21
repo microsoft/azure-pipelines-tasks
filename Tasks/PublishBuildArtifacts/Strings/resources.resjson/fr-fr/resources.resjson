@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "Chemin d'accès",
   "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers",
   "loc.messages.ErrorFileShareLinux": "Impossible de publier les artefacts d'un agent OSX ou Linux sur un partage de fichiers. Vous pouvez changer de type d'artefact en optant pour le stockage sur un serveur, ou utiliser un agent Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "Cette tâche est prise en charge uniquement dans une tâche de build.",
   "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s"
 }

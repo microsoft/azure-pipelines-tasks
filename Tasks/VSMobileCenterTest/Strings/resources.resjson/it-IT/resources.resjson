@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Test",
+  "loc.friendlyName": "Test in Mobile Center",
   "loc.helpMarkDown": "Esegue il test dei pacchetti dell'app per dispositivi mobili con Visual Studio Mobile Center.",
   "loc.description": "Esegue il test dei pacchetti dell'app per dispositivi mobili con Visual Studio Mobile Center.",
   "loc.instanceNameFormat": "Esegui test di $(app) con Visual Studio Mobile Center",

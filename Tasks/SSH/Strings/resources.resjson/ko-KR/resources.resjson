@@ -18,7 +18,7 @@
   "loc.input.help.failOnStdErr": "이 옵션을 선택하면 원격 명령 또는 스크립트에서 STDERR에 쓰는 경우 빌드가 실패합니다.",
   "loc.messages.UseDefaultPort": "포트가 지정되지 않았으므로 SSH에 대한 기본값인 포트 22를 사용합니다.",
   "loc.messages.SettingUpSshConnection": "%s@%s:%s에 대한 SSH 연결을 설정하는 중",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.SshConnectionSuccessful": "연결되었습니다.",
   "loc.messages.ConnectionFailed": "원격 컴퓨터에 연결하지 못했습니다. SSH 끝점 정보를 확인하세요. 오류: %s.",
   "loc.messages.RemoteCopyFailed": "원격 컴퓨터에 스크립트를 복사하지 못했습니다. 오류: %s.",
   "loc.messages.RemoteCmdExecutionErr": "원격 컴퓨터에서 오류가 발생하여 명령이 실패했습니다.",

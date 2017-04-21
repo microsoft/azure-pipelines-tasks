@@ -19,12 +19,12 @@
   "loc.input.help.copyPackageTimeoutSec": "Délai d'expiration en secondes de la copie du package d'application dans le magasin d'images. Si une valeur est spécifiée, elle remplace celle du profil de publication.",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "Délai d'expiration en secondes de l'inscription du package d'application.",
-  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
-  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
-  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
-  "loc.input.label.skipPackageValidation": "Skip package validation",
-  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
+  "loc.input.label.overwriteBehavior": "Comportement de remplacement",
+  "loc.input.help.overwriteBehavior": "Comportement de remplacement si une application portant le même nom existe dans le cluster, et si les mises à niveau n'ont pas été configurées.",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "Ignorer la mise à niveau pour un même type et une même version",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indique si une mise à niveau est ignorée quand une application de même type et de même version existe déjà dans le cluster. Sinon, la mise à niveau se solde par un échec durant la validation. Si cette option est activée, les redéploiements sont idempotents.",
+  "loc.input.label.skipPackageValidation": "Ignorer la validation du package",
+  "loc.input.help.skipPackageValidation": "Indique si le package doit être validé ou non avant le déploiement.",
   "loc.input.label.unregisterUnusedVersions": "Unregister Unused Versions",
   "loc.input.help.unregisterUnusedVersions": "Indicates whether all unused versions of the application type will be removed after an upgrade.",
   "loc.input.label.overridePublishProfileSettings": "Remplacer tous les paramètres de mise à niveau du profil de publication",
@@ -85,5 +85,5 @@
   "loc.messages.SFSDK_UnexpectedError": "Erreur inattendue. Détails de l'erreur : $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "Le paramètre CopyPackageTimeoutSec nécessite la version '2.3' du SDK Service Fabric alors que la version installée est '{0}'. Ce paramètre va être ignoré.",
   "loc.messages.SFSDK_CompressPackageWarning": "Le paramètre CompressPackage exige la version '2.5' du SDK Service Fabric, mais la version '{0}' est installée. Ce paramètre sera ignoré.",
-  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+  "loc.messages.SFSDK_SkipUpgradeWarning": "Mise à niveau ignorée, car l'application de type '{0}', version '{1}', existe déjà dans le cluster."
 }

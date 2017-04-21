@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Mobile Center 업로드",
   "loc.helpMarkDown": "모바일 앱 패키지를 Visual Studio Mobile Center로 업로드",
   "loc.description": "모바일 앱 패키지를 Visual Studio Mobile Center로 업로드",
   "loc.instanceNameFormat": "Visual Studio Mobile Center에 $(app) 배포",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "모바일 센터 연결",
   "loc.input.help.serverEndpoint": "Visual Studio Mobile Center 연결을 위한 서비스 끝점을 선택합니다. 끝점을 만들려면 [관리] 링크를 클릭하고 새 서비스 끝점을 만듭니다.",
   "loc.input.label.appSlug": "앱 동적 필드",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "앱 동적 필드는 **{username}/{app_identifier}** 형식입니다. 앱의 **{username}** 및 **{app_identifier}**를 찾으려면 https://mobile.azure.com/apps에서 앱 이름을 클릭하세요. 결과 URL은 [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier}) 형식입니다.",
   "loc.input.label.app": "이진 파일 경로",
   "loc.input.help.app": "게시할 APK 또는 IPA 파일의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.symbolsType": "기호 형식",
   "loc.input.label.symbolsPath": "기호 경로",
   "loc.input.help.symbolsPath": "기호 폴더의 리포 루트로부터의 상대 경로입니다.",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "기호 경로(*.pdb)",
+  "loc.input.help.pdbPath": "PDB 기호 파일의 리포 루트로부터의 상대 경로입니다. 경로에는 와일드카드가 포함될 수 있습니다.",
   "loc.input.label.dsymPath": "dSYM 경로",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "dSYM 폴더의 리포 루트로부터의 상대 경로입니다. 경로에는 와일드카드가 포함될 수 있습니다.",
   "loc.input.label.mappingTxtPath": "매핑 파일",
   "loc.input.help.mappingTxtPath": "Android mapping.txt 파일의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.packParentFolder": "부모 폴더의 모든 항목 포함",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "%s을(를) 기반으로 하는 파일을 찾을 수 없습니다.",
   "loc.messages.FoundMultipleFiles": "%s과(와) 일치하는 파일을 여러 개 찾았습니다.",
   "loc.messages.FailedToCreateFile": "%s을(를) 만들지 못했습니다(오류: %s).",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "%s을(를) %s에서 찾지 못했습니다."
 }

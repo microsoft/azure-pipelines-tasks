@@ -14,5 +14,5 @@
   "loc.input.label.TargetPath": "Pfad",
   "loc.input.help.TargetPath": "Der UNC-Dateipfad zum Kopieren des Artefakts. Dieser muss vom Build-Agent aus zugänglich sein.",
   "loc.messages.ErrorFileShareLinux": "Artefakte können nicht aus OSX oder Linux in einer Dateifreigabe veröffentlicht werden. Sie können \"Artefakttyp\" in \"Server\" ändern, Windows oder den Task \"Dateien über SSH kopieren\" oder \"FTP-Upload\" verwenden.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
+  "loc.messages.ErrorHostTypeNotSupported": "Diese Aufgabe wird nur innerhalb eines Build-Auftrags unterstützt."
 }

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Mobile Center 上傳",
   "loc.helpMarkDown": "將行動裝置應用程式套件上傳至 Visual Studio Mobile Center",
   "loc.description": "將行動裝置應用程式套件上傳至 Visual Studio Mobile Center",
   "loc.instanceNameFormat": "將 $(app) 部署到 Visual Studio Mobile Center",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "Mobile Center 連線",
   "loc.input.help.serverEndpoint": "選取用於 Visual Studio Mobile Center 連線的服務端點。若要建立一個，請按一下 [管理] 連結建立新的服務端點。",
   "loc.input.label.appSlug": "應用程式動態資料欄位",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "App 動態資料欄位的格式為 **{username}/{app_identifier}**。若要尋找應用程式的 **{username}** 及 **{app_identifier}**，請在 https://mobile.azure.com/apps 中按一下其名稱。產生的 URL 格式為 [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
   "loc.input.label.app": "二進位檔案路徑",
   "loc.input.help.app": "從儲存機制根路徑到要發佈之 APK 或 IPA 檔案的相對路徑",
   "loc.input.label.symbolsType": "符號類型",
   "loc.input.label.symbolsPath": "符號路徑",
   "loc.input.help.symbolsPath": "從儲存機制根路徑到符號資料夾的相對路徑。",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "符號路徑 (*.pdb)",
+  "loc.input.help.pdbPath": "從存放庫根目錄到 PDB 符號檔案的相對路徑。路徑中可以包含萬用字元。",
   "loc.input.label.dsymPath": "dSYM 路徑",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "從存放庫根目錄到 dSYM 資料夾的相對路徑。路徑中可以包含萬用字元。",
   "loc.input.label.mappingTxtPath": "對應檔案",
   "loc.input.help.mappingTxtPath": "從儲存機制根路徑到 Android mapping.txt 檔案的相對路徑。",
   "loc.input.label.packParentFolder": "包括父資料夾中所有項目",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "無法依據 %s 找到任何檔案。",
   "loc.messages.FoundMultipleFiles": "找到多個符合 %s 的檔案。",
   "loc.messages.FailedToCreateFile": "無法建立 %s，發生錯誤: %s。",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "在下列位置上找不到 %s: %s。"
 }

@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "Установщик инструмента Node",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
-  "loc.instanceNameFormat": "Use Node $(versionSpec)",
-  "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
-  "loc.input.label.checkLatest": "Check for Latest Version",
-  "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
-  "loc.messages.ToolFailed": "Tool install failed: %s"
+  "loc.description": "Находит или скачивает и кэширует указанный спецификатор версии Node и добавляет его в PATH.",
+  "loc.instanceNameFormat": "Использовать Node $(versionSpec)",
+  "loc.input.label.versionSpec": "Спецификатор версии",
+  "loc.input.help.versionSpec": "Спецификатор для версии, которую необходимо получить. Примеры: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.checkLatest": "Проверить наличие последней версии",
+  "loc.input.help.checkLatest": "Всегда проверяет наличие в Интернете актуальной версии, соответствующей спецификатору версии. Обычно задано значение \"false\", кроме случаев, когда имеется определенный сценарий всегда получать актуальную версию. Когда практическая необходимость в этом отсутствует, особенно в случае размещенного пула сборок, может взиматься дополнительная плата за загрузку.",
+  "loc.messages.ToolFailed": "Сбой установки инструмента: %s"
 }

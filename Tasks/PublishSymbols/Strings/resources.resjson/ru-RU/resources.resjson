@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "Шаблон поиска",
   "loc.input.help.SearchPattern": "Шаблон, используемый для обнаружения файлов PDB для публикации.",
   "loc.input.label.SymbolsFolder": "Путь к папке символов",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
+  "loc.input.help.SymbolsFolder": "Путь к папке, в которой ищутся файлы символов. По умолчанию используется папка $(Build.SourcesDirectory). В противном случае можно указать корневой путь, (например, $(Build.BinariesDirectory)/MyProject).",
   "loc.input.label.SkipIndexing": "Пропустить индексацию",
   "loc.input.help.SkipIndexing": "Указывает, следует ли пропустить внедрение сведений об исходном сервере в PDB-файле.",
   "loc.input.label.TreatNotIndexedAsWarning": "Предупредить, если не проиндексированы",

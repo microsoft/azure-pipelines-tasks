@@ -3,5 +3,5 @@
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Le chemin du chargeur d'extensions NuGet a été détecté. La variable d'environnement NUGET_EXTENSIONS_PATH a la valeur '{0}'.",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution introuvable à l'aide du modèle de recherche '{0}'.",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "L'option Restaurer des packages NuGet est déconseillée. Pour restaurer des packages NuGet dans votre build, ajoutez une tâche Programme d'installation de NuGet à la définition de votre build.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild(Mono) were not found on the Mac/Linux agent."
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild ou xbuild (Mono) sont introuvables sur l'agent Mac/Linux."
 }

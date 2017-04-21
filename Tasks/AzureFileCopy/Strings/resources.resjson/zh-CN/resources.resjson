@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "无法设置虚拟机“{1}”的自定义脚本扩展“{0}”: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "无法启用复制先决条件。{0}",
   "loc.messages.AFC_BlobStorageNotFound": "未找到存储帐户 {0}。请指定现有的存储帐户",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "\"/S\" 选项对 $root 容器无效。"
 }
