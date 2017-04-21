@@ -28,7 +28,7 @@ export class DistributedTest {
             await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
             try {
-                if(this.dtaPid !== -1) {
+                if (this.dtaPid !== -1) {
                     tl.debug('Trying to kill the Modules/DTAExecutionHost.exe process with pid :' + this.dtaPid);
                     process.kill(this.dtaPid);
                 }
@@ -65,7 +65,7 @@ export class DistributedTest {
 
         const exeInfo = await versionFinder.locateVSTestConsole(this.dtaTestConfig);
         if (exeInfo) {
-            var exelocation = path.dirname(exeInfo)
+            const exelocation = path.dirname(exeInfo)
             tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
 
             // Split the TestWindow path out of full path - if we can't find it, will assume
@@ -120,7 +120,7 @@ export class DistributedTest {
         }
 
         //Modify settings file to enable configurations and data collectors.
-        var settingsFile = this.dtaTestConfig.settingsFile;
+        let settingsFile = this.dtaTestConfig.settingsFile;
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, null, false, this.dtaTestConfig.overrideTestrunParameters);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
@@ -157,7 +157,7 @@ export class DistributedTest {
 
     private async cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
-    if (temporarySettingsFile && this.dtaTestConfig.settingsFile != temporarySettingsFile) {
+    if (temporarySettingsFile && this.dtaTestConfig.settingsFile !== temporarySettingsFile) {
         try {
             tl.rmRF(temporarySettingsFile, true);
         } catch (error) {

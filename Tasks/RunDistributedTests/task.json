@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 49
+        "Patch": 50
     },
     "demands": [],
     "minimumAgentVersion": "1.104.0",
@@ -71,7 +71,7 @@
             "type": "pickList",
             "label": "Test Plan",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -84,7 +84,7 @@
             "type": "pickList",
             "label": "Test Suite",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "MultiSelect": "True",
                 "DisableManageLink": "True"
@@ -98,7 +98,7 @@
             "type": "pickList",
             "label": "Test Configuration",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },

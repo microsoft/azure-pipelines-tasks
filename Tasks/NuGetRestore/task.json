@@ -1,0 +1,163 @@
+{
+    "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+    "name": "NuGetRestore",
+    "friendlyName": "NuGet Restore",
+    "description": "Restores NuGet packages in preparation for a Visual Studio Build step.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "NuGet restore $(solution)",
+    "inputs": [
+        {
+            "name": "solution",
+            "type": "filePath",
+            "label": "Path to solution, packages.config, or project.json",
+            "defaultValue": "**/*.sln",
+            "helpMarkDown": "The path to solution, packages.config, or project.json file that references the packages to be restored.",
+            "required": "true"
+        },
+        {
+            "name": "selectOrConfig",
+            "type": "radio",
+            "label": "Feeds to use",
+            "defaultValue": "select",
+            "helpMarkDown": "To select one feed from VSTS and/or NuGet.org select them here. For multiple feeds, commit a nuget.config file to your source code repository and set its path here.",
+            "required": "true",
+            "options": {
+                "select": "Feed(s) I select here",
+                "config": "Feeds in my NuGet.config"
+            }
+        },
+        {
+            "name": "feed",
+            "type": "pickList",
+            "label": "Use packages from this VSTS feed",
+            "defaultValue": "",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config.",
+            "required": "false",
+            "visibleRule": "selectOrConfig = select",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "includeNuGetOrg",
+            "type": "boolean",
+            "label": "Use packages from NuGet.org",
+            "defaultValue": "true",
+            "helpMarkDown": "Include NuGet.org in the generated NuGet.config.",
+            "required": "false",
+            "visibleRule": "selectOrConfig = select"
+        },
+        {
+            "name": "nugetConfigPath",
+            "type": "filePath",
+            "label": "Path to NuGet.config",
+            "defaultValue": "",
+            "helpMarkDown": "The NuGet.config in your repository that specifies the feeds from which to restore packages.",
+            "required": "false",
+            "visibleRule": "selectOrConfig = config"
+        },
+        {
+            "name": "noCache",
+            "type": "boolean",
+            "label": "Disable local cache",
+            "defaultValue": "false",
+            "helpMarkDown": "Equivalent to the -NoCache NuGet.exe command line argument",
+            "required": "false",
+            "groupName": "advanced"
+        },
+        {
+            "name": "packagesDirectory",
+            "type": "string",
+            "label": "Destination directory",
+            "defaultValue": "",
+            "helpMarkDown": "Equivalent to the -PackagesDirectory NuGet.exe command line argument",
+            "required": "false",
+            "groupName": "advanced"
+        },
+        {
+            "name": "verbosity",
+            "type": "pickList",
+            "label": "Verbosity",
+            "defaultValue": "Detailed",
+            "helpMarkDown": "NuGet's verbosity level",
+            "required": "false",
+            "groupName": "advanced",
+            "options": {
+                "-": "-",
+                "Quiet": "Quiet",
+                "Normal": "Normal",
+                "Detailed": "Detailed"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+        "target": "feed",
+        "endpointId": "tfs:feed",
+        "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+        "resultSelector": "jsonpath:$.value[*]",
+        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "nugetinstaller.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to choose a higher version of nuget or specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
+        "PackagesInstalledSuccessfully": "Packages were restored successfully",
+        "PackagesFailedToInstall": "Packages failed to restore",
+        "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
+        "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+        "NoCredProviderOnAgent": "CredentialProvider.TeamBuild.exe not found on the agent. Falling back to config-based credential flow.",
+        "NotARegularFile": "%s i not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task.",
+        "UnknownRestoreMode": "Unknown restore mode '%s'",
+        "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+        "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
+        
+        "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
+        "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
+        "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
+        "NGCommon_UnableToFindTool": "Unable to find tool %s",
+        "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+        "NGCommon_NuGetConfigIsPackagesConfig": "Expected a NuGet.config file at %s, but its contents appear to be a packages.config. Check the settings for the %s task and confirm you selected NuGet.config rather than packages.config.",
+        "NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
+        "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
+        "NGCommon_AddingSources": "Setting credentials in NuGet.config",
+        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
+        "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
+
+        "Info_AvailableVersions": "The available versions are: %s",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_UsingVersion": "Using version: %s",
+        "Info_UsingToolPath": "Using tool path: %s",
+        "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+        "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+        "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+    }
+}
