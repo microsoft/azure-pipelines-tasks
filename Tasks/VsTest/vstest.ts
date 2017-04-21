@@ -31,11 +31,10 @@ let resultsDirectory = null;
 export async function startTest() {
     try {
         tl._writeLine('Run the tests locally using vstest.console.exe....');
-        tl._writeLine('...........................Inputs.......................');
         tl._writeLine('========================================================');
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tl._writeLine('========================================================');
-        
+
         tiaConfig = vstestConfig.tiaConfig;
         const vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
         vstestRunnerDetails = getVsTestRunnerDetails(vstestlocation);
@@ -477,7 +476,9 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     const execOptions: tr.IExecOptions = <any>{
         ignoreReturnCode: ignoreTestFailures,
-        failOnStdErr: true,
+        failOnStdErr: false,
+        // In effect this will not be called as failOnStdErr is false
+        // Keeping this code in case we want to change failOnStdErr
         errStream: new outStream.StringErrorWritable({ decodeStrings: false })
     };
     vstest.exec(execOptions)

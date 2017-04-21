@@ -15,8 +15,7 @@ try {
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
          || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
 
-        tl._writeLine('In Distributed testing flow....');
-        tl._writeLine('.........................Inputs.......................');
+        tl._writeLine(tl.loc('distributedTestWorkflow'));
         tl._writeLine('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
         tl._writeLine('======================================================');
