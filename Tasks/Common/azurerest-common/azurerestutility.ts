@@ -324,7 +324,7 @@ async function getOperationStatus(SPN, url: string) {
             deferred.reject(error);
         }
         else {
-            deferred.resolve(response);
+            deferred.resolve({ "response": response, "content": body } );
         }
     });
     return deferred.promise;
@@ -338,7 +338,8 @@ function monitorSlotSwap(SPN, url) {
         if (attempts < 360) {
             attempts++;
             tl.debug("Slot swap operation is in progress. Attempt : "+ attempts);
-            await  getOperationStatus(SPN, url).then((response) => {
+            await  getOperationStatus(SPN, url).then((status) => {
+                var response = status["response"];
                 if (response['statusCode'] === 200) {
                     deferred.resolve();
                 }
@@ -346,7 +347,7 @@ function monitorSlotSwap(SPN, url) {
                     setTimeout(poll, 5000);
                 }
                 else {
-                    tl.debug ("Slot swap operation failed. Operation Response: " + JSON.stringify(response));
+                    tl.debug ("Slot swap operation failed. Operation Response: " + status["content"]);
                     deferred.reject(response['statusMessage']);
                 }
             }).catch((error) => {
@@ -381,7 +382,7 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
     );
 
     console.log(tl.loc('StartingSwapSlot',webAppName));
-    httpObj.send('POST', url, body, headers, async (error, response, body) => {
+    httpObj.send('POST', url, body, headers, async (error, response, contents) => {
         if(error) {
             deferred.reject(error);
         }
@@ -396,7 +397,7 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
             });
         }
         else {
-            tl.debug ("Slot swap operation failed. Operation Response: " + JSON.stringify(response));
+            tl.debug ("Slot swap operation failed. Operation Response: " + contents);
             deferred.reject(response.statusMessage);
         }
     });
