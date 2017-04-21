@@ -26,6 +26,8 @@
   "loc.input.help.classFilter": "コード カバレッジの収集にクラスを含めたり除いたりするためのフィルターのコンマ区切り一覧。たとえば、+:com.*,+:org.*,-:my.app*.* と指定します。",
   "loc.input.label.srcDirectories": "ソース ファイル ディレクトリ",
   "loc.input.help.srcDirectories": "ソース コード ディレクトリのパス (Ant ビルド ファイルから見た相対パス) のコンマ区切り一覧。コード カバレッジ レポートはこれらを使用してソース コードをハイライトします。たとえば、src/java,src/Test と指定します。",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME パスの設定",
   "loc.input.help.antHomeUserInputPath": "設定されると、指定したパスの既存のあらゆる ANT_HOME 環境変数を上書きします。",
   "loc.input.label.javaHomeSelection": "次の条件で JAVA_HOME を設定します",
@@ -38,5 +40,6 @@
   "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s の JAVA_HOME を検索する",
   "loc.messages.FailedToLocateSpecifiedJVM": "指定した JDK バージョンが見つかりませんでした。環境変数 '%s' が存在し、対応する JDK の場所に設定されていることをご確認ください。",
-  "loc.messages.DiscontinueAntCodeCoverage": "Ant プロジェクト向けの自動コード カバレッジ レポート生成のサポートを中止します。詳細については、https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md をご覧ください。"
+  "loc.messages.DiscontinueAntCodeCoverage": "Ant プロジェクト向けの自動コード カバレッジ レポート生成のサポートを中止します。詳細については、https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md をご覧ください。",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

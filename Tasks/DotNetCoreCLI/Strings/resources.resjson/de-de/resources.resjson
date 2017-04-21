@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (VORSCHAU)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "Erstellung, Test und Veröffentlichung über die .NET Core-Befehlszeile.",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Webprojekte veröffentlichen",
   "loc.input.help.publishWebProjects": "Bei Festlegung auf TRUE versucht der Task, die Webprojekte im Repository zu ermitteln und für sie den Veröffentlichungsbefehl auszuführen. Webprojekte sind dadurch gekennzeichnet, dass entweder eine Datei \"web.config\" oder ein Ordner \"wwwroot\" im Verzeichnis enthalten ist.",
   "loc.input.label.projects": "Projekte",
-  "loc.input.help.projects": "Relativer Pfad der Datei(en) \"project.json\" vom Repositorystamm. Platzhalter können verwendet werden. Beispiel: Verwenden Sie \"**/project.json\" für alle project.json-Dateien in allen Unterordnern.",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "Argumente",
   "loc.input.help.arguments": "Argumente für den ausgewählten Befehl, z. B. Buildkonfiguration, Ausgabeordner, Laufzeit. Die Argumente richten sich nach dem ausgewählten Befehl.",
   "loc.input.label.zipAfterPublish": "Veröffentlichte Projekte komprimieren",
   "loc.input.help.zipAfterPublish": "Bei Festlegung auf TRUE wird der über den Veröffentlichungsbefehl erstellte Ordner komprimiert.",
   "loc.messages.noProjectFilesFound": "Es wurden keine Projektdateien gefunden, die dem angegebenen Muster entsprechen.",
   "loc.messages.noWebProjctFound": "Im Repository wurde kein Webprojekt gefunden. Webprojekte sind dadurch gekennzeichnet, dass entweder eine Datei \"web.config\" oder ein Ordner \"wwwroot\" im Verzeichnis enthalten ist.",
-  "loc.messages.dotnetCommandFailed": "Fehler bei dotnet-Befehl mit Exitcode ungleich 0: %d.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "Fehler bei Komprimierung: %s",
   "loc.messages.noPublishFolderFoundToZip": "Für die Projektdatei wurde kein Veröffentlichungsordner zum Komprimieren gefunden: %s."
 }

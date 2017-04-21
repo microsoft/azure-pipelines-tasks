@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",
   "loc.input.label.ConnectedServiceName": "Azure クラシック サブスクリプション",
   "loc.input.help.ConnectedServiceName": "PowerShell を実行する前に構成する Azure クラシック サブスクリプション",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM サブスクリプション",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "PowerShell を実行する前に構成する Azure Resource Manager サブスクリプション",
   "loc.input.label.ScriptType": "スクリプトの種類",
   "loc.input.help.ScriptType": "スクリプトの種類: ファイル パスまたはインライン スクリプト",

@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
   "loc.input.label.ConnectedServiceName": "Suscripción de Azure clásico",
   "loc.input.help.ConnectedServiceName": "Suscripción de Azure clásico de destino para la copia de los archivos.",
-  "loc.input.label.ConnectedServiceNameARM": "Suscripción del Administrador de recursos de Azure",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Suscripción de Azure Resource Manager de destino para la copia de los archivos.",
   "loc.input.label.Destination": "Tipo de destino",
   "loc.input.help.Destination": "Seleccione un destino, ya sea el blob de Azure o las VM de Azure.",

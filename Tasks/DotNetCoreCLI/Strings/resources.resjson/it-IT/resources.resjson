@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (ANTEPRIMA)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "Consente di eseguire operazioni di compilazione, test e pubblicazione dalla riga di comando principale di dotnet.",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Pubblica progetti Web",
   "loc.input.help.publishWebProjects": "Se è impostato su true, l'attività proverà a trovare i progetti Web nel repository e a eseguire su di essi il comando publish. I progetti Web sono identificabili dalla presenza di un file web.config file o della cartella wwwroot nella directory.",
   "loc.input.label.projects": "Progetti",
-  "loc.input.help.projects": "Percorso relativo del file o dei file project.json della radice del repository. È possibile usare caratteri jolly, ad esempio **/project.json per indicare tutti i file project.json in tutte le sottocartelle.",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "Argomenti",
   "loc.input.help.arguments": "Argomenti del comando selezionato. Ad esempio, configurazione della build, cartella di output, runtime. Gli argomenti dipendono dal comando selezionato.",
   "loc.input.label.zipAfterPublish": "Comprimi progetti pubblicati",
   "loc.input.help.zipAfterPublish": "Se è impostato su true, la cartella creata dal comando publish verrà compressa.",
   "loc.messages.noProjectFilesFound": "I file di progetto corrispondenti al criterio specificato non sono stati trovati.",
   "loc.messages.noWebProjctFound": "Nel repository non è stato trovato alcun progetto Web. I progetti Web sono identificabili dalla presenza di un file web.config file o della cartella wwwroot nella directory.",
-  "loc.messages.dotnetCommandFailed": "Il comando dotnet non è riuscito. Codice di uscita diverso da zero: %d.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "Il comando zip non è riuscito. Errore: %s",
   "loc.messages.noPublishFolderFoundToZip": "Non è stata trovata alcuna cartella di pubblicazione da comprimere per il file di progetto: %s."
 }

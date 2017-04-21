@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 연결 형식",
   "loc.input.label.ConnectedServiceName": "Azure 클래식 구독",
   "loc.input.help.ConnectedServiceName": "PowerShell을 실행하기 전에 구성할 Azure 클래식 구독입니다.",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 구독",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "PowerShell을 실행하기 전에 구성할 Azure Resource Manager 구독",
   "loc.input.label.ScriptType": "스크립트 유형",
   "loc.input.help.ScriptType": "스크립트 유형: 파일 경로 또는 인라인 스크립트",
