@@ -17,8 +17,6 @@ export class Constants {
     public static vsTestLocationString = 'location';
 }
 
-
-
 export class Helper{
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
