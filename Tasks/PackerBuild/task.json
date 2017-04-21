@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -166,10 +166,10 @@
         },
         {
             "name": "deployScriptPath",
-            "type": "filePath",
+            "type": "string",
             "label": "Deployment script",
             "required": true,
-            "helpMarkDown": "Specify the path to powershell or shell script which deploys provided application package. Path should be relative to relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
+            "helpMarkDown": "Specify the relative path to powershell script(for windows VMSS) or shell script(for linux VMSS) which deploys provided application package. Path should be relative to package path selected above. Supports minimatch pattern.",
             "groupName": "DeploymentInputs"
         },
         {

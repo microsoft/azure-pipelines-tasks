@@ -1,5 +1,6 @@
 "use strict";
 
+import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
@@ -48,10 +49,12 @@ export default class TaskParameters {
                     this._extractImageDetails();
                 }              
 
-                this.deployScriptPath = this._getResolvedPath(tl.getInput(constants.DeployScriptPathInputName, true));
-                console.log(tl.loc("ResolvedDeployPackgePath", this.deployScriptPath));
-                this.packagePath = this._getResolvedPath(tl.getInput(constants.DeployPackageInputName, true));
-                console.log(tl.loc("ResolvedDeployScriptPath", this.packagePath));
+                this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
+                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));
+                var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true)); 
+                this.deployScriptPath = path.relative(this.packagePath, deployScriptAbsolutePath);
+                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));
+                
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
             }                
 
@@ -71,9 +74,7 @@ export default class TaskParameters {
         this.osType = parts[3];
     }
 
-    private _getResolvedPath(inputPath: string) {
-        var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
-
+    private _getResolvedPath(rootFolder: string, inputPath: string) {
         var matchingFiles = utils.findMatch(rootFolder, inputPath);
         if(!utils.HasItems(matchingFiles)) {
             throw tl.loc("ResolvedPathNotFound", inputPath, rootFolder);

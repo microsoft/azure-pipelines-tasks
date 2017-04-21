@@ -11,8 +11,7 @@
     "image_offer": "",
     "image_sku": "",
     "location": "",
-    "script_path": "",
-    "script_name": "",
+    "script_relative_path": "",
     "script_arguments": "",
     "package_path": "",
     "package_name": "",
@@ -49,11 +48,6 @@
     },
     {
         "type": "file",
-        "source": "{{user `script_path`}}",
-        "destination": "/deployTemp/{{user `script_name`}}"
-    },
-    {
-        "type": "file",
         "source": "{{user `package_path`}}",
         "destination": "/deployTemp/{{user `package_name`}}"
     },
@@ -63,8 +57,8 @@
         "inline": [
             "cd /deployTemp",
             "ls",
-            "chmod +x /deployTemp/{{user `script_name`}}",
-            "/deployTemp/{{user `script_name`}} {{user `script_arguments`}}"
+            "chmod +x /deployTemp/{{user `package_name`}}/{{user `script_relative_path`}}",
+            "/deployTemp/{{user `package_name`}}/{{user `script_relative_path`}} {{user `script_arguments`}}"
         ]
     },
     {

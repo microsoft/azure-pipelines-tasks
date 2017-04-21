@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -166,7 +166,7 @@
     },
     {
       "name": "deployScriptPath",
-      "type": "filePath",
+      "type": "string",
       "label": "ms-resource:loc.input.label.deployScriptPath",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath",
