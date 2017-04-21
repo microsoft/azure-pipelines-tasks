@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Тип подключения Azure",
   "loc.input.label.ConnectedServiceName": "Классическая подписка Azure",
   "loc.input.help.ConnectedServiceName": "Классическая подписка Azure для настройки перед запуском PowerShell",
-  "loc.input.label.ConnectedServiceNameARM": "Подписка на AzureRM",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Подписка на Azure Resource Manager для настройки перед запуском PowerShell",
   "loc.input.label.ScriptType": "Тип сценария",
   "loc.input.help.ScriptType": "Тип сценария: путь к файлу или встроенный сценарий",

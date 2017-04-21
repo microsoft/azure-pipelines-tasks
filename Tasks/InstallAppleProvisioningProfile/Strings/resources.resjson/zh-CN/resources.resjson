@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Profile (Preview)",
+  "loc.friendlyName": "Install Apple Provisioning Profile",
   "loc.helpMarkDown": "",
   "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
   "loc.instanceNameFormat": "Install an Apple provisioning profile",

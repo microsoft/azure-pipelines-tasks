@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 连接类型",
   "loc.input.label.ConnectedServiceName": "Azure 经典订阅",
   "loc.input.help.ConnectedServiceName": "部署 SQL 文件的目标 Azure 经典订阅",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 订阅",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "部署 SQL 文件的目标 Azure Resource Manager 订阅",
   "loc.input.label.ServerName": "Azure SQL Server 名称",
   "loc.input.help.ServerName": "Azure SQL Server 名称，如 FabrikamSQL.database.windows.net,1433 或 FabrikamSQL.database.windows.net。",

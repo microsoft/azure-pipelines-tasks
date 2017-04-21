@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (PREVIEW)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "dotnet コアのコマンドラインを使用して構築、テスト、および公開します。",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Web プロジェクトの発行",
   "loc.input.help.publishWebProjects": "true の場合、タスクはリポジトリ内の Web プロジェクトを検索し、発行コマンドを実行しようとします。Web プロジェクトは web.config ファイルまたは wwwroot フォルダーがディレクトリ内にあるかどうかによって識別されます。",
   "loc.input.label.projects": "プロジェクト",
-  "loc.input.help.projects": "リポジトリのルートからの project.json ファイルの相対パス。ワイルドカードを使用できます。たとえば、すべてのサブ フォルダー内のすべての project.json ファイルの場合は **/project.json です。",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "引数",
   "loc.input.help.arguments": "選択したコマンドへの引数。たとえば、ビルド構成、出力フォルダー、ランタイムなどです。引数は選択したコマンドによって決まります。",
   "loc.input.label.zipAfterPublish": "発行されたプロジェクトの zip 圧縮",
   "loc.input.help.zipAfterPublish": "true の場合、発行コマンドで作成されたフォルダーが zip 圧縮されます。",
   "loc.messages.noProjectFilesFound": "指定したパターンと一致するプロジェクト ファイルが見つかりませんでした。",
   "loc.messages.noWebProjctFound": "Web プロジェクトがリポジトリ内にありませんでした。Web プロジェクトは、ディレクトリに存在する web.config ファイルまたは wwwroot フォルダーのいずれかによって識別されます。",
-  "loc.messages.dotnetCommandFailed": "dotnet コマンドが 0 以外の終了コードで失敗しました: %d。",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "エラーが発生し、zip 圧縮できませんでした: %s",
   "loc.messages.noPublishFolderFoundToZip": "プロジェクト ファイルに zip 圧縮する公開フォルダーが見つかりませんでした: %s。"
 }

@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Тип подключения Azure",
   "loc.input.label.ConnectedServiceName": "Классическая подписка Azure",
   "loc.input.help.ConnectedServiceName": "Целевая подписка \"Классический портал Azure\" для развертывания файлов SQL",
-  "loc.input.label.ConnectedServiceNameARM": "Подписка на AzureRM",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Целевая подписка Azure Resource Manager для развертывания файлов SQL",
   "loc.input.label.ServerName": "Имя Azure SQL Server",
   "loc.input.help.ServerName": "Имя сервера SQL Server Azure, например FabrikamSQL.database.windows.net,1433 или FabrikamSQL.database.windows.net.",

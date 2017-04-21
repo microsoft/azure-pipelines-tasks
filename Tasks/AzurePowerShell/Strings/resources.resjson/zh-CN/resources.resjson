@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 连接类型",
   "loc.input.label.ConnectedServiceName": "Azure 经典订阅",
   "loc.input.help.ConnectedServiceName": "在运行 PowerShell 之前配置的 Azure 经典订阅",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 订阅",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "在运行 PowerShell 之前配置的 Azure Resource Manager 订阅",
   "loc.input.label.ScriptType": "脚本类型",
   "loc.input.help.ScriptType": "脚本类型: 文件路径或内联脚本",
