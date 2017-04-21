@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "搜索模式",
   "loc.input.help.SearchPattern": "用于发现要发布的 pdb 文件的模式。",
   "loc.input.label.SymbolsFolder": "符号文件夹的路径",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
+  "loc.input.help.SymbolsFolder": "在其中搜索符号文件的文件夹的路径。默认为 $(Build.SourcesDirectory)。在其他情况下，指定根路径。例如: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SkipIndexing": "跳过索引",
   "loc.input.help.SkipIndexing": "指示是否跳过将源服务器信息注入 PDB 文件这一步骤。",
   "loc.input.label.TreatNotIndexedAsWarning": "未编制索引时发出警告",

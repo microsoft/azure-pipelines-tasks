@@ -18,7 +18,7 @@
   "loc.input.help.failOnStdErr": "如果选择此选项，则 STDERR 中写入远程命令或脚本时，生成将失败。",
   "loc.messages.UseDefaultPort": "由于未指定端口，将使用SSH 的默认端口 22。",
   "loc.messages.SettingUpSshConnection": "正在尝试将 SSH 连接设置为 %s@%s:%s",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.SshConnectionSuccessful": "已成功连接。",
   "loc.messages.ConnectionFailed": "无法连接到远程计算机。请验证 SSH 终结点详细信息。错误: %s。",
   "loc.messages.RemoteCopyFailed": "无法将脚本复制到远程计算机。错误: %s。",
   "loc.messages.RemoteCmdExecutionErr": "命令因远程计算机上的错误而失败。",

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Mobile Center – Upload",
   "loc.helpMarkDown": "Laden Sie mobile App-Pakete in Visual Studio Mobile Center hoch.",
   "loc.description": "Laden Sie mobile App-Pakete in Visual Studio Mobile Center hoch.",
   "loc.instanceNameFormat": "\"$(app)\" in Visual Studio Mobile Center bereitstellen",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "Mobile Center-Verbindung",
   "loc.input.help.serverEndpoint": "Wählen Sie den Dienstendpunkt für Ihre Visual Studio Mobile Center-Verbindung aus. Um einen Endpunkt zu erstellen, klicken Sie auf den Link \"Verwalten\", und erstellen Sie einen neuen Dienstendpunkt.",
   "loc.input.label.appSlug": "Platzhalterfeld für App",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "Das Platzhalterfeld für die App weist das Format **{username}/{app_identifier}** auf.  Um **{username}** und **{app_identifier}** für eine App zu suchen, klicken Sie unter \"https://mobile.azure.com/apps\" auf den Namen der App. Die resultierende URL liegt im Format [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier}) vor.",
   "loc.input.label.app": "Pfad zur Binärdatei",
   "loc.input.help.app": "Der relative Pfad vom Repositorystamm zur APK- oder IPA-Datei, die Sie veröffentlichen möchten.",
   "loc.input.label.symbolsType": "Symboltyp",
   "loc.input.label.symbolsPath": "Symbolpfad",
   "loc.input.help.symbolsPath": "Der relative Pfad vom Repositorystamm zum Symbolordner.",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "Symbolpfad (*.pdb)",
+  "loc.input.help.pdbPath": "Relativer Pfad vom Repositorystamm zu PDB-Symboldateien. Der Pfad enthält unter Umständen Platzhalter.",
   "loc.input.label.dsymPath": "dSYM-Pfad",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "Der relative Pfad vom Repositorystamm zum dSYM-Ordner. Der Pfad enthält unter Umständen Platzhalter.",
   "loc.input.label.mappingTxtPath": "Zuordnungsdatei",
   "loc.input.help.mappingTxtPath": "Der relative Pfad vom Repositorystamm zur mapping.txt-Datei von Android.",
   "loc.input.label.packParentFolder": "Alle Elemente im übergeordneten Ordner einschließen",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "Es kann keine auf \"%s\" basierende Datei gefunden werden.",
   "loc.messages.FoundMultipleFiles": "Es wurden mehrere Dateien gefunden, die \"%s\" entsprechen.",
   "loc.messages.FailedToCreateFile": "Fehler beim Erstellen von \"%s\": %s.",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "%s wurde unter %s nicht gefunden."
 }

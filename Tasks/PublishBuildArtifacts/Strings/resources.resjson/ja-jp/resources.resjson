@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "パス",
   "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有",
   "loc.messages.ErrorFileShareLinux": "成果物を OSX または Linux エージェントからファイル共有に発行することはできません。成果物の種類をサーバーに変更するか、Windows エージェントを使用することができます。",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "ビルド ジョブ内でのみ、このタスクはサポートされます。",
   "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行でエラーが発生しました: %s"
 }

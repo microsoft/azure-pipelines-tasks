@@ -14,5 +14,5 @@
   "loc.input.label.TargetPath": "Путь",
   "loc.input.help.TargetPath": "UNC-путь для файла, в который необходимо скопировать артефакт. Этот путь должен быть доступен агенту сборки.",
   "loc.messages.ErrorFileShareLinux": "Не удается опубликовать артефакты из OS X или Linux в общий файловый ресурс. Измените тип артефакта на \"Сервер\", воспользуйтесь Windows или воспользуйтесь задачей \"Копировать файлы\", \"Копировать файлы через SSH\" или \"Отправка FTP\".",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
+  "loc.messages.ErrorHostTypeNotSupported": "Эта задача поддерживается только в задании сборки."
 }

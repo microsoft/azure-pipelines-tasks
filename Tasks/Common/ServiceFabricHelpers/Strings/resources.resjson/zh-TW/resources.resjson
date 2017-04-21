@@ -1,11 +1,11 @@
 {
-  "loc.messages.AadAuthority": "AAD Authority: {0}",
-  "loc.messages.ClientAppId": "Client Application ID: {0}",
-  "loc.messages.ClusterAppId": "Cluster Application ID: {0}",
-  "loc.messages.ConnectedToCluster": "Successfully connected to cluster.",
-  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
-  "loc.messages.ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-  "loc.messages.ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-  "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it."
+  "loc.messages.AadAuthority": "AAD 授權單位: {0}",
+  "loc.messages.ClientAppId": "用戶端應用程式識別碼: {0}",
+  "loc.messages.ClusterAppId": "叢集應用程式識別碼: {0}",
+  "loc.messages.ConnectedToCluster": "已成功連線到叢集。",
+  "loc.messages.DefaultPortWarning": "在連接端點上指定的連接埠 '{0}' 不符合預設的 ClientConnectionEndpoint '19000'。這可能會造成叢集通訊失敗。",
+  "loc.messages.ErrorOnAcquireToken": "嘗試取得 Azure Active Directory 權杖時發生錯誤。請確定您的服務端點已正確設定有效的認證。錯誤訊息: {0}",
+  "loc.messages.ErrorOnCertificateImport": "嘗試匯入憑證時發生錯誤。請確定您的服務端點已正確設定正確的憑證值，如果憑證受密碼保護，則確定密碼有效。錯誤訊息: {0}",
+  "loc.messages.ImportedCertificate": "已匯入指紋為 '{0}' 的叢集用戶端憑證。",
+  "loc.messages.ServiceFabricSDKNotInstalled": "組建代理程式上未安裝 Service Fabric SDK。請前往 https://aka.ms/servicefabric 加以下載並安裝。"
 }
