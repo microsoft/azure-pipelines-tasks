@@ -158,7 +158,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         tl._writeLine(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
-        tl._writeLine('vstest.console.exe, specified location :' + testConfiguration.vsTestLocation);
+        tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
     }
 
         // only to facilitate the writing of unit tests 

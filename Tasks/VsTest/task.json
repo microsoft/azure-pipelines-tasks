@@ -393,7 +393,9 @@
         "testplanConfigInput": "Test plan configuration Id : %s",
         "testSuiteSelected": "Test suite Id selected: %s",
         "testAssemblyFilterInput": "Test assembly filter : %s",
-        "vsVersionSelected": "VisualStudio version selected for test execution : %s"
+        "vsVersionSelected": "VisualStudio version selected for test execution : %s",
+        "runTestsLocally": "Run the tests locally using %s....",
+        "vstestLocationSpecified": "%s, specified location : %s"
 
     }
 }

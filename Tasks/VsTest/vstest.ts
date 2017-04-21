@@ -30,7 +30,7 @@ let resultsDirectory = null;
 
 export async function startTest() {
     try {
-        tl._writeLine('Run the tests locally using vstest.console.exe....');
+        tl._writeLine(tl.loc('runTestsLocally', 'vstest.console.exe'));
         tl._writeLine('========================================================');
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tl._writeLine('========================================================');
