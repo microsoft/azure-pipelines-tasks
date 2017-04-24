@@ -14,16 +14,15 @@ try {
 
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
          || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
-        tl.debug('Going to the DTA Flow..');
-        tl.debug('***********************');
 
+        tl._writeLine(tl.loc('distributedTestWorkflow'));
+        tl._writeLine('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
+        tl._writeLine('======================================================');
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();
     } else {
-        tl.debug('Run the tests locally using vstest.console.exe....');
-        tl.debug('**************************************************');
         localTest.startTest();
     }
 } catch (error) {
