@@ -29,8 +29,10 @@
   "loc.input.label.outputFormat": "Output format",
   "loc.input.help.outputFormat": "output file format.",
   "loc.input.label.kubectlOutput": "Kubectl output",
-  "loc.input.help.kubectlOutput": "Variable name",
+  "loc.input.help.kubectlOutput": "Name of the variable.",
   "loc.messages.ContainerPatternFound": "Pattern found in dockerfilepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
-  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found."
+  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
+  "loc.messages.DownloadingClient": "Downloading kubernetes client.",
+  "loc.messages.CreatingSecret": "Executing create docker-registry secret command."
 }

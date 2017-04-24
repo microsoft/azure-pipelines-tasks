@@ -22,7 +22,7 @@ export default class ClusterConnection {
     private async initialize() {
         if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
         {
-            tl.debug("Downloading kubernetes client");
+            tl.debug(tl.loc("DownloadingClient"));
             this.kubectlPath = path.join(this.userDir, "kubectl") + this.getExtention();
             var version = await utils.getStableKubectlVersion();
             await utils.downloadKubectl(version, this.kubectlPath);
