@@ -395,7 +395,8 @@
         "testAssemblyFilterInput": "Test assembly filter : %s",
         "vsVersionSelected": "VisualStudio version selected for test execution : %s",
         "runTestsLocally": "Run the tests locally using %s....",
-        "vstestLocationSpecified": "%s, specified location : %s"
+        "vstestLocationSpecified": "%s, specified location : %s",
+        "uitestsparallel": "Running UI tests in parallel can cause errors. Consider disabling run in parallel option."
 
     }
 }

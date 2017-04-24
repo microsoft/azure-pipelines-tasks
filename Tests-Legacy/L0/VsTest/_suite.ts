@@ -406,6 +406,33 @@ describe('VsTest Suite', function () {
             });
     })
 
+    it('Vstest task with run in parallel and UI tests', (done) => {
+
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
+        setResponseFile('vstestGood.json');
+
+        let tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('uiTests', 'true');
+        tr.setInput('runInParallel', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.search(/Running UI tests in parallel can cause errors. Consider disabling run in parallel option./) >= 0, 'should have given a warning for ui tests and run in parallel selection.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Vstest task with run in parallel and vs 2013', (done) => {
 
         let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');

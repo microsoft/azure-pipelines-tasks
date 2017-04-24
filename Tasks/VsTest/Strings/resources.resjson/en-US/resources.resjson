@@ -107,5 +107,6 @@
   "loc.messages.testAssemblyFilterInput": "Test assembly filter : %s",
   "loc.messages.vsVersionSelected": "VisualStudio version selected for test execution : %s",
   "loc.messages.runTestsLocally": "Run the tests locally using %s....",
-  "loc.messages.vstestLocationSpecified": "%s, specified location : %s"
+  "loc.messages.vstestLocationSpecified": "%s, specified location : %s",
+  "loc.messages.uitestsparallel": "Running UI tests in parallel can cause errors. Consider disabling run in parallel option."
 }

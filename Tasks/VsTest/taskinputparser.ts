@@ -110,7 +110,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
     tl._writeLine(tl.loc('runInParallelInput', testConfiguration.runInParallel));
-
+	
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     tl._writeLine(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
 
@@ -159,6 +159,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
         tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
+    }
+
+    if(tl.getBoolInput('uiTests') && testConfiguration.runInParallel)
+    {
+        tl.warning(tl.loc('uitestsparallel'));
     }
 
         // only to facilitate the writing of unit tests 
