@@ -7,7 +7,7 @@ import ClusterConnection from "./clusterconnection";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
 export function run(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
-    tl.debug("Executing create docker-registry secret command");
+    tl.debug(tl.loc("CreatingSecret"));
     var command = connection.createCommand();
     command.arg("create")
     command.arg("secret");
