@@ -4,6 +4,6 @@
         "build.sourcesdirectory": "/source/dir"
     },
     "exist": {
-        "c:/vstest.console.exe" : false
+        "C:/vstest.console.exe" : false
     }
 }
