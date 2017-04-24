@@ -110,7 +110,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
     tl._writeLine(tl.loc('runInParallelInput', testConfiguration.runInParallel));
-	
+
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     tl._writeLine(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
 

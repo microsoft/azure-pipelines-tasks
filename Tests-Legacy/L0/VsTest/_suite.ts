@@ -425,7 +425,7 @@ describe('VsTest Suite', function () {
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/Running UI tests in parallel can cause errors. Consider disabling run in parallel option./) >= 0, 'should have given a warning for ui tests and run in parallel selection.');
+                assert(tr.stdout.search(/Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task./) >= 0, 'should have given a warning for ui tests and run in parallel selection.');
                 done();
             })
             .fail((err) => {
