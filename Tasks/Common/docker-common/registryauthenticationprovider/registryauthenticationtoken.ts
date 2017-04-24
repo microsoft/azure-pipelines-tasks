@@ -10,8 +10,9 @@ export default class RegistryServerAuthenticationToken {
     // registry login server creds
     private username: string;
     private password: string;
+    private email: string;
     
-    constructor(username: string, authenticationPassword: string, registry: string) {
+    constructor(username: string, authenticationPassword: string, registry: string, email: string) {
         
         // Replace it with setvariable once vsts-task-lib is updated
         console.log("##vso[task.setvariable variable=CONTAINER_USERNAME;issecret=true;]" + username);
@@ -20,8 +21,9 @@ export default class RegistryServerAuthenticationToken {
         this.registry = registry;
         this.password = authenticationPassword;
         this.username = username;
+        this.email = email;
     }
-
+    
     public getUsername(): string {
         return this.username;
     }
@@ -32,6 +34,10 @@ export default class RegistryServerAuthenticationToken {
 
     public getLoginServerUrl(): string {
         return this.registry;
+    }
+    
+    public getEmail(): string {
+        return this.email;
     }
     
 }

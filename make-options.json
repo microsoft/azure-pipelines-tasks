@@ -36,6 +36,7 @@
         "IISWebAppManagementOnMachineGroup",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
+        "Kubernetes",
         "ManualIntervention",
         "Maven",
         "MSBuild",
