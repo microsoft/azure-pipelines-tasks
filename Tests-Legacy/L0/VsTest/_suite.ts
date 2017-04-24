@@ -895,5 +895,29 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
+
+    it('Vstest should throw proper error for invalid vstest.console.exe location', (done) => {
+
+        setResponseFile('vstestInvalidVstestPath.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'location');
+        tr.setInput('vstestLocation', 'C:/vstest.console.exe');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.failed, 'task should have failed');
+                assert(tr.stdout.indexOf('C:/vstest.console.exe path does not exist') >= 0, 'should throw invalid path error');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
 });
