@@ -18,7 +18,7 @@
   "loc.input.help.failOnStdErr": "このオプションを選択すると、リモート コマンドまたはスクリプトが STDERR に書き込みを行う場合、ビルドは失敗します。",
   "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。",
   "loc.messages.SettingUpSshConnection": "%s@%s:%s への SSH 接続をセットアップしています",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.SshConnectionSuccessful": "正常に接続しました。",
   "loc.messages.ConnectionFailed": "リモート コンピューターへの接続に失敗しました。SSH エンドポイントの詳細を確認してください。エラー: %s。",
   "loc.messages.RemoteCopyFailed": "リモート コンピューターへのスクリプトのコピーに失敗しました。エラー: %s。",
   "loc.messages.RemoteCmdExecutionErr": "リモート コンピューター上のエラーにより、コマンドの実行に失敗しました。",

@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "路径",
   "loc.input.help.TargetPath": "要将文件复制到的文件共享",
   "loc.messages.ErrorFileShareLinux": "无法将来自 OSX 或 Linux 代理的项目发布到文件共享。可将项目类型更改为服务器或使用 Windows 代理。",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "仅在生成作业中支持此任务。",
   "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s"
 }

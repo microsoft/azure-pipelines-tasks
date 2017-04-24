@@ -19,12 +19,12 @@
   "loc.input.help.copyPackageTimeoutSec": "응용 프로그램 패키지를 이미지 저장소에 복사하는 제한 시간(초)입니다. 지정한 경우 게시 프로필의 값이 재정의됩니다.",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "응용 프로그램 패키지를 등록하는 데 대한 제한 시간(초)입니다.",
-  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
-  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
-  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
-  "loc.input.label.skipPackageValidation": "Skip package validation",
-  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
+  "loc.input.label.overwriteBehavior": "동작 덮어쓰기",
+  "loc.input.help.overwriteBehavior": "응용 프로그램이 이름이 같은 클러스터에 있고 업그레이드가 구성되지 않은 경우 동작을 덮어씁니다.",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "동일한 유형과 버전에 대해 업그레이드 건너뛰기",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "클러스터에 동일한 응용 프로그램 유형과 버전이 이미 있는 경우 업그레이드를 건너뛸지 나타냅니다. 그렇지 않으면 유효성 검사 중 업그레이드가 실패합니다. 사용하도록 설정하는 경우 재배포는 idempotent입니다.",
+  "loc.input.label.skipPackageValidation": "패키지 유효성 검사 건너뛰기",
+  "loc.input.help.skipPackageValidation": "배포 전에 패키지의 유효성 검사를 수행할지 여부를 나타냅니다.",
   "loc.input.label.unregisterUnusedVersions": "Unregister Unused Versions",
   "loc.input.help.unregisterUnusedVersions": "Indicates whether all unused versions of the application type will be removed after an upgrade.",
   "loc.input.label.overridePublishProfileSettings": "모든 게시 프로필 업그레이드 설정 재정의",
@@ -85,5 +85,5 @@
   "loc.messages.SFSDK_UnexpectedError": "예기치 않은 오류입니다. 오류 정보: $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "CopyPackageTimeoutSec 매개 변수를 사용하려면 Service Fabric SDK의 '2.3' 버전이 필요하지만, 설치된 버전은 '{0}'입니다. 이 매개 변수는 무시됩니다.",
   "loc.messages.SFSDK_CompressPackageWarning": "CompressPackage 매개 변수를 사용하려면 Service Fabric SDK의 '2.5' 버전이 필요하지만 설치된 버전은 '{0}'입니다. 이 매개 변수는 무시됩니다.",
-  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+  "loc.messages.SFSDK_SkipUpgradeWarning": "클러스터에 버전이 '{1}'인 응용 프로그램 유형 '{0}'이(가) 이미 있으므로 업그레이드를 건너뛰는 중입니다."
 }

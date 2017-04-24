@@ -3,5 +3,5 @@
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Se detectó la ruta de acceso del cargador de extensiones de NuGet. La variable de entorno NUGET_EXTENSIONS_PATH está establecida en '{0}'.",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "No se encontró la solución con el patrón de búsqueda '{0}'.",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "La opción \"Restaurar paquetes de NuGet\" está en desuso. Para restaurar paquetes de NuGet en la compilación, agregue una tarea del instalador de NuGet a la definición de su compilación.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild(Mono) were not found on the Mac/Linux agent."
+  "loc.messages.MSB_BuildToolNotFound": "No se encontró MSBuild o xbuild (Mono) en el agente para Mac o Linux."
 }

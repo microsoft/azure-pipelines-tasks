@@ -19,12 +19,12 @@
   "loc.input.help.copyPackageTimeoutSec": "Timeout in secondi per la copia del pacchetto dell'applicazione nell'archivio immagini. Se è specificato, sostituirà il valore nel profilo di pubblicazione.",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "Timeout in secondi per la registrazione del pacchetto dell'applicazione.",
-  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
-  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
-  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
-  "loc.input.label.skipPackageValidation": "Skip package validation",
-  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
+  "loc.input.label.overwriteBehavior": "Comportamento di sovrascrittura",
+  "loc.input.help.overwriteBehavior": "Comportamento per la sovrascrittura adottato se nel cluster è presente un'applicazione con lo stesso nome e gli aggiornamenti non sono stati configurati.",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "Ignora aggiornamento per tipo e versione uguali",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indica se un aggiornamento verrà ignorato se nel cluster sono presenti lo stesso tipo e la stessa versione dell'applicazione; in caso contrario, l'aggiornamento non riesce durante la convalida. Se questa opzione è abilitata, le ridistribuzioni sono idempotenti.",
+  "loc.input.label.skipPackageValidation": "Ignora convalida del pacchetto",
+  "loc.input.help.skipPackageValidation": "Indica se il pacchetto deve essere o meno convalidato prima della distribuzione.",
   "loc.input.label.unregisterUnusedVersions": "Unregister Unused Versions",
   "loc.input.help.unregisterUnusedVersions": "Indicates whether all unused versions of the application type will be removed after an upgrade.",
   "loc.input.label.overridePublishProfileSettings": "Sostituisci tutte le impostazioni di aggiornamento del profilo di pubblicazione",
@@ -85,5 +85,5 @@
   "loc.messages.SFSDK_UnexpectedError": "Errore imprevisto. Dettagli errore: $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "Con il parametro CopyPackageTimeoutSec è richiesta la versione '2.3' di Service Fabric SDK, ma la versione installata è la '{0}'. Questo parametro verrà ignorato.",
   "loc.messages.SFSDK_CompressPackageWarning": "Con il parametro CompressPackage è richiesta la versione '2.5' di Service Fabric SDK, ma la versione installata è la '{0}'. Questo parametro verrà ignorato.",
-  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+  "loc.messages.SFSDK_SkipUpgradeWarning": "L'aggiornamento verrà ignorato perché nel cluster esiste già il tipo dell'applicazione '{0}' con versione '{1}'."
 }

@@ -3,5 +3,5 @@
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "偵測到 NuGet 擴充功能載入器路徑。環境變數 NUGET_EXTENSIONS_PATH 設定為 '{0}'。",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "使用搜尋模式 '{0}' 找不到解決方案。",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "已取代 [還原 NuGet 套件] 選項。若要還原組建中的 NuGet 套件，請將 NuGet 安裝程式工作加入組建定義中。",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild(Mono) were not found on the Mac/Linux agent."
+  "loc.messages.MSB_BuildToolNotFound": "在 Mac/Linux 代理程式上找不到 MSBuild 或 xbuild (Mono)。"
 }

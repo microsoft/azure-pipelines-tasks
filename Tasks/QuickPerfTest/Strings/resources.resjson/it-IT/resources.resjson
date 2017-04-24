@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "Area geografica da cui generare il carico. Per altri dettagli, vedere la Guida.",
   "loc.input.label.machineType": "Esegui test di carico con",
   "loc.input.label.avgResponseTimeThreshold": "Imposta test come non superato se il tempo medio di risposta (ms) supera",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "Tempo medio di risposta oltre il quale il test di carico viene considerato non riuscito."
 }

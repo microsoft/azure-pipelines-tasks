@@ -14,5 +14,5 @@
   "loc.input.label.TargetPath": "路徑",
   "loc.input.help.TargetPath": "要複製成品的 UNC 檔案路徑位置。必須要可以從組建代理程式存取。",
   "loc.messages.ErrorFileShareLinux": "無法將成品從 OSX 或 Linux 發佈到檔案共用。您可以將 [成品類型] 變更為 [伺服器]、使用 Windows，或使用 [複製檔案]、[透過 SSH 複製檔案] 或 [FTP 上傳] 工作。",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
+  "loc.messages.ErrorHostTypeNotSupported": "此工作只可在建置作業中執行。"
 }

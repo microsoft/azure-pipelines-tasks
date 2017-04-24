@@ -18,7 +18,7 @@
   "loc.input.help.failOnStdErr": "如果選取此選項，當遠端命令或指令碼寫入 STDERR 時，組建會失敗。",
   "loc.messages.UseDefaultPort": "因為未指定任何連接埠，所以將使用 SSH 的預設連接埠 22。",
   "loc.messages.SettingUpSshConnection": "正在嘗試設定 %s@%s:%s 的 SSH 連線",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.SshConnectionSuccessful": "連線成功。",
   "loc.messages.ConnectionFailed": "無法連線到遠端電腦。請確認 SSH 端點詳細資料。錯誤: %s。",
   "loc.messages.RemoteCopyFailed": "無法將指令碼複製到遠端電腦。錯誤: %s。",
   "loc.messages.RemoteCmdExecutionErr": "命令在遠端電腦上發生錯誤而失敗。",

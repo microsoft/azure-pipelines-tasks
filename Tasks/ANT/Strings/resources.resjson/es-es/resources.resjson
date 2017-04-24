@@ -26,6 +26,8 @@
   "loc.input.help.classFilter": "Lista separada por comas de los filtros para incluir o excluir clases de la recopilación de cobertura de código. Por ejemplo: +:com.*,+:org.*,-:my.app*.*.",
   "loc.input.label.srcDirectories": "Directorios de archivos de origen",
   "loc.input.help.srcDirectories": "Lista separada por comas de las rutas de acceso relativas desde el archivo de compilación de Ant a los directorios de código fuente. Los informes de cobertura de código las usarán para resaltar el código fuente. Por ejemplo: src/java,src/Test.",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.antHomeUserInputPath": "Establecer ruta ANT_HOME",
   "loc.input.help.antHomeUserInputPath": "Si se establece, reemplaza cualquier variable de entorno ANT_HOME existente por la ruta de acceso dada.",
   "loc.input.label.javaHomeSelection": "Establecer JAVA_HOME por",
@@ -38,5 +40,6 @@
   "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) del JDK.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
   "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que la variable de entorno '%s' existe y está establecida en la ubicación del JDK correspondiente.",
-  "loc.messages.DiscontinueAntCodeCoverage": "Se va a interrumpir la compatibilidad con la generación automatizada de informes de Code Coverage para proyectos de Ant. Consulte https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md para más información."
+  "loc.messages.DiscontinueAntCodeCoverage": "Se va a interrumpir la compatibilidad con la generación automatizada de informes de Code Coverage para proyectos de Ant. Consulte https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md para más información.",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

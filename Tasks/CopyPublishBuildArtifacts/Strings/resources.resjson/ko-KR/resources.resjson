@@ -14,5 +14,5 @@
   "loc.input.label.TargetPath": "경로",
   "loc.input.help.TargetPath": "아티팩트를 복사할 UNC 파일 경로 위치입니다. 빌드 에이전트에서 액세스할 수 있어야 합니다.",
   "loc.messages.ErrorFileShareLinux": "OSX 또는 Linux의 아티팩트를 파일 공유에 게시할 수 없습니다. '아티팩트 형식'을 '서버'로 변경하거나, Windows를 사용하거나, '파일 복사', 'SSH를 통해 파일 복사' 또는 'FTP 업로드' 작업을 사용할 수 있습니다.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
+  "loc.messages.ErrorHostTypeNotSupported": "이 작업은 빌드 작업에서만 지원됩니다."
 }

@@ -1,11 +1,11 @@
 {
-  "loc.messages.AadAuthority": "AAD Authority: {0}",
-  "loc.messages.ClientAppId": "Client Application ID: {0}",
-  "loc.messages.ClusterAppId": "Cluster Application ID: {0}",
-  "loc.messages.ConnectedToCluster": "Successfully connected to cluster.",
-  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
-  "loc.messages.ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-  "loc.messages.ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-  "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it."
+  "loc.messages.AadAuthority": "Autorité AAD : {0}",
+  "loc.messages.ClientAppId": "ID d'application cliente : {0}",
+  "loc.messages.ClusterAppId": "ID d'application de cluster : {0}",
+  "loc.messages.ConnectedToCluster": "Connexion réussie au cluster.",
+  "loc.messages.DefaultPortWarning": "Le port '{0}' spécifié sur votre point de terminaison de connexion ne correspond pas au ClientConnectionEndpoint par défaut '19000'. Cela est peut-être à l'origine de l'échec de communication du cluster.",
+  "loc.messages.ErrorOnAcquireToken": "Une erreur s'est produite durant l'acquisition d'un jeton Azure Active Directory. Vérifiez que votre point de terminaison de service est configuré correctement avec des informations d'identification valides. Message d'erreur : {0}",
+  "loc.messages.ErrorOnCertificateImport": "Une erreur s'est produite durant l'importation du certificat. Vérifiez que votre point de terminaison de service est configuré correctement avec un certificat approprié et un mot de passe valide (si le certificat est protégé par un mot de passe). Message d'erreur : {0}",
+  "loc.messages.ImportedCertificate": "Importation effectuée du certificat client du cluster avec l'empreinte numérique '{0}'.",
+  "loc.messages.ServiceFabricSDKNotInstalled": "Le SDK Service Fabric n'est pas installé sur l'agent de build. Accédez à https://aka.ms/servicefabric pour le télécharger et l'installer."
 }

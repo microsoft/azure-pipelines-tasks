@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Install Apple Profile (Preview)",
+  "loc.friendlyName": "Install Apple Provisioning Profile",
   "loc.helpMarkDown": "",
-  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
-  "loc.instanceNameFormat": "Install an Apple provisioning profile",
-  "loc.input.label.provProfileSecureFile": "Provisioning Profile",
-  "loc.input.help.provProfileSecureFile": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
-  "loc.input.label.removeProfile": "Remove Profile After Build",
-  "loc.input.help.removeProfile": "Select to specify that the provisioning profile should be removed from the agent after the build or release is complete."
+  "loc.description": "빌드에 필요한 Apple 권한 설정 프로파일을 macOS 에이전트에 설치합니다.",
+  "loc.instanceNameFormat": "Apple 권한 설정 프로파일 설치",
+  "loc.input.label.provProfileSecureFile": "프로비저닝 프로필",
+  "loc.input.help.provProfileSecureFile": "macOS 에이전트에 설치할 '보안 파일'에 업로드된 프로비저닝 프로필을 선택합니다.",
+  "loc.input.label.removeProfile": "빌드 후 프로필 제거",
+  "loc.input.help.removeProfile": "빌드 또는 릴리스가 완료된 후에 에이전트에서 프로비저닝 프로필을 제거하도록 지정하려면 선택합니다."
 }

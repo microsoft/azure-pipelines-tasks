@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 연결 형식",
   "loc.input.label.ConnectedServiceName": "Azure 클래식 구독",
   "loc.input.help.ConnectedServiceName": "파일 복사를 위한 대상으로 지정할 Azure 클래식 구독입니다.",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 구독",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "파일 복사를 위한 대상으로 지정할 Azure Resource Manager 구독입니다.",
   "loc.input.label.Destination": "대상 형식",
   "loc.input.help.Destination": "대상으로 Azure Blob 또는 Azure VM 중 하나를 선택합니다.",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "가상 컴퓨터 '{1}'의 사용자 지정 스크립트 확장 '{0}'을(를) 설정할 수 없습니다. {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "복사 필수 구성 요소를 사용하도록 설정하지 못했습니다. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "저장소 계정 {0}을(를) 찾을 수 없습니다. 기존 저장소 계정을 지정하세요.",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "$root 컨테이너에 대해 '/S' 옵션이 잘못되었습니다."
 }

@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",
   "loc.input.label.ConnectedServiceName": "Klassisches Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Klassisches Azure-Abonnement, das als Ziel für den Kopiervorgang von Dateien dient.",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM-Abonnement",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager-Abonnement, das als Ziel für den Kopiervorgang von Dateien dient.",
   "loc.input.label.Destination": "Zieltyp",
   "loc.input.help.Destination": "Wählen Sie als Ziel entweder Azure-Blob oder Azure-VMs aus.",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Die benutzerdefinierte Skripterweiterung \"{0}\" kann nicht für den virtuellen Computer \"{1}\" festgelegt werden: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Fehler beim Aktivieren der Kopiervoraussetzungen. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "Das Speicherkonto \"{0}\" wurde nicht gefunden. Bitte geben Sie ein vorhandenes Speicherkonto an.",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "Die Option \"/S\" gilt nicht für \"$root\"-Container."
 }

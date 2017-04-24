@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 連接類型",
   "loc.input.label.ConnectedServiceName": "Azure 傳統訂用帳戶",
   "loc.input.help.ConnectedServiceName": "要作為複製檔案目標的 Azure 傳統訂用帳戶。",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 訂用帳戶",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "要作為複製檔案目標的傳統 Azure Resource Manager 訂用帳戶。",
   "loc.input.label.Destination": "目的地類型",
   "loc.input.help.Destination": "選取目的地，可以是 Azure Blob 或 Azure VM。",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "無法為虛擬機器 '{1}' 設定自訂指令碼擴充功能 '{0}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "無法啟用複製必要條件。{0}",
   "loc.messages.AFC_BlobStorageNotFound": "找不到儲存體帳戶: {0}。請指定現有的儲存體帳戶",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' 選項對 $root 容器而言無效。"
 }

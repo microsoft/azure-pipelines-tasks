@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "Geografische Region, aus der die Auslastung generiert werden soll. Weitere Einzelheiten finden Sie in der Hilfe.",
   "loc.input.label.machineType": "Auslastungstest ausführen mithilfe von",
   "loc.input.label.avgResponseTimeThreshold": "Test schlägt fehl, wenn die durchschnittliche Antwortzeit (ms) den folgenden Wert überschreitet:",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "Durchschnittliche Antwortzeit. Wird dieser Wert überschritten, gilt das Auslastungstestergebnis als nicht erfolgreich."
 }

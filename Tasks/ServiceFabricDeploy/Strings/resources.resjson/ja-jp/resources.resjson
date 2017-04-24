@@ -19,12 +19,12 @@
   "loc.input.help.copyPackageTimeoutSec": "アプリケーション パッケージのイメージ ストアへのコピーがタイムアウトするまでの秒数。これを指定すると、発行プロファイルの値が上書きされます。",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "アプリケーション パッケージの登録に対するタイムアウト (秒)",
-  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
-  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
-  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
-  "loc.input.label.skipPackageValidation": "Skip package validation",
-  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
+  "loc.input.label.overwriteBehavior": "上書きの動作",
+  "loc.input.help.overwriteBehavior": "クラスター内に同じ名前のアプリケーションが存在し、アップグレードが構成されていない場合の上書きの動作。",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "同じ種類とバージョンのアップグレードのスキップ",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "同じアプリケーションの種類とバージョンがクラスター内に既に存在する場合に、アップグレードをスキップするか、検証中にアップグレードを失敗させるかを指定します。有効な場合、再配置はべき等になります。",
+  "loc.input.label.skipPackageValidation": "パッケージ検証のスキップ",
+  "loc.input.help.skipPackageValidation": "配置前にパッケージを検証するかどうかを示します。",
   "loc.input.label.unregisterUnusedVersions": "Unregister Unused Versions",
   "loc.input.help.unregisterUnusedVersions": "Indicates whether all unused versions of the application type will be removed after an upgrade.",
   "loc.input.label.overridePublishProfileSettings": "すべての発行プロファイル アップグレード設定を上書きする",
@@ -85,5 +85,5 @@
   "loc.messages.SFSDK_UnexpectedError": "予期しないエラー。エラーの詳細: $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "CopyPackageTimeoutSec パラメーターにはバージョン '2.3' の Service Fabric SDK が必要ですが、インストールされているバージョンは '{0}' です。このパラメーターは無視されます。",
   "loc.messages.SFSDK_CompressPackageWarning": "CompressPackage パラメーターにはバージョン '2.5' の Service Fabric SDK が必要ですが、インストールされているバージョンは '{0}' です。このパラメーターは無視されます。",
-  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+  "loc.messages.SFSDK_SkipUpgradeWarning": "アプリケーションの種類 '{0}'、バージョン '{1}' はクラスター内に既に存在するため、アップグレードをスキップします。"
 }

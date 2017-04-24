@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Test",
+  "loc.friendlyName": "Mobile Center 테스트",
   "loc.helpMarkDown": "Visual Studio Mobile Center를 통해 모바일 앱 패키지를 테스트합니다.",
   "loc.description": "Visual Studio Mobile Center를 통해 모바일 앱 패키지를 테스트합니다.",
   "loc.instanceNameFormat": "Visual Studio Mobile Center를 통해 $(app) 테스트",

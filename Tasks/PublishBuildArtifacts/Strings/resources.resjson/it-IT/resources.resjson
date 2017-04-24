@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "Percorso",
   "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
   "loc.messages.ErrorFileShareLinux": "Non è possibile pubblicare artefatti da un agente OS X o Linux a una condivisione file. È possibile cambiare il tipo di artefatto in server o usare un agente Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "Questa attività è supportata solo in un processo di compilazione.",
   "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s"
 }

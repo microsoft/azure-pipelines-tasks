@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "Región geográfica desde la que se va a generar la carga. Consulte la sección de ayuda para obtener más información.",
   "loc.input.label.machineType": "Ejecutar la prueba de carga usando",
   "loc.input.label.avgResponseTimeThreshold": "Suspender prueba si el tiempo medio de respuesta (ms) es superior a",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "Tiempo medio de respuesta por encima del cual se considera incorrecto el resultado de la prueba de carga."
 }

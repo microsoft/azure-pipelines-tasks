@@ -14,5 +14,5 @@
   "loc.input.label.TargetPath": "Ruta de acceso",
   "loc.input.help.TargetPath": "La ubicación de la ruta de acceso de archivo UNC para copiar el artefacto. Debe ser accesible desde el agente de compilación.",
   "loc.messages.ErrorFileShareLinux": "No se pueden publicar artefactos de OSX o Linux en un recurso compartido de archivos. Para cambiar \"Tipo de artefacto\" a \"Servidor\", use Windows o use la tarea \"Copiar archivos\", \"Copiar archivos a través de SSH\" o \"Carga por FTP\".",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
+  "loc.messages.ErrorHostTypeNotSupported": "Esta tarea se admite solo en un trabajo de compilación."
 }
