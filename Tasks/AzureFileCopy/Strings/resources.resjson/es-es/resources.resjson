@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
   "loc.input.label.ConnectedServiceName": "Suscripción de Azure clásico",
   "loc.input.help.ConnectedServiceName": "Suscripción de Azure clásico de destino para la copia de los archivos.",
-  "loc.input.label.ConnectedServiceNameARM": "Suscripción del Administrador de recursos de Azure",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Suscripción de Azure Resource Manager de destino para la copia de los archivos.",
   "loc.input.label.Destination": "Tipo de destino",
   "loc.input.help.Destination": "Seleccione un destino, ya sea el blob de Azure o las VM de Azure.",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "No se puede establecer el script personalizado '{0}' para la máquina virtual '{1}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Error al habilitar los requisitos previos de copia. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "No se encontró la cuenta de almacenamiento: {0}. Especifique una cuenta de almacenamiento existente",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "La opción \"/S\" no es válida para contenedores $root."
 }

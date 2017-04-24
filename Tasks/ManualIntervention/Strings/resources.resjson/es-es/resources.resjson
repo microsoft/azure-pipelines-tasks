@@ -7,6 +7,6 @@
   "loc.input.help.instructions": "Estas instrucciones se mostrarán al usuario para reanudar o rechazar la intervención manual. En función de ellas, el usuario tomará una decisión informada sobre esta intervención manual.",
   "loc.input.label.emailRecipients": "Notificar a los usuarios",
   "loc.input.help.emailRecipients": "Envíe un correo electrónico de intervención manual pendiente a usuarios (o grupos) específicos. Solo los usuarios con permiso para administrar implementación pueden realizar una intervención manual.",
-  "loc.input.label.onTimeout": "On timeout",
-  "loc.input.help.onTimeout": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+  "loc.input.label.onTimeout": "Al agotarse el tiempo de espera",
+  "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta intervención manual después de estar pendiente durante el tiempo de espera especificado o 60 días, el que ocurra antes."
 }

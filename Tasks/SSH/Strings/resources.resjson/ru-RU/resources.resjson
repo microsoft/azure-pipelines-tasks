@@ -18,7 +18,7 @@
   "loc.input.help.failOnStdErr": "Если этот параметр выбран, сборка завершится ошибкой при записи данных удаленными командами или сценарием в поток STDERR.",
   "loc.messages.UseDefaultPort": "Используется порт 22, который является портом по умолчанию для SSH, так как порт не указан.",
   "loc.messages.SettingUpSshConnection": "Попытка установить SSH-подключение к %s@%s:%s",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.SshConnectionSuccessful": "Подключение успешно установлено.",
   "loc.messages.ConnectionFailed": "Не удалось подключиться к удаленному компьютеру. Проверьте сведения о конечной точке SSH. Ошибка: %s.",
   "loc.messages.RemoteCopyFailed": "Не удалось скопировать сценарий на удаленный компьютер. Ошибка: %s.",
   "loc.messages.RemoteCmdExecutionErr": "Сбой команды с ошибками на удаленном компьютере.",

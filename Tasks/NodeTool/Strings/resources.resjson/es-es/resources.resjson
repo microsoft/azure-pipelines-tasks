@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "Instalador de herramientas de nodo",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
-  "loc.instanceNameFormat": "Use Node $(versionSpec)",
-  "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
-  "loc.input.label.checkLatest": "Check for Latest Version",
-  "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
-  "loc.messages.ToolFailed": "Tool install failed: %s"
+  "loc.description": "Busca o descarga y almacena en caché la versión especificada del nodo y la agrega a la ruta de acceso.",
+  "loc.instanceNameFormat": "Usar nodo $(versionSpec)",
+  "loc.input.label.versionSpec": "Especificación de versión",
+  "loc.input.help.versionSpec": "Especificación de la versión que debe obtenerse. Ejemplos: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.checkLatest": "Comprobar la última versión",
+  "loc.input.help.checkLatest": "Comprueba siempre en línea la última versión disponible que cumple la especificación de versión. Este valor suele ser false a menos que tenga un escenario específico que deba obtener siempre la última versión. Esto dará lugar a costos de descarga, cuando puede que no sea necesario, especialmente con el grupo de compilación hospedado.",
+  "loc.messages.ToolFailed": "No se pudo instalar la herramienta: %s"
 }

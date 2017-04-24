@@ -1,11 +1,11 @@
 {
-  "loc.messages.AadAuthority": "AAD Authority: {0}",
-  "loc.messages.ClientAppId": "Client Application ID: {0}",
-  "loc.messages.ClusterAppId": "Cluster Application ID: {0}",
-  "loc.messages.ConnectedToCluster": "Successfully connected to cluster.",
-  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
-  "loc.messages.ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-  "loc.messages.ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-  "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it."
+  "loc.messages.AadAuthority": "AAD 権限: {0}",
+  "loc.messages.ClientAppId": "クライアント アプリケーション ID: {0}",
+  "loc.messages.ClusterAppId": "クラスター アプリケーション ID: {0}",
+  "loc.messages.ConnectedToCluster": "正常にクラスターに接続しました。",
+  "loc.messages.DefaultPortWarning": "接続エンドポイント上で指定したポート '{0}' が既定の ClientConnectionEndpoint の '19000' と一致しません。この原因には、クラスターの通信エラーが考えられます。",
+  "loc.messages.ErrorOnAcquireToken": "Azure Active Directory トークンの取得中にエラーが発生しました。サービス エンドポイントが有効な資格情報で適切に構成されていることを確認してください。エラー メッセージ: {0}",
+  "loc.messages.ErrorOnCertificateImport": "証明書のインポート中にエラーが発生しました。サービス エンドポイントが正しい証明書の値で適切に構成されていること、また証明書がパスワードで保護されている場合は、有効なパスワードで適切に構成されていることを確認してください。エラー メッセージ: {0}",
+  "loc.messages.ImportedCertificate": "拇印 '{0}' を含むインポートされたクラスター クライアント証明書。",
+  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK がビルド エージェントにインストールされていません。https://aka.ms/servicefabric にアクセスしてダウンロードし、インストールしてください。"
 }

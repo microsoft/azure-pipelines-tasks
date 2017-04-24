@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "Ruta de acceso",
   "loc.input.help.TargetPath": "Recurso compartido de archivos en el que copiar los archivos",
   "loc.messages.ErrorFileShareLinux": "No se pueden publicar artefactos de un agente OSX o Linux en un recurso compartido de archivos. Puede cambiar el tipo de artefacto a servidor o usar un agente de Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "Esta tarea se admite solo en un trabajo de compilación.",
   "loc.messages.PublishBuildArtifactsFailed": "Error al publicar artefactos de compilación: %s"
 }

@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 33
     },
     "demands": [
         "vstest"
@@ -377,6 +377,25 @@
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
         "vs2013NotSupportedInDta": "Running tests using Visual Studio 2013 with multi-agent phase settings is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
-        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored."
+        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
+        "distributedTestWorkflow": "In distributed testing flow....",
+        "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
+        "testSelectorInput": "Test selector : %s",
+        "searchFolderInput": "Search folder : %s",
+        "testFilterCriteriaInput": "Test filter criteria : %s",
+        "runSettingsFileInput": "Run settings file : %s",
+        "runInParallelInput":"Run in parallel : %s",
+        "runInIsolationInput":"Run in isolation : %s",
+        "pathToCustomAdaptersInput": "Path to custom adapters : %s",
+        "otherConsoleOptionsInput": "Other console options : %s",
+        "codeCoverageInput": "Code coverage enabled : %s",
+        "testPlanInput": "Test plan Id : %s",
+        "testplanConfigInput": "Test plan configuration Id : %s",
+        "testSuiteSelected": "Test suite Id selected: %s",
+        "testAssemblyFilterInput": "Test assembly filter : %s",
+        "vsVersionSelected": "VisualStudio version selected for test execution : %s",
+        "runTestsLocally": "Run the tests locally using %s....",
+        "vstestLocationSpecified": "%s, specified location : %s"
+
     }
 }

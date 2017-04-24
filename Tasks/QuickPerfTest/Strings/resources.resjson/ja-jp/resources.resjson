@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "負荷の生成元とする地理的な領域。詳しくは、ヘルプをご覧ください。",
   "loc.input.label.machineType": "次を使用してロードテストを実行:",
   "loc.input.label.avgResponseTimeThreshold": "標準応答時間 (ミリ秒) を超えるとテストが失敗する",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "これを超えるとロード テストの結果が不成功と見なされる、平均応答時間。"
 }

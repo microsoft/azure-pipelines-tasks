@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Test",
+  "loc.friendlyName": "Mobile Center 测试",
   "loc.helpMarkDown": "使用 Visual Studio Mobile Center 测试移动应用包。",
   "loc.description": "使用 Visual Studio Mobile Center 测试移动应用包。",
   "loc.instanceNameFormat": "使用 Visual Studio Mobile Center 测试 $(应用)",

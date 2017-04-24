@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "Pfad",
   "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen",
   "loc.messages.ErrorFileShareLinux": "Artefakte können nicht von einem OSX- oder Linux-Agent aus in einer Dateifreigabe veröffentlicht werden. Sie können den Artefakttyp in Server ändern oder einen Windows-Agent verwenden.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "Diese Aufgabe wird nur innerhalb eines Build-Auftrags unterstützt.",
   "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s"
 }

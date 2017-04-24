@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "Географический регион, из которого создается нагрузка. Подробнее см. в справке.",
   "loc.input.label.machineType": "Выполнить нагрузочный тест с помощью",
   "loc.input.label.avgResponseTimeThreshold": "Тест не пройден, если среднее время отклика в миллисекундах превышает",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "Среднее время отклика, по прошествии которого нагрузочный тест считается непройденным."
 }

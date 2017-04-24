@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Mobile Center のアップロード",
   "loc.helpMarkDown": "モバイル アプリ パッケージを Visual Studio Mobile Center にアップロードします",
   "loc.description": "モバイル アプリ パッケージを Visual Studio Mobile Center にアップロードします",
   "loc.instanceNameFormat": "$(app) を Visual Studio Mobile Center に配置する",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "Mobile Center 接続",
   "loc.input.help.serverEndpoint": "Visual Studio Mobile Center 接続のサービス エンドポイントを選択します。作成するには、[管理] リンクをクリックして、新しいサービス エンドポイントを作成します。",
   "loc.input.label.appSlug": "アプリ置換フィールド",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "アプリ置換フィールドの形式は **{username}/{app_identifier}** です。アプリの **{username}** や **{app_identifier}** を見つけるには、https://mobile.azure.com/apps からその名前をクリックします。結果の URL は [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier}) の形式になります",
   "loc.input.label.app": "バイナリ ファイル パス",
   "loc.input.help.app": "リポジトリのルートから発行する APK または IPA ファイルへの相対パス",
   "loc.input.label.symbolsType": "シンボルの種類",
   "loc.input.label.symbolsPath": "シンボル パス",
   "loc.input.help.symbolsPath": "リポジトリのルートからシンボル フォルダーへの相対パス。",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "シンボル パス (*.pdb)",
+  "loc.input.help.pdbPath": "リポジトリのルートから PDB シンボル ファイルへの相対パス。パスにはワイルドカードを含めることができます。",
   "loc.input.label.dsymPath": "dSYM パス",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "リポジトリのルートから dSYM フォルダーへの相対パス。パスにはワイルドカードを含めることができます。",
   "loc.input.label.mappingTxtPath": "マッピング ファイル",
   "loc.input.help.mappingTxtPath": "リポジトリのルートから Android の mapping.txt ファイルへの相対パス。",
   "loc.input.label.packParentFolder": "親フォルダー内のアイテムをすべて含める",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "%s に基づくファイルが見つかりません。",
   "loc.messages.FoundMultipleFiles": "%s と一致しているファイルが複数見つかりました。",
   "loc.messages.FailedToCreateFile": "次のエラーで %s を作成できませんでした: %s。",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "%s が %s で見つかりませんでした。"
 }

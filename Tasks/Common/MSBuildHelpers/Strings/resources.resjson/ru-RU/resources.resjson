@@ -3,5 +3,5 @@
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Обнаружен путь к загрузчику расширений NuGet. Для переменной среды NUGET_EXTENSIONS_PATH задано значение \"{0}\".",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Не удалось найти решение по шаблону поиска \"{0}\".",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "Параметр \"Восстановить пакеты NuGet\" использовать не рекомендуется. Чтобы восстановить пакеты NuGet в сборке, добавьте задание установщика NuGet в определение сборки.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild(Mono) were not found on the Mac/Linux agent."
+  "loc.messages.MSB_BuildToolNotFound": "В агенте Mac/Linux не удалось найти MSBuild или xbuild (Mono)."
 }

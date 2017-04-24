@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "NuGet Command",
+  "loc.description": "Runs a NuGet command",
+  "loc.instanceNameFormat": "NuGet $(command)",
+  "loc.input.label.command": "命令",
+  "loc.input.help.command": "The NuGet command to run.\n\nExamples: restore, pack",
+  "loc.input.label.arguments": "参数",
+  "loc.input.help.arguments": "Arguments for the provided command",
+  "loc.messages.NGCommon_DetectedNuGetVersion": "检测到的 NuGet 版本 %s / %s",
+  "loc.messages.Info_NuGetSupportedAfter3_5": "The NuGet version being used is %s and only versions >= 3.5.0 are suported by this task. ",
+  "loc.messages.BuildIdentityPermissionsHint": "对于内部源，请确保生成服务标识“%s”[%s] 有权对其进行访问。",
+  "loc.messages.Info_AvailableVersions": "The available versions are: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+  "loc.messages.Info_UsingVersion": "Using version: %s",
+  "loc.messages.Info_UsingToolPath": "Using tool path: %s",
+  "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+  "loc.messages.Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+  "loc.messages.Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+  "loc.messages.Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+}

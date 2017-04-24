@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Carga de Mobile Center",
   "loc.helpMarkDown": "Carga paquetes de aplicaciones móviles a Visual Studio Mobile Center",
   "loc.description": "Carga paquetes de aplicaciones móviles a Visual Studio Mobile Center",
   "loc.instanceNameFormat": "Implementar $(app) en Visual Studio Mobile Center",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "Conexión a Mobile Center",
   "loc.input.help.serverEndpoint": "Seleccione el punto de conexión de servicio para la conexión con Visual Studio Mobile Center. Para crear uno, haga clic en el vínculo Administrar y cree un punto de conexión de servicio nuevo.",
   "loc.input.label.appSlug": "Slug de aplicación",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "El slug de aplicación tiene el formato \"{nombre_de_usuario}/{identificador_de_aplicación}\". Para buscar \"{nombre_de_usuario}\" e \"{identificador_de_aplicación}\" para una aplicación, haga clic en su nombre en https://mobile.azure.com/apps. La dirección URL resultante tiene el formato [https://mobile.azure.com/users/<b>{nombre_de_usuario}</b>/apps/<b>{identificador_de_aplicación}</b>](https://mobile.azure.com/users/{nombre_de_usuario}/apps/{identificador_de_aplicación}).",
   "loc.input.label.app": "Ruta de acceso a archivo binario",
   "loc.input.help.app": "Ruta de acceso relativa desde la raíz del repositorio al archivo APK o IPA que desea publicar",
   "loc.input.label.symbolsType": "Tipo de símbolos",
   "loc.input.label.symbolsPath": "Ruta de acceso a símbolos",
   "loc.input.help.symbolsPath": "Ruta de acceso relativa de la raíz del repositorio a la carpeta de símbolos.",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "Ruta de acceso de símbolos (*.pdb)",
+  "loc.input.help.pdbPath": "Ruta de acceso relativa desde la raíz del repositorio hasta los archivos de símbolos PDB. Puede contener comodines.",
   "loc.input.label.dsymPath": "Ruta de acceso a dSYM",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "Ruta de acceso relativa desde la raíz del repositorio a la carpeta dSYM. Puede contener comodines.",
   "loc.input.label.mappingTxtPath": "Archivo de asignación",
   "loc.input.help.mappingTxtPath": "Ruta de acceso relativa desde la raíz del repositorio al archivo mapping.txt de Android.",
   "loc.input.label.packParentFolder": "Incluir todos los elementos en la carpeta principal",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "No se puede encontrar ningún archivo basado en %s.",
   "loc.messages.FoundMultipleFiles": "Se encontraron varios archivos que coinciden con %s.",
   "loc.messages.FailedToCreateFile": "Error al crear %s: %s.",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "No se encuentra %s en %s."
 }

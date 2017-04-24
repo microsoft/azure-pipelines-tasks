@@ -25,6 +25,8 @@
   "loc.input.help.classFilesDirectories": "클래스 파일, 보관 파일(JAR, WAR 등)이 포함된 디렉터리의 쉼표로 구분된 목록입니다. 코드 검사는 이러한 디렉터리에 있는 클래스 파일에 대해 보고됩니다. 일반적으로 Gradle 빌드의 기본 클래스 디렉터리인 `build/classes/main` 아래에 있는 클래스가 검색됩니다.",
   "loc.input.label.classFilter": "클래스 포함/제외 필터",
   "loc.input.help.classFilter": "코드 검사 수집에서 클래스를 포함하거나 제외할 필터의 쉼표로 구분된 목록입니다(예: +:com.*,+:org.*,-:my.app*.*).",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.javaHomeSelection": "JAVA_HOME 설정 방법",
   "loc.input.help.javaHomeSelection": "빌드 중에 검색될 JDK 버전을 선택하거나 수동으로 JDK 경로를 입력하여 JAVA_HOME을 설정합니다.",
   "loc.input.label.jdkVersion": "JDK 버전",
@@ -92,5 +94,6 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "코드 분석 결과",
   "loc.messages.codeAnalysisDisabled": "빌드 환경 외부에서 코드 분석을 사용하지 않도록 설정되어 있습니다. %s에 대한 값을 찾을 수 없습니다.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s에 대해 JAVA_HOME 찾기",
-  "loc.messages.FailedToLocateSpecifiedJVM": "지정한 JDK 버전을 찾지 못했습니다. '%s' 환경 변수가 있으며 해당 JDK의 위치로 설정되었는지 확인하세요."
+  "loc.messages.FailedToLocateSpecifiedJVM": "지정한 JDK 버전을 찾지 못했습니다. '%s' 환경 변수가 있으며 해당 JDK의 위치로 설정되었는지 확인하세요.",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

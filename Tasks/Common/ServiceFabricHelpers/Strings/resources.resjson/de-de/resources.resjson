@@ -1,11 +1,11 @@
 {
-  "loc.messages.AadAuthority": "AAD Authority: {0}",
-  "loc.messages.ClientAppId": "Client Application ID: {0}",
-  "loc.messages.ClusterAppId": "Cluster Application ID: {0}",
-  "loc.messages.ConnectedToCluster": "Successfully connected to cluster.",
-  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
-  "loc.messages.ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-  "loc.messages.ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-  "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it."
+  "loc.messages.AadAuthority": "AAD-Autorität: {0}",
+  "loc.messages.ClientAppId": "Clientanwendungs-ID: {0}",
+  "loc.messages.ClusterAppId": "Clusteranwendungs-ID: {0}",
+  "loc.messages.ConnectedToCluster": "Die Verbindung mit dem Cluster wurde erfolgreich hergestellt.",
+  "loc.messages.DefaultPortWarning": "Der auf Ihrem Endpunkt angegebene Port {0} stimmt nicht mit dem standardmäßigen ClientConnectionEndpoint von 19000 überein. Dies kann Fehler bei der Clusterkommunikation verursachen.",
+  "loc.messages.ErrorOnAcquireToken": "Fehler beim Versuch, ein Azure Active Directory-Token abzurufen. Stellen Sie sicher, dass Ihr Dienstendpunkt ordnungsgemäß mit gültigen Anmeldeinformationen konfiguriert ist. Fehlermeldung: {0}",
+  "loc.messages.ErrorOnCertificateImport": "Fehler beim Versuch, das Zertifikat zu importieren. Stellen Sie sicher, dass Ihr Dienstendpunkt ordnungsgemäß mit einem richtigen Zertifikatwert konfiguriert ist. Wenn das Zertifikat durch ein Kennwort geschützt ist, muss außerdem ein gültiges Kennwort verwendet werden. Fehlermeldung: {0}",
+  "loc.messages.ImportedCertificate": "Das Clusterclientzertifikat mit dem Fingerabdruck \"{0}\" wurde importiert.",
+  "loc.messages.ServiceFabricSDKNotInstalled": "Das Service Fabric SDK ist nicht auf dem Build-Agent installiert. Navigieren Sie zu https://aka.ms/servicefabric, um es herunterzuladen und zu installieren."
 }
