@@ -59,6 +59,9 @@ let a: any = <any>{
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': true }
+    },
+    "osType": {
+        "osType": "Windows_NT"
     }
 };
 

@@ -60,6 +60,9 @@ let a: any = <any>{
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': process.env["__cleanup_fails__"] === "true" ? false : true }
+    },
+    "osType": {
+        "osType": "Windows_NT"
     }
 };
 

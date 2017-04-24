@@ -51,8 +51,9 @@ export default class TaskParameters {
 
                 this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
                 console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));
-                var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true)); 
-                this.deployScriptPath = path.relative(this.packagePath, deployScriptAbsolutePath);
+                var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
+                var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
+                this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
                 console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));
                 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
@@ -81,5 +82,17 @@ export default class TaskParameters {
         }
 
         return matchingFiles[0];
+    }
+
+    private _normalizeRelativePathForTargetOS(inputPath: string) {
+        if(tl.osType().match(/^Win/) && !this.osType.toLowerCase().match(/^win/)) {
+            var splitPath = inputPath.split(path.sep);
+            return path.posix.join.apply(null, splitPath);
+        } else if(!tl.osType().match(/^Win/) && this.osType.toLocaleLowerCase().match(/^win/)) {
+            var splitPath = inputPath.split(path.sep);
+            return path.win32.join.apply(null, splitPath);
+        }
+
+        return inputPath;
     }
 }

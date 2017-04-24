@@ -54,6 +54,9 @@ let a: any = <any>{
     "exist": {
         "F:\\somedir\\tempdir\\100\\": true,
         "packer": true
+    },
+    "osType": {
+        "osType": "Windows_NT"
     }
 };
 

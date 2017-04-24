@@ -75,6 +75,9 @@ let a: any = <any>{
     "rmRF": {
         "/tmp/tempdir/100": { 'success': true },
         "\\tmp\\tempdir\\100": { 'success': true }
+    },
+    "osType": {
+        "osType": "Linux"
     }
 };
 
