@@ -395,6 +395,7 @@
     "testAssemblyFilterInput": "ms-resource:loc.messages.testAssemblyFilterInput",
     "vsVersionSelected": "ms-resource:loc.messages.vsVersionSelected",
     "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
-    "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified"
+    "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
+    "uitestsparallel": "ms-resource:loc.messages.uitestsparallel"
   }
 }
