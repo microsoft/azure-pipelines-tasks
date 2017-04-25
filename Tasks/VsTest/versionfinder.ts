@@ -80,15 +80,15 @@ function locateTestWindow(testConfig: models.TestConfigurations): Promise<string
     if(testConfig.vsTestLocationMethod === utils.Constants.vsTestLocationString) {
         if (utils.Helper.pathExistsAsFile(testConfig.vsTestLocation)) {
             return Promise.resolve(path.join(testConfig.vsTestLocation,".."));
-        } 
-        
-        if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
+        }
+
+        if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) &&
             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
             return Promise.resolve(testConfig.vsTestLocation);
-        } 
+        }
 
         throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
-    } 
+    }
 
     if (isNaN(vsVersion)) {
         // latest
@@ -96,13 +96,13 @@ function locateTestWindow(testConfig: models.TestConfigurations): Promise<string
         let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
             return Promise.resolve(vstestconsole15Path);
-        } 
+        }
 
         // fallback
         tl.debug('Unable to find an instance of Visual Studio 2017');
         return getLatestVSTestConsolePathFromRegistry();
     }
-    
+
     if (vsVersion === 15.0) {
         let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
@@ -111,7 +111,6 @@ function locateTestWindow(testConfig: models.TestConfigurations): Promise<string
 
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
     }
-    
 
     tl.debug('Searching for Visual Studio ' + vsVersion.toString());
     return Promise.resolve(getVSTestLocation(vsVersion));
@@ -128,7 +127,7 @@ function getLatestVSTestConsolePathFromRegistry(): Promise<string> {
             let selectedVersion = versions[versions.length - 1];
             tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
             return Promise.resolve(getVSTestLocation(selectedVersion));
-        } 
+        }
 
         tl.debug('No Registry entry found under VisualStudio node');
         return Promise.resolve(null);
@@ -136,21 +135,22 @@ function getLatestVSTestConsolePathFromRegistry(): Promise<string> {
         tl.debug('Registry entry not found under VisualStudio node');
         return Promise.resolve(null);
     });
-    
     return Promise.resolve(null);
 }
 
 function getVSTestConsole15Path(): string {
     const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
-    vswhereTool.line('-latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath')
-    return vswhereTool.execSync().stdout;
+    vswhereTool.line('-latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
+    const op = vswhereTool.execSync().stdout;
+    tl.debug('Visual Studio 15.0 or higher installed path: ' + op);
+    return op;
 }
 
 function getVSTestLocation(vsVersion: number): string {
     let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
     if (!vsCommon) {
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
-    } 
+    }
 
     return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
 }
@@ -166,6 +166,5 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
             }
         }
     }
-    
     return outputArray;
 }
