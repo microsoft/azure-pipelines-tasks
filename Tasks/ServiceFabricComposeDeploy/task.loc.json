@@ -24,8 +24,8 @@
   "minimumAgentVersion": "1.95.0",
   "groups": [
     {
-      "name": "repository",
-      "displayName": "ms-resource:loc.group.displayName.repository",
+      "name": "registry",
+      "displayName": "ms-resource:loc.group.displayName.registry",
       "isExpanded": true
     },
     {
@@ -61,9 +61,9 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationName"
     },
     {
-      "name": "repositoryCredentials",
+      "name": "registryCredentials",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.repositoryCredentials",
+      "label": "ms-resource:loc.input.label.registryCredentials",
       "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
@@ -72,8 +72,8 @@
         "UsernamePassword": "Username and Password",
         "None": "None"
       },
-      "groupName": "repository",
-      "helpMarkDown": "ms-resource:loc.input.help.repositoryCredentials"
+      "groupName": "registry",
+      "helpMarkDown": "ms-resource:loc.input.help.registryCredentials"
     },
     {
       "name": "dockerRegistryEndpointName",
@@ -81,37 +81,37 @@
       "label": "ms-resource:loc.input.label.dockerRegistryEndpointName",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpointName",
-      "groupName": "repository",
-      "visibleRule": "repositoryCredentials = ContainerRegistryEndpoint"
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = ContainerRegistryEndpoint"
     },
     {
       "name": "azureSubscriptionEndpoint",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
-      "groupName": "repository",
-      "visibleRule": "repositoryCredentials = AzureResourceManagerEndpoint",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = AzureResourceManagerEndpoint",
       "required": true
     },
     {
-      "name": "repositoryUserName",
+      "name": "registryUserName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.repositoryUserName",
+      "label": "ms-resource:loc.input.label.registryUserName",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.repositoryUserName",
-      "groupName": "repository",
-      "visibleRule": "repositoryCredentials = UsernamePassword"
+      "helpMarkDown": "ms-resource:loc.input.help.registryUserName",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = UsernamePassword"
     },
     {
-      "name": "repositoryPassword",
+      "name": "registryPassword",
       "type": "string",
-      "label": "ms-resource:loc.input.label.repositoryPassword",
+      "label": "ms-resource:loc.input.label.registryPassword",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.repositoryPassword",
-      "groupName": "repository",
-      "visibleRule": "repositoryCredentials = UsernamePassword"
+      "helpMarkDown": "ms-resource:loc.input.help.registryPassword",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = UsernamePassword"
     },
     {
       "name": "passwordEncrypted",
@@ -120,8 +120,8 @@
       "defaultValue": true,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
-      "groupName": "repository",
-      "visibleRule": "repositoryCredentials = UsernamePassword"
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = UsernamePassword"
     },
     {
       "name": "deployTimeoutSec",
