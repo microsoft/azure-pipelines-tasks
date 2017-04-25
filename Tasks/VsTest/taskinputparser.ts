@@ -160,12 +160,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
         tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
     }
-
-        // only to facilitate the writing of unit tests 
-    testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
-    if (!testConfiguration.vs15HelperPath) {
-        testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
-    }
 }
 
 function getTiaConfiguration() : models.TiaConfiguration {

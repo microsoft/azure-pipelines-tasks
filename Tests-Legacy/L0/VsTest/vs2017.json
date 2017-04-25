@@ -20,15 +20,15 @@
         ]
     },
     "exec": {
-        "\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /path/to/test.dll /logger:trx": {
+        "\\somepath\\vstest.console.exe /path/to/test.dll /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
+        "\\VSTest\\vswhere.exe -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath": {
             "code": 0,
-            "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
+            "stdout": "/somepath"
         },
-        "wmic datafile where name='\\\\vs2017\\\\installation\\\\folder\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+        "wmic datafile where name='\\\\somepath\\\\vstest.console.exe' get Version /Value": {
 			"code": 0,
 			"stdout" : "version=15.0.0.0"
         }

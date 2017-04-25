@@ -93,7 +93,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): Promise<string
     if (isNaN(vsVersion)) {
         // latest
         tl.debug('Searching for latest Visual Studio');
-        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
             return Promise.resolve(vstestconsole15Path);
         } 
@@ -103,11 +103,11 @@ function locateTestWindow(testConfig: models.TestConfigurations): Promise<string
         return getLatestVSTestConsolePathFromRegistry();
     }
     
-        if (vsVersion === 15.0) {
-        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+    if (vsVersion === 15.0) {
+        let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
             return Promise.resolve(vstestconsole15Path);
-        } 
+        }
 
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
     }
@@ -140,27 +140,10 @@ function getLatestVSTestConsolePathFromRegistry(): Promise<string> {
     return Promise.resolve(null);
 }
 
-function getVSTestConsole15Path(vs15HelperPath: string): string {
-    let powershellTool = tl.tool('powershell');
-    let powershellArgs = ['-NonInteractive', '-ExecutionPolicy', 'Unrestricted', '-file', vs15HelperPath]
-    powershellTool.arg(powershellArgs);
-    let xml = powershellTool.execSync().stdout;
-    let deferred = Q.defer<string>();
-    let vstestconsolePath: string = null;
-    xml2js.parseString(xml, (err, result) => {
-        if (result) {
-            try {
-                let vs15InstallDir = result['Objs']['S'][0];
-                vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
-            } catch (e) {
-                tl.debug('Unable to read Visual Studio 2017 installation path');
-                tl.debug(e);
-                vstestconsolePath = null;
-            }
-        }
-    });
-
-    return vstestconsolePath;
+function getVSTestConsole15Path(): string {
+    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line('-latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath')
+    return vswhereTool.execSync().stdout;
 }
 
 function getVSTestLocation(vsVersion: number): string {

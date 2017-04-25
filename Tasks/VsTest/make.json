@@ -8,6 +8,10 @@
             {
                 "url": "https://testexecution.blob.core.windows.net/testexecution/3812251/TestExecution.zip",
                 "dest": "./Modules"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip",
+                "dest": "./"
             }
         ]
     }
