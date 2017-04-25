@@ -9,7 +9,7 @@ export class SecureFileHelpers {
     async downloadSecureFile(secureFileId: string) {
         tl.debug('Mock downloadSecureFile with id = ' + secureFileId);
         let fileName: string = secureFileId + '.filename';
-        let tempDownloadPath: string = tl.resolve(tl.getVariable('Agent.TempDirectory'), fileName);
+        let tempDownloadPath: string = '/build/temp/' + fileName;
         return tempDownloadPath;
     }
 

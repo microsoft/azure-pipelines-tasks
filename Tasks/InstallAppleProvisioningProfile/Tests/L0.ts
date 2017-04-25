@@ -35,7 +35,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         tr.run();
 
-        assert(tr.ran('/bin/rm -f /Users/madhurig/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision'),
+        assert(tr.ran('/bin/rm -f /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision'),
             'provisioning profile should have been deleted.')
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
