@@ -9,7 +9,7 @@
   "loc.input.label.testSelector": "Select tests using",
   "loc.input.help.testSelector": "Specify the means to select tests",
   "loc.input.label.testAssemblyVer2": "Test assemblies",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
   "loc.input.label.testPlan": "Test plan",
   "loc.input.help.testPlan": "Select a Test Plan.",
   "loc.input.label.testSuite": "Test suite",

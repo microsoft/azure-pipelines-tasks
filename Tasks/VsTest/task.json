@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 37
     },
     "demands": [
         "vstest"
@@ -63,7 +63,7 @@
             "label": "Test assemblies",
             "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+            "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
             "groupName": "testSelection",
             "properties": {
                 "rows": "3",
