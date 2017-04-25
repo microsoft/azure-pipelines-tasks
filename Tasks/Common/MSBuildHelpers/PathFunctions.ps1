@@ -5,14 +5,16 @@ function Get-MSBuildPath {
     [CmdletBinding()]
     param(
         [string]$Version,
-        [string]$Architecture,
-        [switch]$SearchCom)
+        [string]$Architecture)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # Attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install.
+        # Only attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install
+        # when "15.0" or latest is specified. In 15.0, the method GetPathToBuildToolsFile(...)
+        # has regressed. When it is called for a version that is not found, the latest version
+        # found is returned instead.
         [System.Reflection.Assembly]$msUtilities = $null
-        if ($SearchCom -and
+        if (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
             ($visualStudio15 = Get-VisualStudio_15_0) -and
             $visualStudio15.installationPath) {
 
