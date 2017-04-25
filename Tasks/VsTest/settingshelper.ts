@@ -56,7 +56,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     const defer = Q.defer<string>();
     let result: any;
 
-    if (!isParallelRun && !videoCollector && (!tiaConfig || (tiaConfig && !(tiaConfig.tiaEnabled))) && !overrideParametersString) {
+    if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString) {
         defer.resolve(settingsFile);
         return defer.promise;
     }
@@ -122,7 +122,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         }
     }
 
-    if (tiaConfig && tiaConfig.tiaEnabled) {
+    if (tiaConfig.tiaEnabled) {
         let testImpactCollectorNode = null;
         parser.parseString(testImpactDataCollectorTemplate, function(err, data) {
             if (err) {

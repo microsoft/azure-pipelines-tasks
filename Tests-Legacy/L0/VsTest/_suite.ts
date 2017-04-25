@@ -904,7 +904,7 @@ describe('VsTest Suite', function () {
 
     it('RunInParallel enabled with no settings file given', (done) => {
         try {
-            settingsHelper.updateSettingsFileAsRequired(undefined, true, undefined, undefined, false, undefined)
+            settingsHelper.updateSettingsFileAsRequired(undefined, true, { tiaEnabled: false }, undefined, false, undefined)
                       .then(function (settingsXml: string) {
                             utils.Helper.getXmlContents(settingsXml)
                             .then(function(settings){
@@ -920,7 +920,7 @@ describe('VsTest Suite', function () {
     it('RunInParallel enabled with invalid settings file', (done) => {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'Invalid.runsettings');
-            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, undefined, undefined, false, undefined)
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
                       .then(function (settingsXml: string) {
                             utils.Helper.getXmlContents(settingsXml)
                             .then(function(settings){
@@ -936,7 +936,7 @@ describe('VsTest Suite', function () {
     it('RunInParallel enabled with Valid settings file, without any configuration', (done) => {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutRunConfiguration.runsettings');
-            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, undefined, undefined, false, undefined)
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
                       .then(function (settingsXml: string) {
                             utils.Helper.getXmlContents(settingsXml)
                             .then(function(settings){
@@ -952,7 +952,7 @@ describe('VsTest Suite', function () {
     it('RunInParallel enabled with Valid settings file, without any MaxCpuCount node in RunConfigurations', (done) => {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutMaxCpuCountNode.runsettings');
-            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, undefined, undefined, false, undefined)
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
                       .then(function (settingsXml: string) {
                             utils.Helper.getXmlContents(settingsXml)
                             .then(function(settings){
@@ -969,7 +969,7 @@ describe('VsTest Suite', function () {
     it('RunInParallel enabled with Valid settings file, with MaxCpuCount set to 1', (done) => {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithMaxCpuCountAs1.runsettings');
-            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, undefined, undefined, false, undefined)
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
                       .then(function (settingsXml: string) {
                             utils.Helper.getXmlContents(settingsXml)
                             .then(function(settings){
