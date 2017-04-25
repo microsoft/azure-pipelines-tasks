@@ -475,6 +475,7 @@
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
-    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters"
+    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters",
+    "AutoDetectDjangoSettingsFailed": "ms-resource:loc.messages.AutoDetectDjangoSettingsFailed"
   }
 }

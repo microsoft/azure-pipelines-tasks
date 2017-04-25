@@ -28,6 +28,20 @@ async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, 
     }
 }
 
+async function waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName) {
+    var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+    if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state"))
+    {
+        tl.debug('App Service State : ' + appServiceDetails.properties.state);
+        while(!(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running"))
+        {
+            appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+            tl.debug('App Service State : ' + appServiceDetails.properties.state);
+        }
+        tl.debug('App Service is in Running State');
+    }
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -62,14 +76,7 @@ async function run() {
         switch(action) {
             case "Start Azure App Service": {
                 console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
-                var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
-                if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state"))
-                {
-                    while(!(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running"))
-                    {
-                        appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
-                    }
-                }
+                waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;
             }
             case "Stop Azure App Service": {
@@ -88,6 +95,7 @@ async function run() {
             }
             case "Restart Azure App Service": {
                 console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;
             }
             case "Swap Slots": {
