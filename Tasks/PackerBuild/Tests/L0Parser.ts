@@ -2,6 +2,8 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
+const DefaultWorkingDirectory: string = "C:\\a\\w\\";
+
 let taskPath = path.join(__dirname, '..\\src\\main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -22,6 +24,7 @@ process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
+process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 
 // provide answers for task mock
 let a: any = <any>{
@@ -77,7 +80,7 @@ tr.registerMock('./utilities', {
         console.log("writing to file " + filePath + " content: " + content);
     },
     findMatch: function(root: string, patterns: string[] | string) {
-        if(root === undefined) {
+        if(root === DefaultWorkingDirectory) {
             return ["C:\\dir1\\somedir\\dir2"];
         } else {
             return ["C:\\dir1\\somedir\\dir2\\dir3\\somedir\\deploy.ps1"];            
