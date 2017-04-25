@@ -77,7 +77,7 @@
             "label": "Test plan",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a Test Plan.",
+            "helpMarkDown": "Select a test plan containing test suites with automated test cases.",
             "groupName": "testSelection",
             "properties": {
                 "DisableManageLink": "True"
@@ -90,7 +90,7 @@
             "label": "Test suite",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select Test Suites from the Test Plan.",
+            "helpMarkDown": "Select one or more test suites containing automated test cases. Test case work items must be associated with an automated test method. [Learn more.](https://go.microsoft.com/fwlink/?linkid=847773",
             "groupName": "testSelection",
             "properties": {
                 "MultiSelect": "True",
