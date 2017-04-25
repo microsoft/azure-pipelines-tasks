@@ -24,8 +24,8 @@
     "minimumAgentVersion": "1.95.0",
     "groups": [
         {
-            "name": "repository",
-            "displayName": "Repository Settings",
+            "name": "registry",
+            "displayName": "Registry Settings",
             "isExpanded": true
         },
         {
@@ -61,9 +61,9 @@
             "helpMarkDown": "Name of the application being deployed."
         },
         {
-            "name": "repositoryCredentials",
+            "name": "registryCredentials",
             "type": "pickList",
-            "label": "Repository Credentials Source",
+            "label": "Registry Credentials Source",
             "defaultValue": "AzureResourceManagerEndpoint",
             "required": true,
             "options": {
@@ -72,7 +72,7 @@
                 "UsernamePassword": "Username and Password",
                 "None": "None"
             },
-            "groupName": "repository",
+            "groupName": "registry",
             "helpMarkDown": "Choose if/how credentials for the docker registry will be provided."
         },
         {
@@ -81,37 +81,37 @@
             "label": "Docker Registry Connection",
             "required": false,
             "helpMarkDown": "Select a Docker registry connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
-            "groupName": "repository",
-            "visibleRule": "repositoryCredentials = ContainerRegistryEndpoint"
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = ContainerRegistryEndpoint"
         },
         {
             "name": "azureSubscriptionEndpoint",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
-            "groupName": "repository",
-            "visibleRule": "repositoryCredentials = AzureResourceManagerEndpoint",
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = AzureResourceManagerEndpoint",
             "required": true
         },
         {
-            "name": "repositoryUserName",
+            "name": "registryUserName",
             "type": "string",
-            "label": "Repository User Name",
+            "label": "Registry User Name",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Username for the Docker registry",
-            "groupName": "repository",
-            "visibleRule": "repositoryCredentials = UsernamePassword"
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = UsernamePassword"
         },
         {
-            "name": "repositoryPassword",
+            "name": "registryPassword",
             "type": "string",
-            "label": "Repository Password",
+            "label": "Registry Password",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
-            "groupName": "repository",
-            "visibleRule": "repositoryCredentials = UsernamePassword"
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = UsernamePassword"
         },
         {
             "name": "passwordEncrypted",
@@ -120,8 +120,8 @@
             "defaultValue": true,
             "required": false,
             "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
-            "groupName": "repository",
-            "visibleRule": "repositoryCredentials = UsernamePassword"
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = UsernamePassword"
         },
         {
             "name": "deployTimeoutSec",

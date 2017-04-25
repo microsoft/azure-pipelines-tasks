@@ -19,7 +19,7 @@ Register-Mock Get-VstsInput { $applicationName } -Name applicationName -Require
 Register-Mock Get-VstsInput { $null } -Name deployTimeoutSec
 Register-Mock Get-VstsInput { $null } -Name removeTimeoutSec
 Register-Mock Get-VstsInput { $null } -Name getStatusTimeoutSec
-Register-Mock Get-VstsInput { "None" } -Name repositoryCredentials -Require
+Register-Mock Get-VstsInput { "None" } -Name registryCredentials -Require
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $composeFilePath } -- -LegacyPattern $composeFilePath

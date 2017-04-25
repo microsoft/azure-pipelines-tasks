@@ -41,8 +41,8 @@ try {
     $clusterConnectionParameters = @{}
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
-    $repositoryCredentials = Get-VstsInput -Name repositoryCredentials -Require
-    switch ($repositoryCredentials) {
+    $registryCredentials = Get-VstsInput -Name registryCredentials -Require
+    switch ($registryCredentials) {
         "ContainerRegistryEndpoint"
         {
             $dockerRegistryEndpointName = Get-VstsInput -Name dockerRegistryEndpointName -Require
@@ -63,13 +63,13 @@ try {
         }
         "UsernamePassword"
         {
-            $username = Get-VstsInput -Name repositoryUserName -Require
-            $password = Get-VstsInput -Name repositoryPassword -Require
+            $username = Get-VstsInput -Name registryUserName -Require
+            $password = Get-VstsInput -Name registryPassword -Require
             $isEncrypted = (Get-VstsInput -Name passwordEncrypted -Require) -eq "true"
         }
     }
 
-    if ($repositoryCredentials -ne "None")
+    if ($registryCredentials -ne "None")
     {
         if ((-not $isEncrypted) -and $connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
         {
@@ -88,8 +88,8 @@ try {
             }
         }
 
-        $deployParameters['RepositoryUserName'] = $username
-        $deployParameters['RepositoryPassword'] = $password
+        $deployParameters['RegistryUserName'] = $username
+        $deployParameters['RegistryPassword'] = $password
         $deployParameters['PasswordEncrypted'] = $isEncrypted
     }
 
