@@ -189,6 +189,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
 
     var buildReason = tl.getVariable('Build.Reason');
 
+    // https://www.visualstudio.com/en-us/docs/build/define/variables
     if (buildReason && buildReason === "PullRequest") {
         tiaConfiguration.isPrFlow = "true";
     }
