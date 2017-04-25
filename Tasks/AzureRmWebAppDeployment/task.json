@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 1
+        "Patch": 2
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -475,6 +475,7 @@
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
         "PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
         "InvalidPollOption": "Invalid polling option provided: %s.",
-        "MissingWebConfigParameters": "Some web.config parameters are missing"
+        "MissingWebConfigParameters": "Some web.config parameters are missing",
+        "AutoDetectDjangoSettingsFailed": "Unable to detect DJANGO_SETTINGS_MODULE (settings.py). Please ensure that the file exists or provide the correct path in Web.config parameters input in the following format '<folder_name>.settings'"
     }
 }
