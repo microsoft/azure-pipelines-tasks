@@ -57,4 +57,5 @@ export interface TiaConfiguration {
     useNewCollector: boolean;
     isPrFlow: string;
     context: string;
+    useTestCaseFilterInResponseFile: string;
 }
