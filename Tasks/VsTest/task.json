@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 35
+        "Patch": 36
     },
     "demands": [
         "vstest"
@@ -238,7 +238,7 @@
             "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
+            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. This will override the MaxCpuCount if specified in your runsettings file. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
          },
          {
