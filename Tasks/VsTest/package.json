@@ -17,7 +17,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "performance-now": "0.2.0",
-    "vsts-task-lib": "^2.0.0-preview",
+    "vsts-task-lib": "2.0.0-preview",
 	  "vso-node-api": "6.0.4-preview",
     "xml2js": "0.4.16"
   },
