@@ -1,0 +1,95 @@
+{
+  "id": "9C3E8943-130D-4C78-AC63-8AF81DF62DFB",
+  "name": "InvokeRESTAPI",
+  "friendlyName": "Invoke REST API",
+  "description": "Invoke REST API as a part of your process.",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "Server"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "Generic Endpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request."
+    },
+    {
+      "name": "httpMethod",
+      "type": "pickList",
+      "label": "HTTP Method",
+      "required": "true",
+      "defaultValue": "POST",
+      "options": {
+        "OPTIONS":"OPTIONS",
+        "GET": "GET",
+        "HEAD": "HEAD",
+        "POST": "POST",
+        "PUT": "PUT",
+        "DELETE": "DELETE",
+        "TRACE":"TRACE",
+        "PATCH": "PATCH"
+      },
+      "helpMarkDown": "Select the http method with which the API should be invoked with."
+    },
+    {
+      "name":"headers",
+      "type":"multiLine",
+      "label":"Headers",
+      "required":"false",
+      "defaultValue":"[{\"Content-Type\":\"text/plain\"}]",
+      "properties": {
+        "resizable": "true",
+        "rows": "3",
+        "maxLength": "500"
+      },
+      "helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
+    },
+    {
+      "name": "triggerBody",
+      "type": "multiLine",
+      "label": "Trigger Body",
+      "required": "false",
+      "defaultValue": "",
+      "properties": {
+                "resizable": "true",
+                "rows": "3",
+                "maxLength": "500"
+            },
+      "visibleRule": "httpMethod != GET && httpMethod != Head"
+    },
+    {
+      "name":"waitForCompletion",
+      "type":"boolean",
+      "label":"Wait For Completion",
+      "Required":"false",
+      "defaultValue":"false",
+      "helpMarkDown":"The task will wait for the JobCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+    }
+  ],
+
+  "instanceNameFormat": "Invoke Rest API: $(httpMethod)",
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId":"$(connectedServiceName)",
+        "EndpointUrl": "$(endpoint.url)",
+        "Method": "$(httpMethod)",
+        "Body": "$(triggerBody)",
+        "Headers":"$(headers)",
+        "WaitForCompletion":"$(waitForCompletion)"
+      }
+    }
+  }
+}
