@@ -76,7 +76,7 @@ async function run() {
         switch(action) {
             case "Start Azure App Service": {
                 console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
-                waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;
             }
             case "Stop Azure App Service": {
@@ -95,7 +95,7 @@ async function run() {
             }
             case "Restart Azure App Service": {
                 console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
-                waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;
             }
             case "Swap Slots": {
