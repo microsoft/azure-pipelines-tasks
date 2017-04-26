@@ -14,20 +14,14 @@ export class KeyVaultTaskParameters {
     public keyVaultUrl: string;
 
     constructor() {
-        try {
-            var connectedService = tl.getInput("ConnectedServiceName", true);
-            this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            this.keyVaultName = tl.getInput("KeyVaultName", true);
-            this.secretsFilter = tl.getDelimitedInput("SecretsFilter", ",", true);
+        var connectedService = tl.getInput("ConnectedServiceName", true);
+        this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+        this.keyVaultName = tl.getInput("KeyVaultName", true);
+        this.secretsFilter = tl.getDelimitedInput("SecretsFilter", ",", true);
+        var azureKeyVaultDnsSuffix = tl.getEndpointDataParameter(connectedService, "AzureKeyVaultDnsSuffix", true);
 
-            var azureKeyVaultDnsSuffix = tl.getEndpointDataParameter(connectedService, "AzureKeyVaultDnsSuffix", true);
-
-            this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
-            this.vaultCredentials = this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
-        }
-        catch (error) {
-            throw (tl.loc("AzKv_ConstructorFailed", error.message));
-        }
+        this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
+        this.vaultCredentials = this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
     }
 
     private getVaultCredentials(connectedService: string, azureKeyVaultDnsSuffix: string): msRestAzure.ApplicationTokenCredentials {
