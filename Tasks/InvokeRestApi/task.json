@@ -22,7 +22,7 @@
       "type": "connectedService:Generic",
       "label": "Generic Endpoint",
       "defaultValue": "",
-      "required": true,
+      "required": "true",
       "helpMarkDown": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request."
     },
     {
