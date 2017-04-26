@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 34
+        "Patch": 38
     },
     "demands": [
         "Cmd"
@@ -164,14 +164,13 @@
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
         "RemovingApplication": "Removing the existing application '{0}'.",
+        "ApplicationRemoved": "Application removed.",
         "EncryptingPassword": "Encrypting the password with the Server Certificate.",
         "CertificateNotFound": "The Server Certificate was not found, the password will not be encrypted.",
-        "WaitingForRemoval": "Waiting for removal...",
         "CreatingApplication": "Creating application",
         "WaitingForDeploy": "Waiting for deploy...",
         "CurrentStatus": "Current Status: {0}",
         "DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
         "CheckingComposeFile": "Checking compose file"
-
     }
 }

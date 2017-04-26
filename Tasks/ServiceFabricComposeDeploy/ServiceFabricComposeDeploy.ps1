@@ -88,8 +88,8 @@ try {
             }
         }
 
-        $deployParameters['RegistryUserName'] = $username
-        $deployParameters['RegistryPassword'] = $password
+        $deployParameters['RepositoryUserName'] = $username
+        $deployParameters['RepositoryPassword'] = $password
         $deployParameters['PasswordEncrypted'] = $isEncrypted
     }
 
@@ -115,11 +115,12 @@ try {
 
         do
         {
-            Write-Host (Get-VstsLocString -Key WaitingForRemoval)
+            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.ComposeApplicationStatus)
             Start-Sleep -Seconds 3
             $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
         }
         while ($existingApplication -ne $null)
+        Write-Host (Get-VstsLocString -Key ApplicationRemoved)
     }
 
     Write-Host (Get-VstsLocString -Key CreatingApplication)
@@ -142,6 +143,7 @@ try {
         Start-Sleep -Seconds 3
         $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
     }
+    Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
 
     if ($newApplication.ComposeApplicationStatus -ne 'Created')
     {

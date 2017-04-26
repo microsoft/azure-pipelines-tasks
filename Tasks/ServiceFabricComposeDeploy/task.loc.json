@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 38
   },
   "demands": [
     "Cmd"
@@ -164,9 +164,9 @@
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "RemovingApplication": "ms-resource:loc.messages.RemovingApplication",
+    "ApplicationRemoved": "ms-resource:loc.messages.ApplicationRemoved",
     "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
     "CertificateNotFound": "ms-resource:loc.messages.CertificateNotFound",
-    "WaitingForRemoval": "ms-resource:loc.messages.WaitingForRemoval",
     "CreatingApplication": "ms-resource:loc.messages.CreatingApplication",
     "WaitingForDeploy": "ms-resource:loc.messages.WaitingForDeploy",
     "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
