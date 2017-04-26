@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports baking images for both windows and linux. These images can be used to deploy Azure VMSS.",
+  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
   "visibility": [
     "Build",
     "Release"
