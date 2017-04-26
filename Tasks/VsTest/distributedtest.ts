@@ -94,7 +94,7 @@ export class DistributedTest {
                 if (line.startsWith('Web method')) {
                     tl.debug(line);
                 } else {
-                    console.log(line.toString());
+                    tl._writeLine(line.toString());
                 }
             });
         });

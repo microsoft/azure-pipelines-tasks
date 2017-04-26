@@ -33,7 +33,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     if (!isNaN(totalJobsInPhase)) {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
-    console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
+    tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
 
@@ -95,35 +95,35 @@ function getDtaInstanceId(): number {
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.testSelection = tl.getInput('testSelector');
-    console.log(tl.loc('testSelectorInput', testConfiguration.testSelection));
+    tl._writeLine(tl.loc('testSelectorInput', testConfiguration.testSelection));
 
     testConfiguration.testDropLocation = tl.getInput('searchFolder');
-    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
+    tl._writeLine(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
 
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
-    console.log(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
+    tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
-    console.log(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
+    tl._writeLine(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
 
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
 
     testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
-    console.log(tl.loc('runInParallelInput', testConfiguration.runInParallel));
+    tl._writeLine(tl.loc('runInParallelInput', testConfiguration.runInParallel));
 
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
-    console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
+    tl._writeLine(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
 
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    console.log(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
+    tl._writeLine(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
 
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
-    console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
+    tl._writeLine(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
 
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
-    console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
+    tl._writeLine(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
 
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
@@ -131,34 +131,34 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     if (testConfiguration.testSelection.toLowerCase() === 'testplan') {
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
-        console.log(tl.loc('testPlanInput', testConfiguration.testplan));
+        tl._writeLine(tl.loc('testPlanInput', testConfiguration.testplan));
 
         testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
-        console.log(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
+        tl._writeLine(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
 
         const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
         testConfiguration.testSuites = new Array<number>();
         testSuiteStrings.forEach(element => {
             const testSuiteId = parseInt(element);
-            console.log(tl.loc('testSuiteSelected', testSuiteId));
+            tl._writeLine(tl.loc('testSuiteSelected', testSuiteId));
             testConfiguration.testSuites.push(testSuiteId);
         });
     } else {
         testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-        console.log(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
+        tl._writeLine(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
     }
 
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
     if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
         if (utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
-            console.log('vsTestVersion is null or empty');
+            tl._writeLine('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
-        console.log(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
+        tl._writeLine(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
-        console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
+        tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
     }
 
     if(tl.getBoolInput('uiTests') && testConfiguration.runInParallel)

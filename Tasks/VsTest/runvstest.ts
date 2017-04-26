@@ -15,10 +15,10 @@ try {
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
          || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
 
-        console.log(tl.loc('distributedTestWorkflow'));
-        console.log('======================================================');
+        tl._writeLine(tl.loc('distributedTestWorkflow'));
+        tl._writeLine('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
-        console.log('======================================================');
+        tl._writeLine('======================================================');
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();
@@ -26,7 +26,7 @@ try {
         localTest.startTest();
     }
 } catch (error) {
-    console.log('##vso[task.logissue type=error;TaskName=VSTest]' + error);
+    tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
     tl.setResult(tl.TaskResult.Failed, error);
 }
 

@@ -30,10 +30,10 @@ let resultsDirectory = null;
 
 export async function startTest() {
     try {
-        console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
-        console.log('========================================================');
+        tl._writeLine(tl.loc('runTestsLocally', 'vstest.console.exe'));
+        tl._writeLine('========================================================');
         vstestConfig = taskInputParser.getvsTestConfigurations();
-        console.log('========================================================');
+        tl._writeLine('========================================================');
 
         tiaConfig = vstestConfig.tiaConfig;
         const vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
@@ -51,7 +51,7 @@ export async function startTest() {
 
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
             deleteVstestDiagFile();
-            console.log('##vso[task.logissue type=warning;code=002004;]');
+            tl._writeLine('##vso[task.logissue type=warning;code=002004;]');
             tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
             return;
         }
@@ -66,13 +66,13 @@ export async function startTest() {
                     deleteVstestDiagFile();
                 } catch (error) {
                     deleteVstestDiagFile();
-                    console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
+                    tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error;
                 }
             })
             .fail(function (err) {
                 deleteVstestDiagFile();
-                console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
+                tl._writeLine('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
                 throw err;
             });
     } catch (error) {
@@ -275,7 +275,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
         .then(function (code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
-            console.log('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
+            tl._writeLine('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
             tl.debug(tl.loc('UploadTestResultsPerfTime', elapsedTime));
             defer.resolve(String(code));
         })
@@ -854,7 +854,7 @@ function publishTestResults(testResultsDirectory: string) {
             const tp = new tl.TestPublisher('VSTest');
             tp.publish(resultFiles, 'false', vstestConfig.buildPlatform, vstestConfig.buildConfig, vstestConfig.testRunTitle, vstestConfig.publishRunAttachments);
         } else {
-            console.log('##vso[task.logissue type=warning;code=002003;]');
+            tl._writeLine('##vso[task.logissue type=warning;code=002003;]');
             tl.warning(tl.loc('NoResultsToPublish'));
         }
     }
