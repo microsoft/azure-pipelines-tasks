@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
   "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
   "loc.input.help.ConnectedServiceName": "Target Azure Classic subscription for deploying SQL files",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Target Azure Resource Manager subscription for deploying SQL files",
   "loc.input.label.ServerName": "Azure SQL Server Name",
   "loc.input.help.ServerName": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net.",

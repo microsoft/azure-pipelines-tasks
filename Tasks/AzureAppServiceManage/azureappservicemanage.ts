@@ -62,6 +62,14 @@ async function run() {
         switch(action) {
             case "Start Azure App Service": {
                 console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state"))
+                {
+                    while(!(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running"))
+                    {
+                        appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                    }
+                }
                 break;
             }
             case "Stop Azure App Service": {

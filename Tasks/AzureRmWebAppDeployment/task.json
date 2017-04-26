@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 2,
-        "Patch": 3
+        "Minor": 3,
+        "Patch": 1
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -24,17 +24,26 @@
         {
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "output",
             "displayName": "Output",
-            "isExpanded": true
+            "isExpanded": true,
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+        },
+        {
+            "name": "ApplicationSettings",
+            "displayName": "Application Settings",
+            "isExpanded": true,
+            "visibleRule": "WebAppKind = linux"
         }
     ],
     "inputs": [
@@ -58,12 +67,71 @@
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
         },
         {
+            "name": "ServerfarmId",
+            "type": "pickList",
+            "label": "Serverfarm id",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppName = invalidwebappname",
+            "properties": {
+                "EditableOptions": "false"
+            }
+        },
+        {
+            "name": "WebAppKind",
+            "type": "pickList",
+            "label": "Web app kind",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppName = invalidwebappname",
+            "properties": {
+                "EditableOptions": "false"
+            }
+        },
+        {
+            "name": "DockerNamespace",
+            "type": "string",
+            "label": "Registry or Namespace",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "WebAppKind = linux",
+            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
+        },
+        {
+            "name": "DockerRepository",
+            "type": "string",
+            "label": "Repository",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "WebAppKind = linux",
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+        },
+        {
+            "name": "DockerImageTag",
+            "type": "string",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKind = linux",
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
+        },
+        {
+            "name": "StartupCommand",
+            "type": "string",
+            "label": "Startup command ",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKind = linux",
+            "helpMarkDown": "Enter the start up command."
+        },
+        {
             "name": "DeployToSlotFlag",
             "type": "boolean",
             "label": "Deploy to slot",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot."
+            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
         },
         {
             "name": "ResourceGroupName",
@@ -95,6 +163,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -103,6 +172,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -168,6 +238,18 @@
             "helpMarkDown": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+            }
+        },
+        {
+            "name": "AppSettings",
+            "type": "multiLine",
+            "label": "App settings",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationSettings",
+            "helpMarkDown": "Edit web app application settings following the syntax -key value .<br /> Example : -Port 5000 -RequestTimeout 5000",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
         },
         {
@@ -279,6 +361,24 @@
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             }
+        },
+        {
+            "target": "ServerfarmId",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMServerfarmId",
+            "parameters": {
+                "WebAppName": "$(WebAppName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{serverFarmId}}}\",\"DisplayValue\":\"{{{serverFarmId}}}\"}"
+        },
+        {
+            "target": "WebAppKind",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppKind",
+            "parameters": {
+                "ServerfarmId": "$(ServerfarmId)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{kind}}}\",\"DisplayValue\":\"{{{kind}}}\"}"
         },
         {
             "target": "SlotName",

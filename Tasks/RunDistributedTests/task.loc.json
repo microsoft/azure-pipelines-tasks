@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 49
+    "Patch": 50
   },
   "demands": [],
   "minimumAgentVersion": "1.104.0",
@@ -98,7 +98,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testConfiguration",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "properties": {
         "DisableManageLink": "True"
       },

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (VERSIÓN PRELIMINAR)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "Compile, pruebe y publique mediante la línea de comandos de dotnet core.",
   "loc.instanceNameFormat": "dotnet $(comando)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Publicar proyectos web",
   "loc.input.help.publishWebProjects": "Si es verdadero, la tarea intentará encontrar los proyectos web en el repositorio y ejecutará el comando de publicación en ellos. Los proyectos web se identifican por la presencia de un archivo web.config o una carpeta wwwroot en el directorio.",
   "loc.input.label.projects": "Proyectos",
-  "loc.input.help.projects": "Ruta de acceso relativa de los archivos project.json de la raíz del repositorio. Se pueden usar caracteres comodín. Por ejemplo, **/project.json para todos los archivos project.json de todas las subcarpetas.",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "Argumentos",
   "loc.input.help.arguments": "Argumentos al comando seleccionado. Por ejemplo, configuración de compilación, carpeta de salida, tiempo de ejecución. Los argumentos dependen del comando seleccionado.",
   "loc.input.label.zipAfterPublish": "Comprimir proyectos publicados",
   "loc.input.help.zipAfterPublish": "Si es verdadero, se descomprimirá la carpeta creada por el comando de publicación.",
   "loc.messages.noProjectFilesFound": "No se encontraron archivos de proyecto que coincidieran con el patrón especificado.",
   "loc.messages.noWebProjctFound": "No se encontró ningún proyecto web en el repositorio. Los proyectos web se identifican por la presencia de un archivo web.config o una carpeta wwwroot en el directorio.",
-  "loc.messages.dotnetCommandFailed": "Error del comando dotnet con código de salida distinto de cero: %d.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "Error de compresión: %s",
   "loc.messages.noPublishFolderFoundToZip": "No se pudo encontrar una carpeta de publicación para comprimir el archivo de proyecto: %s."
 }

@@ -10,10 +10,11 @@ tr.setInput('removeProfile', 'true');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['VSTS_TASKVARIABLE_APPLE_PROV_PROFILE_UUID'] = 'testuuid';
+process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
     existsSync: function (pathToCheck) {
-        if (pathToCheck === '/Users/madhurig/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision') {
+        if (pathToCheck === '/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision') {
             return true;
         }
         return false;
@@ -34,10 +35,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true,
-        "/Users/madhurig/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": true
+        "/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": true
     },
     "exec": {
-        "/bin/rm -f /Users/madhurig/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
+        "/bin/rm -f /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "delete output here"
         }

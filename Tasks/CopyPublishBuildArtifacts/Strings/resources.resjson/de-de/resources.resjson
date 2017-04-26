@@ -13,5 +13,6 @@
   "loc.input.help.ArtifactType": "Wählen Sie aus, ob Sie das Artefakt in TFS/Team Services speichern oder in eine Dateifreigabe kopieren möchten, die vom Build-Agent aus zugänglich sein muss.",
   "loc.input.label.TargetPath": "Pfad",
   "loc.input.help.TargetPath": "Der UNC-Dateipfad zum Kopieren des Artefakts. Dieser muss vom Build-Agent aus zugänglich sein.",
-  "loc.messages.ErrorFileShareLinux": "Artefakte können nicht aus OSX oder Linux in einer Dateifreigabe veröffentlicht werden. Sie können \"Artefakttyp\" in \"Server\" ändern, Windows oder den Task \"Dateien über SSH kopieren\" oder \"FTP-Upload\" verwenden."
+  "loc.messages.ErrorFileShareLinux": "Artefakte können nicht aus OSX oder Linux in einer Dateifreigabe veröffentlicht werden. Sie können \"Artefakttyp\" in \"Server\" ändern, Windows oder den Task \"Dateien über SSH kopieren\" oder \"FTP-Upload\" verwenden.",
+  "loc.messages.ErrorHostTypeNotSupported": "Diese Aufgabe wird nur innerhalb eines Build-Auftrags unterstützt."
 }

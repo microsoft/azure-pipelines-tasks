@@ -4,13 +4,13 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "./containerconnection";
 import * as sourceUtils from "./sourceutils";
-import * as imageUtils from "./contianerimageutils";
+import * as imageUtils from "./containerimageutils";
 
 function findDockerFile(dockerfilepath : string) : string {
 
     if (dockerfilepath.indexOf('*') >= 0 || dockerfilepath.indexOf('?') >= 0) {
         tl.debug(tl.loc('ContainerPatternFound'));
-        var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
+        var buildFolder = tl.cwd();
         var allFiles = tl.find(buildFolder);
         var matchingResultsFiles = tl.match(allFiles, dockerfilepath, buildFolder, { matchBase: true });
 

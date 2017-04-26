@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (預覽)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "使用 dotnet 核心命令列進行建置、測試和發佈。",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "發佈 Web 專案",
   "loc.input.help.publishWebProjects": "若為 true，工作會嘗試在存放庫中尋找 Web 專案，並對其執行 publish 命令。目錄中有 web.config 檔案或 wwwroot 資料夾，即表示有 Web 專案。",
   "loc.input.label.projects": "專案",
-  "loc.input.help.projects": "儲存機制根路徑到 project.json 檔案的相對路徑。可以使用萬用字元。例如 **/project.json 即所有子資料夾中的所有 project.json 檔案。",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "所選命令的引數。例如，組建組態、輸出資料夾、執行階段。引數取決於選取的命令。",
   "loc.input.label.zipAfterPublish": "壓縮發佈的專案",
   "loc.input.help.zipAfterPublish": "若為 true，就會壓縮由 publish 命令所建立的資料夾。",
   "loc.messages.noProjectFilesFound": "找不到符合指定模式的專案檔。",
   "loc.messages.noWebProjctFound": "在存放庫中找不到任何 Web 專案。目錄中有 web.config 檔案或 wwwroot 資料夾，即表示有 Web 專案。",
-  "loc.messages.dotnetCommandFailed": "Dotnet 命令失敗，有不為零的結束代碼: %d。",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "壓縮失敗，發生錯誤: %s",
   "loc.messages.noPublishFolderFoundToZip": "找不到專案檔的發佈資料夾以壓縮: %s。"
 }

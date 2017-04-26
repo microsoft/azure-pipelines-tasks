@@ -12,6 +12,7 @@ tr.setInput('deleteCert', 'true');
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/usr/lib/login.keychain';
 process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_SHA1HASH'] = 'SHA1HASHOFP12CERTIFICATE';
+process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
     readFileSync: fs.readFileSync,

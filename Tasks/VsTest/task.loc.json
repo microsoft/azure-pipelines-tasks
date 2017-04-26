@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 27
+    "Patch": 38
   },
   "demands": [
     "vstest"
@@ -269,6 +269,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "otherConsoleOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.otherConsoleOptions",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "testRunTitle",
       "type": "string",
       "label": "ms-resource:loc.input.label.testRunTitle",
@@ -367,6 +376,26 @@
     "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
     "vs2013NotSupportedInDta": "ms-resource:loc.messages.vs2013NotSupportedInDta",
-    "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed"
+    "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
+    "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
+    "distributedTestWorkflow": "ms-resource:loc.messages.distributedTestWorkflow",
+    "dtaNumberOfAgents": "ms-resource:loc.messages.dtaNumberOfAgents",
+    "testSelectorInput": "ms-resource:loc.messages.testSelectorInput",
+    "searchFolderInput": "ms-resource:loc.messages.searchFolderInput",
+    "testFilterCriteriaInput": "ms-resource:loc.messages.testFilterCriteriaInput",
+    "runSettingsFileInput": "ms-resource:loc.messages.runSettingsFileInput",
+    "runInParallelInput": "ms-resource:loc.messages.runInParallelInput",
+    "runInIsolationInput": "ms-resource:loc.messages.runInIsolationInput",
+    "pathToCustomAdaptersInput": "ms-resource:loc.messages.pathToCustomAdaptersInput",
+    "otherConsoleOptionsInput": "ms-resource:loc.messages.otherConsoleOptionsInput",
+    "codeCoverageInput": "ms-resource:loc.messages.codeCoverageInput",
+    "testPlanInput": "ms-resource:loc.messages.testPlanInput",
+    "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
+    "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
+    "testAssemblyFilterInput": "ms-resource:loc.messages.testAssemblyFilterInput",
+    "vsVersionSelected": "ms-resource:loc.messages.vsVersionSelected",
+    "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
+    "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
+    "uitestsparallel": "ms-resource:loc.messages.uitestsparallel"
   }
 }

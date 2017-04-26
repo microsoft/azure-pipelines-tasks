@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 3
   },
   "demands": [],
   "preview": "true",
@@ -49,8 +49,7 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
-      "visibleRule": "containerregistrytype = Azure Container Registry",
-      "required": true
+      "visibleRule": "containerregistrytype = Azure Container Registry"
     },
     {
       "name": "azureContainerRegistry",
@@ -58,7 +57,6 @@
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
       "visibleRule": "containerregistrytype = Azure Container Registry",
-      "required": true,
       "defaultValue": ""
     },
     {

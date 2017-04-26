@@ -1,0 +1,161 @@
+{
+  "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+  "name": "NuGetRestore",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "solution",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.solution",
+      "defaultValue": "**/*.sln",
+      "helpMarkDown": "ms-resource:loc.input.help.solution",
+      "required": "true"
+    },
+    {
+      "name": "selectOrConfig",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.selectOrConfig",
+      "defaultValue": "select",
+      "helpMarkDown": "ms-resource:loc.input.help.selectOrConfig",
+      "required": "true",
+      "options": {
+        "select": "Feed(s) I select here",
+        "config": "Feeds in my NuGet.config"
+      }
+    },
+    {
+      "name": "feed",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feed",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feed",
+      "required": "false",
+      "visibleRule": "selectOrConfig = select",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "includeNuGetOrg",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeNuGetOrg",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.includeNuGetOrg",
+      "required": "false",
+      "visibleRule": "selectOrConfig = select"
+    },
+    {
+      "name": "nugetConfigPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.nugetConfigPath",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
+      "required": "false",
+      "visibleRule": "selectOrConfig = config"
+    },
+    {
+      "name": "noCache",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.noCache",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.noCache",
+      "required": "false",
+      "groupName": "advanced"
+    },
+    {
+      "name": "packagesDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagesDirectory",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagesDirectory",
+      "required": "false",
+      "groupName": "advanced"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosity",
+      "defaultValue": "Detailed",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
+      "required": "false",
+      "groupName": "advanced",
+      "options": {
+        "-": "-",
+        "Quiet": "Quiet",
+        "Normal": "Normal",
+        "Detailed": "Detailed"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "nugetinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_NoConfigForNoCredentialProvider": "ms-resource:loc.messages.Warning_NoConfigForNoCredentialProvider",
+    "Warning_ConflictingNuGetPreference": "ms-resource:loc.messages.Warning_ConflictingNuGetPreference",
+    "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
+    "PackagesFailedToInstall": "ms-resource:loc.messages.PackagesFailedToInstall",
+    "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
+    "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
+    "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
+    "UnknownRestoreMode": "ms-resource:loc.messages.UnknownRestoreMode",
+    "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "NoNuGetSpecified": "ms-resource:loc.messages.NoNuGetSpecified",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
+    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
+    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
+    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
+    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
+    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
+    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+  }
+}

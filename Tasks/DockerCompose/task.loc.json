@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 4
+    "Patch": 7
   },
   "demands": [],
   "preview": "true",
@@ -26,10 +26,38 @@
   ],
   "inputs": [
     {
+      "name": "containerregistrytype",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerregistrytype",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
+    },
+    {
       "name": "dockerRegistryEndpoint",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint"
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "containerregistrytype = Container Registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "containerregistrytype = Azure Container Registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "defaultValue": ""
     },
     {
       "name": "dockerComposeFile",
@@ -262,11 +290,24 @@
       "groupName": "advanced"
     }
   ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound"
   }
 }

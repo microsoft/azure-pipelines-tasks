@@ -2,6 +2,8 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
+const DefaultWorkingDirectory: string = "C:\\a\\w\\";
+
 let taskPath = path.join(__dirname, '..\\src\\main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -11,8 +13,8 @@ tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImageSource', 'default');
 tr.setInput('baseImage', !!process.env["__ostype__"] ? 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:' + process.env["__ostype__"] : 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows');
 tr.setInput('location', 'South India');
-tr.setInput('packagePath', 'C:\\dummy.zip');
-tr.setInput('deployScriptPath', 'C:\\deploy.ps1');
+tr.setInput('packagePath', 'dir1\\**\\dir2');
+tr.setInput('deployScriptPath', 'dir3\\**\\deploy.ps1');
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 if(!process.env["__no_output_vars__"] || process.env["__no_output_vars__"] !== "true") {
     tr.setInput('imageUri', 'imageUri');
@@ -24,6 +26,7 @@ process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
+process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 
 // provide answers for task mock
 let a: any = <any>{
@@ -44,11 +47,11 @@ let a: any = <any>{
             "code": process.env["__packer_fix_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_fix_fails__"] === "true" ? "packer fix failed\r\nsome error" : "{ \"some-key\": \"some-value\" }",
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_path=C:\\deploy.ps1 -var script_name=deploy.ps1 -var package_path=C:\\dummy.zip -var package_name=dummy.zip -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": process.env["__packer_validate_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_validate_fails__"] === "true" ? "packer validate failed\r\nsome error" : "Executed Successfully",
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_path=C:\\deploy.ps1 -var script_name=deploy.ps1 -var package_path=C:\\dummy.zip -var package_name=dummy.zip -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : (process.env["__packer_build_no_output__"] === "true" ? "Executed Successfully but output search will fail" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"),
         },
@@ -60,6 +63,9 @@ let a: any = <any>{
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': process.env["__cleanup_fails__"] === "true" ? false : true }
+    },
+    "osType": {
+        "osType": "Windows_NT"
     }
 };
 
@@ -83,11 +89,11 @@ tr.registerMock('./utilities', {
         if(process.env["__deploy_package_found__"] === "false") {
             return [];
         } else {
-            if(patterns === '**/*.zip') {
-                return ["C:\\dummy.zip"];
-            }
-
-            return [patterns];         
+            if(root === DefaultWorkingDirectory) {
+                return ["C:\\dir1\\somedir\\dir2"];
+            } else {
+                return ["C:\\dir1\\somedir\\dir2\\dir3\\somedir\\deploy.ps1"];            
+            }      
         }
     },
     getCurrentTime: function() {

@@ -1,0 +1,22 @@
+{
+  "name": "nuget",
+  "version": "0.1.0",
+  "description": "Nuget Build Task",
+  "main": "nuget.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "vsts-task-lib": "2.0.2-preview"
+  }
+}

@@ -1,10 +1,11 @@
 {
     "id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
     "name": "InstallAppleCertificate",
-    "friendlyName": "Install Apple Certificate (Preview)",
+    "friendlyName": "Install Apple Certificate",
     "description": "Install an Apple certificate required to build on a macOS agent",
     "helpMarkDown": "",
     "category": "Utility",
+    "preview": true,
     "visibility": [
         "Build",
         "Release"

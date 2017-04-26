@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 113,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "azureps"
@@ -48,7 +48,7 @@
         {
             "name": "ConnectedServiceNameARM",
             "type": "connectedService:AzureRM",
-            "label": "Azure RM Subscription",
+            "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",

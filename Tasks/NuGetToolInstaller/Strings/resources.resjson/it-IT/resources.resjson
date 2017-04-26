@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Programma di installazione strumento NuGet",
+  "loc.helpMarkDown": "",
+  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet Restore and NuGet Command steps.",
+  "loc.instanceNameFormat": "Usa NuGet $(versionSpec)",
+  "loc.input.label.versionSpec": "Version of NuGet.exe to install",
+  "loc.input.help.versionSpec": "A version or version range that specifies the NuGet version to make available on the path. Use x as a wildcard. See the [list of available NuGet versions](http://dist.nuget.org/tools.json).\n\nIf you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0",
+  "loc.input.label.checkLatest": "Always download the latest matching version",
+  "loc.input.help.checkLatest": "Always check for and download the latest available version of NuGet.exe which satisfies the version spec. This option will also always incur download time, even if the selected version of NuGet is already cached.\n\nEnabling this option could cause unexpected build breaks when a new version of NuGet is released.",
+  "loc.messages.Info_AvailableVersions": "The available versions are: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+  "loc.messages.Info_UsingVersion": "Using version: %s",
+  "loc.messages.Info_UsingToolPath": "Using tool path: %s",
+  "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+  "loc.messages.Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+  "loc.messages.Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+  "loc.messages.Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+}

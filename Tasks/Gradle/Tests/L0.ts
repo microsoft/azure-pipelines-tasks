@@ -978,6 +978,61 @@ describe('Gradle L0 Suite', function () {
         }
     });
 
+    it('No Code Coverage results succeed', function (done) {
+        let tp: string = path.join(__dirname, 'L0NoCodeCoverageSucceed.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            createTemporaryFolders();
+
+            let testStgDir: string = path.join(__dirname, '_temp');
+
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 2, 'should have only run gradle 2 times');
+            assert(tr.stderr.length === 0, 'should not have written to stderr');
+            assert(tr.ran(gradleWrapper + ` properties`), 'should have run Gradle with properties');
+            assert(tr.ran(gradleWrapper + ` clean build jacocoTestReport`), 'should have run Gradle with code coverage');
+            cleanTemporaryFolders();
+
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('No Code Coverage results fail', function (done) {
+        let tp: string = path.join(__dirname, 'L0NoCodeCoverageFail.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            createTemporaryFolders();
+
+            let testStgDir: string = path.join(__dirname, '_temp');
+
+            tr.run();
+
+            assert(tr.failed, 'task should have failed');
+            assert(tr.invokedToolCount === 2, 'should have only run gradle 2 times');
+            assert(tr.stderr.length === 0, 'should not have written to stderr');
+            assert(tr.stdout.indexOf('loc_mock_NoCodeCoverage') > -1, 'should have given an error message');
+            assert(tr.ran(gradleWrapper + ` properties`), 'should have run Gradle with properties');
+            assert(tr.ran(gradleWrapper + ` clean build jacocoTestReport`), 'should have run Gradle with code coverage');
+            cleanTemporaryFolders();
+
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
     // /* BEGIN Tools tests */
     function verifyModuleResult(results: AnalysisResult[], moduleName: string , expectedViolationCount: number, expectedFileCount: number, expectedReports: string[]) {
         let analysisResults = results.filter(ar => ar.moduleName === moduleName);
