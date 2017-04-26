@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "Create Log File",
   "loc.input.help.createLogFile": "Optionally create a log file (Windows only).",
   "loc.messages.MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild not found for version '{0}' and architecture '{1}'.",
   "loc.messages.MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
   "loc.messages.UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",
   "loc.messages.VSLocationDeprecated0": "The Visual Studio location parameter has been deprecated. Ignoring value '{0}'",
-  "loc.messages.VSNotFoundTry": "Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' not found. Looking for the latest version."
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

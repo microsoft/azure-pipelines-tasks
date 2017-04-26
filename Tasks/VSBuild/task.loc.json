@@ -137,11 +137,12 @@
   },
   "messages": {
     "MSBuildLocationDeprecated0": "ms-resource:loc.messages.MSBuildLocationDeprecated0",
-    "MSBuildNotFoundVersion0Architecture1": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1",
     "MSBuildVersionDeprecated0": "ms-resource:loc.messages.MSBuildVersionDeprecated0",
     "UnexpectedVSVersion0": "ms-resource:loc.messages.UnexpectedVSVersion0",
     "VSLocationDeprecated0": "ms-resource:loc.messages.VSLocationDeprecated0",
     "VSNotFoundTry": "ms-resource:loc.messages.VSNotFoundTry",
-    "VSVersion0NotFoundLookingForLatest": "ms-resource:loc.messages.VSVersion0NotFoundLookingForLatest"
+    "VSVersion0NotFound": "ms-resource:loc.messages.VSVersion0NotFound",
+    "VSVersion0NotFoundFallbackVersion1": "ms-resource:loc.messages.VSVersion0NotFoundFallbackVersion1",
+    "VSVersion15NotFound": "ms-resource:loc.messages.VSVersion15NotFound"
   }
 }

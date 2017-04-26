@@ -11,3 +11,4 @@ $actual = Select-VSVersion -PreferredVersion 'Some preferred version'
 
 # Assert.
 Assert-AreEqual 'Some preferred version' $actual
+Assert-WasCalled Get-VSPath -Times 1
