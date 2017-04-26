@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -160,7 +160,6 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.packagePath",
       "required": true,
-      "defaultValue": "**//*.zip",
       "helpMarkDown": "ms-resource:loc.input.help.packagePath",
       "groupName": "DeploymentInputs"
     },
