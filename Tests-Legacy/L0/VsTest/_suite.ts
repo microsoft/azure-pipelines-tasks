@@ -941,6 +941,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -957,6 +958,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -973,6 +975,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -990,6 +993,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -1006,6 +1010,40 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('Updating runsettings with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutRunConfiguration.runsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            let webAppUrlValue = '';
+            let webAppPasswordValue = '';
+
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            const parametersArray = settings.RunSettings.TestRunParameters[0].Parameter;
+                            parametersArray.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl') {
+                                    webAppUrlValue = parameter.$.Value;
+                                } else if (parameter.$.Name === 'webAppInvalid') {
+                                    assert.fail(parameter.$.Name, undefined, 'test param should not exist');
+                                } else if (parameter.$.name === 'webAppPassword') {
+                                    webAppPasswordValue = parameter.$.value;
+                                }
+                            });
+
+                            assert.equal(webAppUrlValue, 'testVal', 'test run parameters must be overridden');
+                            assert.equal(webAppPasswordValue, 'testPass', 'test run parameters must be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 

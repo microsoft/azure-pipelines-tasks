@@ -2,7 +2,7 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-Azure App Service Deploy incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
+Build Machine Image (PREVIEW) task incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
 
 1.	abbrev (https://github.com/isaacs/abbrev-js)
 2.	Archiver (https://github.com/archiverjs/node-archiver)
@@ -1075,7 +1075,7 @@ END OF process-nextick-args NOTICES, INFORMATION, AND LICENSE
 
 %% Q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright 2009–2014 Kristopher Michael Kowal. All rights reserved.
+Copyright 2009ï¿½2014 Kristopher Michael Kowal. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
