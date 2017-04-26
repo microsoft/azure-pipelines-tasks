@@ -5,6 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
+  "preview": true,
   "visibility": [
     "Build",
     "Release"

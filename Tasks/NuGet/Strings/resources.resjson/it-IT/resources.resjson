@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "NuGet Command",
+  "loc.description": "Runs a NuGet command",
+  "loc.instanceNameFormat": "NuGet $(command)",
+  "loc.input.label.command": "Comando",
+  "loc.input.help.command": "The NuGet command to run.\n\nExamples: restore, pack",
+  "loc.input.label.arguments": "Argomenti",
+  "loc.input.help.arguments": "Arguments for the provided command",
+  "loc.messages.NGCommon_DetectedNuGetVersion": "È stata rilevata la versione di NuGet %s / %s",
+  "loc.messages.Info_NuGetSupportedAfter3_5": "La versione di NuGet in uso è la %s, ma in questa attività sono supportate solo le versioni uguali o successive alla 3.5.0. ",
+  "loc.messages.BuildIdentityPermissionsHint": "Per i feed interni assicurarsi che l'identità '%s' [%s] del servizio di compilazione abbia accesso al feed.",
+  "loc.messages.Info_AvailableVersions": "Le versioni disponibili sono: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
+  "loc.messages.Info_UsingVersion": "Uso della versione: %s",
+  "loc.messages.Info_UsingToolPath": "Uso del percorso dello strumento: %s",
+  "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "Sulla stringa di versione viene usata una corrispondenza query che potrebbe causare modifiche del comportamento o impreviste quando NuGet viene aggiornato a una nuova versione.",
+  "loc.messages.Error_NoVersionWasFoundWhichMatches": "Non è stata trovata alcuna versione corrispondente all'input %s",
+  "loc.messages.Error_NoUrlWasFoundWhichMatches": "Non è stato trovato alcun URL di download per %s",
+  "loc.messages.Error_NuGetToolInstallerFailer": "L'installazione dello strumento non è riuscita: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+}

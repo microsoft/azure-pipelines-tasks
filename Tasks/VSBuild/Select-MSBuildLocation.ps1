@@ -17,7 +17,7 @@ function Select-MSBuildLocation {
         }
 
         # Find the MSBuild location.
-        if (!($msBuildLocation = Get-MSBuildPath -Version $msBuildVersion -Architecture $Architecture -SearchCom)) {
+        if (!($msBuildLocation = Get-MSBuildPath -Version $msBuildVersion -Architecture $Architecture)) {
             throw (Get-VstsLocString -Key MSBuildNotFoundVersion0Architecture1 -ArgumentList $msBuildVersion, $Architecture)
         }
 

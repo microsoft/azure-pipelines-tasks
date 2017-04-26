@@ -19,12 +19,12 @@
   "loc.input.help.copyPackageTimeoutSec": "將應用程式套件複製到映像存放區的逾時 (秒)。如有指定，此值將會覆寫發行設定檔中的值。",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "註冊應用程式套件的逾時 (以秒為單位)。",
-  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
-  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
-  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
-  "loc.input.label.skipPackageValidation": "Skip package validation",
-  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
+  "loc.input.label.overwriteBehavior": "覆寫行為",
+  "loc.input.help.overwriteBehavior": "當叢集中有同名的應用程式，且其未設定升級時覆寫行為。",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "當類型與版本相同時跳過升級",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "指定當叢集中有相同的應用程式類型及版本時，應跳過升級或在驗證時讓升級失敗。如有啟用，重新部署為等冪。",
+  "loc.input.label.skipPackageValidation": "跳過套件驗證",
+  "loc.input.help.skipPackageValidation": "指定是否要在部署前驗證套件。",
   "loc.input.label.unregisterUnusedVersions": "Unregister Unused Versions",
   "loc.input.help.unregisterUnusedVersions": "Indicates whether all unused versions of the application type will be removed after an upgrade.",
   "loc.input.label.overridePublishProfileSettings": "覆寫所有發行設定檔升級設定",
@@ -85,5 +85,5 @@
   "loc.messages.SFSDK_UnexpectedError": "未預期的錯誤。錯誤詳細資料: $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "CopyPackageTimeoutSec 參數需要 Service Fabric SDK 版本 '2.3'，但已安裝的版本為 '{0}'。將略過此參數。",
   "loc.messages.SFSDK_CompressPackageWarning": "CompressPackage 參數需要 '2.5' 版的 Service Fabric SDK，但安裝的版本是 '{0}'。此參數將予忽略。",
-  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+  "loc.messages.SFSDK_SkipUpgradeWarning": "將跳過升級; 因為叢集中已有 '{1}' 版的應用程式類型類型 '{0}'。"
 }

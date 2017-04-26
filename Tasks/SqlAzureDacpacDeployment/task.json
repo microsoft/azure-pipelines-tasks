@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [
         "sqlpackage"
@@ -64,7 +64,7 @@
         {
             "name": "ConnectedServiceNameARM",
             "type": "connectedService:AzureRM",
-            "label": "Azure RM Subscription",
+            "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Target Azure Resource Manager subscription for deploying SQL files",

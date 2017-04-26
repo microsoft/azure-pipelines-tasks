@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Install Apple Profile (Preview)",
+  "loc.friendlyName": "安裝 Apple 佈建設定檔",
   "loc.helpMarkDown": "",
   "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
   "loc.instanceNameFormat": "Install an Apple provisioning profile",
-  "loc.input.label.provProfileSecureFile": "Provisioning Profile",
-  "loc.input.help.provProfileSecureFile": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
-  "loc.input.label.removeProfile": "Remove Profile After Build",
-  "loc.input.help.removeProfile": "Select to specify that the provisioning profile should be removed from the agent after the build or release is complete."
+  "loc.input.label.provProfileSecureFile": "佈建設定檔",
+  "loc.input.help.provProfileSecureFile": "請選取已上傳到 [安全的檔案] 的佈建設定檔，以安裝在 macOS 代理程式上。",
+  "loc.input.label.removeProfile": "在建置後移除設定檔",
+  "loc.input.help.removeProfile": "選取此選項可指定在建置或發行完成之後，從代理程式刪除佈建設定檔。"
 }

@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Install Apple Profile (Preview)",
+  "loc.friendlyName": "Install Apple Provisioning Profile",
   "loc.helpMarkDown": "",
-  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
-  "loc.instanceNameFormat": "Install an Apple provisioning profile",
-  "loc.input.label.provProfileSecureFile": "Provisioning Profile",
-  "loc.input.help.provProfileSecureFile": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
-  "loc.input.label.removeProfile": "Remove Profile After Build",
-  "loc.input.help.removeProfile": "Select to specify that the provisioning profile should be removed from the agent after the build or release is complete."
+  "loc.description": "Установите профиль подготовки Apple, необходимый для выполнения сборки в агенте macOS.",
+  "loc.instanceNameFormat": "Установка профиля подготовки Apple",
+  "loc.input.label.provProfileSecureFile": "Профиль подготовки",
+  "loc.input.help.provProfileSecureFile": "Выберите профиль подготовки, отправленный в \"Безопасные файлы\", для установки на агент macOS.",
+  "loc.input.label.removeProfile": "Удалить профиль после создания сборки",
+  "loc.input.help.removeProfile": "Выберите, чтобы указать, что по завершении сборки или версии профиль подготовки следует удалить с агента."
 }

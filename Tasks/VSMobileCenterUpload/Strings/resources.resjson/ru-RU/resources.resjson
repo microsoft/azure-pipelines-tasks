@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Отправка в Mobile Center",
   "loc.helpMarkDown": "Отправка пакетов мобильных приложений в Visual Studio Mobile Center",
   "loc.description": "Отправка пакетов мобильных приложений в Visual Studio Mobile Center",
   "loc.instanceNameFormat": "Развертывание $(app) в Visual Studio Mobile Center",
@@ -7,16 +7,16 @@
   "loc.input.label.serverEndpoint": "Подключение к Mobile Center",
   "loc.input.help.serverEndpoint": "Выберите конечную точку службы для подключения к Visual Studio Mobile Center. Чтобы создать конечную точку службы, щелкните ссылку \"Управление\".",
   "loc.input.label.appSlug": "Заглушка приложения",
-  "loc.input.help.appSlug": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})",
+  "loc.input.help.appSlug": "Заглушка приложения имеет формат **{username}/{app_identifier}**. Чтобы найти значения **{username}** и **{app_identifier}** для приложения, щелкните его имя на сайте https://mobile.azure.com/apps; полученный URL-адрес будет иметь формат [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier}).",
   "loc.input.label.app": "Путь двоичного файла",
   "loc.input.help.app": "Относительный путь от корня репозитория к APK- или IPA-файлу для публикации",
   "loc.input.label.symbolsType": "Тип символов",
   "loc.input.label.symbolsPath": "Путь символов",
   "loc.input.help.symbolsPath": "Относительный путь от корня репозитория к папке символов.",
-  "loc.input.label.pdbPath": "Symbols Path (*.pdb)",
-  "loc.input.help.pdbPath": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+  "loc.input.label.pdbPath": "Путь к символам (*.pdb)",
+  "loc.input.help.pdbPath": "Относительный путь от корня репозитория к файлам символов PDB. Путь может содержать подстановочные знаки.",
   "loc.input.label.dsymPath": "Путь dSYM",
-  "loc.input.help.dsymPath": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
+  "loc.input.help.dsymPath": "Относительный путь от корня репозитория к папке dSYM. Путь может содержать подстановочные знаки.",
   "loc.input.label.mappingTxtPath": "Файл сопоставления",
   "loc.input.help.mappingTxtPath": "Относительный путь от корня репозитория к файлу mapping.txt для Android.",
   "loc.input.label.packParentFolder": "Включить все элементы в родительской папке",
@@ -36,5 +36,5 @@
   "loc.messages.CannotFindAnyFile": "Не удается найти файл на основе %s.",
   "loc.messages.FoundMultipleFiles": "Найдено несколько файлов, соответствующих %s.",
   "loc.messages.FailedToCreateFile": "Не удалось создать %s, ошибка: %s",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "Не удалось найти %s в %s."
 }

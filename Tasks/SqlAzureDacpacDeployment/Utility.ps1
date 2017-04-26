@@ -22,7 +22,7 @@ function Get-AgentIPRange
     $sqlCmd = Get-Command -Name "SqlCmd.exe" -ErrorAction SilentlyContinue
     if ($sqlCmd)
     {
-        $sqlCmdArgs = "-S $serverName -U $sqlUsername -P $sqlPassword -Q `"select getdate()`""
+        $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -P `"$sqlPassword`" -Q `"select getdate()`""
     
         Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 

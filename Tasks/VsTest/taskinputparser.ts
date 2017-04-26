@@ -1,40 +1,43 @@
-import path = require('path');
-import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
-import models = require('./models');
-import utils = require('./helpers');
+import * as path from 'path';
+import * as Q from 'q';
+import * as tl from 'vsts-task-lib/task';
+import * as tr from 'vsts-task-lib/toolrunner';
+import * as models from './models';
+import * as utils from './helpers';
+import * as os from 'os';
 
-let os = require('os');
-let uuid = require('node-uuid');
+const uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations(): models.DtaTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
 
-    if(dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
+    if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
         throw (tl.loc('vs2013NotSupportedInDta'));
     }
-    
-    if(dtaConfiguration.tiaConfig.tiaEnabled) {
+
+    if (dtaConfiguration.tiaConfig.tiaEnabled) {
         tl.warning(tl.loc('tiaNotSupportedInDta'));
         dtaConfiguration.tiaConfig.tiaEnabled = false;
     }
-    if(dtaConfiguration.runTestsInIsolation) {
+    if (dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
+    }
+    if (dtaConfiguration.otherConsoleOptions) {
+        tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
     }
 
     dtaConfiguration.numberOfAgentsInPhase = 0;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
-    if(!isNaN(totalJobsInPhase)) {
+    if (!isNaN(totalJobsInPhase)) {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
+    tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
-
     return dtaConfiguration;
 }
 
@@ -61,8 +64,8 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const taskInstanceId = getDtaInstanceId();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
 
-    if(releaseId) {
-        if(parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
+    if (releaseId) {
+        if (parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
             const jobId = tl.getVariable('System.JobId');
             dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
         } else {
@@ -91,40 +94,76 @@ function getDtaInstanceId(): number {
 }
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations) {
-    testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-    testConfiguration.testDropLocation = tl.getInput('searchFolder');  
+    testConfiguration.testSelection = tl.getInput('testSelector');
+    tl._writeLine(tl.loc('testSelectorInput', testConfiguration.testSelection));
+
+    testConfiguration.testDropLocation = tl.getInput('searchFolder');
+    tl._writeLine(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
+
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
+    tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
+
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
+    tl._writeLine(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
+
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
+
+    testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
+    tl._writeLine(tl.loc('runInParallelInput', testConfiguration.runInParallel));
+
+    testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    tl._writeLine(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
+
+    testConfiguration.tiaConfig = getTiaConfiguration();
+
+    testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+    tl._writeLine(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
+
+    testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
+    tl._writeLine(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
+
+    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
+    tl._writeLine(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
+
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
-    testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
-    testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
-    testConfiguration.tiaConfig = getTiaConfiguration();
-    testConfiguration.testSelection = tl.getInput('testSelector');
 
-    if(testConfiguration.testSelection.toLowerCase() === 'testplan') {    
+    if (testConfiguration.testSelection.toLowerCase() === 'testplan') {
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
-        testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+        tl._writeLine(tl.loc('testPlanInput', testConfiguration.testplan));
 
-        var testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+        testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+        tl._writeLine(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
+
+        const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
         testConfiguration.testSuites = new Array<number>();
         testSuiteStrings.forEach(element => {
-        testConfiguration.testSuites.push(parseInt(element));
+            const testSuiteId = parseInt(element);
+            tl._writeLine(tl.loc('testSuiteSelected', testSuiteId));
+            testConfiguration.testSuites.push(testSuiteId);
         });
+    } else {
+        testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+        tl._writeLine(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
     }
 
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
-    if(testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+    if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
-        if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
+        if (utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
             tl._writeLine('vsTestVersion is null or empty');
-            throw new Error("vsTestVersion is null or empty");
+            throw new Error('vsTestVersion is null or empty');
         }
+        tl._writeLine(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
+        tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
+    }
+
+    if(tl.getBoolInput('uiTests') && testConfiguration.runInParallel)
+    {
+        tl.warning(tl.loc('uitestsparallel'));
     }
 
         // only to facilitate the writing of unit tests 
@@ -132,8 +171,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     if (!testConfiguration.vs15HelperPath) {
         testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
     }
-
-    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
 }
 
 function getTiaConfiguration() : models.TiaConfiguration {
@@ -142,7 +179,7 @@ function getTiaConfiguration() : models.TiaConfiguration {
     tiaConfiguration.tiaRebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
-    tiaConfiguration.tiaFilterPaths = tl.getVariable("TIA_IncludePathFilters");
+    tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
     tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;

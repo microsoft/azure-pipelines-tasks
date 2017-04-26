@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "Node 工具安裝程式",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
-  "loc.instanceNameFormat": "Use Node $(versionSpec)",
-  "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
-  "loc.input.label.checkLatest": "Check for Latest Version",
-  "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
-  "loc.messages.ToolFailed": "Tool install failed: %s"
+  "loc.description": "尋找或下載及快取指定版本規格的 Node，並將其新增到 PATH 中。",
+  "loc.instanceNameFormat": "使用 Node $(versionSpec)",
+  "loc.input.label.versionSpec": "版本指定",
+  "loc.input.help.versionSpec": "要取得之版本的版本規格。例如: 6.x、4.x、6.10.0、>=6.10.0",
+  "loc.input.label.checkLatest": "檢查最新版本",
+  "loc.input.help.checkLatest": "一律檢查網路上有無最新的版本符合版本規格。除非特定的情況必須取得最新版本，否則不建議執行此動作。若非必要，這可能會衍生下載費用，特別是對託管的組建集區。",
+  "loc.messages.ToolFailed": "工具安裝失敗: %s"
 }

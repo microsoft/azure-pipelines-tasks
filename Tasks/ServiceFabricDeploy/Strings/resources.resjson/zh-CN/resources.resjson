@@ -19,12 +19,12 @@
   "loc.input.help.copyPackageTimeoutSec": "将应用程序包复制到映像存储区的超时秒数。如果已指定，该值将替代发布配置文件中的值。",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "注册应用程序包的超时秒数。",
-  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
-  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
-  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
-  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
-  "loc.input.label.skipPackageValidation": "Skip package validation",
-  "loc.input.help.skipPackageValidation": "Indicates whether the package should be validated or not before deployment.",
+  "loc.input.label.overwriteBehavior": "覆盖行为",
+  "loc.input.help.overwriteBehavior": "当一个应用程序存在于具有相同名称的群集中并且未配置升级时的覆盖行为。",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "遇到相同类型和版本时跳过升级",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "当群集中已存在相同的应用程序类型和版本时，指示是否要跳过升级，否则验证过程中的升级将失败。启用后，重新部署为幂等。",
+  "loc.input.label.skipPackageValidation": "跳过包验证",
+  "loc.input.help.skipPackageValidation": "指示部署前是否应该对包进行验证。",
   "loc.input.label.unregisterUnusedVersions": "Unregister Unused Versions",
   "loc.input.help.unregisterUnusedVersions": "Indicates whether all unused versions of the application type will be removed after an upgrade.",
   "loc.input.label.overridePublishProfileSettings": "替代所有发布配置文件升级设置",
@@ -85,5 +85,5 @@
   "loc.messages.SFSDK_UnexpectedError": "出现意外错误。错误详细信息: $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "CopyPackageTimeoutSec 参数需要版本 2.3 的 Service Fabric SDK，但安装的版本为“{0}”。此参数将被忽略。",
   "loc.messages.SFSDK_CompressPackageWarning": "CompressPackage 参数需要 \"2.5\" 版本的 Service Fabric SDK，但安装的版本是“{0}”。此参数将被忽略。",
-  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+  "loc.messages.SFSDK_SkipUpgradeWarning": "正在跳过升级，因为群集中已存在版本为“{1}”的应用程序类型“{0}”。"
 }

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core(미리 보기)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "DotNet Core 명령줄을 사용하여 빌드, 테스트 및 게시합니다.",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "웹 프로젝트 게시",
   "loc.input.help.publishWebProjects": "True이면 작업에서 리포지토리의 웹 프로젝트를 찾고 해당 프로젝트에서 게시 명령을 실행합니다. 디렉터리에 web.config 파일이나 wwwroot 폴더가 있으면 웹 프로젝트가 있는 것입니다.",
   "loc.input.label.projects": "프로젝트",
-  "loc.input.help.projects": "리포지토리 루트에 있는 project.json 파일의 상대 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어 모든 하위 폴더에 있는 모든 project.json 파일의 경우 **/project.json을 사용합니다.",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "인수",
   "loc.input.help.arguments": "선택한 명령의 인수입니다. 빌드 구성, 출력 폴더, 런타임 등을 예로 들 수 있습니다. 인수는 선택한 명령에 따라 다릅니다.",
   "loc.input.label.zipAfterPublish": "게시된 프로젝트 압축",
   "loc.input.help.zipAfterPublish": "True이면 게시 명령으로 만든 폴더가 압축됩니다.",
   "loc.messages.noProjectFilesFound": "지정한 패턴과 일치하는 프로젝트 파일을 찾을 수 없습니다.",
   "loc.messages.noWebProjctFound": "리포지토리에서 웹 프로젝트를 찾을 수 없습니다. 디렉터리에 web.config 파일이나 wwwroot 폴더가 있으면 웹 프로젝트가 있는 것입니다.",
-  "loc.messages.dotnetCommandFailed": "Dotnet 명령이 0이 아닌 종료 코드를 반환하며 실패했습니다. %d.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "압축이 실패했습니다(오류: %s).",
   "loc.messages.noPublishFolderFoundToZip": "프로젝트 파일을 압축할 게시 폴더를 찾을 수 없습니다. %s."
 }

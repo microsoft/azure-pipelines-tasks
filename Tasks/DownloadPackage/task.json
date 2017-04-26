@@ -1,0 +1,106 @@
+{
+  "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
+  "name": "DownloadPackage",
+  "friendlyName": "Download Package",
+  "description": "Download a package from a Package Management feed in VSTS or TFS. \r\n Requires the Package Management extension.",
+  "helpMarkDown": "Needs Package Management extension to be installed",
+  "category": "Utility",
+  "author": "ms-vscs-rm",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 2
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.99.0",
+  "inputs": [
+    {
+      "name": "feed",
+      "type": "pickList",
+      "label": "Feed",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Select the package source"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "Package",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Select the package to download, only nuget packages are supported currently"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "Version",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Version of the package"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "Destination directory",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "Path on the agent machine where the package will be downloaded"
+    }
+  ],
+    "dataSourceBindings": [
+    {
+      "target": "feed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+        "target": "definition",
+        "endpointId": "tfs:feed",
+        "parameters": {
+            "feed": "$(feed)"
+        },
+        "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages?includeUrls=false",
+        "resultSelector": "jsonpath:$.value[?(@.protocolType=='NuGet')]",
+        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+        "target": "version",
+        "endpointId": "tfs:feed",
+        "parameters": {
+          "feed": "$(feed)",
+          "definition": "$(definition)"
+        },
+        "endpointUrl": "{{endpoint.url}}/_apis/Packaging/Feeds/{{{feed}}}/Packages/{{{definition}}}/Versions?includeUrls=false",
+        "resultSelector": "jsonpath:$.value[*]",
+        "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "Download Package",
+  "execution": {
+    "Node": {
+      "target": "download.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToGetPackageMetadata": "Failed to get package metadata with error {0}",
+    "FailedToDownloadNugetPackage": "Failed to download NuGet package from {0} got the following error: {1}",
+    "PackageDownloadSuccessful": "Package download successful",
+    "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
+    "StartingDownloadOfPackage": "Starting download of NuGet package {0} to location {1}",
+    "ExtractingNugetPackage": "Extracting NuGet package {0} to directory {1}",
+    "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
+    "ExtractionFailed": "Failed to extract package with error {0}"
+  }
+}

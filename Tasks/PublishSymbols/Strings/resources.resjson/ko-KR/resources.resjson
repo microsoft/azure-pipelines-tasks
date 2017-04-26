@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "검색 패턴",
   "loc.input.help.SearchPattern": "게시할 pdb 파일을 검색하는 데 사용된 패턴입니다.",
   "loc.input.label.SymbolsFolder": "기호 폴더 경로",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
+  "loc.input.help.SymbolsFolder": "기호 파일을 검색할 폴더의 경로입니다. 기본값은 $(Build.SourcesDirectory)입니다. 그렇지 않으면 루트 경로를 지정하세요(예: $(Build.BinariesDirectory)/MyProject).",
   "loc.input.label.SkipIndexing": "인덱싱 건너뛰기",
   "loc.input.help.SkipIndexing": "소스 서버 정보를 PDB 파일에 삽입하는 것을 건너뛸지 여부를 나타냅니다.",
   "loc.input.label.TreatNotIndexedAsWarning": "인덱싱되지 않은 경우 경고",

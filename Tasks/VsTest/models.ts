@@ -21,6 +21,7 @@ export interface TestConfigurations {
     testplan: number;
     testSuites: number[];
     testPlanConfigId: number;
+    otherConsoleOptions: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
