@@ -170,17 +170,21 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
 }
 
 function updateRunSettingsWithParameters(result: any, overrideParametersString: string) {
-    const overrideParameters = parameterParser.parse(overrideParametersString);            
-    if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] && 
+    const overrideParameters = parameterParser.parse(overrideParametersString);
+    if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
         result.RunSettings.TestRunParameters[0].Parameter) {
-            tl.debug('Overriding test run parameters.');
-            const parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-            parametersArray.forEach(function (parameter) {
-                const key = parameter.$.Name;
-                if (overrideParameters[key] && overrideParameters[key].value) {
+        tl.debug('Overriding test run parameters.');
+        const parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
+        parametersArray.forEach(function (parameter) {
+            const key = parameter.$.Name || parameter.$.name;
+            if (overrideParameters[key] && overrideParameters[key].value) {
+                if (parameter.$.Value) {
                     parameter.$.Value = overrideParameters[key].value;
+                } else {
+                    parameter.$.value = overrideParameters[key].value;
                 }
-            });
+            }
+        });
     }
     return result;
 }
