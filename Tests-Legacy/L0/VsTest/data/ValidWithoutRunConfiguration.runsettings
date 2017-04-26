@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
     <TestRunParameters>
-        <Parameter name="webAppUrl" value="http://localhost" />
-        <Parameter name="-webAppUserName" value="Admin" />
-        <Parameter name="webAppPassword" value="Password" />
+        <Parameter Name="webAppUrl" Value="http://localhost" />
+        <Parameter Name="-webAppUserName" Value="Admin" />
+        <Parameter Name="webAppPassword" Value="Password" />
     </TestRunParameters>
 </RunSettings>

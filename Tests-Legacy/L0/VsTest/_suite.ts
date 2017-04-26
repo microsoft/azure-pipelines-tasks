@@ -941,6 +941,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -957,6 +958,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -973,6 +975,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -990,6 +993,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -1006,6 +1010,34 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('Updating runsettings with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutRunConfiguration.runsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3';
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            let isValid = false;
+                            const parametersArray = settings.RunSettings.TestRunParameters[0].Parameter;
+                            parametersArray.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl' && parameter.$.Value === 'testVal') {
+                                    isValid = true;
+                                } else if (parameter.$.Name === 'webAppInvalid'){
+                                    isValid = false;
+                                }
+                            });
+                            assert.ok(isValid, 'testrun paremeters must be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 

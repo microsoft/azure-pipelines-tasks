@@ -176,9 +176,9 @@ function updateRunSettingsWithParameters(result: any, overrideParametersString: 
             tl.debug('Overriding test run parameters.');
             const parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
             parametersArray.forEach(function (parameter) {
-                const key = parameter.$.name;
+                const key = parameter.$.Name;
                 if (overrideParameters[key] && overrideParameters[key].value) {
-                    parameter.$.value = overrideParameters[key].value;
+                    parameter.$.Value = overrideParameters[key].value;
                 }
             });
     }
