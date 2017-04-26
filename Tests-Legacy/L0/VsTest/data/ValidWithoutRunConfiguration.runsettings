@@ -2,7 +2,7 @@
 <RunSettings>
     <TestRunParameters>
         <Parameter Name="webAppUrl" Value="http://localhost" />
-        <Parameter Name="-webAppUserName" Value="Admin" />
+        <Parameter name="-webAppUserName" Value="Admin" />
         <Parameter name="webAppPassword" value="Password" />
     </TestRunParameters>
 </RunSettings>
