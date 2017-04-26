@@ -77,7 +77,6 @@ export async function startTest() {
             });
     } catch (error) {
         deleteVstestDiagFile();
-        tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
@@ -810,7 +809,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 
     let newSettingsFile = vstestConfig.settingsFile;
     const vsVersion = vstestRunnerDetails.majorVersion;
-  
+
     if (newSettingsFile) {
         if (!pathExistsAsFile(newSettingsFile)) {
             if (!tl.exist(newSettingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
