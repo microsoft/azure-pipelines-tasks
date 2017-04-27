@@ -97,6 +97,7 @@ export class Helper {
         const defer = Q.defer<string>();
         let runSettingsContent = builder.buildObject(result);
         runSettingsContent = str(runSettingsContent).replaceAll('&#xD;', '').s;
+        //This is to fix carriage return any other special chars will not be replaced
         Helper.saveToFile(runSettingsContent, fileExt)
             .then(function (fileName) {
                 defer.resolve(fileName);
