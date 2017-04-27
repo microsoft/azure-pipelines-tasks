@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Pubblica risultati di code coverage",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
-  "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
+  "loc.description": "Pubblica i risultati del code coverage Cobertura o JaCoCo restituiti da una compilazione",
+  "loc.instanceNameFormat": "Pubblica code coverage da $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Strumento di code coverage",
-  "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "Strumento con cui vengono generati i risultati del code coverage.",
   "loc.input.label.summaryFileLocation": "File di riepilogo",
-  "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
+  "loc.input.help.summaryFileLocation": "Percorso del file di riepilogo che contiene le statistiche di code coverage, ad esempio relative alla coverage di righe, metodi e classi. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.reportDirectory": "Directory dei report",
-  "loc.input.help.reportDirectory": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
+  "loc.input.help.reportDirectory": "Percorso della directory dei report HTML di code coverage. La directory dei report viene pubblicata come artefatto di compilazione per la visualizzazione in un secondo momento. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
   "loc.input.label.additionalCodeCoverageFiles": "File aggiuntivi",
-  "loc.input.help.additionalCodeCoverageFiles": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`",
-  "loc.messages.FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
-  "loc.messages.MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s"
+  "loc.input.help.additionalCodeCoverageFiles": "Criterio di percorso di file che consente di specificare eventuali altri file di code coverage aggiuntivi da pubblicare come artefatti della compilazione. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/**/*.exec`",
+  "loc.messages.FoundNMatchesForPattern": "Sono stati trovati %s risultato/i corrispondenti al criterio: %s",
+  "loc.messages.MultipleSummaryFilesFound": "Sono state trovate più corrispondenze relative a file o directory. Verrà usata la prima corrispondenza: %s"
 }

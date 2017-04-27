@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Опубликовать результаты оценки объемов протестированного кода",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
-  "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
+  "loc.description": "Опубликовать результаты оценки объема протестированного кода Cobertura или JaCoCo для сборки",
+  "loc.instanceNameFormat": "Опубликовать объем протестированного кода из $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Средство оценки объемов протестированного кода",
-  "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "Средство, с помощью которого создаются результаты объема протестированного кода.",
   "loc.input.label.summaryFileLocation": "Файл сводки",
-  "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
+  "loc.input.help.summaryFileLocation": "Путь к файлу сводки, который содержит статистику объема протестированного кода, например для строк, методов и классов. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
   "loc.input.label.reportDirectory": "Каталог отчета",
-  "loc.input.help.reportDirectory": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
+  "loc.input.help.reportDirectory": "Путь к каталогу отчетов HTML об объеме протестированного кода. Каталог отчетов опубликован для более позднего просмотра как артефакт сборки. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura\"",
   "loc.input.label.additionalCodeCoverageFiles": "Дополнительные файлы",
-  "loc.input.help.additionalCodeCoverageFiles": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`",
-  "loc.messages.FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
-  "loc.messages.MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s"
+  "loc.input.help.additionalCodeCoverageFiles": "Шаблон пути к файлу, указывающий дополнительные файлы объема протестированного кода, которые будут опубликованы как артефакты сборки. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/**/*.exec\"",
+  "loc.messages.FoundNMatchesForPattern": "Найдены результаты (%s), соответствующие шаблону: %s",
+  "loc.messages.MultipleSummaryFilesFound": "Найдены совпадения в нескольких файлах или каталогах. Используется первое совпадение: %s"
 }
