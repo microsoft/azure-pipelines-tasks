@@ -48,7 +48,7 @@
   "loc.input.help.detached": "バックグラウンドでサービス コンテナーを実行します。",
   "loc.input.label.abortOnContainerExit": "コンテナーの終了時に中止する",
   "loc.input.help.abortOnContainerExit": "いずれかのコンテナーが終了したとき、すべてのコンテナーを停止します。",
-  "loc.input.label.imageDigestComposeFile": "Image Digest Compose File",
+  "loc.input.label.imageDigestComposeFile": "イメージ ダイジェスト Compose ファイル",
   "loc.input.help.imageDigestComposeFile": "各サービスの Docker イメージのフル イメージ リポジトリのダイジェストを設定して作成された Docker Compose ファイルへのパスです。",
   "loc.input.label.removeBuildOptions": "ビルド オプションの削除",
   "loc.input.help.removeBuildOptions": "出力 Docker Compose ファイルからビルド オプションを削除します。",

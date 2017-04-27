@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Install Apple Provisioning Profile",
   "loc.helpMarkDown": "",
-  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
-  "loc.instanceNameFormat": "Install an Apple provisioning profile",
+  "loc.description": "macOS エージェントでのビルドに必要な Apple プロビジョニング プロファイルのインストール",
+  "loc.instanceNameFormat": "Apple プロビジョニング プロファイルのインストール",
   "loc.input.label.provProfileSecureFile": "プロビジョニング プロファイル",
   "loc.input.help.provProfileSecureFile": "macOS エージェントにインストールするため、`セキュリティで保護されたファイル` にアップロードされたプロビジョニング プロファイルを選択します。",
   "loc.input.label.removeProfile": "ビルド後のプロファイル削除",
