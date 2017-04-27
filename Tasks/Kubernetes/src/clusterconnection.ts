@@ -23,7 +23,7 @@ export default class ClusterConnection {
         if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
         {
             tl.debug(tl.loc("DownloadingClient"));
-            this.kubectlPath = path.join(this.userDir, "kubectl") + this.getExtention();
+            this.kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
             var version = await utils.getStableKubectlVersion();
             await utils.downloadKubectl(version, this.kubectlPath);
         }
@@ -71,7 +71,7 @@ export default class ClusterConnection {
         fs.writeFileSync(this.kubeconfigFile, authDetails["kubeconfig"]);
     }
 
-    private getExtention(): string {
+    private getExecutableExtention(): string {
         if(os.type().match(/^Win/)){
             return ".exe";
         }
