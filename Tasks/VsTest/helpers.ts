@@ -6,7 +6,7 @@ import * as Q from 'q';
 import * as models from './models';
 import * as os from 'os';
 
-
+const str = require('string');
 const uuid = require('node-uuid');
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
@@ -95,8 +95,9 @@ export class Helper{
 
     public static writeXmlFile(result: any, settingsFile: string, fileExt: string): Q.Promise<string> {
         const defer = Q.defer<string>();
-        const runSettingsForTestImpact = builder.buildObject(result);
-        Helper.saveToFile(runSettingsForTestImpact, fileExt)
+        let runSettingsContent = builder.buildObject(result);
+        runSettingsContent = str(runSettingsContent).replaceAll('&#xD;', '').s;
+        Helper.saveToFile(runSettingsContent, fileExt)
             .then(function (fileName) {
                 defer.resolve(fileName);
                 return defer.promise;
