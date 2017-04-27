@@ -56,6 +56,7 @@
         "RunDistributedTests",
         "RunJMeterLoadTest",
         "RunLoadTest",
+        "ServiceFabricComposeDeploy",
         "ServiceFabricDeploy",
         "ServiceFabricPowerShell",
         "ServiceFabricUpdateAppVersions",
