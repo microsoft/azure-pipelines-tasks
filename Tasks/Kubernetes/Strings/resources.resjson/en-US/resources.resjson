@@ -18,6 +18,8 @@
   "loc.input.help.azureContainerRegistry": "Select an Azure Container Registry",
   "loc.input.label.secretName": "Secret name",
   "loc.input.help.secretName": "Secret name",
+  "loc.input.label.forceUpdate": "Force Update secret",
+  "loc.input.help.forceUpdate": "Recreate secret.",
   "loc.input.label.command": "Command",
   "loc.input.help.command": "Select a kubectl command.",
   "loc.input.label.useConfigurationFile": "Use Configuration files",
@@ -26,6 +28,8 @@
   "loc.input.help.configuration": "Path to the Configuration file or directory.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Command arguments",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Working directory for the Kubectl command.",
   "loc.input.label.outputFormat": "Output format",
   "loc.input.help.outputFormat": "output file format.",
   "loc.input.label.kubectlOutput": "Kubectl output",
@@ -34,5 +38,6 @@
   "loc.messages.ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
   "loc.messages.DownloadingClient": "Downloading kubernetes client.",
-  "loc.messages.CreatingSecret": "Executing create docker-registry secret command."
+  "loc.messages.CreatingSecret": "Executing create docker-registry %s secret.",
+  "loc.messages.DeleteSecret": "Executing delete docker-registry %s secret"
 }

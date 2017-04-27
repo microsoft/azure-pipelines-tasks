@@ -27,8 +27,7 @@ export async function download(url: string, downloadPath: string): Promise<void>
 
         req.end();
     });
-
-    console.log("closing the file");
+    
     file.end(null, null, file.close);    
 }
 

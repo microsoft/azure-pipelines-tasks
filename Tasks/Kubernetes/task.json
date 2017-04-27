@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 50
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -91,6 +91,14 @@
             "groupName": "registry"
         },
         {
+            "name": "forceUpdate",
+            "type": "boolean",
+            "label": "Force Update secret",
+            "defaultValue": "true",
+            "helpMarkDown": "Recreate secret.",
+            "groupName": "registry"
+        },
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -144,6 +152,14 @@
             "groupName": "commands"
         },
         {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "helpMarkDown": "Working directory for the Kubectl command.",
+            "groupName": "commands"
+        },
+        {
             "name": "outputFormat",
             "type": "pickList",
             "label": "Output format",
@@ -185,6 +201,7 @@
         "ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
         "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
         "DownloadingClient":"Downloading kubernetes client.",
-        "CreatingSecret":"Executing create docker-registry secret command."
+        "CreatingSecret":"Executing create docker-registry %s secret.",
+        "DeleteSecret": "Executing delete docker-registry %s secret"
     }
 }
