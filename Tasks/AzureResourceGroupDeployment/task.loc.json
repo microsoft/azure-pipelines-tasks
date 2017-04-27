@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -175,7 +175,7 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure with WinRM",
+        "ConfigureVMwithWinRM": "Configure with WinRM agent",
         "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
@@ -187,7 +187,10 @@
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupEndpoint"
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupEndpoint",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "project",
@@ -196,7 +199,10 @@
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.project"
+      "helpMarkDown": "ms-resource:loc.input.help.project",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "deploymentGroupName",
@@ -204,9 +210,10 @@
       "label": "ms-resource:loc.input.label.deploymentGroupName",
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupName",
       "properties": {
-        "DisableManageLink": "True"
+        "EditableOptions": "True"
       }
     },
     {
