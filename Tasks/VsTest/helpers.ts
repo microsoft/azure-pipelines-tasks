@@ -17,7 +17,7 @@ export class Constants {
     public static vsTestLocationString = 'location';
 }
 
-export class Helper{
+export class Helper {
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
             envVars[name] = value;
@@ -58,10 +58,10 @@ export class Helper{
                     }
                 });
             })
-            .fail(function(err) {
+            .fail(function (err) {
                 defer.reject(err);
             });
-            return defer.promise;
+        return defer.promise;
     }
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
@@ -90,7 +90,7 @@ export class Helper{
     }
 
     public static readFileContentsSync(filePath: string, encoding: string): string {
-        return fs.readFileSync(filePath, encoding)
+        return fs.readFileSync(filePath, encoding);
     }
 
     public static writeXmlFile(result: any, settingsFile: string, fileExt: string): Q.Promise<string> {
