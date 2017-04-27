@@ -1,5 +1,6 @@
 "use strict";
 
+import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
@@ -48,10 +49,13 @@ export default class TaskParameters {
                     this._extractImageDetails();
                 }              
 
-                this.deployScriptPath = this._getResolvedPath(tl.getInput(constants.DeployScriptPathInputName, true));
-                console.log(tl.loc("ResolvedDeployPackgePath", this.deployScriptPath));
-                this.packagePath = this._getResolvedPath(tl.getInput(constants.DeployPackageInputName, true));
-                console.log(tl.loc("ResolvedDeployScriptPath", this.packagePath));
+                this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
+                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));
+                var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
+                var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
+                this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
+                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));
+                
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
             }                
 
@@ -71,14 +75,24 @@ export default class TaskParameters {
         this.osType = parts[3];
     }
 
-    private _getResolvedPath(inputPath: string) {
-        var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
-
+    private _getResolvedPath(rootFolder: string, inputPath: string) {
         var matchingFiles = utils.findMatch(rootFolder, inputPath);
         if(!utils.HasItems(matchingFiles)) {
             throw tl.loc("ResolvedPathNotFound", inputPath, rootFolder);
         }
 
         return matchingFiles[0];
+    }
+
+    private _normalizeRelativePathForTargetOS(inputPath: string) {
+        if(tl.osType().match(/^Win/) && !this.osType.toLowerCase().match(/^win/)) {
+            var splitPath = inputPath.split(path.sep);
+            return path.posix.join.apply(null, splitPath);
+        } else if(!tl.osType().match(/^Win/) && this.osType.toLocaleLowerCase().match(/^win/)) {
+            var splitPath = inputPath.split(path.sep);
+            return path.win32.join.apply(null, splitPath);
+        }
+
+        return inputPath;
     }
 }
