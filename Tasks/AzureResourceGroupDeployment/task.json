@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -175,7 +175,7 @@
             "groupName": "AdvancedDeploymentOptions",
             "options": {
                 "None": "None",
-                "ConfigureVMwithWinRM": "Configure with WinRM",
+                "ConfigureVMwithWinRM": "Configure with WinRM agent",
                 "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
             },
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
@@ -187,7 +187,10 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"Add\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​"
+            "helpMarkDown": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"Add\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "project",
@@ -196,7 +199,10 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​"
+            "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         
         {
@@ -205,9 +211,10 @@
             "label": "Deployment Group",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-            "helpMarkDown": "Specify the Deployment Group against which the Agent(s) will be registered",
+            "required": true,
+            "helpMarkDown": "Specify the Deployment Group against which the Agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
             "properties": {
-                "DisableManageLink": "True"
+                "EditableOptions": "True"
             }
         },
         {
