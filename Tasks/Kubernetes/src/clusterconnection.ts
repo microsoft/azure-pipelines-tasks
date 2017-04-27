@@ -72,7 +72,7 @@ export default class ClusterConnection {
     }
 
     private getExtention(): string {
-        if(os.type() === "Windows_NT"){
+        if(os.type().match(/^Win/)){
             return ".exe";
         }
 

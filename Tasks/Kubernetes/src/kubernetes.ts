@@ -12,6 +12,10 @@ import ACRAuthenticationTokenProvider from "docker-common/registryauthentication
 import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
 import RegistryAuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
+tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
+// Change to any specified working directory
+tl.cd(tl.getInput("cwd"));
+
 // get the registry server authentication provider 
 var registryType = tl.getInput("containerregistrytype", true);
 var authenticationProvider : AuthenticationTokenProvider;

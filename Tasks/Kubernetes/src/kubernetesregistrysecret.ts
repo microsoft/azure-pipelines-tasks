@@ -2,12 +2,38 @@
 
 import tl = require('vsts-task-lib/task');
 import path = require('path');
+import * as tr from "vsts-task-lib/toolrunner";
 import ClusterConnection from "./clusterconnection";
 
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
 export function run(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
-    tl.debug(tl.loc("CreatingSecret"));
+
+    if(tl.getBoolInput("forceUpdate") == true) {
+        return deleteSecret(connection, secret).fin(() =>{
+            return createSecret(connection, authenticationToken, secret);
+        });
+    } else {
+        return createSecret(connection, authenticationToken, secret);
+    }
+}
+
+function deleteSecret(connection: ClusterConnection, secret: string): any {
+    tl.debug(tl.loc('DeleteSecret', secret));
+    var command = connection.createCommand();
+    command.arg("delete");
+    command.arg("secret");
+    command.arg(secret);
+    var executionOption : tr.IExecOptions = <any> {
+                                                    silent: true,
+                                                    failOnStdErr: false,
+                                                };
+
+    return connection.execCommand(command, executionOption);
+}
+
+function createSecret(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
+    tl.debug(tl.loc('CreatingSecret', secret));
     var command = connection.createCommand();
     command.arg("create")
     command.arg("secret");
