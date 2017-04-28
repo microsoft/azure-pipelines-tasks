@@ -67,8 +67,8 @@ export default class ClusterConnection {
     // download kubernetes cluster config file from endpoint
     private downloadKubeconfigFileFromEndpoint(kubernetesEndpoint: string) : void {
         this.kubeconfigFile = path.join(this.userDir, "config");
-        var authDetails = tl.getEndpointAuthorization(kubernetesEndpoint, false).parameters;
-        fs.writeFileSync(this.kubeconfigFile, authDetails["kubeconfig"]);
+        var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
+        fs.writeFileSync(this.kubeconfigFile, kubeconfig);
     }
 
     private getExecutableExtention(): string {
