@@ -3,7 +3,7 @@
     "name": "DockerCompose",
     "friendlyName": "Docker Compose",
     "description": "Build, push or run multi-container Docker applications",
-    "helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
         "Build",
