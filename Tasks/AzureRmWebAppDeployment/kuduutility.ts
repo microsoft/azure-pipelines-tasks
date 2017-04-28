@@ -403,7 +403,7 @@ async function getPostDeploymentScriptLogs(publishingProfile, physicalPath, uniq
         console.log(tl.loc('stderrFromScript'));
         if(scriptReturnCode != '0') {
             tl.error(stderrLog);
-            throw Error(tl.loc('ScriptExecutionOnKuduFailed', stderrLog));
+            throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
         }
         else {
             console.log(stderrLog);

@@ -7,9 +7,12 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string) {
+export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, webDeployPkg: string) {
 
     if(xmlTransformation) {
+        if(!isFolderBasedDeployment && utility.isMSDeployPackage(webDeployPkg)) {
+            console.log(tl.loc('AutoParameterizationMessage'));
+        }
         var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
             var transformConfigs = ["Release.config"];
