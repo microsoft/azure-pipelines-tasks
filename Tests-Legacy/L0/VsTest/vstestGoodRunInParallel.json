@@ -8,7 +8,7 @@
         "vs15Helper": "/path/to/vs15Helper.ps1"
     },
     "match": {
-        "**\\packages\\**\\*TestAdapter.dll": []
+        "**\\*TestAdapter.dll": []
     },
     "findMatch": {
         "/source/dir/some/*pattern": [

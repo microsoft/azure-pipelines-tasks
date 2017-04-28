@@ -179,7 +179,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
@@ -533,7 +533,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
@@ -871,21 +871,12 @@ function cleanUp(temporarySettingsFile: string) {
     }
 }
 
-function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
+function isTestAdapterPresent(rootDirectory: string): boolean {
     const allFiles = tl.find(rootDirectory);
-    const adapterFiles = tl.match(allFiles, '**\\packages\\**\\*TestAdapter.dll', { matchBase: true, nocase: true });
+    const adapterFiles = tl.match(allFiles, '**\\*TestAdapter.dll', { matchBase: true, nocase: true });
 
     if (adapterFiles && adapterFiles.length !== 0) {
-        for (let i = 0; i < adapterFiles.length; i++) {
-            const adapterFile = adapterFiles[i];
-            const packageIndex = adapterFile.indexOf('packages') + 7;
-            const packageFolder = adapterFile.substr(0, packageIndex);
-            const parentFolder = path.dirname(packageFolder);
-            const solutionFiles = tl.match(allFiles, path.join(parentFolder, '*.sln'), { matchBase: true, nocase: true });
-            if (solutionFiles && solutionFiles.length !== 0) {
-                return true;
-            }
-        }
+        return true;
     }
     return false;
 }

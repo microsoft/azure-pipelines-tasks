@@ -570,7 +570,7 @@ describe('VsTest Suite', function () {
             });
     })
 
-    it('Vstest task with Nuget restored adapter path', (done) => {
+    it('Vstest task with test adapter should be found automatically', (done) => {
 
         const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:/source/dir'].join(' ');
         setResponseFile('vstestGoodwithNugetAdapter.json');
