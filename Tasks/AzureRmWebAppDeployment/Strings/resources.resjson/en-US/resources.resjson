@@ -141,5 +141,7 @@
   "loc.messages.PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
   "loc.messages.InvalidPollOption": "Invalid polling option provided: %s.",
   "loc.messages.MissingWebConfigParameters": "Some web.config parameters are missing",
-  "loc.messages.AutoDetectDjangoSettingsFailed": "Unable to detect DJANGO_SETTINGS_MODULE (settings.py). Please ensure that the file exists or provide the correct path in Web.config parameters input in the following format '<folder_name>.settings'"
+  "loc.messages.AutoDetectDjangoSettingsFailed": "Unable to detect DJANGO_SETTINGS_MODULE (settings.py). Please ensure that the file exists or provide the correct path in Web.config parameters input in the following format '<folder_name>.settings'",
+  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Please follow below steps to debug the issue. \n1. Transformation is applied for MSBuild generated packge during build time. Ensure to remove <DependentUpon> Tag for each config file. \n2. Ensure that the config file and transformation file is present in the same folder inside the package.",
+  "loc.messages.AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Please be aware that transformation has no effect as the same value is overriden during dpeloyment. You can disable the auto parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation."
 }
