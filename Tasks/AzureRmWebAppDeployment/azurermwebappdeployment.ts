@@ -10,7 +10,7 @@ var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('./kuduutility.js');
-var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
+var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
 
 async function run() {
