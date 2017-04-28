@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 5
     },
     "demands": [],
     "preview": "true",
@@ -39,19 +39,19 @@
             "name": "kubernetesServiceEndpoint",
             "type": "connectedService:kubernetes",
             "label": "Kubernetes Service Connection",
-            "helpMarkDown": "Select a Kubernetes Service Connection."
+            "helpMarkDown": "Select a Kubernetes service connection."
         },
         {
             "name": "containerregistrytype",
             "type": "pickList",
-            "label": "Container Registry Type",
+            "label": "Container Registry type",
             "defaultValue": "Azure Container Registry",
             "required": true,
             "options": {
                 "Azure Container Registry": "Azure Container Registry",
                 "Container Registry": "Container Registry"
             },
-            "helpMarkDown": "Select a Container Registry Type.",
+            "helpMarkDown": "Select a Container registry type.",
             "groupName": "registry"
         },
         {
@@ -66,7 +66,7 @@
             "name": "azureSubscriptionEndpoint",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
-            "helpMarkDown": "Select an Azure subscription",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
             "visibleRule": "containerregistrytype = Azure Container Registry",
             "required": true,
             "groupName": "registry"
@@ -75,7 +75,7 @@
             "name": "azureContainerRegistry",
             "label": "Azure Container Registry",
             "type": "pickList",
-            "helpMarkDown": "Select an Azure Container Registry",
+            "helpMarkDown": "Select an Azure Container Registry. Required for commands that need to authenticate with a registry.",
             "visibleRule": "containerregistrytype = Azure Container Registry",
             "required": true,
             "defaultValue": "",
@@ -87,15 +87,15 @@
             "label": "Secret name",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Secret name",
+            "helpMarkDown": "Name of the docker-registry secret. You can use this secret name in the Kubernetes YAML configuration file.",
             "groupName": "registry"
         },
         {
             "name": "forceUpdate",
             "type": "boolean",
-            "label": "Force Update secret",
+            "label": "Force update secret",
             "defaultValue": "true",
-            "helpMarkDown": "Recreate secret.",
+            "helpMarkDown": "Delete the docker-registry secret and create a new one with updated values.",
             "groupName": "registry"
         },
         {
@@ -127,7 +127,7 @@
             "type": "boolean",
             "label": "Use Configuration files",
             "defaultValue": "false",
-            "helpMarkDown": "Use configuration file for the command.",
+            "helpMarkDown": "Use Kubernetes configuration file or folder with the command.",
             "groupName": "commands"
         },
         {
@@ -136,7 +136,7 @@
             "label": "Configuration File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path to the Configuration file or directory.",
+            "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
             "visibleRule": "useConfigurationFile = true",
             "groupName": "commands"
         },
@@ -148,13 +148,13 @@
                 "rows": "2"
             },
             "label": "Arguments",
-            "helpMarkDown": "Command arguments",
+            "helpMarkDown": "Command arguments.",
             "groupName": "commands"
         },
         {
             "name": "cwd",
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "helpMarkDown": "Working directory for the Kubectl command.",
             "groupName": "commands"
@@ -169,7 +169,7 @@
                 "json": "json",
                 "yaml": "yaml"
             },
-            "helpMarkDown": "output file format.",
+            "helpMarkDown": "Output format.",
             "groupName": "output"
         },
         {
