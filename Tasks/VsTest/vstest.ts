@@ -179,7 +179,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(vstestConfig.testDropLocation)) {
+    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
@@ -533,7 +533,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(vstestConfig.testDropLocation)) {
+    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
@@ -871,7 +871,7 @@ function cleanUp(temporarySettingsFile: string) {
     }
 }
 
-function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
+function isTestAdapterPresent(rootDirectory: string): boolean {
     const allFiles = tl.find(rootDirectory);
     const adapterFiles = tl.match(allFiles, '**\\*TestAdapter.dll', { matchBase: true, nocase: true });
 
