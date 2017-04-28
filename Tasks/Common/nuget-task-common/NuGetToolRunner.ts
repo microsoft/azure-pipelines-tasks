@@ -61,6 +61,12 @@ function prepareNuGetExeEnvironment(
         env["NUGET_CREDENTIALPROVIDERS_PATH"] = credProviderPath;
     }
 
+    let httpProxy = getNuGetProxyFromEnvironment();
+    if (httpProxy) {
+        tl.debug(`Adding environment variable for NuGet proxy: ${httpProxy}`);
+        env["HTTP_PROXY"] = httpProxy;
+    }
+
     return env;
 }
 
@@ -276,4 +282,26 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
 
     tl.debug("Credential config is enabled.");
     return true;
+}
+
+export function getNuGetProxyFromEnvironment(): string {
+    let proxyUrl: string = tl.getVariable("agent.proxyurl");
+    let proxyUsername: string = tl.getVariable("agent.proxyusername");
+    let proxyPassword: string = tl.getVariable("agent.proxypassword");
+
+    if (proxyUrl !== undefined) {
+        let proxy: url.Url = url.parse(proxyUrl);
+
+        if (proxyUsername !== undefined) {
+            proxy.auth = proxyUsername;
+
+            if (proxyPassword !== undefined) {
+                proxy.auth += `:${proxyPassword}`;
+            }
+        }
+
+        return url.format(proxy);
+    }
+
+    return undefined;
 }
