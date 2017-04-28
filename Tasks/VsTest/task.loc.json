@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 39
+    "Patch": 40
   },
   "demands": [
     "vstest"
@@ -189,12 +189,13 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
-      "defaultValue": "15.0",
+      "defaultValue": "latest",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "visibleRule": "vstestLocationMethod = version",
       "groupName": "executionOptions",
       "options": {
+        "latest": "Latest",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015"
       }
@@ -347,6 +348,7 @@
     "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
+    "NoVstestFound": "ms-resource:loc.messages.NoVstestFound",
     "VstestFailed": "ms-resource:loc.messages.VstestFailed",
     "VstestTIANotSupported": "ms-resource:loc.messages.VstestTIANotSupported",
     "NoResultsToPublish": "ms-resource:loc.messages.NoResultsToPublish",
@@ -375,7 +377,7 @@
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
     "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
-    "vs2013NotSupportedInDta": "ms-resource:loc.messages.vs2013NotSupportedInDta",
+    "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
     "distributedTestWorkflow": "ms-resource:loc.messages.distributedTestWorkflow",
