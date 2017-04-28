@@ -475,7 +475,7 @@
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
         "PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
         "InvalidPollOption": "Invalid polling option provided: %s.",
-        "MissingWebConfigParameters": "Some web.config parameters are missing",
+        "MissingAppTypeWebConfigParameters": "-appType attribute is missing in Web.config parameters.",
         "AutoDetectDjangoSettingsFailed": "Unable to detect DJANGO_SETTINGS_MODULE (settings.py). Please ensure that the file exists or provide the correct path in Web.config parameters input in the following format '<folder_name>.settings'",
         "FailedToApplyTransformation": "Unable to apply transformation for the given package. Please follow below steps to debug the issue. \n1. Transformation is applied for MSBuild generated packge during build time. Remove <DependentUpon> Tag for each config file. \n2. Ensure that the config file and transformation file are present in the same folder inside the package.",
         "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Please be aware that transformation has no effect on connectioString attributes as the same value is overridden during deployment. You can disable the auto parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation."

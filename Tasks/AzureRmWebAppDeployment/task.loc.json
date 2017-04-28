@@ -475,7 +475,7 @@
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
-    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters",
+    "MissingAppTypeWebConfigParameters": "ms-resource:loc.messages.MissingAppTypeWebConfigParameters",
     "AutoDetectDjangoSettingsFailed": "ms-resource:loc.messages.AutoDetectDjangoSettingsFailed",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage"
