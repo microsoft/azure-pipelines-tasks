@@ -6,12 +6,9 @@ param()
 $serviceConnectionName = "random connection name"
 $composeFilePath = "docker-compose.yml"
 $applicationName = "fabric:/Application1"
-$serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $serverCertThumbprint = "random thumbprint"
 $userName = "random user"
 $password = "random password"
-$aadAuthority = "random authority"
-$accessToken = "random access token"
 $connectionEndpointFullUrl = "https://mycluster.com:19000"
 $connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 
@@ -47,38 +44,42 @@ Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
-$serviceFabricDockerComposeApplicationStatusPaged = @{
+$serviceFabricComposeApplicationStatusPaged = @{
     "ApplicationName"        = $applicationName
-    "DockerComposeApplicationStatus"    = "Created"
+    "ComposeApplicationStatus"    = "Created"
     "StatusDetails" = ""
 }
 
-# Need to store the bool in an object so the two lambdas will share the reference
+# Need to store the bool in an object so the lambdas will share the reference
 $removed = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
 $removed.Value = $false
 
-Register-Mock Get-ServiceFabricDockerComposeApplicationStatusPaged {
+Register-Mock Get-ServiceFabricComposeApplicationStatusPaged {
     if (($removed.Value -eq $true))
     {
         return $null;
     }
     else
     {
-        return $serviceFabricDockerComposeApplicationStatusPaged
+        return $serviceFabricComposeApplicationStatusPaged
     }
 } -ApplicationName: $applicationName
 
-Register-Mock Remove-ServiceFabricDockerComposeApplication {
+Register-Mock Remove-ServiceFabricComposeApplication {
     $removed.Value = $true
 } -Force: True -ApplicationName: $applicationName
 
-Register-Mock New-ServiceFabricDockerComposeApplication { } -ApplicationName: $applicationName
+Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
+
+Register-Mock New-ServiceFabricComposeApplication {
+    $removed.Value = $false
+} -- -Compose: $composeFilePath -ApplicationName: $applicationName
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
-Assert-WasCalled Get-ServiceFabricDockerComposeApplicationStatusPaged -Times 2
-Assert-WasCalled Remove-ServiceFabricDockerComposeApplication -Times 1
-Assert-WasCalled New-ServiceFabricDockerComposeApplication -Times 1
+Assert-WasCalled Get-ServiceFabricComposeApplicationStatusPaged -Times 3
+Assert-WasCalled Remove-ServiceFabricComposeApplication -Times 1
+Assert-WasCalled New-ServiceFabricComposeApplication -Times 1

@@ -44,17 +44,42 @@ Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
-Register-Mock Get-ServiceFabricDockerComposeApplicationStatusPaged { } -- -ApplicationTypeName $applicationTypeName
-Register-Mock Remove-ServiceFabricDockerComposeApplication { }
+$serviceFabricComposeApplicationStatusPaged = @{
+    "ApplicationName"        = $applicationName
+    "ComposeApplicationStatus"    = "Created"
+    "StatusDetails" = ""
+}
 
-$deployArgs = @("-ApplicationName:", $applicationName, "-Compose:", $composeFilePath)
-Register-Mock New-ServiceFabricDockerComposeApplication { } -- -Arguments $deployArgs
+# Need to store the bool in an object so the lambdas will share the reference
+$removed = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
+$removed.Value = $true
+
+Register-Mock Get-ServiceFabricComposeApplicationStatusPaged {
+    if (($removed.Value -eq $true))
+    {
+        return $null;
+    }
+    else
+    {
+        return $serviceFabricComposeApplicationStatusPaged
+    }
+} -ApplicationName: $applicationName
+
+Register-Mock Remove-ServiceFabricComposeApplication {
+    $removed.Value = $true
+} -Force: True -ApplicationName: $applicationName
+
+Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
+
+Register-Mock New-ServiceFabricComposeApplication {
+    $removed.Value = $false
+} -- -Compose: $composeFilePath -ApplicationName: $applicationName
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
-Assert-WasCalled Get-ServiceFabricDockerComposeApplicationStatusPaged
-Assert-WasCalled Remove-ServiceFabricDockerComposeApplication -Times 0
-Assert-WasCalled New-ServiceFabricDockerComposeApplication
+Assert-WasCalled Get-ServiceFabricComposeApplicationStatusPaged -Times 2
+Assert-WasCalled Remove-ServiceFabricComposeApplication -Times 0
+Assert-WasCalled New-ServiceFabricComposeApplication -Times 1
