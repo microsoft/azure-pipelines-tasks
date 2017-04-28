@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Deploy to Kubernetes",
-  "loc.helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=846415)",
   "loc.description": "Deploy of run a command on kubernetes cluster",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.registry": "Container Registry Details",
