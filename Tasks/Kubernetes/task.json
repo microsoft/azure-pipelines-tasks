@@ -3,7 +3,7 @@
     "name": "Kubernetes",
     "friendlyName": "Deploy to Kubernetes",
     "description": "Deploy of run a command on kubernetes cluster",
-    "helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=846415)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 1
     },
     "demands": [],
     "preview": "true",
