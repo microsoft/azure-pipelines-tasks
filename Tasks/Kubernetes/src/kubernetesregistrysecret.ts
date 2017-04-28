@@ -27,6 +27,7 @@ function deleteSecret(connection: ClusterConnection, secret: string): any {
     var executionOption : tr.IExecOptions = <any> {
                                                     silent: true,
                                                     failOnStdErr: false,
+                                                    ignoreReturnCode: true
                                                 };
 
     return connection.execCommand(command, executionOption);
