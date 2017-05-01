@@ -1,5 +1,6 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import ccUtil = require('codecoverage-tools/codecoverageutilities');
 
 // Main entry point of this task.
 async function run() {
@@ -19,7 +20,7 @@ async function run() {
         // It may contain wildcards allowing the path to change between builds, such as for:
         // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage\cobertura.xml
         var resolvedSummaryFile: string = resolvePathToSingleItem(workingDirectory, summaryFileLocation);
-        if (failIfCoverageIsEmpty && !resolvedSummaryFile) {
+        if (failIfCoverageIsEmpty && await ccUtil.isCodeCoverageFileEmpty(resolvedSummaryFile, codeCoverageTool)) {
             throw tl.loc('NoCodeCoverage');
         }
 
