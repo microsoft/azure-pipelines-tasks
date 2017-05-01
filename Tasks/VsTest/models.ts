@@ -1,3 +1,5 @@
+import * as version from './vstestversion';
+
 export interface TestConfigurations {
     sourceFilter: string[];
     testcaseFilter: string;
@@ -12,6 +14,7 @@ export interface TestConfigurations {
     vsTestLocationMethod: string;
     vsTestVersion: string;
     vsTestLocation: string;
+    vsTestVersionDetais: version.VSTestVersion;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
@@ -41,9 +44,9 @@ export interface DtaEnvironment {
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
-    publishRunAttachments: string;    
+    publishRunAttachments: string;
     vstestDiagFile: string;
-    ignoreVstestFailure: string;    
+    ignoreVstestFailure: string;
 }
 
 export interface TiaConfiguration {
