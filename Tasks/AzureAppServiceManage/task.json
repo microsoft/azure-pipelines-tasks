@@ -155,6 +155,14 @@
             "required": "True",
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
+        },
+        {
+            "name": "OutputVariable",
+            "type": "string",
+            "label": "Output variable",
+            "defaultValue": "",
+            "visibleRule": "Action = Install Extensions",
+            "helpMarkDown": "Provide comma separated list of variables that saves the local path of the extension which can be used in subsequent tasks."
         }
     ],
     "dataSourceBindings": [
