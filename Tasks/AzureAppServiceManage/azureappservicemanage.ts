@@ -56,6 +56,7 @@ async function run() {
         var targetSlot: string = tl.getInput('TargetSlot', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         var extensionList = tl.getInput('ExtensionsList', false);
+        var extensionOutputVariables = tl.getInput('OutputVariable').split(",");
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var taskResult = true;
@@ -87,7 +88,7 @@ async function run() {
                 resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
                 var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
                 tl.debug('Retrieved publishing Profile');
-                var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, extensionList.split(','));
+                var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, extensionList.split(','), extensionOutputVariables);
                 if(!anyExtensionInstalled) {
                     tl.debug('No new extension installed. Skipping Restart App Service.');
                     break;
