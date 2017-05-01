@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 116,
+    "Minor": 117,
     "Patch": 0
   },
   "demands": [],
@@ -57,6 +57,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty"
     }
   ],
   "execution": {
@@ -67,6 +75,7 @@
   },
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
-    "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound"
+    "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }
 }
