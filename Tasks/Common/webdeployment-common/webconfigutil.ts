@@ -26,33 +26,36 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
         },
         'python_Bottle': {
             'WSGI_HANDLER': 'app.wsgi_app()',
-            'PYTHON_PATH': 'D:\home\python353x86\python.exe',
-            'PYTHON_WFASTCGI_PATH': 'D:\home\python353x86\wfastcgi.py'
+            'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
+            'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py'
         },
         'python_Django': {
             'WSGI_HANDLER': 'django.core.wsgi.get_wsgi_application()',
-            'PYTHON_PATH': 'D:\home\python353x86\python.exe',
-            'PYTHON_WFASTCGI_PATH': 'D:\home\python353x86\wfastcgi.py',
+            'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
+            'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py',
             'DJANGO_SETTINGS_MODULE': ''
         },
         'python_Flask': {
             'WSGI_HANDLER': 'main.app',
-            'PYTHON_PATH': 'D:\home\python353x86\python.exe',
-            'PYTHON_WFASTCGI_PATH': 'D:\home\python353x86\wfastcgi.py',
+            'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
+            'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py',
             'STATIC_FOLDER_PATH': 'static'
         }
     };
 
     var selectedAppTypeParams = paramDefaultValue[appType];
+    var resultAppTypeParams = {};
     for(var paramAtttribute in selectedAppTypeParams) {
         if(webConfigParameters[paramAtttribute]) {
-            selectedAppTypeParams = webConfigParameters[paramAtttribute].value;
+            tl.debug("param Attribute'" + paramAtttribute + "' values provided as: " + webConfigParameters[paramAtttribute].value);
+            resultAppTypeParams[paramAtttribute] = webConfigParameters[paramAtttribute].value;
         }
         else {
-            tl.debug("param Attribute '" + paramAtttribute + "' is not provided. Overriding the value with '" + selectedAppTypeParams[paramAtttribute] + "'");
+            tl.debug("param Attribute '" + paramAtttribute + "' is not provided. Overriding the value with '" + selectedAppTypeParams[paramAtttribute]+ "'");
+            resultAppTypeParams[paramAtttribute] = selectedAppTypeParams[paramAtttribute];
         }
     }
-    return selectedAppTypeParams;
+    return resultAppTypeParams;
 }
 export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirectoryPath: string) {
     //Generate the web.config file if it does not already exist.
@@ -83,7 +86,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                     webConfigParameters['DJANGO_SETTINGS_MODULE'] = getDjangoSettingsFile(folderPath);
                 }
             }
-            generateWebConfigFile(webConfigPath, appType, webConfigParameters);
+            generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);
             console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
         }
         catch (error) {
