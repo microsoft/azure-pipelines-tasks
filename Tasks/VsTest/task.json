@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 40
+        "Patch": 41
     },
     "demands": [
         "vstest"
@@ -398,7 +398,7 @@
         "vsVersionSelected": "VisualStudio version selected for test execution : %s",
         "runTestsLocally": "Run the tests locally using %s",
         "vstestLocationSpecified": "%s, specified location : %s",
-        "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution "
-
+        "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
+        "pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and the directory should exist."
     }
 }

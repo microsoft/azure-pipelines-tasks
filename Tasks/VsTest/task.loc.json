@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 40
+    "Patch": 41
   },
   "demands": [
     "vstest"
@@ -398,6 +398,7 @@
     "vsVersionSelected": "ms-resource:loc.messages.vsVersionSelected",
     "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
-    "uitestsparallel": "ms-resource:loc.messages.uitestsparallel"
+    "uitestsparallel": "ms-resource:loc.messages.uitestsparallel",
+    "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid"
   }
 }

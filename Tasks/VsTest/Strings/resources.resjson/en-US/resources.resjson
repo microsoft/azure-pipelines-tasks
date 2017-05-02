@@ -109,5 +109,6 @@
   "loc.messages.vsVersionSelected": "VisualStudio version selected for test execution : %s",
   "loc.messages.runTestsLocally": "Run the tests locally using %s",
   "loc.messages.vstestLocationSpecified": "%s, specified location : %s",
-  "loc.messages.uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution "
+  "loc.messages.uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
+  "loc.messages.pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and the directory should exist."
 }

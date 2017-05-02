@@ -51,6 +51,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.CustomTestAdapters', this.dtaTestConfig.pathtoCustomTestAdapters);
 
         // If we are setting the path version is not needed
         const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetais.vstestExeLocation);
