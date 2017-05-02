@@ -94,6 +94,7 @@ async function run() {
             var azureWebAppDetails = null;
             var virtualApplicationPhysicalPath = null;
             if(virtualApplication) {
+                virtualApplication = (virtualApplication.startsWith("/")) ? virtualApplication.substr(1) : virtualApplication;
                 azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
                 var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
