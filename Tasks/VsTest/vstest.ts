@@ -248,6 +248,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     let title: string;
     let platformInput: string;
     let configurationInput: string;
+    let useTestCaseFilterInResponseFile: string;
     const defer = Q.defer<string>();
     const respFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tl.debug('Response file will be generated at ' + respFile);
@@ -281,6 +282,12 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
         configurationInput = '';
     }
 
+    if (tiaConfig.useTestCaseFilterInResponseFile && tiaConfig.useTestCaseFilterInResponseFile.toUpperCase() === 'TRUE') {
+        useTestCaseFilterInResponseFile = 'true';
+    } else {
+        useTestCaseFilterInResponseFile = 'false';
+    }
+
     selectortool.exec({
         cwd: null,
         env: {
@@ -297,7 +304,8 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
             'baselinebuildfilepath': tiaConfig.baseLineBuildIdFile,
             'context': tiaConfig.context,
             'platform': platformInput,
-            'configuration': configurationInput
+            'configuration': configurationInput,
+            'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile
         },
         silent: null,
         failOnStdErr: null,

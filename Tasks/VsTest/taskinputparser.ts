@@ -183,9 +183,9 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 
-function getTiaConfiguration() : models.TiaConfiguration {
+function getTiaConfiguration(): models.TiaConfiguration {
     const tiaConfiguration = {} as models.TiaConfiguration;
-    tiaConfiguration.tiaEnabled =  tl.getBoolInput('runOnlyImpactedTests');
+    tiaConfiguration.tiaEnabled = tl.getBoolInput('runOnlyImpactedTests');
     tiaConfiguration.tiaRebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
@@ -194,10 +194,20 @@ function getTiaConfiguration() : models.TiaConfiguration {
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
     const useNewCollector = tl.getVariable('tia.useNewCollector');
-    if ( useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
+    if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
         tiaConfiguration.useNewCollector = true;
     }
-    tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
+
+    var buildReason = tl.getVariable('Build.Reason');
+
+    // https://www.visualstudio.com/en-us/docs/build/define/variables
+    if (buildReason && buildReason === "PullRequest") {
+        tiaConfiguration.isPrFlow = "true";
+    }
+    else {
+        tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
+    }
+    tiaConfiguration.useTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');
 
     const releaseuri = tl.getVariable('release.releaseUri')
     tiaConfiguration.context = 'CI';
