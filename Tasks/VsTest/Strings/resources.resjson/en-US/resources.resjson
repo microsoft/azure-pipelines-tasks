@@ -2,7 +2,7 @@
   "loc.friendlyName": "Visual Studio Test",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Run tests with Visual Studio test runner",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.group.displayName.testSelection": "Test selection",
   "loc.group.displayName.executionOptions": "Execution options",
   "loc.group.displayName.reportingOptions": "Reporting options",
@@ -109,5 +109,7 @@
   "loc.messages.vsVersionSelected": "VisualStudio version selected for test execution : %s",
   "loc.messages.runTestsLocally": "Run the tests locally using %s",
   "loc.messages.vstestLocationSpecified": "%s, specified location : %s",
-  "loc.messages.uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution "
+  "loc.messages.uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
+  "loc.messages.pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and the directory should exist.",
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
 }

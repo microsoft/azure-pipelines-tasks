@@ -117,6 +117,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+    if (testConfiguration.pathtoCustomTestAdapters &&
+        !utils.Helper.pathExistsAsDirectory(testConfiguration.pathtoCustomTestAdapters)) {
+        throw new Error(tl.loc('pathToCustomAdaptersInvalid', testConfiguration.pathtoCustomTestAdapters));
+    }
+
     tl._writeLine(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
 
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');

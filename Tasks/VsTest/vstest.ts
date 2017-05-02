@@ -130,14 +130,12 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     argsArray.push('/logger:trx');
-    if (vstestConfig.pathtoCustomTestAdapters) {
-        if (pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
-            argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
-        } else {
-            argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
-        }
-    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-        argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+    if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
+        if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
+                argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+            }
+    } else {
+        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
 
     if (isDebugEnabled()) {
@@ -826,8 +824,7 @@ function cleanUp(temporarySettingsFile: string) {
 }
 
 function isTestAdapterPresent(rootDirectory: string): boolean {
-    const allFiles = tl.find(rootDirectory);
-    const adapterFiles = tl.match(allFiles, '**\\*TestAdapter.dll', { matchBase: true, nocase: true });
+    const adapterFiles = tl.findMatch(rootDirectory, '**\\*TestAdapter.dll');
 
     if (adapterFiles && adapterFiles.length !== 0) {
         return true;
