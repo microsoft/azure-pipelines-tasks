@@ -228,7 +228,7 @@ export async function getProvisioningProfileType(provProfilePath: string) {
         //get ProvisionsAllDevices - this will exist for enterprise profiles
         var provisionsAllDevices: string = await printFromPlist('ProvisionsAllDevices', tmpPlist);
         tl.debug('provisionsAllDevices = ' + provisionsAllDevices);
-        if (provisionsAllDevices && provisionsAllDevices.toLowerCase() === 'true') {
+        if (provisionsAllDevices && provisionsAllDevices.trim().toLowerCase() === 'true') {
             //ProvisionsAllDevices = true in enterprise profiles
             provProfileType = 'enterprise';
         } else {
