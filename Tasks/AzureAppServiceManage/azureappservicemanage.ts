@@ -29,16 +29,22 @@ async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, 
 }
 
 async function waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName) {
-    var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
-    if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state"))
-    {
-        tl.debug('App Service State : ' + appServiceDetails.properties.state);
-        while(!(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running"))
-        {
-            appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+
+    while(true) {
+        var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+        if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state")) {
             tl.debug('App Service State : ' + appServiceDetails.properties.state);
+            if(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running") {
+                tl.debug('App Service is in Running State');
+                break;
+            }
+            else {
+                tl.debug('App Service State : ' + appServiceDetails.properties.state);
+                continue;
+            }
         }
-        tl.debug('App Service is in Running State');
+        tl.debug('Unable to find state of the App Service.');
+        break;
     }
 }
 
