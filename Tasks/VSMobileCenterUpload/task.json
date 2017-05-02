@@ -12,7 +12,6 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-
         "Minor": 117,
         "Patch": 0
     },
@@ -106,7 +105,7 @@
             "label": "Include All Items in Parent Folder",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Upload the selected symbols file / folder and all other items inside the same parent folder, this is required for React Native apps."
+            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
         },
         {
             "name": "releaseNotesSelection",
