@@ -11,12 +11,12 @@
   "loc.input.help.version": "Version of the package",
   "loc.input.label.downloadPath": "Destination directory",
   "loc.input.help.downloadPath": "Path on the agent machine where the package will be downloaded",
-  "loc.messages.FailedToGetPackageMetadata": "Failed to get package metadata with error {0}",
-  "loc.messages.FailedToDownloadNugetPackage": "Failed to download NuGet package from {0} got the following error: {1}",
+  "loc.messages.FailedToGetPackageMetadata": "Failed to get package metadata with error %s",
+  "loc.messages.FailedToDownloadNugetPackage": "Failed to download NuGet package from %s got the following error: %s",
   "loc.messages.PackageDownloadSuccessful": "Package download successful",
   "loc.messages.CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
-  "loc.messages.StartingDownloadOfPackage": "Starting download of NuGet package {0} to location {1}",
-  "loc.messages.ExtractingNugetPackage": "Extracting NuGet package {0} to directory {1}",
+  "loc.messages.StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
+  "loc.messages.ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
   "loc.messages.PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
-  "loc.messages.ExtractionFailed": "Failed to extract package with error {0}"
+  "loc.messages.ExtractionFailed": "Failed to extract package with error %s"
 }

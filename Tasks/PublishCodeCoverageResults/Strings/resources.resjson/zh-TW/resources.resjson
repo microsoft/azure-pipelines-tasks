@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "發行程式碼涵蓋範圍結果",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
-  "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
+  "loc.description": "發行組建中的 Cobertura 或 JaCoCo 程式碼涵蓋範圍結果",
+  "loc.instanceNameFormat": "發行 $(summaryFileLocation) 中的程式碼涵蓋範圍",
   "loc.input.label.codeCoverageTool": "程式碼涵蓋範圍工具",
-  "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "用以產生程式碼涵蓋範圍結果的工具。",
   "loc.input.label.summaryFileLocation": "摘要檔",
-  "loc.input.help.summaryFileLocation": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
+  "loc.input.help.summaryFileLocation": "摘要檔案的路徑。該摘要檔案包含程式碼涵蓋範圍統計資料，例如折線圖、方法及類別涵蓋範圍。此值可包含 minimatch 格式。例如 '$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml'",
   "loc.input.label.reportDirectory": "報告目錄",
-  "loc.input.help.reportDirectory": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
+  "loc.input.help.reportDirectory": "程式碼涵蓋範圍 HTML 報表目錄的路徑。此報表目錄會發行為組建成品，供之後檢視用。例如 '$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura'",
   "loc.input.label.additionalCodeCoverageFiles": "其他檔案",
-  "loc.input.help.additionalCodeCoverageFiles": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`",
-  "loc.messages.FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
-  "loc.messages.MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s"
+  "loc.input.help.additionalCodeCoverageFiles": "指定任何其他要發行為組件成品之程式碼涵蓋範圍檔案的檔案路徑格式。此值可以包含 minimatch 格式。例如: '$(System.DefaultWorkingDirectory)/**/*.exec'",
+  "loc.messages.FoundNMatchesForPattern": "找到 %s 個結果符合格式: %s",
+  "loc.messages.MultipleSummaryFilesFound": "找到多個相符的檔案或目錄。將使用第一個相符項目: %s"
 }

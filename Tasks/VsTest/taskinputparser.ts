@@ -5,10 +5,10 @@ import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
 import * as utils from './helpers';
 import * as os from 'os';
-
+import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
 
-export function getDistributedTestConfigurations(): models.DtaTestConfigurations {
+export function getDistributedTestConfigurations() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
@@ -41,7 +41,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     return dtaConfiguration;
 }
 
-export function getvsTestConfigurations(): models.VsTestConfigurations {
+export function getvsTestConfigurations() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
@@ -117,6 +117,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+    if (testConfiguration.pathtoCustomTestAdapters &&
+        !utils.Helper.pathExistsAsDirectory(testConfiguration.pathtoCustomTestAdapters)) {
+        throw new Error(tl.loc('pathToCustomAdaptersInvalid', testConfiguration.pathtoCustomTestAdapters));
+    }
+
     tl._writeLine(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
 
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
@@ -155,6 +160,10 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             tl._writeLine('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
+        if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+            && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
+            throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
+        }
         tl._writeLine(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
@@ -170,6 +179,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     if (!testConfiguration.vs15HelperPath) {
         testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
     }
+
+    versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 
 function getTiaConfiguration(): models.TiaConfiguration {

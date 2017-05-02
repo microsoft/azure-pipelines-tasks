@@ -11,6 +11,8 @@ import GenericAuthenticationTokenProvider from "docker-common/registryauthentica
 
 import Q = require('q');
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 

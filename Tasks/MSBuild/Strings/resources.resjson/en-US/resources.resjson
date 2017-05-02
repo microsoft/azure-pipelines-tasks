@@ -27,13 +27,7 @@
   "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildLocation": "Path to MSBuild",
   "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild.",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
-  "loc.messages.MSB_Build0": "Build {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent"
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

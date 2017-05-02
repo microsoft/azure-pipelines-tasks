@@ -5,7 +5,7 @@ import Q = require('q');
 import models = require('./models');
 import taskInputParser = require('./taskinputparser');
 import settingsHelper = require('./settingshelper');
-import versionFinder = require('./versionfinder');
+import vstestVersion = require('./vstestversion');
 import * as utils from './helpers';
 import * as outStream from './outputstream';
 
@@ -22,13 +22,12 @@ const testSettingsExt = '.testsettings';
 
 let vstestConfig: models.VsTestConfigurations = undefined;
 let tiaConfig: models.TiaConfiguration = undefined;
-let vstestRunnerDetails: versionFinder.VSTestVersion = undefined;
 const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
 let resultsDirectory = null;
 
-export async function startTest() {
+export function startTest() {
     try {
         tl._writeLine(tl.loc('runTestsLocally', 'vstest.console.exe'));
         tl._writeLine('========================================================');
@@ -36,8 +35,6 @@ export async function startTest() {
         tl._writeLine('========================================================');
 
         tiaConfig = vstestConfig.tiaConfig;
-        const vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
-        vstestRunnerDetails = getVsTestRunnerDetails(vstestlocation);
 
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
@@ -91,46 +88,6 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-function getVsTestRunnerDetails(vstestexeLocation: string): versionFinder.VSTestVersion {
-    const vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
-    const wmicTool = tl.tool('wmic');
-    const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
-    wmicTool.arg(wmicArgs);
-    const output = wmicTool.execSync();
-    tl.debug('VSTest Version information: ' + output.stdout);
-
-    const verSplitArray = output.stdout.split('=');
-    if (verSplitArray.length !== 2) {
-        tl.error(tl.loc('ErrorReadingVstestVersion'));
-        throw new Error(tl.loc('ErrorReadingVstestVersion'));
-    }
-
-    const versionArray = verSplitArray[1].split('.');
-    if (versionArray.length !== 4) {
-        tl.warning(tl.loc('UnexpectedVersionString', output.stdout));
-        throw new Error(tl.loc('UnexpectedVersionString', output.stdout));
-    }
-
-    const majorVersion = parseInt(versionArray[0]);
-    const minorVersion = parseInt(versionArray[1]);
-    const patchNumber = parseInt(versionArray[2]);
-
-    if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
-        tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-        throw new Error(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-    }
-
-    switch (majorVersion) {
-        case 14:
-            return new versionFinder.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
-
-        case 15:
-            return new versionFinder.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
-    }
-
-    return new versionFinder.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
-}
-
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
     const argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
@@ -173,18 +130,16 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     argsArray.push('/logger:trx');
-    if (vstestConfig.pathtoCustomTestAdapters) {
-        if (pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
-            argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
-        } else {
-            argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
-        }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
-        argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+    if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
+        if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
+                argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+            }
+    } else {
+        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
 
     if (isDebugEnabled()) {
-        if (vstestRunnerDetails != null && vstestRunnerDetails.vstestDiagSupported()) {
+        if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.vstestDiagSupported()) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
@@ -462,7 +417,7 @@ function publishCodeChanges(): Q.Promise<string> {
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     const defer = Q.defer<number>();
-    const vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
+    const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
     // Adding the other console options here
@@ -541,7 +496,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
@@ -549,7 +504,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         argsArray.push('/UseVsixExtensions:true');
     }
 
-    let vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
+    let vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
 
     if (vsVersion === 14.0) {
         tl.debug('Visual studio 2015 selected. Selecting vstest.console.exe in task ');
@@ -581,7 +536,7 @@ function cleanFiles(responseFile: string, listFile: string): void {
 }
 
 function deleteVstestDiagFile(): void {
-    if (pathExistsAsFile(vstestConfig.vstestDiagFile)) {
+    if (vstestConfig && vstestConfig.vstestDiagFile && pathExistsAsFile(vstestConfig.vstestDiagFile)) {
         tl.debug('Deleting vstest diag file ' + vstestConfig.vstestDiagFile);
         tl.rmRF(vstestConfig.vstestDiagFile, true);
     }
@@ -788,9 +743,6 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     const defer = Q.defer<number>();
-    if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === 'latest') {
-        vstestConfig.vsTestVersion = null;
-    }
 
     try {
         const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
@@ -798,7 +750,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             tiaConfig.tiaEnabled = false;
         }
 
-        if (tiaConfig.tiaEnabled && (vstestRunnerDetails === null || !vstestRunnerDetails.isTestImpactSupported())) {
+        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetais === null || !vstestConfig.vsTestVersionDetais.isTestImpactSupported())) {
             tl.warning(tl.loc('VstestTIANotSupported'));
             tiaConfig.tiaEnabled = false;
         }
@@ -809,14 +761,14 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     // We need to use private data collector dll
-    if (vstestRunnerDetails !== null) {
-        tiaConfig.useNewCollector = vstestRunnerDetails.isPrivateDataCollectorNeededForTIA();
+    if (vstestConfig.vsTestVersionDetais !== null) {
+        tiaConfig.useNewCollector = vstestConfig.vsTestVersionDetais.isPrivateDataCollectorNeededForTIA();
     }
 
     setRunInParallellIfApplicable();
 
     let newSettingsFile = vstestConfig.settingsFile;
-    const vsVersion = vstestRunnerDetails.majorVersion;
+    const vsVersion = vstestConfig.vsTestVersionDetais.majorVersion;
 
     if (newSettingsFile) {
         if (!pathExistsAsFile(newSettingsFile)) {
@@ -879,21 +831,11 @@ function cleanUp(temporarySettingsFile: string) {
     }
 }
 
-function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
-    const allFiles = tl.find(rootDirectory);
-    const adapterFiles = tl.match(allFiles, '**\\packages\\**\\*TestAdapter.dll', { matchBase: true, nocase: true });
+function isTestAdapterPresent(rootDirectory: string): boolean {
+    const adapterFiles = tl.findMatch(rootDirectory, '**\\*TestAdapter.dll');
 
     if (adapterFiles && adapterFiles.length !== 0) {
-        for (let i = 0; i < adapterFiles.length; i++) {
-            const adapterFile = adapterFiles[i];
-            const packageIndex = adapterFile.indexOf('packages') + 7;
-            const packageFolder = adapterFile.substr(0, packageIndex);
-            const parentFolder = path.dirname(packageFolder);
-            const solutionFiles = tl.match(allFiles, path.join(parentFolder, '*.sln'), { matchBase: true, nocase: true });
-            if (solutionFiles && solutionFiles.length !== 0) {
-                return true;
-            }
-        }
+        return true;
     }
     return false;
 }
@@ -932,7 +874,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
 function setRunInParallellIfApplicable() {
     if (vstestConfig.runInParallel) {
-        if (vstestRunnerDetails != null && vstestRunnerDetails.isRunInParallelSupported()) {
+        if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.isRunInParallelSupported()) {
             return;
         }
 

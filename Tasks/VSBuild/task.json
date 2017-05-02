@@ -137,11 +137,12 @@
     },
     "messages": {
         "MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
-        "MSBuildNotFoundVersion0Architecture1": "MSBuild not found for version '{0}' and architecture '{1}'.",
         "MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
         "UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",
         "VSLocationDeprecated0": "The Visual Studio location parameter has been deprecated. Ignoring value '{0}'",
-        "VSNotFoundTry": "Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
-        "VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' not found. Looking for the latest version."
+        "VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+        "VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+        "VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+        "VSVersion15NotFound": "Visual Studio 2017 was not found."
     }
 }

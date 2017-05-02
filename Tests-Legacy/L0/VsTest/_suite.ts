@@ -194,6 +194,32 @@ describe('VsTest Suite', function () {
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/path/to/test.dll');
         tr.setInput('vsTestVersion', 'latest');
+        tr.setInput('vstestLocationMethod', 'version');
+
+        tr.run()
+            .then(() => {
+                console.log(tr.stdout);
+                assert(tr.resultWasSet, 'task should have set a result' + tr.stderr + tr.stdout);
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr + tr.stdout);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest' + tr.stdout + tr.stderr);
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('VSTest task with only VS2015 installed on build agent and latest option is selected in definition', (done) => {
+
+        const vstestCmd = ['\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe', '/path/to/test.dll', '/logger:trx'].join(' ');
+        setResponseFile('vs2015.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/path/to/test.dll');
+        tr.setInput('vsTestVersion', 'latest');
+        tr.setInput('vstestLocationMethod', 'version');
 
         tr.run()
             .then(() => {
@@ -417,7 +443,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -431,33 +457,6 @@ describe('VsTest Suite', function () {
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task./) >= 0, 'should have given a warning for ui tests and run in parallel selection.');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Vstest task with run in parallel and vs 2013', (done) => {
-
-        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx'].join(' ');
-        setResponseFile('vstestGood.json');
-
-        const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
-        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
-        tr.setInput('vstestLocationMethod', 'version');
-        tr.setInput('vsTestVersion', '12.0');
-        tr.setInput('runInParallel', 'true');
-
-        tr.run()
-            .then(() => {
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
-                assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
-                assert(tr.stdout.search(/Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel./) >= 0, 'should have given a warning for update3 or higher requirement');
                 done();
             })
             .fail((err) => {
@@ -570,7 +569,7 @@ describe('VsTest Suite', function () {
             });
     })
 
-    it('Vstest task with Nuget restored adapter path', (done) => {
+    it('Vstest task with test adapter should be found automatically', (done) => {
 
         const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:/source/dir'].join(' ');
         setResponseFile('vstestGoodwithNugetAdapter.json');
@@ -941,6 +940,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -957,6 +957,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -973,6 +974,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -990,6 +992,7 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 
@@ -1006,6 +1009,40 @@ describe('VsTest Suite', function () {
                       });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('Updating runsettings with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutRunConfiguration.runsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            let webAppUrlValue = '';
+            let webAppPasswordValue = '';
+
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            const parametersArray = settings.RunSettings.TestRunParameters[0].Parameter;
+                            parametersArray.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl') {
+                                    webAppUrlValue = parameter.$.Value;
+                                } else if (parameter.$.Name === 'webAppInvalid') {
+                                    assert.fail(parameter.$.Name, undefined, 'test param should not exist');
+                                } else if (parameter.$.name === 'webAppPassword') {
+                                    webAppPasswordValue = parameter.$.value;
+                                }
+                            });
+
+                            assert.equal(webAppUrlValue, 'testVal', 'test run parameters must be overridden');
+                            assert.equal(webAppPasswordValue, 'testPass', 'test run parameters must be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
         }
     });
 

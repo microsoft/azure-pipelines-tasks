@@ -41,8 +41,8 @@ function InstallTestAgent2017 {
     $p.Start()
 
     # it shouldn't take more than 1hr.
-    if ($p.WaitForExit(3600000)) {
-        Write-Warning "Installation couldn't get completed in an hour. Terminating the process".
+    if (-not $p.WaitForExit(3600000)) {
+        Write-Warning "Installation couldn't get completed in an hour. Terminating the process. Please check %temp% logs for more information".
         Stop-Process $p -ErrorAction SilentlyContinue
         return -1
     } 

@@ -17,12 +17,11 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 38
+        "Patch": 43
     },
     "demands": [
         "vstest"
     ],
-    "preview": "true",
     "releaseNotes" : "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
     "minimumAgentVersion": "1.89.0",
     "groups": [
@@ -185,16 +184,17 @@
                 "location": "Specific location"
             }
         },
-        {
+        {  
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "Test platform version",
-            "defaultValue": "15.0",
+            "defaultValue": "latest",
             "required": false,
             "helpMarkDown": "The version of Visual Studio test to use.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
              "options": {
+                 "latest": "Latest",
                  "15.0": "Visual Studio 2017",
                  "14.0": "Visual Studio 2015"
             }
@@ -336,7 +336,7 @@
             "authKey": "tfs:teamfoundation"
         }
     ],
-    "instanceNameFormat": "Test Assemblies",
+    "instanceNameFormat": "VsTest - $(testSelector)",
     "execution": {
         "Node": {
             "target": "runvstest.js"
@@ -347,6 +347,7 @@
         "VstestReturnCode": "Vstest exited with return code: %d.",
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Visual Studio %d is not found. Try again with a version that exists on your build agent machine.",
+        "NoVstestFound": "Test platform is not found. Try again after installing it on your build agent machine.",
         "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
         "VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
         "NoResultsToPublish": "No results found to publish.",
@@ -375,10 +376,10 @@
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
         "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
-        "vs2013NotSupportedInDta": "Running tests using Visual Studio 2013 with multi-agent phase settings is not supported.",
+        "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
         "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
-        "distributedTestWorkflow": "In distributed testing flow....",
+        "distributedTestWorkflow": "In distributed testing flow",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
         "testSelectorInput": "Test selector : %s",
         "searchFolderInput": "Search folder : %s",
@@ -394,9 +395,10 @@
         "testSuiteSelected": "Test suite Id selected: %s",
         "testAssemblyFilterInput": "Test assembly filter : %s",
         "vsVersionSelected": "VisualStudio version selected for test execution : %s",
-        "runTestsLocally": "Run the tests locally using %s....",
+        "runTestsLocally": "Run the tests locally using %s",
         "vstestLocationSpecified": "%s, specified location : %s",
-        "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution "
-
+        "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
+        "pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and the directory should exist.",
+        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
     }
 }

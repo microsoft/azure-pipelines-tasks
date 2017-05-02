@@ -17,12 +17,11 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 38
+    "Patch": 43
   },
   "demands": [
     "vstest"
   ],
-  "preview": "true",
   "releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
   "minimumAgentVersion": "1.89.0",
   "groups": [
@@ -189,12 +188,13 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
-      "defaultValue": "15.0",
+      "defaultValue": "latest",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "visibleRule": "vstestLocationMethod = version",
       "groupName": "executionOptions",
       "options": {
+        "latest": "Latest",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015"
       }
@@ -347,6 +347,7 @@
     "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
+    "NoVstestFound": "ms-resource:loc.messages.NoVstestFound",
     "VstestFailed": "ms-resource:loc.messages.VstestFailed",
     "VstestTIANotSupported": "ms-resource:loc.messages.VstestTIANotSupported",
     "NoResultsToPublish": "ms-resource:loc.messages.NoResultsToPublish",
@@ -375,7 +376,7 @@
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
     "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
-    "vs2013NotSupportedInDta": "ms-resource:loc.messages.vs2013NotSupportedInDta",
+    "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
     "distributedTestWorkflow": "ms-resource:loc.messages.distributedTestWorkflow",
@@ -396,6 +397,8 @@
     "vsVersionSelected": "ms-resource:loc.messages.vsVersionSelected",
     "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
-    "uitestsparallel": "ms-resource:loc.messages.uitestsparallel"
+    "uitestsparallel": "ms-resource:loc.messages.uitestsparallel",
+    "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid",
+    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters"
   }
 }

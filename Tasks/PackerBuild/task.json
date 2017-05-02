@@ -1,11 +1,11 @@
 {
     "id": "845fd4f4-642d-4694-8514-047948a5a556",
     "name": "PackerBuild",
-    "friendlyName": "Bake immutable machine image (PREVIEW)",
-    "description": "Bake immutable machine image using Packer tool. This image can be used for Azure VMSS deployment",
+    "friendlyName": "Build Machine Image (PREVIEW)",
+    "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
     "category": "Deploy",
-    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports baking images for both windows and linux. These images can be used to deploy Azure VMSS.",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
     "visibility": [
         "Build",
         "Release"
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -69,9 +69,9 @@
         {
             "name": "location",
             "type": "pickList",
-            "label": "Location of bake",
+            "label": "Storage location",
             "required": true,
-            "helpMarkDown": "Location for storing the baked machine image. This location will also be used to create a temporary VM for the purpose of baking image.",
+            "helpMarkDown": "Location for storing the built machine image. This location will also be used to create a temporary VM for the purpose of building image.",
             "groupName": "AzureDetails"
         },
         {
@@ -79,7 +79,7 @@
             "type": "pickList",
             "label": "Storage account",
             "required": true,
-            "helpMarkDown": "Storage account for storing the baked machine image. This storage account must be pre-existing in the location selected.",
+            "helpMarkDown": "Storage account for storing the built machine image. This storage account must be pre-existing in the location selected.",
             "groupName": "AzureDetails"
         },
         {
@@ -158,10 +158,9 @@
         {
             "name": "packagePath",
             "type": "filePath",
-            "label": "Application Package/folder",
+            "label": "Deployment Package",
             "required": true,
-            "defaultValue": "**//*.zip",
-            "helpMarkDown": "Specify the path for application package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
+            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp",
             "groupName": "DeploymentInputs"
         },
         {
@@ -169,7 +168,7 @@
             "type": "string",
             "label": "Deployment script",
             "required": true,
-            "helpMarkDown": "Specify the relative path to powershell script(for windows VMSS) or shell script(for linux VMSS) which deploys provided application package. Path should be relative to package path selected above. Supports minimatch pattern.",
+            "helpMarkDown": "Specify the relative path to powershell script(for Windows) or shell script(for Linux) which deploys the package. This script should be contained in the package path selected above. Supports minimatch pattern. Example path: deploy/**/scripts/windows/deploy.ps1",
             "groupName": "DeploymentInputs"
         },
         {
@@ -217,7 +216,7 @@
         }
     ],
     "sourceDefinitions": [],
-    "instanceNameFormat": "Bake immutable image",
+    "instanceNameFormat": "Build immutable image",
     "execution": {
         "Node": {
             "target": "src//main.js"
