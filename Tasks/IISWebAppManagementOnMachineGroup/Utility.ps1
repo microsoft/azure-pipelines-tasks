@@ -12,6 +12,14 @@ function Set-IISWebSite
         [string] $physicalPathAuthUserPassword ,
 
         [string] $addBinding,
+        [string] $protocol,
+        [string] $ipAddress,
+        [string] $port,
+        [string] $serverNameIndication ,
+        [string] $hostNameWithOutSNI,
+        [string] $hostNameWithHttp,
+        [string] $hostNameWithSNI,
+        [string] $sslCertThumbPrint,
         [string] $bindings,
 
         [string] $createOrUpdateAppPool,
@@ -38,7 +46,19 @@ function Set-IISWebSite
             
             if($addBinding -eq "true") 
             {
-                $bindingsArray = Validate-Bindings -bindings $bindings
+                if([string]::IsNullOrWhiteSpace($bindings)) {
+                    $bindingsArray = @(@{
+                        protocol = $protocol.Trim();
+                        ipAddress = $ipAddress.Trim();
+                        port = $port.Trim();
+                        sniFlag = $serverNameIndication;
+                        sslThumbprint = Repair-Inputs -sslCertThumbPrint ([ref]$sslCertThumbPrint) -ipAddress $ipAddress -protocol $protocol -port $port;
+                        hostname = Get-Hostname -port $port -hostNameWithSNI $hostNameWithSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication
+                    })
+                }
+                else {
+                    $bindingsArray = Validate-Bindings -bindings $bindings
+                }
             }
 
             if($physicalPathAuth -ieq "WebsiteWindowsAuth") 
@@ -198,7 +218,7 @@ function Get-CustomCredentials {
     return $credentials
 }
 
-function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser)
+function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint, [string]$protocol, [string]$ipAddress, [string]$port)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
@@ -226,6 +246,23 @@ function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]
     {
         $physicalPathAuthuser.Value = $physicalPathAuthuser.Value.Trim()
     }
+    if($sslCertThumbPrint -ne $null -and -not [string]::IsNullOrWhiteSpace($sslCertThumbPrint.Value))
+    {
+        if([regex]::IsMatch($sslCertThumbPrint.Value, "[^a-fA-F0-9]+"))
+        {
+            Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharactersInBinding" -ArgumentList $protocol, $ipAddress, $port)
+        }
+
+        $sslCertThumbPrint.Value = [Regex]::Replace($sslCertThumbPrint.Value, "[^a-fA-F0-9]+" , "")
+        
+        # Mark the SSL thumbprint value to be a secret value 
+        if(($sslCertThumbPrint.Value.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint.Value, "[a-fA-F0-9]{40}"))){
+            throw (Get-VstsLocString -Key "InvalidSslThumbprintInBinding" -ArgumentList $protocol, $ipAddress, $port)
+        }
+
+        $sslCertThumbprintSecretValue = $sslCertThumbPrint.Value
+        Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprintSecretValue"
+    }
 }
 
 function Test-Inputs
@@ -240,6 +277,32 @@ function Test-Inputs
     }
 }
 
+function Get-HostName
+{
+    param(
+        [string]$protocol,
+        [string]$hostNameWithHttp,
+        [string]$hostNameWithSNI,
+        [string]$hostNameWithOutSNI,
+        [string]$sni
+    )
+    $hostName = [string]::Empty
+
+    if($protocol -eq "http")
+    {
+        $hostName = $hostNameWithHttp
+    }
+    elseif($sni -eq "true")
+    {
+        $hostName = $hostNameWithSNI
+    }
+    else
+    {
+        $hostName = $hostNameWithOutSNI
+    }
+    return $hostName
+}
+
 function Validate-Bindings {
     param (
         [string] $bindings
@@ -252,20 +315,9 @@ function Validate-Bindings {
         if($binding.protocol -eq "https") {
             if(-not [string]::IsNullOrWhiteSpace($binding.sslThumbprint)) {
                 # Trim all non-hexadecimal characters from the ssl cetificate thumbprint
-                if([regex]::IsMatch($binding.sslThumbPrint, "[^a-fA-F0-9]+"))
-                {
-                    Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharactersInBinding" -ArgumentList $binding.protocol, $binding.ipAddress, $binding.port)
-                }
-
-                $binding.sslThumbPrint = [Regex]::Replace($binding.sslThumbPrint, "[^a-fA-F0-9]+" , "")
-                
-                # Mark the SSL thumbprint value to be a secret value 
-                $sslCertThumbprintSecretValue = $binding.sslThumbPrint
-                Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprintSecretValue"
-                
-                if(($binding.sslThumbprint.Length -ne 40) -or (-not [regex]::IsMatch($binding.sslThumbprint, "[a-fA-F0-9]{40}"))){
-                    throw (Get-VstsLocString -Key "InvalidSslThumbprintInBinding" -ArgumentList $binding.protocol, $binding.ipAddress, $binding.port)
-                }
+                $sslCertThumbPrint = $binding.sslThumbPrint
+                $sslCertThumbPrint = Repair-Inputs -sslCertThumbPrint ([ref]$sslCertThumbPrint) -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
+                $binding.sslThumbPrint = $sslCertThumbPrint
             }
             else {
                 throw (Get-VstsLocString -Key "SSLCertificateThumbprintMissingInHttpsBinding" -ArgumentList $binding.protocol, $binding.ipAddress, $binding.port)

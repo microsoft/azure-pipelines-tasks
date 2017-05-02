@@ -14,8 +14,8 @@
     ],
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 0,
+        "Major": 0,
+        "Minor": 4,
         "Patch": 0
     },
     "minimumAgentVersion": "2.111.0",
@@ -28,11 +28,11 @@
             "visibleRule": "ActionIISWebsite = CreateOrUpdateWebsite"
         },
         {
-            "name": "IISBindings",
-            "displayName": "IIS bindings",
-            "isExpanded": true,
-            "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true "
-        },
+            "name": "IISBindings", 
+            "displayName": "IIS Bindings",
+            "isExpanded": true, 
+            "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true"
+        }, 
         {
             "name": "ApplicationPoolForWebsite",
             "displayName": "IIS Application pool",
@@ -189,6 +189,78 @@
             "helpMarkDown": "Select the option to add port binding for the website."
         },
         {
+            "name": "Protocol",
+            "type": "pickList",
+            "label": "Protocol",
+            "required": true,
+            "defaultValue": "http",
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "options": {
+                "https": "https",
+                "http": "http"
+            },
+            "helpMarkDown": "Select HTTP for the website to have an HTTP binding, or select HTTPS for the website to have a Secure Sockets Layer (SSL) binding."
+        },
+        {
+            "name": "IPAddress",
+            "type": "string",
+            "label": "IP address",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "defaultValue": "All Unassigned",
+            "helpMarkDown": "Provide an IP address that end-users can use to access this website. <br>If 'All Unassigned' is selected, then the website will respond to requests for all IP addresses on the port and for the host name, unless another website on the server has a binding on the same port but with a specific IP address.<br>"
+        },
+        {
+            "name": "Port",
+            "type": "string",
+            "label": "Port",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "defaultValue": "80",
+            "helpMarkDown": "Provide the port, where the Hypertext Transfer Protocol Stack (HTTP.sys) will listen to the website requests."
+        },
+        {
+            "name": "ServerNameIndication",
+            "type": "boolean",
+            "label": "Server Name Indication required",
+            "required": false,
+            "defaultValue": "false",
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Select the option to set the Server Name Indication (SNI) for the website. <br>SNI extends the SSL and TLS protocols to indicate the host name that the clients are attempting to connect to. It allows, multiple secure websites with different certificates, to use the same IP address.<br>"
+        },
+        {
+            "name": "HostNameWithOutSNI",
+            "type": "string",
+            "label": "Host name",
+            "required": false,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+        },
+        {
+            "name": "HostNameWithHttp",
+            "type": "string",
+            "label": "Host name",
+            "required": false,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+        },
+        {
+            "name": "HostNameWithSNI",
+            "type": "string",
+            "label": "Host name",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+        },
+        {
+            "name": "SSLCertThumbPrint",
+            "type": "string",
+            "label": "SSL certificate thumbprint",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store."
+        },
+        {
             "name": "Bindings",
             "type": "multiLine",
             "label": "Add bindings",
@@ -196,7 +268,6 @@
             "groupName": "IISBindings",
             "properties": {
                 "resizable": "true",
-                "rows": 4,
                 "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
                 "displayFormat": "{{#bindings}} {{protocol}}:{{ipAddress}}:{{port}}:{{hostname}} \n{{/bindings}}"
             },

@@ -14,8 +14,8 @@
   ],
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 0,
+    "Major": 0,
+    "Minor": 4,
     "Patch": 0
   },
   "minimumAgentVersion": "2.111.0",
@@ -31,7 +31,7 @@
       "name": "IISBindings",
       "displayName": "ms-resource:loc.group.displayName.IISBindings",
       "isExpanded": true,
-      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true "
+      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true"
     },
     {
       "name": "ApplicationPoolForWebsite",
@@ -189,6 +189,78 @@
       "helpMarkDown": "ms-resource:loc.input.help.AddBinding"
     },
     {
+      "name": "Protocol",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Protocol",
+      "required": true,
+      "defaultValue": "http",
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "options": {
+        "https": "https",
+        "http": "http"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Protocol"
+    },
+    {
+      "name": "IPAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.IPAddress",
+      "required": true,
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "defaultValue": "All Unassigned",
+      "helpMarkDown": "ms-resource:loc.input.help.IPAddress"
+    },
+    {
+      "name": "Port",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Port",
+      "required": true,
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "defaultValue": "80",
+      "helpMarkDown": "ms-resource:loc.input.help.Port"
+    },
+    {
+      "name": "ServerNameIndication",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ServerNameIndication",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerNameIndication"
+    },
+    {
+      "name": "HostNameWithOutSNI",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostNameWithOutSNI",
+      "required": false,
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithOutSNI"
+    },
+    {
+      "name": "HostNameWithHttp",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostNameWithHttp",
+      "required": false,
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithHttp"
+    },
+    {
+      "name": "HostNameWithSNI",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HostNameWithSNI",
+      "required": true,
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "helpMarkDown": "ms-resource:loc.input.help.HostNameWithSNI"
+    },
+    {
+      "name": "SSLCertThumbPrint",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SSLCertThumbPrint",
+      "required": true,
+      "visibleRule": "IISDeploymentType = randomDeployment",
+      "helpMarkDown": "ms-resource:loc.input.help.SSLCertThumbPrint"
+    },
+    {
       "name": "Bindings",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.Bindings",
@@ -196,7 +268,6 @@
       "groupName": "IISBindings",
       "properties": {
         "resizable": "true",
-        "rows": 4,
         "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
         "displayFormat": "{{#bindings}} {{protocol}}:{{ipAddress}}:{{port}}:{{hostname}} \n{{/bindings}}"
       },
