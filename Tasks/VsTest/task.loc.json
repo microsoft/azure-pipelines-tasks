@@ -399,6 +399,7 @@
     "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
     "uitestsparallel": "ms-resource:loc.messages.uitestsparallel",
-    "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid"
+    "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid",
+    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters"
   }
 }
