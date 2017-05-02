@@ -2,7 +2,7 @@
   "loc.friendlyName": "Visual Studio Test",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Run tests with Visual Studio test runner",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "VsTest - $(testSelector)",
   "loc.group.displayName.testSelection": "Test selection",
   "loc.group.displayName.executionOptions": "Execution options",
   "loc.group.displayName.reportingOptions": "Reporting options",
