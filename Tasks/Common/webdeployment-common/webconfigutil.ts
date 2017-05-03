@@ -83,7 +83,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                 selectedAppTypeParams['KUDU_WORKING_DIRECTORY'] = rootDirectoryPath;
                 if(appType === 'python_Django' && webConfigParameters['DJANGO_SETTINGS_MODULE'].value === '') {
                     tl.debug('Auto detecting settings.py to set DJANGO_SETTINGS_MODULE...');
-                    webConfigParameters['DJANGO_SETTINGS_MODULE'] = getDjangoSettingsFile(folderPath);
+                    selectedAppTypeParams['DJANGO_SETTINGS_MODULE'] = getDjangoSettingsFile(folderPath);
                 }
             }
             generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);
