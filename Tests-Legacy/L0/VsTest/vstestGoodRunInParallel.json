@@ -7,10 +7,8 @@
         "VS120COMNTools": "/vs/path",
         "vs15Helper": "/path/to/vs15Helper.ps1"
     },
-    "match": {
-        "**\\*TestAdapter.dll": []
-    },
     "findMatch": {
+        "**\\*TestAdapter.dll": [],
         "/source/dir/some/*pattern": [
             "/source/dir/someFile2",
             "/source/dir/someFile1"
