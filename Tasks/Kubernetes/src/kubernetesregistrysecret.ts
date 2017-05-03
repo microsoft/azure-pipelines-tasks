@@ -34,15 +34,25 @@ function deleteSecret(connection: ClusterConnection, secret: string): any {
 }
 
 function createSecret(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
-    tl.debug(tl.loc('CreatingSecret', secret));
-    var command = connection.createCommand();
-    command.arg("create")
-    command.arg("secret");
-    command.arg("docker-registry");
-    command.arg(secret);
-    command.arg("--docker-server="+ authenticationToken.getLoginServerUrl());
-    command.arg("--docker-username="+ authenticationToken.getUsername());
-    command.arg("--docker-password="+ authenticationToken.getPassword());
-    command.arg("--docker-email="+ authenticationToken.getEmail());
-    return connection.execCommand(command);
+
+    if(authenticationToken)
+    {
+        tl.debug(tl.loc('CreatingSecret', secret));
+        var command = connection.createCommand();
+        command.arg("create")
+        command.arg("secret");
+        command.arg("docker-registry");
+        command.arg(secret);
+        command.arg("--docker-server="+ authenticationToken.getLoginServerUrl());
+        command.arg("--docker-username="+ authenticationToken.getUsername());
+        command.arg("--docker-password="+ authenticationToken.getPassword());
+        command.arg("--docker-email="+ authenticationToken.getEmail());
+        return connection.execCommand(command);
+    }
+    else
+    {
+        tl.error(tl.loc("DockerRegistryConnectionNotSpecified"));
+        throw new Error(tl.loc("DockerRegistryConnectionNotSpecified"));
+    }
+
 }
