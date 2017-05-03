@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "File di mapping",
   "loc.input.help.mappingTxtPath": "Percorso relativo dalla radice del repository al file mapping.txt di Android.",
   "loc.input.label.packParentFolder": "Includi tutti gli elementi nella cartella padre",
-  "loc.input.help.packParentFolder": "Consente di caricare la cartella o il file dei simboli selezionati, nonché tutti gli altri elementi presenti all'interno della stessa cartella padre. Questa operazione è obbligatoria per le app React Native.",
+  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "Crea note sulla versione",
   "loc.input.label.releaseNotesInput": "Note sulla versione",
   "loc.input.help.releaseNotesInput": "Note sulla versione per questa versione.",

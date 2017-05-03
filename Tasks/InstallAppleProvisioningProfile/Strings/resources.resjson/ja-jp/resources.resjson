@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "Apple プロビジョニング プロファイルのインストール",
   "loc.helpMarkDown": "",
   "loc.description": "macOS エージェントでのビルドに必要な Apple プロビジョニング プロファイルのインストール",
   "loc.instanceNameFormat": "Apple プロビジョニング プロファイルのインストール",
