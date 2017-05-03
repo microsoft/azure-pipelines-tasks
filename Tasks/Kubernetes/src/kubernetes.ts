@@ -17,7 +17,7 @@ tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 tl.cd(tl.getInput("cwd"));
 
 // get the registry server authentication provider 
-var registryType = tl.getInput("containerregistrytype", true);
+var registryType = tl.getInput("containerRegistryType", true);
 var authenticationProvider : AuthenticationTokenProvider;
 
 if(registryType ==  "Azure Container Registry"){
@@ -29,7 +29,7 @@ else {
 
 var registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
 
-// open kubectl connection and un the command
+// open kubectl connection and run the command
 var connection = new ClusterConnection();
 connection.open(tl.getInput("kubernetesServiceEndpoint")).then( 
     () => run(connection, registryAuthenticationToken),
@@ -51,7 +51,7 @@ function run(clusterConnection: ClusterConnection, registryAuthenticationToken: 
         }).done();
     }
     else {
-        executeKubectlCommand(connection);
+        executeKubectlCommand(clusterConnection);
     }
 }
 

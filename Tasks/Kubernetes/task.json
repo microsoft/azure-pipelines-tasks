@@ -4,7 +4,7 @@
     "friendlyName": "Deploy to Kubernetes",
     "description": "Deploy of run a command on kubernetes cluster",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=846415)",
-    "category": "Build",
+    "category": "Deploy",
     "visibility": [
         "Build",
         "Release"
@@ -42,7 +42,7 @@
             "helpMarkDown": "Select a Kubernetes service connection."
         },
         {
-            "name": "containerregistrytype",
+            "name": "containerRegistryType",
             "type": "pickList",
             "label": "Container Registry type",
             "defaultValue": "Azure Container Registry",
@@ -59,7 +59,7 @@
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
-            "visibleRule": "containerregistrytype = Container Registry",
+            "visibleRule": "containerRegistryType = Container Registry",
             "groupName": "registry"
         },
         {
@@ -67,8 +67,8 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
-            "visibleRule": "containerregistrytype = Azure Container Registry",
-            "required": true,
+            "visibleRule": "containerRegistryType = Azure Container Registry",
+            "defaultValue": "",
             "groupName": "registry"
         },
         {
@@ -76,8 +76,7 @@
             "label": "Azure Container Registry",
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry. Required for commands that need to authenticate with a registry.",
-            "visibleRule": "containerregistrytype = Azure Container Registry",
-            "required": true,
+            "visibleRule": "containerRegistryType = Azure Container Registry",
             "defaultValue": "",
             "groupName": "registry"
         },
@@ -95,7 +94,7 @@
             "type": "boolean",
             "label": "Force update secret",
             "defaultValue": "true",
-            "helpMarkDown": "Delete the docker-registry secret and create a new one with updated values.",
+            "helpMarkDown": "Delete the docker-registry secret if it exists and create a new one with updated values.",
             "groupName": "registry"
         },
         {
@@ -175,11 +174,11 @@
         {
             "name": "kubectlOutput",
             "type": "string",
-            "label": "Kubectl output",
+            "label": "Output variable name",
             "required": false,
             "defaultValue": "",
-            "groupName": "output",
-            "helpMarkDown": "Name of the variable."
+            "helpMarkDown": "Name of the variable in which output of the command should be saved.",
+            "groupName": "output"
         }
     ],
     "dataSourceBindings": [
@@ -197,11 +196,9 @@
         }
     },
     "messages": {
-        "ContainerPatternFound": "Pattern found in dockerfilepath parameter",
-        "ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
-        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
         "DownloadingClient":"Downloading kubernetes client.",
         "CreatingSecret":"Executing create docker-registry %s secret.",
-        "DeleteSecret": "Executing delete docker-registry %s secret"
+        "DeleteSecret": "Executing delete docker-registry %s secret",
+        "DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified"
     }
 }
