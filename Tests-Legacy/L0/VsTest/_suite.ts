@@ -12,9 +12,9 @@ import * as mockHelper from '../../lib/mockHelper';
 import * as fs from 'fs';
 import * as shell from 'shelljs';
 
-const settingsHelper = require('../../../Tasks/VsTest/settingshelper');
-let xml2js = require('../../../Tasks/VsTest/node_modules/xml2js');
-const utils = require( '../../../Tasks/VsTest/helpers');
+const settingsHelper = require('../../../Tasks/VSTest/settingshelper');
+let xml2js = require('../../../Tasks/VSTest/node_modules/xml2js');
+const utils = require( '../../../Tasks/VSTest/helpers');
 
 //const xml2js = require('xml2js');
 const ps = shell.which('powershell.exe');
