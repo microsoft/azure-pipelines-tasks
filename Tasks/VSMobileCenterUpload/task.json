@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 117,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -37,7 +37,7 @@
             "label": "App Slug",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier})"
+            "helpMarkDown": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier}). If you are using orgs, the app slug is of the format **{orgname}/{app_identifier}**."
         },
         {
             "name": "app",
