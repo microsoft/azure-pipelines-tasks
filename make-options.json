@@ -38,6 +38,7 @@
         "InstallAppleProvisioningProfile",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
+        "Kubernetes",
         "ManualIntervention",
         "Maven",
         "MSBuild",
