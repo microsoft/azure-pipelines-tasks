@@ -91,16 +91,17 @@ export class DistributedTest {
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
                 if (line.startsWith('Web method')) {
-                    tl.debug(line);
+                    tl._outStream.write('##vso[task.debug]' + line);
                 } else {
-                    tl._writeLine(line.toString());
+                    tl._outStream.write(line);
                 }
             });
         });
+
         proc.stderr.on('data', (c) => {
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
-               tl._writeError(line.toString());
+                tl._errStream.write(line);
             });
         });
 
