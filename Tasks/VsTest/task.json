@@ -17,11 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-<<<<<<< HEAD
         "Patch": 46
-=======
-        "Patch": 45
->>>>>>> ed11383c4be36a9e517b41d29a024e029b76d206
     },
     "demands": [
         "vstest"
