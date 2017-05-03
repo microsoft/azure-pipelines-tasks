@@ -24,7 +24,7 @@
   "loc.input.label.ExtensionsList": "Install Extensions",
   "loc.input.help.ExtensionsList": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect.",
   "loc.input.label.OutputVariable": "Output variable",
-  "loc.input.help.OutputVariable": "Provide comma separated list of variables that saves the local path of the extension which can be used in subsequent tasks.",
+  "loc.input.help.OutputVariable": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
   "loc.messages.Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",

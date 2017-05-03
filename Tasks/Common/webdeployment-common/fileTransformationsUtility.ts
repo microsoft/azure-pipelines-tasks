@@ -11,7 +11,13 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
 
     if(xmlTransformation) {
         if(!isFolderBasedDeployment && utility.isMSDeployPackage(webDeployPkg)) {
-            console.log(tl.loc('AutoParameterizationMessage'));
+            var debugMode = tl.getVariable('system.debug');
+            if(debugMode && debugMode.toLowerCase() == 'true') {
+                tl.warning(tl.loc('AutoParameterizationMessage'));
+            }
+            else {
+                console.log(tl.loc('AutoParameterizationMessage'));
+            }
         }
         var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {

@@ -162,7 +162,7 @@
             "label": "Output variable",
             "defaultValue": "",
             "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Provide comma separated list of variables that saves the local path of the extension which can be used in subsequent tasks."
+            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field"
         }
     ],
     "dataSourceBindings": [
