@@ -36,6 +36,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
     {
+      "name": "vsVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vsVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
+      "defaultValue": "15.0",
+      "options": {
+        "latest": "Latest",
+        "15.0": "Visual Studio 2017",
+        "14.0": "Visual Studio 2015",
+        "12.0": "Visual Studio 2013",
+        "11.0": "Visual Studio 2012"
+      }
+    },
+    {
       "name": "msbuildArgs",
       "type": "string",
       "label": "ms-resource:loc.input.label.msbuildArgs",
@@ -81,21 +96,6 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
-    },
-    {
-      "name": "vsVersion",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.vsVersion",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
-      "defaultValue": "15.0",
-      "options": {
-        "latest": "Latest",
-        "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015",
-        "12.0": "Visual Studio 2013",
-        "11.0": "Visual Studio 2012"
-      }
     },
     {
       "name": "msbuildArchitecture",
