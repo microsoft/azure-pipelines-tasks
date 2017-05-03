@@ -343,7 +343,7 @@
     }
   },
   "messages": {
-    "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
+    "VstestLocationDoesNotExist": "ms-resource:loc.messages.VstestLocationDoesNotExist",
     "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",

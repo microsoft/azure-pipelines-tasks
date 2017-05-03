@@ -42,7 +42,6 @@ export function getDistributedTestConfigurations() {
 }
 
 export function getvsTestConfigurations() {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
