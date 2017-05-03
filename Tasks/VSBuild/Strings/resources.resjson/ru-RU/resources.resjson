@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "Создать файл журнала",
   "loc.input.help.createLogFile": "При необходимости создайте файл журнала (только в Windows).",
   "loc.messages.MSBuildLocationDeprecated0": "Параметр расположения MSBuild устарел. Выполняется пропуск значения \"{0}\"",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "Не удалось найти MSBuild для версии \"{0}\" и архитектуры \"{1}\".",
   "loc.messages.MSBuildVersionDeprecated0": "Параметр версии MSBuild устарел. Выполняется пропуск значения \"{0}\".",
   "loc.messages.UnexpectedVSVersion0": "Непредвиденная версия Visual Studio \"{0}\".",
   "loc.messages.VSLocationDeprecated0": "Параметр расположения Visual Studio устарел. Выполняется пропуск значения \"{0}\"",
-  "loc.messages.VSNotFoundTry": "Не удалось найти Visual Studio. Попробуйте установить поддерживаемую версию Visual Studio. Список поддерживаемых версий см. в определении задач.",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "Не удалось найти версию Visual Studio \"{0}\". Выполняется поиск последней версии."
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

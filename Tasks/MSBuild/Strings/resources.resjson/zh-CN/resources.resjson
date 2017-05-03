@@ -27,13 +27,7 @@
   "loc.input.help.msbuildArchitecture": "可以选择提供 MSBuild 的体系结构(x86、x64)进行运行。",
   "loc.input.label.msbuildLocation": "MSBuild 的路径",
   "loc.input.help.msbuildLocation": "可以选择提供 MSBuild 的路径。",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "无法找到 MSBuild: 版本 = {0}，体系结构 = {1}。查找最新版本。",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "找不到 MSBuild: 版本 = {0}，体系结构 = {1}。请尝试其他版本/体系结构组合、指定一个位置或安装适当的 MSBuild 版本/体系结构。",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "仅在 Windows 上支持“记录项目详细信息”。",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "仅在 Windows 上支持“创建日志文件”。",
-  "loc.messages.MSB_Build0": "生成 {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "已检测到 NuGet 扩展加载程序路径。将环境变量 NUGET_EXTENSIONS_PATH 设置为“{0}”。",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "使用搜索模式“{0}”找不到解决方案。",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "“还原 NuGet 包”选项已弃用。若要在生成中还原 NuGet 包，请将 NuGet 安装程序任务添加到生成定义中。",
-  "loc.messages.MSB_BuildToolNotFound": "macOS 或 Linux 代理上找不到 MSBuild 或 xbuild (Mono)"
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

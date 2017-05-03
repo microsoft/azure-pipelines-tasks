@@ -27,13 +27,7 @@
   "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
   "loc.input.label.msbuildLocation": "Percorso di MSBuild",
   "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild.",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Non è stata trovata alcuna istanza di MSBuild con versione = {0}, architettura = {1}. Verrà cercata la versione più recente.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "La versione {0} di MSBuild con architettura {1} non è stata trovata. Provare con una diversa combinazione di versione/architettura, specificare un percorso o installare MSBuild nella versione/architettura appropriata.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "L'opzione `Registra dettagli progetto` è supportata solo in Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "L'opzione `Crea file di log` è supportata solo in Windows.",
-  "loc.messages.MSB_Build0": "Compilazione {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Il percorso del caricatore delle estensioni NuGet è stato rilevato. La variabile di ambiente NUGET_EXTENSIONS_PATH è impostata su '{0}'.",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Non sono state trovate soluzioni con il criterio di ricerca '{0}'.",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "L'opzione 'Ripristina pacchetti NuGet' è deprecata. Per ripristinare i pacchetti NuGet nella compilazione, aggiungere un'attività del programma di installazione di NuGet alla definizione di compilazione.",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild o xbuild (Mono) non è stato trovato nell'agente MacOS o Linux"
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

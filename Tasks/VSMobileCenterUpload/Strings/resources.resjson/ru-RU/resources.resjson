@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "Файл сопоставления",
   "loc.input.help.mappingTxtPath": "Относительный путь от корня репозитория к файлу mapping.txt для Android.",
   "loc.input.label.packParentFolder": "Включить все элементы в родительской папке",
-  "loc.input.help.packParentFolder": "Отправьте файл или папку выбранных символов, а также все прочие элементы в той же родительской папке. Это обязательно для приложений React Native.",
+  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "Создание заметок о выпуске",
   "loc.input.label.releaseNotesInput": "Заметки о выпуске",
   "loc.input.help.releaseNotesInput": "Заметки о выпуске для этой версии.",
