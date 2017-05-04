@@ -13,19 +13,33 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 117,
+    "Minor": 118,
     "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "demands": [
-    "xcode"
-  ],
+  "demands": [],
   "minimumAgentVersion": "2.116.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
+    {
+      "name": "hostName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.hostName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.hostName"
+    },
+    {
+      "name": "sshPublicKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sshPublicKey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
+    },
     {
       "name": "sshKeySecureFile",
       "type": "secureFile",
@@ -33,14 +47,6 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sshKeySecureFile"
-    },
-    {
-      "name": "removeKey",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.removeKey",
-      "defaultValue": true,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.removeKey"
     }
   ],
   "prejobexecution": {
@@ -55,5 +61,9 @@
       "argumentFormat": ""
     }
   },
-  "messages": {}
+  "messages": {
+    "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
+    "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
+    "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed"
+  }
 }
