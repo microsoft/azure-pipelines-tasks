@@ -2,7 +2,7 @@
   "name": "vsts-tasks-installsshkey",
   "version": "1.0.0",
   "description": "VSTS Install SSK Key Task",
-  "main": "preinstallprovprofile.js",
+  "main": "preinstallsshkey.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
