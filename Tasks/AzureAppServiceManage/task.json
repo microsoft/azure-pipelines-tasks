@@ -2,7 +2,7 @@
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
     "friendlyName": "Azure App Service Manage (PREVIEW)",
-    "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
+    "description": "Start, Stop, Restart, Slot swap and Install site extensions for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
@@ -36,7 +36,7 @@
             "type": "pickList",
             "label": "Action",
             "required": false,
-            "helpMarkDown": "Action to be performed on the App Service. You can Start/Stop/Restart an App Service or Manage a slot swap.",
+            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap and Install site extensions for an Azure App Service",
             "defaultValue": "Swap Slots",
             "options": {
                 "Swap Slots": "Swap Slots",
@@ -162,7 +162,7 @@
             "label": "Output variable",
             "defaultValue": "",
             "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field"
+            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2"
         }
     ],
     "dataSourceBindings": [
