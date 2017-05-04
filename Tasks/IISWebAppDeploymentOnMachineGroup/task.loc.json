@@ -177,6 +177,8 @@
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
-    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
+    "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
+    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage"
   }
 }
