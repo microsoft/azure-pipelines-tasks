@@ -1,5 +1,14 @@
 {
   "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "NuGet 拡張機能のローダー パス (NUGET_EXTENSIONS_PATH 環境変数) が検出されました。ビルトインの NuGet クライアントを使用するとき、拡張機能は無視されます",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "NuGet 拡張機能のローダー パス (NUGET_EXTENSIONS_PATH 環境変数) が検出されました: %s",
-  "loc.messages.NGCommon_UnableToFindTool": "ツール %s が見つかりません"
+  "loc.messages.NGCommon_UnableToFindTool": "ツール %s が見つかりません",
+  "loc.messages.Info_AvailableVersions": "利用可能なバージョン: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "ツール キャッシュから解決: %s",
+  "loc.messages.Info_UsingVersion": "使用するバージョン: %s",
+  "loc.messages.Info_UsingToolPath": "使用するツール パス: %s",
+  "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "バージョン文字列でクエリ マッチを使用しています。NuGet が新しいバージョンに更新されるときに、動作の変更や重大な変更が発生する可能性があります。",
+  "loc.messages.Error_NoVersionWasFoundWhichMatches": "入力 %s に一致するバージョンは見つかりませんでした",
+  "loc.messages.Error_NoUrlWasFoundWhichMatches": "%s のダウンロード URL が見つかりませんでした",
+  "loc.messages.Error_NuGetToolInstallerFailer": "ツールをインストールできませんでした: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
 }

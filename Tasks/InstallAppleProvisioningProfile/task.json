@@ -2,9 +2,10 @@
     "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
     "name": "InstallAppleProvisioningProfile",
     "friendlyName": "Install Apple Provisioning Profile",
-    "description": "Install an apple provisioning profile required to build on a macOS agent",
+    "description": "Install an Apple provisioning profile required to build on a macOS agent",
     "helpMarkDown": "",
     "category": "Utility",
+    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -23,37 +24,15 @@
         "xcode"
     ],
     "minimumAgentVersion": "2.116.0",
-    "instanceNameFormat": "Install an apple provisioning profile",
+    "instanceNameFormat": "Install an Apple provisioning profile",
     "inputs": [
-        {
-            "name": "provProfileSource",
-            "type": "pickList",
-            "label": "Provisioning Profile Location",
-            "defaultValue": "SecureFile",
-            "required": true,
-            "options": {
-                "SecureFile": "Secure File (Preview)",
-                "Repo": "File in Source Repository"
-            },
-            "helpMarkDown": "A provisioning profile can be installed from an uploaded `Secure File`, or a file in the source repository or a file on the agent."
-        },
         {
             "name": "provProfileSecureFile",
             "type": "secureFile",
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
-            "visibleRule": "provProfileSource == SecureFile"
-        },
-        {
-            "name": "provProfileFilePath",
-            "type": "filePath",
-            "label": "Provisioning Profile",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the path to the provisioning profile to install on the macOS agent.",
-            "visibleRule": "provProfileSource == Repo"
+            "helpMarkDown": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent."
         },
         {
             "name": "removeProfile",
@@ -77,8 +56,6 @@
         }
     },
     "messages": {
-        "NO_PROVPROFILE_FOUND": "No provisioning profile was found matching %s.",
-        "MULTIPLE_PROVPROFILE_FOUND": "Multiple provisioning profiles were found matching %s. Update the input to match one provisioning profile to install."
     }
 }
     

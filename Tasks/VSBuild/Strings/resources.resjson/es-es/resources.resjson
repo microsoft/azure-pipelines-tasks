@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "Crear archivo de registro",
   "loc.input.help.createLogFile": "Si quiere, puede crear un archivo de registro (solo en Windows).",
   "loc.messages.MSBuildLocationDeprecated0": "El parámetro de ubicación MSBuild está en desuso. Se omitirá el valor '{0}'",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "No se encontró MSBuild para la versión '{0}' y la arquitectura '{1}'.",
   "loc.messages.MSBuildVersionDeprecated0": "El parámetro de versión de MSBuild está en desuso. Se omitirá el valor '{0}'.",
   "loc.messages.UnexpectedVSVersion0": "Versión inesperada de Visual Studio '{0}'.",
   "loc.messages.VSLocationDeprecated0": "El parámetro de ubicación Visual Studio está en desuso. Se omitirá el valor '{0}'",
-  "loc.messages.VSNotFoundTry": "No se encuentra Visual Studio. Pruebe a instalar una versión admitida de Visual Studio. Consulte la definición de tarea para ver una lista de versiones compatibles.",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "No se encuentra la versión '{0}' de Visual Studio. Se buscará la versión más reciente."
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

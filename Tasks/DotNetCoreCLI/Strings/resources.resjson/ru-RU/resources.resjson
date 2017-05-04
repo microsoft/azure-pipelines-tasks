@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (ПРЕДВАРИТЕЛЬНАЯ ВЕРСИЯ)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[Дополнительная информация](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "Сборка, тестирование и публикация из командной строки dotnet core.",
   "loc.instanceNameFormat": "dotnet $(команда)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Публикация веб-проектов",
   "loc.input.help.publishWebProjects": "Если параметр имеет значение true, задача будет искать веб-проекты в репозитории и запустит для них команду публикации. Веб-проекты определяются по наличию в каталоге файла web.config или папки wwwroot.",
   "loc.input.label.projects": "Проекты",
-  "loc.input.help.projects": "Путь к файлам project.json относительно корня репозитория. Можно использовать символы подстановки. Например, \"**/project.json\" для всех файлов project.json во всех вложенных папках.",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "Аргументы",
   "loc.input.help.arguments": "Аргументы для выбранной команды. Например, конфигурация сборки, выходной каталог, время выполнения. Аргументы зависят от выбранной команды.",
   "loc.input.label.zipAfterPublish": "Упаковать опубликованные проекты",
   "loc.input.help.zipAfterPublish": "Если этот параметр имеет значение true, папка, создаваемая командой публикации, будет упакована.",
   "loc.messages.noProjectFilesFound": "Файлы проекта, соответствующие заданному шаблону, не найдены.",
   "loc.messages.noWebProjctFound": "В репозитории не найдено ни одного веб-проекта. Веб-проекты определяются по наличию в каталоге файла web.config или папки wwwroot.",
-  "loc.messages.dotnetCommandFailed": "Сбой в команде dotnet с ненулевым кодом завершения: %d.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "Сбой при упаковке с ошибкой %s",
   "loc.messages.noPublishFolderFoundToZip": "Не удается найти каталог публикации для упаковки файла проекта: %s."
 }

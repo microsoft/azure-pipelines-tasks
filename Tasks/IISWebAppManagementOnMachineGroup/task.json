@@ -152,7 +152,7 @@
             "label": "Physical path authentication",
             "required": true,
             "groupName": "Website",
-            "defaultValue": "Application User (Pass-through)",
+            "defaultValue": "WebsiteUserPassThrough",
             "options": {
                 "WebsiteUserPassThrough": "Application User (Pass-through)",
                 "WebsiteWindowsAuth": "Windows Authentication"

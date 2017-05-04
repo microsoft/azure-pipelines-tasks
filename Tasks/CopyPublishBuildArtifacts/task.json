@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 30
+        "Patch": 31
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -79,6 +79,7 @@
         }
     },
     "messages": {
-        "ErrorFileShareLinux": "Cannot publish artifacts from OSX or Linux to a file share. You can change 'Artifact Type' to 'Server', use Windows, or use the 'Copy Files', 'Copy Files Over SSH', or 'FTP Upload' task."
+        "ErrorFileShareLinux": "Cannot publish artifacts from OSX or Linux to a file share. You can change 'Artifact Type' to 'Server', use Windows, or use the 'Copy Files', 'Copy Files Over SSH', or 'FTP Upload' task.",
+        "ErrorHostTypeNotSupported": "This task is only supported within a Build job."
     }
 }

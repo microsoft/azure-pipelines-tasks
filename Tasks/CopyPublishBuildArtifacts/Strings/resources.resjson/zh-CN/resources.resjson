@@ -13,5 +13,6 @@
   "loc.input.help.ArtifactType": "选择是否在 TFS/Team Services 上存储项目，或者是否将其复制到必须可从生成代理访问的文件共享上。",
   "loc.input.label.TargetPath": "路径",
   "loc.input.help.TargetPath": "要将项目复制到的 UNC 文件路径位置。它必须可从生成代理进行访问。",
-  "loc.messages.ErrorFileShareLinux": "无法将项目从 OSX 或 Linux 发布到文件共享。可将“项目类型”更改为“服务器”，使用 Windows，或者使用“复制文件”、“通过 SSH 复制文件”或“FTP 上传”任务。"
+  "loc.messages.ErrorFileShareLinux": "无法将项目从 OSX 或 Linux 发布到文件共享。可将“项目类型”更改为“服务器”，使用 Windows，或者使用“复制文件”、“通过 SSH 复制文件”或“FTP 上传”任务。",
+  "loc.messages.ErrorHostTypeNotSupported": "仅在生成作业中支持此任务。"
 }

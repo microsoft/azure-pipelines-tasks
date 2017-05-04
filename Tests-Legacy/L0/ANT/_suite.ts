@@ -319,4 +319,26 @@ describe('ANT Suite', function() {
                 done(err);
             });
     })
+
+    it('Ant build with Publish Test Results for failed builds.', (done) => {
+        setResponseFile('antFails.json');
+
+        var tr = new trm.TaskRunner('Ant');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('codeCoverageTool', 'None');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
 });

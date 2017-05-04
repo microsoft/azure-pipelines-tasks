@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "Protokolldatei erstellen",
   "loc.input.help.createLogFile": "Erstellen Sie optional eine Protokolldatei (nur Windows).",
   "loc.messages.MSBuildLocationDeprecated0": "Der MSBuild-Parameter für die Angabe des Orts ist veraltet. Der Wert \"{0}\" wird ignoriert.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild wurde für die Version \"{0}\" und die Architektur\"{1}\" nicht gefunden.",
   "loc.messages.MSBuildVersionDeprecated0": "Der MSBuild-Versionsparameter ist veraltet. Der Wert \"{0}\" wird ignoriert.",
   "loc.messages.UnexpectedVSVersion0": "Unerwarteter Visual Studio-Version \"{0}\".",
   "loc.messages.VSLocationDeprecated0": "Der Visual Studio-Parameter zur Angabe des Orts ist veraltet. Der Wert \"{0}\" wird ignoriert.",
-  "loc.messages.VSNotFoundTry": "Visual Studio wurde nicht gefunden. Installieren Sie eine unterstützte Version von Visual Studio. Eine Liste der unterstützten Versionen finden Sie in der Taskdefinition.",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "Die Visual Studio-Version \"{0}\" wurde nicht gefunden. Nach der neuesten Version wird gesucht."
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

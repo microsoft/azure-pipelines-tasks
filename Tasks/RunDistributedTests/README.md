@@ -1,17 +1,17 @@
-#Run Functional Tests Task
+# Run Functional Tests Task
 
-###Overview
+### Overview
 The Run Functional Tests task should be used when you want to run tests on one or more remote machines and you cannot run tests on build machine. Typical scenarios – tests that require additional installations on the test machines like different browsers for Selenium tests, running Coded UI Tests or a specific OS configuration or execute lots of unit tests faster on multiple machines etc. You can run unit tests, integration tests, functional tests – any test that you can run using vstest.console.exe can be run using this task. To use this task, *it needs to be preceded with “Visual Studio Test Agent Deployment” task*.
 To learn more about the general usage of the task, please see https://msdn.microsoft.com/en-us/library/mt270062.aspx and https://blogs.msdn.com/b/visualstudioalm/archive/2015/06/28/10618066.aspx
 
-###The different parameters of the task are explained below:
+### The different parameters of the task are explained below:
 
-####Setup Options
+#### Setup Options
 - **Machines:**	Required Field. Provide a comma separated list of machine names or "Azure Resource Group" name or Variable name containing the list of machines which should be used to run tests.
 
 - **Test drop location:** Required Field. Location on the test machine(s) where the test binaries have been copied to.  ‘Windows Machine File Copy’ task or ‘Azure File Copy’ task (for Azure machines) can be used to copy the test binaries. System Environment Variables from the agent machines can also be used in specifying the drop location. For example, c:\tests or %systemdrive%\Tests
 
-####Execution Options
+#### Execution Options
 - **Test selection:** You can run tests by specifying test files and assemblies or using Test Plan/Test Suite. 
 
 - **Test assembly:** Required Field. This field specifies the test assemblies from which the tests should be picked. 
@@ -40,7 +40,7 @@ For more information, please see https://blogs.msdn.com/b/visualstudioalm/archiv
 
 - **Distribute tests based on:** Specify how the tests should be distributed. 
 
-####Reporting Options
+#### Reporting Options
 -**Test run title:** Provide a name for the test run. 
 
 - **Build platform:**	Build Platform against which the Test Run should be reported. Field is used for reporting purposes only. For example, x64 or x86. If you are using the Deployment – Build, Deploy and Distributed Test template, this is already defined for you. Alternatively, if you have defined a variable for platform in your Build task, use that here.

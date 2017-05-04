@@ -4,8 +4,14 @@
   "loc.description": "Build, push or run Docker images, or run a Docker command",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Advanced Options",
+  "loc.input.label.containerregistrytype": "Container Registry Type",
+  "loc.input.help.containerregistrytype": "Select a Container Registry Type.",
   "loc.input.label.dockerRegistryEndpoint": "Docker Registry Connection",
   "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+  "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
+  "loc.input.help.azureSubscriptionEndpoint": "Select an Azure subscription",
+  "loc.input.label.azureContainerRegistry": "Azure Container Registry",
+  "loc.input.help.azureContainerRegistry": "Select an Azure Container Registry",
   "loc.input.label.action": "Action",
   "loc.input.help.action": "Select a Docker action.",
   "loc.input.label.dockerFile": "Docker File",
@@ -53,5 +59,8 @@
   "loc.input.label.dockerHostEndpoint": "Docker Host Connection",
   "loc.input.help.dockerHostEndpoint": "Select a Docker host connection. Defaults to the agent's host.",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Working directory for the Docker command."
+  "loc.input.help.cwd": "Working directory for the Docker command.",
+  "loc.messages.ContainerPatternFound": "Pattern found in dockerfilepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found."
 }

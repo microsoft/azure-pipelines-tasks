@@ -13,6 +13,7 @@ var restObj = new restClient.RestCallbackClient(httpObj);
 
 var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = 'api-version=2016-08-01';
+var defaultWebAppAvailabilityTimeoutInMS = 3000;
 
 /**
  * gets the name of the ResourceGroup that contains the webApp
@@ -107,8 +108,9 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
         else if(response.statusCode === 200) {
             parseString(body, (error, result) => {
                 for (var index in result.publishData.publishProfile) {
-                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
+                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
                         deferred.resolve(result.publishData.publishProfile[index].$);
+                    }
                 }
                 deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
             });
@@ -416,16 +418,18 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to start App Service: ' + url);
     console.log(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestartedsuccessfully', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoStartAppService", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
@@ -444,16 +448,19 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to stop App Service: ' + url);
+    console.log(headers);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestoppedsuccessfully', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoStopAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
@@ -472,9 +479,11 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to restart App Service: ' + url);
     console.log(tl.loc('RestartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
+            console.log(body);
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
@@ -485,9 +494,97 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
             deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppNameWithSlot));
         }
         else {
-            tl.error(response.statusMessage);
+            console.log(body);
             deferred.reject(tl.loc("FailedtoRestartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
+}
+
+export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
+    var deferred = Q.defer<any>();
+
+    var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
+    tl.debug('Requesting Azure Contianer Registry Creds: ' + url);
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+
+    httpObj.get('POST', url, headers, async (error, response, body) => {
+        if(error) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            try {
+                var credentials = JSON.parse(body);
+                deferred.resolve(credentials);
+            }
+            catch (error) {
+                deferred.reject(error);
+            }
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject("Unable to resolve creds for the registry");
+        }
+    });
+
+    return deferred.promise;
+}
+
+export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout) {
+    var deferred = Q.defer();
+    var headers = {};
+    httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
+        if (error) {
+            tl.debug("Failed to check availability of azure web app, error : " + error);
+            deferred.reject(error);
+        } else {
+            if(response.statusCode === 200) {
+                tl.debug("Azure web app is available.");
+                var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeoutInMS; 
+                await sleep(webAppAvailabilityTimeout);
+                deferred.resolve("SUCCESS");
+            } else {
+                tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
+                deferred.reject("FAILED");
+            }
+        }
+    });
+    return deferred.promise;
+}
+
+export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
+    
+    var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
+    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "?" + azureApiVersion;
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to get App State: ' + webAppNameWithSlot);
+    httpObj.send('GET', url, null, headers, (error, response, body) => {
+        if(error) {
+            console.log(body);
+            deferred.reject(error);
+        }
+        if(response.statusCode === 200) {
+            deferred.resolve(JSON.parse(body));
+        }
+        else {
+            console.log(body);
+            deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
+function sleep(timeInMilliSecond) {
+  return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
 }

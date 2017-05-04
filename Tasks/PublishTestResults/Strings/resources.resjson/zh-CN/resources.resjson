@@ -7,7 +7,9 @@
   "loc.input.label.testRunner": "测试结果格式",
   "loc.input.help.testRunner": "所选测试运行程序(例如 JUnit、VSTest、XUnit V2 和 NUnit)生成的测试结果文件的格式。",
   "loc.input.label.testResultsFiles": "测试结果文件",
-  "loc.input.help.testResultsFiles": "测试结果文件路径。可以使用通配符。例如，\"**/TEST-*.xml\" 表示名称以 TEST- 开头的所有 xml 文件。",
+  "loc.input.help.testResultsFiles": "测试结果文件路径。支持多行 minimatch 模式。[详细信息](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.label.searchFolder": "搜索文件夹",
+  "loc.input.help.searchFolder": "在其中搜索测试结果文件的文件夹。默认为 $(System.DefaultWorkingDirectory)。",
   "loc.input.label.mergeTestResults": "合并测试结果",
   "loc.input.help.mergeTestResults": "要在 VSTS/TFS 中将来自所有测试结果文件的结果合并为一个测试运行，请选中此选项。要为每个测试结果文件创建一个测试运行，请取消选中此选项。",
   "loc.input.label.testRunTitle": "测试运行标题",
@@ -16,6 +18,6 @@
   "loc.input.help.platform": "对其运行了测试的平台。",
   "loc.input.label.configuration": "配置",
   "loc.input.help.configuration": "对其运行了测试的配置。",
-  "loc.input.label.publishRunAttachments": "上传测试附件",
-  "loc.input.help.publishRunAttachments": "选择加入/退出发布测试运行级别附件。"
+  "loc.input.label.publishRunAttachments": "上传测试结果文件",
+  "loc.input.help.publishRunAttachments": "选择加入/退出发布测试运行级别附件。选择后，测试结果文件将上传并附加到测试运行"
 }

@@ -7,8 +7,10 @@
   "loc.input.label.testRunner": "Testergebnisformat",
   "loc.input.help.testRunner": "Das Format der Testergebnisdateien, die vom ausgewählten Test Runner generiert werden, z. B. \"JUnit\", \"VSTest\", \"XUnit V2\" und \"NUnit\".",
   "loc.input.label.testResultsFiles": "Testergebnisdateien",
-  "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
-  "loc.input.label.mergeTestResults": "Testergebnisse zusammenführen",
+  "loc.input.help.testResultsFiles": "Pfad der Testergebnisdateien. Unterstützt mehrere Zeilen von Minimatchmustern. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.label.searchFolder": "Suchordner",
+  "loc.input.help.searchFolder": "Ordner, der nach Testergebnisdateien durchsucht wird. Standardmäßig ist dies \"$(System.DefaultWorkingDirectory)\".",
+  "loc.input.label.mergeTestResults": "Testergebnisse mergen",
   "loc.input.help.mergeTestResults": "Aktivieren Sie diese Option, um Ergebnisse aus allen Testergebnisdateien zu einem Testlauf in VSTS/TFS zu mergen. Deaktivieren Sie diese Option, um für jede Testergebnisdatei einen eigenen Testlauf zu erstellen.",
   "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
@@ -16,6 +18,6 @@
   "loc.input.help.platform": "Plattform, für die die Tests ausgeführt wurden",
   "loc.input.label.configuration": "Konfiguration",
   "loc.input.help.configuration": "Konfiguration, für die die Tests ausgeführt wurden",
-  "loc.input.label.publishRunAttachments": "Testanlagen hochladen",
-  "loc.input.help.publishRunAttachments": "Veröffentlichen von Anlagen auf Testlaufebene abonnieren oder kündigen."
+  "loc.input.label.publishRunAttachments": "Testergebnisdateien hochladen",
+  "loc.input.help.publishRunAttachments": "Veröffentlichen von Anlagen auf Testlaufebene abonnieren oder kündigen. Wenn diese Option ausgewählt ist, werden Testergebnisdateien hochgeladen und dem Testlauf hinzugefügt."
 }

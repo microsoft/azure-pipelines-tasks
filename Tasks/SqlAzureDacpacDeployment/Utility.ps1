@@ -18,34 +18,80 @@ function Get-AgentIPRange
     )
 
     [hashtable] $IPRange = @{}
-    $sqlCmdArgs = "-S $serverName -U $sqlUsername -P $sqlPassword -Q `"select getdate()`""
 
-    Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
-
-    $ErrorActionPreference = 'Continue' 
-    ( Invoke-Expression "&sqlcmd.exe --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null
-    $ErrorActionPreference = 'Stop'
-
-    if($errors.Count -gt 0)
+    $sqlCmd = Get-Command -Name "SqlCmd.exe" -ErrorAction SilentlyContinue
+    if ($sqlCmd)
     {
-        $errorMsg = $errors[0].Exception.Message
-        Write-Verbose $errorMsg
+        $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -P `"$sqlPassword`" -Q `"select getdate()`""
+    
+        Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
-        $pattern = "([0-9]+).([0-9]+).([0-9]+)."
-        $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+        $ErrorActionPreference = 'Continue'
 
-        if($errorMsg.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($errorMsg) -eq $true)
+        $sqlCmdPath = $sqlCmd.Path
+        ( Invoke-Expression "& '$sqlCmdPath' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
+
+        $ErrorActionPreference = 'Stop'
+
+        if($errors.Count -gt 0)
         {
-            $ipRangePrefix = $regex.Match($errorMsg).Groups[0].Value;
+            $errorMsg = $errors[0].ToString()
+            Write-Verbose "Error Message: $errorMsg"
+
+            $pattern = "([0-9]+).([0-9]+).([0-9]+)."
+            $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+            if($errorMsg.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($errorMsg) -eq $true)
+            {
+                $ipRangePrefix = $regex.Match($errorMsg).Groups[0].Value;
+                Write-Verbose "IP Range Prefix $ipRangePrefix"
+
+                $IPRange.StartIPAddress = $ipRangePrefix + '0'
+                $IPRange.EndIPAddress = $ipRangePrefix + '255'
+            }
         }
-
-        Write-Verbose "IP Range Prefix $ipRangePrefix"
-
-        $IPRange.StartIPAddress = $ipRangePrefix + '0'
-        $IPRange.EndIPAddress = $ipRangePrefix + '255'
     }
+    else
+    {
+        Write-Verbose "SqlCmd.exe is not found in PATH" 
+
+        $IPRange.StartIPAddress = Get-AgentStartIPAddress
+        $IPRange.EndIPAddress = $IPRange.StartIPAddress
+    }    
 
     return $IPRange
+}
+
+
+function Get-AgentStartIPAddress
+{
+    $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
+    $vssCredential = [string]$endpoint.auth.parameters.AccessToken
+
+    $vssUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+    if ($vssUri.IndexOf("visualstudio.com", [System.StringComparison]::OrdinalIgnoreCase) -ne -1) {
+        # This hack finds the DTL uri for a hosted account. Note we can't support devfabric since the
+        # there subdomain is not used for DTL endpoint
+        $vssUri = $vssUri.Replace("visualstudio.com", "vsdtl.visualstudio.com")
+    }
+
+    Write-Verbose "Querying VSTS uri '$vssUri' to get external ip address"
+
+    # Getting start ip address from dtl service
+    Write-Verbose "Getting external ip address by making call to dtl service"
+    $vssUri = $vssUri + "/_apis/vslabs/ipaddress"
+    $username = ""
+    $password = $vssCredential
+
+    $basicAuth = ("{0}:{1}" -f $username, $password)
+    $basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
+    $basicAuth = [System.Convert]::ToBase64String($basicAuth)
+    $headers = @{Authorization=("Basic {0}" -f $basicAuth)}
+
+    $response = Invoke-RestMethod -Uri $($vssUri) -headers $headers -Method Get -ContentType "application/json"
+    Write-Verbose "Response: $response"
+
+    return $response.Value
 }
 
 function Get-Endpoint

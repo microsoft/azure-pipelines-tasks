@@ -18,13 +18,13 @@
   "loc.input.help.clean": "Übergibt das clean-Ziel (/t:clean) während des Buildvorgangs.",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild-Version",
-  "loc.input.help.msbuildVersion": "Wenn die bevorzugte Version nicht gefunden werden kann, wird stattdessen die neueste gefundene Version verwendet. Auf einem Mac wird xbuild (Mono) verwendet.",
+  "loc.input.help.msbuildVersion": "Wenn die bevorzugte Version nicht gefunden werden kann, wird stattdessen die neueste gefundene Version verwendet. Unter macOS wird xbuild (Mono) oder MSBuild (Visual Studio für Mac) verwendet.",
   "loc.input.label.msbuildLocation": "MSBuild-Speicherort",
-  "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild (unter Windows) oder xbuild (auf einem Mac) an.",
+  "loc.input.help.msbuildLocation": "Geben Sie optional den Pfad zu MSBuild (unter Windows) oder xbuild (unter macOS) an.",
   "loc.input.label.msbuildArchitecture": "MSBuild-Architektur",
   "loc.input.help.msbuildArchitecture": "Geben Sie optional die auszuführende MSBuild-Architektur an (x86, x64).",
   "loc.input.label.msbuildArguments": "Weitere Argumente",
-  "loc.input.help.msbuildArguments": "Zusätzliche Argumente, die an MSBuild (unter Windows) oder xbuild (auf einem Mac) übergeben werden.",
+  "loc.input.help.msbuildArguments": "Zusätzliche Argumente, die an MSBuild (unter Windows) oder xbuild (unter macOS) übergeben werden.",
   "loc.input.label.jdkSelection": "Für den Build zu verwendendes JDK auswählen",
   "loc.input.help.jdkSelection": "Wählen Sie das während des Buildvorgangs zu verwendende JDK aus, indem Sie eine JDK-Version auswählen, die während des Buildvorgangs erkannt wird, oder indem Sie manuell einen JDK-Pfad eingeben.",
   "loc.input.label.jdkVersion": "JDK-Version",
@@ -33,6 +33,9 @@
   "loc.input.help.jdkUserInputPath": "Verwendet die JDK-Version im angegebenen Pfad beim Buildvorgang.",
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
   "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "MSBuild wurde nicht gefunden: Version = {0}, Architektur = {1}. Es wird nach der aktuellen Version gesucht.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild wurde nicht gefunden: Version = {0}, Architektur = {1}. Versuchen Sie eine andere Kombination aus Version/Architektur, geben Sie einen Speicherort an, oder installieren Sie die entsprechende MSBuild-Version/-Architektur."
+  "loc.messages.JDKNotFound": "Die angegebene JDK-Version wurde nicht gefunden. Stellen Sie sicher, dass die Umgebungsvariable \"%s\" vorhanden ist und auf den Speicherort eines entsprechenden JDK festgelegt wurde.",
+  "loc.messages.NoMatchingProjects": "Es wurden keine Dateien gefunden, die %s entsprechen.",
+  "loc.messages.XamarinAndroidBuildFailed": "%s\nWeitere Informationen hierzu finden Sie unter https://go.microsoft.com/fwlink/?LinkId=760847.",
+  "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android-Aufgabenausführung ohne Fehler abgeschlossen.",
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild oder Xbuild (Mono) wurden auf dem MacOS oder Linux-Agent nicht gefunden."
 }

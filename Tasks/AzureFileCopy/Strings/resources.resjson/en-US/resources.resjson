@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
   "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for copying the files.",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager subscription to target for copying the files.",
   "loc.input.label.Destination": "Destination Type",
   "loc.input.help.Destination": "Select the destination, either Azure Blob or Azure VMs.",

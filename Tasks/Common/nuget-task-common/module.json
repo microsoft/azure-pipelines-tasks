@@ -10,6 +10,7 @@
         "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
         "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
         "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
-        "Error_NuGetToolInstallerFailer": "Tool install failed: %s"
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
     }
 }

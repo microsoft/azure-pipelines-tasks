@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "ログ ファイルを作成する",
   "loc.input.help.createLogFile": "必要に応じて、ログ ファイルを作成します (Windows のみ)。",
   "loc.messages.MSBuildLocationDeprecated0": "MSBuild の場所パラメーターは使用されていません。値 '{0}' を無視しています",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild のバージョン '{0}' およびアーキテクチャ '{1}' が見つかりません。",
   "loc.messages.MSBuildVersionDeprecated0": "MSBuild のバージョン パラメーターは使用されていません。値 '{0}' を無視しています。",
   "loc.messages.UnexpectedVSVersion0": "Visual Studio の予期しないバージョン '{0}'。",
   "loc.messages.VSLocationDeprecated0": "Visual Studio の場所パラメーターは使用されていません。値 '{0}' を無視しています",
-  "loc.messages.VSNotFoundTry": "Visual Studio が見つかりません。サポートされているバージョンの Visual Studio をインストールしてください。サポートされているバージョンの一覧のタスク定義をご参照ください。",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "Visual Studio バージョン '{0}' が見つかりません。最新バージョンを探しています。"
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

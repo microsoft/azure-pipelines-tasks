@@ -8,15 +8,15 @@
         "vs15Helper": "/path/to/vs15Helper.ps1"
     },
     "match": {
-        "**\\packages\\**\\*TestAdapter.dll": [
-            "/source/dir/packages/adapter/a.TestAdapter.dll",
-            "/source/dir/packages/adapter/b.testadapter.dll"
-        ],
         "\\source\\dir\\*.sln": [
             "/source/dir/a.sln"
         ]
     },
     "findMatch": {
+        "**\\*TestAdapter.dll": [
+            "/source/dir/packages/adapter/a.TestAdapter.dll",
+            "/source/dir/packages/adapter/b.testadapter.dll"
+        ],
         "/source/dir/some/*pattern": [
             "/source/dir/someFile2",
             "/source/dir/someFile1"
@@ -86,6 +86,10 @@
         "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
             "code": 0,
             "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
+        },
+        "wmic datafile where name='\\\\vs\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+			"code": 0,
+			"stdout" : "version=14.0.0.0"
         }
     },
     "rmRF": {
