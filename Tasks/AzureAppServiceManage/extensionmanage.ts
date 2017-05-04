@@ -24,7 +24,7 @@ export async function getInstalledExtensions(publishingProfile) {
             var extensionsList = JSON.parse(body);
             for(var extension of extensionsList) {
                 tl.debug('* ' + extension['id']);
-                installedExtensionsList[extension['id']] = extension['title'];
+                installedExtensionsList[extension['id']] = extension;
             }
             defer.resolve(installedExtensionsList);
         }
@@ -52,8 +52,9 @@ export async function installExtension(publishingProfile, extension: string) {
         }
         else if(response.statusCode === 200) {
             tl.debug(body);
-            console.log(tl.loc('ExtensionInstallSuccess', extension));
-            defer.resolve(JSON.parse(body));
+            var responseBody = JSON.parse(body);
+            console.log(tl.loc('ExtensionInstallSuccess', responseBody['title']));
+            defer.resolve(responseBody);
         }
         else {
             console.log(body);
@@ -64,19 +65,48 @@ export async function installExtension(publishingProfile, extension: string) {
     return defer.promise;
 }
 
-export async function installExtensions(publishingProfile, extensions: Array<string>) {
+export async function installExtensions(publishingProfile, extensions: Array<string>, extensionOutputVariables: Array<string>) {
+
+    var outputVariableCount = 0;
+    var outputVariableSize = extensionOutputVariables.length;
     var InstalledExtensions = await getInstalledExtensions(publishingProfile);
+    var extensionInfo = null;
     var anyExtensionInstalled = false;
     for(var extension of extensions) {
         extension = extension.trim();
         if(InstalledExtensions[extension]) {
-            console.log(tl.loc('ExtensionAlreadyAvaiable', InstalledExtensions[extension]));
+            extensionInfo = InstalledExtensions[extension];
+            console.log(tl.loc('ExtensionAlreadyAvaiable', extensionInfo['title']));
         }
         else {
             tl.debug("Extension '" + extension + "' not installed. Installing...");
-            await installExtension(publishingProfile, extension);
+            extensionInfo = await installExtension(publishingProfile, extension);
             anyExtensionInstalled = true;
+        }
+        if(outputVariableCount < outputVariableSize) {
+            var extensionLocalPath: string = getExtensionLocalPath(extensionInfo);
+            tl.debug('Set Variable ' + extensionOutputVariables[outputVariableCount] + ' to value: ' + extensionLocalPath);
+            tl.setVariable(extensionOutputVariables[outputVariableCount], extensionLocalPath);
+            outputVariableCount += 1;
         }
     }
     return anyExtensionInstalled;
+}
+
+function getExtensionLocalPath(extensionInfo: JSON): string {
+    var extensionId: string = extensionInfo['id'];
+    var homeDir = "D:\\home\\";
+
+    if(extensionId.startsWith('python2')) {
+        return homeDir + "Python27";
+    }
+    else if(extensionId.startsWith('python351') || extensionId.startsWith('python352')) {
+        return homeDir + "Python35";
+    }
+    else if(extensionId.startsWith('python3')) {
+        return homeDir + extensionId;
+    }
+    else {
+        return extensionInfo['local_path'];
+    }
 }

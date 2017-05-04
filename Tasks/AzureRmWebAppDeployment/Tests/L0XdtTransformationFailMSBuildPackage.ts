@@ -33,7 +33,6 @@ process.env["AGENT_NAME"] = "author";
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "cmd": "cmd",
-        "msdeploy": "msdeploy",
         "DefaultWorkingDirectory/ctt/ctt.exe": "DefaultWorkingDirectory/ctt/ctt.exe"
     },
     "stats": {
@@ -48,25 +47,20 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "cmd": true,
         "webAppPkg.zip": true,
         "webAppPkg": true,
-        "msdeploy": true,
         "DefaultWorkingDirectory/ctt/ctt.exe": true
     },
-    "exec": {        
-        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw": {
-            "code": 0,
-            "stdout": "ctt execution successful"
-        },
-        "msdeploy -verb:sync -source:package=\'DefaultWorkingDirectory\\temp_web_package.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
+    "exec": {
+        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
             "code": 0,
             "stdout": "Executed Successfully"
-        }
-    },
-    "rmRF": {
-        "temp_web_package_random_path": {
-            "success": true
         },
-        "DefaultWorkingDirectory\temp_web_package.zip": {
-            "success": true
+        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw": {
+            "code": 1,
+            "stderr": "ctt execution failed"
         }
     },
     "exist": {
@@ -78,7 +72,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
-        "**/*.config": ["C:\\tempFolder\\web.config", "C:\\tempFolder\\web.Release.config", "C:\\tempFolder\\web.Debug.config"]
+        "**/*.config": ["C:\\tempFolder\\web.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -180,20 +174,6 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/ziputility.js', {
-    unzip: function() {
-
-    },
-    getArchivedEntries: function(webDeployPkg) {
-        return {
-            "entries":[
-                "systemInfo.xml",
-                "parameters.xml"
-            ]
-        };
-    }
-});
-
 tr.registerMock('webdeployment-common/utility.js', {
     isInputPkgIsFolder: function() {
         return false;    
@@ -217,31 +197,7 @@ tr.registerMock('webdeployment-common/utility.js', {
         };
     },
     isMSDeployPackage: function() {
-        return true;
-    }
-});
-
-var fs = require('fs');
-tr.registerMock('fs', {
-    createWriteStream: function (filePath, options) {
-        return { 
-            "isWriteStreamObj": true,
-            "on": (event) => {
-                console.log("event: " + event + " has occurred");
-            },
-            "end" : () => { return true }
-        };
-    },
-    ReadStream: fs.ReadStream,
-    WriteStream: fs.WriteStream,
-    openSync: function (fd, options) {
-        return true;
-    },
-    closeSync: function (fd) {
-        return true;
-    },
-    fsyncSync: function(fd) {
-        return true;
+        return false;
     }
 });
 
@@ -263,5 +219,6 @@ tr.registerMock('path', {
     },
     dirname: path.dirname
 });
+
 tr.setAnswers(a);
 tr.run();

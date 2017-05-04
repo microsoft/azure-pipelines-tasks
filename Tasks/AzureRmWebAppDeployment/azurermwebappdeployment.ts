@@ -10,7 +10,7 @@ var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('./kuduutility.js');
-var generateWebConfigUtil = require('webdeployment-common/generatewebconfig.js');
+var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
 
 async function run() {
@@ -94,6 +94,7 @@ async function run() {
             var azureWebAppDetails = null;
             var virtualApplicationPhysicalPath = null;
             if(virtualApplication) {
+                virtualApplication = (virtualApplication.startsWith("/")) ? virtualApplication.substr(1) : virtualApplication;
                 azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
                 var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
@@ -112,20 +113,13 @@ async function run() {
                 var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
 
                 if (generateWebConfig) {
-                    var appSetingsVariables = addWebConfigFile(folderPath, webConfigParametersStr, virtualApplicationPhysicalPath);
-                    if(Object.keys(appSetingsVariables).length != 0 && appSetingsVariables.constructor === Object) {
-                        tl.debug('Updating app settings in Azure App Service from web.config');
-                        var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                        for(var appSettingVariable in appSetingsVariables) {
-                            tl.debug('Setting appsettings value: ' + appSettingVariable + ' = ' + appSetingsVariables[appSettingVariable]);
-                            appSettings.properties[appSettingVariable] = appSetingsVariables[appSettingVariable];
-                        }
-                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-                        tl.debug('Updated app settings value in Azure App Service.');
-                    }
+                    tl.debug('parsing web.config parameters');
+                    var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+                    generateWebConfigUtil.addWebConfigFile(folderPath, webConfigParameters, virtualApplicationPhysicalPath);
                 }
                 if (applyFileTransformFlag) {
-                    fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+                    var isMSBuildPackage = !isFolderBasedDeployment  && (await deployUtility.isMSDeployPackage(webDeployPkg));
+                    fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath, isMSBuildPackage);
                 }
 
                 var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
@@ -172,19 +166,19 @@ async function run() {
                 await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                                 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                                 additionalArguments, isFolderBasedDeployment, useWebDeploy);
-            } else {
-                tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
-                if(azureWebAppDetails == null) {
-                    azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                }
-                await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+        } else {
+            tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
+            if(azureWebAppDetails == null) {
+                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            }
+            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
-            }
-            if(scriptType) {
-                var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
-                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
-            }
-            await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        }
+        if(scriptType) {
+            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
+            await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+        }
+        await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
 
         }
     }
@@ -280,40 +274,5 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
 }
 
-function addWebConfigFile(folderPath: any, webConfigParametersStr: string, rootDirectoryPath: string) {
-    //Generate the web.config file if it does not already exist.
-    var webConfigPath = path.join(folderPath, "web.config");
-    var updateAppServiceAppSettings = { };
-    if (!tl.exist(webConfigPath)) {
-        tl.debug('web.config file does not exist. Generating.');
-        //Extract out the appType parameter as it is not to be replaced.
-        var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
-        if(!webConfigParameters || !webConfigParameters['appType']) {
-            throw new Error(tl.loc("FailedToGenerateWebConfig", tl.loc("MissingWebConfigParameters")));
-        }
-        var appType: string = webConfigParameters['appType'].value;
-        delete webConfigParameters['appType'];
-        if(appType != "node") {
-            rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
-            tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
-            webConfigParameters['KUDU_WORKING_DIRECTORY'] = {
-                value: rootDirectoryPath
-            };
-            updateAppServiceAppSettings['PYTHON_EXT_PATH'] = webConfigParameters['PYTHON_PATH'].value;
-        }
-        try {
-            // Create web.config
-            generateWebConfigUtil.generateWebConfigFile(webConfigPath, appType, webConfigParameters);
-            console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
-        }
-        catch (error) {
-            throw new Error(tl.loc("FailedToGenerateWebConfig", error));
-        }
-    }
-    else {
-        console.log(tl.loc('WebConfigAlreadyExists'));
-    }
-    return updateAppServiceAppSettings;
-}
 
 run();
