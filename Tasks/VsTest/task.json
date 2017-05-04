@@ -215,7 +215,7 @@
             "label": "Settings file",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests.",
             "groupName": "executionOptions"
         },
         {
