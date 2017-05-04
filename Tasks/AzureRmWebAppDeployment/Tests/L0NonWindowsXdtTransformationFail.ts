@@ -171,6 +171,11 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function() {
         return "DefaultWorkingDirectory\\temp_web_package.zip"
+    },
+    getArchivedEntries: function() {
+        return {
+            entries: ['Web.config', 'Web.debug.config']
+        }
     }
 });
 
