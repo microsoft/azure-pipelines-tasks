@@ -7,10 +7,10 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, webDeployPkg: string) {
+export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string, isMSBuildPackage: boolean) {
 
     if(xmlTransformation) {
-        if(!isFolderBasedDeployment && utility.isMSDeployPackage(webDeployPkg)) {
+        if(isMSBuildPackage) {
             var debugMode = tl.getVariable('system.debug');
             if(debugMode && debugMode.toLowerCase() == 'true') {
                 tl.warning(tl.loc('AutoParameterizationMessage'));

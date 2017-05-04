@@ -118,7 +118,8 @@ async function run() {
                     generateWebConfigUtil.addWebConfigFile(folderPath, webConfigParameters, virtualApplicationPhysicalPath);
                 }
                 if (applyFileTransformFlag) {
-                    fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath, webDeployPkg);
+                    var isMSBuildPackage = !isFolderBasedDeployment  && (await deployUtility.isMSDeployPackage(webDeployPkg));
+                    fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath, isMSBuildPackage);
                 }
 
                 var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
