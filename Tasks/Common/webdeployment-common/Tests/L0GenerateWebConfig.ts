@@ -20,15 +20,13 @@ mockery.registerMock('fs', {
     }
 });
 
-var generateWebConfig = require('webdeployment-common/generatewebconfig.js');
-generateWebConfig.generateWebConfigFile('node',
+var generateWebConfig = require('webdeployment-common/webconfigutil.js');
+generateWebConfig.generateWebConfigFile(
+    'node',
     'TemplatePath/node',
     {
-        "Handler": {
-            "value": "iisnode"
-        },
-        "NodeStartFile": {
-            "value": "server.js"
-        }
-    });
+        "Handler": "iisnode",
+        "NodeStartFile":  "server.js"
+    }
+);
 
