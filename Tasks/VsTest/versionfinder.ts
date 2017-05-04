@@ -70,7 +70,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
             return testConfig.vsTestLocation;
         }
-        throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
+        throw (new Error(tl.loc('VstestLocationDoesNotExist', testConfig.vsTestLocation)));
     }
 
     if (testConfig.vsTestVersion.toLowerCase() === 'latest') {
