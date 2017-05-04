@@ -1,6 +1,6 @@
 {
   "name": "nugetpublisher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nuget Publisher Build Task",
   "main": "nugetpublisher.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20",
+    "vsts-task-lib": "2.0.2-preview",
     "xmlreader": "^0.2.3"
   }
 }

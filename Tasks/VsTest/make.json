@@ -2,11 +2,11 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://testselector.blob.core.windows.net/testselector/3663651/TestSelector.zip",
+                "url": "https://testselector.blob.core.windows.net/testselector/3843116/TestSelector.zip",
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/3673529/TestExecution.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/3840309/TestExecution.zip",
                 "dest": "./Modules"
             }
         ]

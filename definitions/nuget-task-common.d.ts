@@ -361,7 +361,7 @@ declare module 'nuget-task-common/NuGetConfigHelper' {
 	    tempNugetConfigPath: string;
 	    constructor(nugetPath: string, nugetConfigPath: string, authInfo: auth.NuGetAuthInfo, environmentSettings: ngToolRunner.NuGetEnvironmentSettings);
 	    ensureTempConfigCreated(): void;
-	    setSources(packageSources: IPackageSource[]): void;
+	    setSources(packageSources: IPackageSource[], includeAuth: boolean): void;
 	    getSourcesFromConfig(): Q.Promise<IPackageSource[]>;
 	    private removeSourcesInNugetConfig(packageSources);
 	    private addSourcesInNugetConfig(packageSources);
@@ -379,5 +379,6 @@ declare module 'nuget-task-common/Utility' {
 }
 
 declare module 'nuget-task-common/NuGetToolGetter' {
-	export function getNuGet(versionSpec: string);
+	export const NUGET_EXE_TOOL_PATH_ENV_VAR: string;
+	export function getNuGet(versionSpec: string, checkLatest?: boolean, addNuGetToPath?: boolean);
 }

@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 116,
-        "Patch": 0
+        "Minor": 117,
+        "Patch": 1
     },
     "demands": [
         "msbuild"
@@ -33,6 +33,55 @@
             "defaultValue": "**/*.sln",
             "required": true,
             "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all sub folders."
+        },
+        {
+            "name": "msbuildLocationMethod",
+            "type": "radio",
+            "label": "MSBuild",
+            "required": false,
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
+            "name": "msbuildVersion",
+            "type": "pickList",
+            "label": "MSBuild Version",
+            "required": false,
+            "defaultValue": "15.0",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options": {
+                "latest": "Latest",
+                "15.0": "MSBuild 15.0",
+                "14.0": "MSBuild 14.0",
+                "12.0": "MSBuild 12.0",
+                "4.0": "MSBuild 4.0"
+            }
+        },
+        {
+            "name": "msbuildArchitecture",
+            "type": "pickList",
+            "label": "MSBuild Architecture",
+            "defaultValue": "x86",
+            "required": false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options": {
+                "x86": "MSBuild x86",
+                "x64": "MSBuild x64"
+            }
+        },
+        {
+            "name": "msbuildLocation",
+            "type": "string",
+            "label": "Path to MSBuild",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to MSBuild.",
+            "visibleRule": "msbuildLocationMethod = location"
         },
         {
             "name": "platform",
@@ -99,59 +148,6 @@
             "required": false,
             "helpMarkDown": "Optionally create a log file (Windows only).",
             "groupName": "advanced"
-        },
-        {
-            "name": "msbuildLocationMethod",
-            "type": "radio",
-            "label": "MSBuild",
-            "required": false,
-            "groupName": "advanced",
-            "defaultValue": "version",
-            "options": {
-                "version": "Version",
-                "location": "Specify Location"
-            }
-        },
-        {
-            "name": "msbuildVersion",
-            "type": "pickList",
-            "label": "MSBuild Version",
-            "required": false,
-            "groupName": "advanced",
-            "defaultValue": "15.0",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "latest": "Latest",
-                "15.0": "MSBuild 15.0",
-                "14.0": "MSBuild 14.0",
-                "12.0": "MSBuild 12.0",
-                "4.0": "MSBuild 4.0"
-            }
-        },
-        {
-            "name": "msbuildArchitecture",
-            "type": "pickList",
-            "label": "MSBuild Architecture",
-            "defaultValue": "x86",
-            "required": false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
-            "groupName": "advanced",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "x86": "MSBuild x86",
-                "x64": "MSBuild x64"
-            }
-        },
-        {
-            "name": "msbuildLocation",
-            "type": "string",
-            "label": "Path to MSBuild",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.",
-            "visibleRule": "msbuildLocationMethod = location",
-            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",
@@ -168,14 +164,8 @@
         }
     },
     "messages": {
-        "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
-        "MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.",
         "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
         "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
-        "MSB_Build0" : "Build {0}",
-        "MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
-        "MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
-        "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
-        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent"
+        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
     }
 }

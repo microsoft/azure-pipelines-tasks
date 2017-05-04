@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 40
+    "Patch": 41
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -64,6 +64,7 @@
   },
   "messages": {
     "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
+    "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed"
   }
 }

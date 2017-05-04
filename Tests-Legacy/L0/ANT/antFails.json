@@ -29,5 +29,15 @@
             "success": true,
             "message": "success"
         }
+    },
+    "find": {
+        "/user/build": [
+            "/user/build/fun/test-123.xml"
+        ]
+    },
+    "match": {
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ]
     }
 }

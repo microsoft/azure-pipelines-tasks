@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (PRÉVERSION)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "Créez, testez et publiez à l'aide de la ligne de commande dotnet core.",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Publier des projets web",
   "loc.input.help.publishWebProjects": "Si true, la tâche tente de rechercher les projets web dans le dépôt et exécute la commande de publication sur ces projets. Ils sont identifiés par la présence d'un fichier web.config ou d'un dossier wwwroot dans le répertoire.",
   "loc.input.label.projects": "Projet(s)",
-  "loc.input.help.projects": "Chemin relatif du ou des fichiers project.json à partir de la racine de dépôt. Les caractères génériques peuvent être utilisés. Par exemple, **/project.json pour tous les fichiers project.json dans tous les sous-dossiers.",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments de la commande sélectionnée. Par exemple, configuration de build, dossier de sortie, runtime. Les arguments dépendent de la commande sélectionnée.",
   "loc.input.label.zipAfterPublish": "Compresser les projets publiés",
   "loc.input.help.zipAfterPublish": "Si true, le dossier créé par la commande publier est compressé.",
   "loc.messages.noProjectFilesFound": "Le ou les fichiers projet correspondant au modèle spécifié sont introuvables.",
   "loc.messages.noWebProjctFound": "Aucun projet web n'a été trouvé dans le dépôt. Les projets web sont identifiés par la présence d'un fichier web.config ou d'un dossier wwwroot dans le répertoire.",
-  "loc.messages.dotnetCommandFailed": "Échec de la commande dotnet avec le code de sortie non nul : %d.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "Échec de la compression avec l'erreur : %s",
   "loc.messages.noPublishFolderFoundToZip": "Un dossier de publication à compresser pour le fichier projet est introuvable : %s."
 }

@@ -13,5 +13,6 @@
   "loc.input.help.ArtifactType": "TFS/Team Services に成果物を保存するか、ビルド エージェントからアクセス可能なファイル共有にコピーするかを選択します。",
   "loc.input.label.TargetPath": "パス",
   "loc.input.help.TargetPath": "成果物をコピーする UNC ファイル パスの場所。ビルド エージェントからアクセス可能である必要があります。",
-  "loc.messages.ErrorFileShareLinux": "OSX または Linux からファイル共有に成果物を公開できません。[成果物の種類] を [サーバー] に変更するか、Windows を使用するか、あるいは「ファイルのコピー」、「SSH によるファイルのコピー」、「FTP アップロード」タスクを使用します。"
+  "loc.messages.ErrorFileShareLinux": "OSX または Linux からファイル共有に成果物を公開できません。[成果物の種類] を [サーバー] に変更するか、Windows を使用するか、あるいは「ファイルのコピー」、「SSH によるファイルのコピー」、「FTP アップロード」タスクを使用します。",
+  "loc.messages.ErrorHostTypeNotSupported": "ビルド ジョブ内でのみ、このタスクはサポートされます。"
 }

@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 2,
-    "Patch": 1
+    "Minor": 3,
+    "Patch": 2
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
@@ -24,17 +24,26 @@
     {
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
     },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true
+      "isExpanded": true,
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+    },
+    {
+      "name": "ApplicationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
+      "isExpanded": true,
+      "visibleRule": "WebAppKind = linux"
     }
   ],
   "inputs": [
@@ -58,12 +67,71 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
+      "name": "ServerfarmId",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ServerfarmId",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppName = invalidwebappname",
+      "properties": {
+        "EditableOptions": "false"
+      }
+    },
+    {
+      "name": "WebAppKind",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppKind",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppName = invalidwebappname",
+      "properties": {
+        "EditableOptions": "false"
+      }
+    },
+    {
+      "name": "DockerNamespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerNamespace",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "WebAppKind = linux",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
+    },
+    {
+      "name": "DockerRepository",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerRepository",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "WebAppKind = linux",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
+    },
+    {
+      "name": "DockerImageTag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerImageTag",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKind = linux",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
+    },
+    {
+      "name": "StartupCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartupCommand",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKind = linux",
+      "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
+    },
+    {
       "name": "DeployToSlotFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.DeployToSlotFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag"
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
     },
     {
       "name": "ResourceGroupName",
@@ -95,6 +163,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -103,6 +172,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -168,6 +238,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+      }
+    },
+    {
+      "name": "AppSettings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AppSettings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
     },
     {
@@ -279,6 +361,24 @@
       "parameters": {
         "WebAppName": "$(WebAppName)"
       }
+    },
+    {
+      "target": "ServerfarmId",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMServerfarmId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{serverFarmId}}}\",\"DisplayValue\":\"{{{serverFarmId}}}\"}"
+    },
+    {
+      "target": "WebAppKind",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppKind",
+      "parameters": {
+        "ServerfarmId": "$(ServerfarmId)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{kind}}}\",\"DisplayValue\":\"{{{kind}}}\"}"
     },
     {
       "target": "SlotName",

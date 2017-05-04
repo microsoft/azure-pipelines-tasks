@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 116,
+        "Minor": 117,
         "Patch": 0
     },
     "demands": [
@@ -105,7 +105,7 @@
             "defaultValue": "xbuild",
             "options": {
                 "xbuild": "xbuild (Xamarin Studio)",
-                "MSBuild": "MSBuild (Visual Studio for Mac)"
+                "msbuild": "MSBuild (Visual Studio for Mac)"
             }
         },
         {

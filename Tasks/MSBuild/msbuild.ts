@@ -38,7 +38,7 @@ async function run() {
             msbuildTool = tl.getInput('msbuildLocation');
         } 
 
-        let filesList: string[] = tl.findMatch(null, solution, null, { matchBase: true });
+        let filesList: string[] = tl.findMatch(null, solution, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
         for (let file of filesList) {
             if (clean) {
                 let cleanTool: ToolRunner = tl.tool(msbuildTool);

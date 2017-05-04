@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "PowerShell in Service Fabric",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=841538)",
+  "loc.description": "Esegue uno script PowerShell nel contesto di una connessione cluster di Azure Service Fabric.",
+  "loc.instanceNameFormat": "Script PowerShell in Service Fabric: $(ScriptType)",
+  "loc.input.label.serviceConnectionName": "Connessione cluster",
+  "loc.input.help.serviceConnectionName": "Cluster di Azure Service Fabric per il quale verrà stabilita una connessione durante l'esecuzione dello script PowerShell specificato.",
+  "loc.input.label.ScriptType": "Tipo di script",
+  "loc.input.help.ScriptType": "Tipo dello script: Percorso file o Script inline",
+  "loc.input.label.ScriptPath": "Percorso script",
+  "loc.input.help.ScriptPath": "Percorso dello script. Deve essere un percorso completo o relativo rispetto alla directory di lavoro predefinita.",
+  "loc.input.label.Inline": "Script inline",
+  "loc.input.help.Inline": "Consente di immettere lo script da eseguire.",
+  "loc.input.label.ScriptArguments": "Argomenti script",
+  "loc.input.help.ScriptArguments": "Parametri aggiuntivi da passare a PowerShell. Possono essere ordinali o denominati.",
+  "loc.messages.InvalidScriptArguments0": "Gli argomenti '{0}' dello script non sono validi. Le interruzioni di riga non sono consentite.",
+  "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi."
+}

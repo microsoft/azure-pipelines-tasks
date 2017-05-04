@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 113,
+    "Minor": 117,
     "Patch": 0
   },
   "demands": [
@@ -130,7 +130,8 @@
       "options": {
         "x86": "MSBuild x86",
         "x64": "MSBuild x64"
-      }
+      },
+      "visibleRule": "msbuildLocationMethod = version"
     },
     {
       "name": "msbuildArguments",
@@ -208,7 +209,10 @@
     }
   },
   "messages": {
-    "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "ms-resource:loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion",
-    "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent"
+    "JDKNotFound": "ms-resource:loc.messages.JDKNotFound",
+    "NoMatchingProjects": "ms-resource:loc.messages.NoMatchingProjects",
+    "XamarinAndroidBuildFailed": "ms-resource:loc.messages.XamarinAndroidBuildFailed",
+    "XamarinAndroidSucceeded": "ms-resource:loc.messages.XamarinAndroidSucceeded",
+    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
   }
 }

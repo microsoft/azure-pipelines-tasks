@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 115,
+    "Minor": 117,
     "Patch": 0
   },
   "demands": [
@@ -137,6 +137,16 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
       "visibleRule": "codeCoverageTool != None"
     },
     {
@@ -367,6 +377,7 @@
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
-    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }
 }

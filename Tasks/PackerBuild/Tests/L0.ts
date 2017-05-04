@@ -4,7 +4,7 @@ import * as ttm from 'vsts-task-lib/mock-test';
 import tl = require('vsts-task-lib');
 
 describe('PackerBuild Suite', function() {
-     this.timeout(30000);
+    this.timeout(30000);
     before((done) => {
         done();
     });

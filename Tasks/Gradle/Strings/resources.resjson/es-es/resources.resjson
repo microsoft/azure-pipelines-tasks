@@ -25,6 +25,8 @@
   "loc.input.help.classFilesDirectories": "Lista separada por comas de los directorios que contienen archivos de clase y archivos de almacenamiento (JAR, WAR, etc.). La cobertura de código se notifica para los archivos de clase que están en los directorios. Normalmente, se buscan clases en \"build/classes/main\", que es el directorio de clases predeterminado de las compilaciones de Gradle.",
   "loc.input.label.classFilter": "Filtros de inclusión/exclusión de clase",
   "loc.input.help.classFilter": "Lista separada por comas de los filtros para incluir o excluir clases de la recopilación de cobertura de código. Por ejemplo: +:com.*,+:org.*,-:my.app*.*.",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.javaHomeSelection": "Establecer JAVA_HOME por",
   "loc.input.help.javaHomeSelection": "Establece JAVA_HOME seleccionando una versión de JDK que se detectará durante las compilaciones o especificando manualmente una ruta de acceso del JDK.",
   "loc.input.label.jdkVersion": "Versión de JDK",
@@ -92,5 +94,6 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Resultados del análisis de código",
   "loc.messages.codeAnalysisDisabled": "El análisis de código está deshabilitado fuera del entorno de compilación. No se encontró ningún valor para: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Buscar JAVA_HOME para Java %s %s",
-  "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que la variable de entorno '%s' existe y está establecida en la ubicación del JDK correspondiente."
+  "loc.messages.FailedToLocateSpecifiedJVM": "No se encontró la versión de JDK especificada. Asegúrese de que la variable de entorno '%s' existe y está establecida en la ubicación del JDK correspondiente.",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

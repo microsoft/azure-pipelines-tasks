@@ -1,0 +1,58 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS150COMNTools": "/vs/path",
+        "VS140COMNTools": "/vs/path",
+        "VS120COMNTools": "/vs/path",
+        "vs15Helper": "/path/to/vs15Helper.ps1"
+    },
+    "findMatch": {
+        "**\\*TestAdapter.dll": [],
+        "/source/dir/some/*pattern": [
+            "/source/dir/someFile2",
+            "/source/dir/someFile1"
+        ],
+        "/source/dir/some/*pattern,!/source/dir/some/*excludePattern": [
+            "/source/dir/someFile1"
+        ],
+        "\\source\\dir\\TestResults\\*.trx": [
+            "a.trx"
+        ],
+        "**\\packages\\**\\*TestAdapter.dll": [],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ],
+        "/search/dir/someFile1": [
+            "/search/dir/someFile1"
+        ]
+    },
+    "exec": {
+        "[^~]*logger:trx$": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
+            "code": 0,
+            "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
+        },
+        "wmic datafile where name='\\\\vs2017\\\\installation\\\\folder\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+            "code": 0,
+            "stdout": "version=15.0.0.0"
+        }
+    },
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {
+        "^(?:[\\w]\\:|\\\\)(\\\\[A-z_\\-\\s0-9\\.]+)+\\.(runsettings)$": true
+    },
+    "stats": {
+        "^(?:[\\w]\\:|\\\\)(\\\\[A-z_\\-\\s0-9\\.]+)+\\.(runsettings)$": {
+            "isFile": true
+        }
+    }
+}

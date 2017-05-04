@@ -1,6 +1,6 @@
-#Build your code using Ant in VSTS
+# Build your code using Ant in VSTS
 
-###Parameters for Ant build task are explained below
+### Parameters for Ant build task are explained below
 
 - **Ant Build File :** This is a Required field. Provide relative path from the repository root to the Ant build file. To know more [click here](https://ant.apache.org/manual/using.html#buildfile)
 
@@ -8,7 +8,7 @@
 
 - **Target(s) :** Provide The task(s) for Ant to execute for this build. To know more [click here](https://ant.apache.org/manual/targets.html#targets)
 
-####JUnit Test Results
+#### JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
 - **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Ant build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
@@ -17,7 +17,7 @@ Use the next three options to manage your JUnit test results in VSTS
 
 - **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
-####Advanced
+#### Advanced
 Use the next options to manage your `ANT_HOME` and `JAVA_HOME` attributes
 
 - **Set ANT_HOME Path :** If set, overrides any existing `ANT_HOME` environment variable with the given path.

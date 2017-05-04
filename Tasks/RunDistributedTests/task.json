@@ -13,8 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 49
+        "Patch": 52
     },
+    "runsOn": [
+        "Agent"
+    ],
     "demands": [],
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -71,7 +74,7 @@
             "type": "pickList",
             "label": "Test Plan",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -84,7 +87,7 @@
             "type": "pickList",
             "label": "Test Suite",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "MultiSelect": "True",
                 "DisableManageLink": "True"
@@ -98,7 +101,7 @@
             "type": "pickList",
             "label": "Test Configuration",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -132,7 +135,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests.",
             "groupName": "executionOptions"
         },
         {

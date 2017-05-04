@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 6
+        "Minor": 1,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -60,6 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
+                "StopWithDeallocate":  "Stop and deallocate virtual machines", 
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -174,19 +175,46 @@
             "groupName": "AdvancedDeploymentOptions",
             "options": {
                 "None": "None",
-                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
+                "ConfigureVMwithWinRM": "Configure with WinRM agent",
+                "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
             },
-            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
-            "name": "machineGroupName",
-            "type": "pickList",
-            "label": "Machine group",
+            "name": "deploymentGroupEndpoint",
+            "type": "connectedService:ExternalTfs",
+            "label": "TFS/VSTS endpoint",
             "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "helpMarkDown": "Select a machine group",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"Add\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​",
             "properties": {
-                "DisableManageLink": "True"
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "project",
+            "type": "pickList",
+            "label": "Team project",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        
+        {
+            "name": "deploymentGroupName",
+            "type": "pickList",
+            "label": "Deployment Group",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Specify the Deployment Group against which the Agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -194,19 +222,9 @@
             "type": "boolean",
             "label": "Copy Azure VM tags to agents",
             "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "defaultValue": true,
-            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
-        },
-        {
-            "name": "vstsPATToken",
-            "type": "string",
-            "label": "Personal access token",
-            "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
         {
             "name": "outputVariable",
@@ -229,14 +247,21 @@
             "target": "location",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureLocations"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
-            "target": "machineGroupName",
-            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "tfs:teamfoundation"
+            "target": "project",
+            "endpointId": "$(deploymentGroupEndpoint)",
+            "dataSourceName": "Projects",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "deploymentGroupName",
+            "endpointId": "$(deploymentGroupEndpoint)",
+            "dataSourceName": "DeploymentGroups",
+            "parameters": {
+                "project": "$(project)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
@@ -273,6 +298,7 @@
         "VM_Start": "Starting virtual machine: %s",
         "VM_Restart": "Restarting virtual machine: %s",
         "VM_Stop": "Stopping virtual machine: %s",
+        "VM_Deallocate": "Deallocating virtual machine: %s",
         "VM_Delete": "Deleting virtual machine: %s",
         "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
         "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
@@ -285,24 +311,14 @@
         "InvalidAction": "This action is not defined. Check with the task author.",
         "TaskNotFound": "Task.json file could not be found: %s",
         "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
-        "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
         "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
-        "ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
-        "ExtensionAlreadyPresentVm": "Extension %s is already present on the virtual machine '%s'",
         "AddExtension": "Adding extension '%s' on virtual machine '%s'",
         "DeleteExtension": "Trying to delete extension %s from virtual machine %s",
-        "ARG_AllResourceNotFound": "'%s' not found on resource group '%s'",
         "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
         "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
         "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
-        "FailedToAddRuleToNetworkSecurityGroup": "Failed to add the network security rule to the network security group %s",
-        "FetchingOfNetworkSecurityGroupFailed": "Fetching of network security groups failed with error: %s",
         "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
-        "FailedToAddNetworkSecurityRule": "Failed to add the network security rule to the security group %s",
-        "FailedToEnablePrereqs": "Failed to enable prerequisites",
         "FailedToDeleteExtension": "Deletion of extension failed",
-        "AddedInboundNatRuleLB": "Adding inbound NAT rule to the load balancer %s ",
-        "InboundNatRuleLBPresent": "Relevant inbound NAT rules already present for the load balancer %s",
         "CredentialsCannotBeNull": "'credentials' cannot be null.",
         "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
         "CallbackCannotBeNull": "callback cannot be null.",
@@ -328,17 +344,8 @@
         "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
         "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
         "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
-        "ErrorFetchingNatRules": "Error while fetching Nat rules",
-        "UnableToFetchFQDN": "Unable to fetch FQDN data from one or more VMs",
         "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-        "EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
-        "ARG_ResourceNotFound": "%s is not found on the resource Group %s. Error Count: %s",
-        "FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
-        "ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
         "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
-        "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
-        "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
-        "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
         "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
         "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
         "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
@@ -351,25 +358,28 @@
         "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
         "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
         "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
-        "DeleteAgentManually": "After the task execution completes, if the machine group agent corresponding to the virtual machine %s is present but not active in the machine group %s, then please delete it manually from the machine group.",
-        "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
-        "MGAgentAddedOnAllVMs": "Machine group agent added on all virtual machines of the resource group",
-        "MGAgentDeletedFromAllVMs": "Machine group agent deleted from all virtual machines of the resource group",
-        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is 1",
-        "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
+        "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
+        "DGAgentOperationOnAllVMsFailed": "Deployment group agent %s did not succeed on all VMs. %s",
+        "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
+        "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
+        "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
         "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
         "VMStarted": "Started virtual machine: %s",
         "VMTransitioningSkipExtensionAddition": "Virtual machine %s is in a transitioning state. Skipping adding extension on it.",
         "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
         "VMDetailsFetchSucceeded": "Fetched details of virtual machine %s.",
-        "AddingMGAgentOnVMs": "Adding machine group agent on the resource group virutal machines.",
-        "DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
-        "DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
+        "AddingDGAgentOnVMs": "Adding deployment group agent on the resource group virtual machines.",
+        "DeletingDGAgentOnVMs": "Deleting deployment group agent on virtual machines",
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+        "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
+        "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
+        "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
+        "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
+        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
         "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
     }
 }

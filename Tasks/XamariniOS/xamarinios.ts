@@ -90,8 +90,8 @@ async function run() {
                 let keychainPwd: string = '_xamariniostask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
-                tl.debug('installed cert in temp keychain');
-                await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
+                tl.debug('installing cert in temp keychain');
+                await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd, false);
                 codesignKeychain = keychain;
 
                 //find signing identity

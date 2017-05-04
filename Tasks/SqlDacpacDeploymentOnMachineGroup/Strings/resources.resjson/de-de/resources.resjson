@@ -1,18 +1,20 @@
 {
-  "loc.friendlyName": "SQL Dacpac-Computergruppe bereitstellen (Vorschau)",
+  "loc.friendlyName": "SQL Server-Datenbank bereitstellen (Vorschau)",
   "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/sqldacpacmachinegroupreadme)",
-  "loc.description": "Stellen Sie die Datenbank mithilfe von \"sqlpackage.exe\" oder \"Invoke-Sqlcmd\" bereit.",
+  "loc.description": "Stellen Sie die SQL Server-Datenbank mithilfe von DACPAC- oder SQL-Skripts bereit.",
   "loc.instanceNameFormat": "Bereitstellen über: $(TaskType)",
   "loc.input.label.TaskType": "SQL bereitstellen über",
   "loc.input.help.TaskType": "Geben Sie an, wie Sie die Datenbank bereitstellen möchten: mit Dacpac oder per SQL-Skript.",
   "loc.input.label.DacpacFile": "DACPAC-Datei",
-  "loc.input.help.DacpacFile": "Speicherort der DACPAC-Datei auf den Zielcomputern oder in einem UNC-Pfad wie z. B. \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Auf den UNC-Pfad muss vom Administratorkonto des Computers aus zugegriffen werden können. Umgebungsvariablen wie beispielsweise die folgenden werden ebenfalls unterstützt: $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB.",
+  "loc.input.help.DacpacFile": "Speicherort der DACPAC-Datei auf den Zielcomputern oder in einem UNC-Pfad wie z. B. \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Auf den UNC-Pfad muss vom Administratorkonto des Computers aus zugegriffen werden können. Umgebungsvariablen wie beispielsweise die folgenden werden ebenfalls unterstützt: $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Platzhalter können verwendet werden. Beispiel: \"**/*.dacpac\" für DACPAC-Dateien, die in einem der Unterordner enthalten sind.",
   "loc.input.label.SqlFile": "SQL-Datei",
-  "loc.input.help.SqlFile": "Speicherort der DACPAC-Datei auf den Zielcomputern oder in einem UNC-Pfad wie z. B. \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Auf den UNC-Pfad muss vom Administratorkonto des Computers aus zugegriffen werden können. Umgebungsvariablen wie beispielsweise die folgenden werden ebenfalls unterstützt: $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB.",
+  "loc.input.help.SqlFile": "Speicherort der SQL-Datei auf den Zielcomputern oder in einem UNC-Pfad wie z. B. \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Auf den UNC-Pfad muss vom Administratorkonto des Computers aus zugegriffen werden können. Umgebungsvariablen wie beispielsweise die folgenden werden ebenfalls unterstützt: $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Platzhalter können verwendet werden. Beispiel: \"**/*.sql\" für SQL-Dateien, die in einem der Unterordner enthalten sind.",
   "loc.input.label.InlineSql": "Inline-SQL",
   "loc.input.help.InlineSql": "SQL-Inlineabfragen",
   "loc.input.label.TargetMethod": "SQL angeben mit",
   "loc.input.help.TargetMethod": "Geben Sie die Option an, die zum Herstellen einer Verbindung mit der SQL Server-Zieldatenbank verwendet werden soll. Folgende Optionen können angegeben werden: die Anmeldeinformationen für die SQL Server-Datenbank, die SQL Server-Verbindungszeichenfolge oder die XML-Datei des Veröffentlichungsprofils.",
+  "loc.input.label.ServerName": "Servername",
+  "loc.input.help.ServerName": "Geben Sie den SQL Server-Namen an, z. B. \"computername\\FabrikamSQL,1433\", \"localhost\" oder \".\\SQL2012R2\". Wenn Sie \"localhost\" angeben, wird eine Verbindung mit der SQL Server-Standardinstanz auf dem Computer hergestellt.",
   "loc.input.label.DatabaseName": "Datenbankname",
   "loc.input.help.DatabaseName": "Geben Sie den Namen der SQL Server-Datenbank an.",
   "loc.input.label.AuthScheme": "Authentifizierung",
@@ -32,5 +34,7 @@
   "loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine": "Das SQL-PowerShell-Modul ist auf Ihrem Agent-Computer nicht installiert. Befolgen Sie diese Schritte, um diese Aufgabe auszuführen.",
   "loc.messages.InstallPowershellToolsharedManagementObjectsdependency": "1. Installieren Sie PowershellTools & SharedManagementObjects(dependency) über https://www.microsoft.com/de-de/download/details.aspx?id=52676 (2016).",
   "loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "2. Starten Sie den Agent-Computer nach der Installation der Tools neu, um Modulpfadupdates zu registrieren.",
-  "loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt": "3. Führen Sie \"Import-Module SQLPS\" an der PowerShell-Eingabeaufforderung des Agent-Computers aus. (Dieser Schritt ist auf PowerShell 3.0-fähigen Computern nicht erforderlich.)"
+  "loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt": "3. Führen Sie \"Import-Module SQLPS\" an der PowerShell-Eingabeaufforderung des Agent-Computers aus. (Dieser Schritt ist auf PowerShell 3.0-fähigen Computern nicht erforderlich.)",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Es wurden keine Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden.",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Es wurde mehrere Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden. Es darf maximal eine Datei vorhanden sein."
 }

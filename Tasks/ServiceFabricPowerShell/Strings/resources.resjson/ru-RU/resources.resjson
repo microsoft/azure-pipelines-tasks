@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "PowerShell Service Fabric",
+  "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?LinkID=841538)",
+  "loc.description": "Выполнение сценария PowerShell в контексте подключения к кластеру Azure Service Fabric.",
+  "loc.instanceNameFormat": "Сценарий PowerShell Service Fabric: $(ScriptType)",
+  "loc.input.label.serviceConnectionName": "Подключение кластера",
+  "loc.input.help.serviceConnectionName": "Кластер Azure Service Fabric, с которым будет установлено соединение при выполнении указанного сценария PowerShell.",
+  "loc.input.label.ScriptType": "Тип сценария",
+  "loc.input.help.ScriptType": "Тип сценария: путь к файлу или встроенный сценарий",
+  "loc.input.label.ScriptPath": "Путь к скрипту",
+  "loc.input.help.ScriptPath": "Путь к сценарию. Это должен быть полный путь или путь относительно рабочего каталога по умолчанию.",
+  "loc.input.label.Inline": "Встроенный сценарий",
+  "loc.input.help.Inline": "Введите сценарий для выполнения.",
+  "loc.input.label.ScriptArguments": "Аргументы скрипта",
+  "loc.input.help.ScriptArguments": "Дополнительные параметры для передачи в PowerShell. Могут быть как порядковыми, так и именованными.",
+  "loc.messages.InvalidScriptArguments0": "Недопустимые аргументы скрипта \"{0}\". Разрывы строк запрещены.",
+  "loc.messages.InvalidScriptPath0": "Недопустимый путь к скрипту \"{0}\". Указаны символы, недопустимые в пути."
+}

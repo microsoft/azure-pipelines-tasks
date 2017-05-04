@@ -6,11 +6,10 @@ import fs = require('fs');
 let taskPath = path.join(__dirname, '..', 'preinstallprovprofile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('provProfileSource', 'SecureFile');
 tr.setInput('provProfileSecureFile', 'mySecureFileId');
 
 process.env['AGENT_VERSION'] = '2.116.0';
-process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
+process.env['HOME'] = '/users/test';
 
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
@@ -46,7 +45,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "testuuid"
         },
-        "/bin/cp -f /build/temp/mySecureFileId.filename /Users/madhurig/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
+        "/bin/cp -f /build/temp/mySecureFileId.filename /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "provisioning profile copied"
         },

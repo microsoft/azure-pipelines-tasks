@@ -1,5 +1,14 @@
 {
   "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "Il percorso del caricatore delle estensioni NuGet è stato rilevato (variabile di ambiente NUGET_EXTENSIONS_PATH). Le estensioni vengono ignorate quando si usa il client NuGet predefinito",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Il percorso del caricatore delle estensioni NuGet è stato rilevato (variabile di ambiente NUGET_EXTENSIONS_PATH): %s",
-  "loc.messages.NGCommon_UnableToFindTool": "Lo strumento %s non è stato trovato"
+  "loc.messages.NGCommon_UnableToFindTool": "Lo strumento %s non è stato trovato",
+  "loc.messages.Info_AvailableVersions": "Le versioni disponibili sono: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
+  "loc.messages.Info_UsingVersion": "Uso della versione: %s",
+  "loc.messages.Info_UsingToolPath": "Uso del percorso dello strumento: %s",
+  "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "Sulla stringa di versione viene usata una corrispondenza query che potrebbe causare modifiche del comportamento o impreviste quando NuGet viene aggiornato a una nuova versione.",
+  "loc.messages.Error_NoVersionWasFoundWhichMatches": "Non è stata trovata alcuna versione corrispondente all'input %s",
+  "loc.messages.Error_NoUrlWasFoundWhichMatches": "Non è stato trovato alcun URL di download per %s",
+  "loc.messages.Error_NuGetToolInstallerFailer": "L'installazione dello strumento non è riuscita: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
 }

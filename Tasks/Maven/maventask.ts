@@ -30,6 +30,8 @@ var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
+var codeCoverageFailed: boolean = false;
 var isSonarQubeEnabled:boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
@@ -194,15 +196,19 @@ async function execBuild() {
             if (publishJUnitResults == 'true') {
                 publishJUnitTestResults(testResultsFiles);
             }
-            publishCodeCoverage(isCodeCoverageOpted);
+            publishCodeCoverage(isCodeCoverageOpted).then(function() {
 
-            // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
-            if (userRunFailed || codeAnalysisFailed) {
+                // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+                if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
+                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+                }
+                else {
+                    tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
+                }
+            })
+            .fail(function (err) {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-            }
-            else {
-                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
-            }
+            });
 
             // Do not force an exit as publishing results is async and it won't have finished 
         });
@@ -306,7 +312,8 @@ function enableCodeCoverage() : Q.Promise<any> {
     return ccEnabler.enableCodeCoverage(buildProps);
 }
 
-function publishCodeCoverage(isCodeCoverageOpted: boolean) {
+function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
+    var defer = Q.defer<boolean>();
     if (isCodeCoverageOpted && ccReportTask) {
         tl.debug("Collecting code coverage reports");
 
@@ -324,14 +331,24 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
             }
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
+                defer.resolve(true);
             }).fail(function (err) {
-                tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
+                sendCodeCoverageEmptyMsg();
+                defer.reject(err);
             });
         }
-        else if (ccTool.toLowerCase() == "cobertura") {
-            publishCCToTfs();
+        else {
+            if (ccTool.toLowerCase() == "cobertura") {
+                publishCCToTfs();
+            }
+            defer.resolve(true);
         }
     }
+    else {
+        defer.resolve(true);
+    }
+
+    return defer.promise;
 }
 
 function publishCCToTfs() {
@@ -341,6 +358,16 @@ function publishCCToTfs() {
         tl.debug("Publishing code coverage results to TFS");
         var ccPublisher = new tl.CodeCoveragePublisher();
         ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
+    }
+    else {
+        sendCodeCoverageEmptyMsg();
+    }
+}
+
+function sendCodeCoverageEmptyMsg() {
+    if (failIfCoverageEmptySetting) {
+        tl.error(tl.loc('NoCodeCoverage'));
+        codeCoverageFailed = true;
     }
     else {
         tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
