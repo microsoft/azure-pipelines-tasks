@@ -5,34 +5,36 @@ import Q = require('q');
 import models = require('./models');
 import taskInputParser = require('./taskinputparser');
 import settingsHelper = require('./settingshelper');
-import versionFinder = require('./versionfinder');
+import vstestVersion = require('./vstestversion');
 import * as utils from './helpers';
+import * as outStream from './outputstream';
 
-var os = require('os');
-var regedit = require('regedit');
-var uuid = require('node-uuid');
-var fs = require('fs');
-var xml2js = require('xml2js');
-var perf = require('performance-now');
-var process = require('process');
+let os = require('os');
+let regedit = require('regedit');
+let uuid = require('node-uuid');
+let fs = require('fs');
+let xml2js = require('xml2js');
+let perf = require('performance-now');
+let process = require('process');
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
 
 let vstestConfig: models.VsTestConfigurations = undefined;
 let tiaConfig: models.TiaConfiguration = undefined;
-let vstestRunnerDetails: versionFinder.VSTestVersion = undefined;
 const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
 let resultsDirectory = null;
 
-export async function startTest() {
+export function startTest() {
     try {
+        tl._writeLine(tl.loc('runTestsLocally', 'vstest.console.exe'));
+        tl._writeLine('========================================================');
         vstestConfig = taskInputParser.getvsTestConfigurations();
+        tl._writeLine('========================================================');
+
         tiaConfig = vstestConfig.tiaConfig;
-        var vstestlocation = await versionFinder.locateVSTestConsole(vstestConfig);
-        vstestRunnerDetails = getVsTestRunnerDetails(vstestlocation);
 
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
@@ -72,7 +74,6 @@ export async function startTest() {
             });
     } catch (error) {
         deleteVstestDiagFile();
-        tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
@@ -87,53 +88,13 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-function getVsTestRunnerDetails(vstestexeLocation: string): versionFinder.VSTestVersion {
-    let vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
-    let wmicTool = tl.tool('wmic');
-    let wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
-    wmicTool.arg(wmicArgs);
-    let output = wmicTool.execSync();
-    tl.debug('VSTest Version information: ' + output.stdout);
-
-    let verSplitArray = output.stdout.split('=');
-    if (verSplitArray.length != 2) {
-        tl.error(tl.loc('ErrorReadingVstestVersion'));
-        throw new Error(tl.loc('ErrorReadingVstestVersion'));
-    }
-
-    let versionArray = verSplitArray[1].split('.');
-    if (versionArray.length != 4) {
-        tl.warning(tl.loc('UnexpectedVersionString', output.stdout));
-        throw new Error(tl.loc('UnexpectedVersionString', output.stdout));
-    }
-
-    let majorVersion = parseInt(versionArray[0]);
-    let minorVersion = parseInt(versionArray[1]);
-    let patchNumber = parseInt(versionArray[2]);
-
-    if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
-        tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-        throw new Error(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
-    }
-
-    switch (majorVersion) {
-        case 14:
-            return new versionFinder.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
-
-        case 15:
-            return new versionFinder.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
-    }
-
-    return new versionFinder.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
-}
-
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
-    var argsArray: string[] = [];
+    const argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
-        var testAssemblyPath = testAssembly;
+        let testAssemblyPath = testAssembly;
         //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
         if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
+            const expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -153,11 +114,10 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ' + settings);
             });
-        }
-        else {
+        } else {
             if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidSettingsFile", settingsFile));
-                throw Error((tl.loc("InvalidSettingsFile", settingsFile)));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
+                throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
         }
     }
@@ -170,18 +130,16 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     argsArray.push('/logger:trx');
-    if (vstestConfig.pathtoCustomTestAdapters) {
-        if (pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
-            argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
-        } else {
-            argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
-        }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
-        argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+    if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
+        if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
+                argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+            }
+    } else {
+        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
 
     if (isDebugEnabled()) {
-        if (vstestRunnerDetails != null && vstestRunnerDetails.vstestDiagSupported()) {
+        if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.vstestDiagSupported()) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
@@ -192,7 +150,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
 }
 
 function isDebugEnabled(): boolean {
-    let sysDebug = tl.getVariable('System.Debug');
+    const sysDebug = tl.getVariable('System.Debug');
     if (sysDebug === undefined) {
         return false;
     }
@@ -207,7 +165,7 @@ function addVstestArgs(argsArray: string[], vstest: any) {
 }
 
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
+    const defer = Q.defer<string>();
     argsArray.forEach(function (arr, i) {
         if (!arr.startsWith('/')) {
             argsArray[i] = '\"' + arr + '\"';
@@ -227,19 +185,18 @@ function getTestSelectorLocation(): string {
 }
 
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
-    var startTime = perf();
-    var endTime;
-    var elapsedTime;
-    var definitionRunId: string;
-    var resultFile: string;
-    var defer = Q.defer<string>();
-    var allFilesInResultsDirectory;
-    var resultFiles;
+    const startTime = perf();
+    let endTime;
+    let elapsedTime;
+    let definitionRunId: string;
+    let resultFile: string;
+    const defer = Q.defer<string>();
+    let resultFiles;
     if (!isNullOrWhitespace(testResultsDirectory)) {
         resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
     }
 
-    var selectortool = tl.tool(getTestSelectorLocation());
+    const selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg('UpdateTestResults');
 
     if (tiaConfig.context === 'CD') {
@@ -291,6 +248,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     let title: string;
     let platformInput: string;
     let configurationInput: string;
+    let useTestCaseFilterInResponseFile: string;
     const defer = Q.defer<string>();
     const respFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tl.debug('Response file will be generated at ' + respFile);
@@ -324,6 +282,12 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
         configurationInput = '';
     }
 
+    if (tiaConfig.useTestCaseFilterInResponseFile && tiaConfig.useTestCaseFilterInResponseFile.toUpperCase() === 'TRUE') {
+        useTestCaseFilterInResponseFile = 'true';
+    } else {
+        useTestCaseFilterInResponseFile = 'false';
+    }
+
     selectortool.exec({
         cwd: null,
         env: {
@@ -340,7 +304,8 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
             'baselinebuildfilepath': tiaConfig.baseLineBuildIdFile,
             'context': tiaConfig.context,
             'platform': platformInput,
-            'configuration': configurationInput
+            'configuration': configurationInput,
+            'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile
         },
         silent: null,
         failOnStdErr: null,
@@ -452,7 +417,7 @@ function publishCodeChanges(): Q.Promise<string> {
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     const defer = Q.defer<number>();
-    const vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
+    const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
     // Adding the other console options here
@@ -470,7 +435,15 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     tl.cd(workingDirectory);
     const ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === 'true';
-    vstest.exec(<tr.IExecOptions>{ ignoreReturnCode: ignoreTestFailures, failOnStdErr: false })
+
+    const execOptions: tr.IExecOptions = <any>{
+        ignoreReturnCode: ignoreTestFailures,
+        failOnStdErr: false,
+        // In effect this will not be called as failOnStdErr is false
+        // Keeping this code in case we want to change failOnStdErr
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+    };
+    vstest.exec(execOptions)
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             if (ignoreTestFailures === true) {
@@ -494,10 +467,10 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 }
 
 function getVstestTestsList(vsVersion: number): Q.Promise<string> {
-    let defer = Q.defer<string>();
-    let tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    const defer = Q.defer<string>();
+    const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tl.debug('Discovered tests listed at: ' + tempFile);
-    let argsArray: string[] = [];
+    const argsArray: string[] = [];
 
     testAssemblyFiles.forEach(function (testAssembly) {
         let testAssemblyPath = testAssembly;
@@ -523,7 +496,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+    } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
@@ -531,7 +504,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         argsArray.push('/UseVsixExtensions:true');
     }
 
-    let vstest = tl.tool(vstestRunnerDetails.vstestExeLocation);
+    let vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
 
     if (vsVersion === 14.0) {
         tl.debug('Visual studio 2015 selected. Selecting vstest.console.exe in task ');
@@ -563,7 +536,7 @@ function cleanFiles(responseFile: string, listFile: string): void {
 }
 
 function deleteVstestDiagFile(): void {
-    if (pathExistsAsFile(vstestConfig.vstestDiagFile)) {
+    if (vstestConfig && vstestConfig.vstestDiagFile && pathExistsAsFile(vstestConfig.vstestDiagFile)) {
         tl.debug('Deleting vstest diag file ' + vstestConfig.vstestDiagFile);
         tl.rmRF(vstestConfig.vstestDiagFile, true);
     }
@@ -769,10 +742,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 }
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
-    let defer = Q.defer<number>();
-    if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === 'latest') {
-        vstestConfig.vsTestVersion = null;
-    }
+    const defer = Q.defer<number>();
 
     try {
         const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
@@ -780,7 +750,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             tiaConfig.tiaEnabled = false;
         }
 
-        if (tiaConfig.tiaEnabled && (vstestRunnerDetails === null || !vstestRunnerDetails.isTestImpactSupported())) {
+        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetais === null || !vstestConfig.vsTestVersionDetais.isTestImpactSupported())) {
             tl.warning(tl.loc('VstestTIANotSupported'));
             tiaConfig.tiaEnabled = false;
         }
@@ -791,19 +761,19 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     // We need to use private data collector dll
-    if (vstestRunnerDetails !== null) {
-        tiaConfig.useNewCollector = vstestRunnerDetails.isPrivateDataCollectorNeededForTIA();
+    if (vstestConfig.vsTestVersionDetais !== null) {
+        tiaConfig.useNewCollector = vstestConfig.vsTestVersionDetais.isPrivateDataCollectorNeededForTIA();
     }
 
     setRunInParallellIfApplicable();
 
     let newSettingsFile = vstestConfig.settingsFile;
-    const vsVersion = vstestRunnerDetails.majorVersion;
-  
+    const vsVersion = vstestConfig.vsTestVersionDetais.majorVersion;
+
     if (newSettingsFile) {
         if (!pathExistsAsFile(newSettingsFile)) {
             if (!tl.exist(newSettingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                throw Error((tl.loc("InvalidSettingsFile", newSettingsFile)));
+                throw Error((tl.loc('InvalidSettingsFile', newSettingsFile)));
             }
         }
     }
@@ -838,7 +808,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
-        let resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
+        const resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
 
         if (resultFiles && resultFiles.length !== 0) {
             const tp = new tl.TestPublisher('VSTest');
@@ -861,21 +831,11 @@ function cleanUp(temporarySettingsFile: string) {
     }
 }
 
-function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
-    let allFiles = tl.find(rootDirectory);
-    let adapterFiles = tl.match(allFiles, '**\\packages\\**\\*TestAdapter.dll', { matchBase: true, nocase: true });
+function isTestAdapterPresent(rootDirectory: string): boolean {
+    const adapterFiles = tl.findMatch(rootDirectory, '**\\*TestAdapter.dll');
 
     if (adapterFiles && adapterFiles.length !== 0) {
-        for (let i = 0; i < adapterFiles.length; i++) {
-            const adapterFile = adapterFiles[i];
-            const packageIndex = adapterFile.indexOf('packages') + 7;
-            const packageFolder = adapterFile.substr(0, packageIndex);
-            const parentFolder = path.dirname(packageFolder);
-            const solutionFiles = tl.match(allFiles, path.join(parentFolder, '*.sln'), { matchBase: true, nocase: true });
-            if (solutionFiles && solutionFiles.length !== 0) {
-                return true;
-            }
-        }
+        return true;
     }
     return false;
 }
@@ -914,7 +874,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
 function setRunInParallellIfApplicable() {
     if (vstestConfig.runInParallel) {
-        if (vstestRunnerDetails != null && vstestRunnerDetails.isRunInParallelSupported()) {
+        if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.isRunInParallelSupported()) {
             return;
         }
 
@@ -955,7 +915,7 @@ function getTIALevel() {
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     return utils.Helper.readFileContents(filePath, 'utf-8').then(function (resp) {
-        if (resp === '/Tests:') {
+        if (resp === '/Tests:' || resp === '/TestCaseFilter:') {
             return true;
         }
         else {

@@ -29,7 +29,7 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
     public getAuthenticationToken(): RegistryAuthenticationToken
     {
         if(this.registryURL && this.endpointName) {      
-            return new RegistryAuthenticationToken(tl.getEndpointAuthorizationParameter(this.endpointName, 'serviceprincipalid', true), tl.getEndpointAuthorizationParameter(this.endpointName, 'serviceprincipalkey', true), this.registryURL);
+            return new RegistryAuthenticationToken(tl.getEndpointAuthorizationParameter(this.endpointName, 'serviceprincipalid', true), tl.getEndpointAuthorizationParameter(this.endpointName, 'serviceprincipalkey', true), this.registryURL, "ServicePrincipal@AzureRM");
         }
 
         return null;

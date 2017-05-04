@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "安裝 Apple 佈建設定檔",
   "loc.helpMarkDown": "",
-  "loc.description": "Install an Apple provisioning profile required to build on a macOS agent",
-  "loc.instanceNameFormat": "Install an Apple provisioning profile",
+  "loc.description": "在 macOS 代理程式上執行建置作業必須安裝 Apple 佈建設定檔",
+  "loc.instanceNameFormat": "安裝 Apple 佈建設定檔",
   "loc.input.label.provProfileSecureFile": "佈建設定檔",
   "loc.input.help.provProfileSecureFile": "請選取已上傳到 [安全的檔案] 的佈建設定檔，以安裝在 macOS 代理程式上。",
   "loc.input.label.removeProfile": "在建置後移除設定檔",

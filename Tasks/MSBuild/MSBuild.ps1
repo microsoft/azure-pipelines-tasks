@@ -21,7 +21,6 @@ try {
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
 
     # Import the helpers.
-    . $PSScriptRoot\Select-MSBuildLocation.ps1
     Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
 
     # Resolve match patterns.
@@ -31,7 +30,7 @@ try {
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration -MaximumCpuCount:$maximumCpuCount
 
     # Resolve the MSBuild location.
-    $msBuildLocation = Select-MSBuildLocation -Method $msBuildLocationMethod -Location $msBuildLocation -Version $msBuildVersion -Architecture $msBuildArchitecture
+    $msBuildLocation = Select-MSBuildPath -Method $msBuildLocationMethod -Location $msBuildLocation -PreferredVersion $msBuildVersion -Architecture $msBuildArchitecture
 
     # Change the error action preference to 'Continue' so that each solution will build even if
     # one fails. Since the error action preference is being changed from 'Stop' (the default for

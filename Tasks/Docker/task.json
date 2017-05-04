@@ -3,7 +3,7 @@
     "name": "Docker",
     "friendlyName": "Docker",
     "description": "Build, push or run Docker images, or run a Docker command",
-    "helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "preview": "true",
@@ -49,8 +49,7 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
-            "visibleRule": "containerregistrytype = Azure Container Registry",
-            "required": true
+            "visibleRule": "containerregistrytype = Azure Container Registry"
         },
         {
             "name": "azureContainerRegistry",
@@ -58,7 +57,6 @@
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry",
             "visibleRule": "containerregistrytype = Azure Container Registry",
-            "required": true,
             "defaultValue": ""
         },
         {
