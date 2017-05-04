@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib/task');
 import request = require('request');
 import Q = require('q');
 import fs = require('fs');
+import os = require('os');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
@@ -57,7 +58,12 @@ function responseHandler(defer, err, res, body, handler: () => void) {
 
     tl.debug(`---- http call status code: ${res.statusCode}`);
     if (res.statusCode < 200 || res.statusCode >= 300) {
-        let message = JSON.stringify(body) || `http response code: ${res.statusCode}`;
+        let message = JSON.stringify(body);
+        if (!message) {
+            message = `http response code: ${res.statusCode}`;
+        } else {
+            message = message.concat(os.EOL + `http response code: ${res.statusCode}`);
+        }
         defer.reject(message);
         return;
     }
@@ -171,34 +177,34 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
  * If the input is a single folder, zip it's content. The archive name is the folder's name
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
-function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> { 
+function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     tl.debug("-- Prepare symbols");
-    let defer = Q.defer<string>(); 
+    let defer = Q.defer<string>();
 
     if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
-        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`) 
+        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
 
         // single file - Android source mapping txt file 
-        defer.resolve(symbolsPaths[0]); 
-    } else if (symbolsPaths.length > 0) { 
-        tl.debug(`.. archiving: ${symbolsPaths}`); 
+        defer.resolve(symbolsPaths[0]);
+    } else if (symbolsPaths.length > 0) {
+        tl.debug(`.. archiving: ${symbolsPaths}`);
 
         let symbolsRoot = utils.findCommonParent(symbolsPaths);
         let zipPath = utils.getArchivePath(symbolsRoot);
-        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot); 
+        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
 
-        utils.createZipFile(zipStream, zipPath). 
-            then(() => { 
-                tl.debug(`---- symbols arechive file: ${zipPath}`) 
-                defer.resolve(zipPath); 
-            }); 
+        utils.createZipFile(zipStream, zipPath).
+            then(() => {
+                tl.debug(`---- symbols arechive file: ${zipPath}`)
+                defer.resolve(zipPath);
+            });
     } else {
-        defer.resolve(null); 
+        defer.resolve(null);
     }
 
 
-    return defer.promise; 
-} 
+    return defer.promise;
+}
 
 function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
@@ -277,7 +283,7 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
 function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnError: boolean, packParentFolder: boolean): string[] {
     tl.debug("-- Expanding symbols path pattern to a list of paths");
-    
+
     let symbolsPaths: string[] = [];
 
     if (symbolsType === "Apple") {
