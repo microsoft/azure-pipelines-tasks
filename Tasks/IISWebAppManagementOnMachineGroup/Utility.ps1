@@ -52,7 +52,7 @@ function Set-IISWebSite
                         ipAddress = $ipAddress.Trim();
                         port = $port.Trim();
                         sniFlag = $serverNameIndication;
-                        sslThumbprint = Test-SSLCertficateThumprint -sslCertThumbPrint $sslCertThumbPrint -ipAddress $ipAddress -protocol $protocol -port $port ;
+                        sslThumbprint = Test-SSLCertificateThumbprint -sslCertThumbPrint $sslCertThumbPrint -ipAddress $ipAddress -protocol $protocol -port $port ;
                         hostname = Get-Hostname -port $port -hostNameWithSNI $hostNameWithSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication ;
                     })
                 }
@@ -286,7 +286,7 @@ function Get-HostName
     return $hostName
 }
 
-function Test-SSLCertificateThumprint {
+function Test-SSLCertificateThumbprint {
     param (
         [string] $sslCertThumbPrint,
         [string] $ipAddress,
@@ -327,7 +327,7 @@ function Validate-Bindings {
 
     foreach ($binding in $bindingsObj.bindings) {
         if($binding.protocol -eq "https") {
-            $binding.sslThumbprint = Test-SSLCertificateThumprint -sslCertThumbPrint $binding.sslThumbprint -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
+            $binding.sslThumbprint = Test-SSLCertificateThumbprint -sslCertThumbPrint $binding.sslThumbprint -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
         }
     }
 
