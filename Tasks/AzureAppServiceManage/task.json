@@ -2,7 +2,7 @@
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
     "friendlyName": "Azure App Service Manage (PREVIEW)",
-    "description": "Start, Stop, Restart, Slot swap and Install site extensions for an Azure App Service",
+    "description": "Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
@@ -36,7 +36,7 @@
             "type": "pickList",
             "label": "Action",
             "required": false,
-            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap and Install site extensions for an Azure App Service",
+            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
             "defaultValue": "Swap Slots",
             "options": {
                 "Swap Slots": "Swap Slots",
