@@ -269,7 +269,7 @@
       "properties": {
         "resizable": "true",
         "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
-        "displayFormat": "{{#bindings}} {{protocol}}:{{ipAddress}}:{{port}}:{{hostname}} \n{{/bindings}}"
+        "displayFormat": "{{#bindings}}{{protocol}}/{{ipAddress}}:{{port}}:{{hostname}}\n{{/bindings}}"
       },
       "helpMarkDown": "ms-resource:loc.input.help.Bindings"
     },
@@ -693,7 +693,6 @@
     "InvalidActionIISWebsite": "ms-resource:loc.messages.InvalidActionIISWebsite",
     "InvalidActionIISAppPool": "ms-resource:loc.messages.InvalidActionIISAppPool",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
-    "MissingMandatoryInputInBinding": "ms-resource:loc.messages.MissingMandatoryInputInBinding",
     "SSLCertificateThumbprintMissingInHttpsBinding": "ms-resource:loc.messages.SSLCertificateThumbprintMissingInHttpsBinding",
     "InvalidSslThumbprintInBinding": "ms-resource:loc.messages.InvalidSslThumbprintInBinding",
     "SSLCertWarningInvalidCharactersInBinding": "ms-resource:loc.messages.SSLCertWarningInvalidCharactersInBinding"

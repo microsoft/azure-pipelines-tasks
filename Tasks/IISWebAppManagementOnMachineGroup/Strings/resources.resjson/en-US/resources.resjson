@@ -131,8 +131,7 @@
   "loc.messages.InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
   "loc.messages.InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool.",
   "loc.messages.PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-  "loc.messages.MissingMandatoryInputInBinding": "Mandatory input missing in the binding : ( {0}:{1}:{2} )",
-  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}:{1}:{2} )",
-  "loc.messages.InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}:{1}:{2} ). Length is not 40 characters or contains invalid characters.",
-  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}:{1}:{2} ) . Trimming all non-hexadecimal characters."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}/{1}:{2} )",
+  "loc.messages.InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}/{1}:{2} ). Length is not 40 characters or contains invalid characters.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ) . Trimming all non-hexadecimal characters."
 }

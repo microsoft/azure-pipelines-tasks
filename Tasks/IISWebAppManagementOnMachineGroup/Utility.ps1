@@ -52,8 +52,8 @@ function Set-IISWebSite
                         ipAddress = $ipAddress.Trim();
                         port = $port.Trim();
                         sniFlag = $serverNameIndication;
-                        sslThumbprint = Repair-Inputs -sslCertThumbPrint ([ref]$sslCertThumbPrint) -ipAddress $ipAddress -protocol $protocol -port $port;
-                        hostname = Get-Hostname -port $port -hostNameWithSNI $hostNameWithSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication
+                        sslThumbprint = Test-SSLCertficateThumprint -sslCertThumbPrint $sslCertThumbPrint -ipAddress $ipAddress -protocol $protocol -port $port ;
+                        hostname = Get-Hostname -port $port -hostNameWithSNI $hostNameWithSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication ;
                     })
                 }
                 else {
@@ -218,7 +218,7 @@ function Get-CustomCredentials {
     return $credentials
 }
 
-function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint, [string]$protocol, [string]$ipAddress, [string]$port)
+function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
@@ -245,23 +245,6 @@ function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]
     if ($physicalPathAuthuser -ne $null) 
     {
         $physicalPathAuthuser.Value = $physicalPathAuthuser.Value.Trim()
-    }
-    if($sslCertThumbPrint -ne $null -and -not [string]::IsNullOrWhiteSpace($sslCertThumbPrint.Value))
-    {
-        if([regex]::IsMatch($sslCertThumbPrint.Value, "[^a-fA-F0-9]+"))
-        {
-            Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharactersInBinding" -ArgumentList $protocol, $ipAddress, $port)
-        }
-
-        $sslCertThumbPrint.Value = [Regex]::Replace($sslCertThumbPrint.Value, "[^a-fA-F0-9]+" , "")
-        
-        # Mark the SSL thumbprint value to be a secret value 
-        if(($sslCertThumbPrint.Value.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint.Value, "[a-fA-F0-9]{40}"))){
-            throw (Get-VstsLocString -Key "InvalidSslThumbprintInBinding" -ArgumentList $protocol, $ipAddress, $port)
-        }
-
-        $sslCertThumbprintSecretValue = $sslCertThumbPrint.Value
-        Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprintSecretValue"
     }
 }
 
@@ -303,6 +286,38 @@ function Get-HostName
     return $hostName
 }
 
+function Test-SSLCertificateThumprint {
+    param (
+        [string] $sslCertThumbPrint,
+        [string] $ipAddress,
+        [string] $protocol,
+        [string] $port
+    )
+
+    if($protocol -eq "https") {
+        if(-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint))
+        {
+            if([regex]::IsMatch($sslCertThumbPrint, "[^a-fA-F0-9]+"))
+            {
+                Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharactersInBinding" -ArgumentList $protocol, $ipAddress, $port)
+            }
+
+            $sslCertThumbPrint = [Regex]::Replace($sslCertThumbPrint, "[^a-fA-F0-9]+" , "")
+            
+            if(-not [regex]::IsMatch($sslCertThumbPrint, "^[a-fA-F0-9]{40}$")){
+                throw (Get-VstsLocString -Key "InvalidSslThumbprintInBinding" -ArgumentList $protocol, $ipAddress, $port)
+            }
+
+            # Mark the SSL thumbprint value to be a secret value 
+            Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprint"
+            return $sslCertThumbPrint
+        }
+        else {
+            throw (Get-VstsLocString -Key "SSLCertificateThumbprintMissingInHttpsBinding" -ArgumentList $protocol, $ipAddress, $port)
+        }
+    }
+}
+
 function Validate-Bindings {
     param (
         [string] $bindings
@@ -311,17 +326,8 @@ function Validate-Bindings {
     $bindingsObj = $bindings | ConvertFrom-Json 
 
     foreach ($binding in $bindingsObj.bindings) {
-
         if($binding.protocol -eq "https") {
-            if(-not [string]::IsNullOrWhiteSpace($binding.sslThumbprint)) {
-                # Trim all non-hexadecimal characters from the ssl cetificate thumbprint
-                $sslCertThumbPrint = $binding.sslThumbPrint
-                $sslCertThumbPrint = Repair-Inputs -sslCertThumbPrint ([ref]$sslCertThumbPrint) -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
-                $binding.sslThumbPrint = $sslCertThumbPrint
-            }
-            else {
-                throw (Get-VstsLocString -Key "SSLCertificateThumbprintMissingInHttpsBinding" -ArgumentList $binding.protocol, $binding.ipAddress, $binding.port)
-            }
+            $binding.sslThumbprint = Test-SSLCertificateThumprint -sslCertThumbPrint $binding.sslThumbprint -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
         }
     }
 

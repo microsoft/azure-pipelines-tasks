@@ -269,7 +269,7 @@
             "properties": {
                 "resizable": "true",
                 "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
-                "displayFormat": "{{#bindings}} {{protocol}}:{{ipAddress}}:{{port}}:{{hostname}} \n{{/bindings}}"
+                "displayFormat": "{{#bindings}}{{protocol}}/{{ipAddress}}:{{port}}:{{hostname}}\n{{/bindings}}"
             },
             "helpMarkDown": "Click on the extension [...] button to add bindings for the website."
         },
@@ -693,10 +693,9 @@
         "InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
         "InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool.",
         "PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-        "MissingMandatoryInputInBinding": "Mandatory input missing in the binding : ( {0}:{1}:{2} )",
-        "SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}:{1}:{2} )",
-        "InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}:{1}:{2} ). Length is not 40 characters or contains invalid characters.",
-        "SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}:{1}:{2} ) . Trimming all non-hexadecimal characters."
+        "SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}/{1}:{2} )",
+        "InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}/{1}:{2} ). Length is not 40 characters or contains invalid characters.",
+        "SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ) . Trimming all non-hexadecimal characters."
     }
 
 }
