@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 117,
+        "Minor": 118,
         "Patch": 0
     },
     "runsOn": [
@@ -21,11 +21,26 @@
         "DeploymentGroup"
     ],
     "demands": [
-        "xcode"
     ],
     "minimumAgentVersion": "2.116.0",
     "instanceNameFormat": "Install an SSH key",
     "inputs": [
+        {
+            "name": "hostName",
+            "type": "string",
+            "label": "Known hosts entry",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The entry for this SSH key for the known_hosts file."
+        },
+        {
+            "name": "sshPublicKey",
+            "type": "string",
+            "label": "SSH Public Key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The contents of the public SSH key."
+        },
         {
             "name": "sshKeySecureFile",
             "type": "secureFile",
@@ -33,14 +48,6 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the build agent."
-        },
-        {
-            "name": "removeKey",
-            "type": "boolean",
-            "label": "Remove SSH Key After Build",
-            "defaultValue": true,
-            "required": false,
-            "helpMarkDown": "Select to specify that the SSH key should be removed from the agent after the build or release is complete."
         }
     ],
     "prejobexecution": {
@@ -56,6 +63,9 @@
         }
     },
     "messages": {
+        "SSHKeyAlreadyInstalled": "The SSH Key is already installed.",
+        "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
+        "SSHKeyInstallFailed": "Failed to install the SSH key."
     }
 }
     
