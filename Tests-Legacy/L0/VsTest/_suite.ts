@@ -1060,7 +1060,8 @@ describe('VsTest Suite', function () {
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stdout.indexOf('C:/vstest.console.exe path does not exist') >= 0, 'should throw invalid path error');
+                assert(tr.stdout.indexOf('The location of \'vstest.console.exe\' specified \'C:/vstest.console.exe\' does not exist.') >= 0, 
+                'should throw invalid path error');
                 done();
             })
             .fail((err) => {
