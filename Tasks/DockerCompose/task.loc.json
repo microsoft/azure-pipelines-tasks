@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 3,
-    "Patch": 7
+    "Minor": 4,
+    "Patch": 0
   },
   "demands": [],
   "preview": "true",
@@ -98,7 +98,7 @@
       "name": "qualifyImageNames",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.qualifyImageNames",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageNames"
     },
     {
