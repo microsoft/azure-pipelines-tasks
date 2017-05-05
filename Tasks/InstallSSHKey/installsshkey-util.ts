@@ -16,15 +16,15 @@ export const sshAgentSockEnvVariableKey: string = 'SSH_AUTH_SOCK';
 
 export class SshToolRunner {
     private baseDir = tl.getVariable('Agent.HomeDirectory');
-    private sshGitBaseDir = path.join(this.baseDir, path.join('externals', path.join('Git', path.join('usr', path.join('bin')))));
+    private sshGitExternalsDir = path.join('externals', path.join('Git', path.join('usr', path.join('bin'))));
 
     constructor() {
     }
 
     private getExecutable(executable: string):string {
         let isWindows: RegExpMatchArray = os.type().match(/^Win/);
-        if (isWindows) {
-            executable = path.join(this.sshGitBaseDir, executable);
+        if (isWindows && this.baseDir) {
+            executable = path.join(this.baseDir, path.join(this.sshGitExternalsDir, executable));
             executable += '.exe';
         }
         return executable;
@@ -71,7 +71,7 @@ export class SshToolRunner {
             throw tl.loc('SSHKeyAlreadyInstalled');
         }
 
-        tl.debug('Adding the SSH key to the agent');
+        tl.debug('Adding the SSH key to the agent ' + privateKeyLocation);
         results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
         if (results.error) {
             throw tl.loc('SSHKeyInstallFailed');

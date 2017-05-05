@@ -11,10 +11,10 @@ describe('InstallSSHKey Suite', function () {
     after(() => {
     });
 
-    it('Defaults: install from SecureFile', (done: MochaDone) => {
+    it('Start ssh-agent', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0SecureFile.js');
+        let tp: string = path.join(__dirname, 'L0StartAgent.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -25,4 +25,31 @@ describe('InstallSSHKey Suite', function () {
         done();
     });
 
+    it('SSH key already installed', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0KeyAlreadyInstalled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained('loc_mock_SSHKeyAlreadyInstalled'), 'expected error: SSH key already installed');
+
+        done();
+    });
+
+    it('SSH key malformed', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0KeyMalformed.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.failed, 'task should have failed' + ' std=' + tr.stdout + ' err=' + tr.stderr);
+        assert(tr.stdOutContained('loc_mock_SSHPublicKeyMalformed'), 'expected error: SSH key malformed' + ' std=' + tr.stdout + ' err=' + tr.stderr);
+
+        done();
+    });
 });
