@@ -4,6 +4,7 @@
   "loc.description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
   "loc.instanceNameFormat": "Manage $(IISDeploymentType)",
   "loc.group.displayName.Website": "IIS Website",
+  "loc.group.displayName.IISBindings": "IIS Bindings",
   "loc.group.displayName.ApplicationPoolForWebsite": "IIS Application pool",
   "loc.group.displayName.IISWebsiteAuthentication": "IIS Authentication",
   "loc.group.displayName.ApplicationPool": "IIS Application pool",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>",
   "loc.input.label.SSLCertThumbPrint": "SSL certificate thumbprint",
   "loc.input.help.SSLCertThumbPrint": "Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store.",
+  "loc.input.label.Bindings": "Add bindings",
+  "loc.input.help.Bindings": "Click on the extension [...] button to add bindings for the website.",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "Create or update app pool",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Select the option to create or update an application pool. If checked, the website will be created in the specified app pool.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Configure authentication",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "Provide the name of the IIS application pool.",
   "loc.input.label.AppCmdCommands": "Additional appcmd.exe commands",
   "loc.input.help.AppCmdCommands": "Enter additional AppCmd.exe commands. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.messages.InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
   "loc.messages.InvalidVirtualPath": "Virtual path should begin with a /",
   "loc.messages.InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}",
   "loc.messages.InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
   "loc.messages.InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool.",
   "loc.messages.PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-  "loc.messages.SSLCertWarningInvalidCharacters": "SSL Certificate thumbprint contains non-hexadecimal characters. Trimming all non-hexadecimal characters."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}/{1}:{2} )",
+  "loc.messages.InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}/{1}:{2} ). Length is not 40 characters or contains invalid characters.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ) . Trimming all non-hexadecimal characters."
 }

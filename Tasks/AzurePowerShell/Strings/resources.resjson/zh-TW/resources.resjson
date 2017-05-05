@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 連接類型",
   "loc.input.label.ConnectedServiceName": "Azure 傳統訂用帳戶",
   "loc.input.help.ConnectedServiceName": "執行 PowerShell 之前要設定的 Azure 傳統訂用帳戶",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 訂用帳戶",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "執行 PowerShell 之前要設定的 Azure Resource Manager 訂用帳戶",
   "loc.input.label.ScriptType": "指令碼類型",
   "loc.input.help.ScriptType": "指令碼類型: 檔案路徑或內嵌指令碼",

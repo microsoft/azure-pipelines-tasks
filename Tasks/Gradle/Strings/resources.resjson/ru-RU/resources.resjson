@@ -25,6 +25,8 @@
   "loc.input.help.classFilesDirectories": "Разделенный запятыми список каталогов, содержащих файлы классов и архивов (JAR, WAR и т. д.). Объем протестированного кода указывается для файлов классов в этих каталогах. Задача ищет классы в каталоге \"build/classes/main\", который является каталогом классов по умолчанию для сборок Gradle.",
   "loc.input.label.classFilter": "Фильтры включения и исключения классов",
   "loc.input.help.classFilter": "Список фильтров с разделителями-запятыми для включения или исключения классов при сборе данных по объему протестированного кода. Например: +:com.*,+:org.*,-:my.app*.*.",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.javaHomeSelection": "Установка JAVA_HOME с помощью",
   "loc.input.help.javaHomeSelection": "Задается JAVA_HOME указанием версии JDK, которая будет обнаруживаться во время сборок, или указанием пути к JDK вручную.",
   "loc.input.label.jdkVersion": "Версия JDK",
@@ -92,5 +94,6 @@
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Результаты анализа кода",
   "loc.messages.codeAnalysisDisabled": "Анализ кода отключен вне окружения сборки. Не удалось найти значение: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Найдите JAVA_HOME для Java %s %s",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Не удалось найти указанную версию JDK. Убедитесь, что переменная среды \"%s\" существует и содержит расположение соответствующего пакета JDK."
+  "loc.messages.FailedToLocateSpecifiedJVM": "Не удалось найти указанную версию JDK. Убедитесь, что переменная среды \"%s\" существует и содержит расположение соответствующего пакета JDK.",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

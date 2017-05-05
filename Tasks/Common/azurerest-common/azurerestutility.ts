@@ -449,7 +449,6 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to stop App Service: ' + url);
-    console.log(headers);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
@@ -551,6 +550,35 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
                 tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
                 deferred.reject("FAILED");
             }
+        }
+    });
+    return deferred.promise;
+}
+
+export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
+    
+    var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
+    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "?" + azureApiVersion;
+
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken
+    };
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl.debug('Request to get App State: ' + webAppNameWithSlot);
+    httpObj.send('GET', url, null, headers, (error, response, body) => {
+        if(error) {
+            console.log(body);
+            deferred.reject(error);
+        }
+        if(response.statusCode === 200) {
+            deferred.resolve(JSON.parse(body));
+        }
+        else {
+            console.log(body);
+            deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;

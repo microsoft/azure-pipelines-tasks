@@ -7,6 +7,6 @@
   "loc.input.help.instructions": "이 지침은 사용자가 수동 작업을 다시 시작하거나 거부하려는 경우 표시됩니다. 사용자는 이러한 지침에 따라 이 수동 작업을 합리적으로 결정하게 됩니다.",
   "loc.input.label.emailRecipients": "사용자 알림",
   "loc.input.help.emailRecipients": "수동 작업 보류 중 전자 메일을 특정 사용자나 그룹에 보냅니다. 배포 관리 권한이 있는 사용자만 수동 작업을 수행할 수 있습니다.",
-  "loc.input.label.onTimeout": "On timeout",
-  "loc.input.help.onTimeout": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+  "loc.input.label.onTimeout": "시간 초과 시",
+  "loc.input.help.onTimeout": "이 수동 작업이 지정된 시간 제한이나 60일 중 더 빨리 끝나는 기간에 보류 중이면 그 후에 자동으로 이 수동 작업을 거부하거나 다시 시작합니다."
 }

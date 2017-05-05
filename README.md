@@ -1,7 +1,5 @@
 # Visual Studio Team Services Tasks
-<br/>
-![Tasks](/taskbanner.png?raw=true "Tasks")
-<br/>
+![Tasks](/taskbanner.png "Tasks")
 
 ## Overview
 This repo contains the tasks that are provided out of the box with Visual Studio Team Services and Team Foundation Server.

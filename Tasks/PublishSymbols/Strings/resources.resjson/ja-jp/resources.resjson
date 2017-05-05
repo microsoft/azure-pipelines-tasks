@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "検索パターン",
   "loc.input.help.SearchPattern": "発行する PDB ファイルの検出に使用するパターン。",
   "loc.input.label.SymbolsFolder": "シンボル フォルダーへのパス",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
+  "loc.input.help.SymbolsFolder": "シンボル ファイルを検索するソース フォルダーへのパス。既定値は $(Build.SourcesDirectory) です。それ以外の場合は、$(Build.BinariesDirectory)/MyProject などのルート指定のパスを指定してください",
   "loc.input.label.SkipIndexing": "インデックス作成のスキップ",
   "loc.input.help.SkipIndexing": "PDB ファイルへのソース サーバー情報の挿入をスキップするかどうかを示します。",
   "loc.input.label.TreatNotIndexedAsWarning": "インデックス化されていない場合は警告します",

@@ -2,7 +2,7 @@
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
     "friendlyName": "Azure App Service Manage (PREVIEW)",
-    "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
+    "description": "Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 6
+        "Patch": 8
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -36,7 +36,7 @@
             "type": "pickList",
             "label": "Action",
             "required": false,
-            "helpMarkDown": "Action to be performed on the App Service. You can Start/Stop/Restart an App Service or Manage a slot swap.",
+            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
             "defaultValue": "Swap Slots",
             "options": {
                 "Swap Slots": "Swap Slots",
@@ -155,6 +155,14 @@
             "required": "True",
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
+        },
+        {
+            "name": "OutputVariable",
+            "type": "string",
+            "label": "Output variable",
+            "defaultValue": "",
+            "visibleRule": "Action = Install Extensions",
+            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2"
         }
     ],
     "dataSourceBindings": [
@@ -242,6 +250,7 @@
         "ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
         "ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
         "ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
-        "InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
+        "InstallingSiteExtension": "Installing site extension '%s' in Azure App Service.",
+        "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s"
     }
 }

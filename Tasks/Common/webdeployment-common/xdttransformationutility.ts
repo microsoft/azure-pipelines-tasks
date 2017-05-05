@@ -46,6 +46,7 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 */
 export function basicXdtTransformation(rootFolder, transformConfigs) {
     var sourceXmlFiles = expandWildcardPattern(rootFolder, '**/*.config');
+    var isTransformationApplied = false;
     Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
         var sourceBasename = path.win32.basename(sourceXmlFile, ".config");    
         transformConfigs.forEach( function(transformConfig) {
@@ -53,7 +54,11 @@ export function basicXdtTransformation(rootFolder, transformConfigs) {
             if(sourceXmlFiles[transformXmlFile]) {
                 tl.debug('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
                 applyXdtTransformation(sourceXmlFile, transformXmlFile);
+                isTransformationApplied = true;
             }
         });
-    });    
+    });
+    if(!isTransformationApplied) {
+        throw new Error(tl.loc('FailedToApplyTransformation'));
+    }
 }

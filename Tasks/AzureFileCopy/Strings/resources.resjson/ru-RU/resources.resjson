@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Тип подключения Azure",
   "loc.input.label.ConnectedServiceName": "Классическая подписка Azure",
   "loc.input.help.ConnectedServiceName": "Классическая подписка Azure, предназначенная для копирования файлов.",
-  "loc.input.label.ConnectedServiceNameARM": "Подписка на AzureRM",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Подписка на Azure Resource Manager, предназначенная для копирования файлов.",
   "loc.input.label.Destination": "Целевой тип",
   "loc.input.help.Destination": "Выберите назначение: BLOB-объект Azure или виртуальные машины Azure.",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Не удается задать расширение настраиваемого скрипта \"{0}\" для виртуальной машины \"{1}\": {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Не удалось включить необходимые компоненты для копирования. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "Учетная запись хранения \"{0}\" не найдена. Укажите существующую учетную запись хранения.",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "Параметр \"/S\" является недопустимым для контейнеров $root."
 }

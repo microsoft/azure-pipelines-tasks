@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 连接类型",
   "loc.input.label.ConnectedServiceName": "Azure 经典订阅",
   "loc.input.help.ConnectedServiceName": "用于复制文件的目标帐户的 Azure 经典订阅。",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM 订阅",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "用于复制文件的目标帐户的 Azure Resource Manager 订阅。",
   "loc.input.label.Destination": "目标类型",
   "loc.input.help.Destination": "选择目标，即 Azure Blob 或 Azure VM。",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "无法设置虚拟机“{1}”的自定义脚本扩展“{0}”: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "无法启用复制先决条件。{0}",
   "loc.messages.AFC_BlobStorageNotFound": "未找到存储帐户 {0}。请指定现有的存储帐户",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "\"/S\" 选项对 $root 容器无效。"
 }

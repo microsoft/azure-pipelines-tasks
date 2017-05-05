@@ -33,15 +33,9 @@
   "loc.input.help.jdkUserInputPath": "Use the JDK version at specified path during build.",
   "loc.input.label.jdkArchitecture": "JDK Architecture",
   "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK.",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture.",
   "loc.messages.JDKNotFound": "Failed to find specified JDK version. Please make sure environment variable %s exists and is set to the location of a corresponding JDK.",
   "loc.messages.NoMatchingProjects": "No files were found matching: %s.",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
   "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",
-  "loc.messages.MSB_Build0": "Build {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

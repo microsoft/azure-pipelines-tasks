@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 117,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "java"
@@ -252,6 +252,16 @@
       "label": "ms-resource:loc.input.label.sqProjectVersion",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sqProjectVersion",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqGradlePluginVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqGradlePluginVersion",
+      "required": true,
+      "defaultValue": "2.0.1",
+      "helpMarkDown": "ms-resource:loc.input.help.sqGradlePluginVersion",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },

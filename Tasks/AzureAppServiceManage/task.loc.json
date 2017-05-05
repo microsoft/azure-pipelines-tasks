@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 6
+    "Patch": 8
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -155,6 +155,14 @@
       "required": "True",
       "visibleRule": "Action = Install Extensions",
       "helpMarkDown": "ms-resource:loc.input.help.ExtensionsList"
+    },
+    {
+      "name": "OutputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.OutputVariable",
+      "defaultValue": "",
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
     }
   ],
   "dataSourceBindings": [
@@ -242,6 +250,7 @@
     "ExtensionAlreadyAvaiable": "ms-resource:loc.messages.ExtensionAlreadyAvaiable",
     "ExtensionListFailedError": "ms-resource:loc.messages.ExtensionListFailedError",
     "ExtensionListFailedResponseError": "ms-resource:loc.messages.ExtensionListFailedResponseError",
-    "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension"
+    "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
+    "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState"
   }
 }

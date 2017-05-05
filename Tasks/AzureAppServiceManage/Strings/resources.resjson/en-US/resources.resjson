@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Azure App Service Manage (PREVIEW)",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, Stop, Restart or Slot swap for an Azure App Service",
+  "loc.description": "Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription",
   "loc.input.label.Action": "Action",
-  "loc.input.help.Action": "Action to be performed on the App Service. You can Start/Stop/Restart an App Service or Manage a slot swap.",
+  "loc.input.help.Action": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
   "loc.input.label.WebAppName": "App Service name",
   "loc.input.help.WebAppName": "Enter or select the name of an existing Azure App Service",
   "loc.input.label.SpecifySlot": "Specify Slot",
@@ -23,6 +23,8 @@
   "loc.input.label.Slot": "Slot",
   "loc.input.label.ExtensionsList": "Install Extensions",
   "loc.input.help.ExtensionsList": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect.",
+  "loc.input.label.OutputVariable": "Output variable",
+  "loc.input.help.OutputVariable": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
   "loc.messages.Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
@@ -57,5 +59,6 @@
   "loc.messages.ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
   "loc.messages.ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
   "loc.messages.ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s (%s)",
-  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service."
+  "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service.",
+  "loc.messages.FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s"
 }

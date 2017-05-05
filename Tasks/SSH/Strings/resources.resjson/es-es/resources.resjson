@@ -18,7 +18,7 @@
   "loc.input.help.failOnStdErr": "Si se selecciona esta opción, la compilación dará error cuando el script o los comandos remotos escriban en STDERR.",
   "loc.messages.UseDefaultPort": "Usando el puerto 22, que es el predeterminado para SSH, porque no se especificó ningún puerto.",
   "loc.messages.SettingUpSshConnection": "Intentando configurar la conexión SSH con %s@%s:%s",
-  "loc.messages.SshConnectionSuccessful": "Successfully connected.",
+  "loc.messages.SshConnectionSuccessful": "Conectado correctamente.",
   "loc.messages.ConnectionFailed": "No se pudo conectar a la máquina remota. Compruebe los detalles del punto de conexión SSH. Error: %s.",
   "loc.messages.RemoteCopyFailed": "No se pudo copiar el script en la máquina remota. Error: %s.",
   "loc.messages.RemoteCmdExecutionErr": "No se pudo ejecutar el comando debido a errores en la máquina remota.",

@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 0
+    "Patch": 3
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
@@ -475,6 +475,10 @@
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
-    "MissingWebConfigParameters": "ms-resource:loc.messages.MissingWebConfigParameters"
+    "MissingAppTypeWebConfigParameters": "ms-resource:loc.messages.MissingAppTypeWebConfigParameters",
+    "AutoDetectDjangoSettingsFailed": "ms-resource:loc.messages.AutoDetectDjangoSettingsFailed",
+    "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
+    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
+    "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType"
   }
 }

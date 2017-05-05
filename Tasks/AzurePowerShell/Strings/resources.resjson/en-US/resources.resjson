@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
   "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to configure before running PowerShell",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager subscription to configure before running PowerShell",
   "loc.input.label.ScriptType": "Script Type",
   "loc.input.help.ScriptType": "Type of the script: File Path or Inline Script",

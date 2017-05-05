@@ -1,11 +1,11 @@
 {
-  "loc.messages.AadAuthority": "AAD Authority: {0}",
-  "loc.messages.ClientAppId": "Client Application ID: {0}",
-  "loc.messages.ClusterAppId": "Cluster Application ID: {0}",
-  "loc.messages.ConnectedToCluster": "Successfully connected to cluster.",
-  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
-  "loc.messages.ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-  "loc.messages.ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-  "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it."
+  "loc.messages.AadAuthority": "AAD 기관: {0}",
+  "loc.messages.ClientAppId": "클라이언트 응용 프로그램 ID: {0}",
+  "loc.messages.ClusterAppId": "클러스터 응용 프로그램 ID: {0}",
+  "loc.messages.ConnectedToCluster": "클러스터에 연결했습니다.",
+  "loc.messages.DefaultPortWarning": "연결 끝점에서 지정한 '{0}' 포트가 기본 ClientConnectionEndpoint '19000'과 일치하지 않습니다. 이로 인해 클러스터 통신 오류가 발생했을 수 있습니다.",
+  "loc.messages.ErrorOnAcquireToken": "Azure Active Directory 토큰을 가져오는 동안 오류가 발생했습니다. 서비스 끝점이 유효한 자격 증명으로 제대로 구성되어 있는지 확인하세요. 오류 메시지: {0}",
+  "loc.messages.ErrorOnCertificateImport": "인증서를 가져오는 동안 오류가 발생했습니다. 서비스 끝점이 올바른 인증서 값 및 유효한 암호(인증서가 암호로 보호되는 경우)로 제대로 구성되어 있는지 확인하세요. 오류 메시지: {0}",
+  "loc.messages.ImportedCertificate": "지문 '{0}'(으)로 클러스터 클라이언트 인증서를 가져왔습니다.",
+  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK가 빌드 에이전트에 설치되지 않았습니다. https://aka.ms/servicefabric으로 이동하여 해당 SDK를 다운로드 및 설치하세요."
 }

@@ -14,5 +14,5 @@
   "loc.input.label.TargetPath": "Chemin d'accès",
   "loc.input.help.TargetPath": "Emplacement du chemin de fichier UNC où copier l'artefact. Il doit être accessible par l'agent de build.",
   "loc.messages.ErrorFileShareLinux": "Impossible de publier des artefacts à partir d'OSX ou Linux dans un partage de fichiers. Vous pouvez changer le 'Type d'artefact' en 'Serveur', utiliser Windows, ou utiliser la tâche 'Copier des fichiers', 'Copier des fichiers via SSH' ou 'Chargement FTP'.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job."
+  "loc.messages.ErrorHostTypeNotSupported": "Cette tâche est prise en charge uniquement dans une tâche de build."
 }
