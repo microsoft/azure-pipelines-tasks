@@ -115,7 +115,7 @@
             "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
             "required": true,
             "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
-            "helpMarkDown": "Name of the Docker image to build, push or run. The name will be converted to lowercase as Docker supports only lowercase for image names."
+            "helpMarkDown": "Name of the Docker image to build, push or run."
         },
         {
             "name": "qualifyImageName",
