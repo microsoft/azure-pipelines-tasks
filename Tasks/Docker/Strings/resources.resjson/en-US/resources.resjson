@@ -23,7 +23,7 @@
   "loc.input.label.context": "Build Context",
   "loc.input.help.context": "Path to the build context.",
   "loc.input.label.imageName": "Image Name",
-  "loc.input.help.imageName": "Name of the Docker image to build, push or run. The name will be converted to lowercase as Docker supports only lowercase for image names.",
+  "loc.input.help.imageName": "Name of the Docker image to build, push or run.",
   "loc.input.label.qualifyImageName": "Qualify Image Name",
   "loc.input.help.qualifyImageName": "Qualify the image name with the Docker registry connection's hostname if not otherwise specified.",
   "loc.input.label.additionalImageTags": "Additional Image Tags",

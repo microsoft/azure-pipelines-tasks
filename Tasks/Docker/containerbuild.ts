@@ -27,17 +27,6 @@ function findDockerFile(dockerfilepath : string) : string {
     }
 }
 
-function changeImageNameToLowerCase(imageName: string): string {
-    var imageNameArray = imageName.split(":");
-
-    if(imageNameArray.length > 0)
-    {
-        imageName = imageNameArray[0].toLowerCase() + ":" +  imageNameArray.slice(1).join(":");
-    }
-
-    return imageName;
-} 
-
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
     command.arg("build");
@@ -56,7 +45,7 @@ export function run(connection: ContainerConnection): any {
     });
 
     var imageName = tl.getInput("imageName", true);
-    imageName = changeImageNameToLowerCase(imageName);
+    imageName = imageUtils.changeDefaultImageNameToLowerCase(imageName);
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);
