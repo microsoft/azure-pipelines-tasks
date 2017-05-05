@@ -69,6 +69,31 @@ describe('Publish Code Coverage Results Suite', function() {
             });
     })
 
+    it('Publish code coverage results conditionally fail with empty results', (done) => {
+        setResponseFile('publishCCEmptyResponse.json');
+
+        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
+        tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
+        tr.setInput('failIfCoverageEmpty', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.stdErrContained('No code coverage results were found to publish.'));
+                assert(tr.failed, 'task should have failed');
+                assert(tr.invokedToolCount == 0, 'should exit before running PublishCodeCoverageResults');
+
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Publish code coverage results without additional files input', (done) => {
         setResponseFile('publishCCResponses.json');
 

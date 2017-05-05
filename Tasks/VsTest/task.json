@@ -17,12 +17,11 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 29
+        "Patch": 46
     },
     "demands": [
         "vstest"
     ],
-    "preview": "true",
     "releaseNotes" : "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
     "minimumAgentVersion": "1.89.0",
     "groups": [
@@ -56,14 +55,14 @@
                 "testPlan": "Test plan",
                 "testRun": "Test run (for on-demand runs)"
             }
-        },      
+        },
         {
             "name": "testAssemblyVer2",
             "type": "multiLine",
             "label": "Test assemblies",
             "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+            "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
             "groupName": "testSelection",
             "properties": {
                 "rows": "3",
@@ -77,7 +76,7 @@
             "label": "Test plan",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a Test Plan.",
+            "helpMarkDown": "Select a test plan containing test suites with automated test cases.",
             "groupName": "testSelection",
             "properties": {
                 "DisableManageLink": "True"
@@ -90,8 +89,8 @@
             "label": "Test suite",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select Test Suites from the Test Plan.",
-            "groupName": "testSelection",          
+            "helpMarkDown": "Select one or more test suites containing automated test cases. Test case work items must be associated with an automated test method. [Learn more.](https://go.microsoft.com/fwlink/?linkid=847773",
+            "groupName": "testSelection",
             "properties": {
                 "MultiSelect": "True",
                 "DisableManageLink": "True"
@@ -105,7 +104,7 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select Test Configuration.",
-            "groupName": "testSelection",            
+            "groupName": "testSelection",
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -124,7 +123,7 @@
                 "resizable": "true"
             },
             "visibleRule": "testSelector = testRun"
-        },        
+        },
         {
             "name": "searchFolder",
             "type": "string",
@@ -133,7 +132,7 @@
             "required": false,
             "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
             "groupName": "testSelection"
-        },     
+        },
         {
             "name": "testFiltercriteria",
             "type": "string",
@@ -143,14 +142,14 @@
             "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
             "groupName": "testSelection",
             "visibleRule": "testSelector = testAssemblies"
-        },        
+        },
         {
             "name": "runOnlyImpactedTests",
             "type": "boolean",
             "label": "Run only impacted tests",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
+            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change. [More information](https://aka.ms/tialearnmore)",
             "groupName": "testSelection",
             "visibleRule": "testSelector = testAssemblies"
         },
@@ -189,12 +188,13 @@
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "Test platform version",
-            "defaultValue": "15.0",
+            "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "The version of Visual Studio test to use.",
+            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Sutdio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
              "options": {
+                 "latest": "Latest",
                  "15.0": "Visual Studio 2017",
                  "14.0": "Visual Studio 2015"
             }
@@ -215,7 +215,7 @@
             "label": "Settings file",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests.",
             "groupName": "executionOptions"
         },
         {
@@ -238,7 +238,7 @@
             "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://msdn.microsoft.com/library/jj159530.aspx) to learn more about how tests are run in parallel.",
+            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. This will override the MaxCpuCount if specified in your runsettings file. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
          },
          {
@@ -258,15 +258,24 @@
             "required": false,
             "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
             "groupName": "executionOptions"
-        }, 
-        {  
-           "name": "codeCoverageEnabled",  
+        },
+        {
+           "name": "codeCoverageEnabled",
             "type": "boolean",
             "label": "Code coverage enabled",
             "defaultValue": "False",
-            "required": false,  
-            "helpMarkDown": "Collect code coverage information from the test run.",  
-            "groupName": "executionOptions"      
+            "required": false,
+            "helpMarkDown": "Collect code coverage information from the test run.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "otherConsoleOptions",
+            "type": "string",
+            "label": "Other console options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "groupName": "executionOptions"
         },
         {
             "name": "testRunTitle",
@@ -303,7 +312,7 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
-        }       
+        }
     ],
     "sourceDefinitions": [
         {
@@ -327,17 +336,18 @@
             "authKey": "tfs:teamfoundation"
         }
     ],
-    "instanceNameFormat": "Test Assemblies",
+    "instanceNameFormat": "VsTest - $(testSelector)",
     "execution": {
         "Node": {
             "target": "runvstest.js"
         }
     },
     "messages": {
-        "PathDoesNotExist": "%s path does not exist.",
+        "VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
         "VstestReturnCode": "Vstest exited with return code: %d.",
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Visual Studio %d is not found. Try again with a version that exists on your build agent machine.",
+        "NoVstestFound": "Test platform is not found. Try again after installing it on your build agent machine.",
         "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
         "VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
         "NoResultsToPublish": "No results found to publish.",
@@ -366,7 +376,29 @@
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
         "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
-        "vs2013NotSupportedInDta": "Running tests using Visual Studio 2013 with multi-agent phase settings is not supported.",
-        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s"
+        "vstestVersionInvalid": "Given test platform version %s is not supported.",
+        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
+        "distributedTestWorkflow": "In distributed testing flow",
+        "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
+        "testSelectorInput": "Test selector : %s",
+        "searchFolderInput": "Search folder : %s",
+        "testFilterCriteriaInput": "Test filter criteria : %s",
+        "runSettingsFileInput": "Run settings file : %s",
+        "runInParallelInput":"Run in parallel : %s",
+        "runInIsolationInput":"Run in isolation : %s",
+        "pathToCustomAdaptersInput": "Path to custom adapters : %s",
+        "otherConsoleOptionsInput": "Other console options : %s",
+        "codeCoverageInput": "Code coverage enabled : %s",
+        "testPlanInput": "Test plan Id : %s",
+        "testplanConfigInput": "Test plan configuration Id : %s",
+        "testSuiteSelected": "Test suite Id selected: %s",
+        "testAssemblyFilterInput": "Test assembly filter : %s",
+        "vsVersionSelected": "VisualStudio version selected for test execution : %s",
+        "runTestsLocally": "Run the tests locally using %s",
+        "vstestLocationSpecified": "%s, specified location : %s",
+        "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
+        "pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and it should exist.",
+        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
     }
 }

@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as url from "url";
 import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecResult, ToolRunner} from "vsts-task-lib/toolrunner";
+import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
 
 import * as auth from "./Authentication";
 import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
@@ -33,7 +33,7 @@ function prepareNuGetExeEnvironment(
                 tl.warning(tl.loc("NGCommon_IgnoringNuGetExtensionsPath"));
                 continue;
             } else {
-                tl._writeLine(tl.loc("NGCommon_DetectedNuGetExtensionsPath", input[e]));
+                console.log(tl.loc("NGCommon_DetectedNuGetExtensionsPath", input[e]));
             }
         }
 
@@ -61,6 +61,12 @@ function prepareNuGetExeEnvironment(
         env["NUGET_CREDENTIALPROVIDERS_PATH"] = credProviderPath;
     }
 
+    let httpProxy = getNuGetProxyFromEnvironment();
+    if (httpProxy) {
+        tl.debug(`Adding environment variable for NuGet proxy: ${httpProxy}`);
+        env["HTTP_PROXY"] = httpProxy;
+    }
+
     return env;
 }
 
@@ -80,7 +86,7 @@ export class NuGetToolRunner extends ToolRunner {
         this.settings = settings;
     }
 
-    public execSync(options?: IExecOptions): IExecResult {
+    public execSync(options?: IExecOptions): IExecSyncResult {
         options = options || <IExecOptions>{};
         options.env = prepareNuGetExeEnvironment(options.env || process.env, this.settings);
         return super.execSync(options);
@@ -179,7 +185,7 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
         const version = await peParser.getFileVersionInfoAsync(nuGetExePath);
         const quirks = NuGetQuirks.fromVersion(version.fileVersion);
 
-        tl._writeLine(tl.loc("NGCommon_DetectedNuGetVersion", version.fileVersion, version.strings.ProductVersion));
+        console.log(tl.loc("NGCommon_DetectedNuGetVersion", version.fileVersion, version.strings.ProductVersion));
         tl.debug(`Quirks for ${version.fileVersion}:`);
         quirks.getQuirkNames().forEach(quirk => {
             tl.debug(`    ${quirk}`);
@@ -276,4 +282,26 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
 
     tl.debug("Credential config is enabled.");
     return true;
+}
+
+export function getNuGetProxyFromEnvironment(): string {
+    let proxyUrl: string = tl.getVariable("agent.proxyurl");
+    let proxyUsername: string = tl.getVariable("agent.proxyusername");
+    let proxyPassword: string = tl.getVariable("agent.proxypassword");
+
+    if (proxyUrl !== undefined) {
+        let proxy: url.Url = url.parse(proxyUrl);
+
+        if (proxyUsername !== undefined) {
+            proxy.auth = proxyUsername;
+
+            if (proxyPassword !== undefined) {
+                proxy.auth += `:${proxyPassword}`;
+            }
+        }
+
+        return url.format(proxy);
+    }
+
+    return undefined;
 }

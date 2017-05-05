@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "경로",
   "loc.input.help.TargetPath": "파일을 복사할 파일 공유",
   "loc.messages.ErrorFileShareLinux": "OSX 또는 Linux 에이전트의 아티팩트를 파일 공유에 게시할 수 없습니다. 서버에 대한 아티팩트 형식을 변경하거나 Windows 에이전트를 사용할 수 있습니다.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "이 작업은 빌드 작업에서만 지원됩니다.",
   "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패"
 }

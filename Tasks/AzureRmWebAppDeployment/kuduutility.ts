@@ -355,7 +355,7 @@ async function pollForFile(publishingProfile, physicalPath: string, fileName: st
             catch(error) {
                 if(error.statusCode === 404) {
                     if(fileAction  === 'CheckFileExists') {
-                        tl.debug('File ' + fileName + ' not found. rerty after 10 seconds. Attempt : ' + attempts);
+                        tl.debug('File ' + fileName + ' not found. retry after 10 seconds. Attempt : ' + attempts);
                         setTimeout(poll, 10000);
                     }
                     else if(fileAction === 'CheckFileNotExists') {
@@ -452,6 +452,7 @@ async function runCommandOnKudu(publishingProfile, physicalPath: string, command
         }
         else if(response.statusCode === 200) {
             tl.debug('successfully executed script on kudu');
+            tl.debug('Response from Kudu: ' + body);
             if(timeOut > 0) {
                 tl.debug('Async command execution completed. polling for file: ' + pollFile);
                 try {

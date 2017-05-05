@@ -2,6 +2,15 @@
     "messages": {
         "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
         "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
-        "NGCommon_UnableToFindTool": "Unable to find tool %s"
+        "NGCommon_UnableToFindTool": "Unable to find tool %s",
+        "Info_AvailableVersions": "The available versions are: %s",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_UsingVersion": "Using version: %s",
+        "Info_UsingToolPath": "Using tool path: %s",
+        "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+        "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+        "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
     }
 }

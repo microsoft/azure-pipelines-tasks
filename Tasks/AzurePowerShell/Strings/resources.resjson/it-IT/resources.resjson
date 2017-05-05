@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo di connessione ad Azure",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure classico",
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure classico da configurare prima di eseguire PowerShell",
-  "loc.input.label.ConnectedServiceNameARM": "Sottoscrizione di Gestione risorse di Azure",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Sottoscrizione di Azure Resource Manager da configurare prima di eseguire PowerShell",
   "loc.input.label.ScriptType": "Tipo di script",
   "loc.input.help.ScriptType": "Tipo dello script: Percorso file o Script inline",

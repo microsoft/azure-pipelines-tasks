@@ -26,6 +26,8 @@
   "loc.input.help.classFilter": "코드 검사 수집에서 클래스를 포함하거나 제외할 필터의 쉼표로 구분된 목록입니다(예: +:com.*,+:org.*,-:my.app*.*).",
   "loc.input.label.srcDirectories": "원본 파일 디렉터리",
   "loc.input.help.srcDirectories": "Ant 빌드 파일과 소스 코드 디렉터리 간 상대 경로의 쉼표로 구분된 목록입니다. 코드 검사 보고서에서는 이를 사용하여 소스 코드를 강조 표시합니다(예: src/java,src/Test).",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME 경로 설정",
   "loc.input.help.antHomeUserInputPath": "설정하는 경우 기존 ANT_HOME 환경 변수를 지정된 경로로 재정의합니다.",
   "loc.input.label.javaHomeSelection": "JAVA_HOME 설정 방법",
@@ -38,5 +40,6 @@
   "loc.input.help.jdkArchitecture": "선택적으로 JDK의 아키텍처(x86, x64)를 제공하세요.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s에 대해 JAVA_HOME 찾기",
   "loc.messages.FailedToLocateSpecifiedJVM": "지정한 JDK 버전을 찾지 못했습니다. '%s' 환경 변수가 있으며 해당 JDK의 위치로 설정되었는지 확인하세요.",
-  "loc.messages.DiscontinueAntCodeCoverage": "Ant 프로젝트에 대한 자동 코드 검사 보고서 생성을 더 이상 지원하지 않습니다. 자세한 내용은 https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md를 참조하세요."
+  "loc.messages.DiscontinueAntCodeCoverage": "Ant 프로젝트에 대한 자동 코드 검사 보고서 생성을 더 이상 지원하지 않습니다. 자세한 내용은 https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md를 참조하세요.",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

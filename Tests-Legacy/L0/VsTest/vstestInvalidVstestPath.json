@@ -1,0 +1,9 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir"
+    },
+    "exist": {
+        "C:/vstest.console.exe" : false
+    }
+}

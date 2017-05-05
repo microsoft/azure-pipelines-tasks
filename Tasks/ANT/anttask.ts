@@ -269,6 +269,7 @@ async function doWork() {
             })
             .fail(function (err) {
                 console.error(err.message);
+                publishTestResults(publishJUnitResults, testResultsFiles);
                 tl.debug('taskRunner fail');
                 tl.setResult(tl.TaskResult.Failed, err);
             });

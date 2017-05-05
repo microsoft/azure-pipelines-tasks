@@ -1,10 +1,11 @@
 {
     "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
     "name": "InstallAppleProvisioningProfile",
-    "friendlyName": "Install Apple Profile (Preview)",
+    "friendlyName": "Install Apple Provisioning Profile",
     "description": "Install an Apple provisioning profile required to build on a macOS agent",
     "helpMarkDown": "",
     "category": "Utility",
+    "preview": true,
     "visibility": [
         "Build",
         "Release"

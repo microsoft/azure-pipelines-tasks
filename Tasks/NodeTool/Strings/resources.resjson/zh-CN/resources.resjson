@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "节点工具安装程序",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
-  "loc.instanceNameFormat": "Use Node $(versionSpec)",
-  "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
-  "loc.input.label.checkLatest": "Check for Latest Version",
-  "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
-  "loc.messages.ToolFailed": "Tool install failed: %s"
+  "loc.description": "查找或下载并缓存指定的节点版本规范，并将其添加到该路径。",
+  "loc.instanceNameFormat": "使用节点 $(versionSpec)",
+  "loc.input.label.versionSpec": "版本规范",
+  "loc.input.help.versionSpec": "要获取的版本的版本规范。例如: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.checkLatest": "检查是否有最新版本",
+  "loc.input.help.checkLatest": "始终联机检查是否有满足版本规范的最新可用版本。这通常无法实现，除非有特定的解决方案可以始终获取最新版本。这样会在可能没有必要的情况下，特别是在使用托管生成池时产生下载费用。",
+  "loc.messages.ToolFailed": "工具安装失败: %s"
 }

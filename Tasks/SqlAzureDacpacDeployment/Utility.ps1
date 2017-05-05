@@ -22,7 +22,7 @@ function Get-AgentIPRange
     $sqlCmd = Get-Command -Name "SqlCmd.exe" -ErrorAction SilentlyContinue
     if ($sqlCmd)
     {
-        $sqlCmdArgs = "-S $serverName -U $sqlUsername -P $sqlPassword -Q `"select getdate()`""
+        $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -P `"$sqlPassword`" -Q `"select getdate()`""
     
         Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
@@ -35,8 +35,8 @@ function Get-AgentIPRange
 
         if($errors.Count -gt 0)
         {
-            $errorMsg = $errors[0].Exception.Message
-            Write-Verbose $errorMsg
+            $errorMsg = $errors[0].ToString()
+            Write-Verbose "Error Message: $errorMsg"
 
             $pattern = "([0-9]+).([0-9]+).([0-9]+)."
             $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
