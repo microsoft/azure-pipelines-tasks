@@ -11,13 +11,6 @@ import util = require('./installsshkey-util');
 // var sshAgent = require('ssh-agent-js');
 var sshAgentClient = require('ssh-agent-js/client');
 
-function debugOutput(results: trm.IExecSyncResult) {
-    tl.debug('stdout=' + results.stdout);
-    tl.debug('stderr=' + results.stderr);
-    tl.debug('code  =' + results.code);
-    tl.debug('error =' + results.error);
-}
-
 async function run() {
 
     let secureFileId: string;
@@ -46,8 +39,7 @@ async function run() {
         sshTool.installKey(publicKey, privateKeyLocation);
         util.setKnownHosts(knownHostsEntry);
     } catch(err) {
-        tl.error(err.message);
-        tl.setResult(tl.TaskResult.Failed, "" + err);
+        tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         // delete provisioning profile from temp location after installing
         if (secureFileId && secureFileHelpers) {
