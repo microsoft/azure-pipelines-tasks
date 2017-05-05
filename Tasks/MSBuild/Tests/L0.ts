@@ -2,14 +2,12 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'vsts-task-lib/mock-test';
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('MSBuild Suite', function () {
     this.timeout(20000);
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -23,7 +21,7 @@ describe('MSBuild Suite', function () {
         }
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('passes arguments', (done) => {
             psr.run(path.join(__dirname, 'PassesArguments.ps1'), done);
         })
