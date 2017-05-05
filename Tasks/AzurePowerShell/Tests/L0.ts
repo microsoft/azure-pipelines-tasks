@@ -6,15 +6,13 @@ import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('AzurePowerShell Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -26,7 +24,7 @@ describe('AzurePowerShell Suite', function () {
         psr.kill();
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('does not unravel output', (done) => {
             psr.run(path.join(__dirname, 'DoesNotUnravelOutput.ps1'), done);
         })

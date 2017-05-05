@@ -6,15 +6,13 @@ import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('VSBuild Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -26,7 +24,7 @@ describe('VSBuild Suite', function () {
         psr.kill();
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('(Select-VSVersion) errors if 15 not found', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.ErrorsIf15NotFound.ps1'), done);
         })

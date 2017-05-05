@@ -6,15 +6,13 @@ import Q = require('q');
 import assert = require('assert');
 var path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('IISWebAppManagementOnMachineGroup Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -26,7 +24,7 @@ describe('IISWebAppManagementOnMachineGroup Suite', function () {
         psr.kill();
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('test iis manage utility - manage website', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityManageWebsite.ps1'), done);
         }) 
