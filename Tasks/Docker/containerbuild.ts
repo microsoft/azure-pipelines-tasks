@@ -45,6 +45,7 @@ export function run(connection: ContainerConnection): any {
     });
 
     var imageName = tl.getInput("imageName", true);
+    imageName = imageUtils.changeDefaultImageNameToLowerCase(imageName);
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);
