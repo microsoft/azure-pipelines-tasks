@@ -30,19 +30,11 @@ export class SshToolRunner {
         return executable;
     }
 
-    private debugOutput(results: trm.IExecSyncResult) {
-        tl.debug('stdout=' + results.stdout);
-        tl.debug('stderr=' + results.stderr);
-        tl.debug('code  =' + results.code);
-        tl.debug('error =' + results.error);
-    }
-
     public runAgent() {
         // Expected output sample:
         // SSH_AUTH_SOCK=/tmp/ssh-XVblDhTvcbC3/agent.24196; export SSH_AUTH_SOCK;
         // SSH_AGENT_PID=4644; export SSH_AGENT_PID; echo Agent pid 4644;
         let agentResults: trm.IExecSyncResult = tl.execSync(this.getExecutable('ssh-agent'), null);
-        this.debugOutput(agentResults);
 
         let elements: string[] = agentResults.stdout.split(';');
         for (let i:number = 0; i < elements.length; ++i) {
@@ -67,7 +59,6 @@ export class SshToolRunner {
     public installKey(publicKey: string, privateKeyLocation: string) {
         tl.debug('Get a list of the SSH keys in the agent');
         let results: trm.IExecSyncResult = tl.execSync(this.getExecutable('ssh-add'), '-L');
-        this.debugOutput(results);
 
         let publicKeyComponents:string[] = publicKey.split(' ');
         if (publicKeyComponents.length <= 1) {
@@ -80,17 +71,14 @@ export class SshToolRunner {
             throw tl.loc('SSHKeyAlreadyInstalled');
         }
 
-        // 3. Add key
         tl.debug('Adding the SSH key to the agent');
         results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
-        this.debugOutput(results);
         if (results.error) {
             throw tl.loc('SSHKeyInstallFailed');
         }
         tl.setTaskVariable(postDeleteKeySetting, privateKeyLocation);
 
         results = tl.execSync(this.getExecutable('ssh-add'), null);
-        this.debugOutput(results);
     }
 
     public deleteKey(key: string) {
