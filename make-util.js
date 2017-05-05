@@ -246,14 +246,14 @@ var run = function (cl, inheritStreams, noHeader) {
     var output;
     try {
         output = ncp.execSync(cl, options);
-        console.log('return code: ' + output.status);
+        console.log('success return code: ' + output.status);
     }
     catch (err) {
         if (!inheritStreams) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        console.error('return code: ' + err.status);
+        console.error('error return code: ' + err.status);
         process.exit(1);
     }
 
