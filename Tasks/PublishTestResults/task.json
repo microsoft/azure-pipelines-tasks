@@ -16,7 +16,6 @@
         "Patch": 0
     },
     "demands": [],
-    "preview": "true",
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
     "minimumAgentVersion": "2.0.0",
     "groups": [
