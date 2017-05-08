@@ -34,12 +34,9 @@
         "Gulp",
         "IISWebAppDeploymentOnMachineGroup",
         "IISWebAppManagementOnMachineGroup",
-<<<<<<< HEAD
         "InstallAppleCertificate",
         "InstallAppleProvisioningProfile",
-=======
         "InstallSSHKey",
->>>>>>> d99d09446... #939802: InstallSSHKey basic functionality without UI
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
         "Kubernetes",
