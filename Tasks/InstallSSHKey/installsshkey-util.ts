@@ -113,6 +113,7 @@ export function tryRestoreKnownHosts() {
     if (knownHostsContents && knownHostsLocation) {
         fs.writeFileSync(knownHostsLocation, knownHostsContents);
     } else if (knownHostsLocation || knownHostsContents) {
-        tl.warning('Inconsistency with known_hosts cannot reset (location=' + knownHostsLocation + ' content=' + knownHostsContents + ')');
+        tl.warning(tl.loc('CannotResetKnownHosts'));
+        tl.debug('(location=' + knownHostsLocation + ' content=' + knownHostsContents + ')');
     }
 }
