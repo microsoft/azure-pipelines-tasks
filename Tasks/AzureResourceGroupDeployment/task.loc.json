@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -175,7 +175,8 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure with WinRM agent"
+        "ConfigureVMwithWinRM": "Configure with WinRM agent",
+        "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
