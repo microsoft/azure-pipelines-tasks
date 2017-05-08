@@ -13,6 +13,7 @@ tr.setInput('hostName', 'host name entry');
 
 process.env['AGENT_VERSION'] = '2.117.0';
 process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
+process.env['AGENT_HOMEDIRECTORY'] = '';
 
 let secureFileHelperMock = require('./secure-files-mock.js');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
@@ -68,6 +69,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": ""
         },
+    },
+    "getVariable": {
+        "Agent.HomeDirectory": "",
+        "Agent.TempDirectory": "",
     }
 };
 tr.setAnswers(a);
