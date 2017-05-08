@@ -60,7 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
-                "StopWithDeallocate":  "Stop and deallocate virtual machines", 
+                "StopWithDeallocate": "Stop and deallocate virtual machines",
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -175,7 +175,8 @@
             "groupName": "AdvancedDeploymentOptions",
             "options": {
                 "None": "None",
-                "ConfigureVMwithWinRM": "Configure with WinRM agent"
+                "ConfigureVMwithWinRM": "Configure with WinRM agent",
+                "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
             },
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
@@ -203,7 +204,6 @@
                 "EditableOptions": "True"
             }
         },
-        
         {
             "name": "deploymentGroupName",
             "type": "pickList",
