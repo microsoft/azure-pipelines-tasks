@@ -65,7 +65,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "temp_web_package_random_path": {
             "success": true
         },
-        "DefaultWorkingDirectory\temp_web_package.zip": {
+        "DefaultWorkingDirectory\\temp_web_package.zip": {
             "success": true
         }
     },
