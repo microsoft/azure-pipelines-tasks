@@ -1,5 +1,4 @@
-/// <reference path="../../../definitions/node.d.ts" /> 
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
+/// <reference path="../typings/index.d.ts" />
 
 import tl = require("vsts-task-lib/task");
 import msRestAzure = require("./../operations/azure-rest/azure-arm-common");

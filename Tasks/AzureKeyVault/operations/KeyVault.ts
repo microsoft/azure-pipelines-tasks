@@ -1,7 +1,4 @@
-/// <reference path="../../../definitions/node.d.ts" /> 
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
-/// <reference path="../../../definitions/Q.d.ts" />
-/// <reference path="../../../definitions/vso-node-api.d.ts" /> 
+/// <reference path="../typings/index.d.ts" />
 
 import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
 import armKeyVault = require("./azure-rest/azure-arm-keyvault");
@@ -107,10 +104,6 @@ export class KeyVault {
         tl.debug(util.format("Downloading secret value for: %s", secretName));
 
         return new Promise<void>((resolve, reject) => {
-            // if (tl.getVariable(secretName) !== undefined) {
-            //     return reject(tl.loc("ConflictingVariableFound", secretName));
-            // }
-
             this.keyVaultClient.getSecretValue(secretName, (error, secretValue, request, response) => {
                 if (error) {
                     return reject(tl.loc("GetSecretValueFailed", secretName, this.getError(error)));

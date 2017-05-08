@@ -66,7 +66,6 @@
             "dataSourceName": "AzureKeyVaults"
         }
     ],
-    "sourceDefinitions": [],
     "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
     "execution": {
         "Node": {
