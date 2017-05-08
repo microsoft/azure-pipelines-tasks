@@ -18,13 +18,6 @@
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
-    "groups": [
-        {
-            "name": "AzureKeyVaultDetails",
-            "displayName": "Azure key vault details",
-            "isExpanded": true
-        }
-    ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -32,7 +25,6 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "groupName": "AzureKeyVaultDetails",
             "helpMarkDown": "Select the Azure subscription for the key vault."
         },
         {
@@ -40,7 +32,6 @@
             "type": "pickList",
             "label": "Key vault",
             "required": true,
-            "groupName": "AzureKeyVaultDetails",
             "helpMarkDown": "Provide the name of a key vault.",
             "properties": {
                 "EditableOptions": "True"
@@ -52,7 +43,6 @@
             "label": "Secrets filter",
             "defaultValue": "*",
             "required": true,
-            "groupName": "AzureKeyVaultDetails",
             "helpMarkDown": "Comma separated list of secret names or leave * to download all secrets from the selected key vault.",
             "options": {
                 "EditableOptions": "True"
