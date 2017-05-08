@@ -36,6 +36,7 @@
         "IISWebAppManagementOnMachineGroup",
         "InstallAppleCertificate",
         "InstallAppleProvisioningProfile",
+        "InstallSSHKey",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
         "Kubernetes",
