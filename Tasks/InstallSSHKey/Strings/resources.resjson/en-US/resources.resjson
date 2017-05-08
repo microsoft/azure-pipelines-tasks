@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install SSH Key (Preview)",
+  "loc.friendlyName": "Install SSH Key",
   "loc.helpMarkDown": "",
   "loc.description": "Install an SSH key prior to a build or release",
   "loc.instanceNameFormat": "Install an SSH key",
