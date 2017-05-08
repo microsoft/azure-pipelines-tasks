@@ -18,13 +18,6 @@
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
-  "groups": [
-    {
-      "name": "AzureKeyVaultDetails",
-      "displayName": "ms-resource:loc.group.displayName.AzureKeyVaultDetails",
-      "isExpanded": true
-    }
-  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -32,7 +25,6 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "groupName": "AzureKeyVaultDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
@@ -40,7 +32,6 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.KeyVaultName",
       "required": true,
-      "groupName": "AzureKeyVaultDetails",
       "helpMarkDown": "ms-resource:loc.input.help.KeyVaultName",
       "properties": {
         "EditableOptions": "True"
@@ -52,7 +43,6 @@
       "label": "ms-resource:loc.input.label.SecretsFilter",
       "defaultValue": "*",
       "required": true,
-      "groupName": "AzureKeyVaultDetails",
       "helpMarkDown": "ms-resource:loc.input.help.SecretsFilter",
       "options": {
         "EditableOptions": "True"
