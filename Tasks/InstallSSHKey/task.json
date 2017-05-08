@@ -2,7 +2,7 @@
     "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
     "name": "InstallSSHKey",
     "friendlyName": "Install SSH Key (Preview)",
-    "description": "Install an SSH key prior to a build",
+    "description": "Install an SSH key prior to a build or release",
     "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
@@ -28,7 +28,7 @@
         {
             "name": "hostName",
             "type": "string",
-            "label": "Known hosts entry",
+            "label": "Known Hosts Entry",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The entry for this SSH key for the known_hosts file."
@@ -47,7 +47,7 @@
             "label": "SSH Key",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the build agent."
+            "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the agent."
         }
     ],
     "prejobexecution": {
@@ -63,9 +63,10 @@
         }
     },
     "messages": {
-        "SSHKeyAlreadyInstalled": "The SSH Key is already installed.",
+        "SSHKeyAlreadyInstalled": "The SSH key is already installed.",
         "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
-        "SSHKeyInstallFailed": "Failed to install the SSH key."
+        "SSHKeyInstallFailed": "Failed to install the SSH key.",
+        "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values."
     }
 }
     
