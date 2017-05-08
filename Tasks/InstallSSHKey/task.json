@@ -1,7 +1,7 @@
 {
     "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
     "name": "InstallSSHKey",
-    "friendlyName": "Install SSH Key (Preview)",
+    "friendlyName": "Install SSH Key",
     "description": "Install an SSH key prior to a build or release",
     "helpMarkDown": "",
     "category": "Utility",
