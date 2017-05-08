@@ -47,8 +47,8 @@ describe('InstallSSHKey Suite', function () {
 
         tr.run();
 
-        assert(tr.failed, 'task should have failed' + ' std=' + tr.stdout + ' err=' + tr.stderr);
-        assert(tr.stdOutContained('loc_mock_SSHPublicKeyMalformed'), 'expected error: SSH key malformed' + ' std=' + tr.stdout + ' err=' + tr.stderr);
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained('loc_mock_SSHPublicKeyMalformed'), 'expected error: SSH key malformed');
 
         done();
     });

@@ -10,6 +10,7 @@ tr.setInput('provProfileSecureFile', 'mySecureFileId');
 
 process.env['AGENT_VERSION'] = '2.117.0';
 process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
+process.env['AGENT_HOMEDIRECTORY'] = '';
 
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
