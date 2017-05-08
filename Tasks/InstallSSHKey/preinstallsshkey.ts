@@ -6,8 +6,6 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import util = require('./installsshkey-util');
 
-var sshAgentClient = require('ssh-agent-js/client');
-
 async function run() {
 
     let secureFileId: string;
