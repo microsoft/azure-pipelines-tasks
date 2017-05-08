@@ -85,7 +85,7 @@ export class SshToolRunner {
         let deleteKey: string = tl.getTaskVariable(postDeleteKeySetting);
         if (deleteKey) {
             tl.debug('Deleting Key: ' + deleteKey);
-            tl.execSync(path.join(external, 'ssh-add.exe'), '-d ' + deleteKey);
+            tl.execSync(path.join(external, 'ssh-add.exe'), ['-d', deleteKey]);
         }
     }
 }
