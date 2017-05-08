@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -52,7 +52,7 @@
     },
     {
       "name": "projects",
-      "type": "multiline",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.projects",
       "defaultValue": "",
       "visibleRule": "command != publish || publishWebProjects = false",
