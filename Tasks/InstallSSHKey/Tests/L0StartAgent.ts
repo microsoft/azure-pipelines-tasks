@@ -69,10 +69,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": ""
         },
-    },
-    "getVariable": {
-        "Agent.HomeDirectory": "",
-        "Agent.TempDirectory": "",
     }
 };
 tr.setAnswers(a);
