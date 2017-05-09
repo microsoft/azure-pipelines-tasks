@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "マッピング ファイル",
   "loc.input.help.mappingTxtPath": "リポジトリのルートから Android の mapping.txt ファイルへの相対パス。",
   "loc.input.label.packParentFolder": "親フォルダー内のアイテムをすべて含める",
-  "loc.input.help.packParentFolder": "選択したシンボル ファイル / フォルダー、および同じ親フォルダー内の他のすべてのアイテムをアップロードします。React Native アプリの場合は必須です。",
+  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "リリース ノートの作成",
   "loc.input.label.releaseNotesInput": "リリース ノート",
   "loc.input.help.releaseNotesInput": "このバージョンのリリース ノート。",

@@ -10,13 +10,12 @@ $variableSets = @(
     @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $true ; LogProjectEvents = $false ; CreateLogFile = $false ; VSVersion = '14.0' }
     @{ Clean = $false ; MaximumCpuCount = $true ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false ; VSVersion = '14.0' }
     @{ Clean = $true ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false ; VSVersion = '14.0' }
-    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false ; VSVersion = 'latest' }
 )
 foreach ($variableSet in $variableSets) {
     Unregister-Mock Get-VstsInput
     Unregister-Mock Get-SolutionFiles
     Unregister-Mock Select-VSVersion
-    Unregister-Mock Select-MSBuildLocation
+    Unregister-Mock Select-MSBuildPath
     Unregister-Mock Format-MSBuildArguments
     Unregister-Mock Invoke-BuildTools
     Register-Mock Get-VstsInput { $variableSet.VSVersion } -- -Name VSVersion
@@ -31,9 +30,9 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { $variableSet.LogProjectEvents } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $variableSet.CreateLogFile } -- -Name CreateLogFile -AsBool
     Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
-    Register-Mock Select-VSVersion { 'Some VS version' } -- -PreferredVersion $variableSet.VSVersion
-    Register-Mock Select-MSBuildLocation { 'Some MSBuild location' } -- -VSVersion 'Some VS version' -Architecture 'Some input architecture'
-    Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -VSVersion 'Some VS version' -MaximumCpuCount: $variableSet.MaximumCpuCount
+    Register-Mock Select-VSVersion { $variableSet.VSVersion } -- -PreferredVersion $variableSet.VSVersion
+    Register-Mock Select-MSBuildPath { 'Some MSBuild location' } -- -PreferredVersion $variableSet.VSVersion -Architecture 'Some input architecture'
+    Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -VSVersion $variableSet.VSVersion -MaximumCpuCount: $variableSet.MaximumCpuCount
     Register-Mock Invoke-BuildTools { 'Some build output' }
 
     # Act.

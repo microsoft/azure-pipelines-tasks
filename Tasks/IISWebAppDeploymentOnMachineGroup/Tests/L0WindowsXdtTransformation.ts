@@ -127,6 +127,9 @@ tr.registerMock('webdeployment-common/utility.js', {
             "webDeployPkg": "DefaultWorkingDirectory\\temp_web_package.zip",
             "tempPackagePath": "DefaultWorkingDirectory\\temp_web_package.zip"
         };
+    },
+    isMSDeployPackage: function() {
+        return false;
     }
 });
 

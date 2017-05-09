@@ -33,15 +33,9 @@
   "loc.input.help.jdkUserInputPath": "ビルド中に指定したパスにある JDK のバージョンを使用します。",
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
   "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64) を指定します。",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "MSBuild が見つかりません: バージョン = {0}、アーキテクチャ = {1}。最新バージョンを検索しています。",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild が見つかりません: バージョン = {0}、アーキテクチャ = {1}。バージョン/アーキテクチャの別の組み合わせを使ってみるか、ロケーションを指定するか、適切なバージョン/アーキテクチャの MSBuild をインストールしてください。",
   "loc.messages.JDKNotFound": "指定した JDK バージョンが見つかりませんでした。環境変数 %s が存在し、対応する JDK の場所に設定されていることをご確認ください。",
   "loc.messages.NoMatchingProjects": "%s と一致するファイルが見つかりませんでした。",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nhttps://go.microsoft.com/fwlink/?LinkId=760847 をご覧ください。",
   "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android タスク実行はエラーなしで完了しました。",
-  "loc.messages.MSB_Build0": "ビルド: {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "NuGet 拡張機能のローダー パスが検出されました。環境変数 NUGET_EXTENSIONS_PATH が '{0}' に設定されています。",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "検索パターン '{0}' を使ってソリューションが見つかりませんでした。",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "'NuGet パッケージの復元' オプションは使用されなくなりました。ビルド内の NuGet パッケージを復元するには、NuGet インストーラーのタスクをビルド定義に追加します。",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild または xbuild (Mono) が macOS または Linux エージェントに見つかりませんでした。"
 }

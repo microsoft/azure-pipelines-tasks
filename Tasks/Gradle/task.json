@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 117,
-        "Patch": 0 
+        "Patch": 1
     },
     "demands": [
         "java"
@@ -252,6 +252,16 @@
             "label": "SonarQube Project Version",
             "required": true,
             "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqGradlePluginVersion",
+            "type": "string",
+            "label": "SonarQube Gradle Plugin Version",
+            "required": true,
+            "defaultValue": "2.0.1",
+            "helpMarkDown": "The SonarQube Gradle plugin version to use. Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },

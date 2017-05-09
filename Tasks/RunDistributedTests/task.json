@@ -13,8 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 50
+        "Patch": 52
     },
+    "runsOn": [
+        "Agent"
+    ],
     "demands": [],
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -132,7 +135,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests.",
             "groupName": "executionOptions"
         },
         {

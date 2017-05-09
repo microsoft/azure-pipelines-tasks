@@ -120,6 +120,9 @@ tr.registerMock('./msdeployutility.js', {
 }); 
 
 tr.registerMock('azurerest-common/azurerestutility.js', {
+    testAzureWebAppAvailability: function() {
+        console.log('App Service availability check.');
+    },
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -219,12 +222,6 @@ tr.registerMock('webdeployment-common/utility.js', {
             "webDeployPkg": "DefaultWorkingDirectory\\temp_web_package.zip",
             "tempPackagePath": "DefaultWorkingDirectory\\temp_web_package.zip"
         };
-    }
-});
-
-tr.registerMock('webdeployment-common/generatewebconfig.js', {
-    generateWebConfigFile: function(filePath, templatePath, data) {
-        return;
     }
 });
 
