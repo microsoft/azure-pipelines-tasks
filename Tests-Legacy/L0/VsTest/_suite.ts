@@ -10,14 +10,12 @@ import * as path from 'path';
 import * as os from 'os';
 import * as mockHelper from '../../lib/mockHelper';
 import * as fs from 'fs';
-import * as shell from 'shelljs';
 
 const settingsHelper = require('../../../Tasks/VSTest/settingshelper');
 let xml2js = require('../../../Tasks/VSTest/node_modules/xml2js');
 const utils = require( '../../../Tasks/VSTest/helpers');
 
 //const xml2js = require('xml2js');
-const ps = shell.which('powershell.exe');
 let psr = null;
 const sysVstestLocation = '\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe';
 const sysVstest15Location = '\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe';
@@ -30,7 +28,7 @@ describe('VsTest Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -41,7 +39,7 @@ describe('VsTest Suite', function () {
         psr.kill();
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('(VsTest-NoTestAssemblies) throws if no test assemblies provided as input', (done) => {
             psr.run(path.join(__dirname, 'ThrowsIfAssembliesNotProvided.ps1'), done);
         })

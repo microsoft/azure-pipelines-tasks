@@ -7,15 +7,13 @@ import assert = require('assert');
 import path = require('path');
 
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('PowerShellOnTargetMachine Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -26,7 +24,7 @@ describe('PowerShellOnTargetMachine Suite', function () {
         psr.kill();
     });
 
-    if(ps) {
+    if (psm.testSupported()) {
         it('Validate Get-EnvironmentResources Command', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateEnvResources.ps1'), done);
         });
@@ -56,7 +54,7 @@ describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWin
     this.timeout(20000);
     
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -67,7 +65,7 @@ describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWin
         psr.kill();
     });
 
-    if(ps) {
+    if (psm.testSupported()) {
         it('Test for an environment with Https/SkipCA property set', (done) => {
             psr.run(path.join(__dirname, 'L0SkipCAPropertyOnly.ps1'), done);
         });

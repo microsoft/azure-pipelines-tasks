@@ -1,0 +1,9 @@
+
+{
+  "name": "AzureKeyVault",
+  "main":"main.js",
+  "dependencies": {
+    "vsts-task-lib" : "2.0.1-preview",
+    "vso-node-api": "6.0.1-preview"
+  }
+}

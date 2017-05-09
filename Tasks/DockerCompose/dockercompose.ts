@@ -44,14 +44,14 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
             var action = tl.getInput("action", true);
             /* tslint:disable:no-var-requires */
             return require({
-                "Build services": "./dockerComposeBuild",
-                "Push services": "./dockerComposePush",
-                "Run services": "./dockerComposeUp",
-                "Run a specific service": "./dockerComposeRun",
-                "Lock services": "./dockerComposeLock",
-                "Write service image digests": "./dockerComposeDigests",
-                "Combine configuration": "./dockerComposeConfig",
-                "Run a Docker Compose command": "./dockerComposeCommand"
+                "Build services": "./dockercomposebuild",
+                "Push services": "./dockercomposepush",
+                "Run services": "./dockercomposeup",
+                "Run a specific service": "./dockercomposerun",
+                "Lock services": "./dockercomposelock",
+                "Write service image digests": "./dockercomposedigests",
+                "Combine configuration": "./dockercomposeconfig",
+                "Run a Docker Compose command": "./dockercomposecommand"
             }[action]).run(connection);
             /* tslint:enable:no-var-requires */
         })

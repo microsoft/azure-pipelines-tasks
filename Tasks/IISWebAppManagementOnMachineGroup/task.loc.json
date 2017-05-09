@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -423,7 +423,7 @@
       "label": "ms-resource:loc.input.label.VDPhysicalPathAuth",
       "required": false,
       "groupName": "VirtualDirectory",
-      "defaultValue": "Application User (Pass-through)",
+      "defaultValue": "VDUserPassThrough",
       "options": {
         "VDUserPassThrough": "Application User (Pass-through)",
         "VDWindowsAuth": "Windows Authentication"
@@ -483,7 +483,7 @@
       "label": "ms-resource:loc.input.label.ApplicationPhysicalPathAuth",
       "required": false,
       "groupName": "WebApplication",
-      "defaultValue": "Application User (Pass-through)",
+      "defaultValue": "ApplicationUserPassThrough",
       "options": {
         "ApplicationUserPassThrough": "Application User (Pass-through)",
         "ApplicationWindowsAuth": "Windows Authentication"
