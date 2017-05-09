@@ -18,6 +18,9 @@ process.env['AGENT_HOMEDIRECTORY'] = '';
 let secureFileHelperMock = require('./secure-files-mock.js');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
+class MockStats {
+    mode = 600;
+};
 tr.registerMock('fs', {
     writeFileSync: function (filePath, contents) {
     },
@@ -26,6 +29,13 @@ tr.registerMock('fs', {
     },
     readFileSync: function (filePath) {
         return 'contents';
+    },
+    statSync: function (filePath) {
+        let s : MockStats = new MockStats();
+        return s;
+    },
+    chmodSync: function (filePath, string) {
+        
     }
 });
 
