@@ -8,15 +8,13 @@ import assert = require('assert');
 import path = require('path');
 
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('WindowsMachineFileCopy Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -25,10 +23,12 @@ describe('WindowsMachineFileCopy Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if(ps) {
+    if (psm.testSupported()) {
         it('Throw error if Source Path is invalid or empty', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateSourcePath.ps1'), done);
         });

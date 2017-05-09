@@ -10,14 +10,12 @@ import * as path from 'path';
 import * as os from 'os';
 import * as mockHelper from '../../lib/mockHelper';
 import * as fs from 'fs';
-import * as shell from 'shelljs';
 
-const settingsHelper = require('../../../Tasks/VsTest/settingshelper');
-let xml2js = require('../../../Tasks/VsTest/node_modules/xml2js');
-const utils = require( '../../../Tasks/VsTest/helpers');
+const settingsHelper = require('../../../Tasks/VSTest/settingshelper');
+let xml2js = require('../../../Tasks/VSTest/node_modules/xml2js');
+const utils = require( '../../../Tasks/VSTest/helpers');
 
 //const xml2js = require('xml2js');
-const ps = shell.which('powershell.exe');
 let psr = null;
 const sysVstestLocation = '\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe';
 const sysVstest15Location = '\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe';
@@ -30,7 +28,7 @@ describe('VsTest Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -38,10 +36,12 @@ describe('VsTest Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('(VsTest-NoTestAssemblies) throws if no test assemblies provided as input', (done) => {
             psr.run(path.join(__dirname, 'ThrowsIfAssembliesNotProvided.ps1'), done);
         })
@@ -1060,7 +1060,8 @@ describe('VsTest Suite', function () {
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stdout.indexOf('C:/vstest.console.exe path does not exist') >= 0, 'should throw invalid path error');
+                assert(tr.stdout.indexOf('The location of \'vstest.console.exe\' specified \'C:/vstest.console.exe\' does not exist.') >= 0, 
+                'should throw invalid path error');
                 done();
             })
             .fail((err) => {

@@ -15,7 +15,7 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 3,
+        "Minor": 4,
         "Patch": 1
     },
     "minimumAgentVersion": "2.111.0",
@@ -27,6 +27,12 @@
             "isExpanded": true,
             "visibleRule": "ActionIISWebsite = CreateOrUpdateWebsite"
         },
+        {
+            "name": "IISBindings", 
+            "displayName": "IIS Bindings",
+            "isExpanded": true, 
+            "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true"
+        }, 
         {
             "name": "ApplicationPoolForWebsite",
             "displayName": "IIS Application pool",
@@ -187,9 +193,8 @@
             "type": "pickList",
             "label": "Protocol",
             "required": true,
-            "groupName": "Website",
-            "visibleRule": "AddBinding = true",
             "defaultValue": "http",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "options": {
                 "https": "https",
                 "http": "http"
@@ -201,8 +206,7 @@
             "type": "string",
             "label": "IP address",
             "required": true,
-            "groupName": "Website",
-            "visibleRule": "AddBinding = true",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "defaultValue": "All Unassigned",
             "helpMarkDown": "Provide an IP address that end-users can use to access this website. <br>If 'All Unassigned' is selected, then the website will respond to requests for all IP addresses on the port and for the host name, unless another website on the server has a binding on the same port but with a specific IP address.<br>"
         },
@@ -211,8 +215,7 @@
             "type": "string",
             "label": "Port",
             "required": true,
-            "visibleRule": "AddBinding = true",
-            "groupName": "Website",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "defaultValue": "80",
             "helpMarkDown": "Provide the port, where the Hypertext Transfer Protocol Stack (HTTP.sys) will listen to the website requests."
         },
@@ -221,9 +224,8 @@
             "type": "boolean",
             "label": "Server Name Indication required",
             "required": false,
-            "groupName": "Website",
             "defaultValue": "false",
-            "visibleRule": "Protocol = https",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "helpMarkDown": "Select the option to set the Server Name Indication (SNI) for the website. <br>SNI extends the SSL and TLS protocols to indicate the host name that the clients are attempting to connect to. It allows, multiple secure websites with different certificates, to use the same IP address.<br>"
         },
         {
@@ -231,9 +233,7 @@
             "type": "string",
             "label": "Host name",
             "required": false,
-            "groupName": "Website",
-            "defaultValue": "",
-            "visibleRule": "ServerNameIndication = false",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
         },
         {
@@ -241,9 +241,7 @@
             "type": "string",
             "label": "Host name",
             "required": false,
-            "groupName": "Website",
-            "defaultValue": "",
-            "visibleRule": "Protocol = http",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
         },
         {
@@ -251,9 +249,7 @@
             "type": "string",
             "label": "Host name",
             "required": true,
-            "groupName": "Website",
-            "defaultValue": "",
-            "visibleRule": "ServerNameIndication = true",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
         },
         {
@@ -261,10 +257,21 @@
             "type": "string",
             "label": "SSL certificate thumbprint",
             "required": true,
-            "groupName": "Website",
-            "defaultValue": "",
-            "visibleRule": "Protocol = https",
+            "visibleRule": "IISDeploymentType = randomDeployment",
             "helpMarkDown": "Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store."
+        },
+        {
+            "name": "Bindings",
+            "type": "multiLine",
+            "label": "Add bindings",
+            "required": true,
+            "groupName": "IISBindings",
+            "properties": {
+                "resizable": "true",
+                "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
+                "displayFormat": "{{#bindings}}{{protocol}}/{{ipAddress}}:{{port}}:{{hostname}}\n{{/bindings}}"
+            },
+            "helpMarkDown": "Click on the extension [...] button to add bindings for the website."
         },
         {
             "name": "CreateOrUpdateAppPoolForWebsite",
@@ -416,7 +423,7 @@
             "label": "Physical path authentication",
             "required": false,
             "groupName": "VirtualDirectory",
-            "defaultValue": "Application User (Pass-through)",
+            "defaultValue": "VDUserPassThrough",
             "options": {
                 "VDUserPassThrough": "Application User (Pass-through)",
                 "VDWindowsAuth": "Windows Authentication"
@@ -476,7 +483,7 @@
             "label": "Physical path authentication",
             "required": false,
             "groupName": "WebApplication",
-            "defaultValue": "Application User (Pass-through)",
+            "defaultValue": "ApplicationUserPassThrough",
             "options": {
                 "ApplicationUserPassThrough": "Application User (Pass-through)",
                 "ApplicationWindowsAuth": "Windows Authentication"
@@ -681,13 +688,14 @@
         }
     },
     "messages": {
-        "InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
         "InvalidVirtualPath": "Virtual path should begin with a /",
         "InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}",
         "InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
         "InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool.",
         "PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-        "SSLCertWarningInvalidCharacters": "SSL Certificate thumbprint contains non-hexadecimal characters. Trimming all non-hexadecimal characters."
+        "SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}/{1}:{2} )",
+        "InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}/{1}:{2} ). Length is not 40 characters or contains invalid characters.",
+        "SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ) . Trimming all non-hexadecimal characters."
     }
 
 }

@@ -27,13 +27,7 @@
   "loc.input.help.msbuildArchitecture": "При необходимости укажите архитектуру используемого средства MSBuild (x86, x64).",
   "loc.input.label.msbuildLocation": "Путь к MSBuild",
   "loc.input.help.msbuildLocation": "При необходимости укажите путь к MSBuild.",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Не удалось найти MSBuild: версия = {0}, архитектура = {1}. Идет поиск последней версии.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "Не удалось найти MSBuild: версия = {0}, архитектура = {1}. Попробуйте другую комбинацию версии и архитектуры, укажите расположение или установите подходящую версию и архитектуру MSBuild.",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "Команда \"Записать сведения о проекте\" поддерживается только в Windows.",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "Команда \"Создать файл журнала\" поддерживается только в Windows.",
-  "loc.messages.MSB_Build0": "Сборка {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Обнаружен путь к загрузчику расширений NuGet. Для переменной среды NUGET_EXTENSIONS_PATH задано значение \"{0}\".",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Не удалось найти решение по шаблону поиска \"{0}\".",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "Параметр \"Восстановить пакеты NuGet\" использовать не рекомендуется. Чтобы восстановить пакеты NuGet в сборке, добавьте задание установщика NuGet в определение сборки.",
-  "loc.messages.MSB_BuildToolNotFound": "В агенте macOS или Linux не удалось найти MSBuild или xbuild (Mono)."
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

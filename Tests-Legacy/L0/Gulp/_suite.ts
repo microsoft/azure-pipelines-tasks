@@ -3,9 +3,7 @@
 
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
-import psm = require('../../lib/psRunner');
 import path = require('path');
-import shell = require('shelljs');
 import os = require('os');
 
 function setResponseFile(name: string) {

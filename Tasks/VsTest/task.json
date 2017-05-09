@@ -18,10 +18,14 @@
         "Major": 2,
         "Minor": 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
         "Patch": 46
 =======
         "Patch": 45
 >>>>>>> ed11383c4be36a9e517b41d29a024e029b76d206
+=======
+        "Patch": 46
+>>>>>>> 1b032b17d91e2f09d0ed337ac851d66b300099f6
     },
     "demands": [
         "vstest"
@@ -194,7 +198,7 @@
             "label": "Test platform version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "The version of Visual Studio test to use.",
+            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Sutdio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
              "options": {
@@ -219,7 +223,7 @@
             "label": "Settings file",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests.",
             "groupName": "executionOptions"
         },
         {

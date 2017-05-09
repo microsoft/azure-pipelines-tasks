@@ -36,6 +36,21 @@
             "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
         },
         {
+            "name": "vsVersion",
+            "type": "pickList",
+            "label": "Visual Studio Version",
+            "required": false,
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
+            "defaultValue": "15.0",
+            "options": {
+                "latest": "Latest",
+                "15.0": "Visual Studio 2017",
+                "14.0": "Visual Studio 2015",
+                "12.0": "Visual Studio 2013",
+                "11.0": "Visual Studio 2012"
+            }
+        },
+        {
             "name": "msbuildArgs",
             "type": "string",
             "label": "MSBuild Arguments",
@@ -81,21 +96,6 @@
             "required": false,
             "groupName": "advanced",
             "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
-        },
-        {
-            "name": "vsVersion",
-            "type": "pickList",
-            "label": "Visual Studio Version",
-            "required": false,
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
-            "defaultValue": "15.0",
-            "options": {
-                "latest": "Latest",
-                "15.0": "Visual Studio 2017",
-                "14.0": "Visual Studio 2015",
-                "12.0": "Visual Studio 2013",
-                "11.0": "Visual Studio 2012"
-            }
         },
         {
             "name": "msbuildArchitecture",

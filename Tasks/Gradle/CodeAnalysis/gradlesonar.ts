@@ -1,6 +1,7 @@
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 import Q = require('q');
 import path = require('path');
+import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
@@ -17,7 +18,12 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner): trm.T
 
     // #1: Inject custom script to the Gradle build, triggering a SonarQube run
     // Add a custom initialisation script to the Gradle run that will apply the SonarQube plugin and task
+    // Set the SonarQube Gralde plugin version in the script
     let initScriptPath: string = path.join(__dirname, 'sonar.gradle');
+    let pluginVersion: string = sqCommon.getSonarQubeGradlePluginVersion();
+    let scriptContents: string= fs.readFileSync(initScriptPath, 'utf8');
+    scriptContents = scriptContents.replace('SONARQUBE_GRADLE_PLUGIN_VERSION', pluginVersion);
+    tl.writeFile(initScriptPath, scriptContents);
 
     // Specify that the build should run the init script
     gradleRun.arg(['sonarqube']);

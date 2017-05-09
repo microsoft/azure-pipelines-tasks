@@ -27,13 +27,7 @@
   "loc.input.help.msbuildArchitecture": "必要に応じて、実行する MSBuild のアーキテクチャ (x86、x64) を指定します。",
   "loc.input.label.msbuildLocation": "MSBuild へのパス",
   "loc.input.help.msbuildLocation": "(省略可能) MSBuild へのパスを指定します。",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "MSBuild が見つかりません: バージョン = {0}、アーキテクチャ = {1}。最新バージョンを検索しています。",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild が見つかりません: バージョン = {0}、アーキテクチャ = {1}。バージョン/アーキテクチャの別の組み合わせを使ってみるか、ロケーションを指定するか、適切なバージョン/アーキテクチャの MSBuild をインストールしてください。",
   "loc.messages.RecordProjectDetailsOnlySupportedOnWindows": "`プロジェクトの詳細の記録` は Windows でのみサポートされています。",
   "loc.messages.CreateLogFileOnlySupportedOnWindows": "`ログ ファイルを作成する` は Windows でのみサポートされます。",
-  "loc.messages.MSB_Build0": "ビルド: {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "NuGet 拡張機能のローダー パスが検出されました。環境変数 NUGET_EXTENSIONS_PATH が '{0}' に設定されています。",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "検索パターン '{0}' を使ってソリューションが見つかりませんでした。",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "'NuGet パッケージの復元' オプションは使用されなくなりました。ビルド内の NuGet パッケージを復元するには、NuGet インストーラーのタスクをビルド定義に追加します。",
-  "loc.messages.MSB_BuildToolNotFound": "MSBuild または xbuild (Mono) が macOS または Linux エージェントで見つかりませんでした"
+  "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
 }

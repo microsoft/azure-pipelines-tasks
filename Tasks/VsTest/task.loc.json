@@ -18,10 +18,14 @@
     "Major": 2,
     "Minor": 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Patch": 46
 =======
     "Patch": 45
 >>>>>>> ed11383c4be36a9e517b41d29a024e029b76d206
+=======
+    "Patch": 46
+>>>>>>> 1b032b17d91e2f09d0ed337ac851d66b300099f6
   },
   "demands": [
     "vstest"

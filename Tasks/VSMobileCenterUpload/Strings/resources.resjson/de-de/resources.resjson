@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "Zuordnungsdatei",
   "loc.input.help.mappingTxtPath": "Der relative Pfad vom Repositorystamm zur mapping.txt-Datei von Android.",
   "loc.input.label.packParentFolder": "Alle Elemente im übergeordneten Ordner einschließen",
-  "loc.input.help.packParentFolder": "Laden Sie die ausgewählte Symboldatei bzw. den ausgewählten Ordner und alle weiteren Elemente innerhalb desselben übergeordneten Ordners hoch. Dies ist für React Native-Apps erforderlich.",
+  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "Anmerkungen zu dieser Version erstellen",
   "loc.input.label.releaseNotesInput": "Anmerkungen zu dieser Version",
   "loc.input.help.releaseNotesInput": "Anmerkungen zu dieser Version.",

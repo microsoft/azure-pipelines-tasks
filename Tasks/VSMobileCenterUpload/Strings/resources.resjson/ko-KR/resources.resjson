@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "매핑 파일",
   "loc.input.help.mappingTxtPath": "Android mapping.txt 파일의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.packParentFolder": "부모 폴더의 모든 항목 포함",
-  "loc.input.help.packParentFolder": "선택한 기호 파일/폴더 및 동일한 부모 폴더에 있는 다른 모든 항목을 업로드합니다. React Native 앱에 필요합니다.",
+  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "릴리스 정보 만들기",
   "loc.input.label.releaseNotesInput": "릴리스 정보",
   "loc.input.help.releaseNotesInput": "이 버전의 릴리스 정보입니다.",

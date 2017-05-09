@@ -7,15 +7,13 @@ import assert = require('assert');
 import path = require('path');
 
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('SqlAzureDacpacDeployment  Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -23,10 +21,12 @@ describe('SqlAzureDacpacDeployment  Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if(ps) {
+    if (psm.testSupported()) {
         it('(DACPAC) Should throw if Multiple Dacpac files or none present', (done) => {
             psr.run(path.join(__dirname, 'L0DacpacTaskFileCheck.ps1'), done);
         });
@@ -47,7 +47,7 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
     this.timeout(10000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -55,10 +55,12 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if(ps) {
+    if (psm.testSupported()) {
         it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityUsernameCreate.ps1'), done);
         });

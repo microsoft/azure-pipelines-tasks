@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Build, push or run multi-container Docker applications",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.containerregistrytype": "Container Registry Type",

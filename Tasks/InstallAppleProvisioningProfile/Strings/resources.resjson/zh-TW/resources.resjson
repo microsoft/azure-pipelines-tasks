@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "安裝 Apple 佈建設定檔",
   "loc.helpMarkDown": "",
   "loc.description": "在 macOS 代理程式上執行建置作業必須安裝 Apple 佈建設定檔",
   "loc.instanceNameFormat": "安裝 Apple 佈建設定檔",
