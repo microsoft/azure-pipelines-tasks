@@ -21,7 +21,9 @@ describe('PowerShellOnTargetMachine Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
     if (psm.testSupported()) {
@@ -62,7 +64,9 @@ describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWin
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
     if (psm.testSupported()) {
