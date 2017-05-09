@@ -38,7 +38,6 @@ async function run() {
         var scriptType: string = tl.getInput('ScriptType', false);
         var inlineScript: string = tl.getInput('InlineScript', false);
         var scriptPath: string = tl.getPathInput('ScriptPath', false);
-        var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var webAppKind = tl.getInput('WebAppKind', false);

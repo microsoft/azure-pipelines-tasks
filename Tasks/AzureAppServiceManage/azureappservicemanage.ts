@@ -63,7 +63,6 @@ async function run() {
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         var extensionList = tl.getInput('ExtensionsList', false);
         var extensionOutputVariables = tl.getInput('OutputVariable');
-        var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var taskResult = true;
         var errorMessage: string = "";
