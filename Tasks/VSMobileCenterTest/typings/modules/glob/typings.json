@@ -9,11 +9,9 @@
         "src": "https://raw.githubusercontent.com/typed-typings/npm-minimatch/74f47de8acb42d668491987fc6bc144e7d9aa891/typings.json",
         "raw": "github:typed-typings/npm-minimatch#74f47de8acb42d668491987fc6bc144e7d9aa891",
         "main": "minimatch.d.ts",
-        "name": "minimatch",
-        "type": "typings"
+        "name": "minimatch"
       }
     },
-    "name": "glob",
-    "type": "typings"
+    "name": "glob"
   }
 }
