@@ -22,7 +22,9 @@ describe('Test Helpers Suite', function() {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
     if (psm.testSupported()) {
