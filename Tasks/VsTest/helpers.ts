@@ -117,4 +117,12 @@ export class Helper {
             default: return 'selected';
         }
     }
+
+    public static printMultiLineLog (multiLineString : string, logFunction : Function) {
+        const lines = multiLineString.toString().split('\n');
+            lines.forEach(function (line: string) {
+                logFunction(line);
+            });
+    }
+
 }
