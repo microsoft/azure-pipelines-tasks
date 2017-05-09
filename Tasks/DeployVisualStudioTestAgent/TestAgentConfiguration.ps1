@@ -79,15 +79,15 @@
         Write-Verbose "****************************************************************"
         
         Try
-		{
-			$DtaAgentClient = New-Object MS.VS.TestService.Client.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
-		}
-		Catch
-		{
-			Write-Verbose "Unable to connect to Team Foundation Server, Check if TFS is reachable from the test agent. Exception Details : "
-			Write-Verbose $_.Exception | format-list -force
-			throw "Unable to connect to Team Foundation Server"
-		}
+        {
+            $DtaAgentClient = New-Object MS.VS.TestService.Client.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
+        }
+        Catch
+        {
+            Write-Verbose "Unable to connect to Team Foundation Server, Check if TFS is reachable from the test agent. Exception Details : "
+            Write-Verbose $_.Exception | format-list -force
+            throw "Unable to connect to Team Foundation Server"
+        }
 
         if(-not $DtaAgentClient){
             throw "Unable to register the agent with Team Foundation Server"
