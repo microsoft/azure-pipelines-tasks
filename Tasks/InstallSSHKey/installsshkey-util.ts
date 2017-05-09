@@ -9,6 +9,7 @@ export const postKillAgentSetting: string = 'INSTALL_SSH_KEY_KILL_SSH_AGENT_PID'
 export const postDeleteKeySetting: string = 'INSTALL_SSH_KEY_DELETE_KEY';
 export const postKnownHostsContentsSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_CONTENTS';
 export const postKnownHostsLocationSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION';
+export const postKnownHostsDeleteFileSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_FILE_DELETE';
 
 export const sshAgentPidEnvVariableKey: string = 'SSH_AGENT_PID';
 export const sshAgentSockEnvVariableKey: string = 'SSH_AUTH_SOCK';
@@ -72,10 +73,13 @@ export class SshToolRunner {
         }
 
         tl.debug('Adding the SSH key to the agent ' + privateKeyLocation);
+        let oldMode: number = fs.statSync(privateKeyLocation).mode;
+        fs.chmodSync(privateKeyLocation, '600'); // requires user only permissions when adding to agent
         results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
         if (results.error) {
             throw tl.loc('SSHKeyInstallFailed');
         }
+        fs.chmodSync(privateKeyLocation, oldMode);
         tl.setTaskVariable(postDeleteKeySetting, privateKeyLocation);
 
         results = tl.execSync(this.getExecutable('ssh-add'), null);
@@ -92,14 +96,20 @@ export class SshToolRunner {
 
 export function setKnownHosts(knownHostsEntry: string) {
     let knownHostsFolder: string = path.join(os.homedir(), '.ssh');
+    let knownHostsFile: string = path.join(knownHostsFolder, 'known_hosts');
+    let knownHostsContent: string = '';
+    let knownHostsDeleteFileOnClose: string = 'true';
     if (!fs.existsSync(knownHostsFolder)) {
         fs.mkdirSync(knownHostsFolder);
+    } else if (fs.existsSync(knownHostsFile)) {
+        tl.debug('Read known_hosts');
+        knownHostsDeleteFileOnClose = '';
+        knownHostsContent = fs.readFileSync(knownHostsFile).toString();
     }
-    let knownHostsFile: string = path.join(knownHostsFolder, 'known_hosts');
 
-    tl.debug('Read known_hosts');
-    tl.setTaskVariable(postKnownHostsContentsSetting, fs.readFileSync(knownHostsFile).toString());
+    tl.setTaskVariable(postKnownHostsContentsSetting, knownHostsContent);
     tl.setTaskVariable(postKnownHostsLocationSetting, knownHostsFile);
+    tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose);
 
     tl.debug('Inserting entry into known_hosts');
     fs.writeFileSync(knownHostsFile, knownHostsEntry + os.EOL);
@@ -108,9 +118,12 @@ export function setKnownHosts(knownHostsEntry: string) {
 export function tryRestoreKnownHosts() {
     let knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
     let knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
-
+    let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
+    
     tl.debug('Restoring known_hosts');
-    if (knownHostsContents && knownHostsLocation) {
+    if (knownHostsDeleteFileOnExit && knownHostsLocation) {
+        fs.unlinkSync(knownHostsLocation);
+    } else if (knownHostsContents && knownHostsLocation) {
         fs.writeFileSync(knownHostsLocation, knownHostsContents);
     } else if (knownHostsLocation || knownHostsContents) {
         tl.warning(tl.loc('CannotResetKnownHosts'));
