@@ -48,7 +48,7 @@
       "type":"multiLine",
       "label":"Headers",
       "required":"false",
-      "defaultValue":"[{\"Content-Type\":\"text/plain\"}]",
+      "defaultValue":"{\"Content-Type\":\"application/json\"}",
       "properties": {
         "resizable": "true",
         "rows": "3",
@@ -67,7 +67,7 @@
                 "rows": "3",
                 "maxLength": "500"
             },
-      "visibleRule": "httpMethod != GET && httpMethod != Head"
+      "visibleRule": "method != GET && method != Head"
     },
     {
       "name":"waitForCompletion",
