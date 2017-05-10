@@ -23,6 +23,19 @@ export function isSonarQubeAnalysisEnabled(): boolean {
 }
 
 /**
+ * Returns the SonarQube Gradle plugin version.
+ * @returns {string}
+ */
+export function getSonarQubeGradlePluginVersion(): string {
+    let pluginVersion = '2.0.1';
+    let userSpecifiedVersion = tl.getInput('sqGradlePluginVersion');
+    if (userSpecifiedVersion) {
+        pluginVersion = userSpecifiedVersion.trim();
+    }
+    return pluginVersion;
+}
+
+/**
  * Apply all parameters necessary for SonarQube operation to the given ToolRunner.
  * @param toolRunner Master ToolRunner object that will be executed on the command line.
  * @returns {ToolRunner}

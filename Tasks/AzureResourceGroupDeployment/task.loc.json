@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -175,7 +175,7 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure with WinRM",
+        "ConfigureVMwithWinRM": "Configure with WinRM agent",
         "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
@@ -187,7 +187,10 @@
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupEndpoint"
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupEndpoint",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "project",
@@ -196,7 +199,10 @@
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.project"
+      "helpMarkDown": "ms-resource:loc.input.help.project",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "deploymentGroupName",
@@ -204,9 +210,10 @@
       "label": "ms-resource:loc.input.label.deploymentGroupName",
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupName",
       "properties": {
-        "DisableManageLink": "True"
+        "EditableOptions": "True"
       }
     },
     {
@@ -303,24 +310,14 @@
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
     "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
-    "ValidatingCredentialsFailure": "ms-resource:loc.messages.ValidatingCredentialsFailure",
     "RuleExistsAlready": "ms-resource:loc.messages.RuleExistsAlready",
-    "ARG_NetworkSecurityConfigFailed": "ms-resource:loc.messages.ARG_NetworkSecurityConfigFailed",
-    "ExtensionAlreadyPresentVm": "ms-resource:loc.messages.ExtensionAlreadyPresentVm",
     "AddExtension": "ms-resource:loc.messages.AddExtension",
     "DeleteExtension": "ms-resource:loc.messages.DeleteExtension",
-    "ARG_AllResourceNotFound": "ms-resource:loc.messages.ARG_AllResourceNotFound",
     "FailedToAddExtension": "ms-resource:loc.messages.FailedToAddExtension",
     "AddingSecurityRuleNSG": "ms-resource:loc.messages.AddingSecurityRuleNSG",
     "AddedSecurityRuleNSG": "ms-resource:loc.messages.AddedSecurityRuleNSG",
-    "FailedToAddRuleToNetworkSecurityGroup": "ms-resource:loc.messages.FailedToAddRuleToNetworkSecurityGroup",
-    "FetchingOfNetworkSecurityGroupFailed": "ms-resource:loc.messages.FetchingOfNetworkSecurityGroupFailed",
     "FailedAddingNSGRule3Times": "ms-resource:loc.messages.FailedAddingNSGRule3Times",
-    "FailedToAddNetworkSecurityRule": "ms-resource:loc.messages.FailedToAddNetworkSecurityRule",
-    "FailedToEnablePrereqs": "ms-resource:loc.messages.FailedToEnablePrereqs",
     "FailedToDeleteExtension": "ms-resource:loc.messages.FailedToDeleteExtension",
-    "AddedInboundNatRuleLB": "ms-resource:loc.messages.AddedInboundNatRuleLB",
-    "InboundNatRuleLBPresent": "ms-resource:loc.messages.InboundNatRuleLBPresent",
     "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
     "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
@@ -346,17 +343,8 @@
     "NetworkSecurityGroupNameCannotBeNull": "ms-resource:loc.messages.NetworkSecurityGroupNameCannotBeNull",
     "SecurityRuleNameCannotBeNull": "ms-resource:loc.messages.SecurityRuleNameCannotBeNull",
     "SecurityRuleParametersCannotBeNull": "ms-resource:loc.messages.SecurityRuleParametersCannotBeNull",
-    "ErrorFetchingNatRules": "ms-resource:loc.messages.ErrorFetchingNatRules",
-    "UnableToFetchFQDN": "ms-resource:loc.messages.UnableToFetchFQDN",
     "OutputVariableShouldNotBeEmpty": "ms-resource:loc.messages.OutputVariableShouldNotBeEmpty",
-    "EnablingWinRM": "ms-resource:loc.messages.EnablingWinRM",
-    "ARG_ResourceNotFound": "ms-resource:loc.messages.ARG_ResourceNotFound",
-    "FailedToUpdateInboundNatRuleLB": "ms-resource:loc.messages.FailedToUpdateInboundNatRuleLB",
-    "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed",
     "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
-    "FailedToUpdateNICOfVm": "ms-resource:loc.messages.FailedToUpdateNICOfVm",
-    "FailedToFetchDetailsOfLB": "ms-resource:loc.messages.FailedToFetchDetailsOfLB",
-    "FailedToUpdateLBInboundNatRules": "ms-resource:loc.messages.FailedToUpdateLBInboundNatRules",
     "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
     "AddingInboundNatRule": "ms-resource:loc.messages.AddingInboundNatRule",
     "InboundNatRuleAdditionFailed": "ms-resource:loc.messages.InboundNatRuleAdditionFailed",
@@ -374,14 +362,12 @@
     "DGAgentAddedOnAllVMs": "ms-resource:loc.messages.DGAgentAddedOnAllVMs",
     "DGAgentDeletedFromAllVMs": "ms-resource:loc.messages.DGAgentDeletedFromAllVMs",
     "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",
-    "SkipDeleteExtension": "ms-resource:loc.messages.SkipDeleteExtension",
     "VMStartFailed": "ms-resource:loc.messages.VMStartFailed",
     "VMStarted": "ms-resource:loc.messages.VMStarted",
     "VMTransitioningSkipExtensionAddition": "ms-resource:loc.messages.VMTransitioningSkipExtensionAddition",
     "VMDetailsFetchFailed": "ms-resource:loc.messages.VMDetailsFetchFailed",
     "VMDetailsFetchSucceeded": "ms-resource:loc.messages.VMDetailsFetchSucceeded",
     "AddingDGAgentOnVMs": "ms-resource:loc.messages.AddingDGAgentOnVMs",
-    "DeletingDGAgentFromVMs": "ms-resource:loc.messages.DeletingDGAgentFromVMs",
     "DeletingDGAgentOnVMs": "ms-resource:loc.messages.DeletingDGAgentOnVMs",
     "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
     "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",

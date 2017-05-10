@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "要用于生成负载的地理区域。有关详细信息，请参阅帮助。",
   "loc.input.label.machineType": "运行负载测试使用",
   "loc.input.label.avgResponseTimeThreshold": "如果平均响应时间(毫秒)超出以下值则测试失败:",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "平均响应时间，若高于该值，则负载测试视为失败。"
 }

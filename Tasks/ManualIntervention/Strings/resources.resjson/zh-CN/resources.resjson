@@ -7,6 +7,6 @@
   "loc.input.help.instructions": "将向用户显示这些说明，以便恢复或拒绝手动干预。用户根据这些说明，对此手动干预作出知情的决策。",
   "loc.input.label.emailRecipients": "通知用户",
   "loc.input.help.emailRecipients": "将手动干预挂起电子邮件发送到特定用户(或组)。仅具有管理部署权限的用户才可执行手动干预。",
-  "loc.input.label.onTimeout": "On timeout",
-  "loc.input.help.onTimeout": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
+  "loc.input.label.onTimeout": "超时",
+  "loc.input.help.onTimeout": "手动干预的挂起状态超过指定超时或 60 天后，系统将自动拒绝或继续此手动干预，以首先达到的条件为准。"
 }

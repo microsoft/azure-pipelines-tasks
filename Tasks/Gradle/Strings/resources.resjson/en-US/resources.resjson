@@ -47,6 +47,8 @@
   "loc.input.help.sqProjectKey": "The SonarQube project unique key, i.e. sonar.projectKey.",
   "loc.input.label.sqProjectVersion": "SonarQube Project Version",
   "loc.input.help.sqProjectVersion": "The SonarQube project version, i.e. sonar.projectVersion.",
+  "loc.input.label.sqGradlePluginVersion": "SonarQube Gradle Plugin Version",
+  "loc.input.help.sqGradlePluginVersion": "The SonarQube Gradle plugin version to use. Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
   "loc.input.label.sqDbDetailsRequired": "The SonarQube server version is lower than 5.2",
   "loc.input.help.sqDbDetailsRequired": "If using a SonarQube server 5.1 or lower, you must specify the database connection details.",
   "loc.input.label.sqDbUrl": "Db Connection String",

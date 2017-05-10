@@ -27,11 +27,10 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
 
         this._spnVariables = new Map<string, string>();
         var connectedService = taskParameters.serviceEndpoint;
-        var endpointAuth = tl.getEndpointAuthorization(connectedService, true);
         this._spnVariables.set(constants.TemplateVariableSubscriptionIdName, tl.getEndpointDataParameter(connectedService, "SubscriptionId", true));
-        this._spnVariables.set(constants.TemplateVariableClientIdName, endpointAuth.parameters["serviceprincipalid"]);
-        this._spnVariables.set(constants.TemplateVariableClientSecretName, endpointAuth.parameters["serviceprincipalkey"]);
-        this._spnVariables.set(constants.TemplateVariableTenantIdName, endpointAuth.parameters["tenantid"]);
+        this._spnVariables.set(constants.TemplateVariableClientIdName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false));
+        this._spnVariables.set(constants.TemplateVariableClientSecretName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false));
+        this._spnVariables.set(constants.TemplateVariableTenantIdName, tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false));
         this._spnVariables.set(constants.TemplateVariableObjectIdName, tl.getEndpointDataParameter(connectedService, "spnObjectId", true));        
         
         return this._spnVariables;

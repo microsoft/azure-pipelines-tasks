@@ -10,6 +10,9 @@ tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("resourceGroupName", "dummy");
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY"] = "key";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";

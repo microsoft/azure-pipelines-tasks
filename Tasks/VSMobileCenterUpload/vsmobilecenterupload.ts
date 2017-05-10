@@ -285,34 +285,41 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
         // multiple dSYM folder paths for Apple application.
         let dsymPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
-        dsymPaths.forEach(dsymFolder => {
-            if (dsymFolder) {
-                let folderPath = utils.checkAndFixFilePath(dsymFolder, continueOnError);
-                // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
-                if (folderPath) {
-                    symbolsPaths.push(folderPath);
+        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
+        if (dsymPaths) {
+            dsymPaths.forEach(dsymFolder => {
+                if (dsymFolder) {
+                    let folderPath = utils.checkAndFixFilePath(dsymFolder, continueOnError);
+                    // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
+                    if (folderPath) {
+                        symbolsPaths.push(folderPath);
+                    }
                 }
-            }
-        })
+            })
+        }
     } else if (symbolsType === "UWP") {
         // User can specifay a symbols path pattern that selects 
         // multiple PDB paths for UWP application.
         let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
-        pdbPaths.forEach(pdbFile => {
-            if (pdbFile) {
-                let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
-                // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
-                if (pdbPath) {
-                    symbolsPaths.push(pdbPath);
+        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
+        if (pdbPaths) {
+            pdbPaths.forEach(pdbFile => {
+                if (pdbFile) {
+                    let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
+                    // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
+                    if (pdbPath) {
+                        symbolsPaths.push(pdbPath);
+                    }
                 }
-            }
-        })
+            })
+        }
     } else {
         // For all other application types user can specifay a symbols path pattern 
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
+        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
         if (symbolsFile) {
             let filePath = utils.checkAndFixFilePath(symbolsFile, continueOnError);
             // The path can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.

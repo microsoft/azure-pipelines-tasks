@@ -12,6 +12,9 @@ tr.setInput('GenerateWebConfig','true');
 tr.setInput('WebConfigParameters','-appType node -Handler iisnode -NodeStartFile server.js');
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
@@ -120,6 +123,9 @@ tr.registerMock('./msdeployutility.js', {
 }); 
 
 tr.registerMock('azurerest-common/azurerestutility.js', {
+    testAzureWebAppAvailability: function() {
+        console.log('App Service availability check.');
+    },
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -219,12 +225,6 @@ tr.registerMock('webdeployment-common/utility.js', {
             "webDeployPkg": "DefaultWorkingDirectory\\temp_web_package.zip",
             "tempPackagePath": "DefaultWorkingDirectory\\temp_web_package.zip"
         };
-    }
-});
-
-tr.registerMock('webdeployment-common/generatewebconfig.js', {
-    generateWebConfigFile: function(filePath, templatePath, data) {
-        return;
     }
 });
 

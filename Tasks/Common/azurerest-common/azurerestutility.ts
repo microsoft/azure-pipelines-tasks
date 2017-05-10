@@ -449,7 +449,6 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to stop App Service: ' + url);
-    console.log(headers);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
@@ -574,7 +573,7 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
             console.log(body);
             deferred.reject(error);
         }
-        if(response.statusCode === 200 || response.statusCode === 204) {
+        if(response.statusCode === 200) {
             deferred.resolve(JSON.parse(body));
         }
         else {

@@ -2,8 +2,8 @@
     "id": "E28912F1-0114-4464-802A-A3A35437FD16",
     "name": "Docker",
     "friendlyName": "Docker",
-    "description": "Build, push or run Docker images, or run a Docker command",
-    "helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
+    "description": "Build, push or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 2
+        "Patch": 4
     },
     "demands": [],
     "preview": "true",
@@ -49,8 +49,7 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
-            "visibleRule": "containerregistrytype = Azure Container Registry",
-            "required": true
+            "visibleRule": "containerregistrytype = Azure Container Registry"
         },
         {
             "name": "azureContainerRegistry",
@@ -58,7 +57,6 @@
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry",
             "visibleRule": "containerregistrytype = Azure Container Registry",
-            "required": true,
             "defaultValue": ""
         },
         {
@@ -99,7 +97,7 @@
             "name": "defaultContext",
             "type": "boolean",
             "label": "Use Default Build Context",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "visibleRule": "action = Build an image",
             "helpMarkDown": "Set the build context to the directory that contains the Docker file."
         },
@@ -123,7 +121,7 @@
             "name": "qualifyImageName",
             "type": "boolean",
             "label": "Qualify Image Name",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
             "helpMarkDown": "Qualify the image name with the Docker registry connection's hostname if not otherwise specified."
         },

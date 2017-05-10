@@ -16,11 +16,11 @@ function Set-IISWebSite
         [string] $ipAddress,
         [string] $port,
         [string] $serverNameIndication ,
-
         [string] $hostNameWithOutSNI,
         [string] $hostNameWithHttp,
         [string] $hostNameWithSNI,
         [string] $sslCertThumbPrint,
+        [string] $bindings,
 
         [string] $createOrUpdateAppPool,
         [string] $appPoolName,
@@ -42,9 +42,25 @@ function Set-IISWebSite
     {
         "CreateOrUpdateWebsite" 
         {
-            Repair-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
-            Test-Inputs -sslCertThumbPrint $sslCertThumbPrint -protocol $protocol -addBinding $addBinding
-    
+            Repair-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername)
+            
+            if($addBinding -eq "true") 
+            {
+                if([string]::IsNullOrWhiteSpace($bindings)) {
+                    $bindingsArray = @(@{
+                        protocol = $protocol.Trim();
+                        ipAddress = $ipAddress.Trim();
+                        port = $port.Trim();
+                        sniFlag = $serverNameIndication;
+                        sslThumbprint = Test-SSLCertificateThumbprint -sslCertThumbPrint $sslCertThumbPrint -ipAddress $ipAddress -protocol $protocol -port $port ;
+                        hostname = Get-Hostname -port $port -hostNameWithSNI $hostNameWithSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication ;
+                    })
+                }
+                else {
+                    $bindingsArray = Validate-Bindings -bindings $bindings
+                }
+            }
+
             if($physicalPathAuth -ieq "WebsiteWindowsAuth") 
             {
                 $physicalPathAuthCredentials = Get-CustomCredentials -username $physicalPathAuthUserName -password $physicalPathAuthUserPassword
@@ -58,12 +74,12 @@ function Set-IISWebSite
                 }
 
                 Write-Verbose "Initiating action 'create or update' website with user specified application pool."
-                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
+                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Bindings $bindingsArray -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
             }
             else 
             {
                 Write-Verbose "Initiating action 'create or update' website"
-                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
+                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Bindings $bindingsArray -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
             }
         }
         {($_ -eq "StartWebsite") -or ($_ -eq "StopWebsite")}
@@ -202,7 +218,7 @@ function Get-CustomCredentials {
     return $credentials
 }
 
-function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
+function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
@@ -230,41 +246,90 @@ function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]
     {
         $physicalPathAuthuser.Value = $physicalPathAuthuser.Value.Trim()
     }
-    if ($sslCertThumbPrint -ne $null) 
-    {
-        # Trim all non-hexadecimal characters from the ssl cetificate thumbprint
-        if([regex]::IsMatch($sslCertThumbPrint.Value, "[^a-fA-F0-9]+"))
-        {
-            Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharacters")
-        }
-
-        $sslCertThumbprint.Value = [Regex]::Replace($sslCertThumbprint.Value, "[^a-fA-F0-9]+" , "")
-
-        # Mark the SSL thumbprint value to be a secret value 
-        $sslCertThumbprintValue = $sslCertThumbprint.Value
-        Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprintValue"
-    }
 }
 
 function Test-Inputs
 {
     param (
-        [string] $virtualPath,
-        [string] $sslCertThumbPrint,
-        [string] $protocol, 
-        [string] $addBinding
+        [string] $virtualPath
     )
-
-    if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
-    {
-        if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
-        {
-            throw (Get-VstsLocString -Key "InvalidSslThumbprint" )
-        }
-    }
 
     if((-not [string]::IsNullOrWhiteSpace($virtualPath)) -and (-not $virtualPath.StartsWith("/")))
     {
         throw (Get-VstsLocString -Key "InvalidVirtualPath")
     }
+}
+
+function Get-HostName
+{
+    param(
+        [string]$protocol,
+        [string]$hostNameWithHttp,
+        [string]$hostNameWithSNI,
+        [string]$hostNameWithOutSNI,
+        [string]$sni
+    )
+    $hostName = [string]::Empty
+
+    if($protocol -eq "http")
+    {
+        $hostName = $hostNameWithHttp
+    }
+    elseif($sni -eq "true")
+    {
+        $hostName = $hostNameWithSNI
+    }
+    else
+    {
+        $hostName = $hostNameWithOutSNI
+    }
+    return $hostName
+}
+
+function Test-SSLCertificateThumbprint {
+    param (
+        [string] $sslCertThumbPrint,
+        [string] $ipAddress,
+        [string] $protocol,
+        [string] $port
+    )
+
+    if($protocol -eq "https") {
+        if(-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint))
+        {
+            if([regex]::IsMatch($sslCertThumbPrint, "[^a-fA-F0-9]+"))
+            {
+                Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharactersInBinding" -ArgumentList $protocol, $ipAddress, $port)
+            }
+
+            $sslCertThumbPrint = [Regex]::Replace($sslCertThumbPrint, "[^a-fA-F0-9]+" , "")
+            
+            if(-not [regex]::IsMatch($sslCertThumbPrint, "^[a-fA-F0-9]{40}$")){
+                throw (Get-VstsLocString -Key "InvalidSslThumbprintInBinding" -ArgumentList $protocol, $ipAddress, $port)
+            }
+
+            # Mark the SSL thumbprint value to be a secret value 
+            Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprint"
+            return $sslCertThumbPrint
+        }
+        else {
+            throw (Get-VstsLocString -Key "SSLCertificateThumbprintMissingInHttpsBinding" -ArgumentList $protocol, $ipAddress, $port)
+        }
+    }
+}
+
+function Validate-Bindings {
+    param (
+        [string] $bindings
+    )
+    
+    $bindingsObj = $bindings | ConvertFrom-Json 
+
+    foreach ($binding in $bindingsObj.bindings) {
+        if($binding.protocol -eq "https") {
+            $binding.sslThumbprint = Test-SSLCertificateThumbprint -sslCertThumbPrint $binding.sslThumbprint -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
+        }
+    }
+
+    return $bindingsObj.bindings
 }

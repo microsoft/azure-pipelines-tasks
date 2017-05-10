@@ -11,8 +11,7 @@
     "image_offer": "",
     "image_sku": "",
     "location": "",
-    "script_path": "",
-    "script_name": "",
+    "script_relative_path": "",
     "script_arguments": "",
     "package_path": "",
     "package_name": "",
@@ -53,11 +52,6 @@
         },
         {
             "type": "file",
-            "source": "{{user `script_path`}}",
-            "destination": "c:\\DeployTemp\\{{user `script_name`}}"
-        },
-        {
-            "type": "file",
             "source": "{{user `package_path`}}",
             "destination": "c:\\DeployTemp\\{{user `package_name`}}"
         },
@@ -66,7 +60,7 @@
             "inline": [
                 "cd \"C:\\DeployTemp\"",
                 "ls",
-                "C:\\DeployTemp\\{{user `script_name`}} {{user `script_arguments`}}"
+                "C:\\DeployTemp\\{{user `package_name`}}\\{{user `script_relative_path`}} {{user `script_arguments`}}"
             ]
         },
         {

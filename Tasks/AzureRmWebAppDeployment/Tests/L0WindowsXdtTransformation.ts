@@ -12,6 +12,9 @@ tr.setInput('XmlTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
@@ -65,7 +68,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "temp_web_package_random_path": {
             "success": true
         },
-        "DefaultWorkingDirectory\temp_web_package.zip": {
+        "DefaultWorkingDirectory\\temp_web_package.zip": {
             "success": true
         }
     },
@@ -215,6 +218,9 @@ tr.registerMock('webdeployment-common/utility.js', {
             "webDeployPkg": "DefaultWorkingDirectory\\temp_web_package.zip",
             "tempPackagePath": "DefaultWorkingDirectory\\temp_web_package.zip"
         };
+    },
+    isMSDeployPackage: function() {
+        return true;
     }
 });
 

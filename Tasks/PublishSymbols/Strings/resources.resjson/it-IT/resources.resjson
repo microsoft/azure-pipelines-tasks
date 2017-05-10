@@ -9,7 +9,7 @@
   "loc.input.label.SearchPattern": "Criteri di ricerca",
   "loc.input.help.SearchPattern": "Criterio usato per individuare i file PDB da pubblicare.",
   "loc.input.label.SymbolsFolder": "Percorso della cartella dei simboli",
-  "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
+  "loc.input.help.SymbolsFolder": "Percorso della cartella in cui vengono cercati i file di simboli. L'impostazione predefinita è $(Build.SourcesDirectory). In caso contrario, specificare un percorso completo, ad esempio: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SkipIndexing": "Ignora indicizzazione",
   "loc.input.help.SkipIndexing": "Indica se ignorare l'inserimento delle informazioni sul server di origine nei file PDB.",
   "loc.input.label.TreatNotIndexedAsWarning": "Avvisa se non indicizzate",

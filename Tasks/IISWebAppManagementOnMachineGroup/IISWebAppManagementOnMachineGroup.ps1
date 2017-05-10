@@ -16,6 +16,7 @@ $websitePhysicalPath = Get-VstsInput -Name "WebsitePhysicalPath"
 $websitePhysicalPathAuth = Get-VstsInput -Name "WebsitePhysicalPathAuth" 
 $websiteAuthUserName = Get-VstsInput -Name "WebsiteAuthUserName"
 $websiteAuthUserPassword = Get-VstsInput -Name "WebsiteAuthUserPassword"
+
 $addBinding = Get-VstsInput -Name "AddBinding"
 $protocol = Get-VstsInput -Name "Protocol" 
 $ipAddress = Get-VstsInput -Name "IPAddress"
@@ -25,6 +26,7 @@ $hostNameWithOutSNI = Get-VstsInput -Name "HostNameWithOutSNI"
 $hostNameWithHttp = Get-VstsInput -Name "HostNameWithHttp"
 $hostNameWithSNI = Get-VstsInput -Name "HostNameWithSNI"
 $sslCertThumbPrint = Get-VstsInput -Name "SSLCertThumbPrint"
+$bindings = Get-VstsInput -Name "Bindings"
 
 $createOrUpdateAppPoolForWebsite = Get-VstsInput -Name "CreateOrUpdateAppPoolForWebsite"
 $appPoolNameForWebsite = Get-VstsInput -Name "AppPoolNameForWebsite"
@@ -85,7 +87,7 @@ try {
         "IISWebsite" 
         {
             Set-IISWebsite -actionIISWebsite $actionIISWebsite -websiteName $websiteName -startStopWebsiteName $startStopWebsiteName -physicalPath $websitePhysicalPath -physicalPathAuth $websitePhysicalPathAuth -physicalPathAuthUserName $websiteAuthUserName -physicalPathAuthUserPassword $websiteAuthUserPassword `
-                -addBinding $addBinding -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
+                -addBinding $addBinding -bindings $bindings -protocol $protocol -ipAddress $ipAddress -port $port -serverNameIndication $serverNameIndication `
                 -hostNameWithOutSNI $hostNameWithOutSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -sslCertThumbPrint $sslCertThumbPrint `
                 -createOrUpdateAppPool $createOrUpdateAppPoolForWebsite -appPoolName $appPoolNameForWebsite -dotNetVersion $dotNetVersionForWebsite -pipeLineMode $pipeLineModeForWebsite -appPoolIdentity $appPoolIdentityForWebsite -appPoolUsername $appPoolUsernameForWebsite -appPoolPassword $appPoolPasswordForWebsite `
                 -configureAuthentication $configureAuthenticationForWebsite -anonymousAuthentication $anonymousAuthenticationForWebsite -basicAuthentication $basicAuthenticationForWebsite -windowsAuthentication $windowsAuthenticationForWebsite -appCmdCommands $appCmdCommands

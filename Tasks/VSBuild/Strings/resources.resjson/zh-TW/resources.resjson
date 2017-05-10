@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "建立記錄檔",
   "loc.input.help.createLogFile": "選擇性地建立記錄檔 (僅限 Windows)。",
   "loc.messages.MSBuildLocationDeprecated0": "已取代 MSBuild 位置參數。忽略值 '{0}'",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "找不到版本為 '{0}' 且架構為 '{1}' 的 MSBuild。",
   "loc.messages.MSBuildVersionDeprecated0": "已取代 MSBuild 版本參數。忽略值 '{0}'。",
   "loc.messages.UnexpectedVSVersion0": "未預期的 Visual Studio 版本 '{0}'。",
   "loc.messages.VSLocationDeprecated0": "已取代 Visual Studio 位置參數。忽略值 '{0}'",
-  "loc.messages.VSNotFoundTry": "找不到 Visual Studio。請嘗試安裝支援的 Visual Studio 版本。請參閱工作定義以取得支援版本清單。",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "找不到 Visual Studio 版本 '{0}'。正在尋找最新版本。"
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

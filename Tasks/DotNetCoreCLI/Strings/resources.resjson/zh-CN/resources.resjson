@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": ".NET Core (预览)",
+  "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=832194)",
   "loc.description": "使用 dotnet core 命令行进行生成、测试和发布。",
   "loc.instanceNameFormat": "dotnet $(command)",
@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "发布 Web 项目",
   "loc.input.help.publishWebProjects": "如果为 true，任务将尝试查找存储库中的 Web 项目，并对其运行发布命令。可通过目录中的 web.config 文件或 wwwroot 文件夹来识别 Web 项目。",
   "loc.input.label.projects": "项目",
-  "loc.input.help.projects": "存储库根路径的 project.json 文件的相对路径。可使用通配符。例如，**/project.json 用于子文件夹中的所有 project.json 文件。",
+  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
   "loc.input.label.arguments": "参数",
   "loc.input.help.arguments": "所选命令的参数。例如，生成配置、输出文件夹、运行时。参数取决于所选命令。",
   "loc.input.label.zipAfterPublish": "压缩已发布项目",
   "loc.input.help.zipAfterPublish": "如果为 true，将压缩发布命令创建的文件夹。",
   "loc.messages.noProjectFilesFound": "未找到匹配指定模式的项目文件。",
   "loc.messages.noWebProjctFound": "存储库中未找到 Web 项目。可通过目录中的 web.config 文件或 wwwroot 文件夹来识别 Web 项目。",
-  "loc.messages.dotnetCommandFailed": "Dotnet 命令失败，其中非零退出代码为 %d。",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
   "loc.messages.zipFailed": "Zip 失败，出现错误: %s",
   "loc.messages.noPublishFolderFoundToZip": "无法找到项目文件 %s 的要压缩的发布文件夹。"
 }

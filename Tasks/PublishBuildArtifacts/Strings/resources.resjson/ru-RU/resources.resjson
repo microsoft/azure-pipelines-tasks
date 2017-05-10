@@ -12,6 +12,6 @@
   "loc.input.label.TargetPath": "Путь",
   "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
   "loc.messages.ErrorFileShareLinux": "Не удается опубликовать артефакты из агента OS X или Linux на файловом ресурсе. Вы можете изменить тип артефакта на серверный или воспользоваться агентом Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+  "loc.messages.ErrorHostTypeNotSupported": "Эта задача поддерживается только в задании сборки.",
   "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s"
 }
