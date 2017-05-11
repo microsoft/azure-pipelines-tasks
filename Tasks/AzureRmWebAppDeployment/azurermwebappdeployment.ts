@@ -177,9 +177,8 @@ async function run() {
             var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
             await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
-        await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-
-        }
+    }
+    await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
     }
     catch (error) {
         isDeploymentSuccess = false;
