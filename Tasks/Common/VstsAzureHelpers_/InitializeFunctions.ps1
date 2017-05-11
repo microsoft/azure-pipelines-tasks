@@ -213,10 +213,11 @@ function CmdletHasMember {
     param(
         [Parameter(Mandatory=$true)]
         [string]$cmdlet,
+        [Parameter(Mandatory=$true)]
         [string]$memberName)
     try{
-        $cmdletParameter = (gcm $cmdlet).Parameters.Keys.Contains($memberName)
-        return $cmdletParameter
+        $hasMember = (gcm $cmdlet).Parameters.Keys.Contains($memberName)
+        return $hasMember
     }
     catch
     {
