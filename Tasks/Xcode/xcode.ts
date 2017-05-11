@@ -319,6 +319,9 @@ async function run() {
                 xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
                 xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
                 xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
+                if (args) {
+                    xcb.line(args);
+                }
 
                 if (useXcpretty) {
                     var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
