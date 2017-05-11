@@ -320,7 +320,7 @@ async function run() {
                 xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
                 xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
                 if (args) {
-                    xcb.line(args);
+                    xcodeArchive.line(args);
                 }
 
                 if (useXcpretty) {
