@@ -27,21 +27,27 @@ function Get-AgentIPRange
 
     $ErrorActionPreference = 'Continue'
 
-    ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
+    $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
 
     $ErrorActionPreference = 'Stop'
 
     if($errors.Count -gt 0)
     {
-        $errorMsg = $errors[0].ToString()
-        Write-Verbose "Error Message: $errorMsg"
+        $errMsg = $errors[0].ToString()
+        Write-Verbose "Error Message : $errMsg"
+        $output = $errMsg
+    }
+
+    if($output)
+    {
+        Write-Verbose "Message To Parse: $output"
 
         $pattern = "([0-9]+).([0-9]+).([0-9]+)."
         $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 
-        if($errorMsg.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($errorMsg) -eq $true)
+        if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
         {
-            $ipRangePrefix = $regex.Match($errorMsg).Groups[0].Value;
+            $ipRangePrefix = $regex.Match($output).Groups[0].Value;
             Write-Verbose "IP Range Prefix $ipRangePrefix"
 
             $IPRange.StartIPAddress = $ipRangePrefix + '0'
