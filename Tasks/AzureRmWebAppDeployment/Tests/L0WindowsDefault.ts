@@ -27,6 +27,7 @@ process.env["BUILD_REPOSITORY_PROVIDER"] = "TfsGit";
 process.env["BUILD_REPOSITORY_NAME"] = "MyFirstProject";
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
+process.env["SYSTEM_TEAMPROJECTID"] = 1;
 process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
 process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";

@@ -70,7 +70,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 repoProvider : 'TfsGit',
                 repoName : 'MyFirstProject',
                 collectionUrl : 'https://abc.visualstudio.com/',
-                teamProject : 'MyFirstProject',
+                teamProject : '1',
                 slotName : 'Production'
             });
             var expectedRequestBody = JSON.stringify({
@@ -80,7 +80,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 message : expectedMessage,
                 author : 'author',
                 deployer : 'VSTS',
-                details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+                details : 'https://abc.visualstudio.com/1/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
             });
             expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
@@ -157,7 +157,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 repoProvider : 'TfsGit',
                 repoName : 'MyFirstProject',
                 collectionUrl : 'https://abc.visualstudio.com/',
-                teamProject : 'MyFirstProject',
+                teamProject : '1',
                 slotName : 'Production'
             });
             var expectedRequestBody = JSON.stringify({
@@ -167,7 +167,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 message : expectedMessage,
                 author : 'author',
                 deployer : 'VSTS',
-                details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+                details : 'https://abc.visualstudio.com/1/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
             });
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');

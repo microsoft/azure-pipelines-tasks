@@ -17,7 +17,7 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
 	var releaseName = tl.getVariable('release.releaseName');
 
     var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
-    var teamProject = tl.getVariable('system.teamProject');
+    var teamProject = tl.getVariable('system.teamProjectId');
 
  	var commitId = tl.getVariable('build.sourceVersion');
  	var repoName = tl.getVariable('build.repository.name');
