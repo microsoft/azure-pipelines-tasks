@@ -208,7 +208,7 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
     var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 
-    tl.debug('Requesting Azure App Service Config Details: ' + configUrl);
+    tl.debug('Requesting Azure App Service web config Details: ' + configUrl);
     httpObj.get('GET', configUrl, headers, (error, response, body) => {
         if( error ) {
             deferred.reject(error);
@@ -238,7 +238,7 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
     var configUrl = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 	
-    tl.debug('Updating config details at: ' + configUrl);
+    tl.debug('Updating web config details at: ' + configUrl);
 	
     httpObj.send('PATCH', configUrl, configDetails, headers, (error, response, body) =>{
 		if(error){
@@ -579,6 +579,65 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
         else {
             console.log(body);
             deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
+export async function getAzureRMWebAppMetadata(endpoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+    };
+
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/metadata/list?' + azureApiVersion;
+
+    tl.debug('Requesting Azure App Service Metadata: ' + metadataUrl);
+    httpObj.get('POST', metadataUrl, headers, (error, response, body) => {
+        if( error ) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            var obj = JSON.parse(body);
+            deferred.resolve(obj);
+        }
+        else {
+            tl.debug(body);
+            deferred.reject(response.statusMessage);
+        }
+    });
+    return deferred.promise;
+}
+
+export async function updateAzureRMWebAppMetadata(endPoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, webAppMetadata: Object) {
+
+    var deferred = Q.defer<any>();
+	var accessToken = await getAuthorizationToken(endPoint);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+    };
+	
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var metadataUrl = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/metadata?' + azureApiVersion;
+	
+    tl.debug('Updating Azure App Service Metadata at: ' + metadataUrl);
+	
+    restObj._sendJson('PUT', metadataUrl, "", webAppMetadata, headers, null, (error, response, body) =>{
+        if(error){
+            deferred.reject(error);
+        }
+        else if(response === 200){
+            deferred.resolve();
+        }
+        else {
+            tl.debug(body);
+            deferred.reject(response);
         }
     });
     return deferred.promise;
