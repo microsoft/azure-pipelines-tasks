@@ -42,7 +42,7 @@ function Get-AgentIPRange
     {
         Write-Verbose "Message To Parse: $output"
 
-        $pattern = "([0-9]+).([0-9]+).([0-9]+)."
+        $pattern = "([0-9]+)\.([0-9]+)\.([0-9]+)\."
         $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 
         if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
