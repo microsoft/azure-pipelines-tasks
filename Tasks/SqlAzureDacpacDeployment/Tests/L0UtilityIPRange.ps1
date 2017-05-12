@@ -15,10 +15,6 @@ $firewallException = New-Object -TypeName System.Management.Automation.RemoteExc
 $errors = @()
 $errors += $firewallException
 
-$sqlCmd1 = New-Object PsObject
-$sqlCmd1 | Add-Member -MemberType NoteProperty -Name "Path" -Value "SqlCmd.exe"
-Register-Mock Get-Command { Write-Output $sqlCmd1 } -ParametersEvaluator { $Name -eq "SqlCmd.exe" -and $ErrorAction -eq 'SilentlyContinue' }
-
 $startIP = "167.220.238.0"
 $endIP = "167.220.238.255"
 
