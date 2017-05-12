@@ -177,9 +177,8 @@ async function run() {
             var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
             await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
         }
-        await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-
-        }
+    }
+    await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
     }
     catch (error) {
         isDeploymentSuccess = false;
@@ -253,11 +252,11 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     }
 }
 
-async function updateScmType(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+async function updateWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     try {
         var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         var scmType: string = configDetails.properties.scmType;
-        if(scmType.toLowerCase() === "none") {
+        if (scmType && scmType.toLowerCase() === "none") {
             var updatedConfigDetails = JSON.stringify(
                 {
                     "properties": {
@@ -265,13 +264,41 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
                     }
                 });
             await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
+
+            await updateArmMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+
             console.log(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
         }
     }
-    catch(error) {
+    catch (error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
 }
 
+async function updateArmMetadata(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+    var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
+    var projectId = tl.getVariable("system.teamprojectId");
+    var buildDefintionId = tl.getVariable("build.definitionId")
+    var releaseDefinitionId = tl.getVariable("release.definitionId");
+
+    let newPoperties = {
+        VSTSRM_BuildDefinitionId: buildDefintionId,
+        VSTSRM_ReleaseDefinitionId: releaseDefinitionId,
+        VSTSRM_ProjectId: projectId,
+        VSTSRM_AccountId: tl.getVariable("release.requestedForId"),
+        VSTSRM_BuildDefinitionWebAccessUrl: collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId,
+        VSTSRM_ConfiguredCDEndPoint: collectionUri + projectId + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?definitionId=" + releaseDefinitionId
+    }
+
+    var metadata = await azureRESTUtility.getAzureRMWebAppMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+    var properties = metadata.properties;
+
+    Object.keys(newPoperties).forEach((key) => {
+        properties[key] = newPoperties[key];
+    });
+
+    metadata.properties = properties;
+    await azureRESTUtility.updateAzureRMWebAppMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, metadata);
+}
 
 run();
