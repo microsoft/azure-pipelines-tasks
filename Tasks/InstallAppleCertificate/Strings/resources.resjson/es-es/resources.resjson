@@ -1,9 +1,9 @@
 {
-  "loc.friendlyName": "Install Apple Certificate (Preview)",
+  "loc.friendlyName": "Install Apple Certificate",
   "loc.helpMarkDown": "",
   "loc.description": "Install an Apple certificate required to build on a macOS agent",
   "loc.instanceNameFormat": "Install an Apple certificate",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.certSecureFile": "Certificate (P12)",
   "loc.input.help.certSecureFile": "Select the certificate (.p12) that was uploaded to `Secure Files` to install on the macOS agent.",
   "loc.input.label.certPwd": "Certificate (P12) Password",

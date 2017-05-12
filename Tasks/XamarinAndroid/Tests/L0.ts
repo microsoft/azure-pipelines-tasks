@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 
-describe('XamariniOS L0 Suite', function () {
+describe('XamarinAndroid L0 Suite', function () {
     before(() => {
 
     });

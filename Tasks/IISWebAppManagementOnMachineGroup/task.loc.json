@@ -15,8 +15,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 3,
-    "Patch": 0
+    "Minor": 4,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -26,6 +26,12 @@
       "displayName": "ms-resource:loc.group.displayName.Website",
       "isExpanded": true,
       "visibleRule": "ActionIISWebsite = CreateOrUpdateWebsite"
+    },
+    {
+      "name": "IISBindings",
+      "displayName": "ms-resource:loc.group.displayName.IISBindings",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true"
     },
     {
       "name": "ApplicationPoolForWebsite",
@@ -146,7 +152,7 @@
       "label": "ms-resource:loc.input.label.WebsitePhysicalPathAuth",
       "required": true,
       "groupName": "Website",
-      "defaultValue": "Application User (Pass-through)",
+      "defaultValue": "WebsiteUserPassThrough",
       "options": {
         "WebsiteUserPassThrough": "Application User (Pass-through)",
         "WebsiteWindowsAuth": "Windows Authentication"
@@ -187,9 +193,8 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Protocol",
       "required": true,
-      "groupName": "Website",
-      "visibleRule": "AddBinding = true",
       "defaultValue": "http",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "options": {
         "https": "https",
         "http": "http"
@@ -201,8 +206,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.IPAddress",
       "required": true,
-      "groupName": "Website",
-      "visibleRule": "AddBinding = true",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "defaultValue": "All Unassigned",
       "helpMarkDown": "ms-resource:loc.input.help.IPAddress"
     },
@@ -211,8 +215,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.Port",
       "required": true,
-      "visibleRule": "AddBinding = true",
-      "groupName": "Website",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "defaultValue": "80",
       "helpMarkDown": "ms-resource:loc.input.help.Port"
     },
@@ -221,9 +224,8 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ServerNameIndication",
       "required": false,
-      "groupName": "Website",
       "defaultValue": "false",
-      "visibleRule": "Protocol = https",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "helpMarkDown": "ms-resource:loc.input.help.ServerNameIndication"
     },
     {
@@ -231,9 +233,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.HostNameWithOutSNI",
       "required": false,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "ServerNameIndication = false",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "helpMarkDown": "ms-resource:loc.input.help.HostNameWithOutSNI"
     },
     {
@@ -241,9 +241,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.HostNameWithHttp",
       "required": false,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "Protocol = http",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "helpMarkDown": "ms-resource:loc.input.help.HostNameWithHttp"
     },
     {
@@ -251,9 +249,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.HostNameWithSNI",
       "required": true,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "ServerNameIndication = true",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "helpMarkDown": "ms-resource:loc.input.help.HostNameWithSNI"
     },
     {
@@ -261,10 +257,21 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.SSLCertThumbPrint",
       "required": true,
-      "groupName": "Website",
-      "defaultValue": "",
-      "visibleRule": "Protocol = https",
+      "visibleRule": "IISDeploymentType = randomDeployment",
       "helpMarkDown": "ms-resource:loc.input.help.SSLCertThumbPrint"
+    },
+    {
+      "name": "Bindings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Bindings",
+      "required": true,
+      "groupName": "IISBindings",
+      "properties": {
+        "resizable": "true",
+        "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
+        "displayFormat": "{{#bindings}}{{protocol}}/{{ipAddress}}:{{port}}:{{hostname}}\n{{/bindings}}"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Bindings"
     },
     {
       "name": "CreateOrUpdateAppPoolForWebsite",
@@ -416,7 +423,7 @@
       "label": "ms-resource:loc.input.label.VDPhysicalPathAuth",
       "required": false,
       "groupName": "VirtualDirectory",
-      "defaultValue": "Application User (Pass-through)",
+      "defaultValue": "VDUserPassThrough",
       "options": {
         "VDUserPassThrough": "Application User (Pass-through)",
         "VDWindowsAuth": "Windows Authentication"
@@ -476,7 +483,7 @@
       "label": "ms-resource:loc.input.label.ApplicationPhysicalPathAuth",
       "required": false,
       "groupName": "WebApplication",
-      "defaultValue": "Application User (Pass-through)",
+      "defaultValue": "ApplicationUserPassThrough",
       "options": {
         "ApplicationUserPassThrough": "Application User (Pass-through)",
         "ApplicationWindowsAuth": "Windows Authentication"
@@ -681,12 +688,13 @@
     }
   },
   "messages": {
-    "InvalidSslThumbprint": "ms-resource:loc.messages.InvalidSslThumbprint",
     "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath",
     "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType",
     "InvalidActionIISWebsite": "ms-resource:loc.messages.InvalidActionIISWebsite",
     "InvalidActionIISAppPool": "ms-resource:loc.messages.InvalidActionIISAppPool",
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
-    "SSLCertWarningInvalidCharacters": "ms-resource:loc.messages.SSLCertWarningInvalidCharacters"
+    "SSLCertificateThumbprintMissingInHttpsBinding": "ms-resource:loc.messages.SSLCertificateThumbprintMissingInHttpsBinding",
+    "InvalidSslThumbprintInBinding": "ms-resource:loc.messages.InvalidSslThumbprintInBinding",
+    "SSLCertWarningInvalidCharactersInBinding": "ms-resource:loc.messages.SSLCertWarningInvalidCharactersInBinding"
   }
 }

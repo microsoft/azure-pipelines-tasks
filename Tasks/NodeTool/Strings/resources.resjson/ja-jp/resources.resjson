@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Node Tool Installer",
+  "loc.friendlyName": "Node Tool インストーラー",
   "loc.helpMarkDown": "",
-  "loc.description": "Finds or Downloads and caches specified version spec of Node and adds it to the PATH.",
-  "loc.instanceNameFormat": "Use Node $(versionSpec)",
-  "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
-  "loc.input.label.checkLatest": "Check for Latest Version",
+  "loc.description": "指定されたバージョン仕様の Node を検索またはダウンロードし、それをキャッシュしてから PATH に追加します。",
+  "loc.instanceNameFormat": "Node $(versionSpec) の使用",
+  "loc.input.label.versionSpec": "バージョンの仕様",
+  "loc.input.help.versionSpec": "取得するバージョンのバージョン仕様。例: 6.x、4.x、6.10.0、6.10.0 以上",
+  "loc.input.label.checkLatest": "最新バージョンのチェック",
   "loc.input.help.checkLatest": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
-  "loc.messages.ToolFailed": "Tool install failed: %s"
+  "loc.messages.ToolFailed": "ツールをインストールできませんでした: %s"
 }

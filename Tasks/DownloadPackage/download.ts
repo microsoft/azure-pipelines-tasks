@@ -11,6 +11,7 @@ import * as vsts from "vso-node-api/WebApi"
 import bearm = require('vso-node-api/handlers/bearertoken');
 
 const ApiVersion = "3.0-preview.1";
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
 	let feedId = tl.getInput("feed");
@@ -63,7 +64,7 @@ export async function downloadPackage(collectionUrl: string, credentialHandler: 
 					tl.mkdirP(downloadPath);
 				}
 
-				var zipLocation = path.resolve(downloadPath, "/../", packageName) + ".zip";
+				var zipLocation = path.resolve(downloadPath, "../", packageName) + ".zip";
 				var unzipLocation = path.join(downloadPath, "");
 
 				console.log(tl.loc("StartingDownloadOfPackage", packageName, zipLocation));

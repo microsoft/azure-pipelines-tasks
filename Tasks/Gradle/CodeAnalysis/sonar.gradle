@@ -7,7 +7,7 @@ allprojects {
             }
         }
         dependencies {
-            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1"
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:SONARQUBE_GRADLE_PLUGIN_VERSION"
         }
     }
 

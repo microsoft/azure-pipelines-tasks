@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo di connessione ad Azure",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure classico",
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure classico usata come destinazione per la copia dei file.",
-  "loc.input.label.ConnectedServiceNameARM": "Sottoscrizione di Gestione risorse di Azure",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Sottoscrizione di Azure Resource Manager usata come destinazione per la copia dei file.",
   "loc.input.label.Destination": "Tipo di destinazione",
   "loc.input.help.Destination": "Consente di selezionare la destinazione, nel BLOB o nelle macchine virtuali di Azure.",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Non è possibile impostare l'estensione script personalizzata '{0}' per la macchina virtuale '{1}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Non è stato possibile abilitare i prerequisiti di copia. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "L'account di archiviazione {0} non è stato trovato. Specificarne uno esistente",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "L'opzione '/S' non è valida per i contenitori $root."
 }

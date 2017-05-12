@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "创建日志文件",
   "loc.input.help.createLogFile": "选择创建一个日志文件(仅限 Windows)。",
   "loc.messages.MSBuildLocationDeprecated0": "已弃用 MSBuild 位置参数。将忽略值“{0}”",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "未找到版本为“{0}”、体系结构为“{1}”的 MSBuild。",
   "loc.messages.MSBuildVersionDeprecated0": "已弃用 MSBuild 版本参数。将忽略值“{0}”。",
   "loc.messages.UnexpectedVSVersion0": "意外的 Visual Studio 版本“{0}”。",
   "loc.messages.VSLocationDeprecated0": "已弃用 Visual Studio 位置参数。将忽略值“{0}”",
-  "loc.messages.VSNotFoundTry": "未找到 Visual Studio。请尝试安装 Visual Studio 的受支持版本。查看任务定义以获取受支持版本的列表。",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "未找到 Visual Studio“{0}”版。正在查找最新版本。"
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

@@ -26,6 +26,8 @@
   "loc.input.help.classFilter": "Elenco di filtri delimitati da virgole per includere o escludere classi dalla raccolta delle informazioni sul code coverage, ad esempio +:com.*,+:org.*,-:my.app*.*.",
   "loc.input.label.srcDirectories": "Directory file di origine",
   "loc.input.help.srcDirectories": "Elenco di percorsi relativi separati da virgole dal file di compilazione di Ant alle directory del codice sorgente. Tali percorsi verranno usati nei report di code coverage per evidenziare il codice sorgente, ad esempio src/java,src/Test.",
+  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
+  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
   "loc.input.label.antHomeUserInputPath": "Imposta percorso di ANT_HOME",
   "loc.input.help.antHomeUserInputPath": "Se è impostato, esegue l'override di eventuali variabili di ambiente ANT_HOME esistenti con il percorso specificato.",
   "loc.input.label.javaHomeSelection": "Imposta JAVA_HOME per",
@@ -38,5 +40,6 @@
   "loc.input.help.jdkArchitecture": "Consente facoltativamente di specificare l'architettura (x86, x64) di JDK.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Individuare JAVA_HOME per Java %s %s",
   "loc.messages.FailedToLocateSpecifiedJVM": "La versione JDK specificata non è stata trovata. Assicurarsi che la variabile di ambiente '%s' sia presente e sia impostata sul percorso di un JDK corrispondente.",
-  "loc.messages.DiscontinueAntCodeCoverage": "Il supporto della generazione automatizzata di report di code coverage per progetti Ant a breve verrà sospeso. Per maggiori dettagli, vedere https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md."
+  "loc.messages.DiscontinueAntCodeCoverage": "Il supporto della generazione automatizzata di report di code coverage per progetti Ant a breve verrà sospeso. Per maggiori dettagli, vedere https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md.",
+  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

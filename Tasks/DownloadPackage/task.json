@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "1.99.0",
@@ -94,13 +94,13 @@
     }
   },
   "messages": {
-    "FailedToGetPackageMetadata": "Failed to get package metadata with error {0}",
-    "FailedToDownloadNugetPackage": "Failed to download NuGet package from {0} got the following error: {1}",
+    "FailedToGetPackageMetadata": "Failed to get package metadata with error %s",
+    "FailedToDownloadNugetPackage": "Failed to download NuGet package from %s got the following error: %s",
     "PackageDownloadSuccessful": "Package download successful",
     "CredentialsNotFound": "Could not determine credentials to connect to Package Management service.",
-    "StartingDownloadOfPackage": "Starting download of NuGet package {0} to location {1}",
-    "ExtractingNugetPackage": "Extracting NuGet package {0} to directory {1}",
+    "StartingDownloadOfPackage": "Starting download of NuGet package %s to location %s",
+    "ExtractingNugetPackage": "Extracting NuGet package %s to directory %s",
     "PackageTypeNotSupported": "Only NuGet packages types can be downloaded using this task.",
-    "ExtractionFailed": "Failed to extract package with error {0}"
+    "ExtractionFailed": "Failed to extract package with error %s"
   }
 }

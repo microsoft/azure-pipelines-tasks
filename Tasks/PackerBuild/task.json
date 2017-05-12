@@ -1,11 +1,11 @@
 {
     "id": "845fd4f4-642d-4694-8514-047948a5a556",
     "name": "PackerBuild",
-    "friendlyName": "Bake immutable machine image (PREVIEW)",
-    "description": "Bake immutable machine image using Packer tool. This image can be used for Azure VMSS deployment",
+    "friendlyName": "Build Machine Image (PREVIEW)",
+    "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
     "category": "Deploy",
-    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports baking images for both windows and linux. These images can be used to deploy Azure VMSS.",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
     "visibility": [
         "Build",
         "Release"
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -69,9 +69,9 @@
         {
             "name": "location",
             "type": "pickList",
-            "label": "Location of bake",
+            "label": "Storage location",
             "required": true,
-            "helpMarkDown": "Location for storing the baked machine image. This location will also be used to create a temporary VM for the purpose of baking image.",
+            "helpMarkDown": "Location for storing the built machine image. This location will also be used to create a temporary VM for the purpose of building image.",
             "groupName": "AzureDetails"
         },
         {
@@ -79,7 +79,7 @@
             "type": "pickList",
             "label": "Storage account",
             "required": true,
-            "helpMarkDown": "Storage account for storing the baked machine image. This storage account must be pre-existing in the location selected.",
+            "helpMarkDown": "Storage account for storing the built machine image. This storage account must be pre-existing in the location selected.",
             "groupName": "AzureDetails"
         },
         {
@@ -114,20 +114,20 @@
             },
             "options": {
                 "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
-                "MicrosoftWindowsServer:WindowsServer:2016-Datacenter": "Windows 2016-Datacenter",
-                "MicrosoftWindowsServer:WindowsServer:2012-Datacenter": "Windows 2012-Datacenter",
-                "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1": "Windows 2008-R2-SP1",
+                "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:windows": "Windows 2016-Datacenter",
+                "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:windows": "Windows 2012-Datacenter",
+                "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:windows": "Windows 2008-R2-SP1",
                 "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
-                "Canonical:UbuntuServer:16.04-LTS": "Ubuntu 16.04-LTS",
-                "RedHat:RHEL:7.2": "RHEL 7.2",
-                "RedHat:RHEL:6.8": "RHEL 6.8",
-                "OpenLogic:CentOS:7.2": "CentOS 7.2",
-                "OpenLogic:CentOS:6.8": "CentOS 6.8",
-                "credativ:Debian:8": "Debian 8",
-                "credativ:Debian:7": "Debian 7",
-                "SUSE:openSUSE-Leap:42.2": "openSUSE-Leap 42.2",
-                "SUSE:SLES:12-SP2": "SLES 12-SP2",
-                "SUSE:SLES:11-SP4": "SLES 11-SP4"
+                "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
+                "RedHat:RHEL:7.2:linux": "RHEL 7.2",
+                "RedHat:RHEL:6.8:linux": "RHEL 6.8",
+                "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
+                "OpenLogic:CentOS:6.8:linux": "CentOS 6.8",
+                "credativ:Debian:8:linux": "Debian 8",
+                "credativ:Debian:7:linux": "Debian 7",
+                "SUSE:openSUSE-Leap:42.2:linux": "openSUSE-Leap 42.2",
+                "SUSE:SLES:12-SP2:linux": "SLES 12-SP2",
+                "SUSE:SLES:11-SP4:linux": "SLES 11-SP4"
             },
             "defaultValue": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows",
             "visibleRule": "baseImageSource = default",
@@ -158,18 +158,17 @@
         {
             "name": "packagePath",
             "type": "filePath",
-            "label": "Application Package/folder",
+            "label": "Deployment Package",
             "required": true,
-            "defaultValue": "**//*.zip",
-            "helpMarkDown": "Specify the path for application package relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
+            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp",
             "groupName": "DeploymentInputs"
         },
         {
             "name": "deployScriptPath",
-            "type": "filePath",
+            "type": "string",
             "label": "Deployment script",
             "required": true,
-            "helpMarkDown": "Specify the path to powershell or shell script which deploys provided application package. Path should be relative to relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern.",
+            "helpMarkDown": "Specify the relative path to powershell script(for Windows) or shell script(for Linux) which deploys the package. This script should be contained in the package path selected above. Supports minimatch pattern. Example path: deploy/**/scripts/windows/deploy.ps1",
             "groupName": "DeploymentInputs"
         },
         {
@@ -217,7 +216,7 @@
         }
     ],
     "sourceDefinitions": [],
-    "instanceNameFormat": "Bake immutable image",
+    "instanceNameFormat": "Build immutable image",
     "execution": {
         "Node": {
             "target": "src//main.js"

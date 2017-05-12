@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "Créer le fichier journal",
   "loc.input.help.createLogFile": "Créez éventuellement un fichier journal (Windows uniquement).",
   "loc.messages.MSBuildLocationDeprecated0": "Le paramètre d'emplacement de MSBuild est déconseillé. Valeur '{0}' ignorée",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "MSBuild est introuvable pour la version '{0}' et l'architecture '{1}'.",
   "loc.messages.MSBuildVersionDeprecated0": "Le paramètre de version de MSBuild est déconseillé. Valeur '{0}' ignorée.",
   "loc.messages.UnexpectedVSVersion0": "Version inattendue de Visual Studio : '{0}'.",
   "loc.messages.VSLocationDeprecated0": "Le paramètre d'emplacement de Visual Studio est déconseillé. Valeur '{0}' ignorée",
-  "loc.messages.VSNotFoundTry": "Visual Studio est introuvable. Essayez d'installer une version prise en charge de Visual Studio. Consultez la définition de tâche pour obtenir une liste des versions prises en charge.",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' est introuvable. Recherche de la dernière version."
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

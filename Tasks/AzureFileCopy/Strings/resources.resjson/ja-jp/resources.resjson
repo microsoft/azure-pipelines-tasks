@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",
   "loc.input.label.ConnectedServiceName": "Azure クラシック サブスクリプション",
   "loc.input.help.ConnectedServiceName": "ファイルをコピーする対象の Azure クラシック サブスクリプション。",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM サブスクリプション",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "ファイルをコピーする対象の Azure Resource Manager サブスクリプション。",
   "loc.input.label.Destination": "宛先の種類",
   "loc.input.help.Destination": "Azure BLOB または Azure VM のいずれかをコピー先として選択します。",
@@ -88,5 +88,5 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "仮想マシン '{1}' のカスタム スクリプト拡張機能 '{0}' を設定できません: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "コピーの前提条件を有効にすることができませんでした。{0}",
   "loc.messages.AFC_BlobStorageNotFound": "ストレージ アカウント {0} は見つかりません。既存のストレージ アカウントを指定してください",
-  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
+  "loc.messages.AFC_RootContainerAndDirectory": "$root コンテナーには、'/S' オプションは無効です。"
 }

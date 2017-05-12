@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",
   "loc.input.label.ConnectedServiceName": "Klassisches Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Klassisches Azure-Abonnement, das vor dem Ausführen von PowerShell konfiguriert wird.",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM-Abonnement",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager-Abonnement, das vor dem Ausführen von PowerShell konfiguriert wird.",
   "loc.input.label.ScriptType": "Skripttyp",
   "loc.input.help.ScriptType": "Der Typ des Skripts: Dateipfad oder Inlineskript.",

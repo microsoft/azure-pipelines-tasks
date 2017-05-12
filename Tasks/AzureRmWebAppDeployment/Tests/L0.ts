@@ -30,7 +30,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             var expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -47,7 +47,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -70,7 +70,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 repoProvider : 'TfsGit',
                 repoName : 'MyFirstProject',
                 collectionUrl : 'https://abc.visualstudio.com/',
-                teamProject : 'MyFirstProject',
+                teamProject : '1',
                 slotName : 'Production'
             });
             var expectedRequestBody = JSON.stringify({
@@ -80,14 +80,14 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 message : expectedMessage,
                 author : 'author',
                 deployer : 'VSTS',
-                details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+                details : 'https://abc.visualstudio.com/1/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
             });
             expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.stdout.indexOf(expectedRequestBody) != -1, 'should have said: ' + expectedRequestBody);
             done();
@@ -102,7 +102,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -117,7 +117,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -133,8 +133,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             assert(tr.failed, 'task should have failed');
             done();
         });
@@ -157,7 +157,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 repoProvider : 'TfsGit',
                 repoName : 'MyFirstProject',
                 collectionUrl : 'https://abc.visualstudio.com/',
-                teamProject : 'MyFirstProject',
+                teamProject : '1',
                 slotName : 'Production'
             });
             var expectedRequestBody = JSON.stringify({
@@ -167,7 +167,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 message : expectedMessage,
                 author : 'author',
                 deployer : 'VSTS',
-                details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+                details : 'https://abc.visualstudio.com/1/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
             });
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
@@ -178,8 +178,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.failed, 'task should have failed');
             expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
             assert(tr.stdout.indexOf(expectedRequestBody) != -1, 'should have said: ' + expectedRequestBody);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             done();
         });
 
@@ -192,7 +192,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -211,7 +211,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             done();
         });
@@ -227,8 +227,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
             var expectedOut = 'Failed to update history to kudu';
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             assert(tr.failed, 'task should have failed');
             done();
         });
@@ -243,7 +243,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             var expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             done();
         });
@@ -269,9 +269,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
             assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.search('loc_mock_AutoParameterizationMessage'), 'Should have provided message for MSBuild package');
             done();
         });
 
@@ -286,9 +287,21 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'Should have said: ' + expectedErr);
             var expectedOut = 'Failed to update history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             assert(tr.failed, 'task should have failed');
+            done();
+        });
+
+        it('Fails if XML Transformation throws error (Mock) for MSBuild package', (done) => {
+            this.timeout(1000);
+            let tp = path.join(__dirname, 'L0XdtTransformationFailMSBuildPackage.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+
+            assert(tr.failed, 'task should have failed');
+            assert(tr.stderr.search('loc_mock_FailedToApplyTransformation'), 'Should have provided proper errror message for MSBuild package');
+            assert(tr.stdout.search('loc_mock_AutoParameterizationMessage'), 'Should have provided message for MSBuild package');
             done();
         });
     }
@@ -305,7 +318,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             done();
         });
@@ -323,7 +336,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Successfully updated scmType to VSTSRM';
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -340,8 +353,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);  
             var expectedOut = 'Failed to update history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             assert(tr.failed, 'task should have failed');
             done();
         });
@@ -357,8 +370,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
             var expectedOut = 'Failed to update history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             assert(tr.failed, 'task should have failed');
             done();
         });
@@ -374,8 +387,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
             var expectedOut = 'Failed to update history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            var sampleOut = 'Successfully updated scmType to VSTSRM';
-            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+            var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
             assert(tr.failed, 'task should have failed');
             done();
         });
@@ -392,8 +405,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
         var expectedOut = 'Failed to update history to kudu';
         assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
-        var sampleOut = 'Successfully updated scmType to VSTSRM';
-        assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+        var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+        assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
         assert(tr.failed, 'task should have failed');
         done();
     });
@@ -409,8 +422,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         var expectedOut = 'Failed to update history to kudu';
         assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut); 
-        var sampleOut = 'Successfully updated scmType to VSTSRM';
-        assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
+        var sampleOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+        assert(tr.stdout.search(sampleOut) < 0, 'should not have updated web app config details');
         assert(tr.failed, 'task should have failed');
         done();
     });

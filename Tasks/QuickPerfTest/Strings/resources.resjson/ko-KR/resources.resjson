@@ -17,5 +17,5 @@
   "loc.input.help.geoLocation": "부하를 생성하는 지역입니다. 자세한 내용은 도움말을 참조하세요.",
   "loc.input.label.machineType": "다음을 사용하여 부하 테스트 실행",
   "loc.input.label.avgResponseTimeThreshold": "Avg.Response 시간(밀리초)을 초과하는지 확인하는 테스트 실패",
-  "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
+  "loc.input.help.avgResponseTimeThreshold": "부하 테스트 결과를 실패한 것으로 간주하는 평균 응답 시간입니다."
 }

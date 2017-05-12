@@ -5,10 +5,10 @@ import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
 import * as utils from './helpers';
 import * as os from 'os';
-
+import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
 
-export function getDistributedTestConfigurations(): models.DtaTestConfigurations {
+export function getDistributedTestConfigurations() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
@@ -33,16 +33,15 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     if (!isNaN(totalJobsInPhase)) {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
+    tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
-
     return dtaConfiguration;
 }
 
-export function getvsTestConfigurations(): models.VsTestConfigurations {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
+export function getvsTestConfigurations() {
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
@@ -94,30 +93,63 @@ function getDtaInstanceId(): number {
 }
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations) {
-    testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-    testConfiguration.testDropLocation = tl.getInput('searchFolder');  
+    testConfiguration.testSelection = tl.getInput('testSelector');
+    tl._writeLine(tl.loc('testSelectorInput', testConfiguration.testSelection));
+
+    testConfiguration.testDropLocation = tl.getInput('searchFolder');
+    tl._writeLine(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
+
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
+    tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
+
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
+    tl._writeLine(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
+
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
+
+    testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
+    tl._writeLine(tl.loc('runInParallelInput', testConfiguration.runInParallel));
+
+    testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    tl._writeLine(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
+
+    testConfiguration.tiaConfig = getTiaConfiguration();
+
+    testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+    if (testConfiguration.pathtoCustomTestAdapters &&
+        !utils.Helper.pathExistsAsDirectory(testConfiguration.pathtoCustomTestAdapters)) {
+        throw new Error(tl.loc('pathToCustomAdaptersInvalid', testConfiguration.pathtoCustomTestAdapters));
+    }
+
+    tl._writeLine(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
+
+    testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
+    tl._writeLine(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
+
+    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
+    tl._writeLine(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
+
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
-    testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
-    testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
-    testConfiguration.tiaConfig = getTiaConfiguration();
-    testConfiguration.testSelection = tl.getInput('testSelector');
-    testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
 
     if (testConfiguration.testSelection.toLowerCase() === 'testplan') {
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
+        tl._writeLine(tl.loc('testPlanInput', testConfiguration.testplan));
+
         testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+        tl._writeLine(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
 
         const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
         testConfiguration.testSuites = new Array<number>();
         testSuiteStrings.forEach(element => {
-        testConfiguration.testSuites.push(parseInt(element));
+            const testSuiteId = parseInt(element);
+            tl._writeLine(tl.loc('testSuiteSelected', testSuiteId));
+            testConfiguration.testSuites.push(testSuiteId);
         });
+    } else {
+        testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+        tl._writeLine(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
     }
 
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
@@ -127,22 +159,32 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             tl._writeLine('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
+        if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+            && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
+            throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
+        }
+        tl._writeLine(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
+        tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
     }
 
-        // only to facilitate the writing of unit tests 
+    if (tl.getBoolInput('uiTests') && testConfiguration.runInParallel) {
+        tl.warning(tl.loc('uitestsparallel'));
+    }
+
+    // only to facilitate the writing of unit tests 
     testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
     if (!testConfiguration.vs15HelperPath) {
         testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
     }
 
-    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
+    versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 
-function getTiaConfiguration() : models.TiaConfiguration {
+function getTiaConfiguration(): models.TiaConfiguration {
     const tiaConfiguration = {} as models.TiaConfiguration;
-    tiaConfiguration.tiaEnabled =  tl.getBoolInput('runOnlyImpactedTests');
+    tiaConfiguration.tiaEnabled = tl.getBoolInput('runOnlyImpactedTests');
     tiaConfiguration.tiaRebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
@@ -151,10 +193,20 @@ function getTiaConfiguration() : models.TiaConfiguration {
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
     const useNewCollector = tl.getVariable('tia.useNewCollector');
-    if ( useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
+    if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
         tiaConfiguration.useNewCollector = true;
     }
-    tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
+
+    var buildReason = tl.getVariable('Build.Reason');
+
+    // https://www.visualstudio.com/en-us/docs/build/define/variables
+    if (buildReason && buildReason === "PullRequest") {
+        tiaConfiguration.isPrFlow = "true";
+    }
+    else {
+        tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
+    }
+    tiaConfiguration.useTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');
 
     const releaseuri = tl.getVariable('release.releaseUri')
     tiaConfiguration.context = 'CI';

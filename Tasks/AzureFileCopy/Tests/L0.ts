@@ -7,15 +7,13 @@ import assert = require('assert');
 import path = require('path');
 
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('AzureFileCopy Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -23,10 +21,12 @@ describe('AzureFileCopy Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if(ps) {
+    if (psm.testSupported()) {
         it('Validate AzureFileCopy.Utility Get-AzureUtility', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureUtility.ps1'), done);
         });

@@ -424,8 +424,13 @@ describe('General Suite', function () {
             var folderStack: string[] = [taskFolder];
             while (folderStack.length > 0) {
                 var folder = folderStack.pop();
-                if (path.basename(folder).toLowerCase() == "ps_modules") { continue } // Skip nested ps_modules folder.
-                if (folder == path.join(taskFolder, 'Tests')) { continue } // Skip [...]/Task/Tests and [...]/Common/Tests folders.
+                if (path.basename(folder).toLowerCase() == "node_modules" || // Skip nested node_modules folder.
+                    path.basename(folder).toLowerCase() == "ps_modules") {   // Skip nested ps_modules folder.
+                    continue;
+                }
+                if (folder == path.join(taskFolder, 'Tests')) { // Skip [...]/Task/Tests and [...]/Common/Tests folders.
+                    continue;
+                }
                 fs.readdirSync(folder).forEach(itemName => {
                     var itemPath = path.join(folder, itemName);
                     if (fs.statSync(itemPath).isDirectory()) {
