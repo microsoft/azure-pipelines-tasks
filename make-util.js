@@ -129,7 +129,7 @@ var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
     if (test('-f', rp('package.json'))) {
-        run('npm install');
+        run('npm install --production');
     }
     run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
