@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": 8,
-        "Minor": 0,
+        "Minor": 1,
         "Patch": 2
     },
     "inputs": [
@@ -30,6 +30,14 @@
                 "rows": "10",
                 "maxLength": "500"
             }
+        },
+        {
+            "name": "emailRecipients",
+            "type": "identities",
+            "label": "Notify users",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
         }
     ],
     "instanceNameFormat": "Manual Intervention",
