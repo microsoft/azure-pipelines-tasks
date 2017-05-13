@@ -1,0 +1,17 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "loc.friendlyName": "Cake",
+  "loc.helpMarkDown": "[More Information about Cake](http://cakebuild.net)",
+  "loc.description": "Build with Cake",
+  "loc.instanceNameFormat": "Cake $(message)",
+  "loc.input.label.script": "Cake Script",
+  "loc.input.help.script": "The build script to execute.",
+  "loc.input.label.target": "Target",
+  "loc.input.help.target": "The build script target to run.",
+  "loc.input.label.verbosity": "Verbosity",
+  "loc.input.help.verbosity": "Specifies the amount of information to be displayed.",
+  "loc.input.label.arguments": "Cake Arguments",
+  "loc.input.help.arguments": "Additional arguments passed to Cake."
+}

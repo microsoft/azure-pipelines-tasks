@@ -1,0 +1,72 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "b88ea9a0-7d6e-11e5-b5de-d57d652482f7",
+  "name": "Cake",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Patrik Svensson",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "script",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.script",
+      "defaultValue": "build.cake",
+      "helpMarkDown": "ms-resource:loc.input.help.script",
+      "required": true
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.target",
+      "defaultValue": "Default",
+      "helpMarkDown": "ms-resource:loc.input.help.target",
+      "required": true
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosity",
+      "defaultValue": "Verbose",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
+      "required": true,
+      "options": {
+        "Quiet": "Quiet",
+        "Minimal": "Minimal",
+        "Normal": "Normal",
+        "Verbose": "Verbose",
+        "Diagnostic": "Diagnostic"
+      }
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "required": false
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Cake.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
