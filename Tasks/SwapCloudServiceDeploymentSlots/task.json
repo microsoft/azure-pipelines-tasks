@@ -1,0 +1,94 @@
+﻿{
+  "id": "2B921C43-1BAD-4C9F-A20F-FA1A3143503D",
+  "name": "SwapCloudServiceDeploymentSlots",
+  "friendlyName": "Swap Azure Cloud Service Slots",
+  "description": "Swap the staging and production slot of an Azure Cloud Service",
+  "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/README.md)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],  
+  "author": "Peter Csajtai",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 8
+  },
+  "demands": [
+    "azureps"
+  ],
+  "groups": [
+	{
+		"name": "instancestatecheck",
+		"displayName": "Instance state check",
+		"isExpanded": true
+	}
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "Azure Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Azure subscription contains the cloud service"
+    },
+    {
+      "name": "ServiceName",
+      "type": "pickList",
+      "label": "Service Name",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "name": "RemoveStagingSlot",
+      "type": "boolean",
+      "label": "Remove staging slot after swap",
+      "defaultValue": "true",
+      "required": true
+    },
+    {
+      "name": "WaitInstancesReady",
+      "type": "boolean",
+      "label": "Wait for instances",
+      "defaultValue": "true",
+      "required": true,
+	  "groupName": "instancestatecheck",
+      "helpMarkDown": "Wait for instances reaching ready state"
+    },
+	{
+      "name": "CheckInterval",
+      "type": "string",
+      "label": "Instance check interval",
+      "defaultValue": "30",
+	  "groupName": "instancestatecheck",
+      "helpMarkDown": "Instance state check interval (sec)"
+    },
+	{
+      "name": "CheckTimeout",
+      "type": "string",
+      "label": "Instance check timeout",
+      "defaultValue": "900",
+	  "groupName": "instancestatecheck",
+      "helpMarkDown": "Instance state check timeout (sec)"
+    }
+  ],
+  "sourceDefinitions": [
+	{
+        "target": "ServiceName",
+        "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
+        "selector": "xpath://ServiceName",
+        "authKey": "$(ConnectedServiceName)"
+	}
+  ],
+  "instanceNameFormat": "Swap Cloud Service: $(ServiceName)",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\SwapCloudServiceSlots.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+// *******************************************************
+// GENERATED FILE - DO NOT EDIT DIRECTLY
+// *******************************************************
+{
+  "id": "2B921C43-1BAD-4C9F-A20F-FA1A3143503D",
+  "name": "SwapCloudServiceDeploymentSlots",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Peter Csajtai",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 8
+  },
+  "demands": [
+    "azureps"
+  ],
+  "groups": [
+    {
+      "name": "instancestatecheck",
+      "displayName": "ms-resource:loc.group.displayName.instancestatecheck",
+      "isExpanded": true
+    }
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ServiceName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ServiceName",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "name": "RemoveStagingSlot",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveStagingSlot",
+      "defaultValue": "true",
+      "required": true
+    },
+    {
+      "name": "WaitInstancesReady",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.WaitInstancesReady",
+      "defaultValue": "true",
+      "required": true,
+      "groupName": "instancestatecheck",
+      "helpMarkDown": "ms-resource:loc.input.help.WaitInstancesReady"
+    },
+    {
+      "name": "CheckInterval",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CheckInterval",
+      "defaultValue": "30",
+      "groupName": "instancestatecheck",
+      "helpMarkDown": "ms-resource:loc.input.help.CheckInterval"
+    },
+    {
+      "name": "CheckTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CheckTimeout",
+      "defaultValue": "900",
+      "groupName": "instancestatecheck",
+      "helpMarkDown": "ms-resource:loc.input.help.CheckTimeout"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "ServiceName",
+      "endpoint": "https://management.core.windows.net/$(ConnectedServiceName)/services/hostedservices",
+      "selector": "xpath://ServiceName",
+      "authKey": "$(ConnectedServiceName)"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\SwapCloudServiceSlots.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

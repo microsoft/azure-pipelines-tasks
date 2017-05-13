@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Swap Azure Cloud Service Slots",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/README.md)",
+  "loc.description": "Swap the staging and production slot of an Azure Cloud Service",
+  "loc.instanceNameFormat": "Swap Cloud Service: $(ServiceName)",
+  "loc.group.displayName.instancestatecheck": "Instance state check",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.help.ConnectedServiceName": "Azure subscription contains the cloud service",
+  "loc.input.label.ServiceName": "Service Name",
+  "loc.input.label.RemoveStagingSlot": "Remove staging slot after swap",
+  "loc.input.label.WaitInstancesReady": "Wait for instances",
+  "loc.input.help.WaitInstancesReady": "Wait for instances reaching ready state",
+  "loc.input.label.CheckInterval": "Instance check interval",
+  "loc.input.help.CheckInterval": "Instance state check interval (sec)",
+  "loc.input.label.CheckTimeout": "Instance check timeout",
+  "loc.input.help.CheckTimeout": "Instance state check timeout (sec)"
+}
