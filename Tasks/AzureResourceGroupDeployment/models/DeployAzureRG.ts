@@ -107,10 +107,9 @@ export class AzureRGTaskParameters {
     }
 
     private getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
-        var endpointAuth = tl.getEndpointAuthorization(connectedService, true);
-        var servicePrincipalId: string = endpointAuth.parameters["serviceprincipalid"];
-        var servicePrincipalKey: string = endpointAuth.parameters["serviceprincipalkey"];
-        var tenantId: string = endpointAuth.parameters["tenantid"];
+        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";

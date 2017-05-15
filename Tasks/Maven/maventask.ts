@@ -323,12 +323,12 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
             if (tl.exist(reportPOMFile)) {
                 // multi module project
                 mvnReport.arg(reportPOMFile);
-                mvnReport.arg("verify");
             }
             else {
                 mvnReport.arg(mavenPOMFile);
-                mvnReport.arg("verify");
             }
+            mvnReport.line(mavenOptions);
+            mvnReport.arg("verify");
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
                 defer.resolve(true);

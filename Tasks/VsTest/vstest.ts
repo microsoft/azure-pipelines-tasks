@@ -112,7 +112,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         if (pathExistsAsFile(settingsFile)) {
             argsArray.push('/Settings:' + settingsFile);
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
-                tl.debug('Running VsTest with settings : ' + settings);
+                tl.debug('Running VsTest with settings : ');
+                utils.Helper.printMultiLineLog(settings, (logLine) => {tl._outStream.write('##vso[task.debug]' + logLine);});
             });
         } else {
             if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.

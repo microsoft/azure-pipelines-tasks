@@ -99,10 +99,9 @@ export class azureclitask {
     }
 
     private static loginAzureRM(connectedService: string): void {
-        var endpointAuth = tl.getEndpointAuthorization(connectedService, true);
-        var servicePrincipalId: string = endpointAuth.parameters["serviceprincipalid"];
-        var servicePrincipalKey: string = endpointAuth.parameters["serviceprincipalkey"];
-        var tenantId: string = endpointAuth.parameters["tenantid"];
+        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionName: string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\""));

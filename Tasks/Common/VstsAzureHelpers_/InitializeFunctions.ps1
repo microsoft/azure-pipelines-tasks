@@ -46,7 +46,7 @@ function Initialize-AzureSubscription {
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
     }
-    
+
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
         if (!$script:azureModule) {
@@ -126,8 +126,16 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                if(CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName")
+                {
+                    Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
+                    $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                }
+                else
+                {
+                    Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                    $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                }
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
@@ -197,5 +205,22 @@ function Set-UserAgent_Core {
         Write-Verbose "Set-UserAgent failed with exception message: $_.Exception.Message"
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function CmdletHasMember {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$cmdlet,
+        [Parameter(Mandatory=$true)]
+        [string]$memberName)
+    try{
+        $hasMember = (gcm $cmdlet).Parameters.Keys.Contains($memberName)
+        return $hasMember
+    }
+    catch
+    {
+        return false;
     }
 }
