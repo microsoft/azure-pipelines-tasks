@@ -36,6 +36,17 @@
             Write-Warning $_
         }
 
+        $TestWindowPath = $null
+        $VsPath = $null
+        if ($TestAgentVersion -eq "15.0") {
+            $instance = Get-VisualStudio_15_0
+            if ($instance) {
+                $VsPath = [System.IO.Path]::Combine($instance.Path, "Common7", "IDE")
+                $TestWindowPath = [System.IO.Path]::Combine($VsPath, "CommonExtensions", "Microsoft", "TestWindow")
+                Write-Verbose "VS path $VsPath; Test window path $TestWindowPath" -Verbose
+            }
+        }
+
         # Fix Assembly Redirections
         # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
         # Redirection to Newton Json 8.0
@@ -109,6 +120,10 @@
             $Processinfo.EnvironmentVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
             $Processinfo.EnvironmentVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
             $Processinfo.EnvironmentVariables.Add("DTA.TestPlatformVersion", $TestAgentVersion);
+            if ($VsPath) {
+                $Processinfo.EnvironmentVariables.Add("DTA.VisualStudio.Path", $VsPath);
+                $Processinfo.EnvironmentVariables.Add("DTA.TestWindow.Path", $TestWindowPath);
+            }
             $Processinfo.UseShellExecute = $false
             $Processinfo.LoadUserProfile = $false
             $Processinfo.CreateNoWindow = $true
