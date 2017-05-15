@@ -2,8 +2,40 @@
 
 import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
 import armKeyVault = require("./azure-rest/azure-arm-keyvault");
-import util = require("util")
+import util = require("util");
 import tl = require("vsts-task-lib/task");
+
+export class SecretsToErrorsMapping { 
+    public errorsMap: { [key: string]: string; };
+
+    constructor() {
+        this.errorsMap = {};
+    }
+
+    public addError(secretName: string, errorMessage: string): void {
+        this.errorsMap[secretName] = errorMessage;
+    }
+
+    public isEmpty(): boolean {
+        for (var key in this.errorsMap) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public getAllErrors(): string {
+        var allErrors = "";
+        for (var key in this.errorsMap) {
+            if (this.errorsMap.hasOwnProperty(key)) {
+                var errorMessagePerSecret = key + ": " + this.errorsMap[key];
+                allErrors = allErrors + "\n" + errorMessagePerSecret;
+            }
+        }
+
+        return allErrors;
+    }
+}
 
 export class KeyVault {
 
@@ -19,7 +51,7 @@ export class KeyVault {
             this.taskParameters.keyVaultUrl);
     }
 
-    public downloadSecrets(): Promise<void> {
+    public downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
 
         var downloadAllSecrets = false;
         if (this.taskParameters.secretsFilter && this.taskParameters.secretsFilter.length > 0)
@@ -31,15 +63,18 @@ export class KeyVault {
             downloadAllSecrets = true;
         }
 
+        console.log(tl.loc("SubscriptionIdLabel", this.taskParameters.subscriptionId));
+        console.log(tl.loc("KeyVaultNameLabel", this.taskParameters.keyVaultName));
+
         if (downloadAllSecrets) {
-            return this.downloadAllSecrets();
+            return this.downloadAllSecrets(secretsToErrorsMap);
         } else {
-            return this.downloadSelectedSecrets(this.taskParameters.secretsFilter);
+            return this.downloadSelectedSecrets(this.taskParameters.secretsFilter, secretsToErrorsMap);
         }
     }
 
-    private downloadAllSecrets(): Promise<void> {
-        tl.debug(util.format("Downloading all secrets from vault: %s", this.taskParameters.keyVaultName));
+    private downloadAllSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+        tl.debug(util.format("Downloading all secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
 
         return new Promise<void>((resolve, reject) => {
             this.keyVaultClient.getSecrets("", (error, listOfSecrets, request, response) => {
@@ -58,31 +93,27 @@ export class KeyVault {
 
                 var getSecretValuePromises: Promise<any>[] = [];
                 listOfSecrets.forEach((secret: armKeyVault.AzureKeyVaultSecret, index: number) => {
-                    getSecretValuePromises.push(this.downloadSecretValue(secret.name));
+                    getSecretValuePromises.push(this.downloadSecretValue(secret.name, secretsToErrorsMap));
                 });
 
                 Promise.all(getSecretValuePromises).then(() =>{
                     return resolve();
-                }).catch((error) => {
-                    return reject(error);
                 });
             });
         });
     }
 
-    private downloadSelectedSecrets(selectedSecrets: string[]): Promise<void> {
-        tl.debug(util.format("Downloading selected secrets from vault: %s", this.taskParameters.keyVaultName));
+    private downloadSelectedSecrets(selectedSecrets: string[], secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+        tl.debug(util.format("Downloading selected secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
 
         return new Promise<void>((resolve, reject) => {
             var getSecretValuePromises: Promise<any>[] = [];
             selectedSecrets.forEach((secretName: string, index: number) => {
-                getSecretValuePromises.push(this.downloadSecretValue(secretName));
+                getSecretValuePromises.push(this.downloadSecretValue(secretName, secretsToErrorsMap));
             });
 
             Promise.all(getSecretValuePromises).then(() =>{
                 return resolve();
-            }).catch((error) => {
-                return reject(error);
             });
         });
     }
@@ -100,16 +131,19 @@ export class KeyVault {
         return result;
     }
 
-    private downloadSecretValue(secretName: string): Promise<any> {
-        tl.debug(util.format("Downloading secret value for: %s", secretName));
+    private downloadSecretValue(secretName: string, secretsToErrorsMap: SecretsToErrorsMapping): Promise<any> {
+        tl.debug(util.format("Promise for downloading secret value for: %s", secretName));
 
         return new Promise<void>((resolve, reject) => {
             this.keyVaultClient.getSecretValue(secretName, (error, secretValue, request, response) => {
                 if (error) {
-                    return reject(tl.loc("GetSecretValueFailed", secretName, this.getError(error)));
+                    let errorMessage = this.getError(error);
+                    secretsToErrorsMap.addError(secretName, errorMessage);
+                }
+                else {
+                    console.log("##vso[task.setvariable variable=" + secretName + ";issecret=true;]" + secretValue);
                 }
                 
-                console.log("##vso[task.setvariable variable=" + secretName + ";issecret=true;]" + secretValue);
                 return resolve();
             });
         });
