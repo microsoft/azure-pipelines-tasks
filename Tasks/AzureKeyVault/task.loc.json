@@ -79,6 +79,8 @@
     "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
     "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
     "AzKv_ConstructorFailed": "ms-resource:loc.messages.AzKv_ConstructorFailed",
+    "SubscriptionIdLabel": "ms-resource:loc.messages.SubscriptionIdLabel",
+    "KeyVaultNameLabel": "ms-resource:loc.messages.KeyVaultNameLabel",
     "DownloadingSecretsUsing": "ms-resource:loc.messages.DownloadingSecretsUsing",
     "GetSecretsFailed": "ms-resource:loc.messages.GetSecretsFailed",
     "NoSecretsFound": "ms-resource:loc.messages.NoSecretsFound",

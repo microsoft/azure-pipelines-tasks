@@ -57,8 +57,6 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 var listOfSecrets = this.convertToAzureKeyVaults(result);
 
                 if (response.body.nextLink) {
-                    console.log(response.body.nextLink);
-
                     this.getSecrets(response.body.nextLink, (error, listOfSecretsFromNextLink, request, response) => {
                         if (error) {
                             callback(error);

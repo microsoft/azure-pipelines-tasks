@@ -3,7 +3,7 @@
     "name": "AzureKeyVault",
     "friendlyName": "Azure Key Vault",
     "description": "Download Azure Key Vault Secrets",
-    "helpMarkDown": "[More Information](https://aka.ms/azkvtaskreadme)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
     "category": "Deploy",
     "releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
     "visibility": [
@@ -25,14 +25,14 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure subscription for the key vault."
+            "helpMarkDown": "Select the Azure subscription for the key vault"
         },
         {
             "name": "KeyVaultName",
             "type": "pickList",
             "label": "Key vault",
             "required": true,
-            "helpMarkDown": "Provide the name of a key vault.",
+            "helpMarkDown": "Provide the name of an existing key vault",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -79,6 +79,8 @@
         "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
         "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
         "AzKv_ConstructorFailed": "Azure key vault parameters initialization failed. Error: %s.",
+        "SubscriptionIdLabel": "SubscriptionId: %s.",
+        "KeyVaultNameLabel": "Key vault name: %s.",
         "DownloadingSecretsUsing": "Downloading secrets using: %s.",
         "GetSecretsFailed": "Get secrets failed. Error: %s.",
         "NoSecretsFound": "No secrets found in: %s",
