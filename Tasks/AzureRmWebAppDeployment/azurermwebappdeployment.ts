@@ -285,7 +285,7 @@ async function updateArmMetadata(SPN, webAppName: string, resourceGroupName: str
         VSTSRM_BuildDefinitionId: buildDefintionId,
         VSTSRM_ReleaseDefinitionId: releaseDefinitionId,
         VSTSRM_ProjectId: projectId,
-        VSTSRM_AccountId: tl.getVariable("release.requestedForId"),
+        VSTSRM_AccountId: tl.getVariable("system.collectionId"),
         VSTSRM_BuildDefinitionWebAccessUrl: collectionUri + projectId + "/_build?_a=simple-process&definitionId=" + buildDefintionId,
         VSTSRM_ConfiguredCDEndPoint: collectionUri + projectId + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?definitionId=" + releaseDefinitionId
     }
