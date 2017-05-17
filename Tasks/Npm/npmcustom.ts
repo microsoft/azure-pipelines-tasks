@@ -1,0 +1,48 @@
+import * as path from 'path';
+
+import * as tl from 'vsts-task-lib/task';
+
+import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
+import { INpmRegistry, NpmRegistry } from './npmregistry';
+import { NpmToolRunner } from './npmtoolrunner';
+import * as util from './util';
+
+export async function run(command?: string): Promise<void> {
+    let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
+    let npmrc = util.getTempNpmrcPath();
+    let npmRegistries: INpmRegistry[] = await util.getLocalNpmRegistries(workingDir);
+
+    let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
+    switch (registryLocation) {
+        case RegistryLocation.Feed:
+            tl.debug(tl.loc('UseFeed'));
+            let feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
+            npmRegistries.push(await NpmRegistry.FromFeedId(feedId));
+            break;
+        case RegistryLocation.Npmrc:
+            tl.debug(tl.loc('UseNpmrc'));
+            let endpointId = tl.getInput(NpmTaskInput.CustomEndpoint);
+            if (endpointId) {
+                npmRegistries.push(NpmRegistry.FromServiceEndpoint(endpointId, true));
+            }
+            break;
+    }
+
+    for (let registry of npmRegistries) {
+        if (registry.authOnly === false) {
+            tl.debug(tl.loc('UsingRegistry', registry.url));
+            util.appendToNpmrc(npmrc, `registry=${registry.url}\n`);
+        }
+
+        tl.debug(tl.loc('AddingAuthRegistry', registry.url));
+        util.appendToNpmrc(npmrc, `${registry.auth}\n`);
+    }
+
+    let npm = new NpmToolRunner(workingDir, npmrc);
+    npm.line(command || tl.getInput(NpmTaskInput.CustomCommand, true));
+
+    await npm.exec();
+
+    tl.rmRF(npmrc);
+    tl.rmRF(util.getTempPath());
+}
