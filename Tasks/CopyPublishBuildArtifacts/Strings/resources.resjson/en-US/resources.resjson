@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copy and Publish Build Artifacts",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Copy build artifacts to a staging folder using minimatch patterns and then publish them to the server or a file share",
+  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
   "loc.instanceNameFormat": "Copy Publish Artifact: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copy Root",
   "loc.input.help.CopyRoot": "Root folder to which file matching patterns should apply. If no value is provided, the repo root is used. Use variables to specify a folder outside of the repo, such as: $(Agent.BuildDirectory).",
