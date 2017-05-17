@@ -6,7 +6,7 @@ Provide the ability to deprecate a task.
 
 To mark a task as deprecated:
 
->"deprecated": "true"
+>"deprecated": true
 
 We consider that a certain task is **deprecated** only when the latest version of that task is marked as deprecated.
 
