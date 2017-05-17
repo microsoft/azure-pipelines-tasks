@@ -16,6 +16,9 @@ import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
 
+var base64 = require('base-64');
+var utf8 = require('utf8');
+
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -47,6 +50,8 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
+const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
+
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
@@ -115,6 +120,18 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
+function getSystemAccessToken(): string {
+    tl.debug("Getting credentials for local feeds");
+    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
+    if (auth.scheme === "OAuth") {
+        tl.debug("Got auth token");
+        return auth.parameters["AccessToken"];
+    }
+    else {
+        tl.warning("Could not determine credentials to use for Maven feed");
+    }
+}
+
 async function execBuild() {
     // Maven task orchestration occurs as follows:
     // 1. Check that Maven exists by executing it to retrieve its version.
@@ -155,7 +172,7 @@ async function execBuild() {
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
+            mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
@@ -163,7 +180,15 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
-            return mvnRun.exec(); // Run Maven with the user specified goals
+            return mvnRun.execSync({
+                cwd: null,
+                env: {
+                    accessTokenEnvSetting : base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()))
+                },
+                silent: true,
+                outStream: null,
+                errStream: null
+            }); // Run Maven with the user specified goals
         })
         .fail(function (err) {
             console.error(err.message);
