@@ -2,7 +2,7 @@
     "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
     "name": "CopyPublishBuildArtifacts",
     "friendlyName": "Copy and Publish Build Artifacts",
-    "description": "Copy build artifacts to a staging folder using minimatch patterns and then publish them to the server or a file share",
+    "description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613725)",
     "category": "Utility",
     "visibility": [
@@ -12,10 +12,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 32
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
+    "deprecated": true,
     "inputs": [
         {
             "name": "CopyRoot",
