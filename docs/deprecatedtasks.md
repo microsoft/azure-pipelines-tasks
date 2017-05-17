@@ -8,7 +8,7 @@ To mark a task as deprecated:
 
 >"deprecated": "true"
 
-We consider that a certain task is **deprecated** only when the major version of that task is marked as deprecated.
+We consider that a certain task is **deprecated** only when the latest version of that task is marked as deprecated.
 
 When the user searches for deprecated tasks, we push these tasks to the end and group them under a collapsible section that's collapsed by default.
 
