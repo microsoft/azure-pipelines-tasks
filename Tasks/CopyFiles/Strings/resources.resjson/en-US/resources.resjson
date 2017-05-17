@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Copy files from source folder to target folder using minimatch patterns (The minimatch patterns will only match file paths, not folder paths)",
   "loc.instanceNameFormat": "Copy Files to: $(TargetFolder)",
+  "loc.releaseNotes": "Match pattern consistency.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SourceFolder": "Source Folder",
   "loc.input.help.SourceFolder": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",

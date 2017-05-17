@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "visibility": [
     "Build",
     "Release"
