@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Download Azure Key Vault Secrets",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
+  "loc.releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure subscription for the key vault",
   "loc.input.label.KeyVaultName": "Key vault",
