@@ -14,6 +14,8 @@ let stripbom = require('strip-bom');
 let base64 = require('base-64');
 let utf8 = require('utf8');
 
+export const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
+
 function readXmlFileAsJson(filePath: string): Q.Promise<any> {
     return readFile(filePath, "utf-8")
         .then(convertXmlStringToJson);
@@ -29,9 +31,9 @@ function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
 
 function writeJsonAsSettingsFile(filePath: string, jsonContent: any): Q.Promise<void> {
     let builder = new xml2js.Builder({
-            pretty: true,
-            headless: true,
-            rootName: 'settings'
+        pretty: true,
+        headless: true,
+        rootName: 'settings'
     });
     let xml = builder.buildObject(jsonContent.settings);
     xml = str(xml).replaceAll("&#xD;", "").s;
@@ -46,7 +48,7 @@ function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
 function addServerToJson(obj: any, value: any): void {
     const propName: string = 'server';
 
-    if (typeof obj === "undefined") {
+    if (typeof obj === 'undefined') {
         obj = {};
     }
 
@@ -73,26 +75,9 @@ function addServerToJson(obj: any, value: any): void {
     if (propName in obj) {
         if (obj[propName] instanceof Array) {
             let existing = obj[propName].find(containsId);
-            // (o) => {
-            //     tl.debug('value=' + JSON.stringify(value) + '; o=' + JSON.stringify(o));
-            //     if (value && value.id) {
-            //         tl.debug('o.id=' + o.id + ' value.id=' + value.id);
-            //         if (o.id instanceof Array) {
-            //             return o.id.find((v) => {
-            //                     tl.debug('v=' + v);
-            //                     tl.debug('f=' + (v === value.id));
-            //                     return v === value.id;
-            //                 });
-            //         } else {
-            //             tl.debug('f=' + (value.id === o.id));
-            //             return value.id === o.id;
-            //         }
-            //     }
-            //     tl.debug('Here?');
-            //     return false;
-            // });
             if (existing) {
-                tl.warning('server ' + value.id + ' already exists');
+                tl.warning(tl.loc('ServerEntryAlreadyExists'));
+                tl.debug('Server entry: ' + value.id);
             } else {
                 obj[propName].push(value);
             }
@@ -102,7 +87,8 @@ function addServerToJson(obj: any, value: any): void {
     } else if (obj instanceof Array) {
         let existing = obj.find(containsId); //o => o[propName].id === value.id);
         if (existing) {
-            tl.warning('server ' + value.id + ' already exists');
+            tl.warning(tl.loc('ServerEntryAlreadyExists'));
+            tl.debug('Server entry: ' + value.id);
         } else {
             let prop = {};
             prop[propName] = value;
@@ -134,14 +120,14 @@ function mavenSettingsJsonInsertServer (json: any, settingsXmlFile:string, serve
 }
 
 export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, server:string): Q.Promise<any> {
-    tl.debug('mergeServerCredentialsIntoSettingsXml file=' + settingsXmlFile);
+    tl.debug('merge server credentials into settings.xml file=' + settingsXmlFile);
     let serverJson:any = {
         id: server,
         configuration: {
             httpHeaders: {
                 property: {
                     name: 'Authorization',
-                    value: 'Basic ${env.ENV_MAVEN_ACCESS_TOKEN}'
+                    value: 'Basic ${env.' + accessTokenEnvSetting + '}'
                 }
             }
         }
@@ -156,3 +142,18 @@ export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, se
     });
 }
 
+function getSystemAccessToken(): string {
+    tl.debug("Getting credentials for local feeds");
+    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
+    if (auth.scheme === "OAuth") {
+        tl.debug("Got auth token");
+        return auth.parameters["AccessToken"];
+    }
+    else {
+        tl.warning("Could not determine credentials to use for Maven feed");
+    }
+}
+
+export function getAuthenticationToken() {
+    base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
+}
