@@ -138,7 +138,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
-    let settingsXmlFile: string = null;
+    let settingsXmlFile: string = path.join(tl.cwd(), 'settings.xml'); //path.join(os.tmpdir(), 'settings.xml');
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -147,9 +147,9 @@ async function execBuild() {
         })
         .then(function (code) {
             tl.debug('checking to see if there are settings.xml in use');
-            let options: RegExpMatchArray = mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g);
+            let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
             if (options) {
-                settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+                // settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
                 mavenOptions = '';
                 for (let i = 0; i < options.length; ++i) {
                     if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
@@ -165,7 +165,7 @@ async function execBuild() {
                     }
                 }
             }
-            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, 'daystar-visualstudio.com-test');
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, 'xplatalm-visualstudio.com-xplatmaven');
         })
         .fail(function (err) {
             console.error(err.message);
@@ -198,6 +198,7 @@ async function execBuild() {
             // 3. Run Maven. Compilation or test errors will cause this to fail.
             var env = process.env;
             env[util.accessTokenEnvSetting] = util.getAuthenticationToken();
+            tl.debug('Token=' + env[util.accessTokenEnvSetting]);
             return mvnRun.execSync({
                 env: env,
             }); // Run Maven with the user specified goals
