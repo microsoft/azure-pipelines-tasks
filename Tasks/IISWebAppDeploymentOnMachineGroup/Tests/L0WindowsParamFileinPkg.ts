@@ -39,7 +39,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         }
     },
     "exec": {
-        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule": {
+        "msdeploy -verb:sync -source:package=\"'webAppPkg.zip'\" -dest:auto -setParam:name=\"'IIS Web Application Name'\",value=\"'mytestwebsite'\" -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule": {
             "code" : 0,
             "stdout": "Executed Successfully"
         },

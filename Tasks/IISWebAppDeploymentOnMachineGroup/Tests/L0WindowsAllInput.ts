@@ -33,7 +33,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "msdeploy": true
     },
     "exec": {
-        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite/mytestapp' -skip:Directory=App_Data additionalArguments": {
+        "msdeploy -verb:sync -source:package=\"'webAppPkg.zip'\" -dest:auto -setParam:name=\"'IIS Web Application Name'\",value=\"'mytestwebsite/mytestapp'\" -skip:Directory=App_Data additionalArguments": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
