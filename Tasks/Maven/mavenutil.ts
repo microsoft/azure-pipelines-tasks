@@ -133,8 +133,19 @@ function mavenSettingsJsonInsertServer (json: any, settingsXmlFile:string, serve
     return writeJsonAsSettingsFile(settingsXmlFile, json);
 }
 
-export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, serverJson:any): Q.Promise<any> {
+export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, server:string): Q.Promise<any> {
     tl.debug('mergeServerCredentialsIntoSettingsXml file=' + settingsXmlFile);
+    let serverJson:any = {
+        id: server,
+        configuration: {
+            httpHeaders: {
+                property: {
+                    name: 'Authorization',
+                    value: 'Basic ${env.ENV_MAVEN_ACCESS_TOKEN}'
+                }
+            }
+        }
+    };
     return readXmlFileAsJson(settingsXmlFile)
     .then(function (json) {
         return mavenSettingsJsonInsertServer(json, settingsXmlFile, serverJson);

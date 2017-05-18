@@ -160,7 +160,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
-    let settingsXmlFile: string = 'settings.xml';
+    let settingsXmlFile: string = path.join(os.tmpdir(), 'settings.xml');
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -169,24 +169,22 @@ async function execBuild() {
         })
         .then(function (code) {
             tl.debug('checking to see if there are settings.xml in use');
-            if (mavenOptions && (mavenOptions.indexOf('-s ') || mavenOptions.indexOf('--settings '))) {
-                tl.debug('settings options are being used');
-                // tl.cp()
-            }
-            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, {
-                id: 'daystar-visualstudio.com-test',
-                configuration: {
-                    httpHeaders: {
-                        property: {
-                            name: "Authorization",
-                            value: 'Basic ${env.ENV_MAVEN_ACCESS_TOKEN}'
-                        }
+            let options: RegExpMatchArray = mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g);
+            tl.debug('options=' + options);
+            if (options) {
+                // TODO: remove settings from the command line and pass options later
+                for (let i = 0; i < options.length; ++i) {
+                    tl.debug('option[' + i + ']=' + options[i]);
+                    if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                        let suppliedSettingsXml: string = options[i + 1];
+                        tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                        tl.debug('using settings file: ' + settingsXmlFile);
                     }
                 }
-            })
+            }
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, 'daystar-visualstudio.com-test');
         })
         .fail(function (err) {
-            tl.debug('LUKE failed1: ' + err);
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
@@ -214,22 +212,14 @@ async function execBuild() {
             var env = process.env;
             env[accessTokenEnvSetting] = base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
             return mvnRun.execSync({
-                // cwd: tl.cwd(),
                 env: env,
-                // silent: null,
-                // outStream: tl._outStream,
-                // errStream: tl._errStream,
-                // ignoreReturnCode: false,
-                // failOnStdErr: true
             }); // Run Maven with the user specified goals
         })
         .fail(function (err) {
-            tl.debug('LUKE failed2: ' + err);
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
-            tl.warning('code=' + JSON.stringify(code));
             if (code && code['code'] != 0) {
                 userRunFailed = true;
             }
