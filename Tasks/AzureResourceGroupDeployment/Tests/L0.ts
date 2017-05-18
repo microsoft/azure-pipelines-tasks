@@ -450,7 +450,7 @@ describe('Azure Resource Group Deployment', function () {
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
-            console.log("STDOUT", tr.stdout);   
+            console.log("STDOUT", tr.stdout);
             done(error);
         }
     });
@@ -470,6 +470,23 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
         done();
+    });
+    it('Create or Update RG, succeeded on CSM template file with comments', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "\\CSMwithComments.json";
+        process.env["csmParametersFile"] = "\\CSMwithComments.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
     });
     it('Selected Resource Group successfully', (done) => {
         let tp = path.join(__dirname, 'selectResourceGroup.js');
@@ -614,7 +631,7 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("Enabling winrm for virtual machine") <= 0, "Should not enable winrm if the Operating System is not windows");
             done();
@@ -634,7 +651,7 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rule for the LB");
             assert(tr.stdout.indexOf("Enabling winrm for virtual machine") > 0, "Should add Custom Script Extension to the virual machine");
@@ -661,14 +678,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not try adding custom Script Extension as winrmHttps Listener is already enabled");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -687,14 +704,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -712,14 +729,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -738,14 +755,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -763,13 +780,13 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -787,13 +804,13 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -811,14 +828,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -838,18 +855,18 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not add Custom Script Extension");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -869,17 +886,17 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension present");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -899,17 +916,17 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "Should remove the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") <= 0, "Should not try to get the substatus of the extension");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -929,19 +946,19 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should add the extension");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should Validate the Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Shouldn't try to add NSG rule");
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
             done();
         }
         catch (error) {
@@ -960,15 +977,15 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachines.get is called") <= 0, "Trying to get the extension on the Virtual machines");            
+            assert(tr.stdout.indexOf("virtualMachines.get is called") <= 0, "Trying to get the extension on the Virtual machines");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should update the extension to enable WinrmHttps Listener");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try to add NSG rule");
             done();
         }
@@ -986,16 +1003,16 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Shouldn't try to add NSG rule");
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
             done();
         }
         catch (error) {
@@ -1012,17 +1029,17 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");     
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");
             done();
         }
         catch (error) {
@@ -1039,17 +1056,17 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");     
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");
             done();
         }
         catch (error) {
