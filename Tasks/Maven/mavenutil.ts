@@ -155,5 +155,5 @@ function getSystemAccessToken(): string {
 }
 
 export function getAuthenticationToken() {
-    base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
+    return base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
 }
