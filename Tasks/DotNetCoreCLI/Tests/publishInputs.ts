@@ -73,7 +73,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/project.json": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
         "**/project.json;**/*.csproj": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
         "**/project.json;**/*.csproj;**/*.vbproj": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
-        "**/*.csproj\n**/*.vbproj": ["web/project.csproj"],
+        "**/*.csproj\n**/*.vbproj\n**/*.fsproj": ["web/project.csproj"],
         "*fail*/project.json": [],
         "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
         "dummy/project.json": ["dummy/project.json"],
