@@ -17,6 +17,7 @@ var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 
+var stripJsonComments = require("strip-json-comments");
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
@@ -219,7 +220,7 @@ export class ResourceGroup {
         var template: Object;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile));
+            template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile)));
             tl.debug("Loaded CSM File");
         }
         catch (error) {
@@ -231,7 +232,7 @@ export class ResourceGroup {
             if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
                 if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
                     tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = JSON.parse(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile));
+                    var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile)));
                     tl.debug("Loaded Parameters File");
                     parameters = parameterFile["parameters"];
                 }
@@ -264,7 +265,7 @@ export class ResourceGroup {
         if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
             if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
                 var contents = await this.downloadFile(this.taskParameters.csmParametersFileLink);
-                parameters = JSON.parse(contents).parameters;
+                parameters = JSON.parse(stripJsonComments(contents)).parameters;
             }
             else {
                 deployment.properties["parametersLink"] = {
@@ -278,7 +279,7 @@ export class ResourceGroup {
             var templateFile = await this.downloadFile(this.taskParameters.csmFileLink);
             var template;
             try {
-                var template = JSON.parse(templateFile);
+                var template = JSON.parse(stripJsonComments(templateFile));
                 tl.debug("Loaded CSM File");
             }
             catch (error) {
