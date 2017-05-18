@@ -412,6 +412,7 @@
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "ServerEntryAlreadyExists": "ms-resource:loc.messages.ServerEntryAlreadyExists"
   }
 }

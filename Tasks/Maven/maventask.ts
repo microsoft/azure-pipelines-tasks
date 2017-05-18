@@ -17,15 +17,6 @@ import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
 import util = require('./mavenutil');
 
-import * as str from "string";
-import * as xml2js from "xml2js";
-import * as fse from "fs-extra";
-import * as cheerio from "cheerio";
-
-let stripbom = require('strip-bom');
-let base64 = require('base-64');
-let utf8 = require('utf8');
-
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -57,7 +48,6 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
-const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
 
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
@@ -127,18 +117,6 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
-function getSystemAccessToken(): string {
-    tl.debug("Getting credentials for local feeds");
-    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme === "OAuth") {
-        tl.debug("Got auth token");
-        return auth.parameters["AccessToken"];
-    }
-    else {
-        tl.warning("Could not determine credentials to use for Maven feed");
-    }
-}
-
 async function execBuild() {
     // Maven task orchestration occurs as follows:
     // 1. Check that Maven exists by executing it to retrieve its version.
@@ -160,7 +138,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
-    let settingsXmlFile: string = path.join(os.tmpdir(), 'settings.xml');
+    let settingsXmlFile: string = null;
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -170,15 +148,20 @@ async function execBuild() {
         .then(function (code) {
             tl.debug('checking to see if there are settings.xml in use');
             let options: RegExpMatchArray = mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g);
-            tl.debug('options=' + options);
             if (options) {
-                // TODO: remove settings from the command line and pass options later
+                settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+                mavenOptions = '';
                 for (let i = 0; i < options.length; ++i) {
-                    tl.debug('option[' + i + ']=' + options[i]);
                     if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                        let suppliedSettingsXml: string = options[i + 1];
+                        i++; // increment to the file name
+                        let suppliedSettingsXml: string = options[i];
                         tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
                         tl.debug('using settings file: ' + settingsXmlFile);
+                    } else {
+                        if (mavenOptions) {
+                            mavenOptions.concat(' ');
+                        }
+                        mavenOptions.concat(options[i]);
                     }
                 }
             }
@@ -193,7 +176,11 @@ async function execBuild() {
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
-            mvnRun.line('-s ' + settingsXmlFile);
+            if (settingsXmlFile) {
+                mvnRun.arg('-s');
+                mvnRun.arg(settingsXmlFile);
+            }
+            mvnRun.line(mavenOptions);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
             }
@@ -210,7 +197,7 @@ async function execBuild() {
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
             var env = process.env;
-            env[accessTokenEnvSetting] = base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
+            env[util.accessTokenEnvSetting] = util.getAuthenticationToken();
             return mvnRun.execSync({
                 env: env,
             }); // Run Maven with the user specified goals
