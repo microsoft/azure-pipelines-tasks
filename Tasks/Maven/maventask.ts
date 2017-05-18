@@ -15,9 +15,16 @@ import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
+import util = require('./mavenutil');
 
-var base64 = require('base-64');
-var utf8 = require('utf8');
+import * as str from "string";
+import * as xml2js from "xml2js";
+import * as fse from "fs-extra";
+import * as cheerio from "cheerio";
+
+let stripbom = require('strip-bom');
+let base64 = require('base-64');
+let utf8 = require('utf8');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -153,6 +160,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
+    let settingsXmlFile: string = 'settings.xml';
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -160,11 +168,34 @@ async function execBuild() {
             process.exit(1);
         })
         .then(function (code) {
+            tl.debug('checking to see if there are settings.xml in use');
+            if (mavenOptions && (mavenOptions.indexOf('-s ') || mavenOptions.indexOf('--settings '))) {
+                tl.debug('settings options are being used');
+                // tl.cp()
+            }
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, {
+                id: 'daystar-visualstudio.com-test',
+                configuration: {
+                    httpHeaders: {
+                        property: {
+                            name: "Authorization",
+                            value: 'Basic ${env.ENV_MAVEN_ACCESS_TOKEN}'
+                        }
+                    }
+                }
+            })
+        })
+        .fail(function (err) {
+            tl.debug('LUKE failed1: ' + err);
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {            
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
-            mvnRun.line(mavenOptions);
+            mvnRun.line('-s ' + settingsXmlFile);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
             }
@@ -180,21 +211,28 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
+            var env = process.env;
+            env[accessTokenEnvSetting] = base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
             return mvnRun.execSync({
-                cwd: null,
-                env: {
-                    accessTokenEnvSetting : base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()))
-                },
-                silent: true,
-                outStream: null,
-                errStream: null
+                // cwd: tl.cwd(),
+                env: env,
+                // silent: null,
+                // outStream: tl._outStream,
+                // errStream: tl._errStream,
+                // ignoreReturnCode: false,
+                // failOnStdErr: true
             }); // Run Maven with the user specified goals
         })
         .fail(function (err) {
+            tl.debug('LUKE failed2: ' + err);
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
+            tl.warning('code=' + JSON.stringify(code));
+            if (code && code['code'] != 0) {
+                userRunFailed = true;
+            }
             // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
 
             // The files won't be created if the build failed, and the user should probably fix their build first.
@@ -222,6 +260,7 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
                 if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
