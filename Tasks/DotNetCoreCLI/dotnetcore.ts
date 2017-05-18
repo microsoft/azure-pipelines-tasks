@@ -186,7 +186,7 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = ["**/*.csproj", "**/*.vbproj"];
+            projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
         var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
