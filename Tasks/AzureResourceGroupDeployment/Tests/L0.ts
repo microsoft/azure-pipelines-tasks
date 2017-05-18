@@ -456,8 +456,8 @@ describe('Azure Resource Group Deployment', function () {
     });
     it('Create or Update RG, failed on faulty CSM template file', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
-        process.env["csmFile"] = "\\faultyCSM.json";
-        process.env["csmParametersFile"] = "\\faultyCSM.json";
+        process.env["csmFile"] = "faultyCSM.json";
+        process.env["csmParametersFile"] = "faultyCSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -473,8 +473,8 @@ describe('Azure Resource Group Deployment', function () {
     });
     it('Create or Update RG, succeeded on CSM template file with comments', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
-        process.env["csmFile"] = "\\CSMwithComments.json";
-        process.env["csmParametersFile"] = "\\CSMwithComments.json";
+        process.env["csmFile"] = "CSMwithComments.json";
+        process.env["csmParametersFile"] = "CSMwithComments.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
