@@ -290,7 +290,7 @@ export class Deployments {
             return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
                 var statusCode = response.statusCode;
                 if (statusCode !== 200 && statusCode !== 400) {
-                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response.body)));
+                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
                 }
                 else {
                     resolve(new azureServiceClient.ApiResult(null, response.body));
