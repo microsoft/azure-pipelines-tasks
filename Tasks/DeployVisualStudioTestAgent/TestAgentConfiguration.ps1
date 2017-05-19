@@ -171,6 +171,8 @@
 
                 $rootFolder = $ScheduleObject.GetFolder('\') #'
                 $newTask = $rootFolder.RegisterTaskDefinition("DTA", $TaskDefinition, 6, '', '', 3)
+                Write-Verbose "Starting scheduled task" -Verbose
+                $rootFolder.DeleteTask("DTA", 0)
             }
             else {
                 # Windows 8 or above
