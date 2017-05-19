@@ -16,6 +16,16 @@ let utf8 = require('utf8');
 
 export const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
 
+const jcenterAuthInfo: any = {
+    id: 'jcenter',
+    url: 'https://jcenter.bintray.com/'
+};
+
+const mavenAuthInfo: any = {
+    id: 'maven',
+    url: 'http://repo1.maven.org/maven2'
+};
+
 function readXmlFileAsJson(filePath: string): Q.Promise<any> {
     return readFile(filePath, "utf-8")
         .then(convertXmlStringToJson);
@@ -29,15 +39,23 @@ function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
     return Q.nfcall<any>(xml2js.parseString, stripbom(xmlContent));
 }
 
-function writeJsonAsSettingsFile(filePath: string, jsonContent: any): Q.Promise<void> {
+function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string): Q.Promise<void> {
     let builder = new xml2js.Builder({
         pretty: true,
         headless: true,
-        rootName: 'settings'
+        rootName: rootName
     });
-    let xml = builder.buildObject(jsonContent.settings);
+    let xml = builder.buildObject(jsonContent);
     xml = str(xml).replaceAll("&#xD;", "").s;
     return writeFile(filePath, xml);
+}
+
+function writeJsonAsSettingsFile(filePath: string, jsonContent: any): Q.Promise<void> {
+    return writeJsonAsXmlFile(filePath, jsonContent.settings, 'settings');
+}
+
+export function writeJsonAsPomFile(filePath: string, jsonContent: any): Q.Promise<void> {
+    return writeJsonAsXmlFile(filePath, jsonContent.project, 'project');
 }
 
 function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
@@ -45,9 +63,7 @@ function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
     return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: "utf-8" });
 }
 
-function addServerToJson(obj: any, value: any): void {
-    const propName: string = 'server';
-
+function addPropToJson(obj: any, propName:string, value: any): void {
     if (typeof obj === 'undefined') {
         obj = {};
     }
@@ -76,8 +92,8 @@ function addServerToJson(obj: any, value: any): void {
         if (obj[propName] instanceof Array) {
             let existing = obj[propName].find(containsId);
             if (existing) {
-                tl.warning(tl.loc('ServerEntryAlreadyExists'));
-                tl.debug('Server entry: ' + value.id);
+                tl.warning(tl.loc('EntryAlreadyExists'));
+                tl.debug('Entry: ' + value.id);
             } else {
                 obj[propName].push(value);
             }
@@ -87,8 +103,8 @@ function addServerToJson(obj: any, value: any): void {
     } else if (obj instanceof Array) {
         let existing = obj.find(containsId); //o => o[propName].id === value.id);
         if (existing) {
-            tl.warning(tl.loc('ServerEntryAlreadyExists'));
-            tl.debug('Server entry: ' + value.id);
+            tl.warning(tl.loc('EntryAlreadyExists'));
+            tl.debug('Entry: ' + value.id);
         } else {
             let prop = {};
             prop[propName] = value;
@@ -115,7 +131,7 @@ function mavenSettingsJsonInsertServer (json: any, settingsXmlFile:string, serve
     if (!json.settings.servers) {
         json.settings.servers = {};
     }
-    addServerToJson(json.settings.servers, serverJson);
+    addPropToJson(json.settings.servers, 'server', serverJson);
     return writeJsonAsSettingsFile(settingsXmlFile, json);
 }
 
@@ -156,4 +172,43 @@ function getSystemAccessToken(): string {
 
 export function getAuthenticationToken() {
     return base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
+}
+
+function insertRepoJsonIntoPomJson(pomJson:any, repoJson:any) {
+    if (!pomJson) {
+        pomJson = {};
+    }
+    if (!pomJson.project || typeof pomJson.project === "string") {
+        pomJson.project = {};
+        pomJson.project.$['xmlns'] = 'http://maven.apache.org/POM/4.0.0';
+        pomJson.project.$['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance';
+        pomJson.project.$['xsi:schemaLocation'] = 'http://maven.apache.org/POM/1.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd';
+    }
+    if (!pomJson.project.repositories) {
+        pomJson.project.repositories = {};
+    }
+    addPropToJson(pomJson.project.repositories, 'repository', repoJson);
+}
+
+export function insertRepoIntoPomJson(pomJson:any, repoId:string, repoUrl:string) {
+    insertRepoJsonIntoPomJson(pomJson, {
+        id: repoId,
+        url: repoUrl
+    });
+}
+
+export function readPomAsJson(pomXmlFile:string): Q.Promise<any> {
+    tl.debug('reading POM.xml file=' + pomXmlFile);
+    return readXmlFileAsJson(pomXmlFile);
+}
+
+export function insertPublicReposIntoPom(pomJson:any, includeJCenter:boolean, includeMavenCentral:boolean) {
+    if (includeJCenter) {
+        tl.debug('inserting JCenter repo');
+        insertRepoJsonIntoPomJson(pomJson, jcenterAuthInfo);
+    }
+    if (includeMavenCentral) {
+        tl.debug('inserting Maven Central repo');
+        insertRepoJsonIntoPomJson(pomJson, mavenAuthInfo);
+    }
 }
