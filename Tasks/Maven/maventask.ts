@@ -28,7 +28,7 @@ var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);
 var mavenGoals: string[] = tl.getDelimitedInput('goals', ' ', true); // This assumes that goals cannot contain spaces
 var mavenOptions: string = tl.getInput('options', false); // Options can have spaces and quotes so we need to treat this as one string and not try to parse it
 var selectSources: string = tl.getInput('selectSources', true);
-var vstsFeedNames: string = tl.getInput('vstsFeedNames', false);
+var vstsFeedName: string = tl.getInput('vstsFeedNames', false);
 var includeMavenCentral: boolean = tl.getBoolInput('includeMavenCentral', false);
 var includeJCenter: boolean = tl.getBoolInput('includeJCenter', false);
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
@@ -142,7 +142,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
-    let settingsXmlFile: string = path.join(tl.cwd(), 'settings.xml'); //path.join(os.tmpdir(), 'settings.xml');
+    let settingsXmlFile: string = null;
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -150,10 +150,15 @@ async function execBuild() {
             process.exit(1);
         })
         .then(function (code) {
+            if (selectSources === 'PomSources') {
+                tl.debug('skipping authentication');
+                return Q.resolve(code);
+            }
+            settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+
             tl.debug('checking to see if there are settings.xml in use');
             let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
             if (options) {
-                // settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
                 mavenOptions = '';
                 for (let i = 0; i < options.length; ++i) {
                     if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
@@ -169,7 +174,8 @@ async function execBuild() {
                     }
                 }
             }
-            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, 'xplatalm-visualstudio.com-xplatmaven');
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, 
+                    tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true));
         })
         .fail(function (err) {
             console.error(err.message);
@@ -200,8 +206,10 @@ async function execBuild() {
             })
             .then(function (pomJson) {
                 tl.debug('writing repos to pom');
+                tl.debug('' + tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true));
                 util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
-                util.insertRepoIntoPomJson(pomJson, 'daystar-visualstudio.com-test', 'https://daystar.pkgs.visualstudio.com/_packaging/test/maven/v1');
+                util.insertRepoIntoPomJson(pomJson, tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true), 
+                    tl.getEndpointUrl(vstsFeedName, true));
                 return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
             })
         })
