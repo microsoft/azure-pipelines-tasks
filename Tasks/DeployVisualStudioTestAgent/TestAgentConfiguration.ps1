@@ -141,24 +141,51 @@
         
             throw "Unable to start DTAExecutionHost process"
         }
-        else
-        {
+        else {
             $dtaArgs = "DTA.AccessToken:$PersonalAccessToken DTA.AgentId:$($DtaAgent.Id) DTA.EnvironmentUri:$EnvironmentUrl DTA.TeamFoundationCollectionUri:$TfsCollection DTA.TestPlatformVersion:$TestAgentVersion"
-            $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
-            $trigger = New-ScheduledTaskTrigger -AtLogOn
-            $exePath = "$SetupPath\DTAExecutionHost.exe $dtaArgs"
-
-            Unregister-ScheduledTask -TaskName "DTA" -Confirm:$false -OutVariable out -ErrorVariable err -ErrorAction SilentlyContinue | Out-Null
-            Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "DTA" -Description "DTA UI" -RunLevel Highest -OutVariable out -ErrorVariable err | Out-Null
-            Write-Verbose "Registering scheduled task output: $out error: $err" -Verbose
             
-            Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
-            Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
-            Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
+            $osVersion = [environment]::OSVersion.Version
+            if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
+                ## Windows 7 SP1
+                $ScheduleObject = New-Object -ComObject Schedule.Service
+                $ScheduleObject.Connect()
 
+                $TaskDefinition = $ScheduleObject.NewTask(0) 
+                $TaskDefinition.RegistrationInfo.Description = "DTA UI"
+                $TaskDefinition.Settings.Enabled = $true
+                $TaskDefinition.Settings.AllowDemandStart = $true
+                $TaskDefinition.Settings.DisallowStartIfOnBatteries = $true
+                $TaskDefinition.Settings.StartWhenAvailable = $true
+
+                $triggers = $TaskDefinition.Triggers
+                $trigger = $triggers.Create(7) # Start task immediatly after creating/updating
+                $trigger.ExecutionTimeLimit = 'PT0S' # No time limit
+
+                $action = $TaskDefinition.Actions.Create(0)
+                $action.Path = "$SetupPath\DTAExecutionHost.exe"
+                $action.Arguments = $dtaArgs
+
+                $rootFolder = $ScheduleObject.GetFolder('\') #'
+                $newTask = $rootFolder.RegisterTaskDefinition("DTA", $TaskDefinition, 6, '', '', 3)
+            }
+            else {
+                # Windows 8 or above
+                $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
+                $trigger = New-ScheduledTaskTrigger -AtLogOn
+                $exePath = "$SetupPath\DTAExecutionHost.exe $dtaArgs"
+
+                Unregister-ScheduledTask -TaskName "DTA" -Confirm:$false -OutVariable out -ErrorVariable err -ErrorAction SilentlyContinue | Out-Null
+                Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "DTA" -Description "DTA UI" -RunLevel Highest -OutVariable out -ErrorVariable err | Out-Null
+                Write-Verbose "Registering scheduled task output: $out error: $err" -Verbose
+                
+                Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
+                Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
+                Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
+            }
+            
             $p = Get-Process -Name "DTAExecutionHost" -ErrorAction SilentlyContinue
-            if($p) {
-                return 0;
+            if ($p) {
+                return 0
             }
             
             throw "Unable to start DTAExecutionHost process"
