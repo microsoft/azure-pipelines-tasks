@@ -832,10 +832,11 @@ var getRefs = function () {
 
             var release = parseInt(branch.split('/').pop().substr(1));
 
-            // filter out releases less than 108 and greater than HEAD
+            // filter out releases less than 108 and greater than 121 (because releases/tfs2018rtw branched from releases/m122)
             if (release < 108 ||
-                release > (info.head.release || 999)) {
+                release > 121) {
 
+                console.log(`Skipping ${release} since it falls outside of [108..121].`)
                 return;
             }
 
