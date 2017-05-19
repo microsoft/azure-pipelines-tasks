@@ -10,7 +10,7 @@ class Utils {
             return error.message;
         }
 
-        return error;
+        return JSON.stringify(error);
     }
 }
 
