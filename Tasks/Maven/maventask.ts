@@ -27,6 +27,10 @@ var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
 var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);
 var mavenGoals: string[] = tl.getDelimitedInput('goals', ' ', true); // This assumes that goals cannot contain spaces
 var mavenOptions: string = tl.getInput('options', false); // Options can have spaces and quotes so we need to treat this as one string and not try to parse it
+var selectSources: string = tl.getInput('selectSources', true);
+var vstsFeedNames: string = tl.getInput('vstsFeedNames', false);
+var includeMavenCentral: boolean = tl.getBoolInput('includeMavenCentral', false);
+var includeJCenter: boolean = tl.getBoolInput('includeJCenter', false);
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
@@ -171,6 +175,40 @@ async function execBuild() {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
+        .then(function (code) {
+            if (selectSources === 'PomSources') {
+                tl.debug('Using only sources in the pom.xml file');
+                return Q.resolve(code);
+            }
+            
+            tl.debug('Insert repositories into pom');
+            let mavenPOMOrigFile:string = mavenPOMFile;
+            let mavenPOMExt: string = path.extname(mavenPOMOrigFile);
+            mavenPOMFile = path.join(path.dirname(mavenPOMOrigFile), path.basename(mavenPOMOrigFile)) + '-repo.';
+            let collision: number = 0;
+            let mavenPOMFileLast = mavenPOMFile;
+            while (tl.exist(mavenPOMFile + collision + mavenPOMExt)) {
+                collision++;
+            }
+            mavenPOMFile = mavenPOMFile + collision + mavenPOMExt; // Unique
+
+            tl.debug('Using pom file: ' + mavenPOMFile);
+            tl.cp(mavenPOMOrigFile, mavenPOMFile, '');
+            return util.readPomAsJson(mavenPOMOrigFile).fail(function (err) {
+                console.error(err.message);
+                userRunFailed = true; // Record the error and continue
+            })
+            .then(function (pomJson) {
+                tl.debug('writing repos to pom');
+                util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
+                util.insertRepoIntoPomJson(pomJson, 'daystar-visualstudio.com-test', 'https://daystar.pkgs.visualstudio.com/_packaging/test/maven/v1');
+                return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
+            })
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
         .then(function (code) {            
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
@@ -198,7 +236,6 @@ async function execBuild() {
             // 3. Run Maven. Compilation or test errors will cause this to fail.
             var env = process.env;
             env[util.accessTokenEnvSetting] = util.getAuthenticationToken();
-            tl.debug('Token=' + env[util.accessTokenEnvSetting]);
             return mvnRun.execSync({
                 env: env,
             }); // Run Maven with the user specified goals
