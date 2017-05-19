@@ -26,6 +26,11 @@
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
+            "name": "sourcesAndAuth",
+            "displayName": "Sources and authentication",
+            "isExpanded": true
+        },
+        {
             "name": "junitTestResults",
             "displayName": "JUnit Test Results",
             "isExpanded": true
@@ -56,6 +61,13 @@
             "helpMarkDown": "Relative path from the repository root to the Maven POM file."
         },
         {
+            "name": "goals",
+            "type": "string",
+            "label": "Goal(s)",
+            "defaultValue": "package",
+            "required": false
+        },
+        {
             "name": "options",
             "type": "string",
             "label": "Options",
@@ -63,11 +75,46 @@
             "required": false
         },
         {
-            "name": "goals",
+            "name": "selectSources",
+            "type": "pickList",
+            "label": "Select Sources",
+            "defaultValue" : "PomSources",
+            "groupName": "sourcesAndAuth",
+            "helpMarkDown": "Select the authentication",
+            "options": {
+                "PomSources": "Use only sources in pom.xml",
+                "OverrideSources": "Customize"
+            }
+        },
+        {
+            "name": "vstsFeedNames",
             "type": "string",
-            "label": "Goal(s)",
-            "defaultValue": "package",
-            "required": false
+            "label": "Include packages from this VSTS feed",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "sourcesAndAuth",
+            "helpMarkDown": "Comma separated list of feeds associated with this account",
+            "visibleRule": "selectSources = OverrideSources"
+        },
+        {
+            "name": "includeMavenCentral",
+            "type": "boolean",
+            "label": "Include packages from Maven Central",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "sourcesAndAuth",
+            "helpMarkDown": "",
+            "visibleRule": "selectSources = OverrideSources"
+        },
+        {
+            "name": "includeJCenter",
+            "type": "boolean",
+            "label": "Include packages from JCenter",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "sourcesAndAuth",
+            "helpMarkDown": "",
+            "visibleRule": "selectSources = OverrideSources"
         },
         {
             "name": "publishJUnitResults",
@@ -413,6 +460,6 @@
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
         "NoCodeCoverage": "No code coverage results were found to publish.",
-        "ServerEntryAlreadyExists": "The settings for the server feed already exists in the settings file."
+        "EntryAlreadyExists": "The settings for the feed or repo already exists in the xml file."
     }
 }
