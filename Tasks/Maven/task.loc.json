@@ -88,7 +88,7 @@
     },
     {
       "name": "vstsFeedNames",
-      "type": "string",
+      "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.vstsFeedNames",
       "required": false,
       "defaultValue": "",
