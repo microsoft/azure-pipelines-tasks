@@ -34,7 +34,7 @@
   "loc.input.label.vstestLocation": "Path to vstest.console.exe",
   "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
   "loc.input.label.runSettingsFile": "Settings file",
-  "loc.input.help.runSettingsFile": "Path to runsettings or testsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+  "loc.input.help.runSettingsFile": "Path to runsettings or testsettings file to use with the tests.",
   "loc.input.label.overrideTestrunParameters": "Override test run parameters",
   "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `-key1 value1 -key2 value2`",
   "loc.input.label.runInParallel": "Run tests in parallel on multi-core machines",
