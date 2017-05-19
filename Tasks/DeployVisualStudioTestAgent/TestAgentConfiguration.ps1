@@ -145,6 +145,10 @@
             $dtaArgs = "DTA.AccessToken:$PersonalAccessToken DTA.AgentId:$($DtaAgent.Id) DTA.EnvironmentUri:$EnvironmentUrl DTA.TeamFoundationCollectionUri:$TfsCollection DTA.TestPlatformVersion:$TestAgentVersion"
             
             $osVersion = [environment]::OSVersion.Version
+            if($osVersion.Major -lt "6" -or ($osVersion.Major -eq "6" -and $osVersion.Minor -lt "1")){
+                throw "Unsupported Windows operating system"
+            }
+
             if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
                 ## Windows 7 SP1
                 $ScheduleObject = New-Object -ComObject Schedule.Service
@@ -183,6 +187,8 @@
                 Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
             }
             
+            Start-Sleep -Seconds 10
+
             $p = Get-Process -Name "DTAExecutionHost" -ErrorAction SilentlyContinue
             if ($p) {
                 return 0
