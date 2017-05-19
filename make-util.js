@@ -832,10 +832,11 @@ var getRefs = function () {
 
             var release = parseInt(branch.split('/').pop().substr(1));
 
-            // filter out releases less than 108 and greater than HEAD
+            // filter out releases less than 108 and greater than 116 (because releases/dev15tfsu2rc1 branched from releases/m117)
             if (release < 108 ||
-                release > (info.head.release || 999)) {
+                release > 116) {
 
+                console.log(`Skipping ${release} since it falls outside of [108..116].`)
                 return;
             }
 
