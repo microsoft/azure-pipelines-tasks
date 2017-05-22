@@ -5,10 +5,10 @@ import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 
-import * as str from "string";
-import * as xml2js from "xml2js";
-import * as fse from "fs-extra";
-import * as cheerio from "cheerio";
+import * as str from 'string';
+import * as xml2js from 'xml2js';
+import * as fse from 'fs-extra';
+import * as cheerio from 'cheerio';
 
 let stripbom = require('strip-bom');
 let base64 = require('base-64');
@@ -27,7 +27,7 @@ const mavenAuthInfo: any = {
 };
 
 function readXmlFileAsJson(filePath: string): Q.Promise<any> {
-    return readFile(filePath, "utf-8")
+    return readFile(filePath, 'utf-8')
         .then(convertXmlStringToJson);
 }
 
@@ -46,7 +46,7 @@ function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string)
         rootName: rootName
     });
     let xml = builder.buildObject(jsonContent);
-    xml = str(xml).replaceAll("&#xD;", "").s;
+    xml = str(xml).replaceAll('&#xD;', '').s;
     return writeFile(filePath, xml);
 }
 
@@ -60,7 +60,7 @@ export function writeJsonAsPomFile(filePath: string, jsonContent: any): Q.Promis
 
 function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
     fse.mkdirpSync(path.dirname(filePath));
-    return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: "utf-8" });
+    return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: 'utf-8' });
 }
 
 function addPropToJson(obj: any, propName:string, value: any): void {
@@ -79,8 +79,8 @@ function addPropToJson(obj: any, propName:string, value: any): void {
         if (value && value.id) {
             if (o.id instanceof Array) {
                 return o.id.find((v) => {
-                        return v === value.id;
-                    });
+                    return v === value.id;
+                });
             } else {
                 return value.id === o.id;
             }
@@ -97,11 +97,15 @@ function addPropToJson(obj: any, propName:string, value: any): void {
             } else {
                 obj[propName].push(value);
             }
-        } else if (typeof obj[propName] !== "object") {
+        } else if (typeof obj[propName] !== 'object') {
+            obj[propName] = [obj[propName], value];
+        } else {
+            let prop = {};
+            prop[propName] = value;
             obj[propName] = [obj[propName], value];
         }
     } else if (obj instanceof Array) {
-        let existing = obj.find(containsId); //o => o[propName].id === value.id);
+        let existing = obj.find(containsId);
         if (existing) {
             tl.warning(tl.loc('EntryAlreadyExists'));
             tl.debug('Entry: ' + value.id);
@@ -124,10 +128,10 @@ function mavenSettingsJsonInsertServer (json: any, settingsXmlFile:string, serve
     }
     if (!json.settings.$) {
         json.settings.$ = {};
+        json.settings.$['xmlns'] = 'http://maven.apache.org/SETTINGS/1.0.0';
+        json.settings.$['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance';
+        json.settings.$['xsi:schemaLocation'] = 'http://maven.apache.org/SETTINGS/1.0.0' + os.EOL + 'https://maven.apache.org/xsd/settings-1.0.0.xsd';
     }
-    json.settings.$['xmlns'] = 'http://maven.apache.org/SETTINGS/1.0.0';
-    json.settings.$['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance';
-    json.settings.$['xsi:schemaLocation'] = 'http://maven.apache.org/SETTINGS/1.0.0' + os.EOL + 'https://maven.apache.org/xsd/settings-1.0.0.xsd';
     if (!json.settings.servers) {
         json.settings.servers = {};
     }
@@ -158,15 +162,16 @@ export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, se
     });
 }
 
+// TODO: refactor this method out from NPM, NuGet and Maven into a common module
 function getSystemAccessToken(): string {
-    tl.debug("Getting credentials for local feeds");
-    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme === "OAuth") {
-        tl.debug("Got auth token");
-        return auth.parameters["AccessToken"];
+    tl.debug('Getting credentials for local feeds');
+    let auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+    if (auth.scheme === 'OAuth') {
+        tl.debug('Got auth token');
+        return auth.parameters['AccessToken'];
     }
     else {
-        tl.warning("Could not determine credentials to use for Maven feed");
+        tl.warning(tl.loc('FeedTokenUnavailable'));
     }
 }
 

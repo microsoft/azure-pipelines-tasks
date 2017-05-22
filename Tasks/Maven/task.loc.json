@@ -460,6 +460,7 @@
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
-    "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists"
+    "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
+    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable"
   }
 }
