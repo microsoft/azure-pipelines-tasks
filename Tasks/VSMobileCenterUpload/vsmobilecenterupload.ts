@@ -361,6 +361,13 @@ async function run() {
 
         let appSlug: string = tl.getInput('appSlug', true);
         let appFilePattern: string = tl.getInput('app', true);
+
+        /* The task has support for different symbol types but Mobile Center server only support Apple currently, add back these types in the task.json when support is available in Mobile Center.
+        "AndroidJava": "Android (Java)",
+        "AndroidNative": "Android (native C/C++)",
+        "Windows": "Windows 8.1",
+        "UWP": "Universal Windows Platform (UWP)"
+        */
         let symbolsType: string = tl.getInput('symbolsType', false);
         let symbolVariableName = null;
         switch (symbolsType) {
