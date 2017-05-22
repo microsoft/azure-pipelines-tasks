@@ -76,14 +76,14 @@
     },
     {
       "name": "selectSources",
-      "type": "pickList",
+      "type": "radio",
       "label": "ms-resource:loc.input.label.selectSources",
-      "defaultValue": "PomSources",
+      "defaultValue": "PomXmlOnlySources",
       "groupName": "sourcesAndAuth",
       "helpMarkDown": "ms-resource:loc.input.help.selectSources",
       "options": {
-        "PomSources": "Use only sources in pom.xml",
-        "OverrideSources": "Customize"
+        "PomXmlOnlySources": "sources in pom.xml",
+        "CustomizeSources": "Feed(s) I select here"
       }
     },
     {
@@ -94,7 +94,7 @@
       "defaultValue": "",
       "groupName": "sourcesAndAuth",
       "helpMarkDown": "ms-resource:loc.input.help.vstsFeedNames",
-      "visibleRule": "selectSources = OverrideSources"
+      "visibleRule": "selectSources = CustomizeSources"
     },
     {
       "name": "includeMavenCentral",
@@ -104,7 +104,7 @@
       "defaultValue": "false",
       "groupName": "sourcesAndAuth",
       "helpMarkDown": "ms-resource:loc.input.help.includeMavenCentral",
-      "visibleRule": "selectSources = OverrideSources"
+      "visibleRule": "selectSources = CustomizeSources"
     },
     {
       "name": "includeJCenter",
@@ -114,7 +114,7 @@
       "defaultValue": "false",
       "groupName": "sourcesAndAuth",
       "helpMarkDown": "ms-resource:loc.input.help.includeJCenter",
-      "visibleRule": "selectSources = OverrideSources"
+      "visibleRule": "selectSources = CustomizeSources"
     },
     {
       "name": "publishJUnitResults",
