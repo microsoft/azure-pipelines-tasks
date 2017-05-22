@@ -26,6 +26,8 @@ const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirec
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
 let resultsDirectory = null;
+let resolvedRunSettingsFilePath: string = undefined;
+let resolvedCustomAdaptersPath: string = undefined;
 
 export function startTest() {
     try {
@@ -36,8 +38,12 @@ export function startTest() {
 
         tiaConfig = vstestConfig.tiaConfig;
 
+        // We need to resolve the path of directory inputs like the run settings file and the custom adapters path
+        resolvedRunSettingsFilePath = path.resolve(vstestConfig.settingsFile);
+        resolvedCustomAdaptersPath = path.resolve(vstestConfig.pathtoCustomTestAdapters);
+
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
-        resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
+        resultsDirectory = getTestResultsDirectory(resolvedRunSettingsFilePath, path.join(workingDirectory, 'TestResults'));
         tl.debug('TestRunResults Directory : ' + resultsDirectory);
 
         // clean up old testResults
@@ -133,12 +139,12 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     argsArray.push('/logger:trx');
-    if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
+    if (isNullOrWhitespace(resolvedCustomAdaptersPath)) {
         if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
                 argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
             }
     } else {
-        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
+        argsArray.push('/TestAdapterPath:\"' + resolvedCustomAdaptersPath + '\"');
     }
 
     if (isDebugEnabled()) {
@@ -493,17 +499,17 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     if (vstestConfig.testcaseFilter) {
         argsArray.push('/TestCaseFilter:' + vstestConfig.testcaseFilter);
     }
-    if (vstestConfig.pathtoCustomTestAdapters) {
-        if (pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
-            argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
+    if (resolvedCustomAdaptersPath) {
+        if (pathExistsAsDirectory(resolvedCustomAdaptersPath)) {
+            argsArray.push('/TestAdapterPath:\"' + resolvedCustomAdaptersPath + '\"');
         } else {
-            argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
+            argsArray.push('/TestAdapterPath:\"' + path.dirname(resolvedCustomAdaptersPath) + '\"');
         }
     } else if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
         argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
     }
 
-    if (vstestConfig.pathtoCustomTestAdapters && vstestConfig.pathtoCustomTestAdapters.toLowerCase().indexOf('usevsixextensions:true') !== -1) {
+    if (resolvedCustomAdaptersPath && resolvedCustomAdaptersPath.toLowerCase().indexOf('usevsixextensions:true') !== -1) {
         argsArray.push('/UseVsixExtensions:true');
     }
 
@@ -770,7 +776,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 
     setRunInParallellIfApplicable();
 
-    let newSettingsFile = vstestConfig.settingsFile;
+    let newSettingsFile = resolvedRunSettingsFilePath;
     const vsVersion = vstestConfig.vsTestVersionDetais.majorVersion;
 
     if (newSettingsFile) {
@@ -782,7 +788,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     try {
-        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters).
+        settingsHelper.updateSettingsFileAsRequired(resolvedRunSettingsFilePath, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters).
             then(function (ret) {
                 newSettingsFile = ret;
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
@@ -825,7 +831,7 @@ function publishTestResults(testResultsDirectory: string) {
 
 function cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
-    if (temporarySettingsFile && vstestConfig.settingsFile !== temporarySettingsFile) {
+    if (temporarySettingsFile && resolvedRunSettingsFilePath !== temporarySettingsFile) {
         try {
             tl.rmRF(temporarySettingsFile, true);
         } catch (error) {
