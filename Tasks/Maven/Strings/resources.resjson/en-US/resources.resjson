@@ -15,9 +15,11 @@
   "loc.input.label.selectSources": "Select Sources",
   "loc.input.help.selectSources": "Select the authentication",
   "loc.input.label.vstsFeedNames": "Include packages from this VSTS feed",
-  "loc.input.help.vstsFeedNames": "Comma separated list of feeds associated with this account",
+  "loc.input.help.vstsFeedNames": "Feed name (username) and url account.",
   "loc.input.label.includeMavenCentral": "Include packages from Maven Central",
+  "loc.input.help.includeMavenCentral": "Include support for the repository from Maven Central.",
   "loc.input.label.includeJCenter": "Include packages from JCenter",
+  "loc.input.help.includeJCenter": "Include support for the repository from JCenter.",
   "loc.input.label.publishJUnitResults": "Publish to TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Select this option to publish JUnit test results produced by the Maven build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services.",
   "loc.input.label.testResultsFiles": "Test Results Files",
@@ -109,6 +111,6 @@
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
   "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
   "loc.messages.NoCodeCoverage": "No code coverage results were found to publish.",
-  "loc.messages.EntryAlreadyExists": "The settings for the feed or repo already exists in the xml file.",
-  "loc.messages.FeedTokenUnavailable": "Could not determine credentials to use for Maven feed"
+  "loc.messages.EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
+  "loc.messages.FeedTokenUnavailable": "Could not determine credentials to use for Maven feed."
 }

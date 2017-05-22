@@ -103,7 +103,7 @@
       "required": false,
       "defaultValue": "false",
       "groupName": "sourcesAndAuth",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.includeMavenCentral",
       "visibleRule": "selectSources = OverrideSources"
     },
     {
@@ -113,7 +113,7 @@
       "required": false,
       "defaultValue": "false",
       "groupName": "sourcesAndAuth",
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.includeJCenter",
       "visibleRule": "selectSources = OverrideSources"
     },
     {
