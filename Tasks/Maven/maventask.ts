@@ -206,9 +206,9 @@ async function execBuild() {
             })
             .then(function (pomJson) {
                 tl.debug('writing repos to pom');
-                tl.debug('' + tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true));
                 util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
-                util.insertRepoIntoPomJson(pomJson, tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true), 
+                util.insertRepoIntoPomJson(pomJson, 
+                    tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true), 
                     tl.getEndpointUrl(vstsFeedName, true));
                 return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
             })
