@@ -151,7 +151,7 @@ async function execBuild() {
         })
         .then(function (code) {
             if (selectSources === 'PomSources') {
-                tl.debug('skipping authentication');
+                tl.debug('using pom.xml; skipping task authentication');
                 return Q.resolve(code);
             }
             settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
