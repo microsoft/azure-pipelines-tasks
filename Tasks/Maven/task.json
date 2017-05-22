@@ -93,7 +93,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "sourcesAndAuth",
-            "helpMarkDown": "Comma separated list of feeds associated with this account",
+            "helpMarkDown": "Feed name (username) and url account.",
             "visibleRule": "selectSources = OverrideSources"
         },
         {
@@ -103,7 +103,7 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "sourcesAndAuth",
-            "helpMarkDown": "",
+            "helpMarkDown": "Include support for the repository from Maven Central.",
             "visibleRule": "selectSources = OverrideSources"
         },
         {
@@ -113,7 +113,7 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "sourcesAndAuth",
-            "helpMarkDown": "",
+            "helpMarkDown": "Include support for the repository from JCenter.",
             "visibleRule": "selectSources = OverrideSources"
         },
         {
@@ -460,7 +460,7 @@
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
         "NoCodeCoverage": "No code coverage results were found to publish.",
-        "EntryAlreadyExists": "The settings for the feed or repo already exists in the xml file.",
-        "FeedTokenUnavailable": "Could not determine credentials to use for Maven feed"
+        "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
+        "FeedTokenUnavailable": "Could not determine credentials to use for Maven feed."
     }
 }
