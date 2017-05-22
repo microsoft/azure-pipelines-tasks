@@ -1069,4 +1069,56 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
+
+    it('Vstest search folder field supports double dots', (done) => {
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', '/logger:trx'].join(' ');
+        setResponseFile('vstestGood.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');       
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('searchFolder','E:\\source\\dir\\..');        
+
+        tr.run()
+            .then(() => {                
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.search(/Searching for test assemblies in: E:\\source/) >= 0, 'searching in the wrong path');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Vstest search folder field supports single dots', (done) => {
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', '/logger:trx'].join(' ');
+        setResponseFile('vstestGood.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');       
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('searchFolder','E:\\source\\.\\dir');        
+
+        tr.run()
+            .then(() => {                
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.search(/Searching for test assemblies in: E:\\source\\dir/) >= 0, 'searching in the wrong path');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
 });

@@ -84,8 +84,10 @@ function getTestAssemblies(): string[] {
         tl.debug('Search directory empty, defaulting to ' + vstestConfig.testDropLocation);
     }
 
-    tl.debug('Searching for test assemblies in: ' + vstestConfig.testDropLocation);
-    return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
+    tl.debug("Resolving the test drop location");
+    let resolvedPath = path.resolve(vstestConfig.testDropLocation);
+    tl.debug("Searching for test assemblies in: " + resolvedPath);    
+    return tl.findMatch(resolvedPath, vstestConfig.sourceFilter);
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
