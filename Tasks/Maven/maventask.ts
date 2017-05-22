@@ -150,7 +150,7 @@ async function execBuild() {
             process.exit(1);
         })
         .then(function (code) {
-            if (selectSources === 'PomSources') {
+            if (selectSources === 'PomXmlOnlySources') {
                 tl.debug('using pom.xml; skipping task authentication');
                 return Q.resolve(code);
             }
@@ -182,7 +182,7 @@ async function execBuild() {
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
-            if (selectSources === 'PomSources') {
+            if (selectSources === 'PomXmlOnlySources') {
                 tl.debug('Using only sources in the pom.xml file');
                 return Q.resolve(code);
             }
