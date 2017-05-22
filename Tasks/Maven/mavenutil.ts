@@ -198,7 +198,13 @@ function insertRepoJsonIntoPomJson(pomJson:any, repoJson:any) {
 export function insertRepoIntoPomJson(pomJson:any, repoId:string, repoUrl:string) {
     insertRepoJsonIntoPomJson(pomJson, {
         id: repoId,
-        url: repoUrl
+        url: repoUrl,
+        releases: {
+            enabled: true
+        },
+        snapshots: {
+            enabled: true
+        }
     });
 }
 
