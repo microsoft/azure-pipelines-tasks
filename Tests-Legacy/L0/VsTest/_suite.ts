@@ -1055,6 +1055,9 @@ describe('VsTest Suite', function () {
         modifiedString = utils.Helper.modifyArgument("/settings:c:\\a b\\1.settings");
         assert.equal(modifiedString, '/settings:\"c:\\a b\\1.settings\"', "string doesnt match");
 
+        modifiedString = utils.Helper.modifyArgument('/settings:\"c:\\a b\\1.settings\"');
+        assert.equal(modifiedString, '/settings:\"c:\\a b\\1.settings\"', "string doesnt match");
+
         modifiedString = utils.Helper.modifyArgument("/logger:trx");
         assert.equal(modifiedString, '/logger:\"trx\"', "string doesnt match");
 
