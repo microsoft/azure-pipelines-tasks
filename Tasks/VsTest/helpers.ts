@@ -125,13 +125,13 @@ export class Helper {
         });
     }
 
-    public static modifyArgument(argument: string): string {
+    public static modifyVsTestConsoleArgsForResponseFile(argument: string): string {
         if (argument) {
             if (!argument.startsWith('/')) {
                 return '\"' + argument + '\"';
             } else {
                 // we need to add quotes to args we are passing after : as the arg value can have spaces
-                // we dont need to chnages the guy who is creating the args as toolrunner already takes care of this
+                // we dont need to changes the guy who is creating the args as toolrunner already takes care of this
                 // for response file we need to take care of this ourselves
                 // eg: /settings:c:\a b\1.settings should become /settings:"C:\a b\1.settings"
                 let indexOfColon = argument.indexOf(':'); // find if args has ':'
