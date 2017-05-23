@@ -110,10 +110,10 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
     if (settingsFile) {
         if (pathExistsAsFile(settingsFile)) {
-            argsArray.push('/Settings:' + addQuotes(settingsFile));
+            argsArray.push('/Settings:' + settingsFile);
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ');
-                utils.Helper.printMultiLineLog(settings, (logLine) => {tl._outStream.write('##vso[task.debug]' + logLine);});
+                utils.Helper.printMultiLineLog(settings, (logLine) => { tl._outStream.write('##vso[task.debug]' + logLine); });
             });
         } else {
             if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
@@ -133,25 +133,21 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     argsArray.push('/logger:trx');
     if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
         if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-                argsArray.push('/TestAdapterPath:' + addQuotes(systemDefaultWorkingDirectory));
-            }
+            argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+        }
     } else {
-        argsArray.push('/TestAdapterPath:' + addQuotes(vstestConfig.pathtoCustomTestAdapters));
+        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
 
     if (isDebugEnabled()) {
         if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.vstestDiagSupported()) {
-            argsArray.push('/diag:' + addQuotes(vstestConfig.vstestDiagFile));
+            argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
         }
     }
 
     return argsArray;
-}
-
-function addQuotes(someString: string): string {
-    return '\"' + someString + '\"';
 }
 
 function isDebugEnabled(): boolean {
@@ -165,7 +161,7 @@ function isDebugEnabled(): boolean {
 
 function addVstestArgs(argsArray: string[], vstest: any) {
     argsArray.forEach(function (arr: any) {
-            vstest.arg(arr);
+        vstest.arg(arr);
     });
 }
 
@@ -174,6 +170,17 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
     argsArray.forEach(function (arr, i) {
         if (!arr.startsWith('/')) {
             argsArray[i] = '\"' + arr + '\"';
+        } else {
+            // we need to add quotes to args we are passing after : as the arg value can have spaces
+            // we dont need to chnages the guy who is creating the args as toolrunner already takes care of this
+            // for response file we need to take care of this ourselves
+            // eg: /settings:c:\a b\1.settings should become /settings:"C:\a b\1.settings"
+            let indexOfColon = arr.indexOf(':'); // find if args has ':'
+            if (indexOfColon > 0 && arr[indexOfColon + 1] !== '\"') { // only process when quotes are not there
+                let modifyString = arr.substring(0, indexOfColon + 1); // get string till colon
+                modifyString = modifyString + '\"' + arr.substring(indexOfColon + 1) + '\"'; // append '"' and rest of the string
+                argsArray[i] = modifyString;
+            }
         }
     });
     fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
