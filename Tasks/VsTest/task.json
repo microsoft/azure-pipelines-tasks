@@ -399,6 +399,7 @@
         "vstestLocationSpecified": "%s, specified location : %s",
         "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
         "pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and it should exist.",
-        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
+        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
+        "ResolveSearchFolder": "Resolving the path to test drop location"
     }
 }

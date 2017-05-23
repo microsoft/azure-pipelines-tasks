@@ -39,8 +39,17 @@ export function startTest() {
         tiaConfig = vstestConfig.tiaConfig;
 
         // We need to resolve the path of directory inputs like the run settings file and the custom adapters path
-        resolvedRunSettingsFilePath = path.resolve(vstestConfig.settingsFile);
-        resolvedCustomAdaptersPath = path.resolve(vstestConfig.pathtoCustomTestAdapters);
+        if (!isNullOrWhitespace(vstestConfig.settingsFile))
+        {
+            resolvedRunSettingsFilePath = path.resolve(vstestConfig.settingsFile);
+            tl.debug('Resolved path for Run Settings file:' + resolvedRunSettingsFilePath);
+        }
+
+        if (!isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters))
+        {
+            resolvedCustomAdaptersPath = path.resolve(vstestConfig.pathtoCustomTestAdapters);
+            tl.debug('Resolved path for Custom Adapters: ' + resolvedCustomAdaptersPath);
+        }
 
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(resolvedRunSettingsFilePath, path.join(workingDirectory, 'TestResults'));
@@ -90,7 +99,7 @@ function getTestAssemblies(): string[] {
         tl.debug('Search directory empty, defaulting to ' + vstestConfig.testDropLocation);
     }
 
-    tl.debug("Resolving the test drop location");
+    tl.debug(tl.loc("ResolveSearchFolder"));
     let resolvedPath = path.resolve(vstestConfig.testDropLocation);
     tl.debug("Searching for test assemblies in: " + resolvedPath);    
     return tl.findMatch(resolvedPath, vstestConfig.sourceFilter);
