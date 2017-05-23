@@ -110,7 +110,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
     if (settingsFile) {
         if (pathExistsAsFile(settingsFile)) {
-            argsArray.push('/Settings:' + settingsFile);
+            argsArray.push('/Settings:' + addQuotes(settingsFile));
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ');
                 utils.Helper.printMultiLineLog(settings, (logLine) => {tl._outStream.write('##vso[task.debug]' + logLine);});
@@ -133,21 +133,25 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     argsArray.push('/logger:trx');
     if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
         if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-                argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+                argsArray.push('/TestAdapterPath:' + addQuotes(systemDefaultWorkingDirectory));
             }
     } else {
-        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
+        argsArray.push('/TestAdapterPath:' + addQuotes(vstestConfig.pathtoCustomTestAdapters));
     }
 
     if (isDebugEnabled()) {
         if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.vstestDiagSupported()) {
-            argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
+            argsArray.push('/diag:' + addQuotes(vstestConfig.vstestDiagFile));
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
         }
     }
 
     return argsArray;
+}
+
+function addQuotes(someString: string): string {
+    return '\"' + someString + '\"';
 }
 
 function isDebugEnabled(): boolean {
