@@ -167,9 +167,7 @@ function addVstestArgs(argsArray: string[], vstest: any) {
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
     const defer = Q.defer<string>();
     argsArray.forEach(function (arr, i) {
-        if (!arr.startsWith('/')) {
-            argsArray[i] = '\"' + arr + '\"';
-        }
+        argsArray[i] = utils.Helper.modifyArgument(arr);
     });
     fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
         if (err) {
