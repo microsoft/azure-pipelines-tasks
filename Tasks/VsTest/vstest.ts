@@ -168,20 +168,7 @@ function addVstestArgs(argsArray: string[], vstest: any) {
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
     const defer = Q.defer<string>();
     argsArray.forEach(function (arr, i) {
-        if (!arr.startsWith('/')) {
-            argsArray[i] = '\"' + arr + '\"';
-        } else {
-            // we need to add quotes to args we are passing after : as the arg value can have spaces
-            // we dont need to chnages the guy who is creating the args as toolrunner already takes care of this
-            // for response file we need to take care of this ourselves
-            // eg: /settings:c:\a b\1.settings should become /settings:"C:\a b\1.settings"
-            let indexOfColon = arr.indexOf(':'); // find if args has ':'
-            if (indexOfColon > 0 && arr[indexOfColon + 1] !== '\"') { // only process when quotes are not there
-                let modifyString = arr.substring(0, indexOfColon + 1); // get string till colon
-                modifyString = modifyString + '\"' + arr.substring(indexOfColon + 1) + '\"'; // append '"' and rest of the string
-                argsArray[i] = modifyString;
-            }
-        }
+        argsArray[i] = utils.Helper.modifyArgument(arr);
     });
     fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
         if (err) {

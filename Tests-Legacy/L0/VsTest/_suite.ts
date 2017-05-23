@@ -12,8 +12,9 @@ import * as mockHelper from '../../lib/mockHelper';
 import * as fs from 'fs';
 
 const settingsHelper = require('../../../Tasks/VSTest/settingshelper');
+const vstest = require('../../../Tasks/VSTest/vstest');
 let xml2js = require('../../../Tasks/VSTest/node_modules/xml2js');
-const utils = require( '../../../Tasks/VSTest/helpers');
+const utils = require('../../../Tasks/VSTest/helpers');
 
 //const xml2js = require('xml2js');
 let psr = null;
@@ -166,7 +167,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');       
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -198,7 +199,6 @@ describe('VsTest Suite', function () {
 
         tr.run()
             .then(() => {
-                console.log(tr.stdout);
                 assert(tr.resultWasSet, 'task should have set a result' + tr.stderr + tr.stdout);
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr + tr.stdout);
                 assert(tr.succeeded, 'task should have succeeded');
@@ -240,7 +240,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');       
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern\n!/source/dir/some/*excludePattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -315,7 +315,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestSucceedsOnIgnoreFailure.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');            
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -340,7 +340,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('testFiltercriteria', 'testFilter');
         tr.setInput('vstestLocationMethod', 'version');
@@ -366,7 +366,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');                
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('codeCoverageEnabled', 'true');
         tr.setInput('vstestLocationMethod', 'version');
@@ -729,7 +729,7 @@ describe('VsTest Suite', function () {
         setResponseFile(path.basename(newResponseFilePath));
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -744,7 +744,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-});
+    });
 
     it('Vstest task should not use diag option when system.debug is not set', (done) => {
 
@@ -752,9 +752,9 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
-        tr.setInput('vstestLocationMethod', 'version');        
+        tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.run()
             .then(() => {
@@ -778,7 +778,7 @@ describe('VsTest Suite', function () {
         const tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
-        tr.setInput('vstestLocationMethod', 'version'); 
+        tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.run()
             .then(() => {
@@ -800,7 +800,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestRM.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/artifacts/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -815,8 +815,8 @@ describe('VsTest Suite', function () {
                 done();
             })
             .fail((err) => {
-				console.log(tr.stdout);
-				console.log(err);
+                console.log(tr.stdout);
+                console.log(err);
                 done(err);
             });
     });
@@ -913,11 +913,11 @@ describe('VsTest Suite', function () {
         tr.setInput('codeCoverageEnabled', 'true');
 
         tr.run()
-            .then(() => {                
+            .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.failed, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.indexOf('running vstest with other console duplicate params..') >= 0, 'should have proper console output.');                
+                assert(tr.stdout.indexOf('running vstest with other console duplicate params..') >= 0, 'should have proper console output.');
                 assert(tr.stdout.indexOf('The parameter \"/EnableCodeCoverage\" should be provided only once.') >= 0, 'should have code coverage duplicate issue.');
                 assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: \\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe failed with return code: 1') >= 0, 'should have proper error message.');
                 done();
@@ -931,13 +931,13 @@ describe('VsTest Suite', function () {
     it('RunInParallel enabled with no settings file given', (done) => {
         try {
             settingsHelper.updateSettingsFileAsRequired(undefined, true, { tiaEnabled: false }, undefined, false, undefined)
-                      .then(function (settingsXml: string) {
-                            utils.Helper.getXmlContents(settingsXml)
-                            .then(function(settings){
-                                assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly');
-                                done();
-                            });
-                      });
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly');
+                            done();
+                        });
+                });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
             done(error);
@@ -948,13 +948,13 @@ describe('VsTest Suite', function () {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'Invalid.runsettings');
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
-                      .then(function (settingsXml: string) {
-                            utils.Helper.getXmlContents(settingsXml)
-                            .then(function(settings){
-                                assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly');
-                                done();
-                            });
-                      });
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly');
+                            done();
+                        });
+                });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
             done(error);
@@ -965,13 +965,13 @@ describe('VsTest Suite', function () {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutRunConfiguration.runsettings');
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
-                      .then(function (settingsXml: string) {
-                            utils.Helper.getXmlContents(settingsXml)
-                            .then(function(settings){
-                                assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'RunInparallel setting not set properly');
-                                done();
-                            });
-                      });
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'RunInparallel setting not set properly');
+                            done();
+                        });
+                });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
             done(error);
@@ -982,14 +982,14 @@ describe('VsTest Suite', function () {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutMaxCpuCountNode.runsettings');
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
-                      .then(function (settingsXml: string) {
-                            utils.Helper.getXmlContents(settingsXml)
-                            .then(function(settings){
-                                assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'RunInparallel setting not set properly');
-                                assert.equal(settings.RunSettings.RunConfiguration[0].TargetFrameworkVersion, 'Framework40', 'RunInparallel should delete any other existing settings')
-                                done();
-                            });
-                      });
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'RunInparallel setting not set properly');
+                            assert.equal(settings.RunSettings.RunConfiguration[0].TargetFrameworkVersion, 'Framework40', 'RunInparallel should delete any other existing settings')
+                            done();
+                        });
+                });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
             done(error);
@@ -1000,13 +1000,13 @@ describe('VsTest Suite', function () {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithMaxCpuCountAs1.runsettings');
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, undefined)
-                      .then(function (settingsXml: string) {
-                            utils.Helper.getXmlContents(settingsXml)
-                            .then(function(settings){
-                                assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly');
-                                done();
-                            });
-                      });
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly');
+                            done();
+                        });
+                });
         } catch (error) {
             assert.fail('updateSettingsFileAsRequired failed');
             done(error);
@@ -1046,6 +1046,25 @@ describe('VsTest Suite', function () {
         }
     });
 
+    it('modifiedString test', (done) => {
+        let modifiedString = utils.Helper.modifyArgument("somestring");
+        assert.equal(modifiedString, "\"somestring\"", "string doesnt match");
+
+        modifiedString = utils.Helper.modifyArgument("some string.dll");
+        assert.equal(modifiedString, "\"some string.dll\"", "string doesnt match");
+
+        modifiedString = utils.Helper.modifyArgument("/settings:c:\\a b\\1.settings");
+        assert.equal(modifiedString, '/settings:\"c:\\a b\\1.settings\"', "string doesnt match");
+
+        modifiedString = utils.Helper.modifyArgument("/logger:trx");
+        assert.equal(modifiedString, '/logger:\"trx\"', "string doesnt match");
+
+        modifiedString = utils.Helper.modifyArgument(null);
+        assert.equal(modifiedString, null, "string doesnt match");
+
+        done();
+    });
+
     it('Vstest should throw proper error for invalid vstest.console.exe location', (done) => {
 
         setResponseFile('vstestInvalidVstestPath.json');
@@ -1060,8 +1079,8 @@ describe('VsTest Suite', function () {
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stdout.indexOf('The location of \'vstest.console.exe\' specified \'C:/vstest.console.exe\' does not exist.') >= 0, 
-                'should throw invalid path error');
+                assert(tr.stdout.indexOf('The location of \'vstest.console.exe\' specified \'C:/vstest.console.exe\' does not exist.') >= 0,
+                    'should throw invalid path error');
                 done();
             })
             .fail((err) => {

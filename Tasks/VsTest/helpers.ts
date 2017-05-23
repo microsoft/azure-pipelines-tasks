@@ -118,11 +118,32 @@ export class Helper {
         }
     }
 
-    public static printMultiLineLog (multiLineString : string, logFunction : Function) {
+    public static printMultiLineLog(multiLineString: string, logFunction: Function) {
         const lines = multiLineString.toString().split('\n');
-            lines.forEach(function (line: string) {
-                logFunction(line);
-            });
+        lines.forEach(function (line: string) {
+            logFunction(line);
+        });
+    }
+
+    public static modifyArgument(argument: string): string {
+        if (argument) {
+            if (!argument.startsWith('/')) {
+                return '\"' + argument + '\"';
+            } else {
+                // we need to add quotes to args we are passing after : as the arg value can have spaces
+                // we dont need to chnages the guy who is creating the args as toolrunner already takes care of this
+                // for response file we need to take care of this ourselves
+                // eg: /settings:c:\a b\1.settings should become /settings:"C:\a b\1.settings"
+                let indexOfColon = argument.indexOf(':'); // find if args has ':'
+                if (indexOfColon > 0 && argument[indexOfColon + 1] !== '\"') { // only process when quotes are not there
+                    let modifyString = argument.substring(0, indexOfColon + 1); // get string till colon
+                    modifyString = modifyString + '\"' + argument.substring(indexOfColon + 1) + '\"'; // append '"' and rest of the string
+                    return modifyString;
+                }
+            }
+        }
+
+        return argument;
     }
 
 }
