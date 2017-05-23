@@ -17,13 +17,13 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 49
+    "Patch": 50
   },
   "demands": [
     "vstest"
   ],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "1.89.0",
+  "minimumAgentVersion": "2.103.0",
   "groups": [
     {
       "name": "testSelection",
