@@ -1046,6 +1046,7 @@ describe('VsTest Suite', function () {
         }
     });
 
+    it('modified argument test', (done) => {
         let modifiedString = utils.Helper.modifyArgument("somestring");
         assert.equal(modifiedString, "\"somestring\"", "string doesnt match");
 
