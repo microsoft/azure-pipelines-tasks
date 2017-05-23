@@ -54,7 +54,27 @@
             "code": 0,
             "stdout": "vstest"
         },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:E:\\settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:E:\\source\\settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:E:\\source\\dir\\settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:path/to/customadapters": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:E:\\path\\to\\customadapters": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:E:\\path\\customadapters": {
             "code": 0,
             "stdout": "vstest"
         },
@@ -96,16 +116,33 @@
     },
     "exist": {
         "settings.runsettings": true,
+        "E:\\settings.runsettings": true,
         "random.runsettings": false,
         "path/to/customadapters": true,
+        "E:\\path\\to\\customadapters": true,
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": false,
         "some\\path\\to\\vstest.console.exe": true,
         "some\\illegal\\path\\to\\vstest.console.exe": false,
-        "\\path\\to\\vstest\\directory": true
+        "\\path\\to\\vstest\\directory": true,
+        "E:\\source\\settings.runsettings": true,
+        "E:\\source\\dir\\settings.runsettings":true,
+        "E:\\path\\customadapters":true
     },
     "stats": {
         "settings.runsettings": {
             "isFile": true
+        },
+        "E:\\settings.runsettings": {
+            "isFile": true
+        },
+        "E:\\source\\settings.runsettings": {
+            "isFile": true
+        },
+        "E:\\source\\dir\\settings.runsettings": {
+            "isFile": true
+        },
+        "E:\\path\\customadapters": {
+            "isDirectory": true
         },
         "random.runsettings": {
             "isFile": false
@@ -114,6 +151,9 @@
             "isFile": true
         },
         "path/to/customadapters": {
+            "isDirectory": true
+        },
+        "E:\\path\\to\\customadapters": {
             "isDirectory": true
         },
         "\\path\\to\\vstest\\directory": {

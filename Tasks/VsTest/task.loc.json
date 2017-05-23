@@ -399,7 +399,6 @@
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
     "uitestsparallel": "ms-resource:loc.messages.uitestsparallel",
     "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid",
-    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters",
-    "ResolveSearchFolder": "ms-resource:loc.messages.ResolveSearchFolder"
+    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters"
   }
 }

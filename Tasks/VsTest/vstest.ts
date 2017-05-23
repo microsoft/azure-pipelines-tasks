@@ -83,8 +83,8 @@ function getTestAssemblies(): string[] {
         vstestConfig.testDropLocation = systemDefaultWorkingDirectory;
         tl.debug('Search directory empty, defaulting to ' + vstestConfig.testDropLocation);
     }
-    
-    tl.debug("Searching for test assemblies in: " + vstestConfig.testDropLocation);    
+
+    tl.debug('Searching for test assemblies in: ' + vstestConfig.testDropLocation);
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 

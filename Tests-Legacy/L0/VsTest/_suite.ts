@@ -388,7 +388,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with settings file', (done) => {
 
-        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:settings.runsettings', '/logger:trx'].join(' ');
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:E:\\settings.runsettings', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
@@ -396,7 +396,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', 'settings.runsettings');
+        tr.setInput('runSettingsFile', 'E:\\settings.runsettings');
 
         tr.run()
             .then(() => {
@@ -544,7 +544,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with custom adapter path', (done) => {
 
-        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:path/to/customadapters'].join(' ');
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:E:\\path\\to\\customadapters'].join(' ');
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
@@ -552,7 +552,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('pathtoCustomTestAdapters', 'path/to/customadapters');
+        tr.setInput('pathtoCustomTestAdapters', 'E:/path/to/customadapters');
 
         tr.run()
             .then(() => {
@@ -597,7 +597,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with runsettings file and tia.enabled set to false', (done) => {
 
-        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:settings.runsettings', '/logger:trx'].join(' ');
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:E:\\settings.runsettings', '/logger:trx'].join(' ');
         setResponseFile('vstestGoodWithTiaDisabled.json');
 
         const tr = new trm.TaskRunner('VSTest');
@@ -605,7 +605,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', 'settings.runsettings');
+        tr.setInput('runSettingsFile', 'E:\\settings.runsettings');
 
         tr.run()
             .then(() => {
@@ -624,7 +624,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with runsettings file and tia.enabled undefined', (done) => {
 
-        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:settings.runsettings', '/logger:trx'].join(' ');
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/Settings:E:\\settings.runsettings', '/logger:trx'].join(' ');
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
@@ -632,7 +632,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('runSettingsFile', 'settings.runsettings');
+        tr.setInput('runSettingsFile', 'E:\\settings.runsettings');
 
         tr.run()
             .then(() => {
@@ -744,7 +744,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-});
+    });
 
     it('Vstest task should not use diag option when system.debug is not set', (done) => {
 
@@ -1087,7 +1087,7 @@ describe('VsTest Suite', function () {
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/Searching for test assemblies in: E:\\source/) >= 0, 'searching in the wrong path');
+                assert(tr.stdout.search(/Search folder : E:\\source/) >= 0, 'searching in the wrong path');
                 done();
             })
             .fail((err) => {
@@ -1113,7 +1113,7 @@ describe('VsTest Suite', function () {
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/Searching for test assemblies in: E:\\source\\dir/) >= 0, 'searching in the wrong path');
+                assert(tr.stdout.search(/Search folder : E:\\source\\dir/) >= 0, 'searching in the wrong path');
                 done();
             })
             .fail((err) => {
@@ -1121,4 +1121,102 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
+
+    it('Vstest task with settings file path with double dots is supported', (done) => {
+
+        setResponseFile('vstestGood.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('runSettingsFile', 'E:\\source\\dir\\..\\settings.runsettings');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/Run settings file : E:\\source\\settings.runsettings/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task with settings file path with single dots is supported', (done) => {
+        setResponseFile('vstestGood.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('runSettingsFile', 'E:\\source\\dir\\.\\settings.runsettings');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/Run settings file : E:\\source\\dir\\settings.runsettings/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task with custom adapter path with double dots is supported', (done) => {
+
+        setResponseFile('vstestGood.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('pathtoCustomTestAdapters', 'E:/path/to/../customadapters');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/Path to custom adapters : E:\\path\\customadapters/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Vstest task with custom adapter path with single dots is supported', (done) => {
+
+        setResponseFile('vstestGood.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('pathtoCustomTestAdapters', 'E:/path/to/./customadapters');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/Path to custom adapters : E:\\path\\to\\customadapters/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    })
+
 });

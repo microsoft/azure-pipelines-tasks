@@ -112,6 +112,5 @@
   "loc.messages.vstestLocationSpecified": "%s, specified location : %s",
   "loc.messages.uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
   "loc.messages.pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and it should exist.",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
-  "loc.messages.ResolveSearchFolder": "Resolving the path to test drop location"
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
 }
