@@ -1087,7 +1087,7 @@ describe('VsTest Suite', function () {
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/Search folder : E:\\source/) >= 0, 'searching in the wrong path');
+                assert(tr.stdout.search(/Search folder : E:\\source/) >= 0, 'searching in the wrong path with double dots');
                 done();
             })
             .fail((err) => {
@@ -1113,7 +1113,7 @@ describe('VsTest Suite', function () {
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
-                assert(tr.stdout.search(/Search folder : E:\\source\\dir/) >= 0, 'searching in the wrong path');
+                assert(tr.stdout.search(/Search folder : E:\\source\\dir/) >= 0, 'searching in the wrong path with single dots');
                 done();
             })
             .fail((err) => {
@@ -1138,7 +1138,7 @@ describe('VsTest Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/Run settings file : E:\\source\\settings.runsettings/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Run settings file : E:\\source\\settings.runsettings/) >= 0, 'wrong path for settings file with double dots');
                 done();
             })
             .fail((err) => {
@@ -1161,7 +1161,7 @@ describe('VsTest Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/Run settings file : E:\\source\\dir\\settings.runsettings/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Run settings file : E:\\source\\dir\\settings.runsettings/) >= 0, 'wrong path for settings file with single dots');
                 done();
             })
             .fail((err) => {
@@ -1185,7 +1185,7 @@ describe('VsTest Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/Path to custom adapters : E:\\path\\customadapters/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Path to custom adapters : E:\\path\\customadapters/) >= 0, 'wrong path for custom adapters with double dots');
                 done();
             })
             .fail((err) => {
@@ -1210,7 +1210,7 @@ describe('VsTest Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/Path to custom adapters : E:\\path\\to\\customadapters/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/Path to custom adapters : E:\\path\\to\\customadapters/) >= 0, 'wrong path for custom adapters with single dots');
                 done();
             })
             .fail((err) => {
