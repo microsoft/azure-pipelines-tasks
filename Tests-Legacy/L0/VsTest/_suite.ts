@@ -12,7 +12,6 @@ import * as mockHelper from '../../lib/mockHelper';
 import * as fs from 'fs';
 
 const settingsHelper = require('../../../Tasks/VSTest/settingshelper');
-const vstest = require('../../../Tasks/VSTest/vstest');
 let xml2js = require('../../../Tasks/VSTest/node_modules/xml2js');
 const utils = require('../../../Tasks/VSTest/helpers');
 
