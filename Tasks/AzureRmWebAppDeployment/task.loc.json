@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 6
+    "Patch": 8
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -74,7 +74,8 @@
       "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
       "properties": {
-        "EditableOptions": "false"
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
       }
     },
     {
@@ -85,7 +86,8 @@
       "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
       "properties": {
-        "EditableOptions": "false"
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
       }
     },
     {
