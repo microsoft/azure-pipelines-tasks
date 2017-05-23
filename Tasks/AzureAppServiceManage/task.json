@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 9
+        "Patch": 10
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -241,7 +241,7 @@
         "InvalidAction": "Invalid Action selected !",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment statu. SCM endpoint is not enabled for this website.",
         "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
-        "WebAppDoesntExist": "Webapp '%s' doesn't exist.",
+        "WebAppDoesntExist": "Web app '%s' doesn't exist.",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "StartingSwapSlot": "Requesting swap slot for Web App : %s",
         "ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
