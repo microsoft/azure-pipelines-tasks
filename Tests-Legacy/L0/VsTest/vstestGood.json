@@ -81,11 +81,7 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:E:\\path\\customadapters": {
             "code": 0,
             "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:\\test-machine\\path\\to\\customadapters": {
-            "code": 0,
-            "stdout": "vstest"
-        },
+        },        
         "some\\path\\to\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
@@ -134,9 +130,7 @@
         "\\path\\to\\vstest\\directory": true,
         "E:\\source\\settings.runsettings": true,
         "E:\\source\\dir\\settings.runsettings":true,
-        "E:\\path\\customadapters":true,
-        "\\\\test-machine\\source\\dir\\settings.runsettings": true,
-        "\\\\test-machine\\path\\to\\customadapters": true
+        "E:\\path\\customadapters":true
     },
     "stats": {
         "settings.runsettings": {
@@ -149,9 +143,6 @@
             "isFile": true
         },
         "E:\\source\\dir\\settings.runsettings": {
-            "isFile": true
-        },
-        "\\\\test-machine\\source\\dir\\settings.runsettings": {
             "isFile": true
         },
         "E:\\path\\customadapters": {
@@ -171,9 +162,6 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
-        },
-        "\\\\test-machine\\path\\to\\customadapters": {
-            "isDirectory": true
-        }        
+        }       
     }
 }
