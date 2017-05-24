@@ -179,6 +179,8 @@
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
     "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
+    "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
+    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage"
   }
 }

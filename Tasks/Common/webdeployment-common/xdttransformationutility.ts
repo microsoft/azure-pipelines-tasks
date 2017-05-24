@@ -60,6 +60,8 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
     });
     if(!isTransformationApplied) {
         tl.warning(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason1'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason2'));
     }
 
     return isTransformationApplied;
