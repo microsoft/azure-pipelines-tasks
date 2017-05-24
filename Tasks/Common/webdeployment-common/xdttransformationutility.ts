@@ -59,6 +59,6 @@ export function basicXdtTransformation(rootFolder, transformConfigs) {
         });
     });
     if(!isTransformationApplied) {
-        throw new Error(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplyTransformation'));
     }
 }
