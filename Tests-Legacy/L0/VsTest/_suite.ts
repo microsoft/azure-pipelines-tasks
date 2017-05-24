@@ -1044,6 +1044,28 @@ describe('VsTest Suite', function () {
         }
     });
 
+    it('modified argument test', (done) => {
+        let modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile("somestring");
+        assert.equal(modifiedString, "\"somestring\"", "string doesnt match");
+
+        modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile("some string.dll");
+        assert.equal(modifiedString, "\"some string.dll\"", "string doesnt match");
+
+        modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile("/settings:c:\\a b\\1.settings");
+        assert.equal(modifiedString, '/settings:\"c:\\a b\\1.settings\"', "string doesnt match");
+
+        modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile('/settings:\"c:\\a b\\1.settings\"');
+        assert.equal(modifiedString, '/settings:\"c:\\a b\\1.settings\"', "string doesnt match");
+
+        modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile("/logger:trx");
+        assert.equal(modifiedString, '/logger:\"trx\"', "string doesnt match");
+
+        modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile(null);
+        assert.equal(modifiedString, null, "string doesnt match");
+
+        done();
+    });
+
     it('Vstest should throw proper error for invalid vstest.console.exe location', (done) => {
 
         setResponseFile('vstestInvalidVstestPath.json');
