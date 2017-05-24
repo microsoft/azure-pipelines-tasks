@@ -77,7 +77,7 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
+    request.post({ url: beginUploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
             let uploadInfo: UploadInfo = {
@@ -100,7 +100,7 @@ function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Pr
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
+    let req = request.post({ url: uploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- File uploaded.');
             defer.resolve();
@@ -126,7 +126,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
 
     let commitBody = { "status": "committed" };
 
-    request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: commitReleaseUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             if (body && body['release_url']) {
                 defer.resolve(body['release_url']);
@@ -157,7 +157,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         "release_notes": releaseNotes
     };
 
-    request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
+    request.patch({ url: publishReleaseUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: publishBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
@@ -215,7 +215,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
 
-    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
+    request.post({ url: beginSymbolUploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let symbolsUploadInfo: SymbolsUploadInfo = {
                 symbol_upload_id: body['symbol_upload_id'],
@@ -243,7 +243,7 @@ function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Pr
         "internal-request-source": "VSTS"
     };
 
-    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
+    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- Symbol uploaded.');
             defer.resolve();
@@ -266,7 +266,7 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
     let commitBody = { "status": "committed" };
 
-    request.patch({ url: commitSymbolsUrl, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: commitSymbolsUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
