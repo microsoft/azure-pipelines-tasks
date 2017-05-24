@@ -25,8 +25,13 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
             if(environmentName && environmentName != 'Release') {
                 transformConfigs.push(environmentName + ".config");
             }
-            xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);  
-            console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
+            var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
+            
+            if(isTransformationApplied)
+            {
+                console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
+            }
+            
         }
         else {
             throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
