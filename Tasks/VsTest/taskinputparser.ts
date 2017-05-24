@@ -7,7 +7,6 @@ import * as utils from './helpers';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
-import {isNullOrWhitespace} from './vstest'
 
 export function getDistributedTestConfigurations() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -98,7 +97,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     tl._writeLine(tl.loc('testSelectorInput', testConfiguration.testSelection));
 
     testConfiguration.testDropLocation = tl.getInput('searchFolder');
-    if (!isNullOrWhitespace(testConfiguration.testDropLocation))
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation))
     {
         testConfiguration.testDropLocation = path.resolve(testConfiguration.testDropLocation);
     }
@@ -108,7 +107,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
-    if (!isNullOrWhitespace(testConfiguration.settingsFile))
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
     {
         testConfiguration.settingsFile = path.resolve(testConfiguration.settingsFile);
     }
@@ -125,7 +124,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    if (!isNullOrWhitespace(testConfiguration.pathtoCustomTestAdapters))
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.pathtoCustomTestAdapters))
     {
         testConfiguration.pathtoCustomTestAdapters = path.resolve(testConfiguration.pathtoCustomTestAdapters);
     }

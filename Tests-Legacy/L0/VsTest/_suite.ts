@@ -1121,7 +1121,7 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
-
+    
     it('Vstest task with settings file path with double dots is supported', (done) => {
 
         setResponseFile('vstestGood.json');
@@ -1168,7 +1168,7 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
-
+    
     it('Vstest task with custom adapter path with double dots is supported', (done) => {
 
         setResponseFile('vstestGood.json');
@@ -1217,6 +1217,5 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
-
+    });    
 });
