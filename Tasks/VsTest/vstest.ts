@@ -79,7 +79,7 @@ export function startTest() {
 }
 
 function getTestAssemblies(): string[] {
-    if (isNullOrWhitespace(vstestConfig.testDropLocation)) {
+    if (utils.Helper.isNullOrWhitespace(vstestConfig.testDropLocation)) {
         vstestConfig.testDropLocation = systemDefaultWorkingDirectory;
         tl.debug('Search directory empty, defaulting to ' + vstestConfig.testDropLocation);
     }
@@ -131,7 +131,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     argsArray.push('/logger:trx');
-    if (isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
+    if (utils.Helper.isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
         if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
                 argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
             }
@@ -193,7 +193,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     let resultFile: string;
     const defer = Q.defer<string>();
     let resultFiles;
-    if (!isNullOrWhitespace(testResultsDirectory)) {
+    if (!utils.Helper.isNullOrWhitespace(testResultsDirectory)) {
         resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
     }
 
@@ -923,11 +923,4 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
             return false;
         }
     });
-}
-
-function isNullOrWhitespace(input) {
-    if (typeof input === 'undefined' || input === null) {
-        return true;
-    }
-    return input.replace(/\s/g, '').length < 1;
 }
