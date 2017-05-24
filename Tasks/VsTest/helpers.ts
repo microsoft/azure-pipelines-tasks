@@ -38,6 +38,13 @@ export class Helper {
         return obj === null || obj === '' || obj === undefined;
     }
 
+    public static isNullOrWhitespace(input) {
+        if (typeof input === 'undefined' || input === null) {
+            return true;
+        }
+        return input.replace(/\s/g, '').length < 1;
+    }
+    
     public static pathExistsAsFile(path: string) {
         return tl.exist(path) && tl.stats(path).isFile();
     }
