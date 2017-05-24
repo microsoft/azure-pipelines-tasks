@@ -87,7 +87,7 @@ describe('General Suite', function () {
 
     it('Find .js with uppercase', (done) => {
         this.timeout(20000);
-
+		
         // Path to the _build/Tasks folder.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
 
@@ -196,6 +196,118 @@ describe('General Suite', function () {
 
         if (unsupportedDemands.length > 0) {
             assert(false, 'find unsupported demands, please take necessary operation to fix this. unsupported demands count: ' + unsupportedDemands.length);
+        }
+
+        done();
+    })
+
+    it('Find unsupported runsOn', (done) => {
+        this.timeout(20000);
+        var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server'];
+
+        supportedRunsOn.forEach(runsOn => {
+            if (supportedRunsOn.indexOf(runsOn.toLocaleLowerCase()) < 0) {
+                supportedRunsOn.push(runsOn.toLocaleLowerCase());
+            }
+        });
+
+        // Path to the _build/Tasks folder.
+        var tasksRootFolder = path.resolve(__dirname, '../Tasks');
+
+        var taskFolders: string[] = [];
+        fs.readdirSync(tasksRootFolder).forEach(folderName => {
+            if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+                taskFolders.push(path.join(tasksRootFolder, folderName));
+            }
+        })
+
+        var unsupportedRunsOnCount = 0;
+        for (var i = 0; i < taskFolders.length; i++) {
+            var taskFolder = taskFolders[i];
+            var taskjson = path.join(taskFolder, 'task.json');
+
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
+            if (task.hasOwnProperty('runsOn')) {
+                task['runsOn'].forEach(runsOn => {
+                    if (supportedRunsOn.indexOf(runsOn.toLocaleLowerCase()) < 0) {
+                        ++unsupportedRunsOnCount;
+                        console.warn('found unsupported runsOn: ' + runsOn + ' in ' + taskjson);
+                    }
+                });
+            }
+        }
+        
+        if (unsupportedRunsOnCount > 0){
+            assert(false, 'found unsupported runsOn. please make necessary action to fix this. unsupported runsOn count: ' + unsupportedRunsOnCount);
+        }
+
+        done();
+    })
+
+    it('Find invalid server Task', (done) => {
+        this.timeout(20000);
+
+        // Path to the _build/Tasks folder.
+        var tasksRootFolder = path.resolve(__dirname, '../Tasks');
+        var taskFolders: string[] = [];
+        fs.readdirSync(tasksRootFolder).forEach(folderName => {
+            if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+                taskFolders.push(path.join(tasksRootFolder, folderName));
+            }
+        })
+
+        var supportedServerExecutionHandlers: string[] = [
+            'RM:ManualIntervention', 
+            'ServiceBus'];
+
+       var supportedTaskEvents: string[] = [
+           'TaskAssigned', 
+           'TaskStarted', 
+           'TaskCompleted'];
+
+        var invalidTaskFound: boolean = false;
+        for (var i = 0; i < taskFolders.length; i++) {
+            var taskFolder = taskFolders[i];
+            var taskjson = path.join(taskFolder, 'task.json');
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
+            if (task.hasOwnProperty('runsOn') && task['runsOn'].some(x => x.toLowerCase() == 'server')) {
+                if (task['runsOn'].length > 1) {
+                    assert(false, 'Found invalid value of runsOn in ' + taskjson + '. RunsOn should only be server for server task.');
+                }
+
+                if (task.hasOwnProperty('demands') && task['demands'].length > 0) {
+                    assert(false, 'Found invalid value for demands in ' + taskjson + '. Demands should be either empty or absent for server task.');
+                }
+
+                if (task.hasOwnProperty('minimumAgentVersion')){
+                     assert(false, 'Found minimumAgentVersion in ' + taskjson + '. This should not be present for server task.');
+                }
+
+                if (!task.hasOwnProperty('execution')) {
+                    assert(false, 'No execution section found for server task in ' + taskjson + '.');
+                }
+                
+                var handlers = Object.keys(task['execution']);
+
+                if (handlers.length != 1) {
+                    assert(false, 'Number of execution handlers should be 1. Invalid section found in ' + taskjson + '.');
+                }
+                
+                var handlerName : string = handlers[0];
+                if (!supportedServerExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())){
+                    assert(false, 'Found Invalid task handler name : ' + handlerName + ' in ' + taskjson + '.');
+                }
+
+                var execution = task['execution'][handlerName];
+                if (execution.hasOwnProperty('events')) {
+                    var taskEvents = execution['events'];
+                    Object.keys(taskEvents).forEach( eventName => {
+                        if (!supportedTaskEvents.some(x => x.toLowerCase() == eventName.toLowerCase())) {
+                            assert(false, 'Found Invalid task event name ' + eventName + 'in ' + taskjson + '.')
+                        }
+                    });
+                }
+            }
         }
 
         done();
