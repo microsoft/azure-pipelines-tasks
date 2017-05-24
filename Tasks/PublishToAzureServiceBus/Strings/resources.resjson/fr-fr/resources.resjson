@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Intervention manuelle",
+  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.description": "Suspendre le déploiement et attendre une intervention",
+  "loc.instanceNameFormat": "Intervention manuelle",
+  "loc.input.label.instructions": "Instructions",
+  "loc.input.help.instructions": "Ces instructions sont montrées à l'utilisateur pour lui permettre de reprendre ou de rejeter l'intervention manuelle. En fonction de ces instructions, l'utilisateur prend une décision en connaissance de cause sur l'intervention manuelle.",
+  "loc.input.label.emailRecipients": "Notifier les utilisateurs",
+  "loc.input.help.emailRecipients": "Envoyez un e-mail relatif à une intervention manuelle en attente à des utilisateurs (ou groupes) spécifiques. Seuls les utilisateurs dotés d'une autorisation de déploiement peuvent agir sur une intervention manuelle.",
+  "loc.input.label.onTimeout": "Au délai d'expiration",
+  "loc.input.help.onTimeout": "Rejetez ou reprenez cette intervention manuelle automatiquement après la fin du délai d'expiration spécifié ou après 60 jours, selon la valeur la plus proche."
+}
