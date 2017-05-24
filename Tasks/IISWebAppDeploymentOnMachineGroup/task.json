@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
     "name": "IISWebAppDeploymentOnMachineGroup",
     "friendlyName": "IIS Web App Deploy(Preview)",
@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
