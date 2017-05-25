@@ -28,7 +28,7 @@ var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);
 var mavenGoals: string[] = tl.getDelimitedInput('goals', ' ', true); // This assumes that goals cannot contain spaces
 var mavenOptions: string = tl.getInput('options', false); // Options can have spaces and quotes so we need to treat this as one string and not try to parse it
 var selectSources: string = tl.getInput('selectSources', true);
-var vstsFeedName: string = tl.getInput('vstsFeedNames', false);
+var vstsFeedName: string = tl.getInput('vstsFeedName', false);
 var includeMavenCentral: boolean = tl.getBoolInput('includeMavenCentral', false);
 var includeJCenter: boolean = tl.getBoolInput('includeJCenter', false);
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
@@ -134,6 +134,8 @@ async function execBuild() {
     ccReportTask = await execEnableCodeCoverage();
     var userRunFailed: boolean = false;
     var codeAnalysisFailed: boolean = false;
+    let mavenFeedUrl:string = null;
+    let mavenFeedId:string = null;
 
     // Setup tool runner that executes Maven only to retrieve its version
     var mvnGetVersion = tl.tool(mvnExec);
@@ -148,6 +150,17 @@ async function execBuild() {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
             process.exit(1);
+        })
+        .then(function (code) {
+            return util.getMavenFeedRegistryUrl(vstsFeedName).then(function (feed) {
+                mavenFeedId = feed.mavenFeedId;
+                mavenFeedUrl = feed.mavenFeedUrl;
+                return Q.resolve("Got feed");
+            });
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
             if (selectSources === 'PomXmlOnlySources') {
@@ -174,8 +187,7 @@ async function execBuild() {
                     }
                 }
             }
-            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, 
-                    tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true));
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, mavenFeedId);
         })
         .fail(function (err) {
             console.error(err.message);
@@ -208,8 +220,8 @@ async function execBuild() {
                 tl.debug('writing repos to pom');
                 util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
                 util.insertRepoIntoPomJson(pomJson, 
-                    tl.getEndpointAuthorizationParameter(vstsFeedName, 'username', true), 
-                    tl.getEndpointUrl(vstsFeedName, true));
+                    mavenFeedId, 
+                    mavenFeedUrl);
                 return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
             })
         })
