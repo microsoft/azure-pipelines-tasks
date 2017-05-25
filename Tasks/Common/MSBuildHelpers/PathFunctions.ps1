@@ -252,14 +252,7 @@ function Select-MSBuildPath {
                 return $path
             }
 
-            # Do not fallback from 15.0.
-            if ($PreferredVersion -eq '15.0') {
-                Write-Error (Get-VstsLocString -Key 'MSB_MSBuild15NotFoundionArchitecture0' -ArgumentList $Architecture)
-                return
-            }
-
             # Attempt to fallback.
-            $versions = $versions | Where-Object { $_ -ne '15.0' } # Fallback is only between 14.0-4.0.
             Write-Verbose "Specified version '$PreferredVersion' and architecture '$Architecture' not found. Attempting to fallback."
         }
 
