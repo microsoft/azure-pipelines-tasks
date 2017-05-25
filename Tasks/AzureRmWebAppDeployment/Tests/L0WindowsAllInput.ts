@@ -58,7 +58,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "msdeploy -verb:sync -source:package=\"'webAppPkg.zip'\" -dest:auto,ComputerName=\"'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp'\",UserName=\"'$mytestapp'\",Password=\"'mytestappPwd'\",AuthType=\"'Basic'\" -setParam:name=\"'IIS Web Application Name'\",value=\"'mytestapp/virtualApp'\" -skip:Directory=App_Data additionalArguments -userAgent:TFS_useragent": {
+        "msdeploy -verb:sync -source:package=\'webAppPkg.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp/virtualApp\' -skip:Directory=App_Data additionalArguments -userAgent:TFS_useragent": {
             "code": 0,
             "stdout": "Executed Successfully"
         }

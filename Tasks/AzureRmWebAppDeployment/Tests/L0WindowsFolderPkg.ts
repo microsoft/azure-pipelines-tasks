@@ -52,7 +52,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "msdeploy -verb:sync -source:IisApp=\"'webAppPkg'\" -dest:iisApp=\"'mytestapp'\",ComputerName=\"'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp'\",UserName=\"'$mytestapp'\",Password=\"'mytestappPwd'\",AuthType=\"'Basic'\" -enableRule:DoNotDeleteRule -userAgent:TFS_useragent":{
+        "msdeploy -verb:sync -source:IisApp=\'webAppPkg\' -dest:iisApp=\'mytestapp\',ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent":{
             "code": 0,
             "stdout": "Executed Successfully"
         }
