@@ -13,13 +13,7 @@ function Select-VSVersion {
                 return $PreferredVersion
             }
 
-            # Error. Do not fallback from 15.0.
-            if ($PreferredVersion -eq '15.0') {
-                throw (Get-VstsLocString -Key 'VSVersion15NotFound' -ArgumentList $PreferredVersion)
-            }
-
             # Attempt to fallback.
-            $versions = $versions | Where-Object { $_ -ne '15.0' } # Fallback is only between 14.0-10.0.
             Write-Verbose "Version '$PreferredVersion' not found. Looking for fallback version."
         }
 
