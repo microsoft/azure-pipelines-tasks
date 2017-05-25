@@ -4,17 +4,21 @@ import os = require('os');
 import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
+import locationHelpers = require("nuget-task-common/LocationHelpers"); // TODO: refactor
 
+import * as url from "url";
 import * as str from 'string';
 import * as xml2js from 'xml2js';
 import * as fse from 'fs-extra';
 import * as cheerio from 'cheerio';
+import * as vsts from "vso-node-api/WebApi";
 
 let stripbom = require('strip-bom');
 let base64 = require('base-64');
 let utf8 = require('utf8');
 
 export const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
+const mavenLocationServiceId: string = 'F285A171-0DF5-4C49-AAF2-17D0D37D9F0E';
 
 const jcenterAuthInfo: any = {
     id: 'jcenter',
@@ -222,4 +226,102 @@ export function insertPublicReposIntoPom(pomJson:any, includeJCenter:boolean, in
         tl.debug('inserting Maven Central repo');
         insertRepoJsonIntoPomJson(pomJson, mavenAuthInfo);
     }
+}
+
+export interface MavenFeedInfo {
+    mavenFeedId:string;
+    mavenFeedUrl:string;
+}
+
+export function getMavenFeedRegistryUrl(feedId: string): Q.Promise<MavenFeedInfo> {
+    tl.debug('getMavenFeedRegistryUrl id=' + feedId);
+    const ApiVersion = "3.0-preview.1";
+    const PackagingAreaName: string = "maven";
+    const PackageAreaId: string = "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E";
+ 	let credentialHandler = vsts.getBearerHandler(getSystemAccessToken());
+    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+    let packagingCollectionUrl = null;
+    let vssConnection = null;
+    tl.debug('getMavenFeedRegistryUrl collectionUrl=' + JSON.stringify(collectionUrl));
+
+    // The second element contains the transformed packaging URL
+    return locationHelpers.assumeNuGetUriPrefixes(collectionUrl)
+    .then(function (value) {
+        tl.debug('getMavenFeedRegistryUrl value=' + JSON.stringify(value));
+        packagingCollectionUrl = value[1];
+        if (!packagingCollectionUrl) {
+            packagingCollectionUrl = collectionUrl;
+        }
+
+        vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
+        let coreApi = vssConnection.getCoreApi();
+        return coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+    })
+    .then(function (data) {
+        tl.debug('getMavenFeedRegistryUrl data=' + JSON.stringify(data));
+        let accountUrl = url.parse(packagingCollectionUrl).hostname.toLowerCase();
+        let accountId:string = '';
+        if (accountUrl.endsWith(".pkgs.visualstudio.com")) {
+            accountId = accountUrl.substring(0, accountUrl.length - ".pkgs.visualstudio.com".length);
+        } else if (accountUrl.endsWith(".visualstudio.com")) {
+            accountId = accountUrl.substring(0, accountUrl.length - ".visualstudio.com".length);
+        }
+        tl.debug('getMavenFeedRegistryUrl accountId=' + JSON.stringify(accountId));
+
+        let mavenFeedId:string = accountId + '-visualstudio.com-' + feedId;
+        return {
+            mavenFeedUrl:data.requestUrl, 
+            mavenFeedId:mavenFeedId
+        };
+    });
+}
+
+let _accountName:string;
+function getAccountName(): string {
+    tl.debug('getAccountName');
+    if (_accountName) {
+        return _accountName;
+    }
+    let accountUrl = url.parse(tl.getVariable("System.TeamFoundationCollectionUri")).hostname.toLowerCase();
+    if (accountUrl.endsWith(".pkgs.visualstudio.com")) {
+        _accountName = accountUrl.substring(0, accountUrl.length - ".pkgs.visualstudio.com".length);
+    } else if (accountUrl.endsWith(".visualstudio.com")) {
+        _accountName = accountUrl.substring(0, accountUrl.length - ".visualstudio.com".length);
+    } else {
+        //throw?
+    }
+    return _accountName;
+}
+
+export interface RepositoryInfo {
+    id:string;
+    url:string;
+    name?:string;
+    layout?:string;
+    snapshots?:boolean;
+}
+
+function parseRespositoriesInJson(json:any): RepositoryInfo[] {
+    let repos:RepositoryInfo[] = [];
+    if (json && json.modules.module) {
+
+    }
+    return repos;
+}
+
+export function collectAllRepositoriesFromPom(pomXmlFile: string): Q.Promise<RepositoryInfo[]> {
+    tl.debug('collectAllRepositoriesFromPom file=' + pomXmlFile);
+    let accountName:string = getAccountName();
+    let repos:RepositoryInfo[] = [];
+    return readPomAsJson(pomXmlFile).then(function (json) {
+        if (json) {
+            repos.concat(parseRespositoriesInJson(json));
+            if (json.modules && json.modules.module) {
+                return collectAllRepositoriesFromPom().then(function(childRepos) {
+                    repos.concat(childRepos);
+                });
+            }
+        }
+        return Q.resolve(repos);
+    });
 }

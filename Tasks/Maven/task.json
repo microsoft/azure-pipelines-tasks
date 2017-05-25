@@ -87,14 +87,17 @@
             }
         },
         {
-            "name": "vstsFeedNames",
-            "type": "connectedService:Generic",
+            "name": "vstsFeedName",
+            "type": "pickList",
             "label": "Include packages from this VSTS feed",
             "required": false,
             "defaultValue": "",
             "groupName": "sourcesAndAuth",
             "helpMarkDown": "Feed name (username) and url account.",
-            "visibleRule": "selectSources = CustomizeSources"
+            "visibleRule": "selectSources = CustomizeSources",
+            "properties": {
+                "EditableOptions": "true"
+            }
         },
         {
             "name": "includeMavenCentral",
@@ -420,6 +423,15 @@
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+        "target": "vstsFeedNames",
+        "endpointId": "tfs:feed",
+        "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+        "resultSelector": "jsonpath:$.value[*]",
+        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
