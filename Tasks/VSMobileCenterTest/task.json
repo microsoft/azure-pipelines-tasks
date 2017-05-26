@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 118,
+        "Minor": 119,
         "Patch": 0
     },
     "groups": [
@@ -67,7 +67,8 @@
                 "appium": "Appium",
                 "espresso": "Espresso",
                 "calabash": "Calabash",
-                "uitest": "UI Test"
+                "uitest": "Xamarin UI Test",
+                "xcuitest": "XCUITest"
             }
         },
         {
@@ -300,9 +301,9 @@
         {
             "name": "dsymDir",
             "type": "string",
-            "label": "dSym Directory",
+            "label": "dSYM Directory",
             "defaultValue": "",
-            "visibleRule": "enableRun = true",
+            "visibleRule": "enableRun = true & framework != espresso",
             "required": false,
             "groupName": "run",
             "helpMarkDown": "Path to iOS symbol files."

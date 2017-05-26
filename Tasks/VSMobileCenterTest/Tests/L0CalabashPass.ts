@@ -33,7 +33,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/path/to/mobile-center": true
     },
     "exec" : {
-        "/path/to/mobile-center test prepare calabash --artifacts-dir /path/to/artifactsDir --app-path /test/path/to/my.ipa --project-dir /path/to/project --sign-info SignInfo --config /path/to/configfile --profile myProfile --quiet": {
+        "/path/to/mobile-center test prepare calabash --artifacts-dir /path/to/artifactsDir --app-path /test/path/to/my.ipa --project-dir /path/to/project --sign-info SignInfo --config-path /path/to/configfile --profile myProfile --quiet": {
             "code": 0,
             "stdout": "success",
             "stderr": ""

@@ -53,7 +53,7 @@
   "loc.input.help.devices": "String to identify what devices this test will run against.  Copy and paste this string when you define a new test run from Mobile Center Test beacon.",
   "loc.input.label.series": "Test Series",
   "loc.input.help.series": "The series name for organizing test runs (e.g. master, production, beta).",
-  "loc.input.label.dsymDir": "dSym Directory",
+  "loc.input.label.dsymDir": "dSYM Directory",
   "loc.input.help.dsymDir": "Path to iOS symbol files.",
   "loc.input.label.locale": "System Language",
   "loc.input.help.locale": "If your language isn't displayed, select 'Other' and enter its locale below, such as en_US.",

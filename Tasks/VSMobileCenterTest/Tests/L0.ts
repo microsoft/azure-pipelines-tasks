@@ -75,7 +75,7 @@ describe('VSMobileCenterTest L0 Suite', function () {
         assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
         assert(tr.ran("/path/to/mobile-center test prepare calabash --artifacts-dir " +
             "/path/to/artifactsDir --app-path /test/path/to/my.ipa --project-dir " +
-            "/path/to/project --sign-info SignInfo --config /path/to/configfile " +
+            "/path/to/project --sign-info SignInfo --config-path /path/to/configfile " +
             "--profile myProfile --quiet"),
             "Should have run prepare");
 
