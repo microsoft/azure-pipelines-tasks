@@ -1,9 +1,17 @@
 # Azure CLI
  
 ## Overview
-This task supports running Azure CLI commands on Cross platform agents running Windows, Linux or Mac . 
-The task is **under development and is available to a limited set of accounts on Visual Studio Team Services (VSTS)**. 
- 
+This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/overview) commands on Cross platform agents running Windows, Linux or Mac. 
+
+### What's new in Version 1.0
+- Supports the new [AZ CLI 2.0](https://docs.microsoft.com/en-us/cli/azure/overview) which is Python based
+- Works with Xplat agents  (Windows, Linux or OSX)
+- For working with [Azure CLI 1.0](https://docs.microsoft.com/en-us/azure/cli-install-nodejs) which is node based, switch to task version 0.0
+- Both versions of Azure-CLI can coexist in the same system but task V1.0 logs-in using user’s subsscription into the Python based AZ CLI, where as task V0.0 logs-in to the node based Azure CLI. Hence script should ensure to include only corresponding commands.
+- Limitations:
+	- No support for Classic subscriptions. AZ CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions
+	- Currently, Hosted agents do not have AZ CLI installed, you can either install using ‘npm install -g azure-cli’ or use private agents with AZ CLI pre-installed
+
 ## Contact Information
 Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
  
@@ -16,12 +24,12 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 - For [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/), use 'Azure Resource Manager' endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 #### **Azure CLI**
 The task needs the Azure CLI version to be installed on the automation agent, and the details are available [here](https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/). 
-If an agent is already running on the machine on which the Azure CLI is installed, ensure to restart the agent.
+If an agent is already running on the machine on which the Azure CLI is installed, ensure to restart the agent to ensure all the relavent environment variables are updated.
  
 ## Parameters of the task
 The task is used to run Azure CLI commands on Cross platform agents running Windows, Linux or Mac . The mandatory fields are highlighted with a *.
  
-* **Azure Connection Type**\*: Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint.
+* **Azure Connection Type**\*: Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint. This parameter is shown only when the selected task version is 0.* as Azure CLI task v1.0 supports only Azure Resource Manager (ARM) subscriptions
 
 * **Azure Subscription**\*: Select the Azure Subscription where the Azure CLI commands have to be executed. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Endpoint** and select **Azure Resource Manager** from the dropdown.
  
@@ -34,4 +42,3 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 * **Working folder**: Specify the working directory in which you want to run the script. If you leave it empty, the working directory is the folder where the script is located. 
  
 * **Fail on standard error**: Select this check box if you want the build to fail if errors are written to the StandardError stream.
-
