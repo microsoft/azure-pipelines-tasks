@@ -30,6 +30,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\agent\\home\\directory\\packages.config": {
             "isFile": true
         }
+    }, 
+    "findMatch": {
+        "packages.config" : ["c:\\agent\\home\\directory\\packages.config"]
     }
 };
 nmh.setAnswers(a);

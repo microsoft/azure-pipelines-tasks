@@ -37,6 +37,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\agent\\home\\directory\\tempNuGet_.config": {
             "success": true
         }
+    }, 
+    "findMatch": {
+        "single.sln" : ["c:\\agent\\home\\directory\\single.sln"]
     }
 };
 nmh.setAnswers(a);

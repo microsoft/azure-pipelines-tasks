@@ -1,6 +1,4 @@
 import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
 import * as ngToolRunner from "./Common/NuGetToolRunner";
 import * as nutil from "nuget-task-common/Utility";
 import * as path from "path";
@@ -19,7 +17,7 @@ class NuGetExecutionOptions {
     ) { }
 }
 
-export async function run(): Promise<void> {
+export async function run(nuGetPath: string): Promise<void> {
     nutil.setConsoleCodePage();
 
     tl.setResourcePath(path.join(__dirname, "task.json"));
@@ -28,20 +26,6 @@ export async function run(): Promise<void> {
     let buildIdentityAccount: string = null;
     
     let args: string = tl.getInput("arguments", false);
-
-    // Getting NuGet
-    tl.debug('Getting NuGet');
-    let nuGetPath: string = undefined;
-    try {
-        nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
-        if (!nuGetPath){
-            nuGetPath = await nuGetGetter.getNuGet("4.0.0");
-        }
-    }
-    catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error.message);
-        return;
-    }
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))

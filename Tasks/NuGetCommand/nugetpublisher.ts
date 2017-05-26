@@ -33,7 +33,7 @@ class PublishOptions implements INuGetCommandOptions {
     ) { }
 }
 
-interface VstsNuGetPushOptions {
+interface IVstsNuGetPushOptions {
     vstsNuGetPushPath: string, 
     feedUri: string,
     internalAuthInfo: auth.InternalAuthInfo,
@@ -41,7 +41,7 @@ interface VstsNuGetPushOptions {
     settings: vstsNuGetPushToolRunner.VstsNuGetPushSettings
 }
 
-export async function run(): Promise<void> {
+export async function run(nuGetPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
@@ -49,9 +49,18 @@ export async function run(): Promise<void> {
 
         // Get list of files to pusblish
         let searchPattern = tl.getPathInput("searchPatternPush", true, false);
-        let filesList = nutil.resolveFilterSpec(
-            searchPattern,
-            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+
+        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
+        let filesList: string[] = [];
+        if (!useLegacyFind) {
+            let findOptions: tl.FindOptions = <tl.FindOptions>{};
+            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+        }
+        else {
+            filesList = nutil.resolveFilterSpec(searchPattern);
+        }
+
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("Error_PushNotARegularFile", packageFile));
@@ -73,20 +82,6 @@ export async function run(): Promise<void> {
         }
         nugetFeedType = normalizedNuGetFeedType;
         
-        // Getting NuGet.exe
-        tl.debug('Getting NuGet');
-        let nuGetPath: string = undefined;
-        try {
-            nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
-            if (!nuGetPath){
-                nuGetPath = await nuGetGetter.getNuGet("4.0.0");
-            }
-        }
-        catch (error) {
-            tl.setResult(tl.TaskResult.Failed, error.message);
-            return;
-        }
-
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
         let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
@@ -193,7 +188,7 @@ export async function run(): Promise<void> {
                     continueOnConflict: continueOnConflict
                 }
 
-                let publishOptions = <VstsNuGetPushOptions> {
+                let publishOptions = <IVstsNuGetPushOptions> {
                     vstsNuGetPushPath: vstsPushPath, 
                     feedUri: feedUri,
                     internalAuthInfo: authInfo.internalAuthInfo,
@@ -264,7 +259,7 @@ function publishPackageNuGetAsync(packageFile: string, options: PublishOptions, 
     return nugetTool.exec();
 }
 
-async function publishPackageVstsNuGetPushAsync(packageFile: string, options: VstsNuGetPushOptions) {
+async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IVstsNuGetPushOptions) {
     let vstsNuGetPushTool = vstsNuGetPushToolRunner.createVstsNuGetPushToolRunner(options.vstsNuGetPushPath, options.settings, options.internalAuthInfo);
     vstsNuGetPushTool.arg(packageFile);
     vstsNuGetPushTool.arg(["-Source", options.feedUri]);
@@ -284,6 +279,7 @@ async function publishPackageVstsNuGetPushAsync(packageFile: string, options: Vs
     // ExitCode 2 means a push conflict occurred
     if (exitCode === 2 && options.settings.continueOnConflict)
     {
+        tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`)
         return;
     }
 
@@ -303,10 +299,9 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         return false;
     }
 
-    // TODO check if we can verify an external feed is actually VSTS
     const nugetOverrideFlag = tl.getVariable("NuGet.ForceNuGetForPush");
     if (nugetOverrideFlag === "true") {
-        tl.debug("NuGet is force enabled for publish.");
+        tl.debug("NuGet.exe is force enabled for publish.");
         if(conflictsAllowed)
         {
             tl.warning(tl.loc("Warning_ForceNuGetCannotSkipConflicts"));
@@ -315,18 +310,18 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     }
 
     if (nugetOverrideFlag === "false") {
-        tl.debug("NuGet is force disabled for publish.");
+        tl.debug("NuGet.exe is force disabled for publish.");
         return true;
     }
 
     const vstsNuGetPushOverrideFlag = tl.getVariable("NuGet.ForceVstsNuGetPushForPush");
     if (vstsNuGetPushOverrideFlag === "true") {
-        tl.debug("VstsNuGetPush is force enabled for publish.");
+        tl.debug("VstsNuGetPush.exe is force enabled for publish.");
         return true;
     }
 
     if (vstsNuGetPushOverrideFlag === "false") {
-        tl.debug("VstsNuGetPush is force disabled for publish.");
+        tl.debug("VstsNuGetPush.exe is force disabled for publish.");
         if(conflictsAllowed)
         {
             tl.warning(tl.loc("Warning_ForceNuGetCannotSkipConflicts"));

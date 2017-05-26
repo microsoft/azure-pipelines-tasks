@@ -1,4 +1,4 @@
-import {NuGetEnvironmentSettings} from "./NuGetToolRunner";
+import { NuGetEnvironmentSettings } from "./NuGetToolRunner";
 
 export interface INuGetCommandOptions {
     /** settings used to initialize the environment NuGet.exe is invoked in */

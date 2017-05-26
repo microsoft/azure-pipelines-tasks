@@ -30,12 +30,6 @@
             "visibleRule": "command = restore"
         },
         {
-            "name": "pushAuth",
-            "displayName": "Destination feed and authentication",
-            "isExpanded": true,
-            "visibleRule": "command = push"
-        },
-        {
             "name": "pushAdvanced",
             "displayName": "Advanced",
             "isExpanded": false,
@@ -88,7 +82,7 @@
             "type": "radio",
             "label": "Feeds to use",
             "defaultValue": "config",
-            "helpMarkDown": "You can either select feeds from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
+            "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {
                 "select": "Feed(s) I select here",
@@ -101,7 +95,7 @@
             "type": "pickList",
             "label": "Use packages from this VSTS/TFS feed",
             "defaultValue": "",
-            "helpMarkDown": "Include the selected feeds in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
             "required": "false",
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = select",
@@ -243,7 +237,7 @@
             "name": "searchPatternPack",
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
-            "defaultValue": "**\\*.csproj",
+            "defaultValue": "**/*.csproj",
             "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
             "required": true,
             "visibleRule": "command = pack"
@@ -271,7 +265,7 @@
             "type": "pickList",
             "label": "Automatic package versioning",
             "defaultValue": "off",
-            "helpMarkDown": "Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
+            "helpMarkDown": "Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version your package. **Note:** Under Options set the build number format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
             "required": true,
             "groupName": "packOptions",
             "options": {
@@ -336,7 +330,7 @@
             "label": "Additional build properties",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Semicolon delimited list of properties used to build the package.",
+            "helpMarkDown": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
             "groupName": "packAdvanced"
         },
         {
@@ -442,6 +436,9 @@
         "Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
         "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
-        "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail."
+        "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
+
+        "Error_CommandNotRecognized": "The command %s was not recognized."
     }
 }
