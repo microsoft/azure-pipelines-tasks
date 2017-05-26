@@ -48,7 +48,7 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         let hostType = tl.getVariable('system.hostType');
-        if (hostType && hostType.toUpperCase() != 'BUILD') {
+        if ((hostType && hostType.toUpperCase() != 'BUILD') && (artifactType !== "filepath")) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
             return;
         }
