@@ -44,7 +44,7 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 * @param    transformConfigs  The array of transform config names, ex : ["Release.config", "EnvName.config"]
 * 
 */
-export function basicXdtTransformation(rootFolder, transformConfigs) {
+export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
     var sourceXmlFiles = expandWildcardPattern(rootFolder, '**/*.config');
     var isTransformationApplied = false;
     Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
@@ -59,6 +59,10 @@ export function basicXdtTransformation(rootFolder, transformConfigs) {
         });
     });
     if(!isTransformationApplied) {
-        throw new Error(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason1'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason2'));
     }
+
+    return isTransformationApplied;
 }

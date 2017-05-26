@@ -113,7 +113,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             argsArray.push('/Settings:' + settingsFile);
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ');
-                utils.Helper.printMultiLineLog(settings, (logLine) => {tl._outStream.write('##vso[task.debug]' + logLine);});
+                utils.Helper.printMultiLineLog(settings, (logLine) => { tl._outStream.write('##vso[task.debug]' + logLine); });
             });
         } else {
             if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
@@ -133,8 +133,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     argsArray.push('/logger:trx');
     if (utils.Helper.isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
         if (systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-                argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
-            }
+            argsArray.push('/TestAdapterPath:\"' + systemDefaultWorkingDirectory + '\"');
+        }
     } else {
         argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
@@ -161,16 +161,14 @@ function isDebugEnabled(): boolean {
 
 function addVstestArgs(argsArray: string[], vstest: any) {
     argsArray.forEach(function (arr: any) {
-            vstest.arg(arr);
+        vstest.arg(arr);
     });
 }
 
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
     const defer = Q.defer<string>();
     argsArray.forEach(function (arr, i) {
-        if (!arr.startsWith('/')) {
-            argsArray[i] = '\"' + arr + '\"';
-        }
+        argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
     });
     fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
         if (err) {

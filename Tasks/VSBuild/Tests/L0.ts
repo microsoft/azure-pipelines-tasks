@@ -27,14 +27,17 @@ describe('VSBuild Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('(Select-VSVersion) errors if 15 not found', (done) => {
-            psr.run(path.join(__dirname, 'Select-VSVersion.ErrorsIf15NotFound.ps1'), done);
-        })
         it('(Select-VSVersion) falls back from 14', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom14.ps1'), done);
         })
+        it('(Select-VSVersion) falls back from 15', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.FallsBackFrom15.ps1'), done);
+        })
         it('(Select-VSVersion) falls forward from 12', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom12.ps1'), done);
+        })
+        it('(Select-VSVersion) falls forward from 14', (done) => {
+            psr.run(path.join(__dirname, 'Select-VSVersion.FallsForwardFrom14.ps1'), done);
         })
         it('(Select-VSVersion) finds latest', (done) => {
             psr.run(path.join(__dirname, 'Select-VSVersion.FindsLatest.ps1'), done);
