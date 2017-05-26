@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 41
+        "Patch": 42
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -64,7 +64,7 @@
     },
     "messages": {
         "ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent.",
-        "ErrorHostTypeNotSupported": "This task is only supported within a Build job.",
+        "ErrorHostTypeNotSupported": "This task can be used to publish to server drop within a Build job only.",
         "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
     }
 }
