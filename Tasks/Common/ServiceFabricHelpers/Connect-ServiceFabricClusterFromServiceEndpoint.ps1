@@ -158,6 +158,14 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
                 $clusterConnectionParameters["X509Credential"] = $true
             }
         }
+        else
+        {
+            if ($ConnectedServiceEndpoint.Auth.Parameters.IsWindowsCredential -eq "true")
+            {
+                Write-Debug (Get-VstsLocString -Key UseWindowsCredential)
+                $clusterConnectionParameters["WindowsCredential"] = $true
+            }
+        }
 
         # Connect to cluster
         try {
