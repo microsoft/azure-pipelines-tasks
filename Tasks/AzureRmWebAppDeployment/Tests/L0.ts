@@ -272,6 +272,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             expectedOut = 'Successfully updated scmType to VSTSRM';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.search('loc_mock_AutoParameterizationMessage'), 'Should have provided message for MSBuild package');
             done();
         });
 
@@ -289,6 +290,18 @@ describe('AzureRmWebAppDeployment Suite', function() {
             var sampleOut = 'Successfully updated scmType to VSTSRM';
             assert(tr.stdout.search(sampleOut) < 0, 'should not have updated scmType');
             assert(tr.failed, 'task should have failed');
+            done();
+        });
+
+        it('Fails if XML Transformation throws error (Mock) for MSBuild package', (done) => {
+            this.timeout(1000);
+            let tp = path.join(__dirname, 'L0XdtTransformationFailMSBuildPackage.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+
+            assert(tr.failed, 'task should have failed');
+            assert(tr.stderr.search('loc_mock_FailedToApplyTransformation'), 'Should have provided proper errror message for MSBuild package');
+            assert(tr.stdout.search('loc_mock_AutoParameterizationMessage'), 'Should have provided message for MSBuild package');
             done();
         });
     }

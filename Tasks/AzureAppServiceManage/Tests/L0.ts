@@ -12,7 +12,7 @@ describe('Azure App Service Manage Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('Retrieved list of extensions already available in Azure App Service.'), 'Should have retrieved extensions already avaliable in Azure App Service.');
         assert(tr.stdOutContained('InstallingSiteExtension python2713x86'), 'Should have tried to Install extension.');
-        assert(tr.stdOutContained('ExtensionInstallSuccess python2713x86'), 'Should have installed extension successfully.');
+        assert(tr.stdOutContained('ExtensionInstallSuccess Python 2.7.13 x86'), 'Should have installed extension successfully.');
         done();
     });
     it('Return error when List Extension fails', (done:MochaDone) => {

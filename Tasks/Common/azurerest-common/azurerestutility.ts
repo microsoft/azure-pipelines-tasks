@@ -449,7 +449,6 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to stop App Service: ' + url);
-    console.log(headers);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {

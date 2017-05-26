@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as distributedTest from './distributedtest';
 
 try {
+    tl.setResourcePath(path.join(__dirname, 'task.json'));
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
     tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
@@ -26,7 +27,6 @@ try {
         localTest.startTest();
     }
 } catch (error) {
-    tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
     tl.setResult(tl.TaskResult.Failed, error);
 }
 

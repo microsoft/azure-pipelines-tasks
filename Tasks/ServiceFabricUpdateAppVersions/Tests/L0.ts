@@ -6,15 +6,13 @@ import Q = require('q');
 import assert = require('assert');
 var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('ServiceFabricUpdateAppVersions Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -23,10 +21,12 @@ describe('ServiceFabricUpdateAppVersions Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('update all versions', (done) => {
             psr.run(path.join(__dirname, 'SimpleSuffix.ps1'), done);
         })

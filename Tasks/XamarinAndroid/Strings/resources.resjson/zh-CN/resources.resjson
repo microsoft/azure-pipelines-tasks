@@ -33,15 +33,9 @@
   "loc.input.help.jdkUserInputPath": "在生成期间使用指定路径的 JDK 版本。",
   "loc.input.label.jdkArchitecture": "JDK 体系结构",
   "loc.input.help.jdkArchitecture": "可以选择提供 JDK 的体系结构(x86、x64)。",
-  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "无法找到 MSBuild: 版本 = {0}，体系结构 = {1}。查找最新版本。",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "找不到 MSBuild: 版本 = {0}，体系结构 = {1}。请尝试其他版本/体系结构组合、指定一个位置或安装适当的 MSBuild 版本/体系结构。",
   "loc.messages.JDKNotFound": "未能找到指定的 JDK 版本。请确保环境变量 %s 存在并被设置为相应 JDK 的位置。",
   "loc.messages.NoMatchingProjects": "找不到与 %s 匹配的文件。",
   "loc.messages.XamarinAndroidBuildFailed": "%s\n请参阅 https://go.microsoft.com/fwlink/?LinkId=760847。",
   "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android 任务执行完成，没有发生错误。",
-  "loc.messages.MSB_Build0": "生成 {0}",
-  "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "已检测到 NuGet 扩展加载程序路径。将环境变量 NUGET_EXTENSIONS_PATH 设置为“{0}”。",
-  "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "使用搜索模式“{0}”找不到解决方案。",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "“还原 NuGet 包”选项已弃用。若要在生成中还原 NuGet 包，请将 NuGet 安装程序任务添加到生成定义中。",
   "loc.messages.MSB_BuildToolNotFound": "macOS 或 Linux 代理上找不到 MSBuild 或 xbuild (Mono)。"
 }

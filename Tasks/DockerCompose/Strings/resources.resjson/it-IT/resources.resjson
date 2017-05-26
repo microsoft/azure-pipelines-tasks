@@ -48,7 +48,7 @@
   "loc.input.help.detached": "Consente di eseguire i contenitori dei servizi in background.",
   "loc.input.label.abortOnContainerExit": "Interrompi alla chiusura del contenitore",
   "loc.input.help.abortOnContainerExit": "Arresta tutti i contenitori in caso di chiusura di un qualsiasi contenitore.",
-  "loc.input.label.imageDigestComposeFile": "Image Digest Compose File",
+  "loc.input.label.imageDigestComposeFile": "File digest dell'immagine di Docker Compose",
   "loc.input.help.imageDigestComposeFile": "Percorso di un file di Docker Compose che viene creato e popolato con i digest completi del repository delle immagini dell'immagine Docker di ogni servizio.",
   "loc.input.label.removeBuildOptions": "Rimuovi opzioni di compilazione",
   "loc.input.help.removeBuildOptions": "Rimuove le opzioni di compilazione dal file Docker Compose di output.",

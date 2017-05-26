@@ -1,0 +1,204 @@
+{
+  "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
+  "name": "Kubernetes",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 2
+  },
+  "demands": [],
+  "preview": "true",
+  "groups": [
+    {
+      "name": "registry",
+      "displayName": "ms-resource:loc.group.displayName.registry",
+      "isExpanded": true
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": false
+    },
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "kubernetesServiceEndpoint",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint"
+    },
+    {
+      "name": "containerRegistryType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerRegistryType",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerRegistryType",
+      "groupName": "registry"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "containerRegistryType = Container Registry",
+      "groupName": "registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "containerRegistryType = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "containerRegistryType = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "registry"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName",
+      "groupName": "registry"
+    },
+    {
+      "name": "forceUpdate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceUpdate",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.forceUpdate",
+      "groupName": "registry"
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "apply",
+      "required": true,
+      "options": {
+        "apply": "apply",
+        "create": "create",
+        "delete": "delete",
+        "exec": "exec",
+        "expose": "expose",
+        "get": "get",
+        "logs": "logs",
+        "run": "run",
+        "set": "set",
+        "top": "top"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "groupName": "commands",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useConfigurationFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useConfigurationFile",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
+      "groupName": "commands"
+    },
+    {
+      "name": "configuration",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "visibleRule": "useConfigurationFile = true",
+      "groupName": "commands"
+    },
+    {
+      "name": "arguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "groupName": "commands"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "commands"
+    },
+    {
+      "name": "outputFormat",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.outputFormat",
+      "defaultValue": "json",
+      "required": false,
+      "options": {
+        "json": "json",
+        "yaml": "yaml"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
+      "groupName": "output"
+    },
+    {
+      "name": "kubectlOutput",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kubectlOutput",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.kubectlOutput",
+      "groupName": "output"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "src//kubernetes.js"
+    }
+  },
+  "messages": {
+    "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
+    "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
+    "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
+    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified"
+  }
+}

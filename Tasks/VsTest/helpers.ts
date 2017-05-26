@@ -6,7 +6,7 @@ import * as Q from 'q';
 import * as models from './models';
 import * as os from 'os';
 
-
+const str = require('string');
 const uuid = require('node-uuid');
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
@@ -17,7 +17,7 @@ export class Constants {
     public static vsTestLocationString = 'location';
 }
 
-export class Helper{
+export class Helper {
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
             envVars[name] = value;
@@ -58,10 +58,10 @@ export class Helper{
                     }
                 });
             })
-            .fail(function(err) {
+            .fail(function (err) {
                 defer.reject(err);
             });
-            return defer.promise;
+        return defer.promise;
     }
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
@@ -90,13 +90,15 @@ export class Helper{
     }
 
     public static readFileContentsSync(filePath: string, encoding: string): string {
-        return fs.readFileSync(filePath, encoding)
+        return fs.readFileSync(filePath, encoding);
     }
 
     public static writeXmlFile(result: any, settingsFile: string, fileExt: string): Q.Promise<string> {
         const defer = Q.defer<string>();
-        const runSettingsForTestImpact = builder.buildObject(result);
-        Helper.saveToFile(runSettingsForTestImpact, fileExt)
+        let runSettingsContent = builder.buildObject(result);
+        runSettingsContent = str(runSettingsContent).replaceAll('&#xD;', '').s;
+        //This is to fix carriage return any other special chars will not be replaced
+        Helper.saveToFile(runSettingsContent, fileExt)
             .then(function (fileName) {
                 defer.resolve(fileName);
                 return defer.promise;

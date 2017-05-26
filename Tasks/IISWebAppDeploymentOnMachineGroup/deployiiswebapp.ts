@@ -41,7 +41,8 @@ async function run()
         if ( JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution ) {
 
             var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
-            fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+			var isMSBuildPackage = !isFolderBasedDeployment && await utility.isMSDeployPackage(webDeployPkg);
+            fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath, isMSBuildPackage);
             var output = await utility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;

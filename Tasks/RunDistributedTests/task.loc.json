@@ -13,8 +13,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 50
+    "Patch": 52
   },
+  "runsOn": [
+    "Agent"
+  ],
   "demands": [],
   "minimumAgentVersion": "1.104.0",
   "groups": [

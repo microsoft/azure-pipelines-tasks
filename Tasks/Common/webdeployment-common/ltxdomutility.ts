@@ -82,7 +82,7 @@ export function getChildElementsByTagName(node, tagName) {
             }
             var liveChildNodes = getChildElementsByTagName(children[i], tagName);
             if(liveChildNodes && liveChildNodes.length > 0){
-            	liveNodes.concat(liveChildNodes);
+            	liveNodes = liveNodes.concat(liveChildNodes);
             }
         }
     }

@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "映射文件",
   "loc.input.help.mappingTxtPath": "从存储库根路径到 Android 的 mapping.txt 文件的相对路径。",
   "loc.input.label.packParentFolder": "包含父文件夹中的所有项",
-  "loc.input.help.packParentFolder": "上传选中的符号文件/文件夹以及在同一父级文件夹内的所有其他项，对于 React 本机应用，这是必需的。",
+  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "创建发行说明",
   "loc.input.label.releaseNotesInput": "发行说明",
   "loc.input.help.releaseNotesInput": "此版本的发行说明。",

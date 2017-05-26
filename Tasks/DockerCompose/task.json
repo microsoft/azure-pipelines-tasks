@@ -2,8 +2,8 @@
     "id": "6975E2D1-96D3-4AFC-8A41-498B5D34EA19",
     "name": "DockerCompose",
     "friendlyName": "Docker Compose",
-    "description": "Build, push or run multi-container Docker applications",
-    "helpMarkDown": "[More Information](http://aka.ms/dockertoolsforvsts)",
+    "description": "Build, push or run multi-container Docker applications. Task can be used with Docker or Azure Container registry.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [
         "Build",
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 7
+        "Minor": 4,
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -98,7 +98,7 @@
             "name": "qualifyImageNames",
             "type": "boolean",
             "label": "Qualify Image Names",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "helpMarkDown": "Qualify image names for built services with the Docker registry connection's hostname if not otherwise specified."
         },
         {

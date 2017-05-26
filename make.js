@@ -2,6 +2,7 @@
 var minimist = require('minimist');
 var mopts = {
     string: [
+        'runner',
         'server',
         'suite',
         'task',
@@ -83,6 +84,12 @@ else {
     // load the default list
     taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
 }
+
+// set the runner options. should either be empty or a comma delimited list of test runners.
+// for example: ts OR ts,ps
+//
+// note, currently the ts runner igores this setting and will always run.
+process.env['TASK_TEST_RUNNER'] = options.runner || '';
 
 target.clean = function () {
     rm('-Rf', path.join(__dirname, '_build'));

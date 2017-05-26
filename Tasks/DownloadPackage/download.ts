@@ -64,7 +64,7 @@ export async function downloadPackage(collectionUrl: string, credentialHandler: 
 					tl.mkdirP(downloadPath);
 				}
 
-				var zipLocation = path.resolve(downloadPath, "/../", packageName) + ".zip";
+				var zipLocation = path.resolve(downloadPath, "../", packageName) + ".zip";
 				var unzipLocation = path.join(downloadPath, "");
 
 				console.log(tl.loc("StartingDownloadOfPackage", packageName, zipLocation));

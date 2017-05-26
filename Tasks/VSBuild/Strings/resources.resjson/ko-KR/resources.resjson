@@ -24,10 +24,11 @@
   "loc.input.label.createLogFile": "로그 파일 만들기",
   "loc.input.help.createLogFile": "선택적으로 로그 파일을 만드세요(Windows만 해당).",
   "loc.messages.MSBuildLocationDeprecated0": "MSBuild 위치 매개 변수를 사용하지 않습니다. 값 '{0}'을(를) 무시합니다.",
-  "loc.messages.MSBuildNotFoundVersion0Architecture1": "버전 '{0}' 및 아키텍처 '{1}'에 대한 MSBuild를 찾을 수 없습니다.",
   "loc.messages.MSBuildVersionDeprecated0": "MSBuild 버전 매개 변수를 사용하지 않습니다. 값 '{0}'을(를) 무시합니다.",
   "loc.messages.UnexpectedVSVersion0": "예기치 않은 Visual Studio 버전 '{0}'입니다.",
   "loc.messages.VSLocationDeprecated0": "Visual Studio 위치 매개 변수를 사용하지 않습니다. 값 '{0}'을(를) 무시합니다.",
-  "loc.messages.VSNotFoundTry": "Visual Studio를 찾을 수 없습니다. 지원되는 Visual Studio 버전을 설치해 보세요. 지원되는 버전 목록에 대한 작업 정의를 확인하세요.",
-  "loc.messages.VSVersion0NotFoundLookingForLatest": "Visual Studio 버전 '{0}'을(를) 찾을 수 없습니다. 최신 버전을 찾고 있습니다."
+  "loc.messages.VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+  "loc.messages.VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+  "loc.messages.VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+  "loc.messages.VSVersion15NotFound": "Visual Studio 2017 was not found."
 }

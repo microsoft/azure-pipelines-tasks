@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "preview": "true",
@@ -97,7 +97,7 @@
       "name": "defaultContext",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.defaultContext",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "visibleRule": "action = Build an image",
       "helpMarkDown": "ms-resource:loc.input.help.defaultContext"
     },
@@ -121,7 +121,7 @@
       "name": "qualifyImageName",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.qualifyImageName",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
     },

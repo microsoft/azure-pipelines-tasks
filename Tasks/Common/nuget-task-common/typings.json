@@ -1,6 +1,8 @@
 {
   "name": "nuget-task-common",
-  "dependencies": {},
+  "dependencies": {
+    "mockery": "registry:dt/mockery#1.4.0+20160428043022"
+  },
   "globalDependencies": {
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
     "node": "registry:dt/node#6.0.0+20160915134512",
