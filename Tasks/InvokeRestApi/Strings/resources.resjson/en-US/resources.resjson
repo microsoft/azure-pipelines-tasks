@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Invoke REST API",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "loc.description": "Invoke REST API as a part of your process.",
   "loc.instanceNameFormat": "Invoke Rest API: $(httpMethod)",
   "loc.input.label.connectedServiceName": "Generic Endpoint",

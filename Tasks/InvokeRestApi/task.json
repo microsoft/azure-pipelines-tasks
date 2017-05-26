@@ -3,6 +3,8 @@
   "name": "InvokeRESTAPI",
   "friendlyName": "Invoke REST API",
   "description": "Invoke REST API as a part of your process.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "category": "Deploy",
   "visibility": [
     "Release"
@@ -10,12 +12,13 @@
   "runsOn": [
     "Server"
   ],
-  "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
     "Minor": 0,
     "Patch": 1
   },
+  "instanceNameFormat": "Invoke Rest API: $(httpMethod)",
+  "groups": [],
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -79,7 +82,6 @@
     }
   ],
 
-  "instanceNameFormat": "Invoke Rest API: $(httpMethod)",
   "execution": {
     "HttpRequest": {
       "Execute": {

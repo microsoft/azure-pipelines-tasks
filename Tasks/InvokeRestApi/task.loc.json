@@ -3,6 +3,8 @@
   "name": "InvokeRESTAPI",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Release"
@@ -10,19 +12,20 @@
   "runsOn": [
     "Server"
   ],
-  "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
     "Minor": 0,
     "Patch": 1
   },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [],
   "inputs": [
     {
       "name": "connectedServiceName",
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
-      "required": true,
+      "required": "true",
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
@@ -48,7 +51,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.headers",
       "required": "false",
-      "defaultValue": "[{\"Content-Type\":\"text/plain\"}]",
+      "defaultValue": "{\"Content-Type\":\"application/json\"}",
       "properties": {
         "resizable": "true",
         "rows": "3",
@@ -67,7 +70,7 @@
         "rows": "3",
         "maxLength": "500"
       },
-      "visibleRule": "httpMethod != GET && httpMethod != Head"
+      "visibleRule": "method != GET && method != Head"
     },
     {
       "name": "waitForCompletion",
@@ -78,7 +81,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "HttpRequest": {
       "Execute": {
@@ -90,6 +92,5 @@
         "WaitForCompletion": "$(waitForCompletion)"
       }
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
