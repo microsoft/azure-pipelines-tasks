@@ -60,6 +60,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Get-VisualStudio_15_0) caches result', (done) => {
             psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.CachesResult.ps1'), done);
         })
+        it('(Get-VisualStudio_15_0) falls back to build tools', (done) => {
+            psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.FallsBackToBuildTools.ps1'), done);
+        })
         it('(Get-VisualStudio_15_0) ignores STDERR', (done) => {
             psr.run(path.join(__dirname, 'Get-VisualStudio_15_0.IgnoresStderr.ps1'), done);
         })
