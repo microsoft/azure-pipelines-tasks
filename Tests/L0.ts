@@ -258,7 +258,8 @@ describe('General Suite', function () {
 
         var supportedServerExecutionHandlers: string[] = [
             'RM:ManualIntervention', 
-            'ServiceBus'];
+            'ServiceBus',
+            'HttpRequest'];
 
        var supportedTaskEvents: string[] = [
            'TaskAssigned', 
