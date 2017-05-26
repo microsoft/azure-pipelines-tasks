@@ -142,7 +142,14 @@ async function executeMSDeploy(msDeployCmdArgs) {
     });
 
     try {
+        tl.debug("the argument string is:");
+        tl.debug(msDeployCmdArgs);
+        tl.debug("converting the argument string into an array of arguments");
         msDeployCmdArgs = argStringToArray(msDeployCmdArgs);
+        tl.debug("the array of arguments is:");
+        for(var i = 0 ; i < msDeployCmdArgs.length ; i++ ) {
+            tl.debug("arg#" + i + ": " + msDeployCmdArgs[i]);
+        }
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
         deferred.resolve("Azure App service successfully deployed");
     } catch (error) {
