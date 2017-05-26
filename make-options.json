@@ -38,6 +38,7 @@
         "InstallAppleCertificate",
         "InstallAppleProvisioningProfile",
         "InstallSSHKey",
+        "InvokeRestApi",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
         "Kubernetes",
