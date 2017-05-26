@@ -51,7 +51,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.headers",
       "required": "false",
-      "defaultValue": "{\"Content-Type\":\"application/json\"}",
+      "defaultValue": "{\n\"Content-Type\":\"application/json\"\n}",
       "properties": {
         "resizable": "true",
         "rows": "3",
@@ -70,7 +70,7 @@
         "rows": "3",
         "maxLength": "500"
       },
-      "visibleRule": "method != GET && method != Head"
+      "visibleRule": "method != GET && method != HEAD"
     },
     {
       "name": "waitForCompletion",
