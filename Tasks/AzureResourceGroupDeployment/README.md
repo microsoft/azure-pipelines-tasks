@@ -10,6 +10,7 @@ This task is used to create or update a resource group in Azure using the [Azure
  - Supports viewing/editing template parameters in a grid by clicking on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.
  - NAT rule mapping for VMs that are backed by an Load balancer
  - "Resource group" field is now renamed as "VM details for  WinRM" and is included into the section "Advanced deployment options for virtual machines".
+ - "Enable prerequisites" dropdown now includes the option to configure [deployment group](https://www.visualstudio.com/en-us/docs/build/concepts/definitions/release/deployment-groups/) agents on to each of the virtual machines provisioned in the resource group.
  - Limitations:
   - No support for Classic subscriptions. Only [ARM] (https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) subscriptions are supported.
   - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like "ConvertTo-SecureString" when you migrate from version 1.0 to version 2.0.
@@ -76,11 +77,29 @@ The following parameters are shown when the selected action is to create or upda
  
  These options would be applicable only when the Resource group contains virtual machines.
  
- * **Enable Deployment Prerequisites**: Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Choosing Deployment group option would configure Deployment group agent on each of the virtual machines.
+ * **Enable prerequisites**: Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Choosing Deployment group option would configure Deployment group agent on each of the virtual machines.
  
-  * **VM details for WinRM**: Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected.
+  * **VM details for WinRM**: Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected. Also this field is visible only when "Enable Prerequisites" dropdown option is not Deployment Group. 
   
    Limitation: VM details produced during execution will only contain the VM hostname(s) and (public) ports, if any. Credentials to connect to the VM host(s) are to be provided explicitly in the subsequent tasks.
+
+  * **TFS/VSTS endpoint**\*: Agent registration with Deployment group requires access to your Visual Studio project.​ Click "Add" to create an endpoint using personal access token (PAT) with scope restricted to "Deployment Group" and a default expiration time of 90 days. ​Click "Manage" to update endpoint details.​
+  
+  * **Team project**\*: Specify the Team Project which has the Deployment Group defined in it​.
+  
+  * **Deployment Group**: Specify an existing Deployment Group against which the Agent(s) will be registered.
+  
+  * **Copy Azure VM tags to agents**: Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. ​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)
+  
+
+### Pre-existing Deployment Group
+
+When "Enable Prerequisites" dropdown option is "Configure with Deployment Group agent", this task downloads the agent installer on each of the machines and register them with an existing Deployment group. If there is no pre-existing Deployment group, you can create one in the Deployment groups hub.
+
+Carry out the following steps to create a Deployment group:
+1. Open your Visual Studio Team Services account in your web browser
+2. Open the Deployment groups tab of the Build & Release hub and choose +Deployment group to create a new group
+3. Enter a name for the group in the Details tab and then choose "Create"
 
 
 ### Setting up a virtual machine for WinRM HTTPS using Azure Templates:
