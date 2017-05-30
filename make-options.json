@@ -20,7 +20,6 @@
         "CocoaPods",
         "CopyFiles",
         "CopyFilesOverSSH",
-        "CopyPublishBuildArtifacts",
         "cURLUploader",
         "DecryptFile",
         "DeleteFiles",
