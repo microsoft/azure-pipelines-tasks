@@ -4,6 +4,7 @@
   "loc.description": "Cree o actualice un sitio web, una aplicación web, directorios virtuales y un grupo de aplicaciones",
   "loc.instanceNameFormat": "Administrar $(IISDeploymentType)",
   "loc.group.displayName.Website": "Sitio web de IIS",
+  "loc.group.displayName.IISBindings": "Enlaces de IIS",
   "loc.group.displayName.ApplicationPoolForWebsite": "Grupo de aplicaciones de IIS",
   "loc.group.displayName.IISWebsiteAuthentication": "Autenticación de IIS",
   "loc.group.displayName.ApplicationPool": "Grupo de aplicaciones de IIS",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "Escriba un nombre de host (o de dominio) para el sitio web. <br>Si especifica un nombre de host, los clientes deben usar este nombre en lugar de la dirección IP para acceder al sitio web.<br>",
   "loc.input.label.SSLCertThumbPrint": "Huella digital del certificado SSL",
   "loc.input.help.SSLCertThumbPrint": "Proporcione la huella digital del certificado SSL (capa de sockets seguros) que el sitio web usará para la comunicación HTTPS, con formato de cadena hexadecimal de 40 caracteres de longitud. El certificado SSL debe estar ya instalado en el almacén personal del equipo local.",
+  "loc.input.label.Bindings": "Agregar enlaces",
+  "loc.input.help.Bindings": "Haga clic en el botón [...] de la extensión para agregar enlaces para el sitio web.",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "Crear o actualizar grupo de aplicaciones",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Seleccione la opción para crear o actualizar un grupo de aplicaciones. Si se activa, el sitio web se creará en el grupo de aplicaciones especificado.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Configurar autenticación",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "Proporcione el nombre del grupo de aplicaciones de IIS.",
   "loc.input.label.AppCmdCommands": "Comandos adicionales de appcmd.exe",
   "loc.input.help.AppCmdCommands": "Especifique comandos adicionales de AppCmd.exe. Para usar más de un comando, utilice un separador de línea, como: <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.messages.InvalidSslThumbprint": "Huella digital no válida. La longitud no es de 40 caracteres o contiene caracteres no válidos.",
   "loc.messages.InvalidVirtualPath": "La ruta de acceso virtual debe comenzar con /",
   "loc.messages.InvalidIISDeploymentType": "Tipo de implementación de IIS no válido: {0}",
   "loc.messages.InvalidActionIISWebsite": "Se ha seleccionado una acción no válida ({0}) para el sitio web de IIS.",
   "loc.messages.InvalidActionIISAppPool": "Se ha seleccionado una acción no válida ({0}) para el grupo de aplicaciones de IIS.",
   "loc.messages.PackageDeploymentFailed": "No se pudo implementar el paquete web en el sitio web de IIS.",
-  "loc.messages.SSLCertWarningInvalidCharacters": "La huella digital del certificado SSL contiene caracteres que no son hexadecimales. Se quitarán todos los caracteres no hexadecimales."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "La huella digital del certificado SSL falta en el enlace https : ( {0}/{1}:{2} )",
+  "loc.messages.InvalidSslThumbprintInBinding": "Huella digital no válida en enlace ( {0}/{1}:{2} ). La longitud no es de 40 caracteres o contiene caracteres no válidos.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "La huella digital del certificado SSL contiene caracteres no hexadecimales en enlace : ( {0}/{1}:{2} ) . Recortando todos los caracteres no hexadecimales."
 }

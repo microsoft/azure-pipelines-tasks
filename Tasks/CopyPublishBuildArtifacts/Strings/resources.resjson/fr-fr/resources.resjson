@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copier et publier les artefacts de build",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Copier les artefacts de build dans un dossier intermédiaire à l'aide des modèles minimatch, puis les publier sur le serveur ou un partage de fichiers",
+  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
   "loc.instanceNameFormat": "Copier et publier l'artefact : $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copier la racine",
   "loc.input.help.CopyRoot": "Dossier racine auquel les modèles de correspondance doivent s'appliquer. Si aucune valeur n'est fournie, la racine du dépôt est utilisée. Utilisez des variables pour spécifier un dossier en dehors du dépôt, par exemple : $(Agent.BuildDirectory).",

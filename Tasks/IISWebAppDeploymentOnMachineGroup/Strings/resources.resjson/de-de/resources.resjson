@@ -68,5 +68,9 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "XML-Transformationsfehler beim Transformieren von \"%s\" unter Verwendung von \"%s\".",
   "loc.messages.EncodeNotSupported": "Erkannte Codierung der Datei \"%s\": %s. Eine Variablenersetzung wird für die Dateicodierung \"%s\" nicht unterstützt. Unterstützte Codierungen sind UTF-8 und UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "Die Codierung der Datei \"%s\" wurde nicht erkannt (typeCode: %s). Unterstützte Codierungen sind UTF-8 und UTF-16 LE.",
-  "loc.messages.ShortFileBufferError": "Der Dateipuffer ist zu klein, um den Codierungstyp zu erkennen: %s"
+  "loc.messages.ShortFileBufferError": "Der Dateipuffer ist zu klein, um den Codierungstyp zu erkennen: %s",
+  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.AutoParameterizationMessage": "ConnectionString-Attribute in Web.config ist standardmäßig parametrisiert. Beachten Sie, dass die Transformation keine Auswirkungen auf connectionString-Attribute hat, da der Wert bei der Bereitstellung durch Dateien vom Typ \"Parameters.xml\" oder \"SetParameters.xml\" überschrieben wird. Sie können die automatische Parametrisierung deaktivieren, indem Sie beim Erstellung des MSBuild-Pakets die Einstellung \"/p:AutoParameterizationWebConfigConnectionStrings=False\" festlegen."
 }

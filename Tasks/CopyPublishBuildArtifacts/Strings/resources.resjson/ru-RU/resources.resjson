@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Копировать и опубликовать артефакты сборки",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Копирование артефактов сборки в промежуточную папку при помощи шаблонов minimatch и их публикация на сервере или в общем файловом ресурсе",
+  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
   "loc.instanceNameFormat": "Копировать артефакт публикации: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Копировать корень",
   "loc.input.help.CopyRoot": "Корневой каталог, к которому должны быть применены соответствующие шаблоны. Если значение не указано, используется корень репозитория. Для указания каталога вне репозитория используйте переменные, например: $(Agent.BuildDirectory).",

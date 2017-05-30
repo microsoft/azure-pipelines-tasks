@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Más información](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Compile, inserte o ejecute aplicaciones de Docker con varios contenedores",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Compile, inserte o ejecute aplicaciones de Docker con varios contenedores. La tarea se puede usar con Docker o Azure Container Registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Opciones avanzadas",
   "loc.input.label.containerregistrytype": "Tipo de Container Registry",

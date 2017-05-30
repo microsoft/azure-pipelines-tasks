@@ -27,7 +27,7 @@
   "loc.input.label.testPlatform": "测试代理版本",
   "loc.input.help.testPlatform": "要使用的 Visual Studio 测试代理版本。选取合适的版本以匹配生成测试二进制文件所使用的 VS 版本。",
   "loc.input.label.agentLocation": "测试代理位置",
-  "loc.input.help.agentLocation": "根据需要从网络或本地位置提供 vstf_testagent.exe 路径。如果未提供路径，将从下载中心自动下载。Test Agent 2015 Update 3 的安装程序可从 `https://go.microsoft.com/fwlink/?LinkId=827840` 下载。Test Agent 2017 的安装程序可从 `https://aka.ms/vs/15/release/vs_TestAgent.exe` 下载",
+  "loc.input.help.agentLocation": "根据需要从网络或本地位置提供 vstf_testagent.exe 路径。如果未提供路径，则将从下载中心自动下载。Test Agent 2015 Update 3 的安装程序可从 \"https://go.microsoft.com/fwlink/?LinkId=827840\" 获取。Test Agent 2017 的安装程序可从 \"https://aka.ms/vs/15/release/vs_TestAgent.exe\" 获取。请参阅 \"https://aka.ms/testagentlocation\" 详细了解如何使用脱机安装程序。",
   "loc.input.label.updateTestAgent": "更新测试代理",
   "loc.input.help.updateTestAgent": "如果 Test Agent 已部署在计算机上，此选项会检查是否有可用于该版本 Test Agent 的更新。"
 }

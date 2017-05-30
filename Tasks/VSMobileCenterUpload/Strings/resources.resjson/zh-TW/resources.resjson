@@ -20,7 +20,7 @@
   "loc.input.label.mappingTxtPath": "對應檔案",
   "loc.input.help.mappingTxtPath": "從儲存機制根路徑到 Android mapping.txt 檔案的相對路徑。",
   "loc.input.label.packParentFolder": "包括父資料夾中所有項目",
-  "loc.input.help.packParentFolder": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps.",
+  "loc.input.help.packParentFolder": "上傳選取的符號檔或資料夾，以及相同父資料夾中的所有其他項目。這對 React Native 應用程式而言是必要動作。",
   "loc.input.label.releaseNotesSelection": "建立版本資訊",
   "loc.input.label.releaseNotesInput": "版本資訊",
   "loc.input.help.releaseNotesInput": "此版本的版本資訊。",

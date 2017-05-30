@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[자세한 정보](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Docker 이미지를 빌드, 푸시 또는 실행하거나 Docker 명령을 실행합니다.",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Docker 이미지를 빌드, 푸시 또는 실행하거나 Docker 명령을 실행합니다. Docker 또는 Azure Container Registry에서 작업을 사용할 수 있습니다.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "고급 옵션",
   "loc.input.label.containerregistrytype": "Container Registry 유형",

@@ -50,7 +50,7 @@
   "loc.input.label.appSlug": "アプリ置換フィールド",
   "loc.input.help.appSlug": "アプリ置換フィールドの形式は {username}/{app_identifier} です。アプリの {username} や {app_identifier} を見つけるには、https://mobile.azure.com/apps からその名前をクリックすると、結果の URL の形式が https://mobile.azure.com/users/{username}/apps/{app_identifier} になります。",
   "loc.input.label.devices": "デバイス",
-  "loc.input.help.devices": "このテストを実行する対象のデバイスを特定するための文字列。Mobile Center テスト ビーコンから新しいテストの実行を定義するときは、この文字列をコピーして貼り付けます",
+  "loc.input.help.devices": "このテストを実行する対象のデバイスを特定するための文字列。Mobile Center テスト ビーコンから新しいテストの実行を定義するときに、この文字列をコピーして貼り付けます。",
   "loc.input.label.series": "テスト シリーズ",
   "loc.input.help.series": "テスト実行を編成するためのシリーズ名 (たとえば、master、production、beta)。",
   "loc.input.label.dsymDir": "dSym ディレクトリ",

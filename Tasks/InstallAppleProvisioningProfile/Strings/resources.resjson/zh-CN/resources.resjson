@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "安装 Apple 预配配置文件",
   "loc.helpMarkDown": "",
   "loc.description": "将生成所需的 apple 预配配置文件安装到 macOS 代理上",
   "loc.instanceNameFormat": "安装 apple 预配配置文件",

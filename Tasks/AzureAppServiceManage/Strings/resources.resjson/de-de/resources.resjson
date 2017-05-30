@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Azure App Service Manage (VORSCHAU)",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Hiermit wird der Slottausch für einen Azure App Service gestartet, beendet oder neu gestartet.",
+  "loc.description": "Hiermit wird der Slottausch oder das Installieren von Websiteerweiterungen für einen Azure App Service gestartet, beendet oder neu gestartet.",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Wählen Sie das Azure Resource Manager-Abonnement aus.",
   "loc.input.label.Action": "Aktion",
-  "loc.input.help.Action": "Aktion, die für den App Service durchgeführt werden soll. Sie können einen App Service starten/beenden/neu starten oder einen Slottausch verwalten.",
+  "loc.input.help.Action": "Aktion, die für den App Service durchgeführt werden soll. Hiermit können Sie einen Slottausch oder das Installieren von Websiteerweiterungen für einen Azure App Service starten, beenden oder neu starten.",
   "loc.input.label.WebAppName": "App Service-Name",
   "loc.input.help.WebAppName": "Geben Sie den Namen eines vorhandenen Azure App Service ein, oder wählen Sie ihn aus.",
   "loc.input.label.SpecifySlot": "Slot angeben",
@@ -23,6 +23,8 @@
   "loc.input.label.Slot": "Platz",
   "loc.input.label.ExtensionsList": "Erweiterungen installieren",
   "loc.input.help.ExtensionsList": "Websiteerweiterungen werden in Microsoft Azure App Service ausgeführt. Sie können Tools als Websiteerweiterung installieren und Ihre Azure App Service besser verwalten. Der App Service wird neu gestartet, damit die letzten Änderungen in Kraft treten.",
+  "loc.input.label.OutputVariable": "Ausgabevariable",
+  "loc.input.help.OutputVariable": "Geben Sie den Namen der Variablen für den lokalen Installationspfad der gewählten Erweiterung aus.<br />Hinweis: Wenn mehrere Erweiterungen zur Installation ausgewählt wurden, geben Sie eine durch Trennzeichen getrennte Liste der Variablen an, die die lokalen Pfade der ausgewählten Erweiterungen in der Reihenfolge enthält, in der sie im Feld \"Erweiterung installieren\" angezeigt werden.<br />Beispiel: outputVariable1, outputVariable2",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Fehler: Die Bereitstellungsmethode \"MSDeploy\" ist für die Azure-Web-App nicht vorhanden: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "Der Slottauschverlauf unter \"%s\" wurde für die Azure-Web-App \"%s\" erfolgreich aktualisiert.",
   "loc.messages.Failedtoupdateslotswaphistory": "Fehler beim Aktualisieren des Slottauschverlaufs für Azure-Web-App: %s",
@@ -58,5 +60,5 @@
   "loc.messages.ExtensionListFailedError": "Fehler beim Abrufen der in Azure App Service installierten Erweiterungen. Fehler %s.",
   "loc.messages.ExtensionListFailedResponseError": "Fehler beim Abrufen der in Azure App Service installierten Erweiterungen. Statuscode: %s (%s)",
   "loc.messages.InstallingSiteExtension": "Websiteerweiterung \"%s\" wird in Azure App Service installiert.",
-  "loc.messages.FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s"
+  "loc.messages.FailedToFetchAppServiceState": "Fehler beim Abrufen des App Service-Status für den App Service: %s, Fehlercode: %s, Fehlermeldung: %s"
 }

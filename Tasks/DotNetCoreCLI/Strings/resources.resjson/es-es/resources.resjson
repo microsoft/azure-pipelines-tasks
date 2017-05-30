@@ -8,14 +8,14 @@
   "loc.input.label.publishWebProjects": "Publicar proyectos web",
   "loc.input.help.publishWebProjects": "Si es verdadero, la tarea intentará encontrar los proyectos web en el repositorio y ejecutará el comando de publicación en ellos. Los proyectos web se identifican por la presencia de un archivo web.config o una carpeta wwwroot en el directorio.",
   "loc.input.label.projects": "Proyectos",
-  "loc.input.help.projects": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders.",
+  "loc.input.help.projects": "Ruta de acceso relativa de los archivos .csproj de la raíz del repositorio. Se pueden usar caracteres comodín. Por ejemplo, **/.csproj para todos los archivos .csproj de todas las subcarpetas.",
   "loc.input.label.arguments": "Argumentos",
   "loc.input.help.arguments": "Argumentos al comando seleccionado. Por ejemplo, configuración de compilación, carpeta de salida, tiempo de ejecución. Los argumentos dependen del comando seleccionado.",
   "loc.input.label.zipAfterPublish": "Comprimir proyectos publicados",
   "loc.input.help.zipAfterPublish": "Si es verdadero, se descomprimirá la carpeta creada por el comando de publicación.",
   "loc.messages.noProjectFilesFound": "No se encontraron archivos de proyecto que coincidieran con el patrón especificado.",
   "loc.messages.noWebProjctFound": "No se encontró ningún proyecto web en el repositorio. Los proyectos web se identifican por la presencia de un archivo web.config o una carpeta wwwroot en el directorio.",
-  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
+  "loc.messages.dotnetCommandFailed": "Error del comando dotnet con código de salida distinto de cero en los proyectos siguientes: %s",
   "loc.messages.zipFailed": "Error de compresión: %s",
   "loc.messages.noPublishFolderFoundToZip": "No se pudo encontrar una carpeta de publicación para comprimir el archivo de proyecto: %s."
 }

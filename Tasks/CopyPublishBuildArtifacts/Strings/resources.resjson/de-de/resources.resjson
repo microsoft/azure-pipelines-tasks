@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Buildartefakte kopieren und veröffentlichen",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Kopiert Buildartefakte unter Verwendung von Minimatchmustern in einen Stagingordner und veröffentlicht sie auf dem Server oder in einer Dateifreigabe.",
+  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
   "loc.instanceNameFormat": "Veröffentlichungsartefakt kopieren: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Stamm kopieren",
   "loc.input.help.CopyRoot": "Der Stammordner, auf den die Dateiabgleichsmuster angewendet werden sollen. Wenn kein Wert angegeben wird, wird der Repositorystamm verwendet. Verwenden Sie Variablen, um einen Ordner außerhalb des Repositorys anzugeben, z. B. $(Agent.BuildDirectory).",

@@ -4,6 +4,7 @@
   "loc.description": "Créer ou mettre à jour un site web, une application web, des répertoires virtuels et un pool d'applications",
   "loc.instanceNameFormat": "Gérer $(IISDeploymentType)",
   "loc.group.displayName.Website": "Site web IIS",
+  "loc.group.displayName.IISBindings": "Liaisons IIS",
   "loc.group.displayName.ApplicationPoolForWebsite": "Pool d'applications IIS",
   "loc.group.displayName.IISWebsiteAuthentication": "Authentification IIS",
   "loc.group.displayName.ApplicationPool": "Pool d'applications IIS",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "Entrez le nom d'hôte (ou nom de domaine) du site web. <br>Si un nom d'hôte est spécifié, les clients doivent l'utiliser à la place de l'adresse IP pour accéder au site web.<br>",
   "loc.input.label.SSLCertThumbPrint": "Empreinte du certificat SSL",
   "loc.input.help.SSLCertThumbPrint": "Indiquez l'empreinte numérique du certificat SSL (Secure Socket Layer) que le site web doit utiliser pour la communication HTTPS, sous la forme d'une chaîne hexadécimale de 40 caractères. Le certificat SSL doit être installé au préalable sur l'ordinateur, dans Ordinateur local ou Magasin personnel.",
+  "loc.input.label.Bindings": "Ajouter des liaisons",
+  "loc.input.help.Bindings": "Cliquez sur le bouton [...] de l'extension pour ajouter des liaisons au site web.",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "Créer ou mettre à jour le pool d'applications",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Sélectionnez l'option permettant de créer ou mettre à jour un pool d'applications. Si cette option est cochée, le site web est créé dans le pool d'applications spécifié.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Configurer l'authentification",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "Indiquez le nom du pool d'applications IIS.",
   "loc.input.label.AppCmdCommands": "Commandes appcmd.exe supplémentaires",
   "loc.input.help.AppCmdCommands": "Entrez les commandes AppCmd.exe supplémentaires. Pour plusieurs commandes, utilisez un séparateur de ligne, par exemple <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.messages.InvalidSslThumbprint": "Empreinte numérique non valide. La longueur ne fait pas 40 caractères ou contient des caractères non valides.",
   "loc.messages.InvalidVirtualPath": "Le chemin virtuel doit commencer par /",
   "loc.messages.InvalidIISDeploymentType": "Type de déploiement IIS non valide : {0}",
   "loc.messages.InvalidActionIISWebsite": "Action non valide '{0}' sélectionnée pour le site web IIS.",
   "loc.messages.InvalidActionIISAppPool": "Action non valide '{0}' sélectionnée pour le pool d'applications IIS.",
   "loc.messages.PackageDeploymentFailed": "Échec de déploiement du package web sur le site web IIS.",
-  "loc.messages.SSLCertWarningInvalidCharacters": "L'empreinte numérique du certificat SSL contient des caractères non hexadécimaux. Découpage de tous les caractères non hexadécimaux."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "L'empreinte numérique du certificat SSL est manquante dans la liaison HTTPS : ({0}/{1}:{2})",
+  "loc.messages.InvalidSslThumbprintInBinding": "Empreinte numérique non valide dans la liaison ({0}/{1}:{2}). La longueur ne fait pas 40 caractères ou contient des caractères non valides.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "L'empreinte numérique du certificat SSL contient des caractères non hexadécimaux dans la liaison : ({0}/{1}:{2}). Découpage de tous les caractères non hexadécimaux."
 }

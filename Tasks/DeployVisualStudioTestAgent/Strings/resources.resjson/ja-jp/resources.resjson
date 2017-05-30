@@ -27,7 +27,7 @@
   "loc.input.label.testPlatform": "テスト エージェントのバージョン",
   "loc.input.help.testPlatform": "使用する Visual Studio Test Agent のバージョン。テスト バイナリが作成された VS バージョンと一致する適切なバージョンを選択します。",
   "loc.input.label.agentLocation": "テスト エージェントの場所",
-  "loc.input.help.agentLocation": "ネットワークまたはローカルの場所から vstf_testagent.exe へのパスを任意に指定できます。パスを指定しない場合、ダウンロード センターから自動的にダウンロードされます。Test Agent 2015 Update 3 のインストーラーは、`https://go.microsoft.com/fwlink/?LinkId=827840` から、Test Agent 2017 のインストーラーは、`https://aka.ms/vs/15/release/vs_TestAgent.exe` からダウンロードされます",
+  "loc.input.help.agentLocation": "ネットワークまたはローカルの場所から vstf_testagent.exe へのパスを任意に指定できます。パスを指定しない場合、ダウンロード センターから自動的にダウンロードされます。Test Agent 2015 Update 3 用のインストーラーは 'https://go.microsoft.com/fwlink/?LinkId=827840' から。Test Agent 2017 用のインストーラーは 'https://aka.ms/vs/15/release/vs_TestAgent.exe' から。オフライン インストーラーの使い方の詳細については、'https://aka.ms/testagentlocation' をご覧ください。",
   "loc.input.label.updateTestAgent": "テスト エージェントの更新",
   "loc.input.help.updateTestAgent": "Test Agent が既にマシンに配置されている場合、このオプションは、更新プログラムがそのバージョンの Test Agent で利用可能かどうかを確認します。"
 }

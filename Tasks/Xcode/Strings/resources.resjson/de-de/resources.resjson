@@ -85,6 +85,6 @@
   "loc.messages.ProvProfileDeleteFailed": "Fehler beim Löschen des Bereitstellungsprofils %s.",
   "loc.messages.ExportMethodNotIdentified": "Fehler beim Identifizieren der Exportmethode, die automatisch beim Export aus der Archivdatei verwendet wird. Dies führt möglicherweise zu Buildfehlern oder zur Erstellung eines ungültigen Pakets. Legen Sie \"Exportoptionen\" auf \"Angeben\" oder auf \"Plist\" fest.",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "Die Plist-Datei mit den Exportoptionen ist unter \"%s\" nicht vorhanden. Geben Sie den Pfad zu einer gültigen Plist-Datei an.",
-  "loc.messages.SchemeRequiredForArchive": "Scheme needs to be specified to generate the package with xcodebuild archive and export.",
+  "loc.messages.SchemeRequiredForArchive": "Das Schema muss angegeben werden, damit das Paket mit dem xcodebuild-Archiv und -Export erstellt werden kann.",
   "loc.messages.WorkspaceOrProjectRequiredForArchive": "Der Arbeitsbereichs- oder Projektpfad muss angegeben werden, damit das Paket mit dem xcodebuild-Archiv und -Export erstellt werden kann."
 }

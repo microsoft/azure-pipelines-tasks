@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Azure App Service の管理 (プレビュー)",
   "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Azure App Service の開始、停止、再起動、またはスロット スワップ",
+  "loc.description": "Azure App Service のサイト拡張機能の開始、停止、再起動、スロット スワップ、またはインストール",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "Azure Resource Manager サブスクリプションを選択します",
   "loc.input.label.Action": "アクション",
-  "loc.input.help.Action": "App Service に対して実行されるアクション。App Service の開始/停止/再起動を実行するか、スロット スワップを管理することができます。",
+  "loc.input.help.Action": "App Service に対して実行されるアクション。Azure App Service のサイト拡張機能を開始、停止、再起動、スロット スワップ、またはインストールできます",
   "loc.input.label.WebAppName": "App Service の名前",
   "loc.input.help.WebAppName": "既存の Azure App Service の名前を入力または選択してください",
   "loc.input.label.SpecifySlot": "スロットの指定",
@@ -23,6 +23,8 @@
   "loc.input.label.Slot": "スロット",
   "loc.input.label.ExtensionsList": "拡張機能のインストール",
   "loc.input.help.ExtensionsList": "Microsoft Azure App Service で実行されるサイト拡張機能。ツール一式をサイト拡張機能としてインストールすると、Azure App Service をより良く管理できます。最新の変更が確実に有効になるように、App Service は再起動されます。",
+  "loc.input.label.OutputVariable": "出力変数",
+  "loc.input.help.OutputVariable": "選択された拡張機能のローカル インストール パスに対して変数名を指定します。<br />注: インストール用に複数の拡張機能が選択される場合があるため、[拡張機能のインストール] フィールドに表示される順序で、選択された個々の拡張機能のローカル パスを保存する変数のコンマ区切りの一覧を指定してください。<br />例: outputVariable1, outputVariable2",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "エラー: Deploy メソッド MSDeploy が Azure Web アプリにありません: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "%s で Azure Web アプリ %s のスロット スワップ履歴を更新しました",
   "loc.messages.Failedtoupdateslotswaphistory": "Azure Web アプリのスロット スワップ履歴の更新に失敗しました: %s",
@@ -58,5 +60,5 @@
   "loc.messages.ExtensionListFailedError": "Azure App Service にインストールされている拡張機能の一覧を取得できませんでした。エラー: %s。",
   "loc.messages.ExtensionListFailedResponseError": "Azure App Service にインストールされている拡張機能の一覧を取得できませんでした。状態コード: %s (%s)",
   "loc.messages.InstallingSiteExtension": "サイト拡張機能 '%s' を Azure App Service にインストールしています。",
-  "loc.messages.FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s"
+  "loc.messages.FailedToFetchAppServiceState": "App Service の状態をフェッチできませんでした。App Service: %s、エラー コード: %s、エラー メッセージ: %s"
 }

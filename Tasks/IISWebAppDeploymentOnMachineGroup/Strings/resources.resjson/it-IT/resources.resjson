@@ -68,5 +68,9 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "Si è verificato un errore di trasformazione XML durante la trasformazione di %s con %s.",
   "loc.messages.EncodeNotSupported": "La codifica rilevata del file %s è %s. La sostituzione delle variabili non è supportata con la codifica file %s. Le codifiche supportate sono UTF-8 e UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "Non è possibile rilevare la codifica del file %s (typeCode: %s). Le codifiche supportate sono UTF-8 e UTF-16 LE.",
-  "loc.messages.ShortFileBufferError": "Il buffer di file è troppo piccolo per il rilevamento del tipo di codifica: %s"
+  "loc.messages.ShortFileBufferError": "Il buffer di file è troppo piccolo per il rilevamento del tipo di codifica: %s",
+  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.AutoParameterizationMessage": "Per impostazione predefinita, agli attributi di ConnectionString in Web.config sono associati parametri. Si noti che la trasformazione non ha effetto sugli attributi di ConnectionString perché durante la distribuzione il valore viene sostituito dai file 'Parameters.xml' o 'SetParameters.xml'. Per disabilitare l'aggiunta automatica di parametri, impostare /p:AutoParameterizationWebConfigConnectionStrings=False durante la generazione del pacchetto MSBuild."
 }

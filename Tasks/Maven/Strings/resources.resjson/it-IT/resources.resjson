@@ -25,8 +25,8 @@
   "loc.input.help.classFilesDirectories": "Questo campo è obbligatorio per un progetto composto da più moduli. Specificare un elenco di percorsi relativi separati da virgole dal file POM di Maven alle directory contenenti file di classe e file di archivio (JAR, WAR e così via). I report di code coverage vengono creati per i file di classe presenti in queste directory, ad esempio target/classes,target/testClasses.",
   "loc.input.label.srcDirectories": "Directory file di origine",
   "loc.input.help.srcDirectories": "Questo campo è obbligatorio per un progetto composto da più moduli. Specificare un elenco di percorsi relativi separati da virgole dal file POM di Maven alle directory del codice sorgente. Tali percorsi verranno usati nei report di code coverage per evidenziare il codice sorgente, ad esempio src/java,src/Test.",
-  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
-  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
+  "loc.input.label.failIfCoverageEmpty": "Non compilare se mancano i risultati del code coverage",
+  "loc.input.help.failIfCoverageEmpty": "Non esegue la compilazione se il code coverage non ha prodotto risultati da pubblicare.",
   "loc.input.label.javaHomeSelection": "Imposta JAVA_HOME per",
   "loc.input.help.javaHomeSelection": "Consente di impostare JAVA_HOME selezionando una versione di JDK che verrà individuata durante le compilazioni oppure immettendo manualmente un percorso JDK.",
   "loc.input.label.jdkVersion": "Versione JDK",
@@ -101,5 +101,5 @@
   "loc.messages.codeAnalysisDisabled": "L'analisi codice è disabilitata dall'esterno dell'ambiente di compilazione. Non è stato trovato alcun valore per %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Individuare JAVA_HOME per Java %s %s",
   "loc.messages.FailedToLocateSpecifiedJVM": "La versione JDK specificata non è stata trovata. Assicurarsi che la variabile di ambiente '%s' sia presente e sia impostata sul percorso di un JDK corrispondente.",
-  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
+  "loc.messages.NoCodeCoverage": "Non sono stati trovati risultati del code coverage da pubblicare."
 }

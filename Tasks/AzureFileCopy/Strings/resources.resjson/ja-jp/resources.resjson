@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",
   "loc.input.label.ConnectedServiceName": "Azure クラシック サブスクリプション",
   "loc.input.help.ConnectedServiceName": "ファイルをコピーする対象の Azure クラシック サブスクリプション。",
-  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceNameARM": "ファイルをコピーする対象の Azure Resource Manager サブスクリプション。",
   "loc.input.label.Destination": "宛先の種類",
   "loc.input.help.Destination": "Azure BLOB または Azure VM のいずれかをコピー先として選択します。",

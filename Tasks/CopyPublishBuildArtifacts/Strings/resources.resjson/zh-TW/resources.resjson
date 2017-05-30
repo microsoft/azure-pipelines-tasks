@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "複製並發行組件成品",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "使用 minimatch 模式將組建成品複製到複寫用快取資料夾，然後將其發佈至伺服器或檔案共用",
+  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
   "loc.instanceNameFormat": "複製發行成品: $(ArtifactName)",
   "loc.input.label.CopyRoot": "複製根資料夾",
   "loc.input.help.CopyRoot": "應套用檔案比對模式的根資料夾。如果未提供值，則會使用存放庫根路徑。請使用變數指定存放庫外的資料夾，例如: $(Agent.BuildDirectory)。",

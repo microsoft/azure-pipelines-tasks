@@ -27,7 +27,7 @@
   "loc.input.label.testPlatform": "Версия агента тестирования",
   "loc.input.help.testPlatform": "Используемая версия агента тестирования Visual Studio. Выберите подходящую версию по версии VS, в которой были собраны двоичные файлы теста.",
   "loc.input.label.agentLocation": "Расположение агента тестирования",
-  "loc.input.help.agentLocation": "Также укажите локальный или сетевой путь к файлу vstf_testagent.exe. Если путь не указан, файл будет автоматически скачан из Центра загрузки. Установщик агента тестирования 2015 с обновлением 3: https://go.microsoft.com/fwlink/?LinkId=827840. Установщик агента тестирования 2017: https://aka.ms/vs/15/release/vs_TestAgent.exe",
+  "loc.input.help.agentLocation": "Дополнительно укажите локальный или сетевой путь к файлу vstf_testagent.exe. Если путь не указан, файл будет автоматически скачан из Центра загрузки. Установщик агента тестирования 2015 с обновлением 3: https://go.microsoft.com/fwlink/?LinkId=827840. Установщик агента тестирования 2017: https://aka.ms/vs/15/release/vs_TestAgent.exe. Дополнительные сведения об использовании автономных установщиков: https://aka.ms/testagentlocation.",
   "loc.input.label.updateTestAgent": "Обновить агент тестирования",
   "loc.input.help.updateTestAgent": "Если агент тестирования уже развернут на компьютере, этот параметр проверяет, доступно ли обновление для этой версии агента."
 }
