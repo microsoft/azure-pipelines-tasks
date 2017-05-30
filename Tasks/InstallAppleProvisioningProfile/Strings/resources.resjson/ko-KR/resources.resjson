@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "Apple 권한 설정 프로파일 설치",
   "loc.helpMarkDown": "",
   "loc.description": "빌드에 필요한 Apple 권한 설정 프로파일을 macOS 에이전트에 설치합니다.",
   "loc.instanceNameFormat": "Apple 권한 설정 프로파일 설치",

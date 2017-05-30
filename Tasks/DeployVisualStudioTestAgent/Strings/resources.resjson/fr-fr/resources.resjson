@@ -27,7 +27,7 @@
   "loc.input.label.testPlatform": "Version de l'agent de test",
   "loc.input.help.testPlatform": "Version de Visual Studio Test Agent à utiliser. Choisissez la version appropriée, qui correspond à la version de VS ayant servi à la génération des binaires de test.",
   "loc.input.label.agentLocation": "Emplacement de l'agent de test",
-  "loc.input.help.agentLocation": "Indiquez éventuellement le chemin de vstf_testagent.exe sur un réseau ou un emplacement local. Si aucun chemin n'est indiqué, le fichier est téléchargé automatiquement à partir du Centre de téléchargement. Programme d'installation de Test Agent 2015 Update 3 via 'https://go.microsoft.com/fwlink/?LinkId=827840'. Programme d'installation de Test Agent 2017 via 'https://aka.ms/vs/15/release/vs_TestAgent.exe'",
+  "loc.input.help.agentLocation": "Indiquez éventuellement le chemin de vstf_testagent.exe à partir d'un emplacement réseau ou local. Si aucun chemin n'est indiqué, le fichier est téléchargé automatiquement à partir du Centre de téléchargement. Programme d'installation de Test Agent 2015 Update 3 via 'https://go.microsoft.com/fwlink/?LinkId=827840'. Programme d'installation de Test Agent 2017 à partir de 'https://aka.ms/vs/15/release/vs_TestAgent.exe'. Consultez 'https://aka.ms/testagentlocation' pour plus d'informations sur l'utilisation des programmes d'installation hors connexion.",
   "loc.input.label.updateTestAgent": "Mettre à jour l'agent de test",
   "loc.input.help.updateTestAgent": "Si Test Agent est déjà déployé sur une machine, cette option permet de vérifier si une mise à jour est disponible pour la version spécifique à Test Agent."
 }

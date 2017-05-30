@@ -68,5 +68,9 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "转换 %s (使用 %s)时出现 XML 转换错误。",
   "loc.messages.EncodeNotSupported": "检测到文件 %s 的文件编码为 %s。不支持使用文件编码 %s 进行变量替换。受支持的编码为 UTF-8 和 UTF-16 LE。",
   "loc.messages.UnknownFileEncodeError": "无法检测文件 %s (类型代码: %s)的编码。受支持的编码为 UTF-8 和 UTF-16 LE。",
-  "loc.messages.ShortFileBufferError": "文件缓冲区太短，无法检测编码类型: %s"
+  "loc.messages.ShortFileBufferError": "文件缓冲区太短，无法检测编码类型: %s",
+  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.AutoParameterizationMessage": "默认情况下，Web.config 中的 connectionString 属性已参数化。请注意，转换对 connectionString 属性无影响，因为在通过 \"Parameters.xml\" 或 \"SetParameters.xml\" 文件进行部署期间，该值将被重写。可通过在 MSBuild 包生成期间设置 /p:AutoParameterizationWebConfigConnectionStrings=False 来禁用自动参数化。"
 }

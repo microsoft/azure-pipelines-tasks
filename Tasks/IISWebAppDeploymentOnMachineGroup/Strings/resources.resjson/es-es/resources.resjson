@@ -68,5 +68,9 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "Error de transformación XML al transformar %s mediante %s.",
   "loc.messages.EncodeNotSupported": "Se detectó una codificación de archivos del archivo %s como %s. No se admite la sustitución variables con la codificación de archivos %s. Las codificaciones admitidas son UTF-8 y UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "No se puede detectar la codificación del archivo %s (typeCode: %s). Las codificaciones admitidas son UTF-8 y UTF-16 LE.",
-  "loc.messages.ShortFileBufferError": "El búfer de archivos es demasiado breve para detectar el tipo de codificación : %s"
+  "loc.messages.ShortFileBufferError": "El búfer de archivos es demasiado breve para detectar el tipo de codificación : %s",
+  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.AutoParameterizationMessage": "Los atributos de ConnectionString en Web.config están parametrizados de manera predeterminada. Tenga en cuenta que la transformación no tiene efecto en los atributos connectionString porque el valor se invalida durante la implementación por los archivos \"Parameters.xml\" o \"SetParameters.xml\". Puede deshabilitar la parametrización automática estableciendo /p:AutoParameterizationWebConfigConnectionStrings=False durante la generación del paquete MSBuild."
 }

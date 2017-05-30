@@ -68,5 +68,9 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "%s을(를) 변환(%s 사용)하는 동안 XML 변환 오류가 발생했습니다.",
   "loc.messages.EncodeNotSupported": "%s 파일에 대한 파일 인코딩이 %s(으)로 검색되었습니다. 파일 인코딩 %s을(를) 사용할 경우 변수 대체가 지원되지 않습니다. 지원되는 인코딩은 UTF-8 및 UTF-16 LE입니다.",
   "loc.messages.UnknownFileEncodeError": "%s 파일(typeCode: %s)에 대한 인코딩을 검색할 수 없습니다. 지원되는 인코딩은 UTF-8 및 UTF-16 LE입니다.",
-  "loc.messages.ShortFileBufferError": "파일 버퍼가 너무 짧아서 인코딩 형식을 검색할 수 없습니다. %s"
+  "loc.messages.ShortFileBufferError": "파일 버퍼가 너무 짧아서 인코딩 형식을 검색할 수 없습니다. %s",
+  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.AutoParameterizationMessage": "Web.config의 ConnectionString 특성은 기본적으로 매개 변수가 있습니다. 'Parameters.xml' 또는 'SetParameters.xml' 파일로 배포 중 값이 재정의되므로 변환은 connectionString 특성에 아무런 영향을 미치지 않습니다. MSBuild 패키지 생성 중 p:AutoParameterizationWebConfigConnectionStrings=False를 설정하여 자동 매개 변수화를 사용하지 않도록 설정할 수 있습니다."
 }

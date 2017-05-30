@@ -4,6 +4,7 @@
   "loc.description": "建立或更新網站、Web App、虛擬目錄及應用程式集區",
   "loc.instanceNameFormat": "管理 $(IISDeploymentType)",
   "loc.group.displayName.Website": "IIS 網站",
+  "loc.group.displayName.IISBindings": "IIS 繫結",
   "loc.group.displayName.ApplicationPoolForWebsite": "IIS 應用程式集區",
   "loc.group.displayName.IISWebsiteAuthentication": "IIS 驗證",
   "loc.group.displayName.ApplicationPool": "IIS 應用程式集區",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "請輸入網站的主機名稱 (或網域名稱)。<br>如有指定主機名稱，用戶端必須使用該主機名稱存取網站，而非使用 IP 位址。<br>",
   "loc.input.label.SSLCertThumbPrint": "SSL 憑證指紋",
   "loc.input.help.SSLCertThumbPrint": "請提供網站進行 HTTPS 通訊時所要使用之安全通訊端層憑證的憑證指紋 (長度 40 個字元的十六進位字串)。此 SSL 憑證應已經安裝在電腦、本機電腦、個人存放區。",
+  "loc.input.label.Bindings": "新增繫結",
+  "loc.input.help.Bindings": "按一下延伸模組 [...] 按鈕，為網站新增繫結。",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "建立或更新 App 集區",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "選取此選項可建立或更新應用程式集區。如有核取，將會在指定的 App 集區中建立網站。",
   "loc.input.label.ConfigureAuthenticationForWebsite": "設定驗證",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "請提供 IIS 應用程式集區的名稱。",
   "loc.input.label.AppCmdCommands": "其他 appCmd.exe 命令",
   "loc.input.help.AppCmdCommands": "請輸入其他 AppCmd.exe 命令。如需輸入多個命令，請使用行分隔符號，例如 <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.messages.InvalidSslThumbprint": "指紋無效。長度不是 40 個字元或包含了無效的字元。",
   "loc.messages.InvalidVirtualPath": "虛擬路徑的開頭應為 /",
   "loc.messages.InvalidIISDeploymentType": "IIS 部署類型無效 : {0}",
   "loc.messages.InvalidActionIISWebsite": "為 IIS 網站選取了無效的動作 '{0}'。",
   "loc.messages.InvalidActionIISAppPool": "為 IIS 應用程式集區選取了無效的動作 '{0}'。",
   "loc.messages.PackageDeploymentFailed": "無法將網頁套件部署到 IIS 網站。",
-  "loc.messages.SSLCertWarningInvalidCharacters": "SSL 憑證指紋包含非十六進位字元。所有非十六進位字元將予截斷。"
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "https 繫結中遺漏 SSL 憑證指紋: ( {0}/{1}:{2} )",
+  "loc.messages.InvalidSslThumbprintInBinding": "繫結中的指紋無效 ( {0}/{1}:{2} )。長度並非 40 個字元或包含無效的字元。",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "SSL 憑證指紋在繫結中包含非十六進位字元: ( {0}/{1}:{2} )。請修剪掉所有非十六進位字元。"
 }

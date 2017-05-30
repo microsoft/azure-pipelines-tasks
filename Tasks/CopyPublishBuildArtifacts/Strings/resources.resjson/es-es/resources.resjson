@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copiar y publicar los artefactos de la compilación",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Copie los artefactos de compilación en una carpeta provisional mediante patrones de minimatch y luego publíquelos en el servidor o en un recurso compartido de archivos",
+  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
   "loc.instanceNameFormat": "Copiar y publicar artefacto: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copiar la raíz",
   "loc.input.help.CopyRoot": "Carpeta raíz a la que se deben aplicar los patrones de coincidencia de archivos. Si no se proporciona ningún valor, se usa la raíz de repositorio. Use variables para especificar una carpeta fuera del repositorio, como: $(Agent.BuildDirectory).",

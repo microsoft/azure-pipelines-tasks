@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Plus d'informations](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Génère, effectue un Push ou exécute des images Docker, ou exécute une commande Docker",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Effectuez la build, le Push ou l'exécution d'images Docker, ou exécutez une commande Docker. La tâche peut être utilisée avec le registre de conteneurs Docker ou Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.containerregistrytype": "Type de registre de conteneurs",

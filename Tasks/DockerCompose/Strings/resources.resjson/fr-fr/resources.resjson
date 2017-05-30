@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Plus d'informations](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Effectuez la génération, le Push ou l'exécution d'applications Docker à plusieurs conteneurs",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Effectuez la build, le Push ou l'exécution d'applications Docker à plusieurs conteneurs. La tâche peut être utilisée avec le registre de conteneurs Docker ou Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.containerregistrytype": "Type de registre de conteneurs",

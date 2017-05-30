@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Подробнее](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Создание, отправка или запуск образов Docker или выполнение команд Docker",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Создание, отправка или запуск образов Docker либо выполнение команд Docker. Задачу можно использовать в Docker или реестре контейнеров Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.containerregistrytype": "Тип реестра контейнеров",

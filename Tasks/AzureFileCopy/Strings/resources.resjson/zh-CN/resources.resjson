@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 连接类型",
   "loc.input.label.ConnectedServiceName": "Azure 经典订阅",
   "loc.input.help.ConnectedServiceName": "用于复制文件的目标帐户的 Azure 经典订阅。",
-  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure 订阅",
   "loc.input.help.ConnectedServiceNameARM": "用于复制文件的目标帐户的 Azure Resource Manager 订阅。",
   "loc.input.label.Destination": "目标类型",
   "loc.input.help.Destination": "选择目标，即 Azure Blob 或 Azure VM。",

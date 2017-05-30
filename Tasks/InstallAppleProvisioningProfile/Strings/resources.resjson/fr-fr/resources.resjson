@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "Installer le profil d'approvisionnement Apple",
   "loc.helpMarkDown": "",
   "loc.description": "Installer le profil d'approvisionnement Apple nécessaire pour effectuer une build sur un agent macOS",
   "loc.instanceNameFormat": "Installer un profil d'approvisionnement Apple",

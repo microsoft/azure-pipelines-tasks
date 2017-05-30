@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[詳細](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Docker イメージをビルド、プッシュ、または実行するか、Docker コマンドを実行します",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Build, push or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.containerregistrytype": "コンテナー レジストリの種類",
@@ -33,7 +33,7 @@
   "loc.input.label.includeLatestTag": "最終のタグを含める",
   "loc.input.help.includeLatestTag": "Docker イメージをビルドまたはプッシュするときに、'latest' タグを組み込みます。",
   "loc.input.label.imageDigestFile": "イメージのダイジェスト ファイル",
-  "loc.input.help.imageDigestFile": "プッシュされた Docker イメージのフル イメージ リポジトリのダイジェストを設定して作成されたファイルへのパスです。",
+  "loc.input.help.imageDigestFile": "プッシュされた Docker イメージの完全なイメージ リポジトリ ダイジェストを使って作成、入力されたファイルへのパスです。",
   "loc.input.label.containerName": "コンテナー名 ",
   "loc.input.help.containerName": "実行する Docker コンテナーの名前です。",
   "loc.input.label.ports": "ポート",

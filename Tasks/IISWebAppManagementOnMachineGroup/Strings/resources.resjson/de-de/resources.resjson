@@ -4,6 +4,7 @@
   "loc.description": "Erstellen oder aktualisieren Sie eine Website, eine Web-App, virtuelle Verzeichnisse und einen Anwendungspool.",
   "loc.instanceNameFormat": "$(IISDeploymentType) verwalten",
   "loc.group.displayName.Website": "IIS-Website",
+  "loc.group.displayName.IISBindings": "IIS-Bindungen",
   "loc.group.displayName.ApplicationPoolForWebsite": "IIS-Anwendungspool",
   "loc.group.displayName.IISWebsiteAuthentication": "IIS-Authentifizierung",
   "loc.group.displayName.ApplicationPool": "IIS-Anwendungspool",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "Geben Sie einen Hostnamen (oder Domänennamen) für die Website ein. <br>Wenn ein Hostname angegeben ist, müssen die Clients zum Zugreifen auf die Website statt der IP-Adresse den Hostnamen verwenden.<br>",
   "loc.input.label.SSLCertThumbPrint": "Fingerabdruck des SSL-Zertifikats",
   "loc.input.help.SSLCertThumbPrint": "Stellen Sie den Fingerabdruck des Secure Socket Layer-Zertifikats, das die Website für die HTTPS-Kommunikation verwendet, als Hexadezimalzeichenfolge mit 40 Zeichen bereit. Das SSL-Zertifikat muss auf dem lokalen Computer im persönlichen Speicher bereits installiert sein.",
+  "loc.input.label.Bindings": "Bindungen hinzufügen",
+  "loc.input.help.Bindings": "Klicken Sie auf die Erweiterungsschaltfläche [...], um Bindungen für die Website hinzuzufügen.",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "App-Pool erstellen oder aktualisieren",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Wählen Sie die Option zum Erstellen oder Aktualisieren eines Anwendungspools aus. Wenn sie aktiviert ist, wird die Website im angegebenen App-Pool erstellt.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Authentifizierung konfigurieren",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "Geben Sie den Namen des IIS-Anwendungspools an.",
   "loc.input.label.AppCmdCommands": "Weitere appcmd.exe-Befehle",
   "loc.input.help.AppCmdCommands": "Geben Sie zusätzliche AppCmd.exe-Befehle ein. Verwenden Sie bei mehreren Befehlen ein Zeilentrennzeichen wie <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.messages.InvalidSslThumbprint": "Ungültiger Fingerabdruck. Die Länge beträgt nicht 40 Zeichen, oder ungültige Zeichen sind enthalten.",
   "loc.messages.InvalidVirtualPath": "Ein virtueller Pfad muss mit / beginnen.",
   "loc.messages.InvalidIISDeploymentType": "Ungültiger IIS-Bereitstellungstyp: {0}",
   "loc.messages.InvalidActionIISWebsite": "Ungültige Aktion \"{0}\" für die IIS-Website ausgewählt.",
   "loc.messages.InvalidActionIISAppPool": "Ungültige Aktion \"{0}\" für den IIS-Anwendungspool ausgewählt.",
   "loc.messages.PackageDeploymentFailed": "Fehler beim Bereitstellen des Web-Pakets für die IIS-Website.",
-  "loc.messages.SSLCertWarningInvalidCharacters": "Der SSL-Zertifikatfingerabdruck enthält Nichthexadezimalzeichen. Alle Nichthexadezimalzeichen werden gekürzt."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "Der SSL-Zertifikatfingerabdruck fehlt in der HTTPS-Bindung: ( {0}/{1}:{2} )",
+  "loc.messages.InvalidSslThumbprintInBinding": "Ungültiger Fingerabdruck in Bindung ( {0}/{1}:{2} ). Die Länge beträgt nicht 40 Zeichen, oder er enthält ungültige Zeichen.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "Der SSL-Zertifikatfingerabdruck enthält Nichthexadezimalzeichen in Bindung: ( {0}/{1}:{2} ). Alle Nichthexadezimalzeichen werden gekürzt."
 }

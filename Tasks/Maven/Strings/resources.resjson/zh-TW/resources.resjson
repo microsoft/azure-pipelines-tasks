@@ -25,8 +25,8 @@
   "loc.input.help.classFilesDirectories": "多模組專案需要此欄位。請指定以逗號分隔的清單，內含從 Maven POM 檔案到包含類別檔案和封存檔案 (JAR、WAR 等) 的相對目錄。回報的程式碼涵蓋範圍為這些目錄中的類別檔案。例如: target/classes,target/testClasses。",
   "loc.input.label.srcDirectories": "原始程式檔目錄",
   "loc.input.help.srcDirectories": "多模組專案需要此欄位。請指定以逗號分隔的清單，內含從 Maven POM 檔案到原始程式碼目錄的相對路徑。程式碼涵蓋範圍報表會加以使用，以強調顯示原始程式碼。例如: src/java,src/Test。",
-  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
-  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
+  "loc.input.label.failIfCoverageEmpty": "當遺漏程式碼涵蓋範圍結果時失敗",
+  "loc.input.help.failIfCoverageEmpty": "如果程式碼涵蓋範圍未產生任何可發行的結果，則建置失敗。",
   "loc.input.label.javaHomeSelection": "設定 JAVA_HOME 由",
   "loc.input.help.javaHomeSelection": "選取一個能在組建期間探索到的 JDK 版本，或者手動輸入 JDK 路徑，均能為 JAVA_HOME 進行設定。",
   "loc.input.label.jdkVersion": "JDK 版本",
@@ -101,5 +101,5 @@
   "loc.messages.codeAnalysisDisabled": "組建環境外程式碼分析為停用。找不到 %s 的值",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "為 Java %s %s 找出 JAVA_HOME 的位置",
   "loc.messages.FailedToLocateSpecifiedJVM": "找不到指定的 JDK 版本。請確定環境變數 '%s' 存在且設至相對應 JDK 的位置。",
-  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
+  "loc.messages.NoCodeCoverage": "找不到任何可發行的程式碼涵蓋範圍結果。"
 }
