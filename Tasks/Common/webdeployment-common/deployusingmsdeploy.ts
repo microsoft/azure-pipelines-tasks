@@ -150,7 +150,7 @@ async function executeMSDeploy(msDeployCmdArgs) {
         for(var i = 0 ; i < msDeployCmdArgs.length ; i++ ) {
             tl.debug("arg#" + i + ": " + msDeployCmdArgs[i]);
         }
-        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
+        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true});
         deferred.resolve("Azure App service successfully deployed");
     } catch (error) {
         msDeployError = error;
