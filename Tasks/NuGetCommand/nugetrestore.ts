@@ -3,19 +3,19 @@ import * as path from "path";
 import * as Q  from "q";
 import {IExecOptions} from "vsts-task-lib/toolrunner";
 
-import * as auth from "./Common/Authentication";
-import { IPackageSource } from "./Common/Authentication";
+import * as auth from "nuget-task-common/Authentication";
+import { IPackageSource } from "nuget-task-common/Authentication";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper} from "./Common/NuGetConfigHelper";
+import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import * as ngToolRunner from "./Common/NuGetToolRunner";
+import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as nutil from "nuget-task-common/Utility";
 import * as vsts from "vso-node-api/WebApi";
 import * as vsom from 'vso-node-api/VsoClient';
 import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
-import * as utilities from "./Common/utilities";
+import * as commandHelper from "nuget-task-common/CommandHelper";
 
 const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
 const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
@@ -28,7 +28,7 @@ class RestoreOptions implements INuGetCommandOptions {
         public verbosity: string,
         public packagesDirectory: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings,
-        public authInfo: auth.NuGetAuthInfo
+        public authInfo: auth.NuGetExtendedAuthInfo
     ) { }
 }
 
@@ -87,8 +87,8 @@ export async function run(nuGetPath: string): Promise<void> {
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
         let accessToken = auth.getSystemAccessToken();
-        let externalAuthArr: auth.ExternalAuthInfo[] = utilities.GetExternalAuthInfoArray("externalEndpoints");
-        const authInfo = new auth.NuGetAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig), externalAuthArr);
+        let externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
+        const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig), externalAuthArr);
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
             extensionsDisabled: true
@@ -108,11 +108,12 @@ export async function run(nuGetPath: string): Promise<void> {
         }
         
         // If there was no nuGetConfigPath, NuGetConfigHelper will create one
-        let nuGetConfigHelper = new NuGetConfigHelper(
+        let nuGetConfigHelper = new NuGetConfigHelper2(
                     nuGetPath,
                     nuGetConfigPath,
                     authInfo,
-                    environmentSettings);
+                    environmentSettings,
+                    null);
         
         let credCleanup = () => { return; };
         
@@ -122,7 +123,7 @@ export async function run(nuGetPath: string): Promise<void> {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
             let feed = tl.getInput("feedRestore");
             if (feed) {
-                let feedUrl:string = await utilities.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
+                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
                 sources.push(<IPackageSource>
                 {
                     feedName: feed,

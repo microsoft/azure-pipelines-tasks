@@ -2,7 +2,7 @@
   "name": "vsts-tasks-dotnetcoreexe",
   "version": "0.1.0",
   "description": "Dotnet core exe",
-  "main": "dotnetexe.js",
+  "main": "dotnetcore.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^2.0.2-preview",
+    "vsts-task-lib": "2.0.5",
     "q": "^1.4.1",
-    "archiver": "1.2.0"
+    "archiver": "1.2.0",
+    "xmlreader": "^0.2.3",
+    "vso-node-api": "6.0.1-preview"
   }
 }

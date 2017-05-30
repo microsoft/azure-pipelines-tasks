@@ -3,7 +3,7 @@ import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
 import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
 import * as auth from 'nuget-task-common/Authentication'
 
-export class NugetMockHelper {
+export class DotnetMockHelper {
     private defaultNugetVersion = '4.0.0';
     private defaultNugetVersionInfo = [4,0,0,0];
     
@@ -15,6 +15,7 @@ export class NugetMockHelper {
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
+        process.env['BUILD_BUILDID'] = "1";     
     }
     
     public setNugetVersionInputDefault() {
@@ -68,13 +69,6 @@ export class NugetMockHelper {
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
             },
-            locateCredentialProvider: function(path) {
-                return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
-            },
-            setConsoleCodePage: function() {
-                var tlm = require('vsts-task-lib/mock-task');
-                tlm.debug(`setting console code page`);
-            },
             getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion) {
                 return 'https://vsts/packagesource';
             }
@@ -90,7 +84,7 @@ export class NugetMockHelper {
     }
 
         public registerNuGetPackUtilsMock() {
-        this.tmr.registerMock('./Common/NuGetPackUtilities', {
+        this.tmr.registerMock('./Common/utility', {
             getUtcDateString: function() {
                 return 'YYYYMMDD-HHMMSS';
             }

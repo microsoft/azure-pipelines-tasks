@@ -21,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source foobar -ApiKey VSTS": {
+        "c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source https://vsts/packagesource -ApiKey VSTS": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""

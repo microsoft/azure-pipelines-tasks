@@ -3,6 +3,11 @@ import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
 
+import * as restoreCommand from './restorecommand';
+import * as packCommand from './packcommand';
+import * as pushCommand from './pushcommand';
+
+
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -22,6 +27,33 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+
+        switch(this.command) {
+            case "build":
+            case "publish":
+            case "run":
+            case "test":
+                await this.executeBasicCommand(this.command);
+                break;
+            case "custom":
+                const custom = tl.getInput("custom", true);
+                await this.executeBasicCommand(custom);
+                break;
+            case "restore":
+                await restoreCommand.run();
+                break;
+            case "pack":
+                await packCommand.run();
+                break;
+            case "push":
+                await pushCommand.run();
+                break;
+            default:
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        }
+    }
+
+    private async executeBasicCommand(command: string) {
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();

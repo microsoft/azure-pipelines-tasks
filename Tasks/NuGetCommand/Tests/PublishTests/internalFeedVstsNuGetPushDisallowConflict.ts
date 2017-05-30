@@ -21,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source foobar -AccessToken token -NonInteractive": {
+        "c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source https://vsts/packagesource -AccessToken token -NonInteractive": {
             "code": 2,
             "stdout": "VstsNuGetPush output here",
             "stderr": ""
