@@ -1238,5 +1238,84 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    });    
+    });
+
+    it('Vstest task with custom number of test slices', (done) => {
+
+        setResponseFile('vstestWithDistribution.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('searchFolder', '/source/dir');
+        tr.setInput('testAssemblyVer2', '**/*.dll');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('numberOfTestSlices', '5');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stdout.indexOf('Distributed test execution, number of agents in phase : 4') >= 0,
+                    'number of agents in phase should be read correctly');
+                assert(tr.stdout.indexOf('Distributed test execution, number of test slices requested : 5') >= 0,
+                    'number of agents in test slices to be set correctly');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task without custom number of test slices', (done) => {
+
+        setResponseFile('vstestWithDistribution.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('searchFolder', '/source/dir');
+        tr.setInput('testAssemblyVer2', '**/*.dll');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stdout.indexOf('Distributed test execution, number of agents in phase : 4') >= 0,
+                    'number of agents in phase should be read correctly');
+                assert(tr.stdout.indexOf('Distributed test execution, number of test slices requested : 4') >= 0,
+                    'number of agents in test slices to be set correctly');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task with custom number of test slices less than agent size', (done) => {
+
+        setResponseFile('vstestWithDistribution.json');
+
+        const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('searchFolder', '/source/dir');
+        tr.setInput('testAssemblyVer2', '**/*.dll');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('numberOfTestSlices', '1');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stdout.indexOf('Distributed test execution, number of agents in phase : 4') >= 0,
+                    'number of agents in phase should be read correctly');
+                assert(tr.stdout.indexOf('Distributed test execution, number of test slices requested : 1') >= 0,
+                    'number of agents in test slices to be set correctly');
+                assert(tr.stdout.indexOf('number of test slices requested are less than number of agents in the phase') >= 0,
+                    'message should be displayed if agents are more than slices');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
 });

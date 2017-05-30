@@ -9,7 +9,6 @@ import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations() {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
 
@@ -35,8 +34,19 @@ export function getDistributedTestConfigurations() {
     }
     tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+    dtaConfiguration.numberOfSlicesRequested = dtaConfiguration.numberOfAgentsInPhase; //initialize with agents
+    const numberOfTestSlices = parseInt(tl.getInput('numberOfTestSlices'));
+    if (!isNaN(numberOfTestSlices)) {
+        dtaConfiguration.numberOfSlicesRequested = numberOfTestSlices;
+    }
+    tl._writeLine(tl.loc('numberOfSlicesRequested', dtaConfiguration.numberOfSlicesRequested));
 
+    if (dtaConfiguration.numberOfAgentsInPhase > dtaConfiguration.numberOfSlicesRequested) {
+        // message for user if the agents are more than slices
+        tl._writeLine(tl.loc('numberOfSlicesRequestedLessthanAgents'));
+    }
+
+    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
@@ -53,7 +63,7 @@ export function getvsTestConfigurations() {
 function initDtaEnvironment(): models.DtaEnvironment {
     const dtaEnvironment = {} as models.DtaEnvironment;
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-    dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+    dtaEnvironment.patToken = tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', true);
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
 
     //TODO : Consider build scenario
