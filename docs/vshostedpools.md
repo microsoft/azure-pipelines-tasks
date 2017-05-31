@@ -52,7 +52,7 @@ Offer pools:
   - Hosted VS2015
   - Hosted Deprecated (was Hosted Pool)
 
-On create definition, there is not default.  You must select the queue as an up front decision.  We can possibly default again if we implement Auto (see below).
+On create definition, there will be no default.  You must select the queue as an up front decision.  We can possibly default again if we implement Auto (see below).  Even if we convince ourselves VS2017 is the proper choice, it should still be more up front.  It's not obvious for users to go to the options tab 
 
 ## Part Three: Tasks use environment
 
@@ -60,11 +60,25 @@ New major version of VS/msbuild tasks just use what's in the path.  Create a too
 
 Pick VS environment and everything downstream (including tasks and ad-hoc scripts)
 
-This also eliminates issues where you have to pick the version in multiple msbuild tasks and separate vs test tasks.  Pick your environment, tasks work.  Essentially models
+This also eliminates issues where you have to pick the version in multiple msbuild tasks and separate vs test tasks.  Pick your environment, tasks work.  Essentially models what a dev does.  Pick your VS env from dev cmd prompt or by launching VS then running.
+
+This leverages and follows concepts introduced with tools.  In general, it's a pattern we want to push further.
+
+https://www.youtube.com/edit?o=U&video_id=Ie8EuvqJ0Hg
+
+Once in place, the templates would be updated to include the environment up front to run dev cmd prompt to set up the "tools" or "tool sets"
 
 ## Part Four: Hosted (Auto)
 
 If repo analysis is in place we can have a virtual queue which is auto.  Based on the repo analysis post push we can route the build JIT to the proper queue.  This has the benefit of the customer upgrading their VS solutions, pushing the change and the "right thing happens"
+
+## Part n + 1: Docker Containers
+
+We are making progress on docker containers with it currently working on Linux and tracking progress on windows.  The agent will run on the host, map in the tasks and then execute with our loosely coupled task model.  This allows you to select any docker image without the need for our agent being on it.
+
+The challenge with VS as docker images is the up front time to pull very large docker images.  This is a bigger problem we need to think about and solve.  There is also scenarios like UI tests where a full VS VM is needed.
+
+We will likely start containers around more focused and targetted scenarios like dotnet core, asp.net and other focused toolsets.
 
 
 
