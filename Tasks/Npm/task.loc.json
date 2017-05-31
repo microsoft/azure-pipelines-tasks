@@ -7,9 +7,9 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 2,
-    "Patch": 22
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -23,7 +23,7 @@
   "inputs": [
     {
       "name": "cwd",
-      "type": "filePath",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,
@@ -57,6 +57,7 @@
     "NpmFailed": "ms-resource:loc.messages.NpmFailed",
     "NpmConfigFailed": "ms-resource:loc.messages.NpmConfigFailed",
     "NpmAuthFailed": "ms-resource:loc.messages.NpmAuthFailed",
-    "BuildCredentialsWarn": "ms-resource:loc.messages.BuildCredentialsWarn"
+    "BuildCredentialsWarn": "ms-resource:loc.messages.BuildCredentialsWarn",
+    "NoDirectoryMatchingPattern": "ms-resource:loc.messages.NoDirectoryMatchingPattern"
   }
 }

@@ -8,31 +8,33 @@ export class NpmMockHelper {
     static FakeWorkingDirectory = "fake\\wd";
     static AgentBuildDirectory = 'c:\\agent\\work\\build';
     static BuildBuildId = '12345';
+    static DefaultWorkingDirectory = "c:\\agent\\home\\directory";
 
     public answers: ma.TaskLibAnswers = {
         which: {},
         exec: {},
         checkPath: {},
         exist: {},
-        filter: {},
         find: {},
-        match: {}
+        findMatch: {},
+        rmRF: {}
     };
 
     constructor(
         private tmr: tmrm.TaskMockRunner,
         public command: string,
-        public args: string) { 
-        NpmMockHelper.setVariable('Agent.HomeDirectory', 'c:\\agent\\home\\directory');
+        public args: string,
+        public cwd?: string) { 
+        NpmMockHelper.setVariable('Agent.HomeDirectory', NpmMockHelper.DefaultWorkingDirectory);
         NpmMockHelper.setVariable('Build.SourcesDirectory', 'c:\\agent\\home\\directory\\sources');
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
-        NpmMockHelper.setVariable('System.DefaultWorkingDirectory', 'c:\\agent\\home\\directory');
+        NpmMockHelper.setVariable('System.DefaultWorkingDirectory', NpmMockHelper.DefaultWorkingDirectory);
         NpmMockHelper.setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
         NpmMockHelper.setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
         NpmMockHelper.setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
 
-        tmr.setInput('cwd', NpmMockHelper.FakeWorkingDirectory);
+        tmr.setInput('cwd', cwd || NpmMockHelper.FakeWorkingDirectory);
         tmr.setInput('command', command);
         tmr.setInput('arguments', args);
 
@@ -60,7 +62,9 @@ export class NpmMockHelper {
         let authHelperExternalPath = path.join(npmTaskDirName, 'Npm', 'vsts-npm-auth');
         let authHelperExePath = path.join(authHelperExternalPath, 'bin', 'vsts-npm-auth.exe');
         this.answers.find[authHelperExternalPath] = [npmTaskDirName, authHelperExePath, authHelperExePath + ".config"];
-        this.answers.filter['vsts-npm-auth.exe'] = [authHelperExePath];
+        this.answers["filter"] = {
+            'vsts-npm-auth.exe': [authHelperExePath]
+        };
 
         let targetNpmrcFile = `${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`;
         let sourceNpmrcFile = `${NpmMockHelper.FakeWorkingDirectory}\\.npmrc`;
@@ -112,6 +116,27 @@ export class NpmMockHelper {
         this.setToolPath(this.answers, "npm", NpmMockHelper.NpmCmdPath);
         this.setOsType('WiNdOWs_nT');
         this.setProjectNpmrcExists();
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\one"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\two"] = true;
+        this.answers.findMatch = {
+            "**\\package.json":
+                ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"],
+            "package(s)*.json":
+                [],
+            "fake\\wd":
+                ["fake\\wd"]
+        }
+        this.answers.rmRF[`${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`] = {
+            "success": true
+        }
+        this.answers['stats'] = {
+            "fake\\wd": {
+                isFile: false
+            }
+        }
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {
@@ -121,5 +146,14 @@ export class NpmMockHelper {
 
     private setProjectNpmrcExists() {
         this.answers.exist[path.join(NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
+        this.answers.exist[`${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`] = true;
+        this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "two", '.npmrc')] = true;
+        this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "one", '.npmrc')] = true;
+    }
+
+    public setStats(stats: any) {
+        for(var key in stats) {
+            this.answers['stats'][key] = stats[key];
+        }
     }
 }

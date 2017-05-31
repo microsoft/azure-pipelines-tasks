@@ -28,6 +28,37 @@ describe('Npm Task', function () {
 
         done();
     });
+
+    it("should execute 'npm config list' successfully when cwd is pattern", (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'test-cwdInputAsPatternSuccess.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 6, 'should have run vsts-npm-auth, npm config list and npm command in 2 dir');
+        assert(tr.ran(`${NpmMockHelper.NpmCmdPath} config list`), 'it should have run npm');
+        assert(tr.stdOutContained('; cli configs'), "should have npm config output");
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        assert(tr.succeeded, 'should have succeeded');
+
+        done();
+    });
+
+    it("should show warning when cwd pattern does not match any file path", (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'test-cwdInputAsPatternFail.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert.equal(tr.invokedToolCount, 0, 'should not have run vsts-npm-auth, npm config list and npm command');
+        assert.equal(tr.warningIssues.length, 1, "should have warning since no directory is found matching given pattern");
+        assert(tr.stdout.search("loc_mock_NoDirectoryMatchingPattern") >= 0, "should show warning message")
+        assert(tr.succeeded, 'should have succeeded');
+
+        done();
+    });
     
     it('should pass when no arguments are supplied', (done: MochaDone) => {
         this.timeout(1000);
