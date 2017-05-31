@@ -160,14 +160,21 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
         }
         else
         {
-            if ($ConnectedServiceEndpoint.Auth.Parameters.IsWindowsCredential -eq "true")
+            if ($ConnectedServiceEndpoint.Auth.Parameters.UseWindowsSecurity -eq "true")
             {
-                Write-Debug (Get-VstsLocString -Key UseWindowsCredential)
+                Write-Debug (Get-VstsLocString -Key UseWindowsSecurity)
                 $clusterConnectionParameters["WindowsCredential"] = $true
+
+                $clusterSpn = $ConnectedServiceEndpoint.Auth.Parameters.ClusterSpn
+                if($clusterSpn)
+                {
+                    $clusterConnectionParameters["ClusterSpn"] = $clusterSpn
+                }
             }
         }
 
         # Connect to cluster
+        $ClusterConnectionParameters | Out-String | Write-Debug
         try {
             [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
         }

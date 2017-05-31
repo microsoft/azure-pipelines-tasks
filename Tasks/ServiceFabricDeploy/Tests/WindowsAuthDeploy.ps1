@@ -9,6 +9,9 @@ $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
 $overwriteBehavior = "SameAppTypeAndVersion"
+$connectionEndpointFullUrl = "https://mycluster:19000"
+$connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
+$clusterFqdn = "fqdn"
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -29,17 +32,20 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 
 # Setup mock VSTS service endpoint
 $vstsEndpoint = @{
+    "url" = $connectionEndpointFullUrl
     "Auth" = @{
         "Scheme" = "None"
         "Parameters" = @{
-            "IsWindowsCredential" = "true"
+            "UseWindowsSecurity" = "true"
+            "ClusterSpn" = $clusterFqdn
         }
     }
 }
 Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName -Require
 
 # Setup mock for connection to cluster
-Register-Mock Connect-ServiceFabricCluster { $null } -- -ConnectionEndpoint "test" -WindowsCredential
+$connectArgs = @("-ConnectionEndpoint:", $connectionEndpoint,  "-WindowsCredential:", "True", "-ClusterSpn:", $clusterFqdn)
+Register-Mock Connect-ServiceFabricCluster { $null } -Arguments $connectArgs
 
 # Setup mock registry settings
 $regKeyObj = @{
@@ -59,4 +65,5 @@ Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
 
 # Assert
+Assert-WasCalled Connect-ServiceFabricCluster -Arguments $connectArgs
 Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
