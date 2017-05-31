@@ -3,18 +3,19 @@
   "name": "PublishToAzureServiceBus",
   "friendlyName": "Publish To Azure Service Bus (Preview)",
   "description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "category": "Release",
+  "category": "Utility",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "visibility": [
-	  "Release"
+      "Release"
   ],
   "runsOn": [
-	  "Server"
+      "Server"
    ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "groups": [
@@ -25,36 +26,36 @@
     }
   ],
   "inputs": [
-    {
-      "name": "connectedServiceName",
-      "type": "connectedService:AzureServiceBus",
-      "label": "Azure Service Bus Connection",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select a Azure Service Bus connection."
-    },
-	{
-		"name": "messageBody",
-		"type": "multiLine",
-		"label": "Message body",
-		"required": true,
-		"defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
-		"helpMarkDown": "Enter the json messageBody.",
-		"properties": {
-			"resizable": "true",
-			"rows": "10",
-			"maxLength": "5000",
-			"editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
-		}
-	},
   {
-		"name": "waitForCompletion",
-		"type": "boolean",
-		"label": "Wait for Task Completion",
-		"defaultValue": "false",
-		"required": true,
-		"helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
-	}
+    "name": "connectedServiceName",
+    "type": "connectedService:AzureServiceBus",
+    "label": "Azure Service Bus Connection",
+    "defaultValue": "",
+    "required": true,
+    "helpMarkDown": "Select a Azure Service Bus connection."
+  },
+  {
+    "name": "messageBody",
+    "type": "multiLine",
+    "label": "Message body",
+    "required": true,
+    "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
+    "helpMarkDown": "Enter the json messageBody.",
+    "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000",
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+    }
+  },
+  {
+        "name": "waitForCompletion",
+        "type": "boolean",
+        "label": "Wait for Task Completion",
+        "defaultValue": "false",
+        "required": true,
+        "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+    }
   ],
   "instanceNameFormat": "Publish to Azure Service Bus",
   "execution": {

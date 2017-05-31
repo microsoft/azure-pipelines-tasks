@@ -3,7 +3,8 @@
   "name": "PublishToAzureServiceBus",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "category": "Release",
+  "category": "Utility",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
     "Release"
   ],
@@ -14,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "groups": [
@@ -75,6 +76,5 @@
         }
       }
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
