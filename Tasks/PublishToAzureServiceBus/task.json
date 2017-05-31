@@ -3,9 +3,10 @@
   "name": "PublishToAzureServiceBus",
   "friendlyName": "Publish To Azure Service Bus (Preview)",
   "description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "category": "Release",
+  "category": "Utility",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "visibility": [
-      "Utility"
+      "Release"
   ],
   "runsOn": [
       "Server"
