@@ -3,9 +3,10 @@
   "name": "PublishToAzureServiceBus",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "category": "Release",
+  "category": "Utility",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
-    "Utility"
+    "Release"
   ],
   "runsOn": [
     "Server"
@@ -75,6 +76,5 @@
         }
       }
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
