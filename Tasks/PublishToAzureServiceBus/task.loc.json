@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "category": "Release",
   "visibility": [
-    "Release"
+    "Utility"
   ],
   "runsOn": [
     "Server"
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": "true",
   "groups": [
