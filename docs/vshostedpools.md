@@ -64,7 +64,7 @@ This also eliminates issues where you have to pick the version in multiple msbui
 
 This leverages and follows concepts introduced with tools.  In general, it's a pattern we want to push further.
 
-https://www.youtube.com/edit?o=U&video_id=Ie8EuvqJ0Hg
+https://www.youtube.com/watch?v=Ie8EuvqJ0Hg
 
 Once in place, the templates would be updated to include the environment up front to run dev cmd prompt to set up the "tools" or "tool sets"
 
