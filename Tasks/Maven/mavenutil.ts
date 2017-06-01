@@ -123,7 +123,7 @@ function addPropToJson(obj: any, propName:string, value: any): void {
     }
 }
 
-function mavenSettingsJsonInsertServer (json: any, settingsXmlFile:string, serverJson:any) {
+function mavenSettingsJsonInsertServer (json: any, serverJson:any) {
     if (!json) {
         json = {};
     }
@@ -140,30 +140,37 @@ function mavenSettingsJsonInsertServer (json: any, settingsXmlFile:string, serve
         json.settings.servers = {};
     }
     addPropToJson(json.settings.servers, 'server', serverJson);
-    return writeJsonAsSettingsFile(settingsXmlFile, json);
 }
 
-export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, server:string): Q.Promise<any> {
+export function mergeServerCredentialsIntoSettingsXml(settingsXmlFile:string, repositories:any): Q.Promise<any> {
     tl.debug('merge server credentials into settings.xml file=' + settingsXmlFile);
-    let serverJson:any = {
-        id: server,
-        configuration: {
-            httpHeaders: {
-                property: {
-                    name: 'Authorization',
-                    value: 'Basic ${env.' + accessTokenEnvSetting + '}'
-                }
+    if (repositories) {
+        tl.debug('repos: ' + JSON.stringify(repositories));
+        let insertServer = function(json) {
+            for (let repository of repositories) {
+                tl.debug('repository: ' + JSON.stringify(repository));
+                let serverJson:any = {
+                    id: repository.id,
+                    configuration: {
+                        httpHeaders: {
+                            property: {
+                                name: 'Authorization',
+                                value: 'Basic ${env.' + accessTokenEnvSetting + '}'
+                            }
+                        }
+                    }
+                };
+                tl.debug('inserting: ' + JSON.stringify(serverJson));
+                mavenSettingsJsonInsertServer(json, serverJson);
             }
-        }
-    };
-    return readXmlFileAsJson(settingsXmlFile)
-    .then(function (json) {
-        return mavenSettingsJsonInsertServer(json, settingsXmlFile, serverJson);
-    })
-    .fail(function () {
-        // Generate the settings.xml from scratch
-        return mavenSettingsJsonInsertServer(null, settingsXmlFile, serverJson);
-    });
+            tl.debug('complete json: ' + JSON.stringify(json));
+            return writeJsonAsSettingsFile(settingsXmlFile, json);
+        };
+        return readXmlFileAsJson(settingsXmlFile).then(insertServer, insertServer);
+    } else {
+        tl.debug('no repositories...exitting');
+        return Q.resolve(true);
+    }
 }
 
 // TODO: refactor this method out from NPM, NuGet and Maven into a common module
@@ -199,34 +206,34 @@ function insertRepoJsonIntoPomJson(pomJson:any, repoJson:any) {
     addPropToJson(pomJson.project.repositories, 'repository', repoJson);
 }
 
-export function insertRepoIntoPomJson(pomJson:any, repoId:string, repoUrl:string) {
-    insertRepoJsonIntoPomJson(pomJson, {
-        id: repoId,
-        url: repoUrl,
-        releases: {
-            enabled: true
-        },
-        snapshots: {
-            enabled: true
-        }
-    });
-}
+// export function insertRepoIntoPomJson(pomJson:any, repoId:string, repoUrl:string) {
+//     insertRepoJsonIntoPomJson(pomJson, {
+//         id: repoId,
+//         url: repoUrl,
+//         releases: {
+//             enabled: true
+//         },
+//         snapshots: {
+//             enabled: true
+//         }
+//     });
+// }
 
-export function readPomAsJson(pomXmlFile:string): Q.Promise<any> {
-    tl.debug('reading POM.xml file=' + pomXmlFile);
-    return readXmlFileAsJson(pomXmlFile);
-}
+// export function readPomAsJson(pomXmlFile:string): Q.Promise<any> {
+//     tl.debug('reading POM.xml file=' + pomXmlFile);
+//     return readXmlFileAsJson(pomXmlFile);
+// }
 
-export function insertPublicReposIntoPom(pomJson:any, includeJCenter:boolean, includeMavenCentral:boolean) {
-    if (includeJCenter) {
-        tl.debug('inserting JCenter repo');
-        insertRepoJsonIntoPomJson(pomJson, jcenterAuthInfo);
-    }
-    if (includeMavenCentral) {
-        tl.debug('inserting Maven Central repo');
-        insertRepoJsonIntoPomJson(pomJson, mavenAuthInfo);
-    }
-}
+// export function insertPublicReposIntoPom(pomJson:any, includeJCenter:boolean, includeMavenCentral:boolean) {
+//     if (includeJCenter) {
+//         tl.debug('inserting JCenter repo');
+//         insertRepoJsonIntoPomJson(pomJson, jcenterAuthInfo);
+//     }
+//     if (includeMavenCentral) {
+//         tl.debug('inserting Maven Central repo');
+//         insertRepoJsonIntoPomJson(pomJson, mavenAuthInfo);
+//     }
+// }
 
 export interface MavenFeedInfo {
     mavenFeedId:string;
@@ -276,52 +283,139 @@ export function getMavenFeedRegistryUrl(feedId: string): Q.Promise<MavenFeedInfo
     });
 }
 
-let _accountName:string;
-function getAccountName(): string {
-    tl.debug('getAccountName');
-    if (_accountName) {
-        return _accountName;
-    }
-    let accountUrl = url.parse(tl.getVariable("System.TeamFoundationCollectionUri")).hostname.toLowerCase();
-    if (accountUrl.endsWith(".pkgs.visualstudio.com")) {
-        _accountName = accountUrl.substring(0, accountUrl.length - ".pkgs.visualstudio.com".length);
-    } else if (accountUrl.endsWith(".visualstudio.com")) {
-        _accountName = accountUrl.substring(0, accountUrl.length - ".visualstudio.com".length);
-    } else {
-        //throw?
-    }
-    return _accountName;
-}
+// let _accountName:string;
+// function getAccountName(): string {
+//     tl.debug('getAccountName');
+//     if (_accountName) {
+//         return _accountName;
+//     }
+//     let accountUrl = url.parse(tl.getVariable("System.TeamFoundationCollectionUri")).hostname.toLowerCase();
+//     if (accountUrl.endsWith(".pkgs.visualstudio.com")) {
+//         _accountName = accountUrl.substring(0, accountUrl.length - ".pkgs.visualstudio.com".length);
+//     } else if (accountUrl.endsWith(".visualstudio.com")) {
+//         _accountName = accountUrl.substring(0, accountUrl.length - ".visualstudio.com".length);
+//     } else {
+//         //throw?
+//     }
+//     return _accountName;
+// }
 
 export interface RepositoryInfo {
     id:string;
-    url:string;
-    name?:string;
-    layout?:string;
-    snapshots?:boolean;
+    // url:string;
+    // name?:string;
+    // layout?:string;
+    // snapshots?:boolean;
 }
 
-function parseRespositoriesInJson(json:any): RepositoryInfo[] {
-    let repos:RepositoryInfo[] = [];
-    if (json && json.modules.module) {
-
-    }
-    return repos;
-}
-
-export function collectAllRepositoriesFromPom(pomXmlFile: string): Q.Promise<RepositoryInfo[]> {
-    tl.debug('collectAllRepositoriesFromPom file=' + pomXmlFile);
-    let accountName:string = getAccountName();
-    let repos:RepositoryInfo[] = [];
-    return readPomAsJson(pomXmlFile).then(function (json) {
-        if (json) {
-            repos.concat(parseRespositoriesInJson(json));
-            if (json.modules && json.modules.module) {
-                return collectAllRepositoriesFromPom().then(function(childRepos) {
-                    repos.concat(childRepos);
-                });
-            }
+function collectAllRepositories(pomContents:string): Q.Promise<any> {
+    tl.debug('collectAllRepositories');
+    return convertXmlStringToJson(pomContents).then(function (pomJson) {
+        let repos:RepositoryInfo[] = [];
+        if (!pomJson) {
+            tl.debug('Incomplete pom: ' + pomJson);
+            return Q.resolve(repos);
         }
+        let accountUrl = url.parse(tl.getVariable("System.TeamFoundationCollectionUri")).hostname;
+        let parseRepos:(project) => void = function(project) {
+            tl.debug('project=' + JSON.stringify(project));
+            if (project && project.repositories) {
+                tl.debug('Repositories: ' + JSON.stringify(project.repositories));
+                for (let r of project.repositories) {
+                    r = r instanceof Array ? r[0] : r;
+                    tl.debug('Repository: ' + JSON.stringify(r));
+                    if (r.repository) { 
+                        for (let repo of r.repository) {
+                            repo = repo instanceof Array ? repo[0] : repo;
+                            let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
+                            // && repo.url.includes(accountUrl)) {
+                            tl.debug('Adding for url: ' + repo.url);
+                            repos.push({
+                                id: (repo.id && repo.id instanceof Array) 
+                                    ? repo.id[0] 
+                                    : repo.id
+                                });
+                        }
+                    }
+                }
+            }
+        };
+
+        if (pomJson.projects) {
+            tl.debug('projects=' + JSON.stringify(pomJson.projects.project));
+            for (let project of pomJson.projects.project) {
+                parseRepos(project);
+            }
+        } else if (pomJson.project) {
+            tl.debug('projects=' + JSON.stringify(pomJson.project));
+            parseRepos(pomJson.project);
+        } else {
+            tl.warning('LUKE: Warning');
+        }
+
+        tl.debug('Total repos: ' + JSON.stringify(repos));
         return Q.resolve(repos);
     });
 }
+
+export function collectAllRepositoriesFromEffectivePom(mavenOutput:string): Q.Promise<any> {
+    const projectsBeginTag:string = '<projects';
+    const projectsEndTag:string = '</projects>';
+    const projectBeginTag:string = '<project';
+    const projectEndTag:string = '</project>';
+    let xml:string = String(mavenOutput);
+    let xmlStart:number = xml.indexOf(projectsBeginTag);
+    let xmlEnd:number = xml.indexOf(projectsEndTag);
+    if (xmlStart !== -1 && xmlEnd !== -1 && (xmlStart < xmlEnd)) {
+        xml = xml.substring(xmlStart, xmlEnd + projectsEndTag.length);
+        tl.debug('Effective POM: ' + JSON.stringify(xml.toString()));
+        return collectAllRepositories(xml);
+    }
+
+    xmlStart = xml.indexOf(projectBeginTag);
+    xmlEnd = xml.indexOf(projectEndTag);
+    if (xmlStart !== -1 && xmlEnd !== -1 && (xmlStart < xmlEnd)) {
+        xml = xml.substring(xmlStart, xmlEnd + projectEndTag.length);
+        tl.debug('Effective POM: ' + JSON.stringify(xml.toString()));
+        return collectAllRepositories(xml);
+    } else {
+        tl.warning('Could not ');
+        tl.debug('xml=' + xml);
+        tl.debug('start=' + xmlStart + ' end=' + xmlEnd);
+        return Q.resolve(true);
+    }
+}
+
+// function parseRespositoriesInJson(json:any): RepositoryInfo[] {
+//     let repos:RepositoryInfo[] = [];
+//     if (json && json.modules.module) {
+
+//     }
+//     return repos;
+// }
+
+// export function collectAllRepositoriesFromPom(pomXmlFile: string): Q.Promise<any> {
+//     tl.debug('collectAllRepositoriesFromPom file=' + pomXmlFile);
+//     let accountName:string = getAccountName();
+//     let repos:RepositoryInfo[] = [];
+//     return readPomAsJson(pomXmlFile).then(function (json) {
+//         if (json) {
+//             repos.concat(parseRespositoriesInJson(json));
+//             if (json.modules) {
+//                 let modules = json.modules.module;
+//                 if (modules && modules instanceof Array) {
+//                     for (var module in modules) {
+//                         return collectAllRepositoriesFromPom(module).then(function(childRepos) {
+//                             repos.concat(childRepos);
+//                         });
+//                     }
+//                 } else if (typeof modules === 'object') {
+//                     return collectAllRepositoriesFromPom(modules).then(function(childRepos) {
+//                         repos.concat(childRepos);
+//                     });
+//                 }
+//             }
+//         }
+//         return Q.resolve(repos);
+//     });
+// }

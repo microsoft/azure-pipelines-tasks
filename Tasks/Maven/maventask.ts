@@ -163,11 +163,34 @@ async function execBuild() {
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
+            // Setup tool runner to execute Maven goals
+            var mvnRun = tl.tool(mvnExec);
+            mvnRun.arg('-f');
+            mvnRun.arg(mavenPOMFile);
+            mvnRun.arg('help:effective-pom');
+            return mvnRun.execSync();
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (outputWithEffectivePom) {
+            return util.collectAllRepositoriesFromEffectivePom(outputWithEffectivePom['stdout']);
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (repositories) {
+            tl.debug('Repositories: ' + JSON.stringify(repositories));
             if (selectSources === 'PomXmlOnlySources') {
                 tl.debug('using pom.xml; skipping task authentication');
-                return Q.resolve(code);
+                return Q.resolve('true');
             }
-            settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+            settingsXmlFile = path.join(
+                'D:\\',
+                //os.tmpdir(), 
+                'settings.xml');
 
             tl.debug('checking to see if there are settings.xml in use');
             let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
@@ -187,48 +210,54 @@ async function execBuild() {
                     }
                 }
             }
-            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, mavenFeedId);
+            tl.debug('typeof=' + (typeof repositories));
+            if (mavenFeedId && repositories) {
+                repositories = [].concat(repositories);
+                repositories.push(mavenFeedId);
+            }
+            // tl.debug('typeof=' + (repositories instanceof util.RepositoryInfo[]));
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, repositories);
         })
         .fail(function (err) {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {
-            if (selectSources === 'PomXmlOnlySources') {
-                tl.debug('Using only sources in the pom.xml file');
-                return Q.resolve(code);
-            }
+        // .then(function (code) {
+        //     if (selectSources === 'PomXmlOnlySources') {
+        //         tl.debug('Using only sources in the pom.xml file');
+        //         return Q.resolve(code);
+        //     }
             
-            tl.debug('Insert repositories into pom');
-            let mavenPOMOrigFile:string = mavenPOMFile;
-            let mavenPOMExt: string = path.extname(mavenPOMOrigFile);
-            mavenPOMFile = path.join(path.dirname(mavenPOMOrigFile), path.basename(mavenPOMOrigFile)) + '-repo.';
-            let collision: number = 0;
-            let mavenPOMFileLast = mavenPOMFile;
-            while (tl.exist(mavenPOMFile + collision + mavenPOMExt)) {
-                collision++;
-            }
-            mavenPOMFile = mavenPOMFile + collision + mavenPOMExt; // Unique
+        //     tl.debug('Insert repositories into pom');
+        //     let mavenPOMOrigFile:string = mavenPOMFile;
+        //     let mavenPOMExt: string = path.extname(mavenPOMOrigFile);
+        //     mavenPOMFile = path.join(path.dirname(mavenPOMOrigFile), path.basename(mavenPOMOrigFile)) + '-repo.';
+        //     let collision: number = 0;
+        //     let mavenPOMFileLast = mavenPOMFile;
+        //     while (tl.exist(mavenPOMFile + collision + mavenPOMExt)) {
+        //         collision++;
+        //     }
+        //     mavenPOMFile = mavenPOMFile + collision + mavenPOMExt; // Unique
 
-            tl.debug('Using pom file: ' + mavenPOMFile);
-            tl.cp(mavenPOMOrigFile, mavenPOMFile, '');
-            return util.readPomAsJson(mavenPOMOrigFile).fail(function (err) {
-                console.error(err.message);
-                userRunFailed = true; // Record the error and continue
-            })
-            .then(function (pomJson) {
-                tl.debug('writing repos to pom');
-                util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
-                util.insertRepoIntoPomJson(pomJson, 
-                    mavenFeedId, 
-                    mavenFeedUrl);
-                return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
-            })
-        })
-        .fail(function (err) {
-            console.error(err.message);
-            userRunFailed = true; // Record the error and continue
-        })
+        //     tl.debug('Using pom file: ' + mavenPOMFile);
+        //     tl.cp(mavenPOMOrigFile, mavenPOMFile, '');
+        //     return util.readPomAsJson(mavenPOMOrigFile).fail(function (err) {
+        //         console.error(err.message);
+        //         userRunFailed = true; // Record the error and continue
+        //     })
+        //     .then(function (pomJson) {
+        //         tl.debug('writing repos to pom');
+        //         // util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
+        //         util.insertRepoIntoPomJson(pomJson, 
+        //             mavenFeedId, 
+        //             mavenFeedUrl);
+        //         return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
+        //     })
+        // })
+        // .fail(function (err) {
+        //     console.error(err.message);
+        //     userRunFailed = true; // Record the error and continue
+        // })
         .then(function (code) {            
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
