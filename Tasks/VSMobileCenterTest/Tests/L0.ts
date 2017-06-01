@@ -88,6 +88,28 @@ describe('VSMobileCenterTest L0 Suite', function () {
         done();
     });
 
+    it('Positive path: upload XCUITest test with service endpoint', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0CXCUITestPass.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
+        assert(tr.ran("/path/to/mobile-center test prepare xcuitest --artifacts-dir " +
+            "/path/to/artifactsDir --build-dir /path/to/xcuitest_build_dir --quiet"),
+            "Should have run prepare");
+
+        assert(tr.ran("/path/to/mobile-center test run manifest " +
+            "--manifest-path /path/to/artifactsDir/manifest.json --app-path /test/path/to/my.ipa " + 
+            "--app testuser/testapp --devices 1234abcd --test-series master --dsym-dir /path/to/dsym " + 
+            "--async --locale nl_NL --myRunOpts abc --quiet --token mytoken123"), 
+            "Should have run test run");
+
+        done();
+    });
+
     it('Positive path: upload UITest with username and password', (done: MochaDone) => {
         this.timeout(2000);
 
