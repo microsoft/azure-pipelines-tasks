@@ -113,7 +113,6 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
         addStringArg('--uitest-tools-dir', 'uitestToolsDir', false, prepareRunner);
         addStringArg('--sign-info', 'signInfo', false, prepareRunner);
     } else if (framework === 'xcuitest') {
-        prepareRunner.arg(['--app-path', app]);
         addStringArg('--build-dir', 'xcuitestBuildDir', false, prepareRunner);
         addStringArg('--test-ipa-path', 'xcuitestTestIpaPath', false, prepareRunner);
     }

@@ -208,6 +208,26 @@
       "groupName": "prepare"
     },
     {
+      "name": "xcuitestBuildDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcuitestBuildDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcuitestBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestTestIpaPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcuitestTestIpaPath",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcuitestTestIpaPath",
+      "groupName": "prepare"
+    },
+    {
       "name": "prepareOpts",
       "type": "string",
       "label": "ms-resource:loc.input.label.prepareOpts",
