@@ -214,7 +214,7 @@
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = xcuitest",
             "required": false,
-            "helpMarkDown": "Path to the build output directory (usually  <project>/Build/Products/Debug-iphoneos)",
+            "helpMarkDown": "Path to the build output directory (usually $(ProjectDir)/Build/Products/Debug-iphoneos).",
             "groupName": "prepare"
         },
         {
