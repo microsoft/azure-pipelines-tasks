@@ -303,7 +303,7 @@
             "type": "string",
             "label": "dSYM Directory",
             "defaultValue": "",
-            "visibleRule": "enableRun = true & framework != espresso",
+            "visibleRule": "enableRun = true",
             "required": false,
             "groupName": "run",
             "helpMarkDown": "Path to iOS symbol files."

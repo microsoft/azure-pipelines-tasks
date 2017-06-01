@@ -303,7 +303,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.dsymDir",
       "defaultValue": "",
-      "visibleRule": "enableRun = true & framework != espresso",
+      "visibleRule": "enableRun = true",
       "required": false,
       "groupName": "run",
       "helpMarkDown": "ms-resource:loc.input.help.dsymDir"
