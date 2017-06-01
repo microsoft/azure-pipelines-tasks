@@ -208,6 +208,26 @@
             "groupName": "prepare"
         },
         {
+            "name":"xcuitestBuildDir",
+            "type":"string",
+            "label":"Build Directory",
+            "defaultValue":"",
+            "visibleRule":"enablePrepare = true && framework = xcuitest",
+            "required": true,
+            "helpMarkDown": "Path to the build output directory (usually  <project>/Build/Products/Debug-iphoneos)",
+            "groupName": "prepare"
+        },
+        {
+            "name":"xcuitestTestIpaPath",
+            "type":"string",
+            "label":"Test IPA Path",
+            "defaultValue":"",
+            "visibleRule":"enablePrepare = true && framework = xcuitest",
+            "required": false,
+            "helpMarkDown": "Path to the *.ipa file with the XCUITest tests.",
+            "groupName": "prepare"
+        },
+        {
             "name": "prepareOpts",
             "type": "string",
             "label": "Additional Options",
