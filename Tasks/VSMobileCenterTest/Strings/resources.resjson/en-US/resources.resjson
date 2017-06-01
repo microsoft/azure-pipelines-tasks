@@ -37,7 +37,7 @@
   "loc.input.label.signInfo": "Signing Information",
   "loc.input.help.signInfo": "Use Signing Infor for signing the test server.",
   "loc.input.label.xcuitestBuildDir": "Build Directory",
-  "loc.input.help.xcuitestBuildDir": "Path to the build output directory (usually  <project>/Build/Products/Debug-iphoneos)",
+  "loc.input.help.xcuitestBuildDir": "Path to the build output directory (usually $(ProjectDir)/Build/Products/Debug-iphoneos).",
   "loc.input.label.xcuitestTestIpaPath": "Test IPA Path",
   "loc.input.help.xcuitestTestIpaPath": "Path to the *.ipa file with the XCUITest tests.",
   "loc.input.label.prepareOpts": "Additional Options",
