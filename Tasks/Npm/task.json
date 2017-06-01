@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -160,6 +160,10 @@
         "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
         "FoundLocalRegistries": "Found %d registries in this account/collection",
-        "ForcePackagingUrl": "Packaging collection url forced to: %s"
+        "ForcePackagingUrl": "Packaging collection url forced to: %s",
+        "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
+        "NpmFailed": "Npm failed with return code: %s",
+        "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
+        "TestDebugLog": "Trying debug log location: %s"
     }
 }

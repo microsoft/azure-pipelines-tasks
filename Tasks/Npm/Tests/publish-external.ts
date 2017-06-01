@@ -20,7 +20,7 @@ let auth = {
     }
 };
 tmr.mockServiceEndpoint('SomeEndpointId', 'http://url', auth);
-tmr.setExecResponse('npm publish', {
+tmr.mockNpmCommand('publish', {
     code: 0,
     stdout: 'npm publish successful'
 } as TaskLibAnswerExecResult);

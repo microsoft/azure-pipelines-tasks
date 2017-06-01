@@ -6,6 +6,7 @@ import * as mtr from 'vsts-task-lib/mock-toolrunner';
 
 export class NpmMockHelper extends TaskMockRunner {
     private static NpmCmdPath: string = 'c:\\mock\\location\\npm';
+    private static NpmCachePath: string = 'c:\\mock\\location\\npm_cache';
     private static AgentBuildDirectory: string = 'c:\\mock\\agent\\work\\build';
     private static BuildBuildId: string = '12345';
     private static CollectionUrl: string = 'https://example.visualstudio.com/defaultcollection';
@@ -14,6 +15,7 @@ export class NpmMockHelper extends TaskMockRunner {
         checkPath: {},
         exec: {},
         exist: {},
+        findMatch: {},
         rmRF: {},
         which: {}
     };
@@ -26,18 +28,31 @@ export class NpmMockHelper extends TaskMockRunner {
 
         NpmMockHelper._setVariable('Agent.HomeDirectory', 'c:\\agent\\home\\directory');
         NpmMockHelper._setVariable('Build.SourcesDirectory', 'c:\\agent\\home\\directory\\sources');
-        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = '{"parameters":{"AccessToken":"token"},"scheme":"OAuth"}';
-        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = NpmMockHelper.CollectionUrl;
         NpmMockHelper._setVariable('System.DefaultWorkingDirectory', 'c:\\agent\\home\\directory');
-        NpmMockHelper._setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
+        NpmMockHelper._setVariable('System.TeamFoundationCollectionUri', NpmMockHelper.CollectionUrl);
         NpmMockHelper._setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
         NpmMockHelper._setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
         this.setDebugState(false);
 
+        // mock SYSTEMVSSCONNECtION
+        this.mockServiceEndpoint(
+            'SYSTEMVSSCONNECTION',
+            NpmMockHelper.CollectionUrl,
+            {
+                parameters: { AccessToken: 'token'},
+                scheme: 'OAuth'
+            }
+        );
+
+        this.mockNpmCommand('config get cache', { code: 0, stdout: NpmMockHelper.NpmCachePath} as TaskLibAnswerExecResult);
         this._mockNpmConfigList();
         this._setToolPath('npm', NpmMockHelper.NpmCmdPath);
-        this.answers.rmRF[path.join(NpmMockHelper.AgentBuildDirectory, 'npm', `${NpmMockHelper.BuildBuildId}.npmrc`)] = { success: true };
-        this.answers.rmRF[path.join(NpmMockHelper.AgentBuildDirectory, 'npm')] = { success: true };
+        // mock temp npm path
+        const tempNpmPath = path.join(NpmMockHelper.AgentBuildDirectory, 'npm');
+        this.answers.exist[tempNpmPath] = true;
+        this.answers.rmRF[tempNpmPath] = { success: true };
+        const tempNpmrcPath = path.join(tempNpmPath, `${NpmMockHelper.BuildBuildId}.npmrc`);
+        this.answers.rmRF[tempNpmrcPath] = { success: true };
     }
 
     public run(noMockTask?: boolean): void {
@@ -46,14 +61,6 @@ export class NpmMockHelper extends TaskMockRunner {
 
     public setDebugState(debug: boolean): void {
         NpmMockHelper._setVariable('System.Debug', debug ? 'true' : 'false');
-    }
-
-    public setOsType(osTypeVal : string) {
-        if (!this.answers['osType']) {
-            this.answers['osType'] = {};
-        }
-
-        this.answers['osType']['osType'] = osTypeVal;
     }
 
     private static _setVariable(name: string, value: string): void {
@@ -65,8 +72,9 @@ export class NpmMockHelper extends TaskMockRunner {
         return name.replace(/\./g, '_').toUpperCase();
     }
 
-    public setExecResponse(command: string, result: TaskLibAnswerExecResult) {
-        this.answers.exec[command] = result;
+    public mockNpmCommand(command: string, result: TaskLibAnswerExecResult) {
+        this.answers.exec[`npm ${command}`] = result;
+        this.answers.exec[`${NpmMockHelper.NpmCmdPath} ${command}`] = result;
     }
 
     public RegisterLocationServiceMocks() {
@@ -106,11 +114,11 @@ export class NpmMockHelper extends TaskMockRunner {
     }
 
     private _mockNpmConfigList() {
-        this.setExecResponse(`${NpmMockHelper.NpmCmdPath} config list`, {
+        this.mockNpmCommand(`config list`, {
             code: 0,
             stdout: '; cli configs'} as TaskLibAnswerExecResult);
 
-        this.setExecResponse(`${NpmMockHelper.NpmCmdPath} config list -l`, {
+        this.mockNpmCommand(`config list -l`, {
             code: 0,
             stdout: '; debug cli configs'} as TaskLibAnswerExecResult);
     }

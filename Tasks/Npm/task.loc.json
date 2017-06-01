@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -160,6 +160,10 @@
     "UsingRegistry": "ms-resource:loc.messages.UsingRegistry",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
-    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl"
+    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",
+    "DebugLogNotFound": "ms-resource:loc.messages.DebugLogNotFound",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
+    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog"
   }
 }
