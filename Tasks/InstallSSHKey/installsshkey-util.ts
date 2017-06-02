@@ -1,9 +1,13 @@
 import fs = require('fs');
 import os = require('os');
+import Q = require('q');
 import path = require('path');
+import process = require('process');
+import stream = require('stream');
+import child = require('child_process');
+
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
-
 
 export const postKillAgentSetting: string = 'INSTALL_SSH_KEY_KILL_SSH_AGENT_PID';
 export const postDeleteKeySetting: string = 'INSTALL_SSH_KEY_DELETE_KEY';
@@ -14,6 +18,99 @@ export const postKnownHostsDeleteFileSetting: string = 'INSTALL_SSH_KEY_KNOWN_HO
 export const sshAgentPidEnvVariableKey: string = 'SSH_AGENT_PID';
 export const sshAgentSockEnvVariableKey: string = 'SSH_AUTH_SOCK';
 
+function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
+    tl.debug('execSshAddPassphraseSync');
+
+    var defer = Q.defer<boolean>();
+    let success = true;
+
+    let options:trm.IExecOptions = <trm.IExecOptions> {
+        cwd: process.cwd(),
+        env: process.env,
+        silent: false,
+        failOnStdErr: false,
+        ignoreReturnCode: true,
+        windowsVerbatimArguments: false,
+        outStream:<stream.Writable>process.stdout,
+        errStream:<stream.Writable>process.stderr
+    };
+
+    let cp = child.spawn(tool, args, {});
+
+    var processLineBuffer = (data: Buffer, strBuffer: string, onLine:(line: string) => void): void => {
+        try {
+            var s = strBuffer + data.toString();
+            var n = s.indexOf(os.EOL);
+
+            while(n > -1) {
+                var line = s.substring(0, n);
+                onLine(line);
+
+                // the rest of the string ...
+                s = s.substring(n + os.EOL.length);
+                n = s.indexOf(os.EOL);
+            }
+
+            strBuffer = s;                
+        }
+        catch (err) {
+            tl.debug('error processing line');
+        }
+    }
+
+    var stdbuffer: string = '';
+    cp.stdout.on('data', (data: Buffer) => {
+        options.outStream.write(data);
+        processLineBuffer(data, stdbuffer, (line: string) => {
+            tl.debug('stdline' + line);    
+        });
+    });
+
+    var errbuffer: string = '';
+    cp.stderr.on('data', (data: Buffer) => {
+        // ssh-add puts output on stderr
+        var s = options.errStream;
+        s.write(data);
+        processLineBuffer(data, errbuffer, (line: string) => {
+            tl.debug('errline' + line);    
+        });            
+    });
+
+    cp.on('error', (err) => {
+        defer.reject(new Error(tool + ' failed. ' + err.message));
+    });
+
+    cp.on('close', (code, signal) => {
+        tl.debug('rc:' + code);
+
+        if (stdbuffer.length > 0) {
+            tl.debug('stdline' + stdbuffer);
+        }
+        
+        if (errbuffer.length > 0) {
+            tl.debug('errline' + errbuffer);
+        }
+
+        if (code != 0 && !options.ignoreReturnCode) {
+            tl.debug('Do not ignore return code: ' + code);
+            success = false;
+        }
+
+        tl.debug('success:' + success);
+        if (!success) {
+            defer.reject(new Error(tool + ' failed with return code: ' + code));
+        }
+        else {
+            defer.resolve(success);
+        }
+    });
+    tl.debug('writing passphrase');
+    cp.stdin.write(passphrase);
+    cp.stdin.end();
+    tl.debug('passphrase complete');
+
+    return defer.promise;
+}
 
 export class SshToolRunner {
     private baseDir = tl.getVariable('Agent.HomeDirectory');
@@ -57,7 +154,7 @@ export class SshToolRunner {
         }
     }
 
-    public installKey(publicKey: string, privateKeyLocation: string) {
+    public async installKey(publicKey: string, privateKeyLocation: string, passphrase: string) {
         tl.debug('Get a list of the SSH keys in the agent');
         let results: trm.IExecSyncResult = tl.execSync(this.getExecutable('ssh-add'), '-L');
 
@@ -75,8 +172,15 @@ export class SshToolRunner {
         tl.debug('Adding the SSH key to the agent ' + privateKeyLocation);
         let oldMode: number = fs.statSync(privateKeyLocation).mode;
         fs.chmodSync(privateKeyLocation, '600'); // requires user only permissions when adding to agent
-        results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
-        if (results.error) {
+
+        let installedSSH:boolean = false;
+        if (passphrase) {        
+            installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], 'P@$$w0rd');
+        } else {
+            results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
+            installedSSH = !results.error;
+        }
+        if (!installedSSH) {
             throw tl.loc('SSHKeyInstallFailed');
         }
         fs.chmodSync(privateKeyLocation, oldMode);

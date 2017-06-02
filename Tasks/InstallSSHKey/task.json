@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 117,
+        "Minor": 119,
         "Patch": 0
     },
     "runsOn": [
@@ -40,6 +40,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The contents of the public SSH key."
+        },
+        {
+            "name": "sshPassphrase",
+            "type": "string",
+            "label": "SSH Passphrase",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The passphrase for the SSH key."
         },
         {
             "name": "sshKeySecureFile",
