@@ -132,7 +132,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
 
     let commitBody = { "status": "committed" };
 
-    request.patch({ url: commitReleaseUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             if (body && body['release_url']) {
                 defer.resolve(body['release_url']);
@@ -163,7 +163,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         "release_notes": releaseNotes
     };
 
-    request.patch({ url: publishReleaseUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: publishBody }, (err, res, body) => {
+    request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
@@ -249,7 +249,7 @@ function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Pr
         "internal-request-source": "VSTS"
     };
 
-    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers }, (err, res, body) => {
+    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- Symbol uploaded.');
             defer.resolve();
@@ -272,7 +272,7 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
     let commitBody = { "status": "committed" };
 
-    request.patch({ url: commitSymbolsUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: commitSymbolsUrl, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
