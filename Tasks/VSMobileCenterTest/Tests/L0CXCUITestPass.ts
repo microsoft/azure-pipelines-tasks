@@ -17,11 +17,8 @@ tmr.setInput('series', 'master');
 tmr.setInput('dsymDir', '/path/to/dsym');
 tmr.setInput('locale', 'nl_NL');
 tmr.setInput('artifactsDir', '/path/to/artifactsDir');
-tmr.setInput('framework', 'calabash');
-tmr.setInput('calabashProjectDir', '/path/to/project');
-tmr.setInput('calabashConfigFile', '/path/to/configfile');
-tmr.setInput('calabashProfile', 'myProfile');
-tmr.setInput('signInfo', 'SignInfo');
+tmr.setInput('framework', 'xcuitest');
+tmr.setInput('xcuitestBuildDir', '/path/to/xcuitest_build_dir');
 tmr.setInput('async', 'true');
 tmr.setInput('runOpts', '--myRunOpts abc');
 tmr.setInput('cliLocationOverride', '/path/to/mobile-center');
@@ -33,7 +30,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/path/to/mobile-center": true
     },
     "exec" : {
-        "/path/to/mobile-center test prepare calabash --artifacts-dir /path/to/artifactsDir --app-path /test/path/to/my.ipa --project-dir /path/to/project --sign-info SignInfo --config-path /path/to/configfile --profile myProfile --quiet": {
+        "/path/to/mobile-center test prepare xcuitest --artifacts-dir /path/to/artifactsDir --build-dir /path/to/xcuitest_build_dir --quiet": {
             "code": 0,
             "stdout": "success",
             "stderr": ""
