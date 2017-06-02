@@ -62,7 +62,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
     cp.stdout.on('data', (data: Buffer) => {
         options.outStream.write(data);
         processLineBuffer(data, stdbuffer, (line: string) => {
-            tl.debug('stdline' + line);    
+            tl.debug('stdline:' + line);    
         });
     });
 
@@ -72,7 +72,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
         var s = options.errStream;
         s.write(data);
         processLineBuffer(data, errbuffer, (line: string) => {
-            tl.debug('errline' + line);    
+            tl.debug('errline:' + line);    
         });            
     });
 
@@ -84,11 +84,11 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
         tl.debug('rc:' + code);
 
         if (stdbuffer.length > 0) {
-            tl.debug('stdline' + stdbuffer);
+            tl.debug('stdline:' + stdbuffer);
         }
         
         if (errbuffer.length > 0) {
-            tl.debug('errline' + errbuffer);
+            tl.debug('errline:' + errbuffer);
         }
 
         if (code != 0 && !options.ignoreReturnCode) {
