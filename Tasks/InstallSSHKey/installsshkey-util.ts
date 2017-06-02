@@ -175,7 +175,7 @@ export class SshToolRunner {
 
         let installedSSH:boolean = false;
         if (passphrase) {        
-            installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], 'P@$$w0rd');
+            installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], passphrase);
         } else {
             results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
             installedSSH = !results.error;
