@@ -83,7 +83,7 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    request.post({ url: beginUploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers }, (err, res, body) => {
+    request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let response = JSON.parse(body);
             let uploadInfo: UploadInfo = {
@@ -106,7 +106,7 @@ function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Pr
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    let req = request.post({ url: uploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers }, (err, res, body) => {
+    let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- File uploaded.');
             defer.resolve();
@@ -221,7 +221,7 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
 
-    request.post({ url: beginSymbolUploadUrl, agentOptions: { rejectUnauthorized: false }, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
+    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let symbolsUploadInfo: SymbolsUploadInfo = {
                 symbol_upload_id: body['symbol_upload_id'],
