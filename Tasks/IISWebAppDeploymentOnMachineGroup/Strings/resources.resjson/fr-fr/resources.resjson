@@ -69,8 +69,8 @@
   "loc.messages.EncodeNotSupported": "Encodage du fichier %s en %s détecté. La substitution de variable n'est pas prise en charge avec l'encodage de fichier %s. Les encodages pris en charge sont UTF-8 et UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "Impossible de détecter l'encodage du fichier %s (typeCode : %s). Les encodages pris en charge sont UTF-8 et UTF-16 LE.",
   "loc.messages.ShortFileBufferError": "La mémoire tampon de fichier est insuffisante pour détecter le type d'encodage : %s",
-  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
-  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.FailedToApplyTransformation": "Impossible d'appliquer la transformation pour le package donné. Vérifiez ce qui suit.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. La transformation est-elle déjà appliquée pour le package MSBuild généré durant la build ? Si la réponse est oui, supprimez la balise <DependentUpon> pour chaque configuration dans le fichier csproj, puis effectuez une regénération. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Vérifiez que le fichier config et les fichiers de transformation sont présents dans le même dossier à l'intérieur du package.",
   "loc.messages.AutoParameterizationMessage": "Les attributs de ConnectionString dans Web.config sont paramétrables par défaut. Notez que la transformation n'a aucun effet sur les attributs de connectionString, car la valeur est remplacée durant le déploiement par les fichiers 'Parameters.xml' ou 'SetParameters.xml'. Vous pouvez désactiver le paramétrage automatique en définissant /p:AutoParameterizationWebConfigConnectionStrings=False durant la génération du package MSBuild."
 }

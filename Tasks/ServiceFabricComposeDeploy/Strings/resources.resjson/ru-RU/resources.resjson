@@ -28,7 +28,7 @@
   "loc.input.label.removeTimeoutSec": "Время ожидания удаления (с)",
   "loc.input.help.removeTimeoutSec": "Время ожидания для удаления существующего приложения в секундах.",
   "loc.input.label.getStatusTimeoutSec": "Время ожидания для получения состояния (с)",
-  "loc.input.help.getStatusTimeoutSec": "Время ожидания для получения состояния существующего приложения в секундах.",
+  "loc.input.help.getStatusTimeoutSec": "Время ожидания для получения данных о состоянии существующего приложения в секундах.",
   "loc.messages.ItemSearchMoreThanOneFound": "Найдено несколько элементов с шаблоном поиска {0}. Может существовать только один элемент.",
   "loc.messages.ItemSearchNoFilesFound": "Не найдены элементы с шаблоном поиска {0}.",
   "loc.messages.SearchingForPath": "Поиск пути: {0}",

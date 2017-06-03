@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "复制并发布生成项目",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
+  "loc.description": "[已弃用] 请改为使用“复制文件”任务和“发布生成项目”任务",
   "loc.instanceNameFormat": "复制发布项目: $(ArtifactName)",
   "loc.input.label.CopyRoot": "复制根",
   "loc.input.help.CopyRoot": "文件匹配模式应该应用的根文件夹。如果未提供值，则使用存储库根路径。使用变量来指定存储库外部的文件夹，如 $(Agent.BuildDirectory)。",

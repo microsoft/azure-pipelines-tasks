@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Развертывание в Kubernetes",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=846415)",
-  "loc.description": "Развертывание, настройка и обновление кластера в кластере Kubernetes службы контейнеров Azure с помощью команд kubectl.",
+  "loc.description": "Развертывание, настройка и обновление кластера Kubernetes в службе контейнеров Azure с помощью команд kubectl.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.registry": "Сведения о реестре контейнеров",
   "loc.group.displayName.commands": "Команды",
