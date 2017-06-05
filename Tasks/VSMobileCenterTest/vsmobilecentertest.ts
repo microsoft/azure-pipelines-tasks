@@ -93,20 +93,17 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
     // framework specific options -- appium
     if (framework === 'appium') {
         addStringArg('--build-dir', 'appiumBuildDir', true, prepareRunner);
-    }
-    else if (framework === 'espresso') {
+    } else if (framework === 'espresso') {
         addStringArg('--build-dir', 'espressoBuildDir', false, prepareRunner);
         addOptionalWildcardArg('--test-apk-path', 'espressoTestApkPath', prepareRunner);
-    }
-    else if (framework === 'calabash') {
+    } else if (framework === 'calabash') {
         prepareRunner.arg(['--app-path', app]);
         addStringArg('--project-dir', 'calabashProjectDir', true, prepareRunner);
         addStringArg('--sign-info', 'signInfo', false, prepareRunner);
-        addStringArg('--config', 'calabashConfigFile', false, prepareRunner);
+        addStringArg('--config-path', 'calabashConfigFile', false, prepareRunner);
         addStringArg('--profile', 'calabashProfile', false, prepareRunner);
         addBooleanArg('--skip-config-check', 'calabashSkipConfigCheck', prepareRunner);
-    }
-    else if (framework === 'uitest') {
+    } else if (framework === 'uitest') {
         prepareRunner.arg(['--app-path', app]);
         addStringArg('--build-dir', 'uitestBuildDir', true, prepareRunner);
         addStringArg('--store-file', 'uitestStoreFile', false, prepareRunner);
@@ -115,6 +112,9 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
         addStringArg('--key-password', 'uitestKeyPass', false, prepareRunner);
         addStringArg('--uitest-tools-dir', 'uitestToolsDir', false, prepareRunner);
         addStringArg('--sign-info', 'signInfo', false, prepareRunner);
+    } else if (framework === 'xcuitest') {
+        addStringArg('--build-dir', 'xcuitestBuildDir', false, prepareRunner);
+        addStringArg('--test-ipa-path', 'xcuitestTestIpaPath', false, prepareRunner);
     }
 
     // append user defined inputs

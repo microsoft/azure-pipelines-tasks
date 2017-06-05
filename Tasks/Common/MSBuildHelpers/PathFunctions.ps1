@@ -198,6 +198,26 @@ function Get-VisualStudio_15_0 {
                     }
                 $script:visualStudioCache['15.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
                     Select-Object -First 1
+                if (!$script:visualStudioCache['15.0']) {
+                    # Query for the latest 15.* BuildTools.
+                    #
+                    # Note, whereas VS 15.x version number is always 15.0.*, BuildTools does not follow the
+                    # the same scheme. It appears to follow the 15.<UPDATE_NUMBER>.* versioning scheme.
+                    Write-Verbose "Getting latest BuildTools 15 setup instance."
+                    $output = New-Object System.Text.StringBuilder
+                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                        ForEach-Object {
+                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                                Write-Verbose "STDERR: $($_.Exception.Message)"
+                            }
+                            else {
+                                Write-Verbose $_
+                                $null = $output.AppendLine($_)
+                            }
+                        }
+                    $script:visualStudioCache['15.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
+                        Select-Object -First 1
+                }
             } catch {
                 Write-Verbose ($_ | Out-String)
                 $script:visualStudioCache['15.0'] = $null
@@ -252,14 +272,7 @@ function Select-MSBuildPath {
                 return $path
             }
 
-            # Do not fallback from 15.0.
-            if ($PreferredVersion -eq '15.0') {
-                Write-Error (Get-VstsLocString -Key 'MSB_MSBuild15NotFoundionArchitecture0' -ArgumentList $Architecture)
-                return
-            }
-
             # Attempt to fallback.
-            $versions = $versions | Where-Object { $_ -ne '15.0' } # Fallback is only between 14.0-4.0.
             Write-Verbose "Specified version '$PreferredVersion' and architecture '$Architecture' not found. Attempting to fallback."
         }
 

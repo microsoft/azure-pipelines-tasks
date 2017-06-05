@@ -47,17 +47,17 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        let hostType = tl.getVariable('system.hostType');
-        if (hostType && hostType.toUpperCase() != 'BUILD') {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
-            return;
-        }
-
         // PathtoPublish is a folder that contains the files
         let pathtoPublish: string = tl.getPathInput('PathtoPublish', true, true);
         let artifactName: string = tl.getInput('ArtifactName', true);
         let artifactType: string = tl.getInput('ArtifactType', true);
 
+        let hostType = tl.getVariable('system.hostType');
+        if ((hostType && hostType.toUpperCase() != 'BUILD') && (artifactType.toUpperCase() !== "FILEPATH")) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
+            return;
+        }
+        
         artifactType = artifactType.toLowerCase();
         let data = {
             artifacttype: artifactType,
