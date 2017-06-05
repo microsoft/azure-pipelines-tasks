@@ -196,7 +196,7 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
         Write-Verbose ($instances | Format-List * | Out-String)
 
         return $instances |
-            Where-Object { $_.Version.Major -eq 15 -and $_.Version.Minor -eq 0 } |
+            Where-Object { $_.Version.Major -eq 15 } |
             Sort-Object -Descending -Property Version |
             Select-Object -First 1
     } catch {
