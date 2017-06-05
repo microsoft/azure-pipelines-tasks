@@ -122,7 +122,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         }
     }
 
-    if (tiaConfig.tiaEnabled) {
+    if (tiaConfig.tiaEnabled && !tiaConfig.disableEnablingDataCollector) {
         let testImpactCollectorNode = null;
         parser.parseString(testImpactDataCollectorTemplate, function(err, data) {
             if (err) {
