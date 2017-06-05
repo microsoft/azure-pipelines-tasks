@@ -1,0 +1,62 @@
+{
+  "id": "44318090-aa3d-11e5-9fb2-b30e46922a90",
+  "name": "ServiceFabricApplicationDeployer",
+  "friendlyName": "Service Fabric Application Deployer",
+  "description": "Deploys Service Fabric Application to a cluster",
+  "author": "Sumeet",
+  "helpMarkDown": "**Preview Release**: Deploy your service fabric application to a cluster",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "8"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "ServiceFabricApplicationDeployer $(message)",
+  "inputs": [
+    {
+      "name": "ClusterConnectionString",
+      "type": "string",
+      "label": "ClusterConnectionString",
+      "defaultValue": "localhost:19000",
+      "required": true,
+      "helpMarkDown": "cluster connection string"
+    },
+    {
+      "name": "ApplicationPackagePath",
+      "type": "string",
+      "label": "ApplicationPackagePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "application package path"
+    },
+    {
+      "name": "RemoveAllApplications",
+      "type": "boolean",
+      "label": "RemoveAllApplications",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Remove all the service fabric applications before deploying"
+    },
+    {
+      "name": "ApplicationParameters",
+      "type": "multiLine",
+      "label": "ApplicationParameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Application Parameters for the application to be deployed. It is a hash table of the form key1 = item1 key2 = item2. Each key/value pair must be on a separate line"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\servicefabricappdeployer.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
