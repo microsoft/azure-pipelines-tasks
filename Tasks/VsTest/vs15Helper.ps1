@@ -363,7 +363,7 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
 
         return $instances |
 
-            Where-Object { $_.Version.Major -eq 15 -and $_.Version.Minor -eq 0 } |
+            Where-Object { $_.Version.Major -eq 15 } |
 
             Sort-Object -Descending -Property Version |
 
