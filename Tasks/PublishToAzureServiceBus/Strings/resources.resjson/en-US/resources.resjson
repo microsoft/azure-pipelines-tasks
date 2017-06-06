@@ -3,7 +3,6 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
   "loc.instanceNameFormat": "Publish to Azure Service Bus",
-  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
   "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
   "loc.input.label.messageBody": "Message body",
