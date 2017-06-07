@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -29,6 +29,12 @@
             "name": "DeploymentInputs",
             "displayName": "Deployment Inputs",
             "isExpanded": true,
+            "visibleRule": "templateType = builtin"
+        },
+        {
+            "name": "Advanced",
+            "displayName": "Advanced",
+            "isExpanded": false,
             "visibleRule": "templateType = builtin"
         },
         {
@@ -181,6 +187,18 @@
             "groupName": "DeploymentInputs"
         },
         {
+            "name": "additionalBuilderParameters",
+            "type": "multiLine",
+            "label": "Additional Builder parameters",
+            "required": false,
+            "defaultValue": "{}",
+            "groupName": "Advanced",
+            "helpMarkDown": "To view the additional parameters in a grid, click on “…” next to textbox.",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+            }
+        },
+        {
             "name": "imageUri",
             "type": "string",
             "label": "Image URL",
@@ -241,7 +259,7 @@
         "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
         "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
-        "PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
+        "PackerFixFailed": "Packer fix command failed with error : '%s'. This could happen if task does not support packer version.",
         "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
         "ResolvedPathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
         "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
@@ -252,6 +270,8 @@
         "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
         "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
         "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
-        "InstalledPackerVersion": "Current installed packer version is %s."
+        "InstalledPackerVersion": "Current installed packer version is %s.",
+        "AdditionalParameterIgnored": "Additional parameter key '%s' already exists in builder '%s'. New value will be ignored.",
+        "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second..."
     }
 }

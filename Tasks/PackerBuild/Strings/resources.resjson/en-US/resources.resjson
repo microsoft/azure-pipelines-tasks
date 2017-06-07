@@ -6,6 +6,7 @@
   "loc.releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.DeploymentInputs": "Deployment Inputs",
+  "loc.group.displayName.Advanced": "Advanced",
   "loc.group.displayName.Output": "Output",
   "loc.input.label.templateType": "Packer template",
   "loc.input.help.templateType": "Select whether you want the task to auto generate Packer template or use custom template provided by you.",
@@ -32,6 +33,8 @@
   "loc.input.help.deployScriptPath": "Specify the relative path to powershell script(for Windows) or shell script(for Linux) which deploys the package. This script should be contained in the package path selected above. Supports minimatch pattern. Example path: deploy/**/scripts/windows/deploy.ps1",
   "loc.input.label.deployScriptArguments": "Deployment script arguments",
   "loc.input.help.deployScriptArguments": "Specify the arguments to be passed to deployment script.",
+  "loc.input.label.additionalBuilderParameters": "Additional Builder parameters",
+  "loc.input.help.additionalBuilderParameters": "To view the additional parameters in a grid, click on “…” next to textbox.",
   "loc.input.label.imageUri": "Image URL",
   "loc.input.help.imageUri": "Provide a name for the output variable which will store generated machine image url.",
   "loc.messages.OSTypeNotSupported": "This OS type is not supported for image creation: %s. Please use either windows or linux.",
@@ -52,7 +55,7 @@
   "loc.messages.CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
   "loc.messages.CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
   "loc.messages.TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
-  "loc.messages.PackerFixFailed": "Packer fix command failed. This could happen if task does not support packer version.",
+  "loc.messages.PackerFixFailed": "Packer fix command failed with error : '%s'. This could happen if task does not support packer version.",
   "loc.messages.PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
   "loc.messages.ResolvedPathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
   "loc.messages.ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
@@ -63,5 +66,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
   "loc.messages.CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
-  "loc.messages.InstalledPackerVersion": "Current installed packer version is %s."
+  "loc.messages.InstalledPackerVersion": "Current installed packer version is %s.",
+  "loc.messages.AdditionalParameterIgnored": "Additional parameter key '%s' already exists in builder '%s'. New value will be ignored.",
+  "loc.messages.PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second..."
 }

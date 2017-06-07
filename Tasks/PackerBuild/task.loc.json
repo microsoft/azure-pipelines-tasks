@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -29,6 +29,12 @@
       "name": "DeploymentInputs",
       "displayName": "ms-resource:loc.group.displayName.DeploymentInputs",
       "isExpanded": true,
+      "visibleRule": "templateType = builtin"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": false,
       "visibleRule": "templateType = builtin"
     },
     {
@@ -181,6 +187,18 @@
       "groupName": "DeploymentInputs"
     },
     {
+      "name": "additionalBuilderParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.additionalBuilderParameters",
+      "required": false,
+      "defaultValue": "{}",
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
       "name": "imageUri",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageUri",
@@ -252,6 +270,8 @@
     "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
     "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
     "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
-    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion"
+    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
+    "AdditionalParameterIgnored": "ms-resource:loc.messages.AdditionalParameterIgnored",
+    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy"
   }
 }
