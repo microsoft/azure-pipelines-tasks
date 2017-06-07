@@ -8,6 +8,7 @@ import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
+import * as ci from './cieventlogger';
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -24,6 +25,9 @@ export class DistributedTest {
 
         try {
             const agentId = await ta.TestAgent.createAgent(this.dtaTestConfig.dtaEnvironment, 3);
+            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, agentid: agentId,
+                agentsize: this.dtaTestConfig.numberOfAgentsInPhase});
+
             await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
             try {
@@ -36,6 +40,7 @@ export class DistributedTest {
             }
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
+            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error});
             tl.error(error);
             tl.setResult(tl.TaskResult.Failed, error);
         }
@@ -54,7 +59,7 @@ export class DistributedTest {
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters , '**\\*TestAdapter.dll' );
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
-                tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters))
+                tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters));
             }
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.CustomTestAdapters', this.dtaTestConfig.pathtoCustomTestAdapters);
         }

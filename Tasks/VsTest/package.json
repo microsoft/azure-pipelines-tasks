@@ -3,7 +3,7 @@
   "description": "VSTS VSTEST Task",
   "main": "VSTest.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preinstall": "npm install E:\\Repo\\vsts-node-api\\_build\\"
   },
   "repository": {
     "type": "git",
@@ -17,10 +17,10 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "performance-now": "0.2.0",
+    "string": "^3.3.1",
+    "vso-node-api": "file:..\\..\\..\\vsts-node-api\\_build",
     "vsts-task-lib": "2.0.0-preview",
-	  "vso-node-api": "6.0.4-preview",
-    "xml2js": "0.4.16",
-    "string": "^3.3.1"
+    "xml2js": "0.4.16"
   },
   "optionalDependencies": {
     "regedit": "2.2.6"

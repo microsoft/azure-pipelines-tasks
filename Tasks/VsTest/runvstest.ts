@@ -4,6 +4,11 @@ import * as taskInputParser from './taskinputparser';
 import * as localTest from './vstest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
+import * as ci from './cieventlogger';
+
+//Starting the VsTest execution
+const taskProps = { state: 'started' };
+ci.publishEvent(taskProps);
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -14,19 +19,23 @@ try {
     tl.debug('Value of Test Selector :' + testType);
 
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
-         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+        || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
 
         tl._writeLine(tl.loc('distributedTestWorkflow'));
         tl._writeLine('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
         tl._writeLine('======================================================');
+        ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution.toLowerCase(), testtype: testType.toLowerCase() });
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();
     } else {
+        ci.publishEvent({ runmode: 'vstest' });
         localTest.startTest();
     }
 } catch (error) {
     tl.setResult(tl.TaskResult.Failed, error);
+} finally {
+    taskProps.state = 'completed';
+    ci.publishEvent(taskProps);
 }
-

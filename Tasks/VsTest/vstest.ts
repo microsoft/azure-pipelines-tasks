@@ -8,6 +8,7 @@ import settingsHelper = require('./settingshelper');
 import vstestVersion = require('./vstestversion');
 import * as utils from './helpers';
 import * as outStream from './outputstream';
+import * as ci from './cieventlogger';
 
 let os = require('os');
 let regedit = require('regedit');
@@ -36,7 +37,8 @@ export function startTest() {
 
         tiaConfig = vstestConfig.tiaConfig;
 
-        //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
+        //Try to find the results directory for clean up.
+        // This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
         tl.debug('TestRunResults Directory : ' + resultsDirectory);
 
@@ -116,7 +118,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
                 utils.Helper.printMultiLineLog(settings, (logLine) => { tl._outStream.write('##vso[task.debug]' + logLine); });
             });
         } else {
-            if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
+            if (!tl.exist(settingsFile)) {
+                // because this is filepath input build puts default path in the input. To avoid that we are checking this.
                 tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
                 throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
