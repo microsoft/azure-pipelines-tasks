@@ -2,6 +2,14 @@
 
 This document is focused on the problems around the common case of building with Visual Studio although it is relevant for other development environments as well.  Mac XCode pools could have the same class of issues.
 
+Small sample of issues:  
+
+https://github.com/Microsoft/vsts-tasks/issues/3787
+
+https://github.com/Microsoft/vsts-tasks/issues/4361
+
+https://github.com/Microsoft/vsts-tasks/issues/4403#issuecomment-304463270  
+
 ## Hosted Pool Approach
 
 The "Hosted Pool" had a VM image with all versions of VS (2010, 2012, 2013, and 2015) in addition to many other common development tools (Xamarin, Android SDKs, Windows SDKs, etc...).
@@ -32,11 +40,14 @@ That unblocked 2017 usage but we didn't account for alignment problems.  Specifi
 2.  The default queue was hosted (VS2015), the task default version was VS2017 and your code was ??.
 3.  The queue was hidden in definition options because until now it was a non mainline option - default of hosted pool had everything.
 
+
 ## Solutions
 
 The solutions are in order of implementation and priority.
 
-## Part One: Default task to Latest
+## Phase One  
+
+**Default task to Latest**  
 
 In a scheme of image per VS era, Use "Latest" makes sense.  Regardless of the queue you pick it just works.
 
@@ -44,7 +55,9 @@ Once "Latest" is resolved, we can optionally have the task peek into the solutio
 
 This just changes the default and doesn't introduce compat issues.
 
-## Part Two: Explicit Pool Selection
+VSBuild, msbuild and vstest tasks will be changed to use latest 
+
+**Queue Selection: More obvious and explicit**  
 
 Offer pools:
 
@@ -54,11 +67,21 @@ Offer pools:
 
 On create definition, there will be no default.  You must select the queue as an up front decision.  We can possibly default again if we implement Auto (see below).  Even if we convince ourselves VS2017 is the proper choice, it should still be more up front.  It's not obvious for users to go to the options tab 
 
-## Part Three: Tasks use environment
+Queue selection will move to the up front process section of the definition (defauult view after create).  The user will have to choose before saving.
+
+## Phase Two
+
+**Tasks use environment**
 
 New major version of VS/msbuild tasks just use what's in the path.  Create a tools task which sets up the toolset.  Basically it runs dev environment cmd script for that version of VS.
 
 Pick VS environment and everything downstream (including tasks and ad-hoc scripts)
+
+We would expose a process level parameter to pick the version of VS.  *That will contribute to a demand for that version of VS*
+
+**Hosted VS (Auto)**  
+
+Introduce a virtual hosted pool.  Based on the demand, we would route to the appropriate Hosted VSxxxx pool.
 
 This also eliminates issues where you have to pick the version in multiple msbuild tasks and separate vs test tasks.  Pick your environment, tasks work.  Essentially models what a dev does.  Pick your VS env from dev cmd prompt or by launching VS then running.
 
@@ -66,13 +89,15 @@ This leverages and follows concepts introduced with tools.  In general, it's a p
 
 https://www.youtube.com/watch?v=Ie8EuvqJ0Hg
 
-Once in place, the templates would be updated to include the environment up front to run dev cmd prompt to set up the "tools" or "tool sets"
+Once in place, the templates would be updated to include the environment up front to run dev cmd prompt to set up the "tools" or "tool sets". 
 
-## Part Four: Hosted (Auto)
+All tasks, cmd line tasks and scripts downstream will just work and use a consistent VS.
+
+## Future: Hosted (Auto)
 
 If repo analysis is in place we can have a virtual queue which is auto.  Based on the repo analysis post push we can route the build JIT to the proper queue.  This has the benefit of the customer upgrading their VS solutions, pushing the change and the "right thing happens"
 
-## Part n + 1: Docker Containers
+## Future: Docker Containers
 
 We are making progress on docker containers with it currently working on Linux and tracking progress on windows.  The agent will run on the host, map in the tasks and then execute with our loosely coupled task model.  This allows you to select any docker image without the need for our agent being on it.
 
