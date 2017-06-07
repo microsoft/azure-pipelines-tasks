@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 118,
+        "Minor": 119,
         "Patch": 0
     },
     "demands": [
@@ -50,7 +50,7 @@
             "type": "pickList",
             "label": "MSBuild Version",
             "required": false,
-            "defaultValue": "15.0",
+            "defaultValue": "latest",
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
             "visibleRule": "msbuildLocationMethod = version",
             "options": {
