@@ -142,9 +142,9 @@
   "loc.messages.InvalidPollOption": "Указан недопустимый параметр опроса: %s.",
   "loc.messages.MissingAppTypeWebConfigParameters": "Атрибут \"-appType\" отсутствует в параметрах Web.config. Допустимые значения для \"-appType\": \"python_Bottle\", \"python_Django\", \"python_Flask\" и \"node\".<br />Например, \"-appType python_Bottle\" (без кавычек), если используется платформа Python Bottle.",
   "loc.messages.AutoDetectDjangoSettingsFailed": "Не удалось обнаружить путь к файлу \"settings.py\" DJANGO_SETTINGS_MODULE. Убедитесь, что файл \"settings.py\" существует, или укажите правильный путь во входных данных параметра Web.config в следующем формате: \"-DJANGO_SETTINGS_MODULE <имя_папки>.settings\".",
-  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
-  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.FailedToApplyTransformation": "Не удается применить преобразование для указанного пакета. Проверьте следующее.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Применено ли преобразование к созданному пакету MSBuild во время сборки. Если это так, удалите тег <DependentUpon> для каждой конфигурации в CSPROJ-файле и повторите сборку. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Убедитесь, что файлы конфигурации и преобразования находятся в одной и той же папке в пакете.",
   "loc.messages.AutoParameterizationMessage": "Атрибуты ConnectionString в Web.config параметризованы по умолчанию. Обратите внимание, что преобразование не влияет на атрибуты connectionString, так как значение переопределяется во время развертывания файлом \"Parameters.xml\" или \"SetParameters.xml\". Вы можете отключить автоматическую параметризацию, задав /p:AutoParameterizationWebConfigConnectionStrings=False во время создания пакета MSBuild.",
   "loc.messages.UnsupportedAppType": "Тип приложения \"%s\" не поддерживается при создании Web.config. Допустимые значения для \"-appType\": \"python_Bottle\", \"python_Django\", \"python_Flask\" и \"node\"."
 }

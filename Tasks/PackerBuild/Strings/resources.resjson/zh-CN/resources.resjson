@@ -53,7 +53,7 @@
   "loc.messages.TaskParametersConstructorFailed": "初始化任务 %s 时出现错误。",
   "loc.messages.PackerFixFailed": "Packer 修补命令失败。任务不支持 packer 版本时会发生此情况。",
   "loc.messages.PackerValidateFailed": "Packer 验证命令失败。任务不支持 packer 版本时会发生此情况。",
-  "loc.messages.ResolvedPathNotFound": "找不到任何文件匹配模式 %s (根文件夹 %s 下)。",
+  "loc.messages.ResolvedPathNotFound": "找不到任何文件匹配模式 %s，查找位置: 根文件夹 %s 下。",
   "loc.messages.ResolvedDeployPackgePath": "已解析部署包路径: %s。",
   "loc.messages.ResolvedDeployScriptPath": "已解析部署脚本路径: %s。",
   "loc.messages.OSNotSupportedForRunningPacker": "操作系统不支持运行 packer。",

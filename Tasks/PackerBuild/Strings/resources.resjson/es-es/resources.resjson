@@ -57,7 +57,7 @@
   "loc.messages.ResolvedDeployPackgePath": "Ruta de acceso del paquete de implementación resuelta: %s.",
   "loc.messages.ResolvedDeployScriptPath": "Ruta de acceso del script de implementación resuelta: %s.",
   "loc.messages.OSNotSupportedForRunningPacker": "No se admite este sistema operativo para ejecutar Packer.",
-  "loc.messages.DownloadingPackerRequired": "Puede que Packer no esté instalado o que la versión sea anterior a la %s. Se descargará la versión %s y se instalará para ejecutar la tarea.",
+  "loc.messages.DownloadingPackerRequired": "Puede que Packer no esté instalado o que la versión sea anterior a %s. Se descargará la versión %s y se instalará para ejecutar la tarea.",
   "loc.messages.DownloadingPackerCompleted": "Instalador de Packer descargado correctamente en la ruta de acceso: %s.",
   "loc.messages.ExtractingPackerCompleted": "Packer se ha extraído correctamente en la ruta de acceso: %s.",
   "loc.messages.CreatedStagingDirectory": "Directorio de almacenamiento provisional creado para mantener los archivos binarios y las plantillas de Packer: %s.",

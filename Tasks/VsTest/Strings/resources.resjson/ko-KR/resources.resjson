@@ -107,7 +107,7 @@
   "loc.messages.testSuiteSelected": "선택한 테스트 도구 모음 ID: %s",
   "loc.messages.testAssemblyFilterInput": "테스트 어셈블리 필터: %s",
   "loc.messages.vsVersionSelected": "테스트 실행을 위해 선택한 Visual Studio 버전: %s",
-  "loc.messages.runTestsLocally": "%s을(를) 사용하여 로컬로 테스트를 실행하세요.",
+  "loc.messages.runTestsLocally": "%s을(를) 사용하여 로컬로 테스트 실행",
   "loc.messages.vstestLocationSpecified": "%s, 지정된 위치: %s",
   "loc.messages.uitestsparallel": "동일한 컴퓨터에서 UI 테스트를 동시에 실행하면 오류가 발생할 수 있습니다. ‘병렬로 실행’ 옵션을 사용하지 않도록 설정하거나 별도의 작업을 사용하여 UI 테스트를 실행해 보세요. 자세히 알아보려면 https://aka.ms/paralleltestexecution을 참조하세요. ",
   "loc.messages.pathToCustomAdaptersInvalid": "사용자 지정 어댑터 '%s'에 대한 경로는 디렉터리로 있어야 합니다.",

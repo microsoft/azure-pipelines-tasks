@@ -82,7 +82,7 @@
   "loc.messages.PackageDeploymentFailed": "Non è stato possibile distribuire il pacchetto Web nel servizio app.",
   "loc.messages.Runningcommand": "Esecuzione del comando: %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Distribuzione del pacchetto Web %s nel percorso virtuale (percorso fisico) %s (%s)",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto %s all'indirizzo %s con il servizio Kudu è riuscita",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto %s con il servizio Kudu all'indirizzo %s è riuscita",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Non è stato possibile distribuire il pacchetto del servizio app con il servizio Kudu: %s",
   "loc.messages.Unabletodeploywebappresponsecode": "Non è possibile distribuire il servizio app a causa del codice errore: %s",
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "I pacchetti generati da MSDeploy sono supportati solo per la piattaforma Windows.",
@@ -142,9 +142,9 @@
   "loc.messages.InvalidPollOption": "L'opzione di polling specificata %s non è valida.",
   "loc.messages.MissingAppTypeWebConfigParameters": "Nei parametri di Web.config manca l'attributo '-appType'. I valori validi per '-appType' sono: 'python_Bottle', 'python_Django', 'python_Flask' e 'node'.<br />Esempio: '-appType python_Bottle' (senza virgolette) nel caso del framework Python Bottle.",
   "loc.messages.AutoDetectDjangoSettingsFailed": "Il percorso del file 'settings.py' di DJANGO_SETTINGS_MODULE non è stato rilevato. Assicurarsi che il file 'settings.py' sia esistente oppure specificare il percorso corretto nel campo di input del parametro di Web.config nel formato seguente: '-DJANGO_SETTINGS_MODULE <nome_cartella>.settings'",
-  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
-  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.FailedToApplyTransformation": "Non è possibile applicare la trasformazione per il pacchetto specificato. Eseguire le verifiche seguenti.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Verificare se la trasformazione è già stata applicata per il pacchetto generato da MSBuild durante la compilazione. In caso affermativo, rimuovere il tag <DependentUpon> per ogni file config nel file csproj e ricompilare. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Assicurarsi che il file config e i file di trasformazione siano presenti nella stessa cartella all'interno del pacchetto.",
   "loc.messages.AutoParameterizationMessage": "Per impostazione predefinita, agli attributi di ConnectionString in Web.config sono associati parametri. Si noti che la trasformazione non ha effetto sugli attributi di ConnectionString perché durante la distribuzione il valore viene sostituito dai file 'Parameters.xml' o 'SetParameters.xml'. Per disabilitare l'aggiunta automatica di parametri, impostare /p:AutoParameterizationWebConfigConnectionStrings=False durante la generazione del pacchetto MSBuild.",
   "loc.messages.UnsupportedAppType": "Il tipo di app '%s' non è supportato nella generazione di Web.config. I valori validi per '-appType' sono: 'python_Bottle', 'python_Django', 'python_Flask' e 'node'"
 }

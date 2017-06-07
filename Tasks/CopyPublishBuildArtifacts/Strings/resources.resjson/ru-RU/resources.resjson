@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Копировать и опубликовать артефакты сборки",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
+  "loc.description": "[Устарело] Используйте вместо этого задачи \"Копировать файлы\" и \"Публикация артефактов сборки\"",
   "loc.instanceNameFormat": "Копировать артефакт публикации: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Копировать корень",
   "loc.input.help.CopyRoot": "Корневой каталог, к которому должны быть применены соответствующие шаблоны. Если значение не указано, используется корень репозитория. Для указания каталога вне репозитория используйте переменные, например: $(Agent.BuildDirectory).",

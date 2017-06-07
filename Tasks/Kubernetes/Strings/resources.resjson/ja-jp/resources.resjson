@@ -17,7 +17,7 @@
   "loc.input.label.azureContainerRegistry": "Azure Container Registry",
   "loc.input.help.azureContainerRegistry": "Azure Container Registry を選択します。レジストリで認証する必要のあるコマンドに対して必要です。",
   "loc.input.label.secretName": "シークレット名",
-  "loc.input.help.secretName": "Docker レジストリ シークレットの名前。この名前は Kubernetes YAML 構成ファイルに使用できます。",
+  "loc.input.help.secretName": "docker-registry シークレットの名前。この名前は Kubernetes YAML 構成ファイルに使用できます。",
   "loc.input.label.forceUpdate": "シークレットの強制更新",
   "loc.input.help.forceUpdate": "Docker レジストリ シークレットが存在する場合は削除し、更新された値を使って新たに作成します。",
   "loc.input.label.command": "コマンド",
@@ -36,6 +36,6 @@
   "loc.input.help.kubectlOutput": "コマンドの出力の保存先の変数名。",
   "loc.messages.DownloadingClient": "kubernetes クライアントをダウンロードしています。",
   "loc.messages.CreatingSecret": "Docker レジストリ %s シークレットの作成を実行しています。",
-  "loc.messages.DeleteSecret": "Docker レジストリ %s シークレットの削除を実行しています",
-  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker レジストリ接続の詳細が指定されていません"
+  "loc.messages.DeleteSecret": "docker-registry %s シークレットの削除を実行しています",
+  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry 接続の詳細が指定されていません"
 }

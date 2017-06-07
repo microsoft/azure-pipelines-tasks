@@ -37,5 +37,5 @@
   "loc.messages.DownloadingClient": "Kubernetes 클라이언트를 다운로드하고 있습니다.",
   "loc.messages.CreatingSecret": "docker-registry %s 비밀 만들기를 실행하고 있습니다.",
   "loc.messages.DeleteSecret": "docker-registry %s 비밀 삭제를 실행하는 중",
-  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry 연결 세부 정보를 지정하지 않았습니다."
+  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker 레지스트리 연결 세부 정보를 지정하지 않았습니다."
 }

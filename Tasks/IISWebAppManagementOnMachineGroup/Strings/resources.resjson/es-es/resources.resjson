@@ -132,6 +132,6 @@
   "loc.messages.InvalidActionIISAppPool": "Se ha seleccionado una acción no válida ({0}) para el grupo de aplicaciones de IIS.",
   "loc.messages.PackageDeploymentFailed": "No se pudo implementar el paquete web en el sitio web de IIS.",
   "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "La huella digital del certificado SSL falta en el enlace https : ( {0}/{1}:{2} )",
-  "loc.messages.InvalidSslThumbprintInBinding": "Huella digital no válida en enlace ( {0}/{1}:{2} ). La longitud no es de 40 caracteres o contiene caracteres no válidos.",
+  "loc.messages.InvalidSslThumbprintInBinding": "Hay una huella digital no válida en el enlace ( {0}/{1}:{2} ). La longitud no es de 40 caracteres o contiene caracteres no válidos.",
   "loc.messages.SSLCertWarningInvalidCharactersInBinding": "La huella digital del certificado SSL contiene caracteres no hexadecimales en enlace : ( {0}/{1}:{2} ) . Recortando todos los caracteres no hexadecimales."
 }

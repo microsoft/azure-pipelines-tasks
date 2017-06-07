@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Copia e pubblica artefatti di compilazione",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
+  "loc.description": "[DEPRECATA] Usa in alternativa le attività Copia file e Pubblica artefatti di compilazione",
   "loc.instanceNameFormat": "Copia e pubblica artefatto: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copia radice",
   "loc.input.help.CopyRoot": "Cartella radice a cui devono essere applicati i criteri di corrispondenza minima dei file. Se non viene specificato alcun valore, verrà usata la radice del repository. Usare le variabili per specificare una cartella esterna al repository, ad esempio $(Agent.BuildDirectory).",

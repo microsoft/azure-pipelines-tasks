@@ -20,7 +20,7 @@
   "loc.messages.TarExists": "中繼 tar %s 已存在。正在嘗試將檔案新增至其中。",
   "loc.messages.RemoveBeforeCreation": "在建立前移除現有的封存檔案: %s",
   "loc.messages.AlreadyExists": "封存檔案 %s 已存在。正在嘗試將檔案新增至其中。",
-  "loc.messages.ArchiveCreationFailedWithError": "封存檔案 %s 的封存建立失敗\n代碼: %d \nStdOut: %s \nSTDERR: %s \ne錯誤: %s;",
+  "loc.messages.ArchiveCreationFailedWithError": "封存檔案 %s 的封存建立失敗\n代碼: %d \nStdOut: %s \nSTDERR: %s \n錯誤: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "指定的封存檔案 %s 已存在且不是檔案。",
-  "loc.messages.FailedArchiveFile": "因為無法存取指定的封存檔案 %s，所以無法加以建立: %s"
+  "loc.messages.FailedArchiveFile": "無法加以建立指定的封存檔案 : %s，因為無法存取 : %s"
 }

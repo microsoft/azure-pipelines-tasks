@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "Azure Resource Manager サブスクリプションを選択します",
   "loc.input.label.Action": "アクション",
-  "loc.input.help.Action": "App Service に対して実行されるアクション。Azure App Service のサイト拡張機能を開始、停止、再起動、スロット スワップ、またはインストールできます",
+  "loc.input.help.Action": "App Service に対して実行されるアクション。Azure App Service の開始、停止、再起動、スロット スワップ、またはサイト拡張機能のインストールを行えます。",
   "loc.input.label.WebAppName": "App Service の名前",
   "loc.input.help.WebAppName": "既存の Azure App Service の名前を入力または選択してください",
   "loc.input.label.SpecifySlot": "スロットの指定",

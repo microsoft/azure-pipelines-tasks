@@ -17,7 +17,7 @@
   "loc.input.label.noCache": "로컬 캐시 사용 안 함",
   "loc.input.help.noCache": "-NoCache NuGet.exe 명령줄 인수에 해당",
   "loc.input.label.packagesDirectory": "대상 디렉터리",
-  "loc.input.help.packagesDirectory": "-PackagesDirectory NuGet.exe 명령줄 인수에 해당",
+  "loc.input.help.packagesDirectory": "-PackagesDirectory NuGet.exe 명령줄 인수와 동일",
   "loc.input.label.verbosity": "자세한 정도",
   "loc.input.help.verbosity": "NuGet의 세부 정보 표시 수준",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "이 빌드 에이전트의 Team Services 계정/TFS 프로젝트 컬렉션에 호스트된 NuGet 피드에 연결하려면 빌드 정의를 편집하여 상위 버전의 nuget을 선택하거나 사용할 패키지 소스가 포함된 NuGet.config를 지정하세요.",

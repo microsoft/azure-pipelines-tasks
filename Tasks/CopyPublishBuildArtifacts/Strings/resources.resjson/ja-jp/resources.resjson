@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "ビルド成果物のコピーと発行",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "[DEPRECATED] Use the Copy Files task and the Publish Build Artifacts task instead",
+  "loc.description": "[使用されていない] 代わりに、ファイルのコピー タスクとビルド成果物の発行タスクを使用します",
   "loc.instanceNameFormat": "成果物のコピーと発行: $(ArtifactName)",
   "loc.input.label.CopyRoot": "コピー ルート",
   "loc.input.help.CopyRoot": "ファイル一致パターンを適用するルート フォルダー。値が指定されていない場合は、リポジトリのルートが使用されます。変数を使用して、$(Agent.BuildDirectory) などリポジトリ外のフォルダーを指定します。",

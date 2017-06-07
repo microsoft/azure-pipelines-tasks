@@ -77,7 +77,7 @@
   "loc.messages.SFSDK_UpgradeInProgressError": "'{0}' 응용 프로그램에 대한 업그레이드가 이미 진행 중입니다.",
   "loc.messages.SFSDK_StartAppUpgrade": "응용 프로그램 업그레이드를 시작하는 중...",
   "loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure": "응용 프로그램 종류 '{0}' 및 버전 '{1}'을(를) 등록 취소하는 중...",
-  "loc.messages.SFSDK_WaitingForUpgrade": "업그레이드를 기다리는 중...",
+  "loc.messages.SFSDK_WaitingForUpgrade": "업그레이드될 때까지 대기 중...",
   "loc.messages.SFSDK_UnregisterUnusedVersions": "응용 프로그램 종류에 대해 사용되지 않는 다른 버전을 등록 취소하는 중...",
   "loc.messages.SFSDK_UpgradeSuccess": "업그레이드가 완료되었습니다.",
   "loc.messages.SFSDK_UpgradeRolledBack": "업그레이드가 롤백되었습니다.",

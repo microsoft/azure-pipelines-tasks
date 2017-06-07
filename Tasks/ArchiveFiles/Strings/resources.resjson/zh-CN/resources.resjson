@@ -20,7 +20,7 @@
   "loc.messages.TarExists": "中级 tar %s 已存在。正在尝试将文件添加到其中。",
   "loc.messages.RemoveBeforeCreation": "在创建前删除现有存档文件: %s",
   "loc.messages.AlreadyExists": "存档文件: %s 已存在。正在尝试将文件添加到其中。",
-  "loc.messages.ArchiveCreationFailedWithError": "存档文件的存档创建失败: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+  "loc.messages.ArchiveCreationFailedWithError": "存档文件的存档创建失败: %s \n代码: %d \nStdOut: %s \nstderr: %s \n错误: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "指定的存档文件 %s 已存在，但它不是文件。",
   "loc.messages.FailedArchiveFile": "无法创建指定的存档文件 %s，因为无法访问它: %s"
 }

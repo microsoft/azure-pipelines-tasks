@@ -6,7 +6,7 @@
   "loc.input.help.command": "要运行的 NuGet 命令。\n\n示例: restore、pack",
   "loc.input.label.arguments": "参数",
   "loc.input.help.arguments": "所提供的命令的参数",
-  "loc.messages.NGCommon_DetectedNuGetVersion": "检测到的 NuGet 版本 %s / %s",
+  "loc.messages.NGCommon_DetectedNuGetVersion": "检测到 NuGet 版本 %s / %s",
   "loc.messages.Info_NuGetSupportedAfter3_5": "所用的 NuGet 版本为 %s，此任务仅支持 3.5.0 及以上版本。",
   "loc.messages.BuildIdentityPermissionsHint": "对于内部源，请确保生成服务标识“%s”[%s] 有权对其进行访问。",
   "loc.messages.Info_AvailableVersions": "可用版本为: %s",
