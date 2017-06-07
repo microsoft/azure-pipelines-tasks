@@ -4,9 +4,9 @@ This document is focused on the problems around the common case of building with
 
 Small sample of issues:  
 
-https://github.com/Microsoft/vsts-tasks/issues/3787
+https://github.com/Microsoft/vsts-tasks/issues/4361  
 
-https://github.com/Microsoft/vsts-tasks/issues/4361
+https://github.com/Microsoft/vsts-tasks/issues/3787#issuecomment-299835958  
 
 https://github.com/Microsoft/vsts-tasks/issues/4403#issuecomment-304463270  
 
