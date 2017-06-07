@@ -33,6 +33,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;
     numberOfAgentsInPhase: number;
+    numberOfSlicesRequested: number;
 }
 
 export interface DtaEnvironment {
