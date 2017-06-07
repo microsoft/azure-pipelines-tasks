@@ -89,7 +89,7 @@
   "loc.messages.tiaNotSupportedInDta": "L'exécution des tests impactés uniquement n'est pas prise en charge avec le paramètre de phase multi-agent. Cette option va être ignorée.",
   "loc.messages.overrideNotSupported": "Le remplacement des paramètres de la série de tests est pris en charge uniquement avec le fichier runsettings. Cette option va être ignorée.",
   "loc.messages.vstestVersionInvalid": "La version %s de la plateforme de test spécifiée n'est pas prise en charge.",
-  "loc.messages.configureDtaAgentFailed": "Échec de la configuration de l'agent de test et du serveur même après %d nouvelles tentatives. Erreur %s",
+  "loc.messages.configureDtaAgentFailed": "La configuration de l'agent de test et du serveur a échoué même après %d nouvelles tentatives. Erreur %s",
   "loc.messages.otherConsoleOptionsNotSupported": "Les autres options de console ne sont pas prises en charge avec le paramètre de phase multi-agent. Cette option va être ignorée.",
   "loc.messages.distributedTestWorkflow": "Dans le flux de test distribué",
   "loc.messages.dtaNumberOfAgents": "Exécution du test distribué. Nombre d'agents dans la phase : %s",

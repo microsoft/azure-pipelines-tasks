@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Build, push or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
+  "loc.description": "Docker イメージをビルド、プッシュ、実行するか、Docker コマンドを実行します。タスクは、Docker または Azure Container Registry で使用できます。",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.containerregistrytype": "コンテナー レジストリの種類",

@@ -44,7 +44,7 @@
   "loc.messages.CreatedDestinationDir": "복사를 위해 대상 디렉터리를 생성함: %s",
   "loc.messages.ExecutingPackerFix": "Packer 수정 명령 실행 중",
   "loc.messages.ExecutingPackerValidate": "템플릿이 유효한지 확인하기 위해 Packer 유효성 검사 명령 실행 중",
-  "loc.messages.ExecutingPackerBuild": "Packer 빌드 명령을 실행하고 있습니다. 완료될 때까지 기다리는 중입니다.",
+  "loc.messages.ExecutingPackerBuild": "Packer 빌드 명령을 실행하고 있습니다. 완료될 때까지 대기하는 중입니다.",
   "loc.messages.PackerBuildCompleted": "Packer 빌드가 완료되었습니다.",
   "loc.messages.ImageURIOutputVariableNotFound": "Packer 실행에서 VHD 이미지 URI를 가져올 수 없습니다. 출력 변수가 설정되지 않습니다.",
   "loc.messages.BuiltInTemplateNotFoundErrorMessagePathName": "OS 유형에 대한 기본 제공 템플릿: %s ",

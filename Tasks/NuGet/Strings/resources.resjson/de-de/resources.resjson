@@ -3,7 +3,7 @@
   "loc.description": "Führt einen NuGet-Befehl aus",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.input.label.command": "Befehl",
-  "loc.input.help.command": "The NuGet command to run.\n\nExamples: restore, pack",
+  "loc.input.help.command": "Der auszuführende NuGet-Befehl.\n\nBeispiele: restore, pack",
   "loc.input.label.arguments": "Argumente",
   "loc.input.help.arguments": "Argumente für den angegebenen Befehl",
   "loc.messages.NGCommon_DetectedNuGetVersion": "Erkannte NuGet-Version %s/%s",

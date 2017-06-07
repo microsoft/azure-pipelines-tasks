@@ -36,7 +36,7 @@
   "loc.messages.SourceAndTargetSlotCannotBeSame": "Les emplacements source et cible ne peuvent pas être identiques",
   "loc.messages.Successfullyupdateddeploymenthistory": "Historique de déploiement mis à jour sur %s",
   "loc.messages.Failedtoupdatedeploymenthistory": "Échec de la mise à jour de l'historique de déploiement.",
-  "loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp": "Impossible de récupérer les détails de connexion d'Azure App Service : '%s'. Code d'état : %s (%s)",
+  "loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp": "Impossible de récupérer les détails de connexion d'Azure App Service : %s. Code d'état : %s (%s)",
   "loc.messages.StartingAppService": "Démarrage d'App Service : %s",
   "loc.messages.AppServicestartedsuccessfully": "App Service '%s' a correctement démarré",
   "loc.messages.FailedtoStartAppService": "Impossible de démarrer App Service pour '%s'. Code de réponse : %s (%s)",

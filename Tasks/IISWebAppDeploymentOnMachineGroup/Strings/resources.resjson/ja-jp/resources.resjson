@@ -69,8 +69,8 @@
   "loc.messages.EncodeNotSupported": "ファイル %s のファイル エンコードが %s として検出されました。ファイル エンコード %s では変数置換はサポートされていません。サポートされているエンコードは UTF-8 と UTF-16 LE です。",
   "loc.messages.UnknownFileEncodeError": "ファイル %s (typeCode: %s) のエンコードを検出できません。サポートされているエンコードは UTF-8 および UTF-16 LE です。",
   "loc.messages.ShortFileBufferError": "ファイル バッファーが短すぎてエンコードの種類を検出できません: %s",
-  "loc.messages.FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
-  "loc.messages.FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
-  "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
+  "loc.messages.FailedToApplyTransformation": "指定されたパッケージに変換を適用することはできません。次の点をご確認ください。",
+  "loc.messages.FailedToApplyTransformationReason1": "1. ビルド中、MSBuild によって生成されたパッケージに対して変換が既に適用されたかどうか。適用された場合は、csproj ファイル内の各構成の <DependentUpon> タグを削除してから、リビルドします。",
+  "loc.messages.FailedToApplyTransformationReason2": "2. 構成ファイルと変換ファイルがパッケージ内の同じフォルダーに存在すること。",
   "loc.messages.AutoParameterizationMessage": "Web.config の ConnectionString 属性は既定でパラメーター化されています。'Parameters.xml' ファイルまたは 'SetParameters.xml' ファイルによって値が配置中に上書きされるため、変換が connectionString 属性に影響を与えることはありません。自動パラメーター化は、MSBuild パッケージの生成中に /p:AutoParameterizationWebConfigConnectionStrings=False のように設定することによって無効にできます。"
 }

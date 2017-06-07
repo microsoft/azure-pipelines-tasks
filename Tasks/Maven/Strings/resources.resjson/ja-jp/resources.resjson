@@ -92,7 +92,7 @@
   "loc.messages.sqAnalysis_NoUnitsFound": "SonarQube 測定単位のリストをサーバーから取得できませんでした。",
   "loc.messages.sqAnalysis_NoReportTask": "report-task.txt が見つかりませんでした。考えられる原因: SonarQube 分析が正常に完了しませんでした。",
   "loc.messages.sqAnalysis_MultipleReportTasks": "複数の report-task.txt ファイルが見つかりました。最初のファイルを選択します。ビルドの概要とビルドのブレーカーが正しくない可能性があります。考えられる原因: 同じビルド内に複数の SonarQube 分析がありますが、これはサポートされていません。",
-  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s により、%d 個のファイルで %d 件の違反が見つかりました。",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s により、%d 件の違反が %d 個のファイルで見つかりました。",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s により、1 つのファイルで %d 件の違反が見つかりました。",
   "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s により、1 つのファイルで 1 件の違反が見つかりました。",
   "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s で違反は見つかりませんでした。",

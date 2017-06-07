@@ -5,7 +5,7 @@
   "loc.messages.Info_AvailableVersions": "사용 가능한 버전: %s",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.Info_UsingVersion": "버전 %s 사용",
-  "loc.messages.Info_UsingToolPath": "Using tool path: %s",
+  "loc.messages.Info_UsingToolPath": "도구 경로 %s 사용",
   "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "버전 문자열에서 쿼리 일치를 사용하는 중입니다. NuGet이 새 버전으로 업데이트되면서 동작 변경 내용 또는 새로운 변경 내용이 발생할 수 있습니다.",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "입력 %s과(와) 일치하는 버전을 찾을 수 없습니다.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "%s에 대한 다운로드 URL을 찾을 수 없습니다.",

@@ -34,7 +34,7 @@
   "loc.input.label.project": "チーム プロジェクト",
   "loc.input.help.project": "配置グループが定義されているチーム プロジェクトを指定する",
   "loc.input.label.deploymentGroupName": "配置グループ",
-  "loc.input.help.deploymentGroupName": "エージェントの登録対象の配置グループを指定します。詳細については、[配置グループ](https://aka.ms/832442) をご覧ください",
+  "loc.input.help.deploymentGroupName": "エージェントの登録対象の配置グループを指定します。詳細については、[Deployment Groups (配置グループ)](https://aka.ms/832442) を参照してください",
   "loc.input.label.copyAzureVMTags": "Azure VM タグをエージェントにコピーする",
   "loc.input.help.copyAzureVMTags": "Azure VM 上で構成されるタグを、対応する配置グループ エージェントにコピーする必要がある場合に選択します。<br><br>既定では、すべての Azure タグが “Key: Value” の形式でコピーされます。例: Azure タグ “Role : Web” はそのままエージェント マシンにコピーされます。<br><br>Azure リソースのタグ付けの詳細については、[リンク](https://docs.microsoft.com/ja-jp/azure/azure-resource-manager/resource-group-using-tags) をご覧ください",
   "loc.input.label.outputVariable": "WinRM についての VM の詳細",

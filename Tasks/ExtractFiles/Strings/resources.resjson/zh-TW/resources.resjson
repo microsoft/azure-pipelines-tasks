@@ -12,7 +12,7 @@
   "loc.messages.ExtractDirFailedinFindFiles": "因為指定的封存 %s 為目錄，所以解壓縮失敗。",
   "loc.messages.ExtractNotFileFailed": "因為指定的封存 %s 不是檔案，所以無法予以解壓縮。",
   "loc.messages.ExtractNotAccessibleFile": "因為無法存取指定的封存 %s，所以無法予以解壓縮: %s",
-  "loc.messages.SearchInDir": "正於目錄 %s 下搜尋 %s",
+  "loc.messages.SearchInDir": "正在搜尋 %s，於目錄 %s 下",
   "loc.messages.SearchNonExistDir": "因為指定的搜尋目錄 %s 不存在，所以搜尋失敗。",
   "loc.messages.SearchNonDir": "因為指定的搜尋目錄 %s 不是目錄，所以搜尋失敗。",
   "loc.messages.NoSearchPatternPath": "搜尋模式 %s 沒有指定的路徑，將預設為: %s",

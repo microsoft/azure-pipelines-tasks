@@ -92,7 +92,7 @@
   "loc.messages.sqAnalysis_NoUnitsFound": "La liste des unités de mesure SonarQube n'a pas pu être récupérée sur le serveur.",
   "loc.messages.sqAnalysis_NoReportTask": "report-task.txt introuvable. Cause possible : L'analyse SonarQube ne s'est pas effectuée correctement.",
   "loc.messages.sqAnalysis_MultipleReportTasks": "Plusieurs fichiers report-task.txt trouvés. Le premier fichier est choisi. Le résumé de la génération et l'interrupteur de génération ne sont peut-être pas exacts. Cause possible : plusieurs analyses SonarQube pendant la même génération, ce qui n'est pas pris en charge.",
-  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s a trouvé %d violations dans %d fichier.",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s a trouvé %d violations dans %d fichiers.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s a trouvé %d violations dans 1 fichier.",
   "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s a trouvé 1 violation dans 1 fichier.",
   "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s n'a trouvé aucune violation.",

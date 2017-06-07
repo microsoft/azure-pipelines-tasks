@@ -132,6 +132,6 @@
   "loc.messages.InvalidActionIISAppPool": "IIS 응용 프로그램 풀에 대해 선택한 작업 '{0}'이(가) 잘못되었습니다.",
   "loc.messages.PackageDeploymentFailed": "웹 패키지를 IIS 웹 사이트에 배포하지 못했습니다.",
   "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "https 바인딩({0}/{1}:{2})에 SSL 인증서 지문이 없습니다.",
-  "loc.messages.InvalidSslThumbprintInBinding": "바인딩({0}/{1}:{2})에 잘못된 지문이 있습니다. 길이가 40자가 아니거나 잘못된 문자가 포함되어 있습니다.",
+  "loc.messages.InvalidSslThumbprintInBinding": "바인딩({0}/{1}:{2})에 잘못된 지문이 있습니다. 길이가 40자가 아니거나 잘못된 문자를 포함하고 있습니다.",
   "loc.messages.SSLCertWarningInvalidCharactersInBinding": "SSL 인증서 지문에 16진수가 아닌 문자가 바인딩({0}/{1}:{2})에 포함되어 있습니다. 16진수가 아닌 문자를 모두 자릅니다."
 }

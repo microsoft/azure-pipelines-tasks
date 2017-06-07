@@ -16,7 +16,7 @@
   "loc.messages.PackageDownloadSuccessful": "El paquete se descargó correctamente.",
   "loc.messages.CredentialsNotFound": "No se pudieron determinar las credenciales para conectarse al servicio Administración de paquetes.",
   "loc.messages.StartingDownloadOfPackage": "Iniciando la descarga del paquete NuGet %s en la ubicación %s",
-  "loc.messages.ExtractingNugetPackage": "Extrayendo el paquete NuGet %s al directorio %s.",
+  "loc.messages.ExtractingNugetPackage": "Extrayendo el paquete NuGet %s en el directorio %s.",
   "loc.messages.PackageTypeNotSupported": "Mediante esta tarea, solo se pueden descargar tipos de paquetes NuGet.",
   "loc.messages.ExtractionFailed": "No se pudo extraer el paquete con el error %s."
 }
