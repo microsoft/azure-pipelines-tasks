@@ -9,6 +9,7 @@ tr.setInput('templateType', 'custom');
 tr.setInput('customTemplateLocation', 'C:\\custom.template.json');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
+tr.setInput("additionalBuilderParameters", "{}");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 

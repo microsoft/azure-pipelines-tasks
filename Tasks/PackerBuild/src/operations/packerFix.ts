@@ -16,8 +16,8 @@ export function run(packerHost: packerHost): void {
     var result = command.execSync();
 
     if(result.code != 0) {
-        throw tl.loc("PackerFixFailed");
+        throw tl.loc("PackerFixFailed", result.error ? result.error.message : result.stderr);
     }
     
-    packerHost.getTemplateFileProvider().updateTemplateFile(result.stdout);
+    packerHost.getTemplateFileProvider().saveUpdatedTemplateFile(result.stdout, "-fixed");
 }

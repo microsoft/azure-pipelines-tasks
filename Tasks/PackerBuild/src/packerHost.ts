@@ -119,7 +119,8 @@ export default class PackerHost implements definitions.IPackerHost {
                 var packerPath = path.join(extractedPackerLocation, "packer");
             }
 
-            console.log(tl.loc("ExtractingPackerCompleted", packerPath));            
+            console.log(tl.loc("ExtractingPackerCompleted", packerPath));
+            await this._waitForPackerExecutable(packerPath);         
             return packerPath;
         } else {
             return installedPackerPath;
@@ -135,6 +136,23 @@ export default class PackerHost implements definitions.IPackerHost {
         }
 
         return null;
+    }
+
+    private async _waitForPackerExecutable(packerPath: string): Promise<void> {
+        if(!!packerPath && tl.exist(packerPath)) {
+            var iterationCount = 0;
+            do{
+                // query version to check if packer executable is ready
+                var result = tl.tool(packerPath).arg("--version").execSync();
+                if(result.code != 0 && result.error && result.error.message.indexOf("EBUSY") != -1){
+                    iterationCount++;
+                    console.log(tl.loc("PackerToolBusy"));
+                    await utils.sleep(1000);
+                } else {
+                    break;
+                }
+            } while (iterationCount <= 10)
+        }
     }
 
     private _getPackerZipNamePrefix(): string {
