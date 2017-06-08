@@ -41,106 +41,8 @@ describe('VsTest Suite', function () {
         }
     });
 
-    if (psm.testSupported()) {
-        it('(VsTest-NoTestAssemblies) throws if no test assemblies provided as input', (done) => {
-            psr.run(path.join(__dirname, 'ThrowsIfAssembliesNotProvided.ps1'), done);
-        })
-        it('(VsTest-NoSourceDirectory) throws if no source directory is found', (done) => {
-            psr.run(path.join(__dirname, 'ThrowsIfNoSourceDirectoryFound.ps1'), done);
-        })
-        it('(2015U1Check.ReturnsTrueIfTaefFileIsFound) returns true if taef file is found', (done) => {
-            psr.run(path.join(__dirname, '2015U1Check.ReturnsTrueIfTaefFileIsFound.ps1'), done);
-        })
-        it('(2015U1Check.ReturnsFalseForOlderVSTestVersion.ps1) returns false if vstest version less than 14', (done) => {
-            psr.run(path.join(__dirname, '2015U1Check.ReturnsFalseForOlderVSTestVersion.ps1'), done);
-        })
-        it('(2015U1Check.ReturnsTrueForLaterVSTestVersion) returns true if vstest version greater than 14', (done) => {
-            psr.run(path.join(__dirname, '2015U1Check.ReturnsTrueForLaterVSTestVersion.ps1'), done);
-        })
-        it('(RunSettingsForParallel.ReturnsSameFileIfParallelIsFalse) returns same file if parallel flag is false', (done) => {
-            psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsSameFileIfParallelIsFalse.ps1'), done);
-        })
-        it('(RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameEmpty) returns new file if parallel flag is true and no runsettings file is provided', (done) => {
-            psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameEmpty.ps1'), done);
-        })
-        it('(RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameNotEmpty) returns same but updated file if parallel flag is true and a runsettings file is provided', (done) => {
-            psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameNotEmpty.ps1'), done);
-        })
-        it('(NoResultsFile.PrintsWarning) prints a warning if no results file is found', (done) => {
-            psr.run(path.join(__dirname, 'NoResultsFile.PrintsWarning.ps1'), done);
-        })
-        it('(NoTestAssemblies.PrintsWarning) prints a warning if no test assemblies are found', (done) => {
-            psr.run(path.join(__dirname, 'NoTestAssemblies.PrintsWarning.ps1'), done);
-        })
-        it('(Compat.OptOutOfPublishNotInCmdlet.ProvidedByTask) does not throw if publishattachments is not found in the cmdlet', (done) => {
-            psr.run(path.join(__dirname, 'Compat.OptOutOfPublishNotInCmdlet.ProvidedByTask.ps1'), done);
-        })
-        it('(Compat.TestRunTitleNotInCmdlet.ProvidedByTask) does not throw if testrun title is not found in the cmdlet', (done) => {
-            psr.run(path.join(__dirname, 'Compat.TestRunTitleNotInCmdlet.ProvidedByTask.ps1'), done);
-        })
-        it('(RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameIsADirectory) returns new file if parallel flag is true and runsettings input is a directory', (done) => {
-            psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameIsADirectory.ps1'), done);
-        })
-        it('(RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameIsANonRunsettingsNonTestSettingsFile) returns new file if parallel flag is true and runsettings input is not a runsettings or testsettings file', (done) => {
-            psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsNewFileIfParallelIsTrueAndFileNameIsANonRunsettingsNonTestSettingsFile.ps1'), done);
-        })
-        it('ValidateTestAssembliesAreSplit) tests if the input test assembiles are properly passed to cmdlet', (done) => {
-            psr.run(path.join(__dirname, 'ValidateTestAssembliesAreSplit.ps1'), done);
-        })
-        it('ValidateTestAssembliesAreSplit) tests if the input test assembiles are properly passed to cmdlet', (done) => {
-            psr.run(path.join(__dirname, 'ValidateTestAssembliesAreNotSplit.ps1'), done);
-        })
-        it('(RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameIsTestSettingsFile) returns same file if parallel flag is true and runsettings input is a testsettings file', (done) => {
-            psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsSameFileIfParallelIsTrueAndFileNameIsTestSettingsFile.ps1'), done);
-        })
-
-        it('(GetResultsLocationReturnsPathFromRunsettings) returns the custom results location from runsettings', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsLocationReturnsPathFromRunsettings.ps1'), done);
-        })
-
-        it('(GetResultsLocationReturnsPathFromRunsettingsForRelativePaths) returns the custom results location from runsettings for relative paths', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsLocationReturnsPathFromRunsettingsForRelativePaths.ps1'), done);
-        })
-
-        it('(GetResultsLocationReturnsNullForRunsettingsWithoutResultsDirectory) returns null if there is no results location in runsettings', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForRunsettingsWithoutResultsDirectory.ps1'), done);
-        })
-
-        it('(GetResultsLocationReturnsPathForTmpFile) returns the custom results location for tmp file extension', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsLocationReturnsPathForTmpFile.ps1'), done);
-        })
-
-        it('(GetResultsReturnsNullForTestsettings) returns null for any other file type', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsReturnsNullForTestsettings.ps1'), done);
-        })
-
-        it('(GetResultsLocationReturnsNullForDirectory) returns the null for directory specified as runsettings', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForDirectory.ps1'), done);
-        })
-
-        it('(GetResultsLocationReturnsNullForEmptyPath) returns null for empty directory specified as runsettings', (done) => {
-            psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForEmptyPath.ps1'), done);
-        })
-
-        it('(TestResultsDirectoryVariableIsUsedIfnorunsettings) vstest invoked with  default test results directory if no settings is specified', (done) => {
-            psr.run(path.join(__dirname, 'TestResultsDirectoryVariableIsUsedIfnorunsettings.ps1'), done);
-        })
-
-        it('(TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
-            psr.run(path.join(__dirname, 'TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed.ps1'), done);
-        })
-
-        it('Latest option chosen with VS 15 Willow installed', (done) => {
-            psr.run(path.join(__dirname, 'LatestSelectedwithVS15Installed.ps1'), done);
-        })
-
-        it('v14 option chosen with VS 15 Willow installed', (done) => {
-            psr.run(path.join(__dirname, 'V14SelectedwithVS15Installed.ps1'), done);
-        })
-    }
-
     if (!os.type().match(/^Win/)) {
-        console.log('Skipping vstest tests. Vstest tests run only on windows.')
+        console.log('Skipping vstest tests. Vstest tests run only on windows.');
         return;
     }
 
@@ -159,7 +61,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
     it('Vstest task with test results files filter', (done) => {
 
         const vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', '/logger:trx'].join(' ');
@@ -183,7 +85,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('VSTest task with VS2017 installed on build agent and latest option is selected in definition', (done) => {
 
@@ -207,7 +109,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('VSTest task with only VS2015 installed on build agent and latest option is selected in definition', (done) => {
 
@@ -231,7 +133,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with test results files filter and exclude filter', (done) => {
 
@@ -256,7 +158,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with test results files as path', (done) => {
 
@@ -281,7 +183,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task when vstest fails', (done) => {
 
@@ -306,7 +208,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task when vstest is set to ignore test failures', (done) => {
 
@@ -331,7 +233,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with test case filter', (done) => {
 
@@ -357,7 +259,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with enable code coverage', (done) => {
 
@@ -383,7 +285,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with settings file', (done) => {
 
@@ -409,7 +311,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with invalid settings file', (done) => {
 
@@ -434,7 +336,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with run in parallel and UI tests', (done) => {
 
@@ -461,7 +363,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with run in parallel and vs 2015 below update1', (done) => {
 
@@ -489,7 +391,7 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with run in parallel and vs 2017', (done) => {
         setResponseFile('vstestGoodRunInParallel.json');
@@ -515,7 +417,7 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with run in parallel and vs 2015 update3 or higher', (done) => {
         setResponseFile('vstestRunInParallel.json');
@@ -539,7 +441,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with custom adapter path', (done) => {
 
@@ -566,7 +468,7 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with test adapter should be found automatically', (done) => {
 
@@ -592,7 +494,7 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with runsettings file and tia.enabled set to false', (done) => {
 
@@ -619,7 +521,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with runsettings file and tia.enabled undefined', (done) => {
 
@@ -647,7 +549,7 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    })
+    });
 
     it('Vstest task with results directory as absolute path in run settings file', (done) => {
 
@@ -830,7 +732,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/search/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('searchDirectory', '/search/dir')
+        tr.setInput('searchDirectory', '/search/dir');
         tr.run()
             .then(() => {
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
@@ -985,7 +887,7 @@ describe('VsTest Suite', function () {
                     utils.Helper.getXmlContents(settingsXml)
                         .then(function (settings) {
                             assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'RunInparallel setting not set properly');
-                            assert.equal(settings.RunSettings.RunConfiguration[0].TargetFrameworkVersion, 'Framework40', 'RunInparallel should delete any other existing settings')
+                            assert.equal(settings.RunSettings.RunConfiguration[0].TargetFrameworkVersion, 'Framework40', 'RunInparallel should delete any other existing settings');
                             done();
                         });
                 });
