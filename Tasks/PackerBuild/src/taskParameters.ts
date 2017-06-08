@@ -51,30 +51,21 @@ export default class TaskParameters {
                     this._extractImageDetails();
                 }              
 
-                try {
-                    this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
-                    console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));                    
-                } catch (error) {
-                    throw (tl.loc("DeployPackageInputResolutionFailed", error))
-                }
+                console.log(tl.loc("ResolvingDeployPackageInput"));
+                this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
+                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));                    
 
-                try {
-                    var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
-                    var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
-                    this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
-                    console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));                
-                } catch (error) {
-                    throw (tl.loc("DeployScriptInputResolutionFailed", error))
-                }
+                console.log(tl.loc("ResolvingDeployScriptInput"));
+                var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
+                var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
+                this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
+                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));                
                 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
             }                
 
-            try {
-                this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));                   
-            } catch (error) {
-                throw (tl.loc("AdditionalBuilderParameterParsingFailed", error))
-            }
+            console.log(tl.loc("ParsingAdditionalBuilderParameters"));
+            this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));                   
 
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
         } 

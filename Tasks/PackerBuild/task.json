@@ -273,9 +273,9 @@
         "InstalledPackerVersion": "Current installed packer version is %s.",
         "AdditionalParameterIgnored": "Additional parameter key '%s' already exists in builder '%s'. New value will be ignored.",
         "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
-        "DeployPackageInputResolutionFailed": "Error occurred while resolving deploy package path: %s.",
-        "DeployScriptInputResolutionFailed": "Error occurred while resolving deploy script path: %s.",
-        "AdditionalBuilderParameterParsingFailed": "Error occurred while parsing additional builder parameters json",
+        "ResolvingDeployPackageInput": "Resolving deploy package path.",
+        "ResolvingDeployScriptInput": "Resolving deploy script path.",
+        "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
         "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s."
     }
 }

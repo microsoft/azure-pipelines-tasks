@@ -273,9 +273,9 @@
     "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
     "AdditionalParameterIgnored": "ms-resource:loc.messages.AdditionalParameterIgnored",
     "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
-    "DeployPackageInputResolutionFailed": "ms-resource:loc.messages.DeployPackageInputResolutionFailed",
-    "DeployScriptInputResolutionFailed": "ms-resource:loc.messages.DeployScriptInputResolutionFailed",
-    "AdditionalBuilderParameterParsingFailed": "ms-resource:loc.messages.AdditionalBuilderParameterParsingFailed",
+    "ResolvingDeployPackageInput": "ms-resource:loc.messages.ResolvingDeployPackageInput",
+    "ResolvingDeployScriptInput": "ms-resource:loc.messages.ResolvingDeployScriptInput",
+    "ParsingAdditionalBuilderParameters": "ms-resource:loc.messages.ParsingAdditionalBuilderParameters",
     "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed"
   }
 }
