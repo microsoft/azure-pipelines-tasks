@@ -26,6 +26,8 @@ export default class TaskParameters {
     public deployScriptPath: string;
     public deployScriptArguments: string;
 
+    public additionalBuilderParameters: {};
+
     public imageUri: string;
 
     constructor() {
@@ -59,6 +61,7 @@ export default class TaskParameters {
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
             }                
 
+            this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
         } 
         catch (error) {

@@ -19,6 +19,7 @@ tr.setInput('deployScriptArguments', "-target \"subdir 1\" -shouldFail false");
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
+tr.setInput("additionalBuilderParameters", "{}");
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -45,6 +46,10 @@ let a: any = <any>{
             "code": 0,
             "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : "0.12.3"
         },
+        "F:\\somedir\\tempdir\\100\\packer\\packer.exe --version": {
+            "code": 0,
+            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : "0.12.3"
+        },
         "F:\\somedir\\tempdir\\100\\packer\\packer.exe fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
@@ -61,7 +66,8 @@ let a: any = <any>{
     "exist": {
         "F:\\somedir\\tempdir\\100": true,
         "F:\\somedir\\tempdir\\100\\": true,
-        "packer": true       
+        "packer": true,
+        "F:\\somedir\\tempdir\\100\\packer\\packer.exe": true      
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': true }

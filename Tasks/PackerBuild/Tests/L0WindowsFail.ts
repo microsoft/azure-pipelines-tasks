@@ -20,6 +20,7 @@ if(!process.env["__no_output_vars__"] || process.env["__no_output_vars__"] !== "
     tr.setInput('imageUri', 'imageUri');
     tr.setInput('imageStorageAccount', 'imageStorageAccount');
 }
+tr.setInput("additionalBuilderParameters", "{}");
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -49,6 +50,7 @@ let a: any = <any>{
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": process.env["__packer_fix_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_fix_fails__"] === "true" ? "packer fix failed\r\nsome error" : "{ \"some-key\": \"some-value\" }",
+            "stderr": process.env["__packer_fix_fails__"] === "true" ? "packer fix failed\r\nsome error" : ""
         },
         "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": process.env["__packer_validate_fails__"] === "true" ? 1 : 0,
