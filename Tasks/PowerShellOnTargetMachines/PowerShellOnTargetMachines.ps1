@@ -32,7 +32,7 @@ Write-Verbose "sessionVariables = $sessionVariables"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal" -ErrorAction Ignore
 
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
