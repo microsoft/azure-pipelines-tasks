@@ -174,7 +174,6 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
         }
 
         # Connect to cluster
-        $ClusterConnectionParameters | Out-String | Write-Debug
         try {
             [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
         }
