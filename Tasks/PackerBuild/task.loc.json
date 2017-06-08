@@ -272,6 +272,10 @@
     "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
     "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
     "AdditionalParameterIgnored": "ms-resource:loc.messages.AdditionalParameterIgnored",
-    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy"
+    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
+    "DeployPackageInputResolutionFailed": "ms-resource:loc.messages.DeployPackageInputResolutionFailed",
+    "DeployScriptInputResolutionFailed": "ms-resource:loc.messages.DeployScriptInputResolutionFailed",
+    "AdditionalBuilderParameterParsingFailed": "ms-resource:loc.messages.AdditionalBuilderParameterParsingFailed",
+    "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed"
   }
 }
