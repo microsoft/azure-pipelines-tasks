@@ -68,5 +68,9 @@
   "loc.messages.CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
   "loc.messages.InstalledPackerVersion": "Current installed packer version is %s.",
   "loc.messages.AdditionalParameterIgnored": "Additional parameter key '%s' already exists in builder '%s'. New value will be ignored.",
-  "loc.messages.PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second..."
+  "loc.messages.PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
+  "loc.messages.ResolvingDeployPackageInput": "Resolving deploy package path.",
+  "loc.messages.ResolvingDeployScriptInput": "Resolving deploy script path.",
+  "loc.messages.ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
+  "loc.messages.ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s."
 }

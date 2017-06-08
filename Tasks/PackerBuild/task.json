@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 6
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -272,6 +272,10 @@
         "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
         "InstalledPackerVersion": "Current installed packer version is %s.",
         "AdditionalParameterIgnored": "Additional parameter key '%s' already exists in builder '%s'. New value will be ignored.",
-        "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second..."
+        "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
+        "ResolvingDeployPackageInput": "Resolving deploy package path.",
+        "ResolvingDeployScriptInput": "Resolving deploy script path.",
+        "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
+        "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s."
     }
 }

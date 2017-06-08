@@ -132,8 +132,8 @@ export function HasItems(arr: any[]): boolean {
     return true;
 }
 
-export function sleep (time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
+export function sleep (time): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
 }
 
 export function deleteDirectory(dir: string): void {

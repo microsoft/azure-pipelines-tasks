@@ -28,8 +28,8 @@ export default class TemplateFileProviderBase {
 
         try {
             templateJson = JSON.parse(content);
-        } catch (err) {
-            tl.debug('unable to parse template json string with err: ' + err.message);  
+        } catch (err) { 
+            throw (tl.loc("ParsingTemplateFileContentFailed", this._templateFileLocation, err));
         }
 
         return templateJson;

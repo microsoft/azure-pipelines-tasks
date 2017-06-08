@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -272,6 +272,10 @@
     "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
     "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
     "AdditionalParameterIgnored": "ms-resource:loc.messages.AdditionalParameterIgnored",
-    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy"
+    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
+    "ResolvingDeployPackageInput": "ms-resource:loc.messages.ResolvingDeployPackageInput",
+    "ResolvingDeployScriptInput": "ms-resource:loc.messages.ResolvingDeployScriptInput",
+    "ParsingAdditionalBuilderParameters": "ms-resource:loc.messages.ParsingAdditionalBuilderParameters",
+    "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed"
   }
 }
