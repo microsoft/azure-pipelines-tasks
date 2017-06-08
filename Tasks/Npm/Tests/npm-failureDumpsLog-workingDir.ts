@@ -9,10 +9,19 @@ import { NpmMockHelper } from './NpmMockHelper';
 let taskPath = path.join(__dirname, '..', 'npm.js');
 let tmr = new NpmMockHelper(taskPath);
 
-tmr.setInput(NpmTaskInput.Command, NpmCommand.Install);
-tmr.setInput(NpmTaskInput.WorkingDir, '');
-tmr.mockNpmCommand('install', {
+tmr.setInput(NpmTaskInput.Command, NpmCommand.Custom);
+tmr.setInput(NpmTaskInput.CustomCommand, 'custom');
+tmr.setInput(NpmTaskInput.WorkingDir, 'C:\\mock\\workingDir');
+tmr.mockNpmCommand('custom', {
     code: -1,
     stdout: 'some npm failure'
 } as TaskLibAnswerExecResult);
+tmr.answers.exist['C:\\mock\\workingDir\\npm-debug.log'] = true;
+
+let mockFs = require('fs');
+tmr.registerMock('fs', mockFs);
+mockFs.readFile = (a, b, cb) => {
+    cb(undefined, 'NPM_DEBUG_LOG');
+};
+
 tmr.run();
