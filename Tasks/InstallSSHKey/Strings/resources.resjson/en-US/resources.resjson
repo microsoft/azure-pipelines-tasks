@@ -8,7 +8,7 @@
   "loc.input.label.sshPublicKey": "SSH Public Key",
   "loc.input.help.sshPublicKey": "The contents of the public SSH key.",
   "loc.input.label.sshPassphrase": "SSH Passphrase",
-  "loc.input.help.sshPassphrase": "The passphrase for the SSH key.",
+  "loc.input.help.sshPassphrase": "The passphrase for the SSH key, if any.",
   "loc.input.label.sshKeySecureFile": "SSH Key",
   "loc.input.help.sshKeySecureFile": "Select the SSH key that was uploaded to `Secure Files` to install on the agent.",
   "loc.messages.SSHKeyAlreadyInstalled": "The SSH key is already installed.",
