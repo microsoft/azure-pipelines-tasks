@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "Идентификатор плана тестирования: %s",
   "loc.messages.testplanConfigInput": "Идентификатор конфигурации плана тестирования: %s",
   "loc.messages.testSuiteSelected": "Идентификатор выбранного набора тестов: %s",
-  "loc.messages.testAssemblyFilterInput": "Фильтр сборки теста: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "Версия VisualStudio, выбранная для запуска теста: %s",
   "loc.messages.runTestsLocally": "Запускать тесты локально с помощью %s",
   "loc.messages.vstestLocationSpecified": "%s, указанное расположение: %s",
   "loc.messages.uitestsparallel": "Параллельный запуск тестов пользовательского интерфейса на одном компьютере может привести к ошибкам. Попробуйте отключить параметр \"Запустить параллельно\" или запускать тесты пользовательского интерфейса в отдельной задаче. Дополнительные сведения: https://aka.ms/paralleltestexecution. ",
   "loc.messages.pathToCustomAdaptersInvalid": "Путь к пользовательским адаптерам \"%s\" должен быть существующим каталогом.",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Путь к пользовательским адаптерам \"%s\" не содержит адаптеры теста; укажите допустимый путь."
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Путь к пользовательским адаптерам \"%s\" не содержит адаптеры теста; укажите допустимый путь.",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }

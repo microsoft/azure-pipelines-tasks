@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "测试计划 ID: %s",
   "loc.messages.testplanConfigInput": "测试计划配置 ID: %s",
   "loc.messages.testSuiteSelected": "所选的测试套件 ID: %s",
-  "loc.messages.testAssemblyFilterInput": "测试程序集筛选器: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "选择进行测试执行的 VisualStudio 版本: %s",
   "loc.messages.runTestsLocally": "使用 %s 本地运行测试",
   "loc.messages.vstestLocationSpecified": "%s，指定位置: %s",
   "loc.messages.uitestsparallel": "在同一计算机上并行运行 UI 测试可能导致错误。请考虑禁用“并行运行”选项或使用单独任务运行 UI 测试。有关详细信息，请参阅 https://aka.ms/paralleltestexecution",
   "loc.messages.pathToCustomAdaptersInvalid": "自定义适配器 \"%s\" 的路径应该是一个目录，且该目录应该存在。",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "自定义适配器 \"%s\" 的路径不包含任何测试适配器，请提供一个有效的路径。"
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "自定义适配器 \"%s\" 的路径不包含任何测试适配器，请提供一个有效的路径。",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }

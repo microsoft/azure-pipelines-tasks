@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "測試計劃識別碼: %s",
   "loc.messages.testplanConfigInput": "測試計劃設定識別碼: %s",
   "loc.messages.testSuiteSelected": "已選取測試套件識別碼: %s",
-  "loc.messages.testAssemblyFilterInput": "測試組件篩選: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "選取用於測試執行的 Visual Studio 版本: %s",
   "loc.messages.runTestsLocally": "使用 %s 在本機執行測試",
   "loc.messages.vstestLocationSpecified": "%s，指定的位置: %s",
   "loc.messages.uitestsparallel": "在相同的機器上平行執行 UI 測試可能會造成錯誤。請考慮停用 [平行執行] 選項，或使用不同的工作來執行 UI 測試。如需詳細資訊，請參閱 https://aka.ms/paralleltestexecution ",
   "loc.messages.pathToCustomAdaptersInvalid": "自訂配接器 '%s' 的路徑應為存在的目錄。",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "自訂配接器 '%s' 的路徑不包含任何測試配接器，請提供有效的路徑。"
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "自訂配接器 '%s' 的路徑不包含任何測試配接器，請提供有效的路徑。",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }

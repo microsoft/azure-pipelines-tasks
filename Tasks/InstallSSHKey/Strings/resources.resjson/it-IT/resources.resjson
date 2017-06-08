@@ -7,6 +7,8 @@
   "loc.input.help.hostName": "Voce di questa chiave SSH per il file known_hosts.",
   "loc.input.label.sshPublicKey": "Chiave SSH pubblica",
   "loc.input.help.sshPublicKey": "Contenuto della chiave SSH pubblica.",
+  "loc.input.label.sshPassphrase": "SSH Passphrase",
+  "loc.input.help.sshPassphrase": "The passphrase for the SSH key, if any.",
   "loc.input.label.sshKeySecureFile": "Chiave SSH",
   "loc.input.help.sshKeySecureFile": "Consente di selezionare la chiave SSH caricata in `File protetti` da installare nell'agente.",
   "loc.messages.SSHKeyAlreadyInstalled": "La chiave SSH è già installata.",

@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "テスト計画 ID: %s",
   "loc.messages.testplanConfigInput": "テスト計画構成 ID: %s",
   "loc.messages.testSuiteSelected": "選択されたテスト スイート ID: %s",
-  "loc.messages.testAssemblyFilterInput": "テスト アセンブリ フィルター: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "テストの実行用に選択された Visual Studio のバージョン: %s",
   "loc.messages.runTestsLocally": "%s を使ってローカルでテストを実行",
   "loc.messages.vstestLocationSpecified": "%s、指定された場所: %s",
   "loc.messages.uitestsparallel": "同じマシン上で並列に UI テストを実行すると、エラーが発生することがあります。[並列で実行] オプションを無効にするか、別のタスクを使って UI テストを実行することを検討してください。詳細については、https://aka.ms/paralleltestexecution をご覧ください ",
   "loc.messages.pathToCustomAdaptersInvalid": "カスタム アダプター '%s' へのパスは存在し、ディレクトリでなければなりません。",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "カスタム アダプター '%s' へのパスにはテスト アダプターが含まれていません。有効なパスを指定してください。"
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "カスタム アダプター '%s' へのパスにはテスト アダプターが含まれていません。有効なパスを指定してください。",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }

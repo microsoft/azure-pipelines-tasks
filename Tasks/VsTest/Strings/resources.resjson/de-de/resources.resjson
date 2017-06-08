@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "Testplan-ID: %s",
   "loc.messages.testplanConfigInput": "Testplankonfigurations-ID: %s",
   "loc.messages.testSuiteSelected": "Ausgewählte Testsuite-ID: %s",
-  "loc.messages.testAssemblyFilterInput": "Testassemblyfilter: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "Die für die Testausführung ausgewählte Version von Visual Studio: %s",
   "loc.messages.runTestsLocally": "Tests lokal mithilfe von %s ausführen",
   "loc.messages.vstestLocationSpecified": "%s, angegebener Speicherort: %s",
   "loc.messages.uitestsparallel": "Wenn Sie UI-Tests parallel auf dem gleichen Computer ausführen, treten unter Umständen Fehler auf. Deaktivieren Sie die Option \"Parallel ausführen\", oder führen Sie UI-Tests mithilfe einer separaten Aufgabe aus. Weitere Informationen finden Sie unter: https://aka.ms/paralleltestexecution",
   "loc.messages.pathToCustomAdaptersInvalid": "Der Pfad zu den benutzerdefinierten Adaptern \"%s\" muss ein Verzeichnis sein und muss vorhanden sein.",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Der Pfad zu den benutzerdefinierten Adaptern \"%s\" enthält keine Testadapter. Geben Sie einen gültigen Pfad an."
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Der Pfad zu den benutzerdefinierten Adaptern \"%s\" enthält keine Testadapter. Geben Sie einen gültigen Pfad an.",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }

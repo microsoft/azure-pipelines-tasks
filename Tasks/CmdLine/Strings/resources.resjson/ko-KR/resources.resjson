@@ -11,6 +11,6 @@
   "loc.input.label.workingFolder": "작업 폴더",
   "loc.input.label.failOnStandardError": "표준 오류 시 실패",
   "loc.input.help.failOnStandardError": "true일 경우 StandardError 스트림에 오류가 작성되면 이 작업은 실패하게 됩니다.",
-  "loc.messages.CmdLineReturnCode": "반환 코드 %d(으)로 %s 종료",
-  "loc.messages.CmdLineFailed": "오류 %s(으)로 %s 실패"
+  "loc.messages.CmdLineReturnCode": "%s 종료(반환 코드: %d)",
+  "loc.messages.CmdLineFailed": "%s 실패(오류: %s)"
 }

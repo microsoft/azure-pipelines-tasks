@@ -53,7 +53,7 @@
   "loc.messages.TaskParametersConstructorFailed": "작업 초기화 중 오류 발생: %s.",
   "loc.messages.PackerFixFailed": "Packer 수정 명령이 실패했습니다. 작업에서 Packer 버전을 지원하지 않는 경우 이러한 문제가 발생할 수 있습니다.",
   "loc.messages.PackerValidateFailed": "Packer 유효성 검사 명령이 실패했습니다. 작업에서 Packer 버전을 지원하지 않는 경우 이러한 문제가 발생할 수 있습니다.",
-  "loc.messages.ResolvedPathNotFound": "패턴과 일치하는 파일 없음: %s, 루트 폴더: %s.",
+  "loc.messages.ResolvedPathNotFound": "패턴 %s과(와) 일치하는 파일이 없습니다(루트 폴더 %s 아래).",
   "loc.messages.ResolvedDeployPackgePath": "확인된 배포 패키지 경로: %s.",
   "loc.messages.ResolvedDeployScriptPath": "확인된 배포 스크립트 경로: %s.",
   "loc.messages.OSNotSupportedForRunningPacker": "Packer 실행에 OS가 지원되지 않습니다.",

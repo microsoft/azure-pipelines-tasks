@@ -7,6 +7,8 @@
   "loc.input.help.hostName": "這份 SSH 金鑰的輸入，用於 known_hosts 檔案。",
   "loc.input.label.sshPublicKey": "SSH 公開金鑰",
   "loc.input.help.sshPublicKey": "公開 SSH 金鑰的內容。",
+  "loc.input.label.sshPassphrase": "SSH Passphrase",
+  "loc.input.help.sshPassphrase": "The passphrase for the SSH key, if any.",
   "loc.input.label.sshKeySecureFile": "SSH 金鑰",
   "loc.input.help.sshKeySecureFile": "請選取已上傳到 [安全的檔案] 的 SSH 金鑰，以安裝在代理程式上。",
   "loc.messages.SSHKeyAlreadyInstalled": "已安裝 SSH 金鑰。",
