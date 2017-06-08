@@ -47,7 +47,7 @@
             "label": "SSH Passphrase",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The passphrase for the SSH key."
+            "helpMarkDown": "The passphrase for the SSH key, if any."
         },
         {
             "name": "sshKeySecureFile",
