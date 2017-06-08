@@ -103,7 +103,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
 
 function getVSTestConsole15Path(): string {
     const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
-    vswhereTool.line('-latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
+    vswhereTool.line('-version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
     const vsPath = vswhereTool.execSync().stdout;
     tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
     if (!utils.Helper.isNullOrWhitespace(vsPath)) {

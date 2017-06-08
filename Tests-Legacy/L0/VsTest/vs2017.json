@@ -24,7 +24,7 @@
             "code": 0,
             "stdout": "vstest"
         },
-        "\\VSTest\\vswhere.exe -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath": {
+        "\\VSTest\\vswhere.exe -version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath": {
             "code": 0,
             "stdout": "\\vs2017\\installation\\folder"
         },
