@@ -53,7 +53,7 @@
   "loc.messages.WebAppDoesntExist": "Die Webapp \"%s\" ist nicht vorhanden.",
   "loc.messages.UnabletoretrieveWebAppID": "Die Verbindungsdetails für Azure App Service konnten nicht abgerufen werden: \"%s\". Statuscode: %s",
   "loc.messages.StartingSwapSlot": "Slottausch für Web-App wird angefordert: %s",
-  "loc.messages.ExtensionInstallFailedError": "Fehler beim Installieren der Erweiterung: '%s'. Fehler: %s",
+  "loc.messages.ExtensionInstallFailedError": "Fehler beim Installieren der Erweiterung: \"%s\". Fehler: %s",
   "loc.messages.ExtensionInstallFailedResponseError": "Fehler beim Installieren der Erweiterung \"%s\". Statuscode: %s (%s)",
   "loc.messages.ExtensionInstallSuccess": "Erweiterung \"%s\" in Azure App Service erfolgreich installiert.",
   "loc.messages.ExtensionAlreadyAvaiable": "Erweiterung \"%s\" ist bereits in Azure App Service verfügbar.",

@@ -7,6 +7,8 @@
   "loc.input.help.hostName": "Der Eintrag für diesen SSH-Schlüssel für die Datei \"known_hosts\".",
   "loc.input.label.sshPublicKey": "Öffentlicher SSH-Schlüssel",
   "loc.input.help.sshPublicKey": "Der Inhalt des öffentlichen SSH-Schlüssels.",
+  "loc.input.label.sshPassphrase": "SSH Passphrase",
+  "loc.input.help.sshPassphrase": "The passphrase for the SSH key, if any.",
   "loc.input.label.sshKeySecureFile": "SSH-Schlüssel",
   "loc.input.help.sshKeySecureFile": "Wählen Sie den SSH-Schlüssel aus, der in \"Secure Files\" (Sichere Dateien) für die Installation auf dem Agent hochgeladen wurde.",
   "loc.messages.SSHKeyAlreadyInstalled": "Der SSH-Schlüssel ist bereits installiert.",

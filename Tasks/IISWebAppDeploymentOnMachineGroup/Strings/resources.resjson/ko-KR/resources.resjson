@@ -48,7 +48,7 @@
   "loc.messages.Isparameterfilepresentinwebpackage0": "웹 패키지에 매개 변수 파일이 있는지 여부: %s",
   "loc.messages.Requestingconfigdetails": "구성 정보를 요청하는 중: %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "웹 패키지 %s을(를) 가상 경로(실제 경로) %s(%s)에 배포하는 중입니다.",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "%s에서 kudu 서비스를 사용하여 %s 패키지를 배포했습니다.",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Kudu 서비스를 사용하여 %s 패키지를 %s에 배포했습니다.",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Kudu 서비스를 사용하여 웹앱 패키지를 배포하지 못했습니다. %s",
   "loc.messages.Unabletodeploywebappresponsecode": "오류 코드로 인해 웹앱을 배포할 수 없습니다. %s",
   "loc.messages.Unabletopackagecontentoffolder": "폴더의 콘텐츠를 패키지할 수 없습니다. %s",

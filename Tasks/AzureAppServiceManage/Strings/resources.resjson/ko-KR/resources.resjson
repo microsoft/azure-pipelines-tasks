@@ -30,7 +30,7 @@
   "loc.messages.Failedtoupdateslotswaphistory": "Azure 웹앱에 대한 슬롯 교환 기록을 업데이트하지 못했습니다. %s",
   "loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "경고: 슬롯 교환 상태를 업데이트할 수 없습니다. 이 Azure 웹앱에는 SCM(소스 제어 관리자) 끝점을 사용할 수 없습니다.",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "이 Azure 웹앱에 대한 고유한 배포 ID를 검색할 수 없어서 Kudu 배포 로그를 업데이트할 수 없습니다.",
-  "loc.messages.FailedToSwapWebAppSlots": "Azure 웹앱의 슬롯을 교환하지 못했습니다. %s. 오류: %s",
+  "loc.messages.FailedToSwapWebAppSlots": "Azure 웹앱 슬롯을 교환하지 못했습니다. %s. 오류: %s",
   "loc.messages.SlotSwapOperationNotCompleted": "Azure 웹앱에 대한 슬롯 교환 작업이 완료되지 않았습니다. %s",
   "loc.messages.Successfullyswappedslots": "웹앱 %s 슬롯을 %s에서 %s(으)로 교환했습니다.",
   "loc.messages.SourceAndTargetSlotCannotBeSame": "소스 슬롯과 대상 슬롯이 같을 수 없습니다.",

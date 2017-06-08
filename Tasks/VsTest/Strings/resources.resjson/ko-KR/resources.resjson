@@ -89,7 +89,7 @@
   "loc.messages.tiaNotSupportedInDta": "영향을 받는 테스트만 실행하는 작업은 다중 에이전트 단계 설정을 사용할 경우 지원되지 않습니다. 이 옵션은 무시됩니다.",
   "loc.messages.overrideNotSupported": "테스트 실행 매개 변수 재정의는 runsettings 파일에서만 지원됩니다. 이 옵션은 무시됩니다.",
   "loc.messages.vstestVersionInvalid": "지정한 테스트 플랫폼 버전 %s은(는) 지원되지 않습니다.",
-  "loc.messages.configureDtaAgentFailed": "%s 오류가 발생하여 서버에 테스트 에이전트를 구성하는 작업이 %d번의 재시도 후 실패했습니다.",
+  "loc.messages.configureDtaAgentFailed": "서버에 테스트 에이전트를 구성하는 작업이 %d번의 재시도 후 실패했습니다(오류 %s).",
   "loc.messages.otherConsoleOptionsNotSupported": "다중 에이전트 단계 설정을 사용할 경우 기타 콘솔 옵션이 지원되지 않습니다. 이 옵션은 무시됩니다.",
   "loc.messages.distributedTestWorkflow": "분산된 테스트 흐름에서",
   "loc.messages.dtaNumberOfAgents": "분산된 테스트 실행, 단계의 에이전트 수: %s",
@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "테스트 계획 ID: %s",
   "loc.messages.testplanConfigInput": "테스트 계획 구성 ID: %s",
   "loc.messages.testSuiteSelected": "선택한 테스트 도구 모음 ID: %s",
-  "loc.messages.testAssemblyFilterInput": "테스트 어셈블리 필터: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "테스트 실행을 위해 선택한 Visual Studio 버전: %s",
   "loc.messages.runTestsLocally": "%s을(를) 사용하여 로컬로 테스트 실행",
   "loc.messages.vstestLocationSpecified": "%s, 지정된 위치: %s",
   "loc.messages.uitestsparallel": "동일한 컴퓨터에서 UI 테스트를 동시에 실행하면 오류가 발생할 수 있습니다. ‘병렬로 실행’ 옵션을 사용하지 않도록 설정하거나 별도의 작업을 사용하여 UI 테스트를 실행해 보세요. 자세히 알아보려면 https://aka.ms/paralleltestexecution을 참조하세요. ",
   "loc.messages.pathToCustomAdaptersInvalid": "사용자 지정 어댑터 '%s'에 대한 경로는 디렉터리로 있어야 합니다.",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "사용자 지정 어댑터 '%s'에 대한 경로에 테스트 어댑터가 포함되어 있지 않습니다. 올바른 경로를 제공하세요."
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "사용자 지정 어댑터 '%s'에 대한 경로에 테스트 어댑터가 포함되어 있지 않습니다. 올바른 경로를 제공하세요.",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }

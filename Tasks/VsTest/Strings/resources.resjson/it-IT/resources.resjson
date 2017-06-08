@@ -105,11 +105,16 @@
   "loc.messages.testPlanInput": "ID piano di test: %s",
   "loc.messages.testplanConfigInput": "ID configurazione piano di test: %s",
   "loc.messages.testSuiteSelected": "ID gruppo di test selezionato: %s",
-  "loc.messages.testAssemblyFilterInput": "Filtro assembly di test: %s",
+  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
   "loc.messages.vsVersionSelected": "Versione di Visual Studio selezionata per l'esecuzione dei test: %s",
   "loc.messages.runTestsLocally": "Eseguire i test in locale con %s",
   "loc.messages.vstestLocationSpecified": "%s. Posizione specificata: %s",
   "loc.messages.uitestsparallel": "L'esecuzione di test dell'interfaccia utente in parallelo nello stesso computer può comportare errori. Provare a disabilitare l'opzione 'Esegui in parallelo' o a eseguire i test dell'interfaccia utente con un'attività separata. Per altre informazioni, vedere https://aka.ms/paralleltestexecution ",
   "loc.messages.pathToCustomAdaptersInvalid": "Il percorso degli adattatori personalizzati '%s' deve essere una directory e deve essere già esistente.",
-  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Il percorso degli adattatori personalizzati '%s' non contiene alcun adattatore di test. Specificare un percorso valido."
+  "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Il percorso degli adattatori personalizzati '%s' non contiene alcun adattatore di test. Specificare un percorso valido.",
+  "loc.messages.testAssembliesSelector": "Test assemblies",
+  "loc.messages.testPlanSelector": "Test plan",
+  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
 }
