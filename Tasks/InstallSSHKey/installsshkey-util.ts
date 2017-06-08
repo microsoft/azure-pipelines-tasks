@@ -24,18 +24,9 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
     let success = true;
 
-    let options:trm.IExecOptions = <trm.IExecOptions> {
-        cwd: process.cwd(),
-        env: process.env,
-        silent: false,
-        failOnStdErr: false,
-        ignoreReturnCode: true,
-        windowsVerbatimArguments: false,
-        outStream:<stream.Writable>process.stdout,
-        errStream:<stream.Writable>process.stderr
-    };
-
-    let cp = child.spawn(tool, args, {});
+    let cp = child.spawn(tool, args, {
+        detached: true // required to work on macOS
+    });
 
     var processLineBuffer = (data: Buffer, strBuffer: string, onLine:(line: string) => void): void => {
         try {
@@ -60,7 +51,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
 
     var stdbuffer: string = '';
     cp.stdout.on('data', (data: Buffer) => {
-        options.outStream.write(data);
+        process.stdout.write(data);
         processLineBuffer(data, stdbuffer, (line: string) => {
             tl.debug('stdline:' + line);    
         });
@@ -69,8 +60,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
     var errbuffer: string = '';
     cp.stderr.on('data', (data: Buffer) => {
         // ssh-add puts output on stderr
-        var s = options.errStream;
-        s.write(data);
+        process.stderr.write(data);
         processLineBuffer(data, errbuffer, (line: string) => {
             tl.debug('errline:' + line);    
         });            
@@ -91,11 +81,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
             tl.debug('errline:' + errbuffer);
         }
 
-        if (code != 0 && !options.ignoreReturnCode) {
-            tl.debug('Do not ignore return code: ' + code);
-            success = false;
-        }
-
+        // Always ignore the return code
         tl.debug('success:' + success);
         if (!success) {
             defer.reject(new Error(tool + ' failed with return code: ' + code));
