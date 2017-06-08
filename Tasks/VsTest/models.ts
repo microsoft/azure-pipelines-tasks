@@ -33,7 +33,6 @@ export interface TestConfigurations {
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
     runTestsInIsolation: boolean;
-    vs15HelperPath: string;
     otherConsoleOptions: string;
 }
 

@@ -160,12 +160,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    // only to facilitate the writing of unit tests 
-    testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
-    if (!testConfiguration.vs15HelperPath) {
-        testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
-    }
-
     versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 

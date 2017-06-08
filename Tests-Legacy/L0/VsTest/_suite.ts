@@ -190,7 +190,7 @@ describe('VsTest Suite', function () {
         const vstestCmd = ['\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe', '/path/to/test.dll', '/logger:trx'].join(' ');
         setResponseFile('vs2017.json');
 
-        const tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest', false, true, false);
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/path/to/test.dll');
         tr.setInput('vsTestVersion', 'latest');
@@ -214,7 +214,7 @@ describe('VsTest Suite', function () {
         const vstestCmd = ['\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe', '/path/to/test.dll', '/logger:trx'].join(' ');
         setResponseFile('vs2015.json');
 
-        const tr = new trm.TaskRunner('VSTest');
+        const tr = new trm.TaskRunner('VSTest', false, true, false);
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/path/to/test.dll');
         tr.setInput('vsTestVersion', 'latest');
@@ -1096,14 +1096,14 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');       
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('searchFolder','E:\\source\\dir\\..');        
+        tr.setInput('searchFolder','E:\\source\\dir\\..');
 
         tr.run()
-            .then(() => {                
+            .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
@@ -1122,14 +1122,14 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         const tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');       
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('searchFolder','E:\\source\\.\\dir');        
+        tr.setInput('searchFolder','E:\\source\\.\\dir');
 
         tr.run()
-            .then(() => {                
+            .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length === 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
@@ -1142,7 +1142,7 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
-    
+
     it('Vstest task with settings file path with double dots is supported', (done) => {
 
         setResponseFile('vstestGood.json');
@@ -1189,7 +1189,7 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
-    
+
     it('Vstest task with custom adapter path with double dots is supported', (done) => {
 
         setResponseFile('vstestGood.json');
@@ -1238,5 +1238,5 @@ describe('VsTest Suite', function () {
                 console.log(tr.stdout);
                 done(err);
             });
-    });    
+    });
 });
