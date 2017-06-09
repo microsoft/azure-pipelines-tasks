@@ -115,7 +115,7 @@
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
   "loc.messages.testAssembliesSelector": "Test assemblies",
   "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testRunSelector": "Test run",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id : '%s'"
 }
