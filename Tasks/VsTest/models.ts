@@ -1,8 +1,22 @@
 import * as version from './vstestversion';
 
 export interface TestConfigurations {
+    testSelection: string;
+
+    // ranjanar : TODO : Plan for better modelling of these
+    // Test Assembly Related Properties
     sourceFilter: string[];
     testcaseFilter: string;
+
+    // Test Plan related Properties
+    testplan: number;
+    testSuites: number[];
+    testPlanConfigId: number;
+
+    // Test Run Related Properties
+    onDemandTestRunId: string;
+
+    // Common Properties
     settingsFile: string;
     testDropLocation: string; // search folder
     overrideTestrunParameters: string;
@@ -19,16 +33,10 @@ export interface TestConfigurations {
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
     runTestsInIsolation: boolean;
-    vs15HelperPath: string;
-    testSelection: string; // "testPlan" as selection string
-    testplan: number;
-    testSuites: number[];
-    testPlanConfigId: number;
     otherConsoleOptions: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
-    onDemandTestRunId: string;
     testConfigurationMapping: string; // TODO : What is this?
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;

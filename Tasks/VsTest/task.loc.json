@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 52
+    "Patch": 55
   },
   "demands": [
     "vstest"
@@ -399,6 +399,11 @@
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
     "uitestsparallel": "ms-resource:loc.messages.uitestsparallel",
     "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid",
-    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters"
+    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters",
+    "testAssembliesSelector": "ms-resource:loc.messages.testAssembliesSelector",
+    "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
+    "testRunSelector": "ms-resource:loc.messages.testRunSelector",
+    "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput"
   }
 }

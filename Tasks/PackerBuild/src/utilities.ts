@@ -68,6 +68,22 @@ export async function unzip(zipLocation, unzipLocation): Promise<string> {
     return finishPromise;
 }
 
+export function readJsonFile(filePath: string): string {
+    var content = null;
+    if (tl.exist(filePath)) {
+        var content = fs.readFileSync(filePath, 'utf8').toString();
+        
+        // remove BOM
+        if (content.indexOf('\uFEFF') == 0) {
+            content = content.slice(1);
+        }
+    }
+    else {
+        tl.debug('Json file not found: ' + filePath);
+    }
+    return content;
+}
+
 export function writeFile(filePath: string, content: string): void {
     tl.writeFile(filePath, content);
 }
@@ -114,6 +130,10 @@ export function HasItems(arr: any[]): boolean {
     }
 
     return true;
+}
+
+export function sleep (time): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
 }
 
 export function deleteDirectory(dir: string): void {
