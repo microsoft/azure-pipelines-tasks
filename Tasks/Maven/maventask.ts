@@ -15,6 +15,7 @@ import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
+import util = require('./mavenutil');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -26,6 +27,10 @@ var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
 var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);
 var mavenGoals: string[] = tl.getDelimitedInput('goals', ' ', true); // This assumes that goals cannot contain spaces
 var mavenOptions: string = tl.getInput('options', false); // Options can have spaces and quotes so we need to treat this as one string and not try to parse it
+var selectSources: string = tl.getInput('selectSources', true);
+var vstsFeedName: string = tl.getInput('vstsFeedName', false);
+var includeMavenCentral: boolean = tl.getBoolInput('includeMavenCentral', false);
+var includeJCenter: boolean = tl.getBoolInput('includeJCenter', false);
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
@@ -47,6 +52,7 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
+
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
@@ -128,6 +134,8 @@ async function execBuild() {
     ccReportTask = await execEnableCodeCoverage();
     var userRunFailed: boolean = false;
     var codeAnalysisFailed: boolean = false;
+    let mavenFeedUrl:string = null;
+    let mavenFeedId:string = null;
 
     // Setup tool runner that executes Maven only to retrieve its version
     var mvnGetVersion = tl.tool(mvnExec);
@@ -136,6 +144,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
+    let settingsXmlFile: string = null;
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -143,10 +152,92 @@ async function execBuild() {
             process.exit(1);
         })
         .then(function (code) {
+            return util.getMavenFeedRegistryUrl(vstsFeedName).then(function (feed) {
+                mavenFeedId = feed.mavenFeedId;
+                mavenFeedUrl = feed.mavenFeedUrl;
+                return Q.resolve("Got feed");
+            });
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {
+            if (selectSources === 'PomXmlOnlySources') {
+                tl.debug('using pom.xml; skipping task authentication');
+                return Q.resolve(code);
+            }
+            settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+
+            tl.debug('checking to see if there are settings.xml in use');
+            let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
+            if (options) {
+                mavenOptions = '';
+                for (let i = 0; i < options.length; ++i) {
+                    if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                        i++; // increment to the file name
+                        let suppliedSettingsXml: string = options[i];
+                        tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                        tl.debug('using settings file: ' + settingsXmlFile);
+                    } else {
+                        if (mavenOptions) {
+                            mavenOptions.concat(' ');
+                        }
+                        mavenOptions.concat(options[i]);
+                    }
+                }
+            }
+            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, mavenFeedId);
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {
+            if (selectSources === 'PomXmlOnlySources') {
+                tl.debug('Using only sources in the pom.xml file');
+                return Q.resolve(code);
+            }
+            
+            tl.debug('Insert repositories into pom');
+            let mavenPOMOrigFile:string = mavenPOMFile;
+            let mavenPOMExt: string = path.extname(mavenPOMOrigFile);
+            mavenPOMFile = path.join(path.dirname(mavenPOMOrigFile), path.basename(mavenPOMOrigFile)) + '-repo.';
+            let collision: number = 0;
+            let mavenPOMFileLast = mavenPOMFile;
+            while (tl.exist(mavenPOMFile + collision + mavenPOMExt)) {
+                collision++;
+            }
+            mavenPOMFile = mavenPOMFile + collision + mavenPOMExt; // Unique
+
+            tl.debug('Using pom file: ' + mavenPOMFile);
+            tl.cp(mavenPOMOrigFile, mavenPOMFile, '');
+            return util.readPomAsJson(mavenPOMOrigFile).fail(function (err) {
+                console.error(err.message);
+                userRunFailed = true; // Record the error and continue
+            })
+            .then(function (pomJson) {
+                tl.debug('writing repos to pom');
+                util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
+                util.insertRepoIntoPomJson(pomJson, 
+                    mavenFeedId, 
+                    mavenFeedUrl);
+                return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
+            })
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {            
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
+            if (settingsXmlFile) {
+                mvnRun.arg('-s');
+                mvnRun.arg(settingsXmlFile);
+            }
             mvnRun.line(mavenOptions);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
@@ -155,7 +246,7 @@ async function execBuild() {
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
+            mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
@@ -163,13 +254,20 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
-            return mvnRun.exec(); // Run Maven with the user specified goals
+            var env = process.env;
+            env[util.accessTokenEnvSetting] = util.getAuthenticationToken();
+            return mvnRun.execSync({
+                env: env,
+            }); // Run Maven with the user specified goals
         })
         .fail(function (err) {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
+            if (code && code['code'] != 0) {
+                userRunFailed = true;
+            }
             // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
 
             // The files won't be created if the build failed, and the user should probably fix their build first.
@@ -197,6 +295,7 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
                 if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
