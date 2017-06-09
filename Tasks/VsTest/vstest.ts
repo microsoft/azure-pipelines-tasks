@@ -946,7 +946,6 @@ function getTIALevel() {
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     return utils.Helper.readFileContents(filePath, 'utf-8').then(function (resp) {
-        if (resp === '/Tests:' || resp === '/TestCaseFilter:') {
             return true;
         }
         else {
