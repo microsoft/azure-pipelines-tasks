@@ -3,6 +3,7 @@
 ### Overview
 
 This task is used for downloading secrets(such as authentication keys, storage account keys, data encryption keys, .PFX files, and passwords)  from a given [Azure key vault](https://docs.microsoft.com/en-us/rest/api/keyvault/about-keys--secrets-and-certificates?redirectedfrom=MSDN#key-vault-secrets-1) instance.
+This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks.
 Task is node based and works with Xplat agents  (Windows, Linux or OSX).
 
 ## Contact Information

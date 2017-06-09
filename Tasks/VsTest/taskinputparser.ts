@@ -9,7 +9,6 @@ import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations() {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
 
@@ -34,8 +33,6 @@ export function getDistributedTestConfigurations() {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
     tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
-
-    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
@@ -94,7 +91,7 @@ function getDtaInstanceId(): number {
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.testSelection = tl.getInput('testSelector');
-    tl._writeLine(tl.loc('testSelectorInput', testConfiguration.testSelection));
+    getTestSelectorBasedInputs(testConfiguration);
 
     testConfiguration.testDropLocation = tl.getInput('searchFolder');
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation))
@@ -102,9 +99,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         testConfiguration.testDropLocation = path.resolve(testConfiguration.testDropLocation);
     }
     tl._writeLine(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
-
-    testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
-    tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
@@ -145,25 +139,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
 
-    if (testConfiguration.testSelection.toLowerCase() === 'testplan') {
-        testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
-        tl._writeLine(tl.loc('testPlanInput', testConfiguration.testplan));
-
-        testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
-        tl._writeLine(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
-
-        const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
-        testConfiguration.testSuites = new Array<number>();
-        testSuiteStrings.forEach(element => {
-            const testSuiteId = parseInt(element);
-            tl._writeLine(tl.loc('testSuiteSelected', testSuiteId));
-            testConfiguration.testSuites.push(testSuiteId);
-        });
-    } else {
-        testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-        tl._writeLine(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
-    }
-
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
     if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
@@ -185,13 +160,45 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    // only to facilitate the writing of unit tests 
-    testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
-    if (!testConfiguration.vs15HelperPath) {
-        testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
-    }
-
     versionFinder.getVsTestRunnerDetails(testConfiguration);
+}
+
+function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations) {
+    const testSelection = testConfiguration.testSelection.toLowerCase();
+    switch (testSelection) {
+        case 'testplan':
+            tl._writeLine(tl.loc('testSelectorInput', tl.loc('testPlanSelector')));
+            testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
+            tl._writeLine(tl.loc('testPlanInput', testConfiguration.testplan));
+
+            testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+            tl._writeLine(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
+
+            const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+            testConfiguration.testSuites = new Array<number>();
+            testSuiteStrings.forEach(element => {
+                const testSuiteId = parseInt(element);
+                tl._writeLine(tl.loc('testSuiteSelected', testSuiteId));
+                testConfiguration.testSuites.push(testSuiteId);
+            });
+            break;
+        case 'testassemblies':
+            tl._writeLine(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));
+            testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+            tl._writeLine(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
+
+            testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
+            tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
+            break;
+        case 'testrun':
+            tl._writeLine(tl.loc('testSelectorInput', tl.loc('testRunSelector')));
+            testConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+            if (parseInt(testConfiguration.onDemandTestRunId) <= 0) {
+                throw new Error(tl.loc('testRunIdInvalid', testConfiguration.onDemandTestRunId));
+            }
+            tl._writeLine(tl.loc('testRunIdInput', testConfiguration.onDemandTestRunId));
+            break;
+    }
 }
 
 function getTiaConfiguration(): models.TiaConfiguration {

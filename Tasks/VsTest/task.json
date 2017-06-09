@@ -1,4 +1,4 @@
-{
+﻿{
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 54
+        "Patch": 57
     },
     "demands": [
         "vstest"
@@ -184,7 +184,7 @@
                 "location": "Specific location"
             }
         },
-        {  
+        {
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "Test platform version",
@@ -393,12 +393,17 @@
         "testPlanInput": "Test plan Id : %s",
         "testplanConfigInput": "Test plan configuration Id : %s",
         "testSuiteSelected": "Test suite Id selected: %s",
-        "testAssemblyFilterInput": "Test assembly filter : %s",
+        "testAssemblyFilterInput": "Test assemblies : %s",
         "vsVersionSelected": "VisualStudio version selected for test execution : %s",
         "runTestsLocally": "Run the tests locally using %s",
         "vstestLocationSpecified": "%s, specified location : %s",
         "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
         "pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and it should exist.",
-        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
+        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
+        "testAssembliesSelector": "Test assemblies",
+        "testPlanSelector": "Test plan",
+        "testRunSelector": "Test run (for on-demand runs)",
+        "testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
+        "testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
     }
 }
