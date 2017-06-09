@@ -45,6 +45,13 @@ export class Helper {
         return input.replace(/\s/g, '').length < 1;
     }
 
+    public static trimString(input: string): string {
+        if (input) {
+            return input.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, '');
+        }
+        return input;
+    }
+
     public static pathExistsAsFile(path: string) {
         return tl.exist(path) && tl.stats(path).isFile();
     }
