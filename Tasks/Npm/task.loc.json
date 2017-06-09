@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -89,7 +89,10 @@
       "label": "ms-resource:loc.input.label.customEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
       "type": "connectedService:externalnpmregistry",
-      "visibleRule": "customRegistry = useNpmrc"
+      "visibleRule": "customRegistry = useNpmrc",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     },
     {
       "groupName": "publishRegistries",

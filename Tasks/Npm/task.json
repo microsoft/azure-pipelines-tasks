@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
@@ -89,7 +89,10 @@
             "label": "Credentials for registries outside this account/collection",
             "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
-            "visibleRule": "customRegistry = useNpmrc"
+            "visibleRule": "customRegistry = useNpmrc",
+            "properties": {
+                "MultiSelectFlatList": "true"
+            }
         },
         {
             "groupName": "publishRegistries",
