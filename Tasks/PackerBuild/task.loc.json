@@ -199,6 +199,14 @@
       }
     },
     {
+      "name": "skipTempFileCleanupDuringVMDeprovision",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipTempFileCleanupDuringVMDeprovision",
+      "defaultValue": true,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipTempFileCleanupDuringVMDeprovision"
+    },
+    {
       "name": "imageUri",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageUri",
