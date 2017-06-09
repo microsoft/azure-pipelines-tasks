@@ -20,7 +20,6 @@ export class VSTestVersion {
     }
 }
 
-
 export class Dev14VSTestVersion extends VSTestVersion {
     constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {
         super(runnerLocation, 14, minorVersion, patchNumber);
