@@ -74,7 +74,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testPlan",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "properties": {
         "DisableManageLink": "True"
       },
@@ -87,7 +87,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testSuite",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "properties": {
         "MultiSelect": "True",
         "DisableManageLink": "True"

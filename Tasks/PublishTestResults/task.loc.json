@@ -17,7 +17,7 @@
   },
   "demands": [],
   "preview": "true",
-  "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
