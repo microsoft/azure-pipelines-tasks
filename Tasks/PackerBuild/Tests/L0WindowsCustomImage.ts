@@ -21,6 +21,7 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
 tr.setInput("additionalBuilderParameters", "{}");
+tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -51,11 +52,11 @@ let a: any = <any>{
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_url=https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/vsts-buildimagetask/Release-1-osDisk.2d175222-b257-405f-a07f-0af4dc4b3dc4.vhd -var location=South India -var capture_name_prefix=Release-1 -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\custom.windows.template-fixed.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_url=https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/vsts-buildimagetask/Release-1-osDisk.2d175222-b257-405f-a07f-0af4dc4b3dc4.vhd -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\custom.windows.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_url=https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/vsts-buildimagetask/Release-1-osDisk.2d175222-b257-405f-a07f-0af4dc4b3dc4.vhd -var location=South India -var capture_name_prefix=Release-1 -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\custom.windows.template-fixed.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_url=https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/vsts-buildimagetask/Release-1-osDisk.2d175222-b257-405f-a07f-0af4dc4b3dc4.vhd -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\custom.windows.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
         }

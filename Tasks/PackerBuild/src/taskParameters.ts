@@ -27,6 +27,7 @@ export default class TaskParameters {
     public deployScriptArguments: string;
 
     public additionalBuilderParameters: {};
+    public skipTempFileCleanupDuringVMDeprovision: boolean = true;
 
     public imageUri: string;
 
@@ -66,7 +67,7 @@ export default class TaskParameters {
 
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));                   
-
+            this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
         } 
         catch (error) {
