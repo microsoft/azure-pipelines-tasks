@@ -37,8 +37,6 @@ export async function run(nuGetPath: string): Promise<void> {
     let buildIdentityAccount: string = null;
 
     try {
-        
-
         nutil.setConsoleCodePage();
 
         // Reading inputs

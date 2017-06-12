@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -131,7 +131,7 @@
             "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this account/collection, leave this blank; the build’s credentials are used automatically.",
             "properties": {
                 "EditableOptions": "False",
-                "MultiSelect": "True"
+                "MultiSelectFlatList": "True"
             },
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = config"

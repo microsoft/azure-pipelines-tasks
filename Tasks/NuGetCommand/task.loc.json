@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -130,7 +130,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.externalEndpoints",
       "properties": {
         "EditableOptions": "False",
-        "MultiSelect": "True"
+        "MultiSelectFlatList": "True"
       },
       "groupName": "restoreAuth",
       "visibleRule": "selectOrConfig = config"
