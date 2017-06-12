@@ -322,7 +322,7 @@ export class JobQueue {
                     if (thisQueue.taskOptions.capturePipeline) {
                         message = tl.loc('JenkinsPipelineComplete');
                     } else if (thisQueue.taskOptions.captureConsole) {
-                        message = tl.loc('JenkinsJobCompletee');
+                        message = tl.loc('JenkinsJobComplete');
                     } else {
                         message = tl.loc('JenkinsJobQueued');
                     }
