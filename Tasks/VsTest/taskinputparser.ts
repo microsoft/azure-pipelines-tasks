@@ -237,7 +237,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.userMapFile = tl.getVariable('tia.usermapfile');
 
     // disable editing settings file to switch on data collector
-    if (tl.getVariable('tia.disabledatacollector') && tl.getVariable('tia.disabledatacollector').toUpperCase() === 'TRUE') {
+    if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
         tiaConfiguration.disableEnablingDataCollector = true;
     } else {
         tiaConfiguration.disableEnablingDataCollector = false;
