@@ -46,7 +46,8 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariableLocationName, taskParameters.location);        
 
         var capturePrefix = tl.getVariable('release.releaseName') || tl.getVariable('build.buildnumber') || "vstscapture";
-        this._templateVariables.set(constants.TemplateVariableCapturePrefixName, capturePrefix);        
+        this._templateVariables.set(constants.TemplateVariableCapturePrefixName, capturePrefix);  
+        this._templateVariables.set(constants.TemplateVariableSkipCleanName, taskParameters.skipTempFileCleanupDuringVMDeprovision.toString());      
         
         // user deployment script specific variables
         var deployScriptPath = taskParameters.deployScriptPath;
