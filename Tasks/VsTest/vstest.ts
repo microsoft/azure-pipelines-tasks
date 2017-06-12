@@ -255,8 +255,6 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     const selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg('GetImpactedtests');
 
-
-
     if (tiaConfig.context === 'CD') {
         // Release context. Passing Release Id.
         definitionRunId = tl.getVariable('Release.ReleaseId');
@@ -307,7 +305,8 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
             'platform': platformInput,
             'configuration': configurationInput,
             'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
-            'TestCaseFilterOutputFile' : testCaseFilterOutputFile ? testCaseFilterOutputFile : ""
+            'testCaseFilterOutputFile' : testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
+            'isCustomEngineEnabled' : String(!utils.Helper.isNullOrWhitespace(tiaConfig.userMapFile))
         },
         silent: null,
         failOnStdErr: null,
@@ -396,7 +395,7 @@ function publishCodeChanges(testCaseFilterFile: string): Q.Promise<string> {
             'baselinefile': tiaConfig.baseLineBuildIdFile,
             'context': tiaConfig.context,
             'filter': pathFilters,
-            'UserMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : "",
+            'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : "",
             'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : ""
         },
         silent: null,
@@ -946,7 +945,7 @@ function getTIALevel() {
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     return utils.Helper.readFileContents(filePath, 'utf-8').then(function (resp) {
-        if (resp === '/Tests:' || resp === '/TestCaseFilter:') {
+        if (resp === '/Tests:"' || resp === '/Tests:' || resp === '/TestCaseFilter:') {
             return true;
         }
         else {
