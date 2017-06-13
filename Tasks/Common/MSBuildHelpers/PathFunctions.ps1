@@ -177,16 +177,13 @@ function Get-VisualStudio_15_0 {
     try {
         if (!$script:visualStudioCache.ContainsKey('15.0')) {
             try {
-                # Query for the latest 15.0.* version.
+                # Query for the latest 15.* version.
                 #
-                # Note, even though VS 15 Update 1 is sometimes referred to as "15.1", the actual installation
-                # version number is 15.0.26403.7.
-                #
-                # Also note, the capability is registered as VisualStudio_15.0, so the following code should
-                # query for 15.0.* versions only.
+                # Note, the capability is registered as VisualStudio_15.0, however the actual version
+                # may be something like 15.2.
                 Write-Verbose "Getting latest Visual Studio 15 setup instance."
                 $output = New-Object System.Text.StringBuilder
-                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,15.1) -latest -format json" -RequireExitCodeZero 2>&1 |
+                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -latest -format json" -RequireExitCodeZero 2>&1 |
                     ForEach-Object {
                         if ($_ -is [System.Management.Automation.ErrorRecord]) {
                             Write-Verbose "STDERR: $($_.Exception.Message)"
