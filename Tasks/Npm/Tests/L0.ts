@@ -60,6 +60,20 @@ describe('Npm Task', function () {
     });
 
     // custom
+    it('custom command succeeds with single service endpoint', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'custom-singleEndpoint.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('npm custom successful'), 'npm custom command should have run');
+        assert(tr.stdOutContained('http://example.com/1/'), 'debug output should have contained endpoint');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it('custom command should return npm version', (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'custom-version.js');
@@ -127,6 +141,21 @@ describe('Npm Task', function () {
 
         assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
         assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('install using multiple endpoints', (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'install-multipleEndpoints.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('http://example.com/1/'), 'debug output should have contained endpoint');
+        assert(tr.stdOutContained('http://example.com/2/'), 'debug output should have contained endpoint');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();

@@ -21,9 +21,10 @@ export async function run(command?: string): Promise<void> {
             break;
         case RegistryLocation.Npmrc:
             tl.debug(tl.loc('UseNpmrc'));
-            let endpointId = tl.getInput(NpmTaskInput.CustomEndpoint);
-            if (endpointId) {
-                npmRegistries.push(NpmRegistry.FromServiceEndpoint(endpointId, true));
+            let endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
+            if (endpointIds && endpointIds.length > 0) {
+                let endpointRegistries = endpointIds.map(e => NpmRegistry.FromServiceEndpoint(e, true));
+                npmRegistries = npmRegistries.concat(endpointRegistries);
             }
             break;
     }
