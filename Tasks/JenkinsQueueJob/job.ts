@@ -167,6 +167,12 @@ export class Job {
     }
 
     setStreaming(executableNumber: number): void {
+        // If we aren't waiting for the job to finish then we should end it now
+        if (!this.queue.taskOptions.captureConsole) { // transition to Finishing
+            this.changeState(JobState.Streaming);
+            this.changeState(JobState.Finishing);
+            return;
+        }
         if (this.state == JobState.New || this.state == JobState.Locating) {
             this.executableNumber = executableNumber;
             this.executableUrl = Util.addUrlSegment(this.taskUrl, this.executableNumber.toString());
