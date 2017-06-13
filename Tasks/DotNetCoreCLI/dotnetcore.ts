@@ -27,17 +27,16 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        if (this.command === "custom") {
+            this.command = tl.getInput("custom", true);
+        }
 
         switch(this.command) {
             case "build":
             case "publish":
             case "run":
             case "test":
-                await this.executeBasicCommand(this.command);
-                break;
-            case "custom":
-                const custom = tl.getInput("custom", true);
-                await this.executeBasicCommand(custom);
+                await this.executeBasicCommand();
                 break;
             case "restore":
                 await restoreCommand.run();
@@ -53,7 +52,7 @@ export class dotNetExe {
         }
     }
 
-    private async executeBasicCommand(command: string) {
+    private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();

@@ -95,7 +95,7 @@
             "type": "multiLine",
             "label": "Path to project(s)",
             "defaultValue": "",
-            "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || command = publish",
+            "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
             "required": false,
             "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. */.csproj for all .csproj files in all subfolders)."
         },
@@ -113,7 +113,7 @@
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",
-            "visibleRule": "command = build || command = publish || command = run || command = test",
+            "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, rutime. The arguments depend on the command selected."
         },
