@@ -2,7 +2,7 @@
     "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
     "name": "DotNetCoreCLI",
     "friendlyName": ".NET Core",
-    "description": "Build, test and publish using dotnet core command-line.",
+    "description": "Build, test, package, or publish a dotnet application, or run a custom dotnet command. For package commands, supports NuGet.org and authenticated feeds like Package Management and MyGet.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
     "category": "Build",
@@ -66,7 +66,7 @@
             "label": "Command",
             "defaultValue": "build",
             "required": true,
-            "helpMarkDown": "Select a dotnet command. Select 'Custom' to enter any dotnet command with arguments.",
+            "helpMarkDown": "The dotnet command to run. Select 'Custom' to add arguments or use a command not listed here.",
             "options": {
                 "build": "build",
                 "push": "nuget push",
@@ -93,11 +93,11 @@
         {
             "name": "projects",
             "type": "multiLine",
-            "label": "Project(s)",
+            "label": "Path to project(s)",
             "defaultValue": "",
             "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || command = publish",
             "required": false,
-            "helpMarkDown": "Relative path of the .csproj file(s) from repo root. Wildcards can be used. For example, **/*.csproj for all .csproj files in all the sub folders."
+            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. */.csproj for all .csproj files in all subfolders)."
         },
         {
             "name": "custom",
