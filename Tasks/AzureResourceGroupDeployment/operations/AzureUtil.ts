@@ -1,8 +1,8 @@
-import networkManagementClient = require("./azure-rest/azure-arm-network");
-import computeManagementClient = require("./azure-rest/azure-arm-compute");
+import networkManagementClient = require("azure-arm-rest/azure-arm-network");
+import computeManagementClient = require("azure-arm-rest/azure-arm-compute");
 import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("vsts-task-lib/task")
-import az = require("./azure-rest/azureModels");
+import az = require("azure-arm-rest/azureModels");
 import utils = require("./Utils");
 
 export class NetworkInterface {
