@@ -135,6 +135,23 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('restore single solution with nuget config and multiple service connections', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/multipleServiceConnections.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet with ConfigFile specified');
+        assert(tr.stdOutContained('adding token auth entry for feed https://endpoint1.visualstudio.com/path'), 'it should have added auth entry for endpoint 1');
+        assert(tr.stdOutContained('adding token auth entry for feed https://endpoint2.visualstudio.com/path'), 'it should have added auth entry for endpoint 2');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('publish works with explicit project files', (done: MochaDone) => {
 
         process.env["__projects__"] = '**/project.json';
