@@ -3,7 +3,7 @@ import * as path from 'path';
 import { TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
 import * as tmrm from 'vsts-task-lib/mock-run';
 
-import { NpmCommand, NpmTaskInput } from '../Constants';
+import { NpmCommand, NpmTaskInput } from '../constants';
 import { NpmMockHelper } from './NpmMockHelper';
 
 let taskPath = path.join(__dirname, '..', 'npm.js');
