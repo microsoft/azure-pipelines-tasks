@@ -1,0 +1,6 @@
+{
+    "messages": {
+        "ActionTimedOut": "Timed out.",
+        "RetryAfterMessage": "Retrying after {0} seconds..."
+    }
+}
