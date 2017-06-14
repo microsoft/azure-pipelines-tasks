@@ -120,7 +120,7 @@
         "PreviousBuildNumberLabel": "Previous build number: '{0}'",
         "PreviousBuildLocationLabel": "Previous build location: '{0}'",
         "NoPreviousSuccessfulBuild": "Could not find previous build to compare against.",
-        "NoManifestInPreviousBuild": "Previous build does not contains application manifest. Force updating application type version.",
+        "NoManifestInPreviousBuild": "Previous build does not contains application manifest. Force updating all manifest versions.",
         "UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'.",
         "UpdatedServiceVerison": "Updated service '{0}' to version '{1}'.",
         "UpdatedPackageVerison": "Updated package '{0}\\{1}' to version '{2}'.",
