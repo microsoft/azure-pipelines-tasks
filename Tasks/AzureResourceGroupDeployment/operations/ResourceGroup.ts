@@ -10,7 +10,7 @@ import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("./azure-rest/azure-arm-resource");
+import armResource = require("azure-arm-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
