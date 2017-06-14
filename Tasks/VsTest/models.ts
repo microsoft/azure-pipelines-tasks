@@ -69,4 +69,6 @@ export interface TiaConfiguration {
     isPrFlow: string;
     context: string;
     useTestCaseFilterInResponseFile: string;
+    userMapFile: string;
+    disableEnablingDataCollector: boolean;
 }
