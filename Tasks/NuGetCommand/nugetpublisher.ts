@@ -329,7 +329,6 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         return false;
     }
 
-    // NOTE: This should return true once VstsNuGetPush is packaged within the task
-    return false;
+    return true;
 }
 
