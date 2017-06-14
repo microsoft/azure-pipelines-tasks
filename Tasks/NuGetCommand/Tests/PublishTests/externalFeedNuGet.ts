@@ -38,7 +38,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
-process.env["NuGet_ForceNuGetForPush"] = "true";
+process.env["NUGET_FORCENUGETFORPUSH"] = "true";
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
