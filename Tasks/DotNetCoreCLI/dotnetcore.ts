@@ -3,6 +3,11 @@ import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
 
+import * as restoreCommand from './restorecommand';
+import * as packCommand from './packcommand';
+import * as pushCommand from './pushcommand';
+
+
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -22,6 +27,32 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        if (this.command === "custom") {
+            this.command = tl.getInput("custom", true);
+        }
+
+        switch(this.command) {
+            case "build":
+            case "publish":
+            case "run":
+            case "test":
+                await this.executeBasicCommand();
+                break;
+            case "restore":
+                await restoreCommand.run();
+                break;
+            case "pack":
+                await packCommand.run();
+                break;
+            case "push":
+                await pushCommand.run();
+                break;
+            default:
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        }
+    }
+
+    private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
@@ -69,7 +100,7 @@ export class dotNetExe {
                 outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
             }
             else {
-                var pattern = "/**/publish";
+                var pattern = "**/publish";
                 var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];

@@ -6,37 +6,40 @@ import * as tl from "vsts-task-lib/task";
 
 import * as auth from "./Authentication";
 import { IPackageSource } from "./Authentication";
-import * as ngToolRunner from "./NuGetToolRunner";
+import * as ngToolRunner from "./NuGetToolRunner2";
 
 let xmlreader = require("xmlreader");
 
+// NuGetConfigHelper2 handles authenticated scenarios where the user selects a source from the UI or from a service connection.
+// It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
-export class NuGetConfigHelper {
-    private tempNugetConfigBaseDir
-        = tl.getVariable("Agent.BuildDirectory")
-        || tl.getVariable("Agent.ReleaseDirectory")
-        || process.cwd();
-    private tempNugetConfigDir = path.join(this.tempNugetConfigBaseDir, "Nuget");
-    private tempNugetConfigFileName = "tempNuGet_" + tl.getVariable("build.buildId") + ".config";
+export class NuGetConfigHelper2 {
     public tempNugetConfigPath = undefined;
 
     constructor(
         private nugetPath: string,
         private nugetConfigPath: string,
-        private authInfo: auth.NuGetAuthInfo,
-        private environmentSettings: ngToolRunner.NuGetEnvironmentSettings) 
+        private authInfo: auth.NuGetExtendedAuthInfo,
+        private environmentSettings: ngToolRunner.NuGetEnvironmentSettings,
+        private tempConfigPath: string /*optional*/)
     {
+        this.tempNugetConfigPath = tempConfigPath || this.getTempNuGetConfigPath();
     }
+
+    public static getTempNuGetConfigBasePath() {
+        return tl.getVariable("Agent.BuildDirectory")
+        || tl.getVariable("Agent.ReleaseDirectory")
+        || process.cwd();
+     }
 
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
         console.log(tl.loc("Info_SavingTempConfig"));
         
-        if (!tl.exist(this.tempNugetConfigDir)) {
-            tl.mkdirP(this.tempNugetConfigDir);
+        let tempNuGetConfigDir = path.dirname(this.tempNugetConfigPath);
+        if (!tl.exist(tempNuGetConfigDir)) {
+            tl.mkdirP(tempNuGetConfigDir);
         }
-
-        this.tempNugetConfigPath = path.join(this.tempNugetConfigDir, this.tempNugetConfigFileName);
 
         if (!tl.exist(this.tempNugetConfigPath))
         {
@@ -62,7 +65,8 @@ export class NuGetConfigHelper {
     public async setAuthForSourcesInTempNuGetConfigAsync(): Promise<void>
     {
         tl.debug('Setting auth in the temp nuget.config');
-        
+        this.ensureTempConfigCreated();
+
         let sources = await this.getSourcesFromTempNuGetConfig();
         if (sources.length < 1)
         {
@@ -70,7 +74,6 @@ export class NuGetConfigHelper {
             return;
         }
 
-        this.ensureTempConfigCreated();
         sources.forEach((source) => {
             if (source.isInternal)
             {
@@ -119,6 +122,12 @@ export class NuGetConfigHelper {
                 }
             }
         });
+    }
+
+    private getTempNuGetConfigPath(): string {
+        const tempNuGetConfigBaseDir = NuGetConfigHelper2.getTempNuGetConfigBasePath();
+        const tempNuGetConfigFileName = "tempNuGet_" + tl.getVariable("build.buildId") + ".config";
+        return path.join(tempNuGetConfigBaseDir, "Nuget", tempNuGetConfigFileName);
     }
 
     private getSourcesFromTempNuGetConfig(): Q.Promise<IPackageSource[]> {

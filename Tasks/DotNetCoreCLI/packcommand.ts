@@ -3,35 +3,21 @@ import * as nutil from "nuget-task-common/Utility";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as path from "path";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import * as packUtils from "./Common/NuGetPackUtilities";
-import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import { IExecOptions } from "vsts-task-lib/toolrunner";
+import * as utility from './Common/utility';
 
-class PackOptions implements INuGetCommandOptions {
-    constructor(
-        public nuGetPath: string,
-        public outputDir: string,
-        public includeReferencedProjects: boolean,
-        public version: string,
-        public properties: string[],
-        public verbosity: string,
-        public configFile: string,
-        public environment: ngToolRunner.NuGetEnvironmentSettings
-    ) { }
-}
-
-export async function run(nuGetPath: string): Promise<void> {
-    nutil.setConsoleCodePage();
+export async function run(): Promise<void> {
 
     let searchPattern = tl.getPathInput("searchPatternPack", true);
     let configuration = tl.getInput("configurationToPack");
     let versioningScheme = tl.getInput("versioningScheme");
-    let includeRefProj = tl.getBoolInput("includeReferencedProjects");
     let versionEnvVar = tl.getInput("versionEnvVar");
     let majorVersion = tl.getInput("requestedMajorVersion");
     let minorVersion = tl.getInput("requestedMinorVersion");
     let patchVersion = tl.getInput("requestedPatchVersion");
     let propertiesInput = tl.getInput("buildProperties");
     let verbosity = tl.getInput("verbosityPack");
+    let nobuild = tl.getBoolInput("nobuild");
     let outputDir = undefined;
 
     try 
@@ -46,11 +32,6 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 
     try{
-        if(versioningScheme !== "off" && includeRefProj)
-        {
-            tl.warning(tl.loc("Warning_AutomaticallyVersionReferencedProjects"));
-        }
-
         let version: string = undefined;
         switch(versioningScheme)
         {
@@ -59,7 +40,7 @@ export async function run(nuGetPath: string): Promise<void> {
             case "byPrereleaseNumber":
                 tl.debug(`Getting prerelease number`);
 
-                let nowUtcString = packUtils.getUtcDateString();
+                let nowUtcString = utility.getUtcDateString();
                 version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowUtcString}`;
                 break;
             case "byEnvVar":
@@ -139,18 +120,10 @@ export async function run(nuGetPath: string): Promise<void> {
             extensionsDisabled: true
         };
 
-        let packOptions = new PackOptions(
-            nuGetPath,
-            outputDir,
-            includeRefProj,
-            version,
-            props,
-            verbosity,
-            undefined,
-            environmentSettings);
+        const dotnetPath = tl.which("dotnet", true);
 
         for (const file of filesList) {
-            await packAsync(file, packOptions);
+            await dotnetPackAsync(dotnetPath, file, outputDir, nobuild, version, props, verbosity);
         }
     } catch (err) {
         tl.error(err);
@@ -158,39 +131,33 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function packAsync(file: string, options: PackOptions): Q.Promise<number> {
-    console.log(tl.loc("Info_AttemptingToPackFile") + file);
+function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, version: string, properties: string[], verbosity: string): Q.Promise<number> {
+    let dotnet = tl.tool(dotnetPath);
 
-    let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, undefined);
-    nugetTool.arg("pack");
-    nugetTool.arg(file);
+    dotnet.arg("pack");
+    dotnet.arg(packageFile);
 
-    nugetTool.arg("-NonInteractive");
-
-    nugetTool.arg("-OutputDirectory");
-    if (options.outputDir) {
-        nugetTool.arg(options.outputDir);
-    }
-    else {
-        nugetTool.arg(path.dirname(file));
+    if (outputDir) {
+        dotnet.arg("--output");
+        dotnet.arg(outputDir);
     }
 
-    if (options.properties && options.properties.length > 0) {
-        nugetTool.arg("-Properties");
-        nugetTool.arg(options.properties.join(";"));
+    if (nobuild){
+        dotnet.arg("--no-build");
     }
 
-    nugetTool.argIf(options.includeReferencedProjects, "-IncludeReferencedProjects")
-
-    if (options.version) {
-        nugetTool.arg("-version");
-        nugetTool.arg(options.version);
+    if (properties && properties.length > 0) {
+        dotnet.arg("/p:"+properties.join(";"));
     }
 
-    if (options.verbosity && options.verbosity !== "-") {
-        nugetTool.arg("-Verbosity");
-        nugetTool.arg(options.verbosity);
+    if(version){
+        dotnet.arg("/p:PackageVersion="+version);
     }
 
-    return nugetTool.exec();
+    if(verbosity && verbosity !== "-") {
+        dotnet.arg("--verbosity");
+        dotnet.arg(verbosity);
+    }
+
+    return dotnet.exec({ cwd: path.dirname(packageFile) } as IExecOptions);
 }
