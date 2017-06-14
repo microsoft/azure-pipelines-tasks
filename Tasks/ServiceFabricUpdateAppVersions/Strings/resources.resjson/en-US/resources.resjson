@@ -32,6 +32,7 @@
   "loc.messages.PreviousBuildNumberLabel": "Previous build number: '{0}'",
   "loc.messages.PreviousBuildLocationLabel": "Previous build location: '{0}'",
   "loc.messages.NoPreviousSuccessfulBuild": "Could not find previous build to compare against.",
+  "loc.messages.NoManifestInPreviousBuild": "Previous build does not contains application manifest. Force updating all manifest versions.",
   "loc.messages.UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'.",
   "loc.messages.UpdatedServiceVerison": "Updated service '{0}' to version '{1}'.",
   "loc.messages.UpdatedPackageVerison": "Updated package '{0}\\{1}' to version '{2}'.",
