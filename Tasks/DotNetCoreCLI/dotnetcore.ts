@@ -100,7 +100,7 @@ export class dotNetExe {
                 outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
             }
             else {
-                var pattern = "/**/publish";
+                var pattern = "**/publish";
                 var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];

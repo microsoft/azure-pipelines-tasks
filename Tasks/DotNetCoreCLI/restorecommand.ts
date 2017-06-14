@@ -12,9 +12,6 @@ import {IExecOptions} from "vsts-task-lib/toolrunner";
 import * as nutil from "nuget-task-common/Utility";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 
-
-const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
-
 export async function run(): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
@@ -97,7 +94,7 @@ export async function run(): Promise<void> {
                 sources.push(<IPackageSource>
                 {
                     feedName: "NuGetOrg",
-                    feedUri:  NUGET_ORG_V3_URL,
+                    feedUri: locationHelpers.NUGET_ORG_V3_URL,
                     isInternal: false
                 })
             }

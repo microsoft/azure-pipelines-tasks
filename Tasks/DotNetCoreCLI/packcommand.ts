@@ -121,6 +121,7 @@ export async function run(): Promise<void> {
         };
 
         const dotnetPath = tl.which("dotnet", true);
+
         for (const file of filesList) {
             await dotnetPackAsync(dotnetPath, file, outputDir, nobuild, version, props, verbosity);
         }
@@ -130,7 +131,7 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, version: string, properties: string[], verbosity: string) {
+function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: string, nobuild: boolean, version: string, properties: string[], verbosity: string): Q.Promise<number> {
     let dotnet = tl.tool(dotnetPath);
 
     dotnet.arg("pack");

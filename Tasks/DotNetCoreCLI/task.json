@@ -21,7 +21,7 @@
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
-        "groups": [
+    "groups": [
         {
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
@@ -378,18 +378,18 @@
     ],
     "dataSourceBindings": [
         {
-        "target": "feedRestore",
-        "endpointId": "tfs:feed",
-        "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-        "resultSelector": "jsonpath:$.value[*]",
-        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "target": "feedRestore",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
-        "target": "feedPublish",
-        "endpointId": "tfs:feed",
-        "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-        "resultSelector": "jsonpath:$.value[*]",
-        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "target": "feedPublish",
+            "endpointId": "tfs:feed",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
@@ -418,7 +418,7 @@
         "PackagesInstalledSuccessfully": "Packages were restored successfully",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "UnknownFeedType": "Unknown feed type '%s'",
-        "Warning_AutomaticallyVersionReferencedProjects" : "The automatic package versioning and include referenced projects options do not work together. Referenced projects will not inherit the custom version provided by the automatic versioning settings.",
+        "Warning_AutomaticallyVersionReferencedProjects": "The automatic package versioning and include referenced projects options do not work together. Referenced projects will not inherit the custom version provided by the automatic versioning settings.",
         "Warning_MoreThanOneVersionInBuildNumber": "Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.",
         "dotnetCommandFailed": "Dotnet command failed with non-zero exit code on the following projects : %s",
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
