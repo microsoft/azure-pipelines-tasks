@@ -1,9 +1,9 @@
-import computeManagementClient = require("azure-arm-rest/azure-arm-compute");
+import computeManagementClient = require("./azure-rest/azure-arm-compute");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
-import az = require("azure-arm-rest/azureModels");
+import az = require("./azure-rest/azureModels");
 import utils = require("./Utils");
 
 export class DeploymentGroupExtensionHelper {
