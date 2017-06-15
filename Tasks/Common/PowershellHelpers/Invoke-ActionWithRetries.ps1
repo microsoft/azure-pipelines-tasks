@@ -8,13 +8,14 @@ function Invoke-ActionWithRetries {
         $ActionSuccessValidator = { $true },
 
         [int32]
-        $MaxRetries = 10,
+        $MaxTries = 10,
 
         [int32]
         $RetryIntervalInSeconds = 1,
 
+        [string[]]
         [ValidateScript({[System.Exception].IsAssignableFrom([type]$_)})]
-        $RetryableException,
+        $RetryableExceptions,
 
         [switch]
         $ContinueOnError = $false,
@@ -25,36 +26,31 @@ function Invoke-ActionWithRetries {
 
     Trace-VstsEnteringInvocation $MyInvocation
 
-    if($MaxRetries -eq 0)
-    {
-        $MaxRetries = [Int16]::MaxValue
-    }
-
     if(!$RetryMessage)
     {
         $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
     }
 
     $retryIteration = 1
-    do 
+    do
     {
         $shouldRetry = $false
         $result = $false
         $exception = $null
 
-        try 
+        try
         {
             $result = & $Action
         }
-        catch 
+        catch
         {
-            if(!$RetryableException -or ($_.Exception.GetType() -eq ([type]$RetryableException)))
+            if(($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -AllowedExceptions $RetryableExceptions))
             {
                 $exception = $_.Exception
             }
-            else 
+            else
             {
-                throw   
+                throw
             }
         }
 
@@ -65,7 +61,7 @@ function Invoke-ActionWithRetries {
 
         $shouldRetry = $true
 
-        if($retryIteration -eq $MaxRetries)
+        if($retryIteration -eq $MaxTries)
         {
             if(!$ContinueOnError)
             {
@@ -85,9 +81,29 @@ function Invoke-ActionWithRetries {
         }
 
         Write-Host $RetryMessage
-        $retryIteration++ 
+        $retryIteration++
         Start-Sleep $RetryIntervalInSeconds
-    }  while ($shouldRetry -and ($retryIteration -le $MaxRetries))
+    }  while ($shouldRetry -and ($retryIteration -le $MaxTries))
 
     Trace-VstsLeavingInvocation $MyInvocation
+}
+
+function Test-RetryableException {
+    [CmdletBinding()]
+    param(
+        [System.Object]
+        $Exception,
+
+        [string[]]
+        $AllowedExceptions
+    )
+
+    $AllowedExceptions | ForEach-Object {
+        if($_ -and ([type]$_).IsAssignableFrom($Exception.GetType()))
+        {
+            return $true;
+        }
+    }
+
+    return $false
 }

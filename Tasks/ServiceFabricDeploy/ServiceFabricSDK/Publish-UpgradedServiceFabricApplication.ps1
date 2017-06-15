@@ -324,9 +324,9 @@ function Publish-UpgradedServiceFabricApplication
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
                                 -ActionSuccessValidator $upgradeStatusValidator `
-                                -MaxRetries 0 `
+                                -MaxTries 2147483647 `
                                 -RetryIntervalInSeconds 3 `
-                                -RetryableException "System.Fabric.FabricTransientException" `
+                                -RetryableExceptions @("System.Fabric.FabricTransientException") `
                                 -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 
         if($UnregisterUnusedVersions)

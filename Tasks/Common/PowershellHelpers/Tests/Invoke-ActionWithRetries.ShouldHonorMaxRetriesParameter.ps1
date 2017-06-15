@@ -15,6 +15,6 @@ Unregister-Mock Start-Sleep
 Register-Mock Start-Sleep {}
 # Act/Assert.
 Assert-Throws {
-    & $module Invoke-ActionWithRetries -Action $action -MaxRetries 5
+    & $module Invoke-ActionWithRetries -Action $action -MaxTries 5
 } -MessagePattern "File not found error!"
 Assert-AreEqual 5 $global:retriesAttempted "Number of retries not correct"
