@@ -72,7 +72,7 @@ Task now supports you to configure multiple HTTP/HTTPS bindings that should be a
 * **Host name\*:** Enter a host name (or domain name) for the website.  Example: www.contoso.com. Leave empty to use any host header. If a host name is specified, then the clients could use the host name instead of the IP address to access the website. 
 * **SSL certificate thumbprint\*:** Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store.
 
-* **Authentication modes:**: Choose the authentication mode(s) IIS should enable for the website. Currently Windows, Basic and Anonymous authentication modes are supported. By default, Windows authentication mode is chosen. You can select more than one authentication mode. You could also use additional Appcmd.exe commands to [configure other authentication modes](https://technet.microsoft.com/en-us/library/cc733010(v=ws.10).aspx).
+* **Authentication modes:** Choose the authentication mode(s) IIS should enable for the website. Currently Windows, Basic and Anonymous authentication modes are supported. By default, Windows authentication mode is chosen. You can select more than one authentication mode. You could also use additional Appcmd.exe commands to [configure other authentication modes](https://technet.microsoft.com/en-us/library/cc733010(v=ws.10).aspx).
 
 ### Advanced Deployment Options
 * **Additional appcmd.exe commands:** Enter additional AppCmd.exe commands. For more than one command use a line separator, like list apppools, list sites, recycle apppool /apppool.name:ExampleAppPoolName
