@@ -64,13 +64,15 @@ The following parameters are shown for an IIS Application Pool:
 * **Username\*:** The Windows/domain account of the custom user that the application pool will run under. Example: YOURDOMAIN\YourAccount. You will need to ensure that this user has permissions to run as an application pool. 
 * **Password\*:** The password for the custom account given above. The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. Note: Special characters in password are interpreted as per [command-line arguments](https://go.microsoft.com/fwlink/?linkid=843470)
 
-The following parameters are shown for an IIS Binding:
+Task now supports you to configure multiple HTTP/HTTPS bindings that should be added to the IIS Web Site. The following parameters are shown for an IIS Binding:
 * **Protocol\*:** Select HTTP for the website to have an HTTP binding, or select HTTPS for the website to have a Secure Sockets Layer (SSL) binding.
 * **IP address\*:** Provide an IP address that end-users can use to access this website. If 'All Unassigned' is selected, then the website will respond to requests for all IP addresses on the port and for the host name, unless another website on the server has a binding on the same port but with a specific IP address.
 * **Port\*:** Provide the port, where the Hypertext Transfer Protocol Stack (HTTP.sys) will listen to the website requests.
 * **Server Name Indication required\*:** Select the option to set the Server Name Indication (SNI) for the website. SNI extends the SSL and TLS protocols to indicate the host name that the clients are attempting to connect to. It allows, multiple secure websites with different certificates, to use the same IP address.
 * **Host name\*:** Enter a host name (or domain name) for the website.  Example: www.contoso.com. Leave empty to use any host header. If a host name is specified, then the clients could use the host name instead of the IP address to access the website. 
 * **SSL certificate thumbprint\*:** Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store.
+
+* **Authentication modes: Choose the authentication mode(s) IIS should enable for the website. Currently Windows, Basic and Anonymous authentication modes are supported. By default, Windows authentication mode is chosen. You can select more than one authentication mode. You could also use additional Appcmd.exe commands to [configure other authentication modes](https://technet.microsoft.com/en-us/library/cc733010(v=ws.10).aspx).
 
 ### Advanced Deployment Options
 * **Additional appcmd.exe commands:** Enter additional AppCmd.exe commands. For more than one command use a line separator, like list apppools, list sites, recycle apppool /apppool.name:ExampleAppPoolName
