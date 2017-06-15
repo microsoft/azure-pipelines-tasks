@@ -61,11 +61,13 @@ export async function run(): Promise<void> {
 
         // Setting up auth info
         let externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
-        let accessToken = auth.getSystemAccessToken();
 
+        let accessToken = auth.getSystemAccessToken();
         const isInternalFeed: boolean = nugetFeedType === "internal";
         let useCredConfig = useCredentialConfiguration(isInternalFeed);
-        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ useCredConfig), externalAuthArr);
+        let internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, useCredConfig);
+
+        let authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
 
         let configFile = null;
         let apiKey: string;
@@ -171,7 +173,8 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
 }
 
 function useCredentialConfiguration(isInternalFeed: boolean): boolean {
-    // if we are pushing to an internal on-premises server, then credential configuration is not possible -- only integrated authentication works
+    // if we are pushing to an internal on-premises server, then credential configuration is not possible
+    // and integrated authentication must be used
     let useCredConfig = !(isInternalFeed && commandHelper.isOnPremisesTfs());
     if (!useCredConfig) {
         tl.debug("Push to internal OnPrem server detected. Credential configuration will be skipped.")
