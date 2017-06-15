@@ -9,7 +9,6 @@
         "AzureFileCopy",
         "AzureNLBManagement",
         "AzurePowerShell",
-        "AzureRmWebAppDeployment",
         "BatchScript",
         "Chef",
         "ChefKnife",
