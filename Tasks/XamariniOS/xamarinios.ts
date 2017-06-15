@@ -55,6 +55,9 @@ async function run() {
             cleanBuildRunner.arg(solutionPath);
             cleanBuildRunner.argIf(configuration, '/p:Configuration=' + configuration);
             cleanBuildRunner.argIf(device, '/p:Platform=' + device);
+            if (args) {
+                cleanBuildRunner.line(args);
+            }
             cleanBuildRunner.arg('/t:Clean');
             await cleanBuildRunner.exec();
         }
