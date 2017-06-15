@@ -53,7 +53,7 @@
             "options": {
                 "testAssemblies": "Test assemblies",
                 "testPlan": "Test plan",
-                "testRun": "Test run (for on-demand runs)"
+                "testRun": "Test run"
             }
         },
         {
@@ -402,8 +402,8 @@
         "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
         "testAssembliesSelector": "Test assemblies",
         "testPlanSelector": "Test plan",
-        "testRunSelector": "Test run (for on-demand runs)",
-        "testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-        "testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+        "testRunSelector": "Test run",
+        "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
+        "testRunIdInput": "Test run Id : '%s'"
     }
 }
