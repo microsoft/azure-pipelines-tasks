@@ -53,7 +53,6 @@
         "NuGetToolInstaller",
         "PackerBuild",
         "DownloadPackage",
-        "powerShell",
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
