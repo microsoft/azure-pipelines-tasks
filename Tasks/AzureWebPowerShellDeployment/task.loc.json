@@ -10,7 +10,7 @@
     "Release"
   ],
   "runsOn": [
-        "Agent"
+    "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
@@ -115,6 +115,7 @@
     "Updatingdeploymenthistoryfordeployment0": "ms-resource:loc.messages.Updatingdeploymenthistoryfordeployment0",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
     "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
-    "FailedtodeployWebsiteError0": "ms-resource:loc.messages.FailedtodeployWebsiteError0"
+    "FailedtodeployWebsiteError0": "ms-resource:loc.messages.FailedtodeployWebsiteError0",
+    "DeprecatedWarning": "ms-resource:loc.messages.DeprecatedWarning"
   }
 }

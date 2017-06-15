@@ -115,6 +115,7 @@
         "Updatingdeploymenthistoryfordeployment0": "Updating deployment history for deployment {0}",
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-        "FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}"
+        "FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}",
+        "DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
     }
 }
