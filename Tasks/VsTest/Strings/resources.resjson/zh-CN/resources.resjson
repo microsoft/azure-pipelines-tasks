@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "使用 Visual Studio 测试运行器运行测试",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
+  "loc.releaseNotes": "<ul><li><b>使用代理阶段运行测试:</b>跨生成、版本和测试的统一代理也允许将自动代理用于测试目的。现可采用各种模式运行 Visual Studio 测试: 单代理，以及使用多代理和多配置模式来复制不同配置中测试的分布式测试运行。</li><li><b>测试影响分析:</b> 自动选择和运行仅需要验证代码更改的测试。</li><li>支持 minimatch 模式以指定测试程序集。</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">更多信息</a></p>",
   "loc.group.displayName.testSelection": "测试选择",
   "loc.group.displayName.executionOptions": "执行选项",
   "loc.group.displayName.reportingOptions": "报告选项",
@@ -112,9 +113,9 @@
   "loc.messages.uitestsparallel": "在同一计算机上并行运行 UI 测试可能导致错误。请考虑禁用“并行运行”选项或使用单独任务运行 UI 测试。有关详细信息，请参阅 https://aka.ms/paralleltestexecution",
   "loc.messages.pathToCustomAdaptersInvalid": "自定义适配器 \"%s\" 的路径应该是一个目录，且该目录应该存在。",
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "自定义适配器 \"%s\" 的路径不包含任何测试适配器，请提供一个有效的路径。",
-  "loc.messages.testAssembliesSelector": "Test assemblies",
-  "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testAssembliesSelector": "测试程序集",
+  "loc.messages.testPlanSelector": "测试计划",
+  "loc.messages.testRunSelector": "测试运行(对于按需运行)",
+  "loc.messages.testRunIdInvalid": "选择的测试是“测试运行(对于按需运行)”，但给出的测试运行 ID“%s”无效",
+  "loc.messages.testRunIdInput": "测试运行 ID (对于按需运行):“%s”"
 }

@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "使用 Visual Studio 測試執行器執行測試",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
+  "loc.releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
   "loc.group.displayName.testSelection": "測試選取項目",
   "loc.group.displayName.executionOptions": "執行選項",
   "loc.group.displayName.reportingOptions": "報告選項",

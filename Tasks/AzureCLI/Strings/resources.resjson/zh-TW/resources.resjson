@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "對 Azure 訂閱執行使用 Azure CLI 命令的 Shell 或 Batch 指令碼",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with Xplat agents (Windows, Linux or OSX)\n- For working with Azure CLI 1.0 (node based), switch to task version 0.0\n- Limitations:\n - No support for Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.connectedServiceNameARM": "Azure 訂閱",
   "loc.input.help.connectedServiceNameARM": "為部署選取 Azure Resource Manager 訂閱",

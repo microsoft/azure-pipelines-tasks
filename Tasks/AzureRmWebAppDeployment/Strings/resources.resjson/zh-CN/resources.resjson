@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[详细信息](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "使用 Web 部署/Kudu REST API 更新 Azure App Service",
   "loc.instanceNameFormat": "Azure 应用服务部署: $(WebAppName)",
+  "loc.releaseNotes": "版本 3.0 中的新增功能: <br/>&nbsp;&nbsp;支持文件转换(XDT) <br/>&nbsp;&nbsp;支持变量替换(XML、JSON) <br/>单击[此处](https://aka.ms/azurermwebdeployreadme)了解详细信息。",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "文件转换和变量替换选项",
   "loc.group.displayName.AdditionalDeploymentOptions": "其他部署选项",
   "loc.group.displayName.output": "输出",

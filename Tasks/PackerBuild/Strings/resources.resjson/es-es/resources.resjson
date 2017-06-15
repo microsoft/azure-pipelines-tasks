@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Compila una imagen de máquina con Packer. Esta imagen se puede usar para la implementación del conjunto de escalado de máquinas virtuales de Azure.",
   "loc.instanceNameFormat": "Compilar imagen inmutable",
+  "loc.releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
   "loc.group.displayName.AzureDetails": "Detalles de Azure",
   "loc.group.displayName.DeploymentInputs": "Entradas de implementación",
   "loc.group.displayName.Output": "Salida",

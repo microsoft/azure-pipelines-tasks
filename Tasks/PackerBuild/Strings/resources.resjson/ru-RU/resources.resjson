@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Собрать образ компьютера с помощью средства Packer. Этот образ можно использовать для развертывания масштабируемого набора виртуальных машин Azure.",
   "loc.instanceNameFormat": "Собрать неизменяемый образ",
+  "loc.releaseNotes": "- Поддержка агентов Xplat (Windows, Linux или OSX).\n- Поддержка создания образов для Windows и Linux. Эти образы можно использовать для развертывания масштабируемого набора виртуальных машин Azure.",
   "loc.group.displayName.AzureDetails": "Сведения об Azure",
   "loc.group.displayName.DeploymentInputs": "Входные данные развертывания",
   "loc.group.displayName.Output": "Выход",

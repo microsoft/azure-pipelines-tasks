@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "部署及設定 Test Agent 以在一組電腦上執行測試",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 部署測試代理程式",
+  "loc.releaseNotes": "<ul><li>Support for Visual Studio Test Agent 2017: You can now deploy and run tests using multiple versions of Visual Studio Test Agent. Versions 2015 and 2017 are supported.</li><li>Machine groups created from the Test hub are no longer supported. You can continue to use a list of machines or Azure resource groups.</li></ul>",
   "loc.group.displayName.testMachineGroups": "測試電腦",
   "loc.group.displayName.agentConfiguration": "代理程式組態",
   "loc.group.displayName.advanced": "進階",

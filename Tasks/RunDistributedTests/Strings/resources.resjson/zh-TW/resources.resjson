@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "測試篩選準則",
   "loc.input.help.testFilterCriteria": "選擇性地指定測試案例篩選準則。例如 'Owner=james&Priority=1'",
   "loc.input.label.runSettingsFile": "回合設定檔案",
-  "loc.input.help.runSettingsFile": "要搭配測試使用之 runsettings 或 testsettings 檔案的路徑。請使用 `$(agent.BuildDirectory)\\$(system.teamProject)` 存取專案資料夾。",
+  "loc.input.help.runSettingsFile": "要在測試中使用之 runsettings 或 testsettings 檔案的路徑。",
   "loc.input.label.overrideRunParams": "覆寫測試回合參數",
   "loc.input.help.overrideRunParams": "覆寫在 runsettings 檔案 TestRunParameters 區段中定義的參數。例如: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "已啟用程式碼涵蓋範圍",

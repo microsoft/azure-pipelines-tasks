@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Опубликовать результаты теста в VSTS или TFS",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
+  "loc.releaseNotes": "<ul><li>Поддержка NUnit3</li><li>Поддержка шаблонов файлов Minimatch</li></ul>",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.testRunner": "Формат результатов теста",
   "loc.input.help.testRunner": "Формат файлов результатов тестирования, создаваемых выбранным вами средством выполнения тестов, например JUnit, VSTest, XUnit V2 и NUnit.",

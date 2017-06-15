@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "使用匹配模式(匹配模式仅匹配文件路径，而不匹配文件夹路径)将文件从源文件夹复制到目标文件夹",
   "loc.instanceNameFormat": "将文件复制到: $(TargetFolder)",
+  "loc.releaseNotes": "匹配模式一致性。",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.SourceFolder": "源文件夹",
   "loc.input.help.SourceFolder": "将在其中运行复制模式的源文件夹。为空表示存储库的根。如果存储库中没有文件，请使用[变量](https://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(agent.builddirectory)",

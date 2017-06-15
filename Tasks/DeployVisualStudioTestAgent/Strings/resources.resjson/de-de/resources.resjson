@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Stellen Sie den Test-Agent für die Ausführung von Tests auf einer Computergruppe bereit, und konfigurieren Sie ihn.",
   "loc.instanceNameFormat": "TestAgent auf $(testMachineGroup) bereitstellen",
+  "loc.releaseNotes": "<ul><li>Unterstützung für Visual Studio Test Agent 2017: Das Bereitstellen und Ausführen von Tests ist jetzt mit mehreren Versionen von Visual Studio Test Agent möglich. Die Versionen 2015 und 2017 werden unterstützt.</li><li>Vom Testhub erstellte Computergruppen werden nicht mehr unterstützt. Sie können weiterhin eine Liste von Computern oder Azure-Ressourcengruppen verwenden.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Testcomputer",
   "loc.group.displayName.agentConfiguration": "Agent-Konfiguration",
   "loc.group.displayName.advanced": "Erweitert",

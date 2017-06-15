@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[자세한 정보](https://aka.ms/argtaskreadme)",
   "loc.description": "Azure 리소스 그룹 배포, 시작, 중지, 삭제",
   "loc.instanceNameFormat": "Azure 배포:$(resourceGroupName)에 대한 $(action) 작업",
+  "loc.releaseNotes": "- Xplat 에이전트와 호환(Windows, Linux 또는 OSX)\n- 공개적으로 액세스할 수 있는 http/https URL에 있는 템플릿 JSON 지원\n- UX가 향상되어 이제 재정의 매개 변수를 표로 보거나 편집할 수 있음\n- 부하 분산 장치로 지원되는 VM에 대한 NAT 규칙 매핑\n- \"리소스 그룹\" 필드가 이제 \"WinRM에 대한 VM 세부 정보\"로 이름이 바뀌고 \"가상 컴퓨터에 대한 고급 배포 옵션\" 섹션에 포함됨\n- 제한 사항: \n - 클래식 구독 지원 안 함. ARM 구독만 지원됩니다.\n - 작업이 이제 node.js 기반이므로 PowerShell 구문 지원 안 함. 템플릿 매개 변수를 재정의할 때 매개 변수 이름의 대/소문자가 일치해야 합니다. 또한 버전 1.0에서 버전 2.0으로 마이그레이션할 때 \"ConvertTo-SecureString\"과 같은 PowerShell cmdlet을 제거하세요.",
   "loc.group.displayName.AzureDetails": "Azure 세부 정보",
   "loc.group.displayName.Template": "템플릿",
   "loc.group.displayName.AdvancedDeploymentOptions": "가상 컴퓨터에 대한 고급 배포 옵션",

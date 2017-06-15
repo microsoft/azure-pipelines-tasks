@@ -18,7 +18,7 @@
   "loc.input.help.replaceExistingArchive": "若已有同名的封存檔，請指定是否要加以覆寫，否則只會將檔案新增至其中。",
   "loc.messages.Filename": "files=%s",
   "loc.messages.TarExists": "中繼 tar %s 已存在。正在嘗試將檔案新增至其中。",
-  "loc.messages.RemoveBeforeCreation": "在建立前移除現有的封存檔案: %s",
+  "loc.messages.RemoveBeforeCreation": "Removing existing archive file before creation: %s",
   "loc.messages.AlreadyExists": "封存檔案 %s 已存在。正在嘗試將檔案新增至其中。",
   "loc.messages.ArchiveCreationFailedWithError": "封存檔案 %s 的封存建立失敗\n代碼: %d \nStdOut: %s \nSTDERR: %s \n錯誤: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "指定的封存檔案 %s 已存在且不是檔案。",

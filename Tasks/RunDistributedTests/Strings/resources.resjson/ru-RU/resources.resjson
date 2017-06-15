@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "Критерии фильтрации тестов",
   "loc.input.help.testFilterCriteria": "При необходимости укажите критерии фильтра тестовых случаев. Пример: Owner=james&Priority=1",
   "loc.input.label.runSettingsFile": "Файл параметров запуска",
-  "loc.input.help.runSettingsFile": "Путь к файлу runsettings или testsettings, используемому при выполнении тестов. Для доступа к папке проекта используйте значение \"$(agent.BuildDirectory)\\$(system.teamProject)\".",
+  "loc.input.help.runSettingsFile": "Путь к файлу runsettings или testsettings для использования в тестах.",
   "loc.input.label.overrideRunParams": "Переопределить параметры тестового запуска",
   "loc.input.help.overrideRunParams": "Переопределите параметры, заданные в разделе TestRunParameters файла runsettings. Пример: \"AppURL=$(DeployURL);Port=8080\"",
   "loc.input.label.codeCoverageEnabled": "Оценка объемов протестированного кода включена",

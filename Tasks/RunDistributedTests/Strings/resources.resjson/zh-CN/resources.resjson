@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "测试筛选器标准",
   "loc.input.help.testFilterCriteria": "可以选择指定测试用例筛选器条件。例如，\"Owner=james&Priority=1\"。",
   "loc.input.label.runSettingsFile": "运行设置文件",
-  "loc.input.help.runSettingsFile": "要用于测试的 runsettings 或 testsettings 文件的路径。使用 \"$(agent.BuildDirectory)\\$(system.teamProject)\" 可访问项目文件夹。",
+  "loc.input.help.runSettingsFile": "要用于测试的 runsettings 或 testsettings 文件的路径。",
   "loc.input.label.overrideRunParams": "替代测试运行参数",
   "loc.input.help.overrideRunParams": "替代 runsettings 文件的 TestRunParameters 部分中定义的参数。例如: \"AppURL=$(DeployURL);Port=8080\"",
   "loc.input.label.codeCoverageEnabled": "代码覆盖率已启用",

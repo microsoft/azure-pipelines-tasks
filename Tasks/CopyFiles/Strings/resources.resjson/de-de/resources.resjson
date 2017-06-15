@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Kopiert Dateien aus dem Quellordner mithilfe von Vergleichsmustern in den Zielordner (die Vergleichsmuster ordnen nur Dateipfade und keine Ordnerpfade zu).",
   "loc.instanceNameFormat": "Dateien kopieren in: $(TargetFolder)",
+  "loc.releaseNotes": "Übereinstimmungsmusterkonsistenz.",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.SourceFolder": "Quellordner",
   "loc.input.help.SourceFolder": "Der Quellordner, aus dem mindestens ein Kopiermuster ausgeführt wird. \"Empty\" ist der Stamm des Repositorys. Verwenden Sie [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988), wenn sich Dateien nicht im Repository befinden. Beispiel: \"$(agent.builddirectory)\".",

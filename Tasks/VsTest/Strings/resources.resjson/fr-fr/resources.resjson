@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Exécuter des tests avec Visual Studio Test Runner",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
+  "loc.releaseNotes": "<ul><li><b>Exécuter les tests à l'aide de la phase d'agent :</b>l'utilisation d'un agent unifié pour les phases de build, de mise en production et de test permet également d'utiliser les agents Automation à des fins de test. Vous pouvez désormais exécuter les tests Visual Studio dans différents modes : agent unique, série de tests distribués à l'aide d'un paramètre multi-agent et du mode multiconfiguration pour répliquer les tests dans des configurations distinctes.</li><li><b>Analyse de l'impact sur les tests :</b> sélectionnez automatiquement et exécutez uniquement les tests nécessaires pour valider la modification du code.</li><li>Prise en charge des modèles minimatch pour la spécification d'assemblys de tests.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">Plus d'informations</a></p>",
   "loc.group.displayName.testSelection": "Sélection de test",
   "loc.group.displayName.executionOptions": "Options d'exécution",
   "loc.group.displayName.reportingOptions": "Options de signalement",
@@ -112,9 +113,9 @@
   "loc.messages.uitestsparallel": "L'exécution de tests d'IU en parallèle sur la même machine peut entraîner des erreurs. Désactivez l'option Exécuter en parallèle, ou exécutez les tests d'IU à l'aide d'une tâche distincte. Pour en savoir plus, consultez https://aka.ms/paralleltestexecution ",
   "loc.messages.pathToCustomAdaptersInvalid": "Le chemin des adaptateurs personnalisés '%s' doit correspondre à un répertoire existant.",
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Le chemin des adaptateurs personnalisés '%s' ne contient aucun adaptateur de test. Indiquez un chemin valide.",
-  "loc.messages.testAssembliesSelector": "Test assemblies",
-  "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testAssembliesSelector": "Assemblys de tests",
+  "loc.messages.testPlanSelector": "Plan de test",
+  "loc.messages.testRunSelector": "Série de tests (pour les exécutions à la demande)",
+  "loc.messages.testRunIdInvalid": "La sélection de test correspond à 'Série de tests (pour les exécutions à la demande)', mais l'ID de série de tests '%s' fourni est non valide",
+  "loc.messages.testRunIdInput": "ID de série de tests (pour les exécutions à la demande) : '%s'"
 }

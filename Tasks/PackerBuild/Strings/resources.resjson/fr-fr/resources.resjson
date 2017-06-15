@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Générez une image de machine à l'aide de l'outil Packer. Vous pouvez utiliser cette image pour un déploiement de groupe de machines virtuelles identiques Azure",
   "loc.instanceNameFormat": "Générer l'image non modifiable",
+  "loc.releaseNotes": "- Fonctionne avec les agents Xplat (Windows, Linux ou OSX)\n- Prend en charge la génération d'images pour Windows et Linux. Vous pouvez utiliser ces images pour déployer un groupe de machines virtuelles identiques Azure.",
   "loc.group.displayName.AzureDetails": "Détails relatifs à Azure",
   "loc.group.displayName.DeploymentInputs": "Entrées de déploiement",
   "loc.group.displayName.Output": "Sortie",

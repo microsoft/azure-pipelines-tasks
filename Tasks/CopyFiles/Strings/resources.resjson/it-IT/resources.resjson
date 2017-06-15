@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Copia i file dalla cartella di origine a quella di destinazione usando criteri di corrispondenza che prendono in considerazione solo i percorsi dei file e non i percorsi delle cartelle",
   "loc.instanceNameFormat": "Copia file in: $(TargetFolder)",
+  "loc.releaseNotes": "Coerenza dei criteri di corrispondenza.",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.SourceFolder": "Cartella di origine",
   "loc.input.help.SourceFolder": "Cartella di origine da cui verranno eseguiti i criteri di copia. Il valore vuoto corrisponde alla radice del repository. Usare [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) se i file non sono presenti nel repository. Esempio: $(agent.builddirectory)",

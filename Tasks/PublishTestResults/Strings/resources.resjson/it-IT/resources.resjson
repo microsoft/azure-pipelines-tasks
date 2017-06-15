@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Pubblica risultati del test in VSTS/TFS",
   "loc.instanceNameFormat": "Pubblica risultati del test $(testResultsFiles)",
+  "loc.releaseNotes": "<ul><li>Supporto per NUnit3</li><li>Supporto per criteri di file di corrispondenza minima</li></ul>",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.testRunner": "Formato dei risultati del test",
   "loc.input.help.testRunner": "Formato dei file dei risultati del test generati con il test runner scelto, ad esempio JUnit, VSTest, XUnit V2 e NUnit.",

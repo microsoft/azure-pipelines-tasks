@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "使用 Web Deploy / Kudu REST API 更新 Azure App Service",
   "loc.instanceNameFormat": "Azure App Service 部署: $(WebAppName)",
+  "loc.releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "檔案轉換及變數替代選項",
   "loc.group.displayName.AdditionalDeploymentOptions": "其他部署選項",
   "loc.group.displayName.output": "輸出",

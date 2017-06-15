@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Ejecuta un shell o un script por lotes con comandos de la CLI de Azure en una suscripción de Azure",
   "loc.instanceNameFormat": "CLI de Azure $(scriptPath)",
+  "loc.releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with Xplat agents (Windows, Linux or OSX)\n- For working with Azure CLI 1.0 (node based), switch to task version 0.0\n- Limitations:\n - No support for Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.connectedServiceNameARM": "Suscripción de Azure",
   "loc.input.help.connectedServiceNameARM": "Seleccione una suscripción de Azure Resource Manager para la implementación",

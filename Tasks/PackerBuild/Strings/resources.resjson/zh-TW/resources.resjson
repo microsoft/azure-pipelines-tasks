@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "使用 Packer 建置機器映像。此映像可用於 Azure 虛擬機器擴展集部署",
   "loc.instanceNameFormat": "建置不可變的映像",
+  "loc.releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
   "loc.group.displayName.AzureDetails": "Azure 詳細資料",
   "loc.group.displayName.DeploymentInputs": "部署輸入",
   "loc.group.displayName.Output": "輸出",
