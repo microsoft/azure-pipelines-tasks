@@ -63,7 +63,9 @@ export async function run(): Promise<void> {
         let externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
         let accessToken = auth.getSystemAccessToken();
 
-        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ true), externalAuthArr);
+        const isInternalFeed: boolean = nugetFeedType === "internal";
+        let useCredConfig = useCredentialConfiguration(isInternalFeed);
+        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ useCredConfig), externalAuthArr);
 
         let configFile = null;
         let apiKey: string;
@@ -80,7 +82,6 @@ export async function run(): Promise<void> {
 
         const nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, {credProviderFolder: null, extensionsDisabled: true}, tempNuGetPath);
         let feedUri: string = undefined;
-        const isInternalFeed: boolean = nugetFeedType === "internal";
 
         if (isInternalFeed) 
         {
@@ -167,4 +168,13 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
 
     return dotnet.exec({ cwd: workingDirectory } as IExecOptions);
+}
+
+function useCredentialConfiguration(isInternalFeed: boolean): boolean {
+    // if we are pushing to an internal on-premises server, then credential configuration is not possible -- only integrated authentication works
+    let useCredConfig = !(isInternalFeed && commandHelper.isOnPremisesTfs());
+    if (!useCredConfig) {
+        tl.debug("Push to internal OnPrem server detected. Credential configuration will be skipped.")
+    }
+    return useCredConfig;
 }
