@@ -26,6 +26,13 @@ export class VstsServerUtils {
      * @returns {boolean} True if the build is a PR build, false otherwise.
      */
     public static isPrBuild(): boolean {
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Changing the behavior of the SonarCube integration if this is a PR build causes at least one known bug
+        // Because of this bug and other concerns we are disabling that behavior here by returning false
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        return false;
+        
+        /* TODO remove this commented code and remove all references to this method
         let sourceBranch: string = tl.getVariable('build.sourceBranch');
         let sccProvider: string = tl.getVariable('build.repository.provider');
 
@@ -36,6 +43,7 @@ export class VstsServerUtils {
             sccProvider.toLowerCase() === "tfsgit" &&
             !VstsServerUtils.isNullOrEmpty(sourceBranch) &&
             sourceBranch.toLowerCase().startsWith("refs/pull/");
+        */
     }
 
     /**
