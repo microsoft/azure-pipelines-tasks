@@ -1,3 +1,5 @@
+import path = require('path');
+
 import {BuildArtifact, ArtifactResource} from 'vso-node-api/interfaces/BuildInterfaces';
 import {WebApi, getHandlerFromToken} from 'vso-node-api/WebApi';
 import * as tl from 'vsts-task-lib/task';
@@ -8,6 +10,8 @@ import {FilePathProvider} from './FilePath';
 
 async function main(): Promise<void> {
 	try {
+		tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 		let projectId = tl.getVariable('System.TeamProjectId');
 		let artifactName = tl.getInput("artifactName");
 		let downloadPath = tl.getPathInput("downloadPath");
