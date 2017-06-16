@@ -26,6 +26,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
     Register-Mock Get-VstsInput { $treatNotIndexedAsWarning } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
     Register-Mock Get-VstsInput { $true } -- -Name 'SkipIndexing' -AsBool
+    $env:PublishSymbols_Debug = $null
 
     # Act.
     & $PSScriptRoot\..\PublishSymbols.ps1
