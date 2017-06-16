@@ -4,6 +4,7 @@ import * as tl from 'vsts-task-lib/task';
 
 import {ArtifactProvider} from './ArtifactProvider';
 import {FileContainerProvider} from './FileContainer';
+import {FilePathProvider} from './FilePath';
 
 async function main(): Promise<void> {
 	try {
@@ -26,7 +27,8 @@ async function main(): Promise<void> {
 		let artifact = await buildApi.getArtifact(buildId, artifactName, projectId);
 
 		let providers: ArtifactProvider[] = [
-			new FileContainerProvider()
+			new FileContainerProvider(),
+			new FilePathProvider()
 		];
 
 		let provider = providers.filter((provider) => provider.supportsArtifactType(artifact.resource.type))[0];

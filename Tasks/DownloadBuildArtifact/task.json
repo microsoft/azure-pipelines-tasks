@@ -55,6 +55,7 @@
     "FileContainerCredentialsNotFound": "Could not determine credentials to connect to file container service.",
     "FileContainerInvalidArtifact": "Invalid file container artifact",
     "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
+    "FilePathNotSupported": "File share artifacts are not yet supported in the early preview. Coming soon.",
     "ArtifactProviderNotFound": "Could not determine a provider to download artifact of type {0}",
     "DownloadError": "Error downloading file {0}",
     "DownloadingFile": "Downloading '{0}' to '{1}' (file {2}/{3})",

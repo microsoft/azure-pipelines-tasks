@@ -54,6 +54,7 @@
     "FileContainerCredentialsNotFound": "ms-resource:loc.messages.FileContainerCredentialsNotFound",
     "FileContainerInvalidArtifact": "ms-resource:loc.messages.FileContainerInvalidArtifact",
     "FileContainerInvalidArtifactData": "ms-resource:loc.messages.FileContainerInvalidArtifactData",
+    "FilePathNotSupported": "ms-resource:loc.messages.FilePathNotSupported",
     "ArtifactProviderNotFound": "ms-resource:loc.messages.ArtifactProviderNotFound",
     "DownloadError": "ms-resource:loc.messages.DownloadError",
     "DownloadingFile": "ms-resource:loc.messages.DownloadingFile",
