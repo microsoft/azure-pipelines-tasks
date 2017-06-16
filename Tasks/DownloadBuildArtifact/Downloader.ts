@@ -28,7 +28,9 @@ export async function download<T>(items: DownloadItem<T>[], targetPath: string, 
     // keep track of folders we've touched so we don't call mkdirP for every single file
     let createdFolders: { [key: string]: boolean } = {};
     let downloaders: Promise<{}>[] = [];
+
     let fileCount: number = items.length;
+    let logProgress = fileCount < 100 ? logProgressFilename : logProgressPercentage;
 
     maxConcurrency = Math.min(maxConcurrency, items.length);
     for (let i = 0; i < maxConcurrency; ++i) {
@@ -50,7 +52,7 @@ export async function download<T>(items: DownloadItem<T>[], targetPath: string, 
                         createdFolders[folder] = true;
                     }
 
-                    console.log(tl.loc("DownloadingFile", item.relativePath, outputFilename, fileIndex, fileCount));
+                    logProgress(item.relativePath, outputFilename, fileIndex, fileCount);
                     await new Promise(async (downloadResolve, downloadReject) => {
                         try {
                             // get the content stream from the provider
@@ -81,4 +83,15 @@ export async function download<T>(items: DownloadItem<T>[], targetPath: string, 
     }
 
     await Promise.all(downloaders);
+}
+
+function logProgressFilename(relativePath: string, outputFilename: string, fileIndex: number, fileCount: number): void {
+    console.log(tl.loc("DownloadingFile", relativePath, outputFilename, fileIndex, fileCount));
+}
+
+function logProgressPercentage(relativePath: string, outputFilename: string, fileIndex: number, fileCount: number): void {
+    let percentage = (fileIndex / fileCount) * 100;
+    if (Math.floor(percentage) > Math.floor(((fileIndex - 1) / fileCount) * 100)) {
+        console.log(tl.loc("DownloadingPercentage", percentage.toFixed(2), fileIndex, fileCount));
+    }
 }

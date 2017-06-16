@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 48
+    "Patch": 57
   },
   "demands": [],
   "inputs": [
@@ -58,6 +58,7 @@
     "ArtifactProviderNotFound": "ms-resource:loc.messages.ArtifactProviderNotFound",
     "DownloadError": "ms-resource:loc.messages.DownloadError",
     "DownloadingFile": "ms-resource:loc.messages.DownloadingFile",
+    "DownloadingPercentage": "ms-resource:loc.messages.DownloadingPercentage",
     "InvalidBuildId": "ms-resource:loc.messages.InvalidBuildId"
   }
 }
