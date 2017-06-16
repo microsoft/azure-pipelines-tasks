@@ -151,20 +151,16 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        // Set working directory
-        let workingDirectory: string = tl.getPathInput('cwd', false, true);
-        if (workingDirectory) {
-            tl.cd(workingDirectory);
-        }
-		
         // Configure wrapperScript
         let wrapperScript: string = tl.getPathInput('wrapperScript', true, true);
         wrapperScript = configureWrapperScript(wrapperScript);
 
+        // Set working directory
+        let workingDirectory: string = tl.getPathInput('cwd', false, true);
         if (!workingDirectory) {
             workingDirectory = path.dirname(wrapperScript);
-            tl.cd(workingDirectory);
         }
+        tl.cd(workingDirectory);
 
         let javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
         let codeCoverageTool: string = tl.getInput('codeCoverageTool');
