@@ -1,7 +1,7 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
-Write-Warning Get-VstsLocString -Key "TaskDeprecatedWarning"
+Write-Warning (Get-VstsLocString -Key "DeprecatedWarning")
 
 function Get-SingleFile($files, $pattern)
 {
