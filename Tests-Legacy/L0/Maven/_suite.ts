@@ -1083,60 +1083,6 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
-        // Arrange
-        createTempDirsForSonarQubeTests();
-        var testSrcDir: string = __dirname;
-        var testStgDir: string = path.join(__dirname, '_temp');
-        createTempDir();
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-
-        mockHelper.setResponseAndBuildVars(
-            path.join(__dirname, 'response.json'),
-            path.join(__dirname, 'new_response.json'),
-            [["build.sourceBranch", "refs/pull/6/master"], ["build.repository.provider", "TFSGit"],
-                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
-        var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
-        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-
-        // Add fields corresponding to responses for mock filesystem operations for the following paths
-        // Staging directories
-        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
-        // Test data files
-        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
-
-        // Write and set the newly-changed response file
-        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
-        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-        setResponseFile(path.basename(newResponseFilePath));
-
-        var tr: trm.TaskRunner = setupDefaultMavenTaskRunner();
-        tr.setInput('sqAnalysisEnabled', 'true');
-        tr.setInput('sqConnectedServiceName', 'ID1');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran(
-                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
-                ), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length < 1, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-
-                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
-                    'should not have uploaded a SonarQube Analysis Report build summary');
-                done();
-            })
-            .fail((err) => {
-                console.log(tr.stdout);
-                console.log(tr.stderr);
-                console.log(err);
-                done(err);
-            });
-    });
-
     it('Maven build with publish test results', (done) => {
         setResponseFile('response.json');
         var tr = new trm.TaskRunner('Maven', true);
@@ -1770,7 +1716,7 @@ describe('Maven Suite', function () {
             .fail((reason) => done("an error occured: " + reason));
     });
 
-    it('during PR builds SonarQube analysis runs in issues mode', function (done) {
+    it('during PR builds SonarQube analysis runs normally', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
         var testSrcDir: string = path.join(__dirname, 'data', 'taskreport-valid');
@@ -1803,7 +1749,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should NOT have run SQ analysis in issues mode');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
