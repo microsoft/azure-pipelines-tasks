@@ -7,7 +7,7 @@ $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $global:retriesAttempted = 0
 $action = {
     $global:retriesAttempted++
-    throw "Invalid error!"
+    throw [System.AccessViolationException] "Access denied!"
 }
 
 Register-Mock Set-UserAgent
@@ -16,6 +16,6 @@ Register-Mock Start-Sleep {}
 
 # Act/Assert.
 Assert-Throws {
-    & $module Invoke-ActionWithRetries -Action $action -RetryableException "System.Exception"
-} -MessagePattern "Invalid error!"
+    & $module Invoke-ActionWithRetries -Action $action -RetryableExceptions @("System.IO.IOException")
+} -MessagePattern "Access denied!"
 Assert-AreEqual 1 $global:retriesAttempted "Number of retries not correct"

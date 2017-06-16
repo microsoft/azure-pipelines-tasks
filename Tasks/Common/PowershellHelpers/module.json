@@ -1,6 +1,6 @@
 {
     "messages": {
-        "ActionTimedOut": "Timed out.",
-        "RetryAfterMessage": "Retrying after {0} seconds..."
+        "ActionTimedOut": "Exceeded max retries. Timing out.",
+        "RetryAfterMessage": "Retrying after {0} second(s)..."
     }
 }

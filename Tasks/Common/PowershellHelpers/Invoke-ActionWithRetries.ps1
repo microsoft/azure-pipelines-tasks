@@ -17,9 +17,6 @@ function Invoke-ActionWithRetries {
         [ValidateScript({[System.Exception].IsAssignableFrom([type]$_)})]
         $RetryableExceptions,
 
-        [switch]
-        $ContinueOnError = $false,
-
         [string]
         $RetryMessage
     )
@@ -34,7 +31,6 @@ function Invoke-ActionWithRetries {
     $retryIteration = 1
     do
     {
-        $shouldRetry = $false
         $result = $false
         $exception = $null
 
@@ -59,31 +55,22 @@ function Invoke-ActionWithRetries {
             return $result
         }
 
-        $shouldRetry = $true
-
         if($retryIteration -eq $MaxTries)
         {
-            if(!$ContinueOnError)
+            if($exception)
             {
-                if($exception)
-                {
-                    throw $exception
-                }
-                else
-                {
-                    throw (Get-VstsLocString -Key ActionTimedOut)
-                }
+                throw $exception
             }
             else
             {
-                return $result
+                throw (Get-VstsLocString -Key ActionTimedOut)
             }
         }
 
         Write-Host $RetryMessage
         $retryIteration++
         Start-Sleep $RetryIntervalInSeconds
-    }  while ($shouldRetry -and ($retryIteration -le $MaxTries))
+    } while ($true)
 
     Trace-VstsLeavingInvocation $MyInvocation
 }

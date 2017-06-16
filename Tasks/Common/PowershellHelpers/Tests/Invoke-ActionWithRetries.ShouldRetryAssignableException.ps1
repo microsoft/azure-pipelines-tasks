@@ -7,7 +7,11 @@ $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $global:retriesAttempted = 0
 $action = {
     $global:retriesAttempted++
-    throw [System.IO.FileNotFoundException] "File not found error!"
+    if($global:retriesAttempted -eq 5) {
+        return $true
+    } else {
+        throw [System.IO.FileNotFoundException] "File not found error!"
+    }
 }
 
 Register-Mock Set-UserAgent
@@ -15,5 +19,5 @@ Unregister-Mock Start-Sleep
 Register-Mock Start-Sleep {}
 
 # Act/Assert.
-$actionResult = & $module Invoke-ActionWithRetries -Action $action -ContinueOnError
-Assert-IsNullOrEmpty $actionResult "Result should be null"
+& $module Invoke-ActionWithRetries -Action $action -RetryableExceptions @("System.IO.IOException")
+Assert-AreEqual 5 $global:retriesAttempted "Number of retries not correct"

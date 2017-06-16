@@ -36,8 +36,8 @@ describe('PowershellHelpers Suite', function () {
         it('(Invoke-ActionWithRetries) should not retry action if it is successful', (done) => {
             psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldNotRetrySuccess.ps1'), done);
         })
-        it('(Invoke-ActionWithRetries) should not throw if ContinueOnError is set', (done) => {
-            psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldNotThrowIfContinueOnErrorIsTrue.ps1'), done);
+        it('(Invoke-ActionWithRetries) should not handle retryable exception', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldRetryAssignableException.ps1'), done);
         })
         it('(Invoke-ActionWithRetries) should stop retry once success', (done) => {
             psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldRetryUntilSuccess.ps1'), done);
@@ -47,6 +47,9 @@ describe('PowershellHelpers Suite', function () {
         })
         it('(Invoke-ActionWithRetries) should throw if result does not evaluate to success', (done) => {
             psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldThrowIfResultNotSuccessfull.ps1'), done);
+        })
+        it('(Invoke-ActionWithRetries) should handle multiple retryable exceptions', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldHandleMultipleRetryableExceptions.ps1'), done);
         })
     }
 });
