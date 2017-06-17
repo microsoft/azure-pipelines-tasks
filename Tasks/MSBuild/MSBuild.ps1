@@ -12,11 +12,13 @@ try {
     [string]$solution = Get-VstsInput -Name Solution -Require
     [string]$platform = Get-VstsInput -Name Platform
     [string]$configuration = Get-VstsInput -Name Configuration
+    [string]$outDir = Get-VstsInput -Name OutDir
     [bool]$clean = Get-VstsInput -Name Clean -AsBool
     [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNuGetPackages = Get-VstsInput -Name RestoreNuGetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
     [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
+    [bool]$generateProjectSpecificOutputFolder = Get-VstsInput -Name GenerateProjectSpecificOutputFolder -AsBool
     [string]$msBuildVersion = Get-VstsInput -Name MSBuildVersion
     [string]$msBuildArchitecture = Get-VstsInput -Name MSBuildArchitecture
 
@@ -27,7 +29,7 @@ try {
     $solutionFiles = Get-SolutionFiles -Solution $solution
 
     # Format the MSBuild args.
-    $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration -MaximumCpuCount:$maximumCpuCount
+    $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msBuildArguments -Platform $platform -Configuration $configuration -OutDir $outDir -MaximumCpuCount:$maximumCpuCount -GenerateProjectSpecificOutputFolder:$generateProjectSpecificOutputFolder
 
     # Resolve the MSBuild location.
     $msBuildLocation = Select-MSBuildPath -Method $msBuildLocationMethod -Location $msBuildLocation -PreferredVersion $msBuildVersion -Architecture $msBuildArchitecture

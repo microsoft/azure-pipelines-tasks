@@ -114,6 +114,24 @@
             "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
         },
         {
+            "name": "outDir",
+            "type": "string",
+            "label": "Out Dir",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Passed OutDir argument to MSBuild (/p:OutDir=)"
+        },
+        {
+            "name": "generateProjectSpecificOutputFolder",
+            "type": "boolean",
+            "label": "Project specific folder",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Projects are automatically build to subfolders. (/p:GenerateProjectSpecificOutputFolder=true)"
+        },
+        {
             "name": "maximumCpuCount",
             "type": "boolean",
             "label": "Build in Parallel",

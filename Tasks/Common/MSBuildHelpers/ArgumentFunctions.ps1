@@ -5,7 +5,9 @@ function Format-MSBuildArguments {
         [string]$Platform,
         [string]$Configuration,
         [string]$VSVersion,
-        [switch]$MaximumCpuCount)
+        [string]$OutDir,
+        [switch]$MaximumCpuCount,
+        [switch]$GenerateProjectSpecificOutputFolder)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -21,8 +23,16 @@ function Format-MSBuildArguments {
             $MSBuildArguments = "$MSBuildArguments /p:VisualStudioVersion=`"$VSVersion`""
         }
 
+        if ($OutDir) {
+            $MSBuildArguments = "$MSBuildArguments /p:OutDir=`"$OutDir`""
+        }
+
         if ($MaximumCpuCount) {
             $MSBuildArguments = "$MSBuildArguments /m"
+        }
+
+        if ($GenerateProjectSpecificOutputFolder) {
+            $MSBuildArguments = "$MSBuildArguments /p:GenerateProjectSpecificOutputFolder=true"
         }
         
         $userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
