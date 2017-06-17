@@ -144,6 +144,15 @@
             "required": false,
             "helpMarkDown": "Optionally supply the path to NuGet.exe",
             "groupName": "advanced"
+        },
+        {
+            "name": "basePath",
+            "type": "string",
+            "label": "Base Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally set the base path of the files defined in the .nuspec file.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
