@@ -2,7 +2,7 @@ import * as tl from 'vsts-task-lib/task';
 
 import {BuildArtifact} from 'vso-node-api/interfaces/BuildInterfaces';
 
-import {ArtifactProvider} from './ArtifactProvider';
+import {ArtifactProvider} from './artifactprovider';
 
 export class FilePathProvider implements ArtifactProvider {
     public supportsArtifactType(artifactType: string): boolean {

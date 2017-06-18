@@ -7,8 +7,8 @@ import {FileContainerItem, ContainerItemType} from 'vso-node-api/interfaces/File
 import {IFileContainerApi} from 'vso-node-api/FileContainerApi';
 import {WebApi, getHandlerFromToken} from 'vso-node-api/WebApi';
 
-import {DownloadItem, download} from './Downloader';
-import {ArtifactProvider} from './ArtifactProvider';
+import {DownloadItem, download} from './downloader';
+import {ArtifactProvider} from './artifactprovider';
 
 export class FileContainerProvider implements ArtifactProvider {
     public supportsArtifactType(artifactType: string): boolean {

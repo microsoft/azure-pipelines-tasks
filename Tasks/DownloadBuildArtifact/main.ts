@@ -4,9 +4,9 @@ import {BuildArtifact, ArtifactResource} from 'vso-node-api/interfaces/BuildInte
 import {WebApi, getHandlerFromToken} from 'vso-node-api/WebApi';
 import * as tl from 'vsts-task-lib/task';
 
-import {ArtifactProvider} from './ArtifactProvider';
-import {FileContainerProvider} from './FileContainer';
-import {FilePathProvider} from './FilePath';
+import {ArtifactProvider} from './artifactprovider';
+import {FileContainerProvider} from './filecontainer';
+import {FilePathProvider} from './filepath';
 
 async function main(): Promise<void> {
 	try {
