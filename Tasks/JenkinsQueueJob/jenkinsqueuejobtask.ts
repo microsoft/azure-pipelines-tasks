@@ -111,6 +111,8 @@ async function doWork() {
         var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
         jobQueue.start();
+        //store the job name in the output variable
+        tl.setVariable("JENKINS_JOB_ID", rootJob.executableNumber.toString());
     } catch (e) {
         tl.debug(e.message);
         tl._writeError(e);
