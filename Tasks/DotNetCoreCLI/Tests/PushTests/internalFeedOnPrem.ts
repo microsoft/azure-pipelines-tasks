@@ -39,6 +39,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "rmRF": {
         "c:\\agent\\home\\directory\\NuGet_1": {
             "success": true
+        },
+        "c:\\agent\\home\\directory/NuGet_1": {
+            "success": true
         }
     },
     "findMatch": {
