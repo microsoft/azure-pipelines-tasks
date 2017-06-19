@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Visual Studio テスト ランナーを使用してテストを実行します",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
-  "loc.releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+  "loc.releaseNotes": "<ul><li><b>エージェント フェーズを使用したテスト実行:</b>ビルド、リリース、およびテスト間の統合エージェントでは、テスト用に自動化エージェントを使用することもできます。Visual Studio テストは、単一エージェント、あるいは異なる構成でテストを複製するための複数エージェント設定および複数構成モードを使用した分散テストなど、さまざまなモードでテストを実行できるようになりました。</li><li><b>テストの影響分析:</b> コード変更を検証するために必要なテストのみを自動的に選択し、実行します。</li><li>テスト アセンブリを指定するための minimatch パターンをサポートします。</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">詳細情報</a></p>",
   "loc.group.displayName.testSelection": "テストの選択",
   "loc.group.displayName.executionOptions": "実行オプション",
   "loc.group.displayName.reportingOptions": "レポートのオプション",
@@ -113,9 +113,9 @@
   "loc.messages.uitestsparallel": "同じマシン上で並列に UI テストを実行すると、エラーが発生することがあります。[並列で実行] オプションを無効にするか、別のタスクを使って UI テストを実行することを検討してください。詳細については、https://aka.ms/paralleltestexecution をご覧ください ",
   "loc.messages.pathToCustomAdaptersInvalid": "カスタム アダプター '%s' へのパスは存在し、ディレクトリでなければなりません。",
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "カスタム アダプター '%s' へのパスにはテスト アダプターが含まれていません。有効なパスを指定してください。",
-  "loc.messages.testAssembliesSelector": "Test assemblies",
-  "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testAssembliesSelector": "テスト アセンブリ",
+  "loc.messages.testPlanSelector": "テスト計画",
+  "loc.messages.testRunSelector": "テスト実行 (オンデマンド実行用)",
+  "loc.messages.testRunIdInvalid": "テストの選択は [テスト実行 (オンデマンド実行用)] ですが、指定されているテスト実行 ID '%s' が無効です",
+  "loc.messages.testRunIdInput": "テスト実行 ID (オンデマンド実行用) : '%s'"
 }

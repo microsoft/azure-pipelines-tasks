@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "クラウドベースの Web パフォーマンス テスト",
-  "loc.helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
+  "loc.helpMarkDown": "Visual Studio Team Services を使用するクラウドベースのロード テストをトリガーします。[詳細](https://go.microsoft.com/fwlink/?linkid=613203)",
   "loc.description": "Visual Studio Team Services を使用して、クラウドでのクイック Web パフォーマンス テストを実行します",
   "loc.instanceNameFormat": "クイック Web パフォーマンス テスト $(testName)",
   "loc.input.label.connectedServiceName": "VS Team Services 接続",
@@ -14,7 +14,7 @@
   "loc.input.label.runDuration": "実行期間 (秒数)",
   "loc.input.help.runDuration": "ロード テストの実行期間 (秒数)。",
   "loc.input.label.geoLocation": "負荷の場所",
-  "loc.input.help.geoLocation": "Geographical region to generate the load from.",
+  "loc.input.help.geoLocation": "負荷の生成元とする地理的な領域。",
   "loc.input.label.machineType": "次を使用してロードテストを実行:",
   "loc.input.label.avgResponseTimeThreshold": "標準応答時間 (ミリ秒) を超えるとテストが失敗する",
   "loc.input.help.avgResponseTimeThreshold": "これを超えるとロード テストの結果が不成功と見なされる、平均応答時間。"

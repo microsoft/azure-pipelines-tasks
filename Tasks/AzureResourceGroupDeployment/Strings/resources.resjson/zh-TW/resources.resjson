@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[更多資訊](https://aka.ms/argtaskreadme)",
   "loc.description": "部署、啟動、停止與刪除 Azure 資源群組",
   "loc.instanceNameFormat": "在 $(resourceGroupName) 上的 Azure 部署:$(action) 動作",
-  "loc.releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+  "loc.releaseNotes": "- 適用於 Xplat 代理程式 (Windows、Linux 或 OSX)\n- 支援位於任何可供公開存取 http/https URL 的範本 JSON。\n- 增強 Override 參數的 UX，現在能夠在格線中對其進行檢視/編輯。\n- 受負載平衡器支援的 VM 可進行 NAT 規則對應。\n- [資源群組] 欄位現已重新命名為 [WinRM 的 VM 詳細資料]，並且包含在 [虛擬機器的進階部署選項] 區段中。\n- 限制: \n - 不支援傳統訂用帳戶。只支援 ARM 訂用帳戶。\n - 因為現在工作改以 node.js 為基礎，所以不支援 PowerShell 語法。當您覆寫範本參數時，請確認參數名稱的區分大小寫符合。此外，當您從 1.0 版移轉為 2.0 版時，會移除 \"ConvertTo-SecureString\" 等 PowerShell Cmdlet。",
   "loc.group.displayName.AzureDetails": "Azure 詳細資料",
   "loc.group.displayName.Template": "範本",
   "loc.group.displayName.AdvancedDeploymentOptions": "虛擬機器的進階部署選項",

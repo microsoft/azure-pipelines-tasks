@@ -18,7 +18,7 @@
   "loc.input.help.replaceExistingArchive": "既存のアーカイブが存在する場合、上書きするかどうかを指定します。上書きしない場合には、ファイルは追加されます。",
   "loc.messages.Filename": "files=%s",
   "loc.messages.TarExists": "中間 tar %s は既に存在しています。ファイルの追加を試行しています。",
-  "loc.messages.RemoveBeforeCreation": "Removing existing archive file before creation: %s",
+  "loc.messages.RemoveBeforeCreation": "作成する前に既存のアーカイブ ファイルを削除しています: %s",
   "loc.messages.AlreadyExists": "アーカイブ ファイル %s は既に存在しています。ファイルの追加を試行しています。",
   "loc.messages.ArchiveCreationFailedWithError": "次のアーカイブ ファイルのアーカイブ作成に失敗しました: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "指定されたアーカイブ ファイル %s は既に存在しており、ファイルではありません。",

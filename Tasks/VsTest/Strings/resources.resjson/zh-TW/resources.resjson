@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "使用 Visual Studio 測試執行器執行測試",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
-  "loc.releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+  "loc.releaseNotes": "<ul><li><b>使用代理程式階段執行測試:</b>跨越建置/發行及測試階段的整合代理程式，也考量到用於測試用途的自動化代理程式。您現在可以在各種模式中執行 Visual Studio 測試: 單一代理程式、使用多重代理程式設定的分散式測試回合及多重組態模式，以在不同組態中的複寫測試。</li><li><b>測試影響分析:</b>僅自動選取及執行驗證程式碼變更所需的測試。</li><li>支援用於指定測試組件的 minimatch 模式。</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">更多資訊</a></p>",
   "loc.group.displayName.testSelection": "測試選取項目",
   "loc.group.displayName.executionOptions": "執行選項",
   "loc.group.displayName.reportingOptions": "報告選項",
@@ -113,9 +113,9 @@
   "loc.messages.uitestsparallel": "在相同的機器上平行執行 UI 測試可能會造成錯誤。請考慮停用 [平行執行] 選項，或使用不同的工作來執行 UI 測試。如需詳細資訊，請參閱 https://aka.ms/paralleltestexecution ",
   "loc.messages.pathToCustomAdaptersInvalid": "自訂配接器 '%s' 的路徑應為存在的目錄。",
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "自訂配接器 '%s' 的路徑不包含任何測試配接器，請提供有效的路徑。",
-  "loc.messages.testAssembliesSelector": "Test assemblies",
-  "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testAssembliesSelector": "測試組件",
+  "loc.messages.testPlanSelector": "測試計劃",
+  "loc.messages.testRunSelector": "測試回合 (適用於隨選回合)",
+  "loc.messages.testRunIdInvalid": "測試選取項目為 [測試回合 (適用於隨選回合)]，但指定的測試回合識別碼 '%s' 無效",
+  "loc.messages.testRunIdInput": "測試回合識別碼 (適用於隨選回合) : '%s'"
 }
