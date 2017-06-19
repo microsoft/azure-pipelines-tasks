@@ -4,7 +4,7 @@ import util = require('util');
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var parameterParser = require("./parameterparser.js").parse;
 
-export async function deployWebAppImage(endPoint, resourceGroupName, webAppName) {
+export async function deployWebAppImage(endPoint, resourceGroupName, webAppName, deployToSlotFlag, slotName) {
     var startupCommand = tl.getInput('StartupCommand', false);
     var appSettings = tl.getInput('AppSettings', false);
     var imageSourceAndTag;
@@ -31,7 +31,8 @@ export async function deployWebAppImage(endPoint, resourceGroupName, webAppName)
 
     if(imageSourceAndTag)
     {
-        tl.debug("Deploying the image " + imageSourceAndTag + " to the webapp " + webAppName);
+        var appName = deployToSlotFlag ? webAppName + "-" + slotName : webAppName;
+        tl.debug("Deploying the image " + imageSourceAndTag + " to the webapp " + appName);
 
         tl.debug("Updating the webapp configuration.");
         var updatedConfigDetails = JSON.stringify({
@@ -41,16 +42,16 @@ export async function deployWebAppImage(endPoint, resourceGroupName, webAppName)
                 }
         });
 
-        await azureRESTUtility.updateAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, false, null, updatedConfigDetails);
+        await azureRESTUtility.updateAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
         tl.debug("Updating the webapp application settings.");
         appSettings = appSettings ? appSettings.trim() : "";
         appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
 
         // Update webapp application setting
-        var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, false, null);
+        var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         mergeAppSettings(appSettings, webAppSettings);
-        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, false, null, webAppSettings);
+        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
     }
 }
 
