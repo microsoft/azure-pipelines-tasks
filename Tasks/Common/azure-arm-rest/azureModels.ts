@@ -43,18 +43,37 @@ export interface VMProperties {
     storageProfile: StorageProfile
 }
 
+export interface VirtualMachineProfile {
+    networkProfile?: NetworkProfile;
+    instanceView?: InstanceView;
+    storageProfile?: StorageProfile
+}
+
+export interface VMSSProperties {
+    virtualMachineProfile: VirtualMachineProfile;
+    provisioningState?: string;
+}
+
 export interface VMExtensionProperties {
     provisioningState: string;
 }
 
 export interface StorageProfile{
-    imageReference: Map<string, string>;
+    imageReference?: Map<string, string>;
     osDisk: OSDisk;
-    dataDisks: Map<string, string>[];
+    dataDisks?: Map<string, string>[];
 }
 
 export interface OSDisk{
     osType: string;
+    name: string;
+    createOption: string;
+    caching: string;
+    image: ImageUrl;
+}
+
+export interface ImageUrl{
+    uri: string;
 }
 
 export interface DnsSettings {
@@ -81,6 +100,12 @@ export interface LoadBalancer extends AzureBaseObject {
 export interface VM extends AzureBaseObject {
     properties: VMProperties,
     location: string,
+    tags?: string ;
+}
+
+export interface VMSS extends AzureBaseObject {
+    properties?: VMSSProperties,
+    location?: string,
     tags?: string ;
 }
 

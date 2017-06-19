@@ -1,0 +1,108 @@
+{
+    "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
+    "name": "AzureVmssDeployment",
+    "friendlyName": "Azure VMSS Deployment",
+    "description": "Update virtual machine scale set image",
+    "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
+    "category": "Deploy",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Image",
+            "displayName": "Image",
+            "isExpanded": true,
+            "visibleRule": "action = Update image"
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "UpdateImage",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
+            "options": {
+                "UpdateImage": "Update image"
+            }
+        },
+        {
+            "name": "vmssName",
+            "type": "pickList",
+            "label": "Resource group",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the name of a resource group.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "imageUrl",
+            "type": "string",
+            "label": "Image url",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Image",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "vmssName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachineScaleSetsNames"
+        }
+    ],
+    "instanceNameFormat": "Azure VMSS:$(action) action on $(vmssName)",
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "InvalidAction": "This action is not defined. Check with the task author.",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "TaskConstructorFailed": "Task failed while initializing. Error: %s",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VMSSListFetchFailed": "Failed to fetch VMSS details.",
+        "NoVMSSFound": "No VMSS found with name %s.",
+        "FailedToGetRGForVMSS": "Failed to get resource group information for VMSS %s.",
+        "VMSSImageUpdateFailed": "Failed to update image for VMSS %s. Error: %s",
+        "UpdatedVMSSImage": "Successfully updated VMSS image.",
+        "VMSSUpdateImage": "Updating VMSS %s image to %s",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "GetVMSSFailedWillRetry": "Failed to get VMSS details with resource group %s and name %s. Error: %s. Will retry.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "WaitingForVMSSImageUpdateCompletion": "Waiting for VMSS image to get updated..",
+        "VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated."
+    }
+}

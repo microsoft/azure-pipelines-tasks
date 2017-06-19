@@ -2,12 +2,14 @@ import msRestAzure = require("./azure-arm-common");
 import tl = require('vsts-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
+import Model = require("./azureModels");
 import Q = require("q");
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
 
     public virtualMachines: VirtualMachines;
     public virtualMachineExtensions: VirtualMachineExtensions;
+    public virtualMachineScaleSets: VirtualMachineScaleSets;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials, subscriptionId);
@@ -34,6 +36,7 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         }
         this.virtualMachines = new VirtualMachines(this);
         this.virtualMachineExtensions = new VirtualMachineExtensions(this);
+        this.virtualMachineScaleSets = new VirtualMachineScaleSets(this);
     }
 }
 
@@ -547,4 +550,226 @@ export class VirtualMachineExtensions {
             (error) => callback(error));
     }
 
+}
+
+export class VirtualMachineScaleSets {
+    private client: ComputeManagementClient;
+    private ImageUpdateWaitSleepDurationInMilleseconds: number = 5000;
+    private ImageUpdateWaitMaxTries: number;
+
+    constructor(client) {
+        this.client = client;
+    }
+
+    public list(options, callback: azureServiceClient.ApiCallback) {
+        if (!callback && typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.headers = this.client.setCustomHeaders(options);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets', {});
+
+        var result = [];
+        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                if (response.body.value) {
+                    result = result.concat(response.body.value);
+                }
+
+                if (response.body.nextLink) {
+                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
+                    }
+                    result = result.concat(nextResult.result);
+                }
+                return new azureServiceClient.ApiResult(null, result);
+            }
+            else {
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+            }
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    public get(resourceGroupName:string, vmssName:string, options, callback: azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback && typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        var expand = (options && options.expand !== undefined) ? options.expand : undefined;
+
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if (vmssName === null || vmssName === undefined || typeof vmssName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMSSNameCannotBeNull"));
+            }
+            if (expand) {
+                var allowedValues = ['instanceView'];
+                if (!allowedValues.some(function (item) { return item === expand; })) {
+                    throw new Error(tl.loc("InvalidValue", expand, allowedValues));
+                }
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmssName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmssName}': vmssName
+            },
+            ['$expand=' + encodeURIComponent(expand)]
+        );
+
+        // Set Headers
+        httpRequest.headers = this.client.setCustomHeaders(options);
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            if (response.statusCode == 200) {
+                var result = response.body;
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
+            }
+            else {
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, options, callback: azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback && typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        var expand = (options && options.expand !== undefined) ? options.expand : undefined;
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if (vmssName === null || vmssName === undefined || typeof vmssName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMSSNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // first get VMSS
+        this.get(resourceGroupName, vmssName, null, (error, vmss, request, response) => {
+                if (error) {
+                    tl.warning(tl.loc("GetVMSSFailed", resourceGroupName, vmssName, error));
+                    return callback(error, null);
+                }
+
+                var osDisk = vmss["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"];
+                if(!(osDisk && osDisk.image && osDisk.image.uri)) {
+                    return callback(tl.loc("VMSSDoesNotHaveCustomImage", vmssName));
+                }
+
+                // update image uri
+                osDisk.image.uri = imageUrl;
+                var storageProfile: Model.StorageProfile = { "osDisk": osDisk };
+                var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile };
+                var properties: Model.VMSSProperties = { "virtualMachineProfile": virtualMachineProfile };
+                var patchBody: Model.VMSS = {
+                    "id": vmss["id"],
+                    "name": vmss["name"],
+                    "properties":  properties
+                };
+
+                var httpRequest = new azureServiceClient.WebRequest();
+                httpRequest.method = 'PATCH';
+                httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmssName}',
+                    {
+                        '{resourceGroupName}': resourceGroupName,
+                        '{vmssName}': vmssName
+                    }
+                );
+
+                // Set Headers
+                httpRequest.headers = this.client.setCustomHeaders(options);
+                httpRequest.body = JSON.stringify(patchBody);
+
+                // patch VMSS image
+                console.log(tl.loc("VMSSUpdateImage", vmssName, imageUrl));
+                this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+                    var deferred = Q.defer<azureServiceClient.ApiResult>();
+                    var statusCode = response.statusCode;
+                    if (response.statusCode == 200) {
+                        // wait for image update to complete
+                        this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                            if (operationResponse.body.status === "Succeeded") {
+                                deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                            }
+                            else {
+                                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                            }
+                        }, (error) => deferred.reject(error));
+                    }
+                    else {
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                    }
+                    return deferred.promise;
+                }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+                    (error) => callback(error));
+        });
+    }
+
+    // Recursive logic to wait for image update. This is required as we do not use promises.
+    //
+    // private waitForImageUpdateCompletion(iterationCount: number, resourceGroupName, vmssName, callback: azureServiceClient.ApiCallback) {
+    //     if(iterationCount == this.ImageUpdateWaitMaxTries) {
+    //         return callback(tl.loc("VMSSImageUpdateTimedOut"));
+    //     }
+
+    //     console.log(tl.loc("WaitingForVMSSImageUpdateCompletion"));
+
+    //     this.get(resourceGroupName, vmssName, null, (error, vmss, request, response) => {
+    //         if (error) {
+    //             console.log(tl.loc("GetVMSSFailedWillRetry", resourceGroupName, vmssName, error));
+    //         } else {
+    //             var provisioningState = vmss["properties"]["provisioningState"]
+    //             if (provisioningState === "Failed") {
+    //                 tl.debug("Update operation has completed with failure.");
+    //                 return callback("failed");
+    //             } else if (provisioningState === "Succeeded") {
+    //                 tl.debug("Update operation has completed with success.");
+    //                 return callback(null, true);
+    //             }
+    //         }
+
+    //         iterationCount++;
+    //         this.sleep(this.ImageUpdateWaitSleepDurationInMilleseconds).then(() => {
+    //             this.waitForImageUpdateCompletion(iterationCount, resourceGroupName, vmssName, (error, result, request, response) => {
+    //                 if(error) {
+    //                     return callback(error);
+    //                 } else {
+    //                     return callback(null, result);
+    //                 }
+    //             });
+    //         });
+    //     });
+    // }
+
+    // private sleep (time): Promise<void> {
+    //     return new Promise<void>((resolve) => setTimeout(resolve, time));
+    // }
 }
