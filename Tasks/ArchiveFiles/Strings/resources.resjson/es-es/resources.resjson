@@ -18,7 +18,7 @@
   "loc.input.help.replaceExistingArchive": "Si ya existe un archivo de almacenamiento, especifique si quiere sobrescribirlo. De lo contrario, se le agregarán los archivos.",
   "loc.messages.Filename": "files=%s",
   "loc.messages.TarExists": "El archivo tar intermedio %s ya existe. Intentando agregar archivos.",
-  "loc.messages.RemoveBeforeCreation": "Removing existing archive file before creation: %s",
+  "loc.messages.RemoveBeforeCreation": "Quitando el archivo de almacenamiento existente antes de la creación: %s",
   "loc.messages.AlreadyExists": "El archivo de almacenamiento %s ya existe. Intentando agregar archivos.",
   "loc.messages.ArchiveCreationFailedWithError": "Error de creación del archivo de almacenamiento: %s \nCódigo: %d \nStdOut: %s \nStdErr: %s \nError: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "El archivo de almacenamiento especificado %s ya existe y no es un archivo.",

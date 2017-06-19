@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Ejecutar pruebas con el ejecutor de pruebas de Visual Studio",
   "loc.instanceNameFormat": "VsTest - $(testSelector)",
-  "loc.releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+  "loc.releaseNotes": "<ul><li><b>Ejecución de pruebas mediante la fase de agente:</b>El agente unificado en las fases de compilación, publicación y prueba permite que también se usen agentes automatizados con fines de prueba. Ahora puede ejecutar pruebas de Visual Studio en varios modos: un único agente, serie de pruebas distribuida mediante la opción de varios agentes y el modo de varias configuraciones para replicar pruebas en distintas configuraciones.</li><li><b>Análisis de impacto de las pruebas:</b> Seleccione y ejecute automáticamente solo las pruebas necesarias para validar el cambio de código.</li><li>Compatibilidad con patrones de minimatch para la especificación de ensamblados de prueba.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">Más información</a></p>",
   "loc.group.displayName.testSelection": "Selección de pruebas",
   "loc.group.displayName.executionOptions": "Opciones de ejecución",
   "loc.group.displayName.reportingOptions": "Opciones de informe",
@@ -113,9 +113,9 @@
   "loc.messages.uitestsparallel": "Ejecutar pruebas de IU en paralelo en una misma máquina puede generar errores. Considere la posibilidad de deshabilitar la opción \"Ejecutar en paralelo\" o de ejecutar las pruebas de IU mediante una tarea independiente. Para obtener más información, consulte https://aka.ms/paralleltestexecution. ",
   "loc.messages.pathToCustomAdaptersInvalid": "La ruta de acceso a los adaptadores personalizados \"%s\" debe ser un directorio y debe existir.",
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "La ruta de acceso a los adaptadores personalizados \"%s\" no contiene adaptadores de prueba, proporcione una ruta de acceso válida.",
-  "loc.messages.testAssembliesSelector": "Test assemblies",
-  "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testAssembliesSelector": "Ensamblados de prueba",
+  "loc.messages.testPlanSelector": "Plan de pruebas",
+  "loc.messages.testRunSelector": "Serie de pruebas (para ejecuciones a petición)",
+  "loc.messages.testRunIdInvalid": "La selección de prueba es \"Serie de pruebas (para ejecuciones a petición)\", pero el id. de serie de pruebas dado \"%s\" no es válido",
+  "loc.messages.testRunIdInput": "Id. de serie de pruebas (para ejecuciones a petición) : \"%s\""
 }

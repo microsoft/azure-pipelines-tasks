@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Implementar y configurar el agente de pruebas para que ejecute pruebas en un grupo de máquinas",
   "loc.instanceNameFormat": "Implementar TestAgent en $(testMachineGroup)",
-  "loc.releaseNotes": "<ul><li>Support for Visual Studio Test Agent 2017: You can now deploy and run tests using multiple versions of Visual Studio Test Agent. Versions 2015 and 2017 are supported.</li><li>Machine groups created from the Test hub are no longer supported. You can continue to use a list of machines or Azure resource groups.</li></ul>",
+  "loc.releaseNotes": "<ul><li>Compatibilidad con Visual Studio Test Agent 2017: Ahora puede implementar y ejecutar pruebas con varias versiones de Visual Studio Test Agent. Se admiten las versiones 2015 y 2017.</li><li>Ya no se admiten los grupos de máquinas creados desde la central de prueba. Puede seguir usando una lista de máquinas o grupos de recursos de Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Máquinas de prueba",
   "loc.group.displayName.agentConfiguration": "Configuración de agente",
   "loc.group.displayName.advanced": "Avanzado",

@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Publicar los resultados de pruebas en VSTS/TFS",
   "loc.instanceNameFormat": "Publicar resultados de pruebas $(testResultsFiles)",
-  "loc.releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
+  "loc.releaseNotes": "<ul><li>Compatibilidad con NUnit3</li><li>Compatibilidad con patrones de archivos de minimatch</li></ul>",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.testRunner": "Formato del resultado de las pruebas",
   "loc.input.help.testRunner": "Formato de los archivos de resultados de pruebas generados por el ejecutor de pruebas de su elección; por ejemplo, JUnit, VSTest, XUnit V2 y NUnit.",
