@@ -20,7 +20,7 @@
                 "dest": "./"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M116.3/DeploymentUtilities.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M118.1/DeploymentUtilities.zip",
                 "dest": "./"
             }
         ],
