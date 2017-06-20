@@ -62,6 +62,7 @@ export interface VMExtensionProperties {
     typeHandlerVersion: string;
     autoUpgradeMinorVersion?: boolean;
     settings?: Object;
+    protectedSettings?: Object;
 }
 
 export interface StorageProfile{

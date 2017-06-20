@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -27,6 +27,12 @@
     {
       "name": "Image",
       "displayName": "ms-resource:loc.group.displayName.Image",
+      "isExpanded": true,
+      "visibleRule": "action = UpdateImage"
+    },
+    {
+      "name": "StartupConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.StartupConfiguration",
       "isExpanded": true,
       "visibleRule": "action = UpdateImage"
     }
@@ -79,7 +85,7 @@
       "label": "ms-resource:loc.input.label.customScriptUrl",
       "defaultValue": "",
       "required": false,
-      "groupName": "Image",
+      "groupName": "StartupConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.customScriptUrl"
     },
     {
@@ -88,7 +94,7 @@
       "label": "ms-resource:loc.input.label.customScriptCommand",
       "defaultValue": "",
       "required": false,
-      "groupName": "Image",
+      "groupName": "StartupConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
     }
   ],

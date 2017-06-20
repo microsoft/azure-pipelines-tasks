@@ -44,9 +44,10 @@ export default class VirtualMachineScaleSet {
                 switch (this.taskParameters.action) {
                     case "UpdateImage":
                     var extensionMetadata: azureModel.VMExtensionMetadata = null;
+                    var customScriptExtension: azureModel.VMExtension = null;
                     if(!!this.taskParameters.customScriptUrl) {
                         extensionMetadata = this._getCustomScriptExtensionMetadata(osType);
-                        var customScriptExtension: azureModel.VMExtension = {
+                         customScriptExtension = {
                             name: "CustomScriptExtension" + Date.now().toString(),
                             properties: {
                                 type: extensionMetadata.type,
@@ -54,7 +55,9 @@ export default class VirtualMachineScaleSet {
                                 typeHandlerVersion: extensionMetadata.typeHandlerVersion,
                                 autoUpgradeMinorVersion: true,
                                 settings: {
-                                    "fileUris": [ this.taskParameters.customScriptUrl ],
+                                    "fileUris": [ this.taskParameters.customScriptUrl ]
+                                },
+                                protectedSettings: {
                                     "commandToExecute": this.taskParameters.customScriptCommand
                                 }
                             }
@@ -66,7 +69,7 @@ export default class VirtualMachineScaleSet {
                             return reject(tl.loc("VMSSImageUpdateFailed", utils.getError(error)));
                         }
                         console.log(tl.loc("UpdatedVMSSImage"));
-                        resolve();
+                        return resolve();
                     });
                     break;
                 }
@@ -79,13 +82,13 @@ export default class VirtualMachineScaleSet {
             return <azureModel.VMExtensionMetadata>{
                 type: "CustomScriptExtension",
                 publisher: "Microsoft.Compute",
-                typeHandlerVersion: "1.8"
+                typeHandlerVersion: "1.0"
             }
         } else if(osType === "Linux") {
             return <azureModel.VMExtensionMetadata>{
                 type: "CustomScriptForLinux",
                 publisher: "Microsoft.OSTCExtensions",
-                typeHandlerVersion: "1.5"
+                typeHandlerVersion: "1.0"
             }
         }
     }

@@ -758,44 +758,4 @@ export class VirtualMachineScaleSets {
         newExtensionProfile.extensions.push(vmExtension);
         return newExtensionProfile;
     }
-
-    // Recursive logic to wait for image update. This is required as we do not use promises.
-    //
-    // private waitForImageUpdateCompletion(iterationCount: number, resourceGroupName, vmssName, callback: azureServiceClient.ApiCallback) {
-    //     if(iterationCount == this.ImageUpdateWaitMaxTries) {
-    //         return callback(tl.loc("VMSSImageUpdateTimedOut"));
-    //     }
-
-    //     console.log(tl.loc("WaitingForVMSSImageUpdateCompletion"));
-
-    //     this.get(resourceGroupName, vmssName, null, (error, vmss, request, response) => {
-    //         if (error) {
-    //             console.log(tl.loc("GetVMSSFailedWillRetry", resourceGroupName, vmssName, error));
-    //         } else {
-    //             var provisioningState = vmss["properties"]["provisioningState"]
-    //             if (provisioningState === "Failed") {
-    //                 tl.debug("Update operation has completed with failure.");
-    //                 return callback("failed");
-    //             } else if (provisioningState === "Succeeded") {
-    //                 tl.debug("Update operation has completed with success.");
-    //                 return callback(null, true);
-    //             }
-    //         }
-
-    //         iterationCount++;
-    //         this.sleep(this.ImageUpdateWaitSleepDurationInMilleseconds).then(() => {
-    //             this.waitForImageUpdateCompletion(iterationCount, resourceGroupName, vmssName, (error, result, request, response) => {
-    //                 if(error) {
-    //                     return callback(error);
-    //                 } else {
-    //                     return callback(null, result);
-    //                 }
-    //             });
-    //         });
-    //     });
-    // }
-
-    // private sleep (time): Promise<void> {
-    //     return new Promise<void>((resolve) => setTimeout(resolve, time));
-    // }
 }
