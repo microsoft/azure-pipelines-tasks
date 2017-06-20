@@ -86,7 +86,7 @@ function Test-RetryableException {
     )
 
     $AllowedExceptions | ForEach-Object {
-        if($_ -and ([type]$_).IsAssignableFrom($Exception.GetType()))
+        if($_ -and ($Exception -is ([type]$_)))
         {
             return $true;
         }
