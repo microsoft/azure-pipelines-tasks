@@ -16,6 +16,6 @@ Register-Mock Start-Sleep {}
 
 # Act/Assert.
 Assert-Throws {
-    & $module Invoke-ActionWithRetries -Action $action -RetryableExceptions @("System.IO.FileNotFoundException")
+    & $module Invoke-ActionWithRetries -Action $action -RetryableExceptions @("System.IO.IOException")
 } -MessagePattern "File not found error!"
 Assert-AreEqual 10 $global:retriesAttempted "Number of retries not correct"
