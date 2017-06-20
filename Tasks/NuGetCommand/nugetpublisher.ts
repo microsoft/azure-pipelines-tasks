@@ -117,6 +117,8 @@ export async function run(nuGetPath: string): Promise<void> {
         if (isInternalFeed) 
         {
             let internalFeedId = tl.getInput("feedPublish");
+            const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
+            feedUri = await nutil.getNuGetFeedRegistryUrl(accessToken, internalFeedId, nuGetVersion);
             if (useCredConfig) {
                 
                 nuGetConfigHelper.addSourcesToTempNuGetConfig([<IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
@@ -125,8 +127,6 @@ export async function run(nuGetPath: string): Promise<void> {
             }
 
             apiKey = "VSTS";
-            const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
-            feedUri = await nutil.getNuGetFeedRegistryUrl(accessToken, internalFeedId, nuGetVersion);
         }
         else {
             let externalAuth = externalAuthArr[0];
