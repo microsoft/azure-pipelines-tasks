@@ -8,6 +8,7 @@ import settingsHelper = require('./settingshelper');
 import vstestVersion = require('./vstestversion');
 import * as utils from './helpers';
 import * as outStream from './outputstream';
+import * as testselectorinvoker from './testselectorinvoker';
 
 let os = require('os');
 let regedit = require('regedit');
@@ -328,96 +329,6 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     return defer.promise;
 }
 
-function publishCodeChanges(testCaseFilterFile: string): Q.Promise<string> {
-    const startTime = perf();
-    let endTime: number;
-    let elapsedTime: number;
-    let pathFilters: string;
-    let definitionRunId: string;
-    let definitionId: string;
-    let prFlow: string;
-    let rebaseLimit: string;
-    let sourcesDirectory: string;
-    const defer = Q.defer<string>();
-
-    let newprovider = 'true';
-    if (getTIALevel() === 'method') {
-        newprovider = 'false';
-    }
-
-    const selectortool = tl.tool(getTestSelectorLocation());
-    selectortool.arg('PublishCodeChanges');
-
-    if (tiaConfig.context === 'CD') {
-        // Release context. Passing Release Id.
-        definitionRunId = tl.getVariable('Release.ReleaseId');
-        definitionId = tl.getVariable('release.DefinitionId');
-    } else {
-        // Build context. Passing build id.
-        definitionRunId = tl.getVariable('Build.BuildId');
-        definitionId = tl.getVariable('System.DefinitionId');
-    }
-
-    if (tiaConfig.isPrFlow && tiaConfig.isPrFlow.toUpperCase() === 'TRUE') {
-        prFlow = 'true';
-    } else {
-        prFlow = 'false';
-    }
-
-    if (tiaConfig.tiaRebaseLimit) {
-        rebaseLimit = tiaConfig.tiaRebaseLimit;
-    }
-
-    if (typeof tiaConfig.tiaFilterPaths !== 'undefined') {
-        pathFilters = tiaConfig.tiaFilterPaths.trim();
-    } else {
-        pathFilters = '';
-    }
-
-    if (typeof tiaConfig.sourcesDir !== 'undefined') {
-        sourcesDirectory = tiaConfig.sourcesDir.trim();
-    } else {
-        sourcesDirectory = '';
-    }
-
-    selectortool.exec({
-        cwd: null,
-        env: {
-            'collectionurl': tl.getVariable('System.TeamFoundationCollectionUri'),
-            'projectid': tl.getVariable('System.TeamProject'),
-            'definitionrunid': definitionRunId,
-            'definitionid': definitionId,
-            'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
-            'sourcesdir': sourcesDirectory,
-            'newprovider': newprovider,
-            'prflow': prFlow,
-            'rebaselimit': rebaseLimit,
-            'baselinefile': tiaConfig.baseLineBuildIdFile,
-            'context': tiaConfig.context,
-            'filter': pathFilters,
-            'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : "",
-            'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : ""
-        },
-        silent: null,
-        failOnStdErr: null,
-        ignoreReturnCode: null,
-        outStream: null,
-        errStream: null,
-        windowsVerbatimArguments: null
-    })
-        .then(function (code) {
-            endTime = perf();
-            elapsedTime = endTime - startTime;
-            tl.debug(tl.loc('PublishCodeChangesPerfTime', elapsedTime));
-            defer.resolve(String(code));
-        })
-        .fail(function (err) {
-            defer.reject(err);
-        });
-
-    return defer.promise;
-}
-
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
@@ -574,8 +485,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
             testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
         }
-        publishCodeChanges(testCaseFilterFile)
-            .then(function (status) {
+        
+        let testselector = new testselectorinvoker.TestSelectorInvoker();
+        let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile);
+        if(code === 0) {
                 getVstestTestsList(vsVersion)
                     .then(function (listFile) {
                         discoverTestFromFilteredFilter(vsVersion, testCaseFilterFile, testCaseFilterOutput);
@@ -745,9 +658,9 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
                         defer.resolve(1);
                     });
-            })
-            .fail(function (err) {
-                tl.error(err);
+            }
+            else
+            {            
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                     .then(function (code) {
@@ -757,7 +670,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     .fail(function (code) {
                         defer.resolve(code);
                     });
-            });
+            }
     } else {
         tl.debug('Non TIA mode of test execution');
         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
@@ -809,7 +722,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     try {
-        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters).
+        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters, false).
             then(function (ret) {
                 newSettingsFile = ret;
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
@@ -934,13 +847,6 @@ function isTiaAllowed(): boolean {
         return true;
     }
     return false;
-}
-
-function getTIALevel() {
-    if (tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE') {
-        return 'method';
-    }
-    return 'file';
 }
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {

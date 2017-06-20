@@ -8,15 +8,34 @@ import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
+import * as testselectorinvoker from './testselectorinvoker';
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
         this.dtaPid = -1;
         this.dtaTestConfig = dtaTestConfig;
+        this.tiaConfig = dtaTestConfig.tiaConfig;
     }
 
     public runDistributedTest() {
+        this.publishCodeChangesIfRequired();
         this.registerAndConfigureAgent();
+    }
+
+    private publishCodeChangesIfRequired(): number{
+        if (this.tiaConfig.tiaEnabled) {
+            let testselector = new testselectorinvoker.TestSelectorInvoker();
+            let code = testselector.publishCodeChanges(this.tiaConfig, null); //todo: enable custom engine
+
+            if(code === 0) {
+                utils.Helper.readFileContents(this.tiaConfig.baseLineBuildIdFile, 'utf-8');
+            }
+            else{
+                tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
+            }
+        }
+
+        return 0;
     }
 
     private async registerAndConfigureAgent() {
@@ -52,7 +71,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
-            const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters , '**\\*TestAdapter.dll' );
+            const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
                 tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters))
             }
@@ -137,8 +156,8 @@ export class DistributedTest {
         let settingsFile = this.dtaTestConfig.settingsFile;
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
-                (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                null, false, this.dtaTestConfig.overrideTestrunParameters);
+                (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.tiaConfig,
+                null, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {
@@ -183,4 +202,6 @@ export class DistributedTest {
     }
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
+    private vstestConfig: models.VsTestConfigurations = undefined;
+    private tiaConfig: models.TiaConfiguration = undefined;
 }

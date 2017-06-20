@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 56
+    "Patch": 57
   },
   "demands": [
     "vstest"
@@ -374,7 +374,6 @@
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
-    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
     "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
