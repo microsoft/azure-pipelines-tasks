@@ -1,0 +1,23 @@
+{
+    "common": [
+        {
+            "module": "../Common/azure-arm-rest",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        }
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "AzCopy",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/3.1/AzCopy.zip",
+                "dest": "./"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M118.1/DeploymentUtilities.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}
