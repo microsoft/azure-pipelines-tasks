@@ -3,6 +3,10 @@
         {
             "module": "../Common/ServiceFabricHelpers",
             "type": "ps"
+        },
+        {
+            "module": "../Common/PowershellHelpers",
+            "type": "ps"
         }
     ],
     "externals": {

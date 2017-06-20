@@ -11,11 +11,13 @@ export async function run(command?: string): Promise<void> {
     let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     let npmrc = util.getTempNpmrcPath();
     let npmRegistries: INpmRegistry[] = await util.getLocalNpmRegistries(workingDir);
+    let overrideNpmrc = false;
 
     let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
+            overrideNpmrc = true;
             let feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
             npmRegistries.push(await NpmRegistry.FromFeedId(feedId));
             break;
@@ -39,7 +41,7 @@ export async function run(command?: string): Promise<void> {
         util.appendToNpmrc(npmrc, `${registry.auth}\n`);
     }
 
-    let npm = new NpmToolRunner(workingDir, npmrc);
+    let npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
     npm.line(command || tl.getInput(NpmTaskInput.CustomCommand, true));
 
     await npm.exec();
