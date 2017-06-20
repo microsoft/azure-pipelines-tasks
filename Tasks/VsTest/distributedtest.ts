@@ -14,7 +14,6 @@ export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
         this.dtaPid = -1;
         this.dtaTestConfig = dtaTestConfig;
-        this.tiaConfig = dtaTestConfig.tiaConfig;
     }
 
     public runDistributedTest() {
@@ -23,14 +22,11 @@ export class DistributedTest {
     }
 
     private publishCodeChangesIfRequired(): number{
-        if (this.tiaConfig.tiaEnabled) {
+        if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
             let testselector = new testselectorinvoker.TestSelectorInvoker();
-            let code = testselector.publishCodeChanges(this.tiaConfig, null); //todo: enable custom engine
+            let code = testselector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null); //todo: enable custom engine
 
-            if(code === 0) {
-                utils.Helper.readFileContents(this.tiaConfig.baseLineBuildIdFile, 'utf-8');
-            }
-            else{
+            if(code !== 0) {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
             }
         }
@@ -156,7 +152,7 @@ export class DistributedTest {
         let settingsFile = this.dtaTestConfig.settingsFile;
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
-                (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.tiaConfig,
+                (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
                 null, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
@@ -202,6 +198,4 @@ export class DistributedTest {
     }
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
-    private vstestConfig: models.VsTestConfigurations = undefined;
-    private tiaConfig: models.TiaConfiguration = undefined;
 }

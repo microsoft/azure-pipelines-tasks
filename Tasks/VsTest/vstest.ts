@@ -660,7 +660,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     });
             }
             else
-            {            
+            {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                     .then(function (code) {
