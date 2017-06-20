@@ -46,7 +46,8 @@ export interface VMProperties {
 export interface VirtualMachineProfile {
     networkProfile?: NetworkProfile;
     instanceView?: InstanceView;
-    storageProfile?: StorageProfile
+    storageProfile?: StorageProfile;
+    extensionProfile?:ExtensionProfile;
 }
 
 export interface VMSSProperties {
@@ -55,7 +56,12 @@ export interface VMSSProperties {
 }
 
 export interface VMExtensionProperties {
-    provisioningState: string;
+    provisioningState?: string;
+    type: string;
+    publisher: string;
+    typeHandlerVersion: string;
+    autoUpgradeMinorVersion?: boolean;
+    settings?: Object;
 }
 
 export interface StorageProfile{
@@ -84,6 +90,10 @@ export interface NetworkProfile {
     networkInterfaces: NetworkInterface[]
 }
 
+export interface ExtensionProfile {
+    extensions: VMExtension[];
+}
+
 export interface InstanceView {
     statuses: Status[];
 }
@@ -109,8 +119,17 @@ export interface VMSS extends AzureBaseObject {
     tags?: string ;
 }
 
-export interface VMExtension extends AzureBaseObject {
+export interface VMExtension {
+    name?: string;
+    id?: string;
     properties: VMExtensionProperties,
+    sku?: VMSku;
+}
+
+export interface VMSku {
+    name?: string,
+    tier?: string;
+    capacity?: string;
 }
 
 export interface NetworkInterface extends AzureBaseObject {
@@ -131,4 +150,10 @@ export interface BackendAddressPool extends AzureBaseObject {
 
 export interface PublicIPAddress extends AzureBaseObject {
     properties: PublicIPAddressProperties;
+}
+
+export interface VMExtensionMetadata {
+    type: string;
+    publisher: string;
+    typeHandlerVersion: string;
 }

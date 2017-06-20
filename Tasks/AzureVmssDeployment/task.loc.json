@@ -25,10 +25,10 @@
       "isExpanded": true
     },
     {
-      "name": "Template",
-      "displayName": "ms-resource:loc.group.displayName.Template",
+      "name": "Image",
+      "displayName": "ms-resource:loc.group.displayName.Image",
       "isExpanded": true,
-      "visibleRule": "action = Update image"
+      "visibleRule": "action = UpdateImage"
     }
   ],
   "inputs": [
@@ -70,8 +70,26 @@
       "label": "ms-resource:loc.input.label.imageUrl",
       "defaultValue": "",
       "required": true,
-      "groupName": "Template",
+      "groupName": "Image",
       "helpMarkDown": "ms-resource:loc.input.help.imageUrl"
+    },
+    {
+      "name": "customScriptUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customScriptUrl",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Image",
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptUrl"
+    },
+    {
+      "name": "customScriptCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customScriptCommand",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Image",
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
     }
   ],
   "dataSourceBindings": [

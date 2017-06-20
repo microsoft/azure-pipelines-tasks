@@ -6,6 +6,8 @@ export default class AzureVmssTaskParameters {
     public action: string;
     public vmssName: string;
     public imageUrl: string;
+    public customScriptUrl: string;
+    public customScriptCommand: string;
     public subscriptionId: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
 
@@ -16,6 +18,8 @@ export default class AzureVmssTaskParameters {
             this.vmssName = tl.getInput("vmssName", true);
             this.imageUrl = tl.getInput("imageUrl", true);
             this.action = tl.getInput("action");
+            this.customScriptUrl = tl.getInput("customScriptUrl");
+            this.customScriptCommand = tl.getInput("customScriptCommand");
             this.credentials = this.getARMCredentials(connectedService);
         }
         catch (error) {

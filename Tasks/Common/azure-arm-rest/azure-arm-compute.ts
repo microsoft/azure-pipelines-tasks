@@ -652,7 +652,7 @@ export class VirtualMachineScaleSets {
             (error) => callback(error));
     }
 
-    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, options, callback: azureServiceClient.ApiCallback) {
+    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, vmExtension: Model.VMExtension, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -662,6 +662,7 @@ export class VirtualMachineScaleSets {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
+
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
@@ -672,14 +673,15 @@ export class VirtualMachineScaleSets {
             return callback(error);
         }
 
-        // first get VMSS
-        this.get(resourceGroupName, vmssName, null, (error, vmss, request, response) => {
+        // get VMSS
+        this.get(resourceGroupName, vmssName, null, (error, result, request, response) => {
                 if (error) {
                     tl.warning(tl.loc("GetVMSSFailed", resourceGroupName, vmssName, error));
                     return callback(error, null);
                 }
 
-                var osDisk = vmss["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"];
+                var vmss: Model.VMSS = result;
+                var osDisk = vmss.properties.virtualMachineProfile.storageProfile.osDisk;
                 if(!(osDisk && osDisk.image && osDisk.image.uri)) {
                     return callback(tl.loc("VMSSDoesNotHaveCustomImage", vmssName));
                 }
@@ -687,7 +689,12 @@ export class VirtualMachineScaleSets {
                 // update image uri
                 osDisk.image.uri = imageUrl;
                 var storageProfile: Model.StorageProfile = { "osDisk": osDisk };
-                var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile };
+
+                // update VM extension
+                var oldExtensionProfile: Model.ExtensionProfile = vmss.properties.virtualMachineProfile.extensionProfile;
+                var newExtensionProfile = this.getUpdatedExtensionProfile(oldExtensionProfile, vmExtension);
+                var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile, extensionProfile: newExtensionProfile };
+
                 var properties: Model.VMSSProperties = { "virtualMachineProfile": virtualMachineProfile };
                 var patchBody: Model.VMSS = {
                     "id": vmss["id"],
@@ -731,6 +738,25 @@ export class VirtualMachineScaleSets {
                 }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
                     (error) => callback(error));
         });
+    }
+
+    private getUpdatedExtensionProfile(extensionProfile: Model.ExtensionProfile, vmExtension: Model.VMExtension): Model.ExtensionProfile {
+        if(!vmExtension) {
+            return extensionProfile;
+        }
+
+        var newExtensionProfile: Model.ExtensionProfile = { extensions: []};
+        if(!!extensionProfile && !!extensionProfile.extensions) {
+            extensionProfile.extensions.forEach((extension: Model.VMExtension) => {
+                if(extension.properties.type !== vmExtension.properties.type &&
+                extension.properties.publisher !== vmExtension.properties.publisher) {
+                    newExtensionProfile.extensions.push(extension);
+                }
+            });
+        }
+
+        newExtensionProfile.extensions.push(vmExtension);
+        return newExtensionProfile;
     }
 
     // Recursive logic to wait for image update. This is required as we do not use promises.

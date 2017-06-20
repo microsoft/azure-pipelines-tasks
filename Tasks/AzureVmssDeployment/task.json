@@ -28,7 +28,7 @@
             "name": "Image",
             "displayName": "Image",
             "isExpanded": true,
-            "visibleRule": "action = Update image"
+            "visibleRule": "action = UpdateImage"
         }
     ],
     "inputs": [
@@ -56,7 +56,7 @@
         {
             "name": "vmssName",
             "type": "pickList",
-            "label": "Resource group",
+            "label": "VMSS",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of a resource group.",
@@ -72,6 +72,24 @@
             "required": true,
             "groupName": "Image",
             "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS."
+        },
+        {
+            "name": "customScriptUrl",
+            "type": "string",
+            "label": "Custom script url",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Image",
+            "helpMarkDown": "Specify the URL of the script to run using CustomScriptExtension. This should be a publically accessible url. "
+        },
+        {
+            "name": "customScriptCommand",
+            "type": "string",
+            "label": "Command",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Image",
+            "helpMarkDown": "Command to be run to execute custom script."
         }
     ],
     "dataSourceBindings": [
