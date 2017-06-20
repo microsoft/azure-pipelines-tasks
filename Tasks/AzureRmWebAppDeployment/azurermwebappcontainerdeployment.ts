@@ -29,30 +29,27 @@ export async function deployWebAppImage(endPoint, resourceGroupName, webAppName,
         imageSourceAndTag = dockerNamespace + "/" + dockerRepository;
     }
 
-    if(imageSourceAndTag)
-    {
-        var appName = deployToSlotFlag ? webAppName + "-" + slotName : webAppName;
-        tl.debug("Deploying the image " + imageSourceAndTag + " to the webapp " + appName);
+    var appName = deployToSlotFlag ? webAppName + "-" + slotName : webAppName;
+    tl.debug("Deploying the image " + imageSourceAndTag + " to the webapp " + appName);
 
-        tl.debug("Updating the webapp configuration.");
-        var updatedConfigDetails = JSON.stringify({
-                "properties": {
-                    "appCommandLine": startupCommand,
-                    "linuxFxVersion": "DOCKER|" + imageSourceAndTag
-                }
-        });
+    tl.debug("Updating the webapp configuration.");
+    var updatedConfigDetails = JSON.stringify({
+        "properties": {
+            "appCommandLine": startupCommand,
+            "linuxFxVersion": "DOCKER|" + imageSourceAndTag
+        }
+    });
 
-        await azureRESTUtility.updateAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
+    await azureRESTUtility.updateAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
-        tl.debug("Updating the webapp application settings.");
-        appSettings = appSettings ? appSettings.trim() : "";
-        appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
+    tl.debug("Updating the webapp application settings.");
+    appSettings = appSettings ? appSettings.trim() : "";
+    appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
 
-        // Update webapp application setting
-        var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        mergeAppSettings(appSettings, webAppSettings);
-        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
-    }
+    // Update webapp application setting
+    var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+    mergeAppSettings(appSettings, webAppSettings);
+    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
 }
 
 function mergeAppSettings(appSettings, webAppSettings) {
