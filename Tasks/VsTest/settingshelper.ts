@@ -105,7 +105,8 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     if(isDistributedRun && tiaConfig.tiaEnabled){
         let baseLineRunId = utils.Helper.readFileContentsSync(tiaConfig.baseLineBuildIdFile, 'utf-8');
         if (settingsExt === testSettingsExt) {
-            // todo
+            tl.debug('Enabling tia in testsettings.');
+            result = setupTestSettingsWithTestImpactOn(result, baseLineRunId);
         } else if (settingsExt === runSettingsExt) {
             tl.debug('Enabling tia in runsettings.');
             result = setupRunSettingsWithTestImpactOn(result, baseLineRunId);
@@ -253,26 +254,26 @@ function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyN
         tl.debug('Updating testsettings file from Execution node');
         result.TestSettings.Execution = { AgentRule: { DataCollectors: dataCollectorNodeToAdd } };
         result.TestSettings.Execution.AgentRule.$ = { name: testSettingsAgentNameTag };
-    } else if (!result.TestSettings.Execution[0].AgentRule) {
+    } else if (!result.TestSettings.Execution.AgentRule) {
         tl.debug('Updating testsettings file from AgentRule node');
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: dataCollectorNodeToAdd } };
-        result.TestSettings.Execution[0].AgentRule.$ = { name: testSettingsAgentNameTag };
-    } else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
+        result.TestSettings.Execution.AgentRule = { DataCollectors: dataCollectorNodeToAdd };
+        result.TestSettings.Execution.AgentRule.$ = { name: testSettingsAgentNameTag };
+    } else if (!result.TestSettings.Execution.AgentRule.DataCollectors) {
         tl.debug('Updating testsettings file from DataCollectors node');
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: dataCollectorNodeToAdd };
-        result.TestSettings.Execution[0].AgentRule.$ = { name: testSettingsAgentNameTag };
+        result.TestSettings.Execution.AgentRule[0] = { DataCollectors: dataCollectorNodeToAdd };
+        result.TestSettings.Execution.AgentRule.$ = { name: testSettingsAgentNameTag };
     } else {
-        const dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
+        const dataCollectorArray = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
         if (!dataCollectorArray) {
             tl.debug('Updating testsettings file from DataCollector node');
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = dataCollectorNodeToAdd;
+            result.TestSettings.Execution.AgentRule.DataCollectors = dataCollectorNodeToAdd;
         } else {
             if (!isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName)) {
                 tl.debug('Updating testsettings file, adding a DataCollector node');
                 dataCollectorArray.push(dataCollectorNodeToAdd.DataCollector);
             }
         }
-    }
+    }    
     return result;
 }
 
@@ -304,14 +305,34 @@ function setupRunSettingsWithRunInParallel(result: any) {
 }
 
 function setupRunSettingsWithTestImpactOn(result: any, baseLineRunId: String) {
-    const tiaOnNode = { TestImpact: '' };
-    const baseLineNode = { BaseLineRunId: '' };
+    const tiaNode = {TestImpact : '', BaseLineRunId : ''};
     if (!result.RunSettings.RunConfiguration || !result.RunSettings.RunConfiguration[0]) {
         tl.debug('Run configuration not found in the runsettings, so adding one with TestImpact on');
-        result.RunSettings.RunConfiguration = tiaOnNode;
+        result.TestSettings.RunConfiguration = tiaNode;
     }
-    result.RunSettings.RunConfiguration.TestImpact.enabled = true;
-    result.RunSettings.RunConfiguration.BaseLineRunId.value = baseLineRunId;
+    
+    result.TestSettings.RunConfiguration.TestImpact = {};
+    result.TestSettings.RunConfiguration.BaseLineRunId = {};
+    result.TestSettings.RunConfiguration.TestImpact.$ = {};
+    result.TestSettings.RunConfiguration.BaseLineRunId.$ = {};
+    result.TestSettings.RunConfiguration.TestImpact.$.enabled = true;
+    result.TestSettings.RunConfiguration.BaseLineRunId.$.value = baseLineRunId;
+
+    return result;
+}
+
+function setupTestSettingsWithTestImpactOn(result: any, baseLineRunId: String) {
+    const tiaNode = {TestImpact : '', BaseLineRunId : ''};
+    if (!result.TestSettings.Execution || !result.TestSettings.Execution[0]) {
+        tl.debug('Run configuration not found in the testsettings, so adding one with TestImpact on');
+        result.TestSettings.Execution = tiaNode;
+    }
+    result.TestSettings.Execution.TestImpact = {};
+    result.TestSettings.Execution.BaseLineRunId = {};
+    result.TestSettings.Execution.TestImpact.$ = {};
+    result.TestSettings.Execution.BaseLineRunId.$ = {};
+    result.TestSettings.Execution.TestImpact.$.enabled = true;
+    result.TestSettings.Execution.BaseLineRunId.$.value = baseLineRunId;
 
     return result;
 }
