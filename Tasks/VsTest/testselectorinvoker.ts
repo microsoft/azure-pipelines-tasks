@@ -6,7 +6,7 @@ import path = require('path');
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string = null): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
