@@ -36,7 +36,7 @@ try {
     [string]$SymbolsVersion = Get-VstsInput -Name 'SymbolsVersion' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
     [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)
     [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
-    [bool]$SkipIndexing = Get-VstsInput -Name 'SkipIndexing' -AsBool
+    [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
 
     # Get the PDB file paths.

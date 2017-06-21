@@ -16,13 +16,13 @@
         "Patch": "1"
     },
     "minimumAgentVersion": "1.95.0",
-    "instanceNameFormat" : "Publish symbols path: ",
+    "instanceNameFormat": "Publish symbols path: ",
     "groups": [
-      {
-        "name": "advanced",
-        "displayName": "Advanced",
-        "isExpanded": false
-      }
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
     ],
     "inputs": [
         {
@@ -136,8 +136,8 @@
         }
     ],
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\MergedPublishSymbols.ps1"
+        "PowerShell3": {
+            "target": "PublishSymbolsTask.ps1"
         }
     },
     "messages": {
