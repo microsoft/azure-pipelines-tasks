@@ -3,6 +3,7 @@ import Q = require('q');
 import querystring = require('querystring');
 var httpClient = require('vso-node-api/HttpClient');
 var util = require('util');
+var index = require("./index");
 
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 

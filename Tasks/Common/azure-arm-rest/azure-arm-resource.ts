@@ -3,6 +3,7 @@ import azureServiceClient = require("./AzureServiceClient");
 import util = require("util");
 import tl = require('vsts-task-lib/task');
 import Q = require("q");
+var index = require("./index");
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
