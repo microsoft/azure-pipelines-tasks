@@ -10,7 +10,7 @@ import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
 import * as testselectorinvoker from './testselectorinvoker';
 
-const testSelectorInvoker = new testselectorinvoker.TestSelectorInvoker();
+const testSelector = new testselectorinvoker.TestSelectorInvoker();
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -23,11 +23,11 @@ export class DistributedTest {
         this.registerAndConfigureAgent();
     }
 
-    private publishCodeChangesIfRequired(): void{
+    private publishCodeChangesIfRequired(): void {
         if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
-            let code = testSelectorInvoker.publishCodeChanges(this.dtaTestConfig.tiaConfig); //todo: enable custom engine
+            let code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null); //todo: enable custom engine
 
-            if(code !== 0) {
+            if (code !== 0) {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
             }
         }
