@@ -33,6 +33,14 @@ export function getDistributedTestConfigurations() {
     }
     tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
+    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    if (useVsTestConsole) {
+        dtaConfiguration.useVsTestConsole = useVsTestConsole;
+    }
+    else {
+        dtaConfiguration.useVsTestConsole = 'true';
+    }
+
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
