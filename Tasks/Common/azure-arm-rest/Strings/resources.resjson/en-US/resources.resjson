@@ -25,5 +25,14 @@
   "loc.messages.ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
   "loc.messages.ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
   "loc.messages.ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
-  "loc.messages.ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/"
+  "loc.messages.ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+  "loc.messages.VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+  "loc.messages.GetVMSSFailedWillRetry": "Failed to get VMSS details with resource group %s and name %s. Error: %s. Will retry.",
+  "loc.messages.GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+  "loc.messages.VMSSUpdateImage": "Updating VMSS %s image to %s",
+  "loc.messages.WaitingForVMSSImageUpdateCompletion": "Waiting for VMSS image to get updated..",
+  "loc.messages.VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
+  "loc.messages.VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+  "loc.messages.VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
+  "loc.messages.VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date."
 }
