@@ -28,7 +28,6 @@
         "DeployVisualStudioTestAgent",
         "Docker",
         "DockerCompose",
-        "DotNetCoreCLI",
         "DownloadBuildArtifact",
         "ExtractFiles",
         "FtpUpload",
