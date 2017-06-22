@@ -661,6 +661,11 @@ export class VirtualMachineScaleSets {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
+
+        if (imageUrl === null || imageUrl === undefined || typeof imageUrl.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMSSImageUrlCannotBeNull"));
+        }
+
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
 
         // Validate
@@ -686,14 +691,22 @@ export class VirtualMachineScaleSets {
                     return callback(tl.loc("VMSSDoesNotHaveCustomImage", vmssName));
                 }
 
+                if(imageUrl === osDisk.image.uri) {
+                    console.log(tl.loc("VMSSImageAlreadyUptoDate", vmssName));
+                    return callback(null, null);
+                }
+
                 // update image uri
                 osDisk.image.uri = imageUrl;
                 var storageProfile: Model.StorageProfile = { "osDisk": osDisk };
 
                 // update VM extension
                 var oldExtensionProfile: Model.ExtensionProfile = vmss.properties.virtualMachineProfile.extensionProfile;
-                var newExtensionProfile = this.getUpdatedExtensionProfile(oldExtensionProfile, vmExtension);
-                var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile, extensionProfile: newExtensionProfile };
+                var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile };
+                if(!!vmExtension) {
+                    var newExtensionProfile = this.getUpdatedExtensionProfile(oldExtensionProfile, vmExtension);
+                    virtualMachineProfile.extensionProfile = newExtensionProfile;
+                }
 
                 var properties: Model.VMSSProperties = { "virtualMachineProfile": virtualMachineProfile };
                 var patchBody: Model.VMSS = {
