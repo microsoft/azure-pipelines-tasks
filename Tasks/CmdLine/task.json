@@ -69,14 +69,14 @@
             ]
         },
         "Node": {
-            "target": "cmdlinetask.js",
+            "target": "cmdline.js",
             "argumentFormat": ""
         }
     },
     "messages": {
-        "CmdLineReturnCode": "%s exited with return code: %d",
-        "CmdLineFailed": "%s failed with error: %s",
-        "PS_ExitCode": "powershell exited with code '{0}'.",
-        "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell."
+        "JS_Stderr": "bash wrote one or more lines to the standard error stream.",
+        "JS_ExitCode": "bash exited with code '%s'.",
+        "PS_ExitCode": "cmd.exe exited with code '{0}'.",
+        "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from cmd.exe."
     }
 }
