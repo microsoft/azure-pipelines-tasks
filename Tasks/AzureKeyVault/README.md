@@ -41,5 +41,4 @@ The parameters of the task are described below. The parameters listed with a \* 
  
  * **Key Vault**\*: Select the name of the Key vault from which the secrets need to be downloaded.
  
- * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.
- 
+ * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.  This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. For example, if there is a secret name: connectionString, a task variable "connectionString" is created with the latest fetched value of the respective secret from Azure key vault. And this secret variable would be available to be consumed in subsequent tasks.
