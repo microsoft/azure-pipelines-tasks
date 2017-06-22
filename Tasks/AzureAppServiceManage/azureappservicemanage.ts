@@ -1,9 +1,13 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
+
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
 var extensionManage = require('./extensionmanage.js');
+var azureStackRESTUtility = require ('azurestackrest-common/azurestackrestutility.js');
+
+var azureStackEnvironment = "AzureStack";
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
@@ -75,6 +79,15 @@ async function run() {
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+        var environmentName = tl.getEndpointDataParameter(connectedServiceName, 'environment', true);
+
+        if(environmentName && environmentName == azureStackEnvironment) {
+            if(!endPoint["envAuthUrl"]) {
+                azureStackRESTUtility.populateAzureRmDependencyData(endPoint);
+            } else {
+                endPoint["envAuthUrl"] =  endPoint["envAuthUrl"].trim("/") + "/";
+            }
+        }
 
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);

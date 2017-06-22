@@ -4,6 +4,7 @@ import fs = require('fs');
 import * as ParameterParser from './parameterparser'
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
+var azureStackRESTUtility = require ('azurestackrest-common/azurestackrestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var deployUtility = require('webdeployment-common/utility.js');
@@ -12,6 +13,8 @@ var fileTransformationsUtility = require('webdeployment-common/fileTransformatio
 var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
+
+var azureStackEnvironment = "AzureStack";
 
 async function run() {
     try {
@@ -52,6 +55,16 @@ async function run() {
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+        var environmentName = tl.getEndpointDataParameter(connectedServiceName, 'environment', true);
+
+        if(environmentName && environmentName == azureStackEnvironment) {
+            if(!endPoint["envAuthUrl"]) {
+                azureStackRESTUtility.populateAzureRmDependencyData(endPoint);
+            } else {
+                endPoint["envAuthUrl"] =  endPoint["envAuthUrl"].trim("/") + "/";
+            }
+        }
+        
 
         if(webAppKind && webAppKind === "linux") {
             deployToSlotFlag = false;

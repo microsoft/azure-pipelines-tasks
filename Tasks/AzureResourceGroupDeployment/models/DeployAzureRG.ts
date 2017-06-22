@@ -4,6 +4,9 @@
 import tl = require("vsts-task-lib/task");
 import msRestAzure = require("./../operations/azure-rest/azure-arm-common");
 
+var azureStackRESTUtility = require ('azurestackrest-common/azurestackrestutility.js'); 
+var azureStackEnvironment = "AzureStack";
+
 class TokenCredentials {
     private hostUrl: string;
     private patToken: string;
@@ -112,7 +115,17 @@ export class AzureRGTaskParameters {
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
-        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
+        var environment: string = tl.getEndpointDataParameter(connectedService, 'environment', true);
+        
+        if(environment != null && environment == azureStackEnvironment) {
+            if(!envAuthorityUrl) {
+                var endPoint = azureStackRESTUtility.populateAzureRmDependencyData({"url":armUrl});
+                envAuthorityUrl = endPoint["environmentAuthorityUrl"];
+            }   
+        } else {
+            envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
+        }
+
         var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl);
         return credentials;
     }

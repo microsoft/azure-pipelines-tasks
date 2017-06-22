@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 8
+        "Patch": 10
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -59,7 +59,7 @@
             "name": "WebAppName",
             "type": "pickList",
             "label": "App Service name",
-            "defaultValue": "",
+            "defaultValue": "Test1",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
@@ -74,8 +74,7 @@
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
-                "EditableOptions": "false",
-                "PopulateDefaultValue": "true"
+                "EditableOptions": "false"
             }
         },
         {
@@ -86,8 +85,7 @@
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
-                "EditableOptions": "false",
-                "PopulateDefaultValue": "true"
+                "EditableOptions": "false"
             }
         },
         {

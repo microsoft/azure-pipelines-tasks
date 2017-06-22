@@ -1,4 +1,4 @@
-﻿function Add-Certificate {
+function Add-Certificate {
     [CmdletBinding()]
     param([Parameter(Mandatory=$true)]$Endpoint)
 
@@ -45,6 +45,11 @@ function Initialize-AzureSubscription {
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
+    }
+
+    if($environmentName -eq "AzureStack")
+    {
+        Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
     }
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
@@ -223,4 +228,83 @@ function CmdletHasMember {
     {
         return false;
     }
+}
+
+<#
+    Adds Azure Stack environment to use with AzureRM command-lets when targeting Azure Stack
+#>
+function Add-AzureStackAzureRmEnvironment {
+    param (
+        [Parameter(mandatory=$true, HelpMessage="The Admin ARM endpoint of the Azure Stack Environment")]
+        $Endpoint,
+        [parameter(mandatory=$true, HelpMessage="Azure Stack environment name for use with AzureRM commandlets")]
+        [string] $Name
+    )
+
+    $EndpointURI = $Endpoint.Url.TrimEnd("/")
+
+    $Domain = ""
+    try {
+        $uriendpoint = [System.Uri] $EndpointURI
+        $i = $EndpointURI.IndexOf('.')
+        $Domain = ($EndpointURI.Remove(0,$i+1)).TrimEnd('/')
+    }
+    catch {
+        Write-Error "The specified ARM endpoint was invalid"
+    }
+
+    $ResourceManagerEndpoint = $EndpointURI
+    $stackdomain = $Domain
+
+    $AzureKeyVaultDnsSuffix="vault.$($stackdomain)".ToLowerInvariant()
+    $AzureKeyVaultServiceEndpointResourceId= $("https://vault.$stackdomain".ToLowerInvariant())
+    $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
+
+    # Check if endpoint data contains required data.
+    if($Endpoint.data.GraphUrl -eq $null)
+    {
+        Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
+        $endpointData = Invoke-RestMethod -Method Get -Uri "$($EndpointURI.ToString().TrimEnd('/'))/metadata/endpoints?api-version=2015-01-01" -ErrorAction Stop
+
+        $aadAuthorityEndpoint = $endpointData.authentication.loginEndpoint
+        $graphEndpoint = $endpointData.graphEndpoint
+        $graphAudience = $endpointData.graphEndpoint
+        $activeDirectoryEndpoint = $endpointData.authentication.loginEndpoint.TrimEnd('/') + "/"
+        $activeDirectoryServiceEndpointResourceId = $endpointData.authentication.audiences[0]
+        $galleryEndpoint = $endpointData.galleryEndpoint
+    }
+    else
+    {
+        $aadAuthorityEndpoint = $Endpoint.data.ActiveDirectoryAuthority.Trim("/") + "/"
+        $graphEndpoint = $Endpoint.data.graphUrl
+        $graphAudience = $Endpoint.data.graphUrl
+        $activeDirectoryEndpoint = $Endpoint.data.ActiveDirectoryAuthority.Trim("/") + "/"
+        $activeDirectoryServiceEndpointResourceId = $Endpoint.data.ResourceManagerUrl
+        $galleryEndpoint = $Endpoint.data.galleryUrl
+    }
+
+    $azureEnvironmentParams = @{
+        Name                                     = $Name
+        ActiveDirectoryEndpoint                  = $activeDirectoryEndpoint
+        ActiveDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
+        ResourceManagerEndpoint                  = $ResourceManagerEndpoint
+        GalleryEndpoint                          = $galleryEndpoint
+        GraphEndpoint                            = $graphEndpoint
+        GraphAudience                            = $graphAudience
+        StorageEndpointSuffix                    = $StorageEndpointSuffix
+        AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
+        AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
+        EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
+    }
+
+    $armEnv = Get-AzureRmEnvironment -Name $name
+    if($armEnv -ne $null) {
+        Write-Verbose "Updating AzureRm environment $name" -Verbose
+        Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+    }
+    else {
+        Write-Verbose "Adding AzureRm environment $name" -Verbose
+    }
+
+    return Add-AzureRmEnvironment @azureEnvironmentParams
 }
