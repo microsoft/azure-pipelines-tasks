@@ -37,7 +37,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSuffix",
       "defaultValue": ".$(Build.BuildNumber)",
-      "required": true
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
     },
     {
       "name": "versionBehavior",

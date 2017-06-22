@@ -6,6 +6,7 @@
   "loc.input.label.applicationPackagePath": "Application Package",
   "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.versionSuffix": "Version Value",
+  "loc.input.help.versionSuffix": "The value used to the specify the version in the manifest files. Default is .$(Build.BuildNumber). Tip: You can modify the build number format directly or use a logging command to dynamically set a variable in any format. For example, you can use $(VersionSuffix) defined in a PowerShell task: $versionSuffix = .$([DateTimeOffset]::UtcNow.ToString('yyyyMMdd.HHmmss')) Write-Host '##vso[task.setvariable variable=VersionSuffix;]$versionSuffix",
   "loc.input.label.versionBehavior": "Version Behavior",
   "loc.input.help.versionBehavior": "Specify whether to append the version value to existing values in the manifest files or replace them.",
   "loc.input.label.updateOnlyChanged": "Update only if changed",
