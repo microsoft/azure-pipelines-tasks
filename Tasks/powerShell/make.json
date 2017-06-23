@@ -3,11 +3,12 @@
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.8.1",
+                "version": "0.8.2",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
                         "source": [
+                            "*.dll",
                             "*.ps1",
                             "*.psd1",
                             "*.psm1",
