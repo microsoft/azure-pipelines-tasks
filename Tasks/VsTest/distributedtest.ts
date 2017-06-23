@@ -8,9 +8,9 @@ import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
-import * as testselectorinvoker from './testselectorinvoker';
+import {TestSelectorInvoker} from './testselectorinvoker';
 
-const testSelector = new testselectorinvoker.TestSelectorInvoker();
+const testSelector = new TestSelectorInvoker();
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
