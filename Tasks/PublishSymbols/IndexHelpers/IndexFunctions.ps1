@@ -51,6 +51,13 @@ function Invoke-IndexSources {
                 #    continue
                 #}
 
+                $bytes = Get-Content $symbolsFilePath -Encoding byte -TotalCount 4
+                $data = [System.Text.Encoding]::ASCII.GetString($bytes)
+                if ($data.equals("BSJB")) {
+                    Write-Verbose "Skipping: $symbolsFilePath because it is a Portable PDB"
+                    continue
+                }
+
                 # Get the source file paths embedded in the symbols file.
                 [string[]]$sourceFilePaths = Get-SourceFilePaths -SymbolsFilePath $symbolsFilePath -SourcesRootPath $provider.SourcesRootPath -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
                 if (!$sourceFilePaths.Count) {
