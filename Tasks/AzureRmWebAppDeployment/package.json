@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "q": "1.4.1"
+    "azurerest-common": "file:..\\..\\_build\\Tasks\\Common\\azurerest-common",
+    "azurestackrest-common": "file:..\\..\\_build\\Tasks\\Common\\azurestackrest-common",
+    "q": "1.4.1",
+    "webdeployment-common": "file:..\\..\\_build\\Tasks\\Common\\webdeployment-common"
   }
 }

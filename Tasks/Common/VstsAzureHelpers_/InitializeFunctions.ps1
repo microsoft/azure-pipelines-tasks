@@ -279,7 +279,7 @@ function Add-AzureStackAzureRmEnvironment {
         $graphEndpoint = $Endpoint.data.graphUrl
         $graphAudience = $Endpoint.data.graphUrl
         $activeDirectoryEndpoint = $Endpoint.data.ActiveDirectoryAuthority.Trim("/") + "/"
-        $activeDirectoryServiceEndpointResourceId = $Endpoint.data.ResourceManagerUrl
+        $activeDirectoryServiceEndpointResourceId = $Endpoint.data.activeDirectoryServiceEndpointResourceId
         $galleryEndpoint = $Endpoint.data.galleryUrl
     }
 
