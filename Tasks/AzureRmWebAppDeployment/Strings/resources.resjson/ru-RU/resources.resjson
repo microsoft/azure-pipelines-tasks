@@ -50,7 +50,7 @@
   "loc.messages.ConstructedmsDeploycomamndlinearguments": "Аргументы сформированной командной строки msDeploy",
   "loc.messages.Isparameterfilepresentinwebpackage0": "Есть ли файл параметров в пакете службы приложений: %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Развертывание веб-пакета %s по виртуальному пути (физическому пути): %s (%s)",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Пакет службы приложений %s успешно развернут в %s с помощью службы Kudu.",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Пакет службы приложений %s успешно развернут в %s с помощью службы kudu.",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Не удалось развернуть пакет службы приложений при помощи службы kudu: %s",
   "loc.messages.Unabletodeploywebappresponsecode": "Не удалось развернуть службу приложений из-за ошибки: %s",
   "loc.messages.Compressedfolderintozip": "Папка %s сжата в ZIP-архив %s.",

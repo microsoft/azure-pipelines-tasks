@@ -67,7 +67,7 @@
   "loc.messages.Configfiledoesntexists": "Le fichier config %s n'existe pas.",
   "loc.messages.Providednodeisemptyorcomment": "Le nœud fourni est vide ou est un commentaire.",
   "loc.messages.Configfileupdated": "Le fichier config %s est mis à jour.",
-  "loc.messages.Failedtowritetoconfigfilewitherror": "Échec de l'écriture dans le fichier config %s avec l'erreur : %s",
+  "loc.messages.Failedtowritetoconfigfilewitherror": "Échec d'écriture dans le fichier config %s avec l'erreur : %s",
   "loc.messages.Erroroccurredwhileprocessingxmlnode": "Une erreur s'est produite pendant le traitement du nœud XML : %s.",
   "loc.messages.Processingsubstitutionforxmlnode": "Traitement de la substitution pour le nœud XML : %s",
   "loc.messages.AppOfflineModeenabled": "Mode hors connexion de l'application activé.",

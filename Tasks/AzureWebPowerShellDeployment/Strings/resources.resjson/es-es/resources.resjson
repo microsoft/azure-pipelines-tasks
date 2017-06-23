@@ -1,13 +1,13 @@
 {
-  "loc.friendlyName": "Implementación de aplicaciones web de Azure",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Publicar un proyecto web de Visual Studio en una aplicación web de Microsoft Azure con Web Deploy",
+  "loc.friendlyName": "Azure App Service: Classic (En desuso)",
+  "loc.helpMarkDown": "Más información: La tarea \"Azure App Service: Classic\" estará en desuso. Le recomendamos migrar la definición para usar en su lugar la tarea \"Implementación de Azure App Service\". Para más información, vea [esto](https://go.microsoft.com/fwlink/?LinkID=613750).",
+  "loc.description": "Crear o actualizar Azure App Service con Azure PowerShell",
   "loc.instanceNameFormat": "Implementación de Azure: $(WebSiteName)",
-  "loc.input.label.ConnectedServiceName": "Suscripción a Azure (clásico)",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Azure (Clásico)",
   "loc.input.help.ConnectedServiceName": "Suscripción de Azure clásico de destino para la implementación.",
   "loc.input.label.WebSiteLocation": "Ubicación de la aplicación web",
   "loc.input.help.WebSiteLocation": "Seleccione una ubicación para el sitio web.",
-  "loc.input.label.WebSiteName": "Nombre de la aplicación web",
+  "loc.input.label.WebSiteName": "Nombre de aplicación web",
   "loc.input.help.WebSiteName": "Escriba el nombre del sitio web o selecciónelo de la lista.<br>Nota: Solo se muestran los sitios web asociados al plan de App Service predeterminado de la región seleccionada.",
   "loc.input.label.Slot": "Ranura",
   "loc.input.help.Slot": "Ranura",
@@ -23,5 +23,7 @@
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "No se puede actualizar el estado de la implementación, no se puede recuperar el valor deploymentId único",
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "Actualizando historial de implementación para la implementación {0}",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No se encontraron archivos para implementar con el patrón de búsqueda {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Se encontró más de un archivo para implementar con el patrón de búsqueda {0}. Solo puede haber uno."
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Se encontró más de un archivo para implementar con el patrón de búsqueda {0}. Solo puede haber uno.",
+  "loc.messages.FailedtodeployWebsiteError0": "No se pudo implementar el sitio web. Error : {0}",
+  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
 }
