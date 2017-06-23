@@ -1,6 +1,6 @@
 {
-  "id": "D9BAFED4-0B18-4F58-968D-86655B4D2CE9",
-  "name": "CmdLine",
+  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
+  "name": "Bash",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -15,12 +15,14 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
+    "Major": 3,
     "Minor": 120,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "preview": true,
+  "minimumAgentVersion": "2.115.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
       "name": "advanced",
@@ -34,7 +36,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
       "required": true,
-      "defaultValue": "echo Write your commands here\necho Use the Environment input below to map secret variables into environment variables",
+      "defaultValue": "# Write your commands here\n# Use the Environment input below to map secret variables into environment variables",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -60,23 +62,14 @@
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell3": {
-      "target": "cmdline.ps1",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
-      "target": "cmdline.js",
+      "target": "bash.js",
       "argumentFormat": ""
     }
   },
   "messages": {
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
-    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
-    "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode"
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr"
   }
 }

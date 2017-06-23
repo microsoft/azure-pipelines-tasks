@@ -10,50 +10,25 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get inputs.
-        let errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
-        switch (errorActionPreference.toUpperCase()) {
-            case 'STOP':
-            case 'CONTINUE':
-            case 'SILENTLYCONTINUE':
-                break;
-            default:
-                throw new Error(tl.loc('JS_InvalidErrorActionPreference', errorActionPreference));
-        }
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
-        let ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
-
-        // Generate the script contents.
-        let contents: string[] = [];
-        contents.push(`$ErrorActionPreference = '${errorActionPreference}'`);
-        contents.push(script);
-        if (!ignoreLASTEXITCODE) {
-            contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
-            contents.push(`    Write-Verbose 'Last exit code is not set.'`);
-            contents.push(`} else {`);
-            contents.push(`    Write-Verbose ('$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
-            contents.push(`    exit $LASTEXITCODE`);
-            contents.push(`}`);
-        }
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        await fs.writeFile(
+        let filePath = path.join(tempDirectory, uuidV4() + '.sh');
+        await fs.writeFileSync(
             filePath,
-            '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will
-        //                                    // encode the BOM into its UTF8 binary sequence.
+            '\ufeff' + script,      // Prepend the Unicode BOM character.
+            { encoding: 'utf8' });  // Since UTF8 encoding is specified, node will
+        //                          // encode the BOM into its UTF8 binary sequence.
 
-        // Run the script.
-        let powershell = tl.tool(tl.which('powershell', true))
-            .arg('-NoLogo')
-            .arg('-NoProfile')
-            .arg('-NonInteractive')
-            .arg('-File')
+        // Create the tool runner.
+        let bash = tl.tool(tl.which('bash', true))
+            .arg('--noprofile')
+            .arg(`--norc`)
             .arg(filePath);
         let options = <tr.IExecOptions>{
             cwd: workingDirectory,
@@ -66,13 +41,13 @@ async function run() {
         // Listen for stderr.
         let stderrFailure = false;
         if (failOnStderr) {
-            powershell.on('stderr', (data) => {
+            bash.on('stderr', (data) => {
                 stderrFailure = true;
             });
         }
 
         // Run bash.
-        let exitCode: number = await powershell.exec(options);
+        let exitCode: number = await bash.exec(options);
 
         // Fail on exit code.
         if (exitCode !== 0) {

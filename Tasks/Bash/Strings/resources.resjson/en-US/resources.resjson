@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Bash",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "loc.description": "Run a Bash script on Mac, Linux, or Windows",
+  "loc.instanceNameFormat": "Bash Script",
+  "loc.releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.script": "Script",
+  "loc.input.label.workingDirectory": "Working Directory",
+  "loc.input.label.failOnStderr": "Fail on Standard Error",
+  "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+  "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
+  "loc.messages.JS_Stderr": "Bash wrote one or more lines to the standard error stream."
+}

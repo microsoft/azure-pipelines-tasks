@@ -67,7 +67,6 @@
         "ServiceFabricDeploy",
         "ServiceFabricPowerShell",
         "ServiceFabricUpdateAppVersions",
-        "ShellScript",
         "SqlAzureDacpacDeployment",
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",

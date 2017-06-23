@@ -1,8 +1,8 @@
 {
-  "name": "vsts-tasks-shellscript",
+  "name": "vsts-tasks-bash",
   "version": "1.0.0",
-  "description": "VSTS ShellScript Task",
-  "main": "shellscript.js",
+  "description": "VSTS Bash Task",
+  "main": "bash.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20"
+    "uuid": "^3.0.1",
+    "vsts-task-lib": "2.0.5"
   }
 }
