@@ -78,7 +78,7 @@
         {
             "target": "vmssName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureVirtualMachineScaleSetsNames"
+            "dataSourceName": "AzureVirtualMachineScaleSetNames"
         }
     ],
     "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
