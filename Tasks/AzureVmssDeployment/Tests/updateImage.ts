@@ -7,7 +7,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("action", "UpdateImage");
 tr.setInput("ConnectedServiceName", "AzureRM");
-tr.setInput("vmssName", "testvmss1");
+tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : "testvmss1");
 tr.setInput("imageUrl", "https://someurl");
 
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
