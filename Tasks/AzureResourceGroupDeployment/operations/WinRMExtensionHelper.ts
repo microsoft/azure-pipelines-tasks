@@ -307,10 +307,10 @@ export class WinRMExtensionHelper {
                 if (result["properties"]["provisioningState"] === 'Succeeded') {
                     extensionStatusValid = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, fileUris);
                 }
+            }
 
-                if (!extensionStatusValid) {
-                    await this.RemoveExtensionFromVM(extensionName, vmName);
-                }
+            if (!extensionStatusValid) {
+                await this.RemoveExtensionFromVM(extensionName, vmName);
             }
         }
         if (!extensionStatusValid) {
@@ -345,7 +345,7 @@ export class WinRMExtensionHelper {
                 if (result["properties"]["instanceView"] && result["properties"]["instanceView"]["extensions"]) {
                     var extensions = result["properties"]["instanceView"]["extensions"];
                     for (var extension of extensions) {
-                        if (result["name"] === extensionName) {
+                        if (extension["name"] === extensionName) {
                             for (var substatus of extension["substatuses"]) {
                                 if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
                                     invalidExecutionStatus = true;
@@ -394,6 +394,11 @@ export class WinRMExtensionHelper {
                 tl.debug("Addition of extension completed for vm: " + vmName);
                 if (result["properties"]["provisioningState"] != 'Succeeded') {
                     tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
+                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
+                    return;
+                }
+                if (!this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris)) {
+                    tl.debug("WinRMCustomScriptExtension is not valid on vm " + vmName);
                     reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
                     return;
                 }
