@@ -1,11 +1,11 @@
 {
     "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
     "name": "AzureVmssDeployment",
-    "friendlyName": "Azure VM Scale set Deployment (PREVIEW)",
-    "description": "Deploy virtual machine scale set image",
-    "helpMarkDown": "[More Information](https://aka.ms/azurevmsstaskreadme)",
+    "friendlyName": "Azure VM scale set Deployment (PREVIEW)",
+    "description": "Deploy Virtual Machine scale set image",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
     "category": "Deploy",
-    "releaseNotes": "- Updates azure virtual machine scale set with a custom image.\n- Works with Xplat agents (Windows, Linux or OSX).",
+    "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
     "visibility": [
         "Build",
         "Release"
@@ -56,7 +56,7 @@
         {
             "name": "vmssName",
             "type": "pickList",
-            "label": "VMSS",
+            "label": "Virtual Machine scale set name",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of scale set. Note that image can be updated only for a scale set which is running a custom image. If a scale set is using platform/gallery image, then image update operation will fail.",
@@ -71,7 +71,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "Image",
-            "helpMarkDown": "Specify the URL of image VHD. If it is a azure storage blob url, the storage account location should be same as scale set location."
+            "helpMarkDown": "Specify the URL of image VHD. If it is an Azure storage blob url, the storage account location should be same as scale set location."
         }
     ],
     "dataSourceBindings": [
