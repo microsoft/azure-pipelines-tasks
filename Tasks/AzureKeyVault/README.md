@@ -34,17 +34,14 @@ To add secrets to the keyvault, use PowerShell cmdlet [Set-AzureKeyVaultSecret](
 Or use Azure CLI : To add a secret, which is a password named SQLPassword and that has the value of Pa$$w0rd to Azure Key Vault, type the following:
 az keyvault secret set --vault-name 'ContosoKeyVault' --name 'SQLPassword' --value 'Pa$$w0rd'
 
-Ensure the Azure endpoint has at least Get and List permissions on the vault. You can set these permissions in the Azure portal:
-Open the Settings blade for the vault, choose Access policies, then Add new.
-In the Add access policy blade, choose Select principal and select the service principal for your client account.
-In the Add access policy blade, choose Secret permissions and ensure that Get and List are checked (ticked).
-Choose OK to save the changes.
-
 ### Parameters of the task:
 
 The parameters of the task are described below. The parameters listed with a \* are required parameters for the task:
 
- * **Azure Subscription**\*: Select the service connection for the Azure Subscription where the Azure Key vault instance is created. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
+ * **Azure Subscription**\*: Select the service endpoint for the Azure Subscription where the Azure Key vault instance is created. To configure new service endpoint, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
+
+Ensure the Azure endpoint has at least Get and List permissions on the vault. You can set these permissions in the Azure portal:
+Open the Settings blade for the vault, choose Access policies, then Add new.In the Add access policy blade, choose Select principal and select the service principal for your client account.In the Add access policy blade, choose Secret permissions and ensure that Get and List are checked (ticked). Choose OK to save the changes.
  
  * **Key Vault**\*: Select the name of the Key vault from which the secrets need to be downloaded.
  
