@@ -106,7 +106,7 @@
   "loc.messages.testPlanInput": "Идентификатор плана тестирования: %s",
   "loc.messages.testplanConfigInput": "Идентификатор конфигурации плана тестирования: %s",
   "loc.messages.testSuiteSelected": "Идентификатор выбранного набора тестов: %s",
-  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterInput": "Сборки теста: %s",
   "loc.messages.vsVersionSelected": "Версия VisualStudio, выбранная для запуска теста: %s",
   "loc.messages.runTestsLocally": "Запускать тесты локально с помощью %s",
   "loc.messages.vstestLocationSpecified": "%s, указанное расположение: %s",

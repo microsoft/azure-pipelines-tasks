@@ -106,7 +106,7 @@
   "loc.messages.testPlanInput": "测试计划 ID: %s",
   "loc.messages.testplanConfigInput": "测试计划配置 ID: %s",
   "loc.messages.testSuiteSelected": "所选的测试套件 ID: %s",
-  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterInput": "测试程序集: %s",
   "loc.messages.vsVersionSelected": "选择进行测试执行的 VisualStudio 版本: %s",
   "loc.messages.runTestsLocally": "使用 %s 本地运行测试",
   "loc.messages.vstestLocationSpecified": "%s，指定位置: %s",

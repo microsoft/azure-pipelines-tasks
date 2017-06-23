@@ -8,7 +8,7 @@
   "loc.group.displayName.advanced": "進階",
   "loc.group.displayName.CodeAnalysis": "程式碼分析",
   "loc.input.label.mavenPOMFile": "Maven POM 檔案",
-  "loc.input.help.mavenPOMFile": "從儲存機制根路徑到 Maven POM 檔案的相對路徑。",
+  "loc.input.help.mavenPOMFile": "從存放庫根路徑到 Maven POM 檔案的相對路徑。",
   "loc.input.label.options": "選項",
   "loc.input.label.goals": "目標",
   "loc.input.label.publishJUnitResults": "發行至 TFS/Team Services",

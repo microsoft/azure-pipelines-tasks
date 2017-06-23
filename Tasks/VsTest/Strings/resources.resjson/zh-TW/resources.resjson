@@ -106,7 +106,7 @@
   "loc.messages.testPlanInput": "測試計劃識別碼: %s",
   "loc.messages.testplanConfigInput": "測試計劃設定識別碼: %s",
   "loc.messages.testSuiteSelected": "已選取測試套件識別碼: %s",
-  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterInput": "測試組件: %s",
   "loc.messages.vsVersionSelected": "選取用於測試執行的 Visual Studio 版本: %s",
   "loc.messages.runTestsLocally": "使用 %s 在本機執行測試",
   "loc.messages.vstestLocationSpecified": "%s，指定的位置: %s",

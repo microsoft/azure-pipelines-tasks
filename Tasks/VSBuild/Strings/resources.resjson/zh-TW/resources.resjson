@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "建置方案 $(solution)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.solution": "方案",
-  "loc.input.help.solution": "要執行的方案或 MSBuild 專案之儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**\\*.sln` 即適用於所有子資料夾中的所有 sln 檔 。",
+  "loc.input.help.solution": "要執行的方案或 MSBuild 專案之存放庫根路徑的相對路徑。可使用萬用字元。例如，`**\\*.sln` 即適用於所有子資料夾中的所有 sln 檔 。",
   "loc.input.label.vsVersion": "Visual Studio 版本",
   "loc.input.help.vsVersion": "若找不到慣用版本，將會改用所能找到的最新版本。",
   "loc.input.label.msbuildArgs": "MSBuild 引數",

@@ -6,7 +6,7 @@
   "loc.releaseNotes": "符合模式一致性。",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.SourceFolder": "來源資料夾",
-  "loc.input.help.SourceFolder": "複製模式執行所在的來源資料夾。保留空白表示是儲存機制的根資料夾。若檔案不在儲存機制中，請使用 [變數](https://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(agent.builddirectory)",
+  "loc.input.help.SourceFolder": "複製模式執行所在的來源資料夾。保留空白表示是存放庫的根資料夾。若檔案不在存放庫中，請使用 [變數](https://go.microsoft.com/fwlink/?LinkID=550988)。例如: $(agent.builddirectory)",
   "loc.input.label.Contents": "內容",
   "loc.input.help.Contents": "要在複製時一併加入的檔案路徑。支援多行的比對模式。[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "目標資料夾",

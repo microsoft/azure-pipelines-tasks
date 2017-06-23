@@ -106,7 +106,7 @@
   "loc.messages.testPlanInput": "테스트 계획 ID: %s",
   "loc.messages.testplanConfigInput": "테스트 계획 구성 ID: %s",
   "loc.messages.testSuiteSelected": "선택한 테스트 도구 모음 ID: %s",
-  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterInput": "테스트 어셈블리: %s",
   "loc.messages.vsVersionSelected": "테스트 실행을 위해 선택한 Visual Studio 버전: %s",
   "loc.messages.runTestsLocally": "%s을(를) 사용하여 로컬로 테스트 실행",
   "loc.messages.vstestLocationSpecified": "%s, 지정된 위치: %s",

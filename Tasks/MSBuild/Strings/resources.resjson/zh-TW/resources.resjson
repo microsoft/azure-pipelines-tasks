@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "建置方案 $(solution)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.solution": "專案",
-  "loc.input.help.solution": "要執行之專案或解決方案儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**/*.csproj` 即適用於所有子資料夾中的所有 csproj 檔。",
+  "loc.input.help.solution": "要執行之專案或解決方案存放庫根路徑的相對路徑。可使用萬用字元。例如，`**/*.csproj` 即適用於所有子資料夾中的所有 csproj 檔。",
   "loc.input.label.msbuildLocationMethod": "MSBuild",
   "loc.input.label.msbuildVersion": "MSBuild 版本",
   "loc.input.help.msbuildVersion": "若找不到所需的版本，將會改用所能找到的最新版本。在 MacOS 代理程式上，若版本低於 15.0，將會使用 xbuild (Mono)。",

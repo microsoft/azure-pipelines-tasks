@@ -106,7 +106,7 @@
   "loc.messages.testPlanInput": "Id. del plan de pruebas: %s",
   "loc.messages.testplanConfigInput": "Id. de configuración del plan de pruebas: %s",
   "loc.messages.testSuiteSelected": "Id. de conjunto de pruebas seleccionado: %s",
-  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterInput": "Ensamblados de prueba: %s",
   "loc.messages.vsVersionSelected": "Versión de Visual Studio seleccionada para la ejecución de pruebas: %s",
   "loc.messages.runTestsLocally": "Ejecutar las pruebas localmente con %s",
   "loc.messages.vstestLocationSpecified": "%s, ubicación especificada: %s",

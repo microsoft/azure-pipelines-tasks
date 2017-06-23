@@ -106,7 +106,7 @@
   "loc.messages.testPlanInput": "テスト計画 ID: %s",
   "loc.messages.testplanConfigInput": "テスト計画構成 ID: %s",
   "loc.messages.testSuiteSelected": "選択されたテスト スイート ID: %s",
-  "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterInput": "テスト アセンブリ: %s",
   "loc.messages.vsVersionSelected": "テストの実行用に選択された Visual Studio のバージョン: %s",
   "loc.messages.runTestsLocally": "%s を使ってローカルでテストを実行",
   "loc.messages.vstestLocationSpecified": "%s、指定された場所: %s",

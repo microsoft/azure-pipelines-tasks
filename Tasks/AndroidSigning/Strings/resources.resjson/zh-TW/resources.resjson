@@ -6,7 +6,7 @@
   "loc.group.displayName.jarsignerOptions": "簽署選項",
   "loc.group.displayName.zipalignOptions": "Zipalign 選項",
   "loc.input.label.files": "APK 檔案",
-  "loc.input.help.files": "從儲存機制根路徑到您想登入之 APK 的相對路徑。您可使用萬用字元指定多個檔案。例如，`**/bin/*.apk` 即代表 'bin' 子資料夾中的所有 .APK 檔。",
+  "loc.input.help.files": "從存放庫根路徑到您想登入之 APK 的相對路徑。您可使用萬用字元指定多個檔案。例如，`**/bin/*.apk` 即代表 'bin' 子資料夾中的所有 .APK 檔。",
   "loc.input.label.jarsign": "簽署 APK",
   "loc.input.help.jarsign": "若要使用提供的金鑰儲存區檔案簽署 APK，請選取此選項。未經簽署的 APK 只可在模擬器中執行。APK 必須經過簽署，才能在裝置上執行。",
   "loc.input.label.keystoreFile": "Keystore 檔案",
