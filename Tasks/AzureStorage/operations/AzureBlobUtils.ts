@@ -1,6 +1,6 @@
 import tl = require("vsts-task-lib/task");
-import msRestAzure = require("./azure-rest/azure-arm-common");
-import armStorage = require("./azure-rest/azure-arm-storage");
+import msRestAzure = require("azure-arm-rest/azure-arm-common");
+import armStorage = require("azure-arm-rest/azure-arm-storage");
 import azcopy = require("./AzCopyUtils");
 import util = require("util");
 
