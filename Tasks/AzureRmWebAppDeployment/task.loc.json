@@ -82,8 +82,8 @@
       "name": "WebAppKind",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
-      "required": false,
       "defaultValue": "app",
+      "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
       "properties": {
         "EditableOptions": "false",

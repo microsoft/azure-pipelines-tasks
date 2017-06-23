@@ -82,8 +82,8 @@
             "name": "WebAppKind",
             "type": "pickList",
             "label": "Web app kind",
-            "required": false,
             "defaultValue": "app",
+            "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
                 "EditableOptions": "false",
