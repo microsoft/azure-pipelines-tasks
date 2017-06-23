@@ -50,7 +50,7 @@
   "loc.messages.ConstructedmsDeploycomamndlinearguments": "Gli argomenti della riga di comando di MSDeploy sono stati costruiti",
   "loc.messages.Isparameterfilepresentinwebpackage0": "File dei parametri presente nel pacchetto del servizio app: %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Distribuzione del pacchetto Web %s nel percorso virtuale (percorso fisico) %s (%s)",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto del servizio app %s all'indirizzo %s con il servizio Kudu è riuscita",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto del servizio app %s con il servizio Kudu all'indirizzo %s è riuscita",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Non è stato possibile distribuire il pacchetto del servizio app con il servizio Kudu: %s",
   "loc.messages.Unabletodeploywebappresponsecode": "Non è possibile distribuire il servizio app a causa del codice errore: %s",
   "loc.messages.Compressedfolderintozip": "La cartella %s è stata compressa nel file ZIP: %s",

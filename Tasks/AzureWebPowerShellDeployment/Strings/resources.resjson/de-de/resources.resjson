@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Web App-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Ein Visual Studio-Webprojekt mithilfe von Web Deploy als Microsoft Azure Web App veröffentlichen",
+  "loc.friendlyName": "Azure App Service: Klassisch (veraltet)",
+  "loc.helpMarkDown": "Weitere Informationen: Die Aufgabe \"Azure App Service: Klassisch\" ist veraltet. Wir empfehlen Ihnen stattdessen, Ihre Definition zur Verwendung der Aufgabe \"Azure App Service-Bereitstellung\" zu migrieren. Weitere Informationen finden Sie [hier] (https://go.microsoft.com/fwlink/?LinkID=613750).",
+  "loc.description": "Azure App Service mithilfe von Azure PowerShell erstellen oder aktualisieren",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement (klassisch)",
   "loc.input.help.ConnectedServiceName": "Klassisches Azure-Zielabonnement für die Bereitstellung.",
@@ -18,10 +18,12 @@
   "loc.input.label.AdditionalArguments": "Zusätzliche Argumente",
   "loc.messages.Cannotgetwebsitedeploymentstatusisnotupdated": "Die Website kann nicht abgerufen werden. Der Bereitstellungsstatus wurde nicht aktualisiert.",
   "loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "Der Bereitstellungsstatus kann nicht aktualisiert werden. Der SCM-Endpunkt ist für diese Website nicht aktiviert.",
-  "loc.messages.Cannotupdatedeploymentstatusfor01": "Der Bereitstellungsstatus für {0}: {1} kann nicht aktualisiert werden.",
+  "loc.messages.Cannotupdatedeploymentstatusfor01": "Der Bereitstellungsstatus für {0} – {1} kann nicht aktualisiert werden.",
   "loc.messages.Updatingdeploymentstatus": "Der Bereitstellungsstatus wird aktualisiert.",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Der Bereitstellungsstatus kann nicht aktualisiert werden kann. Eine eindeutige \"DeploymentId\" kann nicht abgerufen werden.",
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "Der Bereitstellungsverlauf für die Bereitstellung {0} wird aktualisiert.",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Es wurden keine Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden.",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Es wurde mehrere Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden. Es darf maximal eine Datei vorhanden sein."
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Es wurde mehrere Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden. Es darf maximal eine Datei vorhanden sein.",
+  "loc.messages.FailedtodeployWebsiteError0": "Fehler beim Bereitstellen der Website. Fehler: {0}.",
+  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
 }
