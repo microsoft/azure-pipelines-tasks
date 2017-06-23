@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -29,7 +29,7 @@
         },
         {
             "name": "StorageAccountName",
-            "type": "string",
+            "type": "pickList",
             "label": "Storage Account Name",
             "defaultValue": "",
             "required": true,
@@ -52,7 +52,7 @@
         {
             "name": "CommonVirtualPath",
             "type": "string",
-            "label": "Container Name",
+            "label": "Common Virtual Path",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "(Optional) Provide the sub-folder path inside the container.",
@@ -63,12 +63,12 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "KeyVaultName",
+            "target": "StorageAccountName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureKeyVaults"
+            "dataSourceName": "AzureStorageAccountRM"
         }
     ],
-    "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
+    "instanceNameFormat": "Azure Storage Task",
     "execution": {
         "Node": {
             "target": "main.js"
@@ -90,16 +90,13 @@
         "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
         "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
         "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
-        "AzKv_ConstructorFailed": "Azure key vault parameters initialization failed. Error: %s.",
         "SubscriptionIdLabel": "SubscriptionId: %s.",
-        "KeyVaultNameLabel": "Key vault name: %s.",
         "DownloadingSecretsUsing": "Downloading secrets using: %s.",
         "GetSecretsFailed": "Get secrets failed. Error: %s.",
         "NoSecretsFound": "No secrets found in: %s",
         "NumberOfSecretsFound": "Number of secrets found in %s: %s",
         "NumberOfEnabledSecretsFound": "Number of enabled and unexpired secrets found in %s: %s",
         "DownloadingSecretValue": "Downloading secret value for: %s.",
-        "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
-        "ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault"
+        "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s."
     }
 }

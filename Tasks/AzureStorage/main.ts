@@ -1,20 +1,22 @@
-import tl = require("vsts-task-lib/task");
-import msRestAzure = require("./operations/azure-rest/azure-arm-common");
 import path = require("path");
 import * as os from 'os';
 import util = require("util");
-import armStorage = require("./operations/azure-rest/azure-arm-storage");
+import tl = require("vsts-task-lib/task");
+import msRestAzure = require("azure-arm-rest/azure-arm-common");
+import armStorage = require("azure-arm-rest/azure-arm-storage");
 import blobUtils = require("./operations/AzureBlobUtils");
 
 function run(): Q.Promise<void> {
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
-    var workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-    var azCopyExeLocation: string = path.join(workingDirectory, 'AzCopy', 'AzCopy.exe');
+    var azCopyExeLocation: string = path.join(__dirname, 'AzCopy', 'AzCopy.exe');
 
     var connectedServiceName = tl.getInput('ConnectedServiceName', true);
     var storageAccountName = tl.getInput('StorageAccountName', true);
     var containerName = tl.getInput('ContainerName', true);
-    var commonVirtualPath = ""; // tl.getInput('CommonVirtualPath', true);
+    var commonVirtualPath = tl.getInput('CommonVirtualPath', false);
+    if(!commonVirtualPath) {
+        commonVirtualPath = "";
+    }
     var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
     var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedServiceName, "serviceprincipalid", false);
 

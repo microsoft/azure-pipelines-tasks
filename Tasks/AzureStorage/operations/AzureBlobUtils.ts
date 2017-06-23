@@ -14,6 +14,10 @@ export class AzureBlobUtils {
     }
 
     public downloadFromBlob(storageAccountName: string, containerName: string, commonVirtualPath:string, destLocation: string): Q.Promise<void> {
+        if(!tl.osType().match(/^Win/)) {
+            throw new Error(tl.osType()+' : OS type not supported with AzCopy');
+        }
+
         var resourceGroupNamePromise: Q.Promise<string> = AzureBlobUtils.armStorageClient.getResourceGroupName(storageAccountName);
         return resourceGroupNamePromise.then(function(resourceGroupName) {
             var storageAccountAccessKeysPromise: Q.Promise<string[]> = (AzureBlobUtils.armStorageClient).getStorageAccountAccessKeys(resourceGroupName, storageAccountName);
