@@ -46,6 +46,11 @@ export class DotnetMockHelper {
         })
     }
 
+    public setOnPremServerUris() {
+        process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.privatedomain.com/defaultcollection";
+        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.privatedomain.com/defaultcollection";
+    }
+
     private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
         this.registerMockWithMultiplePaths(['nuget-task-common/pe-parser/index', './pe-parser/index'], {
             getFileVersionInfoAsync: function(nuGetExePath) {

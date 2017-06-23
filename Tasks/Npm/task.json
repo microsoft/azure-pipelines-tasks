@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
@@ -167,6 +167,8 @@
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",
         "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
-        "TestDebugLog": "Trying debug log location: %s"
+        "TestDebugLog": "Trying debug log location: %s",
+        "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
+        "RestoringProjectNpmrc": "Restoring project .npmrc"
     }
 }

@@ -1,0 +1,110 @@
+{
+    "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
+    "name": "AzureVmssDeployment",
+    "friendlyName": "Azure VM Scale set Deployment (PREVIEW)",
+    "description": "Deploy virtual machine scale set image",
+    "helpMarkDown": "[More Information](https://aka.ms/azurevmsstaskreadme)",
+    "category": "Deploy",
+    "releaseNotes": "- Updates azure virtual machine scale set with a custom image.\n- Works with Xplat agents (Windows, Linux or OSX).",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Image",
+            "displayName": "Image Details",
+            "isExpanded": true,
+            "visibleRule": "action = UpdateImage"
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "UpdateImage",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Action to be performed on the scale set.",
+            "options": {
+                "UpdateImage": "Update image"
+            }
+        },
+        {
+            "name": "vmssName",
+            "type": "pickList",
+            "label": "VMSS",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the name of scale set. Note that image can be updated only for a scale set which is running a custom image. If a scale set is using platform/gallery image, then image update operation will fail.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "imageUrl",
+            "type": "string",
+            "label": "Image url",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Image",
+            "helpMarkDown": "Specify the URL of image VHD. If it is a azure storage blob url, the storage account location should be same as scale set location."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "vmssName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachineScaleSetsNames"
+        }
+    ],
+    "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "InvalidAction": "This action is not defined. Check with the task author.",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "TaskConstructorFailed": "Task failed while initializing. Error: %s",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VMSSListFetchFailed": "Failed to fetch VMSS details.",
+        "NoVMSSFound": "No VMSS found with name %s.",
+        "FailedToGetRGForVMSS": "Failed to get resource group information for VMSS %s.",
+        "VMSSImageUpdateFailed": "Failed to update image for VMSS %s. Error: %s",
+        "UpdatedVMSSImage": "Successfully updated VMSS image.",
+        "VMSSUpdateImage": "Updating VMSS %s image to %s",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "GetVMSSFailedWillRetry": "Failed to get VMSS details with resource group %s and name %s. Error: %s. Will retry.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "WaitingForVMSSImageUpdateCompletion": "Waiting for VMSS image to get updated..",
+        "VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+        "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
+        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date."
+    }
+}

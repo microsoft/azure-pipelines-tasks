@@ -1,0 +1,110 @@
+{
+  "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
+  "name": "AzureVmssDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
+      "isExpanded": true
+    },
+    {
+      "name": "Image",
+      "displayName": "ms-resource:loc.group.displayName.Image",
+      "isExpanded": true,
+      "visibleRule": "action = UpdateImage"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "UpdateImage",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "UpdateImage": "Update image"
+      }
+    },
+    {
+      "name": "vmssName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vmssName",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.vmssName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "imageUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageUrl",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "Image",
+      "helpMarkDown": "ms-resource:loc.input.help.imageUrl"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "vmssName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureVirtualMachineScaleSetsNames"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "main.js"
+    }
+  },
+  "messages": {
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
+    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
+    "TaskConstructorFailed": "ms-resource:loc.messages.TaskConstructorFailed",
+    "InvalidValue": "ms-resource:loc.messages.InvalidValue",
+    "VMSSListFetchFailed": "ms-resource:loc.messages.VMSSListFetchFailed",
+    "NoVMSSFound": "ms-resource:loc.messages.NoVMSSFound",
+    "FailedToGetRGForVMSS": "ms-resource:loc.messages.FailedToGetRGForVMSS",
+    "VMSSImageUpdateFailed": "ms-resource:loc.messages.VMSSImageUpdateFailed",
+    "UpdatedVMSSImage": "ms-resource:loc.messages.UpdatedVMSSImage",
+    "VMSSUpdateImage": "ms-resource:loc.messages.VMSSUpdateImage",
+    "VMSSNameCannotBeNull": "ms-resource:loc.messages.VMSSNameCannotBeNull",
+    "GetVMSSFailedWillRetry": "ms-resource:loc.messages.GetVMSSFailedWillRetry",
+    "GetVMSSFailed": "ms-resource:loc.messages.GetVMSSFailed",
+    "WaitingForVMSSImageUpdateCompletion": "ms-resource:loc.messages.WaitingForVMSSImageUpdateCompletion",
+    "VMSSImageUpdateTimedOut": "ms-resource:loc.messages.VMSSImageUpdateTimedOut",
+    "VMSSDoesNotHaveCustomImage": "ms-resource:loc.messages.VMSSDoesNotHaveCustomImage",
+    "VMSSImageUrlCannotBeNull": "ms-resource:loc.messages.VMSSImageUrlCannotBeNull",
+    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate"
+  }
+}
