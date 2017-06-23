@@ -1,3 +1,4 @@
+
 # Azure Key Vault Task
 
 ### Overview
@@ -32,6 +33,12 @@ This task supports fetching latest values of the secrets which are already added
 To add secrets to the keyvault, use PowerShell cmdlet [Set-AzureKeyVaultSecret](https://docs.microsoft.com/en-us/powershell/module/azurerm.keyvault/set-azurekeyvaultsecret?view=azurermps-4.0.0): If the secret does not exist, this cmdlet creates it. If the secret already exists, this cmdlet creates a new version of that secret. 
 Or use Azure CLI : To add a secret, which is a password named SQLPassword and that has the value of Pa$$w0rd to Azure Key Vault, type the following:
 az keyvault secret set --vault-name 'ContosoKeyVault' --name 'SQLPassword' --value 'Pa$$w0rd'
+
+Ensure the Azure endpoint has at least Get and List permissions on the vault. You can set these permissions in the Azure portal:
+Open the Settings blade for the vault, choose Access policies, then Add new.
+In the Add access policy blade, choose Select principal and select the service principal for your client account.
+In the Add access policy blade, choose Secret permissions and ensure that Get and List are checked (ticked).
+Choose OK to save the changes.
 
 ### Parameters of the task:
 
