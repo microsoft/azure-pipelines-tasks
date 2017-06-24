@@ -30,8 +30,7 @@ try {
     Assert-VstsPath -LiteralPath $input_workingDirectory -PathType 'Container'
 
     # Generate the script contents.
-    #TODO: CONVERT NEWLINES?
-    $contents = "$input_script"
+    $contents = "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
 
     # Write the script to disk.
     Assert-VstsAgent -Minimum '2.115.0'
@@ -55,7 +54,8 @@ try {
     #        expansion is disabled by default, unless enabled via registry.
     # /S     Will cause first and last quote after /C to be stripped.
     #
-    # TODO: ADD EXPLANATION WHY "CALL" IS REQUIRED
+    # Note, use CALL otherwise if a script ends with "goto :eof" the errorlevel
+    # will not bubble as the exit code of cmd.exe.
     $arguments = "/Q /D /E:ON /V:OFF /S /C `"CALL `"$filePath`"`""
     $splat = @{
         'FileName' = $cmdPath
