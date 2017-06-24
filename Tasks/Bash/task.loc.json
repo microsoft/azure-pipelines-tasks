@@ -70,6 +70,7 @@
   },
   "messages": {
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
-    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr"
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
+    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed"
   }
 }

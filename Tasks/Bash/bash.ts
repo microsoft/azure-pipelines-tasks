@@ -18,17 +18,44 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.sh');
+        let fileName = uuidV4() + '.sh';
+        let filePath = path.join(tempDirectory, fileName);
         await fs.writeFileSync(
             filePath,
-            '\ufeff' + script,      // Prepend the Unicode BOM character.
-            { encoding: 'utf8' });  // Since UTF8 encoding is specified, node will
-        //                          // encode the BOM into its UTF8 binary sequence.
+            script,
+            { encoding: 'utf8' });
+
+        let bashPath: string = tl.which('bash', true);
+        if (process.platform == 'win32') {
+            // Translate the script path from Windows to the Linux file system.
+            let bashPwd = tl.tool(bashPath)
+                .arg('--noprofile')
+                .arg('--norc')
+                .arg('-c')
+                .arg('pwd');
+            let bashPwdOptions = <tr.IExecOptions>{
+                cwd: tempDirectory,
+                failOnStdErr: true,
+                errStream: process.stdout,
+                outStream: process.stdout,
+                ignoreReturnCode: false
+            };
+            let pwdOutput = '';
+            bashPwd.on('stdout', (data) => {
+                pwdOutput += data.toString().trim();
+            });
+            await bashPwd.exec(bashPwdOptions);
+            if (!pwdOutput) {
+                throw new Error(tl.loc('JS_TranslatePathFailed', tempDirectory));
+            }
+
+            filePath = `${pwdOutput}/${fileName}`;
+        }
 
         // Create the tool runner.
-        let bash = tl.tool(tl.which('bash', true))
+        let bash = tl.tool(bashPath)
             .arg('--noprofile')
-            .arg(`--norc`)
+            .arg('--norc')
             .arg(filePath);
         let options = <tr.IExecOptions>{
             cwd: workingDirectory,
