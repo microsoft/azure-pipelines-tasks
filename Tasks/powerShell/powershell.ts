@@ -30,9 +30,9 @@ async function run() {
         contents.push(script);
         if (!ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
-            contents.push(`    Write-Verbose 'Last exit code is not set.'`);
+            contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
             contents.push(`} else {`);
-            contents.push(`    Write-Verbose ('$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
+            contents.push(`    Write-Host ('##vso[task.debug]$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
             contents.push(`    exit $LASTEXITCODE`);
             contents.push(`}`);
         }
