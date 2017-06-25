@@ -2,7 +2,6 @@
   "name": "AzureVmssDeployment",
   "main":"main.js",
   "dependencies": {
-    "vsts-task-lib" : "^0.9.20",
-    "vso-node-api": "6.0.1-preview"
+    "vsts-task-lib" : "^0.9.20"
   }
 }
