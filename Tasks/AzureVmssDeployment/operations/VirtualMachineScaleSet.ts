@@ -62,18 +62,66 @@ export default class VirtualMachineScaleSet {
                                 }
                             }
                         }
+
+                        client.virtualMachineExtensions.list(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", null, (error, result, request, response) => {
+                            if (error) {
+                                // Just log warning, do not fail
+                                tl.warning(tl.loc("GetVMSSExtensionsListFailed", utils.getError(error)));
+                            }
+
+                            var extensions: azureModel.VMExtension[] = result;
+                            var matchingExtension: azureModel.VMExtension = null;
+                            extensions.forEach((extension: azureModel.VMExtension) => {
+                                if(extension.properties.type === customScriptExtension.properties.type &&
+                                extension.properties.publisher === customScriptExtension.properties.publisher) {
+                                    matchingExtension = extension;
+                                    return;
+                                }
+                            });
+
+                            // if extension already exists, remove it
+                            if(!!matchingExtension) {
+                                client.virtualMachineExtensions.deleteMethod(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", matchingExtension.name, (error, result, request, response) => {
+                                    if (error) {
+                                        // Just log warning, do not fail
+                                        tl.warning(tl.loc("RemoveVMSSExtensionsFailed", utils.getError(error)));
+                                    }
+
+                                    client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", customScriptExtension.name, customScriptExtension, (error, result, request, response) => {
+                                        if (error) {
+                                            return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
+                                        }
+
+                                        this._updateImageInternal(client, resourceGroupName, customScriptExtension, resolve, reject);
+                                    });
+                                });
+                            } else {
+                                client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", customScriptExtension.name, customScriptExtension, (error, result, request, response) => {
+                                    if (error) {
+                                        return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
+                                    }
+
+                                    this._updateImageInternal(client, resourceGroupName, customScriptExtension, resolve, reject);
+                                });
+                            }
+                        });
+                    } else {
+                        this._updateImageInternal(client, resourceGroupName, customScriptExtension, resolve, reject);
                     }
 
-                    client.virtualMachineScaleSets.updateImage(resourceGroupName, this.taskParameters.vmssName, this.taskParameters.imageUrl, customScriptExtension, null, (error, result, request, response) => {
-                        if (error) {
-                            return reject(tl.loc("VMSSImageUpdateFailed", utils.getError(error)));
-                        }
-                        console.log(tl.loc("UpdatedVMSSImage"));
-                        return resolve();
-                    });
                     break;
                 }
             });
+        });
+    }
+
+    private _updateImageInternal(client, resourceGroupName, customScriptExtension, resolve, reject) {
+        client.virtualMachineScaleSets.updateImage(resourceGroupName, this.taskParameters.vmssName, this.taskParameters.imageUrl, customScriptExtension, null, (error, result, request, response) => {
+            if (error) {
+                return reject(tl.loc("VMSSImageUpdateFailed", utils.getError(error)));
+            }
+            console.log(tl.loc("UpdatedVMSSImage"));
+            return resolve();
         });
     }
 

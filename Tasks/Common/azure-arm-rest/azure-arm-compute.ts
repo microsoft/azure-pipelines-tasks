@@ -386,6 +386,49 @@ export class VirtualMachineExtensions {
         this.client = client;
     }
 
+    public list(resourceGroupName, resourceName, resourceType, options, callback: azureServiceClient.ApiCallback) {
+        if (!callback && typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.headers = this.client.setCustomHeaders(options);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{resourceType}': resourceType,
+                '{resourceName}': resourceName
+            }
+        );
+
+        var result = [];
+        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                if (response.body.value) {
+                    result = result.concat(response.body.value);
+                }
+
+                if (response.body.nextLink) {
+                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
+                    }
+                    result = result.concat(nextResult.result);
+                }
+                return new azureServiceClient.ApiResult(null, result);
+            }
+            else {
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+            }
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
     public get(resourceGroupName, vmName, vmExtensionName, options, callback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
@@ -439,7 +482,7 @@ export class VirtualMachineExtensions {
             (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback): void {
+    public createOrUpdate(resourceGroupName, resourceName, resourceType, vmExtensionName, extensionParameters, callback): void {
         var client = this.client;
 
         if (!callback) {
@@ -448,7 +491,7 @@ export class VirtualMachineExtensions {
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
-            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+            if (resourceName === null || resourceName === undefined || typeof resourceName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
@@ -465,10 +508,11 @@ export class VirtualMachineExtensions {
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = this.client.setCustomHeaders(null);
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{vmName}': vmName,
+                '{resourceType}': resourceType,
+                '{resourceName}': resourceName,
                 '{vmExtensionName}': vmExtensionName
             }
         );
@@ -502,14 +546,14 @@ export class VirtualMachineExtensions {
 
     }
 
-    public deleteMethod(resourceGroupName, vmName, vmExtensionName, callback) {
+    public deleteMethod(resourceGroupName, resourceName, resourceType, vmExtensionName, callback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
-            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+            if (resourceName === null || resourceName === undefined || typeof resourceName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
@@ -522,10 +566,11 @@ export class VirtualMachineExtensions {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'DELETE';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{vmName}': vmName,
+                '{resourceType}': resourceType,
+                '{resourceName}': resourceName,
                 '{vmExtensionName}': vmExtensionName
             }
         );

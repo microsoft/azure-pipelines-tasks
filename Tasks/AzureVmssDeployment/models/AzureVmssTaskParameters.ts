@@ -18,8 +18,8 @@ export default class AzureVmssTaskParameters {
             this.vmssName = tl.getInput("vmssName", true);
             this.imageUrl = tl.getInput("imageUrl", true);
             this.action = tl.getInput("action");
-            this.customScriptUrl = null;
-            this.customScriptCommand = null;
+            this.customScriptUrl = tl.getInput("customScriptUrl");
+            this.customScriptCommand = tl.getInput("customScriptCommand");
             this.credentials = this.getARMCredentials(connectedService);
         }
         catch (error) {
