@@ -320,7 +320,7 @@ function setupRunSettingsWithTestImpactOn(result: any, baseLineRunId: String) {
 
     if (!result.RunSettings.RunConfiguration) {
         tl.debug('Run configuration not found in the runsettings, so adding one with TestImpact on');
-        result.TestSettings.RunConfiguration = tiaNode;
+        result.RunSettings.RunConfiguration = tiaNode;
     } else if (!result.RunSettings.RunConfiguration[0]){
         result.RunSettings.RunConfiguration.TestImpact = {};
         result.RunSettings.RunConfiguration.BaseLineRunId = {};
