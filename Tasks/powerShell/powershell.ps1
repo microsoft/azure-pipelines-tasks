@@ -42,12 +42,12 @@ try {
     # Generate the script contents.
     $contents = @()
     $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
-    $contents += $input_script
-    if (!$ignoreLASTEXITCODE) {
+    $contents += "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    if (!$input_ignoreLASTEXITCODE) {
         $contents += 'if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {'
-        $contents += '    Write-Verbose ''Last exit code is not set.'''
+        $contents += '    Write-Host ''##vso[task.debug]$LASTEXITCODE is not set.'''
         $contents += '} else {'
-        $contents += '    Write-Verbose (''$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
+        $contents += '    Write-Host (''##vso[task.debug]$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
         $contents += '    exit $LASTEXITCODE'
         $contents += '}'
     }
