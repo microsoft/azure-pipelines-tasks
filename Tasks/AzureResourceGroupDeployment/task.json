@@ -230,7 +230,7 @@
             "name": "outputVariable",
             "type": "string",
             "label": "VM details for WinRM",
-            "required": false,
+            "required": true,
             "defaultValue": "",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
