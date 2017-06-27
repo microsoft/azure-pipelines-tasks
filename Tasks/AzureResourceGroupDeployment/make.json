@@ -15,5 +15,13 @@
             ],
             "options": "-Rf"
         }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
     ]
 }

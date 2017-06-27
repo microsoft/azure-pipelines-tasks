@@ -14,7 +14,7 @@ try {
     tl.debug('Value of Test Selector :' + testType);
 
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
-         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+        || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
 
         tl._writeLine(tl.loc('distributedTestWorkflow'));
         tl._writeLine('======================================================');

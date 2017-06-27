@@ -6,7 +6,11 @@
                 "dest": "./"
             },
             {
+<<<<<<< HEAD
                 "url": "https://testexecution.blob.core.windows.net/testexecution/3965641/TestExecution.zip",
+=======
+                "url": "https://testexecution.blob.core.windows.net/testexecution/3969469/TestExecution.zip",
+>>>>>>> 6f865ba9e5258750b45ace4a4e9ad5d67605e050
                 "dest": "./Modules"
             }
         ],

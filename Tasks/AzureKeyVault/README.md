@@ -1,3 +1,4 @@
+
 # Azure Key Vault Task
 
 ### Overview
@@ -37,9 +38,11 @@ az keyvault secret set --vault-name 'ContosoKeyVault' --name 'SQLPassword' --val
 
 The parameters of the task are described below. The parameters listed with a \* are required parameters for the task:
 
- * **Azure Subscription**\*: Select the service connection for the Azure Subscription where the Azure Key vault instance is created. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
+ * **Azure Subscription**\*: Select the service endpoint for the Azure Subscription where the Azure Key vault instance is created. To configure new service endpoint, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
+
+Ensure the Azure endpoint has at least Get and List permissions on the vault. You can set these permissions in the Azure portal:
+Open the Settings blade for the vault, choose Access policies, then Add new.In the Add access policy blade, choose Select principal and select the service principal for your client account.In the Add access policy blade, choose Secret permissions and ensure that Get and List are checked (ticked). Choose OK to save the changes.
  
  * **Key Vault**\*: Select the name of the Key vault from which the secrets need to be downloaded.
  
- * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.
- 
+ * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.  This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. For example, if there is a secret name: connectionString, a task variable "connectionString" is created with the latest fetched value of the respective secret from Azure key vault. And this secret variable would be available to be consumed in subsequent tasks.

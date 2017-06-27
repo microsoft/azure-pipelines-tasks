@@ -43,18 +43,44 @@ export interface VMProperties {
     storageProfile: StorageProfile
 }
 
+export interface VirtualMachineProfile {
+    networkProfile?: NetworkProfile;
+    instanceView?: InstanceView;
+    storageProfile?: StorageProfile;
+    extensionProfile?:ExtensionProfile;
+}
+
+export interface VMSSProperties {
+    virtualMachineProfile: VirtualMachineProfile;
+    provisioningState?: string;
+}
+
 export interface VMExtensionProperties {
-    provisioningState: string;
+    provisioningState?: string;
+    type: string;
+    publisher: string;
+    typeHandlerVersion: string;
+    autoUpgradeMinorVersion?: boolean;
+    settings?: Object;
+    protectedSettings?: Object;
 }
 
 export interface StorageProfile{
-    imageReference: Map<string, string>;
+    imageReference?: Map<string, string>;
     osDisk: OSDisk;
-    dataDisks: Map<string, string>[];
+    dataDisks?: Map<string, string>[];
 }
 
 export interface OSDisk{
     osType: string;
+    name: string;
+    createOption: string;
+    caching: string;
+    image: ImageUrl;
+}
+
+export interface ImageUrl{
+    uri: string;
 }
 
 export interface DnsSettings {
@@ -63,6 +89,10 @@ export interface DnsSettings {
 
 export interface NetworkProfile {
     networkInterfaces: NetworkInterface[]
+}
+
+export interface ExtensionProfile {
+    extensions: VMExtension[];
 }
 
 export interface InstanceView {
@@ -84,8 +114,23 @@ export interface VM extends AzureBaseObject {
     tags?: string ;
 }
 
-export interface VMExtension extends AzureBaseObject {
+export interface VMSS extends AzureBaseObject {
+    properties?: VMSSProperties,
+    location?: string,
+    tags?: string ;
+}
+
+export interface VMExtension {
+    name?: string;
+    id?: string;
     properties: VMExtensionProperties,
+    sku?: VMSku;
+}
+
+export interface VMSku {
+    name?: string,
+    tier?: string;
+    capacity?: string;
 }
 
 export interface NetworkInterface extends AzureBaseObject {
@@ -106,4 +151,10 @@ export interface BackendAddressPool extends AzureBaseObject {
 
 export interface PublicIPAddress extends AzureBaseObject {
     properties: PublicIPAddressProperties;
+}
+
+export interface VMExtensionMetadata {
+    type: string;
+    publisher: string;
+    typeHandlerVersion: string;
 }

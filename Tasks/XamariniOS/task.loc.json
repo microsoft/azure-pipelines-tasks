@@ -11,7 +11,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
+<<<<<<< HEAD
     "Minor": 119,
+=======
+    "Minor": 120,
+>>>>>>> 6f865ba9e5258750b45ace4a4e9ad5d67605e050
     "Patch": 0
   },
   "demands": [

@@ -17,7 +17,11 @@
   "version": {
     "Major": 2,
     "Minor": 0,
+<<<<<<< HEAD
     "Patch": 58
+=======
+    "Patch": 59
+>>>>>>> 6f865ba9e5258750b45ace4a4e9ad5d67605e050
   },
   "demands": [
     "vstest"
@@ -53,7 +57,7 @@
       "options": {
         "testAssemblies": "Test assemblies",
         "testPlan": "Test plan",
-        "testRun": "Test run (for on-demand runs)"
+        "testRun": "Test run"
       }
     },
     {
@@ -374,7 +378,6 @@
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
-    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
     "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",

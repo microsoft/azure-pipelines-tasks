@@ -16,7 +16,6 @@
         "Chef",
         "ChefKnife",
         "CMake",
-        "CmdLine",
         "CocoaPods",
         "CopyFiles",
         "CopyFilesOverSSH",
@@ -26,6 +25,10 @@
         "DeployVisualStudioTestAgent",
         "Docker",
         "DockerCompose",
+<<<<<<< HEAD
+=======
+        "DotNetCoreCLI",
+>>>>>>> 6f865ba9e5258750b45ace4a4e9ad5d67605e050
         "DownloadBuildArtifact",
         "ExtractFiles",
         "FtpUpload",
@@ -53,7 +56,6 @@
         "NuGetToolInstaller",
         "PackerBuild",
         "DownloadPackage",
-        "powerShell",
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
@@ -68,7 +70,6 @@
         "ServiceFabricDeploy",
         "ServiceFabricPowerShell",
         "ServiceFabricUpdateAppVersions",
-        "ShellScript",
         "SqlAzureDacpacDeployment",
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
