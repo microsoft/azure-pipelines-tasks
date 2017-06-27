@@ -108,7 +108,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'a/b/c/y.pdb': true,
         'a/b/c/z.pdb': true
     },
-    'glob' : {
+    'findMatch' : {
         'a/**/*.pdb': [
             'a/b/c/x.pdb',
             'a/b/c/y.pdb',
