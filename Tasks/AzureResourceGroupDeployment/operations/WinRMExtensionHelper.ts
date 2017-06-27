@@ -341,14 +341,15 @@ export class WinRMExtensionHelper {
                     return;
                 }
                 tl.debug("Got the Instance View of the virtualMachine " + vmName + ": " + JSON.stringify(result));
-                var invalidExecutionStatus: boolean = false;
+                var validExecutionStatus: boolean = false;
                 if (result["properties"]["instanceView"] && result["properties"]["instanceView"]["extensions"]) {
                     var extensions = result["properties"]["instanceView"]["extensions"];
                     for (var extension of extensions) {
                         if (extension["name"] === extensionName) {
+                            validExecutionStatus = true;
                             for (var substatus of extension["substatuses"]) {
                                 if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
-                                    invalidExecutionStatus = true;
+                                    validExecutionStatus = false;
                                     break;
                                 }
                             }
@@ -357,13 +358,13 @@ export class WinRMExtensionHelper {
                     }
                 }
                 tl.debug("Custom Script Extension status validated for vm: " + vmName + "!!");
-                resolve(!invalidExecutionStatus);
+                resolve(validExecutionStatus);
             });
         });
     }
 
     private async AddExtensionToVM(vmName: string, dnsName: string, extensionName: string, location: string, _fileUris): Promise<any> {
-        var _commandToExecute: string = "powershell.exe -File ConfigureWinRM.ps1 " + dnsName;
+        var _commandToExecute: string = "powershell.exe -ExecutionPolicy RemoteSigned -File ConfigureWinRM.ps1 " + dnsName;
         var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
         var _virtualMachineExtensionType: string = 'CustomScriptExtension';
         var _typeHandlerVersion: string = '1.7';
@@ -397,7 +398,8 @@ export class WinRMExtensionHelper {
                     reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
                     return;
                 }
-                if (!this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris)) {
+                var validStatus = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris);
+                if (!validStatus) {
                     tl.debug("WinRMCustomScriptExtension is not valid on vm " + vmName);
                     reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
                     return;
