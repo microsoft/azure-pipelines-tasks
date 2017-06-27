@@ -348,7 +348,7 @@ export class WinRMExtensionHelper {
                         if (extension["name"] === extensionName) {
                             validExecutionStatus = true;
                             for (var substatus of extension["substatuses"]) {
-                                if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
+                                if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && substatus["message"]) {
                                     validExecutionStatus = false;
                                     break;
                                 }
@@ -395,13 +395,13 @@ export class WinRMExtensionHelper {
                 tl.debug("Addition of extension completed for vm: " + vmName);
                 if (result["properties"]["provisioningState"] != 'Succeeded') {
                     tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
-                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
+                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, JSON.stringify(result)));
                     return;
                 }
                 var validStatus = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris);
                 if (!validStatus) {
                     tl.debug("WinRMCustomScriptExtension is not valid on vm " + vmName);
-                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
+                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, JSON.stringify(result)));
                     return;
                 }
                 tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
