@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 54
+        "Patch": 55
     },
     "demands": [
         "vstest"
@@ -48,12 +48,12 @@
             "label": "Select tests using",
             "defaultValue": "testAssemblies",
             "required": true,
-            "helpMarkDown": "Specify the means to select tests",
+            "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li></ul>",
             "groupName": "testSelection",
             "options": {
                 "testAssemblies": "Test assemblies",
                 "testPlan": "Test plan",
-                "testRun": "Test run (for on-demand runs)"
+                "testRun": "Test run"
             }
         },
         {

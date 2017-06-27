@@ -8,7 +8,7 @@
   "loc.group.displayName.executionOptions": "Execution options",
   "loc.group.displayName.reportingOptions": "Reporting options",
   "loc.input.label.testSelector": "Select tests using",
-  "loc.input.help.testSelector": "Specify the means to select tests",
+  "loc.input.help.testSelector": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li></ul>",
   "loc.input.label.testAssemblyVer2": "Test assemblies",
   "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
   "loc.input.label.testPlan": "Test plan",
