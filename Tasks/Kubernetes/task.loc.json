@@ -151,6 +151,15 @@
       "groupName": "commands"
     },
     {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace",
+      "groupName": "commands"
+    },
+    {
       "name": "cwd",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",

@@ -55,5 +55,11 @@ function getCommandArguments(): string[] {
         args = argument.split(" ");
     }
 
+    // add in the namespace (if present)
+    var ns = tl.getInput("namespace", false);
+    if (ns){
+        args.push(`--namespace=${ns}`);
+    }
+
     return args;
 }

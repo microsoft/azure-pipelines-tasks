@@ -151,6 +151,15 @@
             "groupName": "commands"
         },
         {
+            "name": "namespace",
+            "type": "string",
+            "label": "Namespace",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Name of the namespace to run the command in.",
+            "groupName": "commands"
+        },
+        {
             "name": "cwd",
             "type": "filePath",
             "label": "Working directory",
