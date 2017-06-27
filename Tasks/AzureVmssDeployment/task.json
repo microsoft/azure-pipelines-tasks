@@ -129,6 +129,13 @@
         "VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
         "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
         "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
-        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date."
+        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date.",
+        "GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
+        "CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
+        "CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
+        "RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
+        "RemoveVMSSExtensionsFailed": "Failed to remove extension %s. Error: %s.",
+        "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error:%s.",
+        "ResourceNameCannotBeNull": "Resource name cannot be null."
     }
 }

@@ -129,6 +129,13 @@
     "VMSSImageUpdateTimedOut": "ms-resource:loc.messages.VMSSImageUpdateTimedOut",
     "VMSSDoesNotHaveCustomImage": "ms-resource:loc.messages.VMSSDoesNotHaveCustomImage",
     "VMSSImageUrlCannotBeNull": "ms-resource:loc.messages.VMSSImageUrlCannotBeNull",
-    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate"
+    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate",
+    "GetVMSSExtensionsListFailed": "ms-resource:loc.messages.GetVMSSExtensionsListFailed",
+    "CustomScriptExtensionRemoved": "ms-resource:loc.messages.CustomScriptExtensionRemoved",
+    "CustomScriptExtensionInstalled": "ms-resource:loc.messages.CustomScriptExtensionInstalled",
+    "RemovingCustomScriptExtension": "ms-resource:loc.messages.RemovingCustomScriptExtension",
+    "RemoveVMSSExtensionsFailed": "ms-resource:loc.messages.RemoveVMSSExtensionsFailed",
+    "SettingVMExtensionFailed": "ms-resource:loc.messages.SettingVMExtensionFailed",
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull"
   }
 }

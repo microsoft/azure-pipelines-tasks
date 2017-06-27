@@ -66,10 +66,10 @@ export default class VirtualMachineScaleSet {
                         client.virtualMachineExtensions.list(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", null, (error, result, request, response) => {
                             if (error) {
                                 // Just log warning, do not fail
-                                tl.warning(tl.loc("GetVMSSExtensionsListFailed", utils.getError(error)));
+                                tl.warning(tl.loc("GetVMSSExtensionsListFailed", this.taskParameters.vmssName, utils.getError(error)));
                             }
 
-                            var extensions: azureModel.VMExtension[] = result;
+                            var extensions: azureModel.VMExtension[] = result || [];
                             var matchingExtension: azureModel.VMExtension = null;
                             extensions.forEach((extension: azureModel.VMExtension) => {
                                 if(extension.properties.type === customScriptExtension.properties.type &&
@@ -81,10 +81,13 @@ export default class VirtualMachineScaleSet {
 
                             // if extension already exists, remove it
                             if(!!matchingExtension) {
+                                console.log(tl.loc("RemovingCustomScriptExtension", matchingExtension.name));
                                 client.virtualMachineExtensions.deleteMethod(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", matchingExtension.name, (error, result, request, response) => {
                                     if (error) {
                                         // Just log warning, do not fail
-                                        tl.warning(tl.loc("RemoveVMSSExtensionsFailed", utils.getError(error)));
+                                        tl.warning(tl.loc("RemoveVMSSExtensionsFailed", matchingExtension.name, utils.getError(error)));
+                                    } else {
+                                        console.log(tl.loc("CustomScriptExtensionRemoved", matchingExtension.name));
                                     }
 
                                     client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, "virtualMachineScaleSets", customScriptExtension.name, customScriptExtension, (error, result, request, response) => {
@@ -92,6 +95,7 @@ export default class VirtualMachineScaleSet {
                                             return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
                                         }
 
+                                        console.log(tl.loc("CustomScriptExtensionInstalled", customScriptExtension.name));
                                         this._updateImageInternal(client, resourceGroupName, customScriptExtension, resolve, reject);
                                     });
                                 });
@@ -101,6 +105,7 @@ export default class VirtualMachineScaleSet {
                                         return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
                                     }
 
+                                    console.log(tl.loc("CustomScriptExtensionInstalled", customScriptExtension.name));
                                     this._updateImageInternal(client, resourceGroupName, customScriptExtension, resolve, reject);
                                 });
                             }

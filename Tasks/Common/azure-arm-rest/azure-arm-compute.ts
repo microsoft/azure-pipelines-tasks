@@ -395,6 +395,16 @@ export class VirtualMachineExtensions {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
 
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if (resourceName === null || resourceName === undefined || typeof resourceName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
@@ -423,13 +433,13 @@ export class VirtualMachineExtensions {
                 return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response), result);
             }
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public get(resourceGroupName, vmName, vmExtensionName, options, callback) {
+    public get(resourceGroupName, resourceName, resourceType, vmExtensionName, options, callback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -442,8 +452,8 @@ export class VirtualMachineExtensions {
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
-            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error(tl.loc("VMNameCannotBeNull"));
+            if (resourceName === null || resourceName === undefined || typeof resourceName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
@@ -459,10 +469,11 @@ export class VirtualMachineExtensions {
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{vmName}': vmName,
+                '{resourceType}': resourceType,
+                '{resourceName}': resourceName,
                 '{vmExtensionName}': vmExtensionName
             }
         );
@@ -492,7 +503,7 @@ export class VirtualMachineExtensions {
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
             if (resourceName === null || resourceName === undefined || typeof resourceName.valueOf() !== 'string') {
-                throw new Error(tl.loc("VMNameCannotBeNull"));
+                throw new Error(tl.loc("ResourceNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
@@ -554,7 +565,7 @@ export class VirtualMachineExtensions {
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
             if (resourceName === null || resourceName === undefined || typeof resourceName.valueOf() !== 'string') {
-                throw new Error(tl.loc("VMNameCannotBeNull"));
+                throw new Error(tl.loc("ResourceNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
@@ -599,8 +610,6 @@ export class VirtualMachineExtensions {
 
 export class VirtualMachineScaleSets {
     private client: ComputeManagementClient;
-    private ImageUpdateWaitSleepDurationInMilleseconds: number = 5000;
-    private ImageUpdateWaitMaxTries: number;
 
     constructor(client) {
         this.client = client;
@@ -637,7 +646,7 @@ export class VirtualMachineScaleSets {
                 return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response), result);
             }
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));

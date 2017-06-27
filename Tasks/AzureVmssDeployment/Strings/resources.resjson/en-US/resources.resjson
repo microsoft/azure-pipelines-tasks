@@ -36,5 +36,12 @@
   "loc.messages.VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
   "loc.messages.VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
   "loc.messages.VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
-  "loc.messages.VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date."
+  "loc.messages.VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date.",
+  "loc.messages.GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
+  "loc.messages.CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
+  "loc.messages.CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
+  "loc.messages.RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
+  "loc.messages.RemoveVMSSExtensionsFailed": "Failed to remove extension %s. Error: %s.",
+  "loc.messages.SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error:%s.",
+  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null."
 }

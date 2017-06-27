@@ -8,7 +8,11 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("action", "UpdateImage");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : "testvmss1");
-tr.setInput("imageUrl", "https://someurl");
+tr.setInput("imageUrl", process.env["imageUrlAlreadyUptoDate"] === "true" ? "http://old-url" : "https://someurl");
+if(!(process.env["customScriptNotSpecified"] === "true")) {
+    tr.setInput("customScriptUrl", "https://some-file-url");
+}
+tr.setInput("customScriptCommand", "powershell .\file.ps1 args");
 
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
