@@ -9,6 +9,29 @@ function Check-ServerName
     }
 }
 
+function Get-FormattedSqlUsername
+{
+    param(
+        [String] $sqlUserName,
+        [String] $serverName
+    )
+
+    if ($serverName)
+    {
+        $serverNameSplittedArgs = $serverName.Trim().Split(".")
+        if ($serverNameSplittedArgs.Length -gt 0)
+        {
+            $sqlServerFirstName = $serverNameSplittedArgs[0]
+            if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
+            {
+                $sqlUsername = $sqlUsername + "@" + $serverName 
+            }
+        }
+    }
+
+    return $sqlUsername
+}
+
 function Get-AgentIPRange
 {
     param(
@@ -21,7 +44,15 @@ function Get-AgentIPRange
 
     $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
     $env:SQLCMDPASSWORD = $sqlPassword
-    $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -Q `"select getdate()`""
+
+    $formattedSqlUsername = $sqlUserName
+
+    if($sqlUserName)
+    {
+        $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
+    }
+
+    $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
     
     Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
@@ -144,18 +175,7 @@ function Get-SqlPackageCommandArguments
 
         if($sqlUsername)
         {
-            if ($serverName)
-            {
-                $serverNameSplittedArgs = $serverName.Trim().Split(".")
-                if ($serverNameSplittedArgs.Length -gt 0)
-                {
-                    $sqlServerFirstName = $serverNameSplittedArgs[0]
-                    if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
-                    {
-                        $sqlUsername = $sqlUsername + "@" + $serverName 
-                    }
-                }
-            }
+            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
 
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))
