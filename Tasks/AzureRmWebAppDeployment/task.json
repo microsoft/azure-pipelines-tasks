@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 9
+        "Patch": 10
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -70,7 +70,7 @@
             "name": "ServerfarmId",
             "type": "pickList",
             "label": "Serverfarm id",
-            "defaultValue": "",
+            "defaultValue": "invalidServerfarmId",
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {

@@ -19,9 +19,7 @@ async function run() {
             default:
                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', errorActionPreference));
         }
-        let executionPolicy: string = tl.getInput('executionPolicy', false) || 'Unrestricted';
         let failOnStderr = tl.getBoolInput('failOnStderr', false);
-        let ignoreExitCode = tl.getBoolInput('ignoreExitCode', false);
         let ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
         let script: string = tl.getInput('script', false) || '';
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
@@ -32,9 +30,9 @@ async function run() {
         contents.push(script);
         if (!ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
-            contents.push(`    Write-Verbose 'Last exit code is not set.'`);
+            contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
             contents.push(`} else {`);
-            contents.push(`    Write-Verbose ('$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
+            contents.push(`    Write-Host ('##vso[task.debug]$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
             contents.push(`    exit $LASTEXITCODE`);
             contents.push(`}`);
         }
@@ -53,19 +51,38 @@ async function run() {
         // Run the script.
         let powershell = tl.tool(tl.which('powershell', true))
             .arg('-NoLogo')
-            .arg(`-Sta`)
             .arg('-NoProfile')
             .arg('-NonInteractive')
-            .arg('-ExecutionPolicy')
-            .arg(executionPolicy)
             .arg('-File')
             .arg(filePath);
         let options = <tr.IExecOptions>{
             cwd: workingDirectory,
-            failOnStdErr: failOnStderr,
-            ignoreReturnCode: ignoreExitCode
+            failOnStdErr: false,
+            errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
+            outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
+            ignoreReturnCode: true
         };
-        await powershell.exec(options);
+
+        // Listen for stderr.
+        let stderrFailure = false;
+        if (failOnStderr) {
+            powershell.on('stderr', (data) => {
+                stderrFailure = true;
+            });
+        }
+
+        // Run bash.
+        let exitCode: number = await powershell.exec(options);
+
+        // Fail on exit code.
+        if (exitCode !== 0) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
+        }
+
+        // Fail on stderr.
+        if (stderrFailure) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
+        }
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');

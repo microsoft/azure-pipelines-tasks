@@ -17,8 +17,7 @@ export function getDistributedTestConfigurations() {
     }
 
     if (dtaConfiguration.tiaConfig.tiaEnabled) {
-        tl.warning(tl.loc('tiaNotSupportedInDta'));
-        dtaConfiguration.tiaConfig.tiaEnabled = false;
+        dtaConfiguration.tiaConfig = getTiaConfiguration();
     }
     if (dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));

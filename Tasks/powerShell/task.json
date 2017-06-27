@@ -98,8 +98,10 @@
         }
     },
     "messages": {
+        "JS_ExitCode": "PowerShell exited with code '%s'.",
         "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
-        "PS_ExitCode": "powershell exited with code '{0}'.",
+        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+        "PS_ExitCode": "PowerShell exited with code '{0}'.",
         "PS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
         "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell."
     }
