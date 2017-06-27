@@ -53,7 +53,7 @@
       "options": {
         "testAssemblies": "Test assemblies",
         "testPlan": "Test plan",
-        "testRun": "Test run (for on-demand runs)"
+        "testRun": "Test run"
       }
     },
     {
