@@ -887,7 +887,6 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
 
         try {
-            assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
@@ -917,7 +916,6 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
 
         try {
-            assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
@@ -925,7 +923,6 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "Should remove the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") <= 0, "Should not try to get the substatus of the extension");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
@@ -955,7 +952,6 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should add the extension");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should Validate the Custom Script Extension");
-            assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Shouldn't try to add NSG rule");
             assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
@@ -983,7 +979,6 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachines.get is called") <= 0, "Trying to get the extension on the Virtual machines");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should update the extension to enable WinrmHttps Listener");
             assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try to add NSG rule");
