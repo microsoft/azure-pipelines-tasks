@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 8
+    "Patch": 9
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -70,7 +70,7 @@
       "name": "ServerfarmId",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ServerfarmId",
-      "defaultValue": "",
+      "defaultValue": "invalidServerfarmId",
       "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
       "properties": {
