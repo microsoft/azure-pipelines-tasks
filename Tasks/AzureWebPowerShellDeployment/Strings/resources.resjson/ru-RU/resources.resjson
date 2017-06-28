@@ -25,5 +25,5 @@
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Не удалось найти файлы для развертывания с шаблоном поиска \"{0}\"",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Найдено несколько файлов для развертывания с шаблоном поиска \"{0}\". Файл может быть только один.",
   "loc.messages.FailedtodeployWebsiteError0": "Не удалось развернуть веб-сайт. Ошибка: {0}",
-  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
+  "loc.messages.DeprecatedWarning": "Задача \"Служба приложений Azure: классическая\" скоро станет нерекомендуемой. Ее заменит задача \"Развертывание службы приложений Azure\", на использование которой рекомендуется перевести процесс сборки или выпуска. Дополнительные сведения см. на странице по адресу https://go.microsoft.com/fwlink/?LinkID=613750."
 }

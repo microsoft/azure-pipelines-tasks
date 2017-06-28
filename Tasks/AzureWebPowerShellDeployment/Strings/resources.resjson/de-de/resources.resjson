@@ -25,5 +25,5 @@
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Es wurden keine Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden.",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Es wurde mehrere Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden. Es darf maximal eine Datei vorhanden sein.",
   "loc.messages.FailedtodeployWebsiteError0": "Fehler beim Bereitstellen der Website. Fehler: {0}.",
-  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
+  "loc.messages.DeprecatedWarning": "Die Aufgabe \"Azure App Service: Klassisch\" ist bald veraltet. Die Aufgabe \"Azure App Service-Bereitstellung\" wird die Aufgabe \"Azure App Service: Klassisch\" ersetzen. Eine Migration Ihres Build- oder Releaseprozesses zur Verwendung der Aufgabe \"Azure App Service-Bereitstellung\" wird empfohlen. Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?LinkID=613750."
 }

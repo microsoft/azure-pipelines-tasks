@@ -25,5 +25,5 @@
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No se encontraron archivos para implementar con el patrón de búsqueda {0}",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Se encontró más de un archivo para implementar con el patrón de búsqueda {0}. Solo puede haber uno.",
   "loc.messages.FailedtodeployWebsiteError0": "No se pudo implementar el sitio web. Error : {0}",
-  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
+  "loc.messages.DeprecatedWarning": "La tarea \"Azure App Service: Clásico\" dejará de usarse pronto. Se reemplazará por la tarea \"Implementación de Azure App Service\" y, por tanto, se recomienda migrar los procesos de compilación o versión para que utilicen esta nueva tarea. Para obtener más información, consulte https://go.microsoft.com/fwlink/?LinkID=613750."
 }
