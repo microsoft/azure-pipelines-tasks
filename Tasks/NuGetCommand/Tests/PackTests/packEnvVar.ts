@@ -13,7 +13,7 @@ tmr.setInput('searchPatternPack', 'foo.nuspec');
 tmr.setInput('outputDir', 'C:\\out\\dir');
 tmr.setInput('command', 'pack');
 tmr.setInput('versioningScheme', 'byEnvVar');
-tmr.setInput('versionEnvVar', 'foobarVersionEnvVar');
+tmr.setInput('versionEnvVar', 'FOOBARVERSIONENVVAR');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
@@ -42,7 +42,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
-process.env['foobarVersionEnvVar'] = 'XX.YY.ZZ'
+process.env['FOOBARVERSIONENVVAR'] = 'XX.YY.ZZ'
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nuspec"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
