@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "mockery": "^2.0.0",
+    "mockery": "^1.7.0",
     "vso-node-api": "^5.0.5",
     "vsts-task-lib": "2.0.2-preview",
     "vsts-task-tool-lib": "0.4.0"
