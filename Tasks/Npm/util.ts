@@ -79,7 +79,8 @@ export async function getPackagingCollectionUrl(): Promise<string> {
 }
 
 export function getTempNpmrcPath(): string {
-    let tempUserNpmrcPath: string = path.join(getTempPath(), `${tl.getVariable('Build.BuildId')}.npmrc`);
+    let id: string = tl.getVariable('Build.BuildId') || tl.getVariable('Release.ReleaseId');
+    let tempUserNpmrcPath: string = path.join(getTempPath(), `${id}.npmrc`);
 
     return tempUserNpmrcPath;
 }
