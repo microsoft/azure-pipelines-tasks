@@ -9,7 +9,7 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'push');
-tmr.setInput('searchPattern', 'foo.nupkg');
+tmr.setInput('searchPatternPush', 'foo.nupkg');
 tmr.setInput('nuGetFeedType', 'external');
 tmr.setInput('connectedServiceName', 'externalNuGetFeed');
 
@@ -31,6 +31,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\agent\\home\\directory\\foo.nupkg": {
             "isFile": true
         }
+    }, 
+    "findMatch": {
+        "foo.nupkg" : ["c:\\agent\\home\\directory\\foo.nupkg"]
     }
 };
 nmh.setAnswers(a);
@@ -41,6 +44,5 @@ nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
 nmh.RegisterLocationServiceMocks();
-//nmh.registerCommonUtilities();
 
 tmr.run();

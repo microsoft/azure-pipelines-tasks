@@ -1,6 +1,4 @@
 import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
 import * as nutil from "nuget-task-common/Utility";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as path from "path";
@@ -21,12 +19,11 @@ class PackOptions implements INuGetCommandOptions {
     ) { }
 }
 
-export async function run(): Promise<void> {
+export async function run(nuGetPath: string): Promise<void> {
     nutil.setConsoleCodePage();
 
     let searchPattern = tl.getPathInput("searchPatternPack", true);
     let configuration = tl.getInput("configurationToPack");
-    let outputDir = tl.getPathInput("outputDir");
     let versioningScheme = tl.getInput("versioningScheme");
     let includeRefProj = tl.getBoolInput("includeReferencedProjects");
     let versionEnvVar = tl.getInput("versionEnvVar");
@@ -35,6 +32,19 @@ export async function run(): Promise<void> {
     let patchVersion = tl.getInput("requestedPatchVersion");
     let propertiesInput = tl.getInput("buildProperties");
     let verbosity = tl.getInput("verbosityPack");
+    let outputDir = undefined;
+
+    try 
+    {
+        // If outputDir is not provided then the root working directory is set by default.
+        // By requiring it, it will throw an error if it is not provided and we can set it to undefined.
+        outputDir = tl.getPathInput("outputDir", true);
+    }
+    catch(error)
+    {
+        outputDir = undefined;
+    }
+
     try{
         if(versioningScheme !== "off" && includeRefProj)
         {
@@ -97,26 +107,22 @@ export async function run(): Promise<void> {
             tl.debug(`Creating output directory: ${outputDir}`);
             tl.mkdirP(outputDir);
         }
-        
-        let filesList = nutil.resolveFilterSpec(searchPattern);
+
+        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
+        let filesList: string[] = [];
+        if (!useLegacyFind) {
+            let findOptions: tl.FindOptions = <tl.FindOptions>{};
+            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+        }
+        else {
+            filesList = nutil.resolveFilterSpec(searchPattern);
+        }
+
         tl.debug(`Found ${filesList.length} files`);
         filesList.forEach(file => {
             tl.debug(`--File: ${file}`);
         });
-
-        // Getting NuGet
-        tl.debug('Getting NuGet');
-        let nuGetPath: string = undefined;
-        try {
-            nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
-            if (!nuGetPath){
-                nuGetPath = await nuGetGetter.getNuGet("4.0.0");
-            }
-        }
-        catch (error) {
-            tl.setResult(tl.TaskResult.Failed, error.message);
-            return;
-        }
 
         let props: string[] = [];
         if(configuration && configuration !== "$(BuildConfiguration)")
@@ -127,8 +133,6 @@ export async function run(): Promise<void> {
         {
             props = props.concat(propertiesInput.split(";"));
         }
-
-        // TODO: Check nuget extensions path
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: null,
@@ -163,12 +167,15 @@ function packAsync(file: string, options: PackOptions): Q.Promise<number> {
 
     nugetTool.arg("-NonInteractive");
 
+    nugetTool.arg("-OutputDirectory");
     if (options.outputDir) {
-        nugetTool.arg("-OutputDirectory");
         nugetTool.arg(options.outputDir);
     }
+    else {
+        nugetTool.arg(path.dirname(file));
+    }
 
-    if (options.properties) {
+    if (options.properties && options.properties.length > 0) {
         nugetTool.arg("-Properties");
         nugetTool.arg(options.properties.join(";"));
     }

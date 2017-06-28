@@ -36,6 +36,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "rmRF": {
         "c:\\agent\\home\\directory\\tempNuGet_.config": { success: true }
+    }, 
+    "findMatch": {
+        "packages.config" : ["c:\\agent\\home\\directory\\packages.config"]
     }
 };
 nmh.setAnswers(a);

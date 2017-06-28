@@ -1,6 +1,4 @@
 import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
 import * as path from "path";
 import * as Q  from "q";
 import {IExecOptions} from "vsts-task-lib/toolrunner";
@@ -34,7 +32,7 @@ class RestoreOptions implements INuGetCommandOptions {
     ) { }
 }
 
-export async function run(): Promise<void> {
+export async function run(nuGetPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
 
@@ -45,7 +43,16 @@ export async function run(): Promise<void> {
 
         // Reading inputs
         let solution = tl.getPathInput("solution", true, false);
-        let filesList = nutil.resolveFilterSpec(solution, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
+        let filesList: string[] = [];
+        if (!useLegacyFind) {
+            let findOptions: tl.FindOptions = <tl.FindOptions>{};
+            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+            filesList = tl.findMatch(undefined, solution, findOptions, matchOptions);
+        }
+        else {
+            filesList = nutil.resolveFilterSpec(solution, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+        }
         filesList.forEach(solutionFile => {
             if (!tl.stats(solutionFile).isFile()) {
                 throw new Error(tl.loc("NotARegularFile", solutionFile));
@@ -56,20 +63,6 @@ export async function run(): Promise<void> {
         let packagesDirectory = tl.getPathInput("packagesDirectory");
         if (!tl.filePathSupplied("packagesDirectory")) {
             packagesDirectory = null;
-        }
-        
-        // Getting NuGet
-        tl.debug('Getting NuGet');
-        let nuGetPath: string = undefined;
-        try {
-            nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
-            if (!nuGetPath){
-                nuGetPath = await nuGetGetter.getNuGet("4.0.0");
-            }
-        }
-        catch (error) {
-            tl.setResult(tl.TaskResult.Failed, error.message);
-            return;
         }
         
         const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);

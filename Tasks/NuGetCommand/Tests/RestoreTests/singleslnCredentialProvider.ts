@@ -30,6 +30,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\agent\\home\\directory\\single.sln": {
             "isFile": true
         }
+    }, 
+    "findMatch": {
+        "single.sln" : ["c:\\agent\\home\\directory\\single.sln"]
     }
 };
 nmh.setAnswers(a);

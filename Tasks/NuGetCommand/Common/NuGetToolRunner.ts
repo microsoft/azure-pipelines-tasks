@@ -143,7 +143,7 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
 // when using the credential provider.
 // Unfortunately, on on-premises TFS, we must use credential provider to override NTLM auth with the build
 // identity's token.
-// Therefore, we are enabling credential provider on on-premises and disabling it on hosted. We allow for test
+// Therefore, we are enabling credential provider on on-premises and disabling it on hosted (only when the version of NuGet does not support it). We allow for test
 // instances by an override variable.
 
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {

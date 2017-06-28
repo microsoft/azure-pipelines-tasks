@@ -30,23 +30,24 @@ export class NuGetConfigHelper {
 
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
-        console.log("save nuget.config to temp config file");
-        if (!(fs.existsSync(this.tempNugetConfigDir))) {
-            fs.mkdirSync(this.tempNugetConfigDir);
+        console.log(tl.loc("Info_SavingTempConfig"));
+        
+        if (!tl.exist(this.tempNugetConfigDir)) {
+            tl.mkdirP(this.tempNugetConfigDir);
         }
 
         this.tempNugetConfigPath = path.join(this.tempNugetConfigDir, this.tempNugetConfigFileName);
 
-        if (!fs.existsSync(this.tempNugetConfigPath))
+        if (!tl.exist(this.tempNugetConfigPath))
         {
             if (this.nugetConfigPath) {
                 // don't use cp as that copies the read-only flag, and tfvc sets that on files
                 let content = fs.readFileSync(this.nugetConfigPath);
-                fs.writeFileSync(this.tempNugetConfigPath, content);
+                tl.writeFile(this.tempNugetConfigPath, content);
             }
             else {
                 // small file, use writeFileSync
-                fs.writeFileSync(this.tempNugetConfigPath, "<configuration/>");
+                tl.writeFile(this.tempNugetConfigPath, "<configuration/>");
             }
         }
     }

@@ -24,7 +24,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version x.y.z-CI-YYYYMMDD-HHMMSS": {
+        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory c:\\agent\\home\\directory -Properties -version x.y.z-CI-YYYYMMDD-HHMMSS": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -37,6 +37,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\agent\\home\\directory\\foo.nuspec": {
             "isFile": true
         }
+    }, 
+    "findMatch": {
+        "foo.nuspec" : ["c:\\agent\\home\\directory\\foo.nuspec"]
     }
 };
 nmh.setAnswers(a);

@@ -48,7 +48,7 @@
         "NuGet",
         "NugetPackager",
         "NuGetPublisher",
-        "NuGetRestore",
+        "NuGetCommand",
         "NuGetToolInstaller",
         "PackerBuild",
         "DownloadPackage",

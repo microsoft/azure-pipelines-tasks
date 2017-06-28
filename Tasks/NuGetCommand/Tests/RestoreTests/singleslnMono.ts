@@ -38,6 +38,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "~/myagent/_work/1/s/single.sln": {
             "isFile": true
         }
+    }, 
+    "findMatch": {
+        "single.sln" : ["~/myagent/_work/1/s/single.sln"]
     }
 };
 tmr.setAnswers(a);

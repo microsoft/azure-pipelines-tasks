@@ -1,7 +1,7 @@
 {
   "name": "nugetcommand",
   "version": "2.0.0",
-  "description": "Nuget Installer Build Task",
+  "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
   "main": "nugetcommandmain.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "2.0.2-preview",
+    "vsts-task-lib": "2.0.5",
     "xmlreader": "^0.2.3",
     "vso-node-api": "6.0.1-preview"
   }

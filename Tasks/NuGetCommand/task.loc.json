@@ -30,12 +30,6 @@
       "visibleRule": "command = restore"
     },
     {
-      "name": "pushAuth",
-      "displayName": "ms-resource:loc.group.displayName.pushAuth",
-      "isExpanded": true,
-      "visibleRule": "command = push"
-    },
-    {
       "name": "pushAdvanced",
       "displayName": "ms-resource:loc.group.displayName.pushAdvanced",
       "isExpanded": false,
@@ -240,7 +234,7 @@
       "name": "searchPatternPack",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPack",
-      "defaultValue": "**\\*.csproj",
+      "defaultValue": "**/*.csproj",
       "helpMarkDown": "ms-resource:loc.input.help.searchPatternPack",
       "required": true,
       "visibleRule": "command = pack"
@@ -434,6 +428,8 @@
     "Warning_ForceNuGetCannotSkipConflicts": "ms-resource:loc.messages.Warning_ForceNuGetCannotSkipConflicts",
     "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
-    "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted"
+    "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized"
   }
 }
