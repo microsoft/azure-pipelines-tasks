@@ -4,12 +4,13 @@ import path = require("path");
 import AzureVmssTaskParameters from "./models/AzureVmssTaskParameters";
 import VirtualMachineScaleSet from "./operations/VirtualMachineScaleSet";
 
-function run(): Promise<void> {
+async function run(): Promise<void> {
     var taskParameters = new AzureVmssTaskParameters();
     var vmssOperation = new VirtualMachineScaleSet(taskParameters);
     switch (taskParameters.action) {
         case "UpdateImage":
-            return vmssOperation.execute();
+            await vmssOperation.execute();
+            break;
         default:
             throw tl.loc("InvalidAction", taskParameters.action);
     }

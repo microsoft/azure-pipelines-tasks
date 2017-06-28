@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 0,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -27,6 +27,12 @@
     {
       "name": "Image",
       "displayName": "ms-resource:loc.group.displayName.Image",
+      "isExpanded": true,
+      "visibleRule": "action = UpdateImage"
+    },
+    {
+      "name": "StartupConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.StartupConfiguration",
       "isExpanded": true,
       "visibleRule": "action = UpdateImage"
     }
@@ -72,6 +78,24 @@
       "required": true,
       "groupName": "Image",
       "helpMarkDown": "ms-resource:loc.input.help.imageUrl"
+    },
+    {
+      "name": "customScriptUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customScriptUrl",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "StartupConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptUrl"
+    },
+    {
+      "name": "customScriptCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customScriptCommand",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "StartupConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
     }
   ],
   "dataSourceBindings": [
@@ -105,6 +129,13 @@
     "VMSSImageUpdateTimedOut": "ms-resource:loc.messages.VMSSImageUpdateTimedOut",
     "VMSSDoesNotHaveCustomImage": "ms-resource:loc.messages.VMSSDoesNotHaveCustomImage",
     "VMSSImageUrlCannotBeNull": "ms-resource:loc.messages.VMSSImageUrlCannotBeNull",
-    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate"
+    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate",
+    "GetVMSSExtensionsListFailed": "ms-resource:loc.messages.GetVMSSExtensionsListFailed",
+    "CustomScriptExtensionRemoved": "ms-resource:loc.messages.CustomScriptExtensionRemoved",
+    "CustomScriptExtensionInstalled": "ms-resource:loc.messages.CustomScriptExtensionInstalled",
+    "RemovingCustomScriptExtension": "ms-resource:loc.messages.RemovingCustomScriptExtension",
+    "RemoveVMSSExtensionsFailed": "ms-resource:loc.messages.RemoveVMSSExtensionsFailed",
+    "SettingVMExtensionFailed": "ms-resource:loc.messages.SettingVMExtensionFailed",
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull"
   }
 }
