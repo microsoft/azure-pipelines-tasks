@@ -402,7 +402,9 @@
     "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
@@ -426,10 +428,8 @@
     "Warning_FallBackToNuGet": "ms-resource:loc.messages.Warning_FallBackToNuGet",
     "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",
     "Warning_ForceNuGetCannotSkipConflicts": "ms-resource:loc.messages.Warning_ForceNuGetCannotSkipConflicts",
-    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
-    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized"
   }
 }

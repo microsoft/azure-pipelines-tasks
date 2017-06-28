@@ -1,8 +1,8 @@
 import * as tl from "vsts-task-lib/task";
-import * as ngToolRunner from "./Common/NuGetToolRunner";
+import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as nutil from "nuget-task-common/Utility";
 import * as path from "path";
-import * as auth from "./Common/Authentication";
+import * as auth from "nuget-task-common/Authentication";
 
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
@@ -13,7 +13,7 @@ class NuGetExecutionOptions {
         public nuGetPath: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings,
         public args: string,
-        public authInfo: auth.NuGetAuthInfo
+        public authInfo: auth.NuGetExtendedAuthInfo
     ) { }
 }
 
@@ -55,7 +55,7 @@ export async function run(nuGetPath: string): Promise<void> {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        let authInfo = new auth.NuGetAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, false), []);
+        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, false), []);
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
             extensionsDisabled: true

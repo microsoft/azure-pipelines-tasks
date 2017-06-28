@@ -3,10 +3,14 @@ import * as tl from "vsts-task-lib/task";
 import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
 
 import * as auth from "./Authentication";
-import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "nuget-task-common/NuGetQuirks";
-import * as ngutil from "nuget-task-common/Utility";
-import * as util from "./utilities";
-import * as peParser from "nuget-task-common/pe-parser";
+import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
+import * as ngutil from "./Utility";
+import * as peParser from "./pe-parser";
+import * as commandHelper from "./CommandHelper";
+
+// NuGetToolRunner2 can handle environment setup for new authentication scenarios where
+// we are accessing internal or external package sources.
+// It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -18,7 +22,7 @@ export interface NuGetEnvironmentSettings {
 function prepareNuGetExeEnvironment(
     input: EnvironmentDictionary,
     settings: NuGetEnvironmentSettings,
-    authInfo: auth.NuGetAuthInfo): EnvironmentDictionary {
+    authInfo: auth.NuGetExtendedAuthInfo): EnvironmentDictionary {
 
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string;
@@ -73,11 +77,11 @@ function prepareNuGetExeEnvironment(
     return env;
 }
 
-export class NuGetToolRunner extends ToolRunner {
+export class NuGetToolRunner2 extends ToolRunner {
     private settings: NuGetEnvironmentSettings;
-    private authInfo: auth.NuGetAuthInfo;
+    private authInfo: auth.NuGetExtendedAuthInfo;
 
-    constructor(nuGetExePath: string, settings: NuGetEnvironmentSettings, authInfo: auth.NuGetAuthInfo) {
+    constructor(nuGetExePath: string, settings: NuGetEnvironmentSettings, authInfo: auth.NuGetExtendedAuthInfo) {
         if (tl.osType() === 'Windows_NT' || !nuGetExePath.trim().toLowerCase().endsWith(".exe")) {
             super(nuGetExePath);
         }
@@ -104,8 +108,8 @@ export class NuGetToolRunner extends ToolRunner {
     }
 }
 
-export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings, authInfo: auth.NuGetAuthInfo): NuGetToolRunner {
-    let runner = new NuGetToolRunner(nuGetExePath, settings, authInfo);
+export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings, authInfo: auth.NuGetExtendedAuthInfo): NuGetToolRunner2 {
+    let runner = new NuGetToolRunner2(nuGetExePath, settings, authInfo);
     runner.on("debug", message => tl.debug(message));
     return runner;
 }
@@ -167,7 +171,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (util.isOnPremisesTfs() && (
+    if (commandHelper.isOnPremisesTfs() && (
         quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthCredentialProvider))) {
         tl.debug("Credential provider is disabled due to on-prem quirks.");
         return false;
@@ -192,7 +196,7 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (util.isOnPremisesTfs() && (
+    if (commandHelper.isOnPremisesTfs() && (
         quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthConfig))) {
         tl.debug("Credential config is disabled due to on-prem quirks.");
         return false;

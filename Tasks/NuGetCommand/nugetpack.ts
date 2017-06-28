@@ -2,7 +2,7 @@ import * as tl from "vsts-task-lib/task";
 import * as nutil from "nuget-task-common/Utility";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as path from "path";
-import * as ngToolRunner from "./Common/NuGetToolRunner";
+import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as packUtils from "./Common/NuGetPackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 
