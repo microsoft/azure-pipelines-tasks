@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[자세한 정보](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "웹 배포/Kudu REST API를 사용하여 Azure App Service를 업데이트합니다.",
   "loc.instanceNameFormat": "Azure App Service 배포: $(WebAppName)",
+  "loc.releaseNotes": "버전 3.0의 새로운 기능: <br/>&nbsp;&nbsp;파일 변환 지원(XDT) <br/>&nbsp;&nbsp;변수 대체 지원(XML, JSON) <br/>자세한 내용을 보려면 [여기](https://aka.ms/azurermwebdeployreadme)를 클릭하세요.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "파일 변환 및 변수 대체 옵션",
   "loc.group.displayName.AdditionalDeploymentOptions": "추가 배포 옵션",
   "loc.group.displayName.output": "출력",

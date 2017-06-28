@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "使用 Packer 生成计算机映像。此映像可用于 Azure 虚拟机规模集部署",
   "loc.instanceNameFormat": "生成不可变映像",
+  "loc.releaseNotes": "- 适用于 Xplat 代理(Windows、Linux 或 OSX)\n- 支持对 Windows 和 Linux 生成映像。这些映像可用于部署 Azure 虚拟机规模集。",
   "loc.group.displayName.AzureDetails": "Azure 详细信息",
   "loc.group.displayName.DeploymentInputs": "部署输入",
   "loc.group.displayName.Output": "输出",

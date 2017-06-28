@@ -7,7 +7,7 @@
   "loc.group.displayName.codeCoverage": "程式碼涵蓋範圍",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.antBuildFile": "Ant 組建檔案",
-  "loc.input.help.antBuildFile": "從儲存機制根路徑到 Ant 組建檔案的相對路徑。",
+  "loc.input.help.antBuildFile": "從存放庫根路徑到 Ant 組建檔案的相對路徑。",
   "loc.input.label.options": "選項",
   "loc.input.help.options": "提供傳遞給 Ant 命令列的任何選項。您可以提供您自己的屬性 (例如 ***-DmyProperty=myPropertyValue***)，並同時使用內建變數 (例如 ***-DmyProperty=myPropertyValue***)。或者，如果內建變數已在建置期間設為環境變數，則也可以直接傳遞 (例如 ***-DcollectionIdAsEnvVar=%SYSTEM_COLLECTIONID%***)。",
   "loc.input.label.targets": "目標",

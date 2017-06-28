@@ -18,7 +18,7 @@
   "loc.input.help.replaceExistingArchive": "Если имеется существующий архив, укажите, следует ли перезаписать его. В противном случае файлы будут добавлены в него.",
   "loc.messages.Filename": "files=%s",
   "loc.messages.TarExists": "Промежуточный TAR-файл уже существует: %s. Идет попытка добавления файлов в него.",
-  "loc.messages.RemoveBeforeCreation": "удаление существующего архивного файла перед созданием: %s",
+  "loc.messages.RemoveBeforeCreation": "Удаление существующего архивного файла перед созданием: %s",
   "loc.messages.AlreadyExists": "Архивный файл уже существует: %s. Идет попытка добавления файлов в него.",
   "loc.messages.ArchiveCreationFailedWithError": "Сбой создания архивного файла: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "Указанный архивный файл уже существует и не является файлом: %s",

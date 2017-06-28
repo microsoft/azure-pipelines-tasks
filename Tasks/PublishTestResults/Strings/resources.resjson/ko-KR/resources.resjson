@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "VSTS/TFS에 테스트 결과 게시",
   "loc.instanceNameFormat": "테스트 결과 $(testResultsFiles) 게시",
+  "loc.releaseNotes": "<ul><li>NUnit3 지원</li><li>Minimatch 파일 패턴 지원</li></ul>",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.testRunner": "테스트 결과 형식",
   "loc.input.help.testRunner": "Test Runner의 선택으로 생성된 테스트 결과 파일의 형식(예: JUnit, VSTest, XUnit V2, NUnit 등)",

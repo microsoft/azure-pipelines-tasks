@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.description": "Копирование файлов из исходной папки в целевую с помощью шаблонов сопоставления, в которых на соответствие проверяются только пути к файлам, а не пути к папкам",
   "loc.instanceNameFormat": "Копировать файлы в: $(TargetFolder)",
+  "loc.releaseNotes": "Согласованность шаблонов соответствия.",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.SourceFolder": "Исходная папка",
   "loc.input.help.SourceFolder": "Исходная папка, откуда будут запускаться шаблоны копирования. Если значение не указано, используется корень репозитория. Используйте [переменные](https://go.microsoft.com/fwlink/?LinkID=550988), если файлы находятся не в репозитории. Например: $(agent.builddirectory)",

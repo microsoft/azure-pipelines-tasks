@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "執行 $(filename)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.filename": "工具",
-  "loc.input.help.filename": "要執行的工具名稱。工具應包含在路徑中。您可以選擇提供完整路徑，但其必須存在於代理程式上。<br/>注意: 如果您要讓路徑與儲存機制相對，可以使用 **$(Build.SourcesDirectory)**\\\\。",
+  "loc.input.help.filename": "要執行的工具名稱。工具應包含在路徑中。您可以選擇提供完整路徑，但其必須存在於代理程式上。<br/>注意: 如果您要讓路徑與存放庫相對，可以使用 **$(Build.SourcesDirectory)**\\\\。",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "傳遞至工具的引數。請使用雙引號來逸出空格。",
   "loc.input.label.workingFolder": "工作資料夾",

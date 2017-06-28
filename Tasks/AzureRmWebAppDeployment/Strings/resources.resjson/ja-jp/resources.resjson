@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細情報](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Web 配置/Kudu REST API を使用して Azure App Service を更新します",
   "loc.instanceNameFormat": "Azure App Service の配置: $(WebAppName)",
+  "loc.releaseNotes": "バージョン 3.0 の新機能: <br/>&nbsp;&nbsp;ファイル変換 (XDT) をサポート<br/>&nbsp;&nbsp; 変数置換 (XML、JSON) をサポート<br/>詳細については、[ここ](https://aka.ms/azurermwebdeployreadme) をクリックしてください。",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "ファイルの変換と変数の置換のオプション",
   "loc.group.displayName.AdditionalDeploymentOptions": "追加の配置オプション",
   "loc.group.displayName.output": "出力",

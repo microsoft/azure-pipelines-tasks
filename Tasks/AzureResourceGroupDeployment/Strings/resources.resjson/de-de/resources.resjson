@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/argtaskreadme)",
   "loc.description": "Bereitstellen, Starten, Beenden und Löschen von Azure-Ressourcengruppen.",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(action) Aktion für $(resourceGroupName)",
+  "loc.releaseNotes": "- Funktioniert mit Xplat-Agents (Windows, Linux oder OSX)\n- Unterstützt Vorlagen-JSONs unter allen öffentlich zugänglichen http/https-URLs.\n- Optimierte Benutzeroberfläche für Überschreibungsparameter, die jetzt in einem Raster angezeigt/bearbeitet werden können.\n- NAT-Regelzuordnung für virtuelle Computer, die von einem Lastenausgleich unterstützt werden.\n- Das Feld \"Ressourcengruppe\" wurde in \"VM-Details für   WinRM\" umbenannt und ist nun im Bereich \"Erweiterte Bereitstellungsoptionen für virtuelle Computer\" enthalten.\n- Einschränkungen: \n - Keine Unterstützung für klassische Abonnements. Nur ARM-Abonnements werden unterstützt.\n - Keine Unterstützung für die PowerShell-Syntax, da die Aufgabe jetzt node.js-basiert ist. Stellen Sie sicher, dass die Groß-/Kleinschreibung der Parameternamen übereinstimmt, wenn Sie die Vorlagenparameter überschreiben. Entfernen Sie auch die PowerShell-Cmdlets wie \"ConvertTo-SecureString\", wenn Sie die Migration von Version 1.0 auf Version 2.0 durchführen.",
   "loc.group.displayName.AzureDetails": "Azure-Details",
   "loc.group.displayName.Template": "Vorlage",
   "loc.group.displayName.AdvancedDeploymentOptions": "Erweiterte Bereitstellungsoptionen für virtuelle Computer",

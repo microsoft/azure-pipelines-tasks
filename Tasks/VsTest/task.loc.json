@@ -17,12 +17,12 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 53
+    "Patch": 55
   },
   "demands": [
     "vstest"
   ],
-  "releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.103.0",
   "groups": [
     {
@@ -53,7 +53,7 @@
       "options": {
         "testAssemblies": "Test assemblies",
         "testPlan": "Test plan",
-        "testRun": "Test run (for on-demand runs)"
+        "testRun": "Test run"
       }
     },
     {

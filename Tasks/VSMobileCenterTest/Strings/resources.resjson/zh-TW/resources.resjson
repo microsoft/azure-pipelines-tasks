@@ -7,7 +7,7 @@
   "loc.group.displayName.run": "執行測試",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.app": "二進位應用程式檔案路徑",
-  "loc.input.help.app": "從儲存機制根路徑到欲測試 APK 或 IPA 檔案的相對路徑。",
+  "loc.input.help.app": "從存放庫根路徑到欲測試 APK 或 IPA 檔案的相對路徑。",
   "loc.input.label.artifactsDir": "成品目錄",
   "loc.input.help.artifactsDir": "成品的放置位置，成品由準備步驟所產生，以供執行步驟使用。如果此目錄不存在，將會予以建立。",
   "loc.input.label.enablePrepare": "準備測試",

@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Aggiorna il servizio app di Azure con le API REST di Distribuzione Web/Kudu",
   "loc.instanceNameFormat": "Distribuzione servizio app di Azure: $(WebAppName)",
+  "loc.releaseNotes": "Novità della versione 3.0: <br/>&nbsp;&nbsp;Supporta le trasformazioni di file (XDT) <br/>&nbsp;&nbsp;Supporta le sostituzioni di variabili (XML, JSON) <br/>Per altre informazioni, fare clic [qui](https://aka.ms/azurermwebdeployreadme).",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Opzioni di trasformazioni di file e sostituzioni di variabili",
   "loc.group.displayName.AdditionalDeploymentOptions": "Opzioni di distribuzione aggiuntive",
   "loc.group.displayName.output": "Output",

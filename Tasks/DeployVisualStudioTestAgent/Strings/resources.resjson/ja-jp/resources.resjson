@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "一連のコンピューターでテストを実行するためにテスト エージェントを展開および構成する",
   "loc.instanceNameFormat": "TestAgent を $(testMachineGroup) に展開",
+  "loc.releaseNotes": "<ul><li>Visual Studio Test Agent 2017 のためのサポート: Visual Studio Test Agent の複数のバージョンを使用して、配置およびテストを実行できるようになりました。バージョン 2015 と 2017 がサポートされています。</li><li>テスト ハブから作成されたマシン グループはサポートされなくなりました。マシン一覧または Azure リソース グループ一覧については、引き続き使用できます。</li></ul>",
   "loc.group.displayName.testMachineGroups": "テスト コンピューター",
   "loc.group.displayName.agentConfiguration": "エージェントの構成",
   "loc.group.displayName.advanced": "詳細設定",

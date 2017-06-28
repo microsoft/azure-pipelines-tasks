@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Test de charge Apache JMeter dans le cloud",
-  "loc.helpMarkDown": "Cette tâche permet de déclencher un test de charge Apache JMeter dans le cloud à l'aide de Visual Studio Team Services. [En savoir plus](https://go.microsoft.com/fwlink/?LinkId=784929).",
+  "loc.helpMarkDown": "Cette tâche permet de déclencher un test de charge Apache JMeter dans le cloud à l'aide de Visual Studio Team Services. [En savoir plus](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "Exécute le test de charge Apache JMeter dans le cloud",
   "loc.instanceNameFormat": "Test Apache JMeter $(LoadTest)",
   "loc.input.label.connectedServiceName": "Connexion Visual Studio Team Services",

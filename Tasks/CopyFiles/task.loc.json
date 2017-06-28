@@ -18,7 +18,7 @@
     "Minor": 117,
     "Patch": 0
   },
-  "releaseNotes": "Match pattern consistency.",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
   "minimumAgentVersion": "1.91.0",
   "groups": [

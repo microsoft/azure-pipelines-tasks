@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Crea l'immagine della macchina virtuale con lo strumento di creazione pacchetti. È possibile usare questa immagine per la distribuzione di set di scalabilità di macchine virtuali di Azure",
   "loc.instanceNameFormat": "Crea immagine non modificabile",
+  "loc.releaseNotes": "- È compatibile con gli agenti Xplat (Windows, Linux o OS X)\n- Supporta la creazione di immagini per Windows e Linux. È possibile usare queste immagini per distribuire set di scalabilità di macchine virtuali di Azure.",
   "loc.group.displayName.AzureDetails": "Dettagli su Azure",
   "loc.group.displayName.DeploymentInputs": "Input per la distribuzione",
   "loc.group.displayName.Output": "Output",

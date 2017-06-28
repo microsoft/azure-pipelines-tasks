@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "테스트 필터 조건",
   "loc.input.help.testFilterCriteria": "원하는 경우 테스트 사례 필터 조건을 지정하세요. 예: `Owner=james&Priority=1`",
   "loc.input.label.runSettingsFile": "실행 설정 파일",
-  "loc.input.help.runSettingsFile": "테스트에 사용할 runsettings 파일의 경로입니다. 프로젝트 폴더에 액세스하려면 `$(agent.BuildDirectory)\\$(system.teamProject)`를 사용하세요.",
+  "loc.input.help.runSettingsFile": "테스트에서 사용할 runsettings 또는 testsettings 파일의 경로입니다.",
   "loc.input.label.overrideRunParams": "테스트 실행 매개 변수 재정의",
   "loc.input.help.overrideRunParams": "runsettings 파일의 TestRunParameters 섹션에 정의된 매개 변수를 재정의하세요. 예: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "코드 검사 사용",

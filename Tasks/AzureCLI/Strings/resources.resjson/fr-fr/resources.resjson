@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Exécuter un script d'interpréteur de commandes ou un script de commandes par lot avec des commandes Azure CLI pour un abonnement Azure",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.releaseNotes": "Nouveautés de la version 1.0 :\n- Prend en charge la nouvelle interface Azure CLI 2.0 basée sur Python\n- Fonctionne avec les agents Xplat (Windows, Linux ou OSX)\n- Pour utiliser l'interface Azure CLI 1.0 (basée sur node), passez à la tâche version 0.0\n- Limitations :\n - Aucune prise en charge pour les abonnements Classic. Azure CLI 2.0 prend en charge uniquement les abonnements ARM (Azure Resource Manager)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.connectedServiceNameARM": "Abonnement Azure",
   "loc.input.help.connectedServiceNameARM": "Sélectionner un abonnement Azure Resource Manager pour le déploiement",

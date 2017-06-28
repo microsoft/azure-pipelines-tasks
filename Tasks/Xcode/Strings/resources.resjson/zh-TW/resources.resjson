@@ -57,7 +57,7 @@
   "loc.input.label.args": "引數",
   "loc.input.help.args": "應用於建置的其他命令列引數。在使用 -target 或 -project 而非指定工作區及配置時十分有用。",
   "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "組建執行的工作目錄。預設值為儲存機制的根目錄。",
+  "loc.input.help.cwd": "組建執行的工作目錄。預設值為存放庫的根目錄。",
   "loc.input.label.outputPattern": "輸出目錄",
   "loc.input.help.outputPattern": "將放置建立輸出 (二進位檔) 的相對路徑。",
   "loc.input.label.xcodeDeveloperDir": "Xcode 開發人員路徑",

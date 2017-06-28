@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Déployer et configurer l'agent de test pour exécuter des tests sur un ensemble de machines",
   "loc.instanceNameFormat": "Déployer TestAgent sur $(testMachineGroup)",
+  "loc.releaseNotes": "<ul><li>Prise en charge de Visual Studio Test Agent 2017 : vous pouvez désormais déployer et exécuter des tests à l'aide de plusieurs versions de Visual Studio Test Agent. Les versions 2015 et 2017 sont prises en charge.</li><li>Les groupes de machines créés à partir du hub de test ne sont plus pris en charge. Vous pouvez continuer à utiliser une liste de machines ou de groupes de ressources Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Machines de test",
   "loc.group.displayName.agentConfiguration": "Configuration de l'agent",
   "loc.group.displayName.advanced": "Avancé",

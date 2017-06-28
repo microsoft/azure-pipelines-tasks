@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "テストのフィルター条件",
   "loc.input.help.testFilterCriteria": "オプションで、テスト ケース フィルターの条件を指定します。例: `Owner=james&Priority=1`",
   "loc.input.label.runSettingsFile": "実行設定ファイル",
-  "loc.input.help.runSettingsFile": "テストで使用する runsettings または testsettings ファイルへのパス。プロジェクト フォルダーにアクセスするには '$(agent.BuildDirectory)\\$(system.teamProject)' を使います。",
+  "loc.input.help.runSettingsFile": "テストで使用する runsettings または testsettings ファイルへのパス。",
   "loc.input.label.overrideRunParams": "テスト実行パラメーターのオーバーライド",
   "loc.input.help.overrideRunParams": "runsettings ファイルの TestRunParameters セクションで定義されたパラメーターを無視します。例: 'AppURL=$(DeployURL);Port=8080'",
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",

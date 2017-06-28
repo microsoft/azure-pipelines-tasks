@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[详细信息](https://aka.ms/argtaskreadme)",
   "loc.description": "部署、启动、停止和删除 Azure 资源组",
   "loc.instanceNameFormat": "对 $(resourceGroupName) 的 Azure Deployment:$(action) 操作",
+  "loc.releaseNotes": "- 适用于 Xplat 代理(Windows、Linux 或 OSX)\n- 支持位于任何公开可访问 http/https URL 的模板 JSON。\n- 对于现可在网格中查看/编辑的 Override 参数增强了 UX。\n- 提供了对由负载均衡器支持的 VM 的 NAT 规则映射。\n-“资源组”字段现重命名为“  WinRM 的 VM 详细信息”，且包含在节“虚拟机高级部署选项”中。\n- 局限: \n - 不支持经典订阅。只支持 ARM 订阅。\n - 不支持 PowerShell 语法，因任务现基于 node.js。替代模板参数时，请确保参数名的大小写匹配。另外，从版本 1.0 迁移到版本 2.0 时，请删除诸如 \"ConvertTo-SecureString\" 的 PowerShell cmdlet。",
   "loc.group.displayName.AzureDetails": "Azure 详细信息",
   "loc.group.displayName.Template": "模板",
   "loc.group.displayName.AdvancedDeploymentOptions": "虚拟机的高级部署选项",

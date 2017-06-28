@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "Criterios de filtro de la prueba",
   "loc.input.help.testFilterCriteria": "Especifique opcionalmente los criterios de filtro de caso de prueba. Por ejemplo, `Owner=james&Priority=1`.",
   "loc.input.label.runSettingsFile": "Archivo de configuración de ejecución",
-  "loc.input.help.runSettingsFile": "Ruta de acceso al archivo runsettings que se va a usar en las pruebas. Use '$(agent.BuildDirectory)\\$(system.teamProject)' para tener acceso a la carpeta del proyecto.",
+  "loc.input.help.runSettingsFile": "Ruta de acceso al archivo runsettings o testsettings que se va a usar en las pruebas.",
   "loc.input.label.overrideRunParams": "Reemplazar parámetros de ejecución de prueba",
   "loc.input.help.overrideRunParams": "Reemplace los parámetros definidos en la sección TestRunParameters del archivo runsettings. Por ejemplo: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",

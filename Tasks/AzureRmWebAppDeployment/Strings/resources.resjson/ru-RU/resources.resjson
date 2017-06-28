@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Обновить службу приложений Azure при помощи веб-развертывания / API-интерфейсов REST Kudu",
   "loc.instanceNameFormat": "Развертывание службы приложений Azure: $(WebAppName)",
+  "loc.releaseNotes": "Новые возможности в версии 3.0 <br/>&nbsp;&nbsp;Поддержка преобразований файлов (XDT) <br/>&nbsp;&nbsp;Поддержка подстановок переменных (XML, JSON) <br/>Подробнее см. [здесь](https://aka.ms/azurermwebdeployreadme).",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Параметры преобразования файлов и подстановки переменных",
   "loc.group.displayName.AdditionalDeploymentOptions": "Дополнительные параметры развертывания",
   "loc.group.displayName.output": "Выход",

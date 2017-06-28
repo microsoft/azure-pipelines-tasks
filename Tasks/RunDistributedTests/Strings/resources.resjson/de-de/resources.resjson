@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "Testfilterkriterien",
   "loc.input.help.testFilterCriteria": "Geben Sie optional die Testfall-Filterkriterien an, z. B. \"Owner=james&Priority=1\".",
   "loc.input.label.runSettingsFile": "Testlaufeinstellungsdatei",
-  "loc.input.help.runSettingsFile": "Der Pfad zur Datei mit den Ausführungs- oder Testeinstellungen, die mit den Tests verwendet werden soll. Verwenden Sie \"$(agent.BuildDirectory)\\$(system.teamProject)\", um auf den Projektordner zuzugreifen.",
+  "loc.input.help.runSettingsFile": "Pfad zur Ausführungs- oder Testeinstellungsdatei, die bei den Tests verwendet werden soll.",
   "loc.input.label.overrideRunParams": "Testlaufparameter überschreiben",
   "loc.input.help.overrideRunParams": "Überschreiben Sie Parameter, die im Abschnitt \"TestRunParameters\" der Datei mit den Ausführungseinstellungen definiert sind, z. B. \"AppURL=$(DeployURL);Port=8080\".",
   "loc.input.label.codeCoverageEnabled": "Code Coverage aktiviert",

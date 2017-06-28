@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細](https://aka.ms/argtaskreadme)",
   "loc.description": "Azure リソース グループを展開、開始、停止、削除します",
   "loc.instanceNameFormat": "Azure の配置: $(resourceGroupName) 上の $(action) アクション",
+  "loc.releaseNotes": "- Xplat エージェント対応 (Windows、Linux、OSX)\n- 公開されている http/https URL でテンプレートの JSON をサポート。\n- 現在グリッド内で表示/編集が可能なオーバーライド パラメーターの拡張 UX。\n- ロード バランサーの対象となる VM への NAT 規則のマッピング。\n- [リソース グループ] フィールドの名前は [WinRM についての VM の詳細] と変更され、[仮想マシン用の詳細展開オプション] セクションに含まれています\n- 制限事項: \n - 従来のサブスクリプションはサポートしていません。ARM サブスクリプションのみサポートしています。\n - タスクが現在、node.js ベースのため PowerShell 構文はサポートしていません。テンプレート パラメーターを上書きする場合は、パラメーター名の大文字と小文字の区別を確認してください。また、バージョン 1.0 からバージョン 2.0 に移行する場合は、\"ConvertTo-SecureString\" などの PowerShell コマンドレットを削除してください。",
   "loc.group.displayName.AzureDetails": "Azure の詳細",
   "loc.group.displayName.Template": "テンプレート",
   "loc.group.displayName.AdvancedDeploymentOptions": "仮想マシン用の詳細展開オプション",
