@@ -59,7 +59,7 @@
             "name": "WebAppName",
             "type": "pickList",
             "label": "App Service name",
-            "defaultValue": "Test1",
+            "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
@@ -74,7 +74,8 @@
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
-                "EditableOptions": "false"
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
             }
         },
         {
@@ -85,7 +86,8 @@
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
-                "EditableOptions": "false"
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
             }
         },
         {

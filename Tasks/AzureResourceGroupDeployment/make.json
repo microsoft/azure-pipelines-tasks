@@ -12,8 +12,6 @@
             "dest": "./",
             "compile" : true
         }
-    ]
-}
     ],
     "rm": [
         {

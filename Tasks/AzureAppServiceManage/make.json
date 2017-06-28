@@ -5,12 +5,6 @@
             "type": "node",
             "dest": "./",
             "compile" : true
-        },
-        {
-            "module": "../Common/azurestackrest-common",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
         }
     ]
 }
