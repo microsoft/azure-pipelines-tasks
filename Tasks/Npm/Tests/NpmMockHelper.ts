@@ -1,125 +1,126 @@
-import ma = require('vsts-task-lib/mock-answer');
-import path = require('path');
-import tmrm = require('vsts-task-lib/mock-run');
+import * as path from 'path';
 
-export class NpmMockHelper {
-    static NpmCmdPath = "C:\\Program Files (x86)\\nodejs\\npm";
-    static NpmAuthPath = "C:\\tool\\vsts-npm-auth\\vsts-npm-auth.exe";
-    static FakeWorkingDirectory = "fake\\wd";
-    static AgentBuildDirectory = 'c:\\agent\\work\\build';
-    static BuildBuildId = '12345';
+import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
+import { TaskMockRunner } from 'vsts-task-lib/mock-run';
+import * as mtr from 'vsts-task-lib/mock-toolrunner';
 
-    public answers: ma.TaskLibAnswers = {
-        which: {},
-        exec: {},
+export class NpmMockHelper extends TaskMockRunner {
+    private static NpmCmdPath: string = 'c:\\mock\\location\\npm';
+    private static AgentBuildDirectory: string = 'c:\\mock\\agent\\work\\build';
+    private static BuildBuildId: string = '12345';
+    private static CollectionUrl: string = 'https://example.visualstudio.com/defaultcollection';
+
+    public answers: TaskLibAnswers = {
         checkPath: {},
+        exec: {},
         exist: {},
-        filter: {},
-        find: {},
-        match: {}
+        rmRF: {},
+        which: {}
     };
 
-    constructor(
-        private tmr: tmrm.TaskMockRunner,
-        public command: string,
-        public args: string) { 
-        NpmMockHelper.setVariable('Agent.HomeDirectory', 'c:\\agent\\home\\directory');
-        NpmMockHelper.setVariable('Build.SourcesDirectory', 'c:\\agent\\home\\directory\\sources');
-        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
-        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
-        NpmMockHelper.setVariable('System.DefaultWorkingDirectory', 'c:\\agent\\home\\directory');
-        NpmMockHelper.setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
-        NpmMockHelper.setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
-        NpmMockHelper.setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
+    constructor(taskPath: string) {
+        super(taskPath);
 
-        tmr.setInput('cwd', NpmMockHelper.FakeWorkingDirectory);
-        tmr.setInput('command', command);
-        tmr.setInput('arguments', args);
+        this.registerMock('vsts-task-lib/toolrunner', mtr);
+        this.setAnswers(this.answers);
 
-        this.setDefaultAnswers();
+        NpmMockHelper._setVariable('Agent.HomeDirectory', 'c:\\agent\\home\\directory');
+        NpmMockHelper._setVariable('Build.SourcesDirectory', 'c:\\agent\\home\\directory\\sources');
+        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = '{"parameters":{"AccessToken":"token"},"scheme":"OAuth"}';
+        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = NpmMockHelper.CollectionUrl;
+        NpmMockHelper._setVariable('System.DefaultWorkingDirectory', 'c:\\agent\\home\\directory');
+        NpmMockHelper._setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
+        NpmMockHelper._setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
+        NpmMockHelper._setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
+        this.setDebugState(false);
+
+        this._mockNpmConfigList();
+        this._setToolPath('npm', NpmMockHelper.NpmCmdPath);
+        this.answers.rmRF[path.join(NpmMockHelper.AgentBuildDirectory, 'npm', `${NpmMockHelper.BuildBuildId}.npmrc`)] = { success: true };
+        this.answers.rmRF[path.join(NpmMockHelper.AgentBuildDirectory, 'npm')] = { success: true };
     }
 
-    public run(result?: ma.TaskLibAnswerExecResult) {
-        if (result) {
-            let command = `${NpmMockHelper.NpmCmdPath} ${this.command}`;
-            if (this.args) {
-                command += " " + this.args;
-            }
-            this.setExecResponse(command, result);
-        }
-        this.tmr.setAnswers(this.answers);
-        this.tmr.run();
+    public run(noMockTask?: boolean): void {
+        super.run(noMockTask);
     }
 
-    public useDeprecatedTask() {
-        process.env['USE_DEPRECATED_TASK_VERSION'] = 'true';
-    }
-
-    public mockAuthHelper() {
-        let npmTaskDirName = path.dirname(__dirname);
-        let authHelperExternalPath = path.join(npmTaskDirName, 'Npm', 'vsts-npm-auth');
-        let authHelperExePath = path.join(authHelperExternalPath, 'bin', 'vsts-npm-auth.exe');
-        this.answers.find[authHelperExternalPath] = [npmTaskDirName, authHelperExePath, authHelperExePath + ".config"];
-        this.answers.filter['vsts-npm-auth.exe'] = [authHelperExePath];
-
-        let targetNpmrcFile = `${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`;
-        let sourceNpmrcFile = `${NpmMockHelper.FakeWorkingDirectory}\\.npmrc`;
-        let command = `${authHelperExePath} -NonInteractive -Verbosity Detailed -Config ${sourceNpmrcFile} -TargetConfig ${targetNpmrcFile}`;
-        this.setExecResponse(command, { code: 0, stdout: "", stderr: "" });
-    }
-
-    public mockNpmConfigList() {
-        let command = `${NpmMockHelper.NpmCmdPath} config list`;
-        if (this.isDebugging()) {
-            // add option to dump all default values
-            command += " -l";
-        }
-        this.setExecResponse(command, { code: 0, stdout: "; cli configs", stderr: "" });
-    }
-
-    public setDebugState(isDebugging: boolean) {
-        NpmMockHelper.setVariable('system.debug', isDebugging ? 'true' : 'false');
+    public setDebugState(debug: boolean): void {
+        NpmMockHelper._setVariable('System.Debug', debug ? 'true' : 'false');
     }
 
     public setOsType(osTypeVal : string) {
-        if(!this.answers['osType']) {
+        if (!this.answers['osType']) {
             this.answers['osType'] = {};
         }
 
         this.answers['osType']['osType'] = osTypeVal;
     }
 
-    private static setVariable(name: string, value: string) {
-        let key = NpmMockHelper.getVariableKey(name);
+    private static _setVariable(name: string, value: string): void {
+        let key = NpmMockHelper._getVariableKey(name);
         process.env[key] = value;
     }
 
-    private static getVariableKey(name: string) {
-        let key = name.replace(/\./g, '_').toUpperCase();
-        return key;
+    private static _getVariableKey(name: string): string {
+        return name.replace(/\./g, '_').toUpperCase();
     }
 
-    private setExecResponse(command: string, result:ma.TaskLibAnswerExecResult) {
+    public setExecResponse(command: string, result: TaskLibAnswerExecResult) {
         this.answers.exec[command] = result;
     }
 
+    public RegisterLocationServiceMocks() {
+        this.registerMock('vso-node-api/WebApi', {
+            getBearerHandler: function(token){
+                return {};
+            },
+            WebApi: function(url, handler){
+                return {
+                    getCoreApi: function() {
+                        return {
+                            vsoClient: {
+                                getVersioningData: function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
+                                    return { requestUrl: 'foobar' };
+                                }
+                            }
+                        };
+                    }
+                };
+            }
+        });
+    }
+
+    public mockServiceEndpoint(endpointId: string, url: string, auth: any): void {
+        process.env['ENDPOINT_URL_' + endpointId] = url;
+        process.env['ENDPOINT_AUTH_' + endpointId] = JSON.stringify(auth);
+    }
+
     private isDebugging() {
-        let value = process.env[NpmMockHelper.getVariableKey('system.debug')];
+        let value = process.env[NpmMockHelper._getVariableKey('System.Debug')];
         return value === 'true';
     }
 
-    private setDefaultAnswers() {
-        this.setToolPath(this.answers, "npm", NpmMockHelper.NpmCmdPath);
-        this.setOsType('WiNdOWs_nT');
-        this.setProjectNpmrcExists();
+    private _setToolPath(tool: string, path: string) {
+        this.answers.which[tool] = path;
+        this.answers.checkPath[path] = true;
     }
 
-    private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {
-        answers.which[tool] = path;
-        answers.checkPath[path] = true;
+    private _mockNpmConfigList() {
+        this.setExecResponse(`${NpmMockHelper.NpmCmdPath} config list`, {
+            code: 0,
+            stdout: '; cli configs'} as TaskLibAnswerExecResult);
+
+        this.setExecResponse(`${NpmMockHelper.NpmCmdPath} config list -l`, {
+            code: 0,
+            stdout: '; debug cli configs'} as TaskLibAnswerExecResult);
     }
 
-    private setProjectNpmrcExists() {
-        this.answers.exist[path.join(NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
+    private _registerMockToolRunner() {
+        let tmr = require('vsts-task-lib/mock-toolrunner');
+        this.registerMock('vsts-task-lib/toolrunner', tmr);
+    }
+
+    private _mockGetFeedRegistryUrl(feedId: string): string {
+        return NpmMockHelper.CollectionUrl + '/_packaging/' + feedId + '/npm/registry/';
     }
 }
