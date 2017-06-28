@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 0,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
