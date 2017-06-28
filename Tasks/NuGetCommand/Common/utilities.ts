@@ -57,6 +57,7 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
         switch(scheme) {
             case "token":
                 let token = externalAuth.parameters["apitoken"]; 
+                tl.debug("adding token auth entry for feed " + feedUri);
                 externalAuthArray.push(new auth.TokenExternalAuthInfo(<IPackageSource>
                     {
                         feedName: feedName,
@@ -67,6 +68,7 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
             case "usernamepassword":
                 let username = externalAuth.parameters["username"];
                 let password = externalAuth.parameters["password"];
+                tl.debug("adding password auth entry for feed " + feedUri);
                 externalAuthArray.push(new auth.UsernamePasswordExternalAuthInfo(<IPackageSource>
                     {
                         feedName: feedName,
@@ -77,6 +79,7 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
                 break;
             case "none":
                 let apiKey = externalAuth.parameters["nugetkey"];
+                tl.debug("adding apikey auth entry for feed " + feedUri);
                 externalAuthArray.push(new auth.ApiKeyExternalAuthInfo(<IPackageSource>
                     {
                         feedName: feedName,
