@@ -1,13 +1,13 @@
 {
     "common": [
         {
-            "module": "../Common/azurestack-common",
+            "module": "../Common/azurerest-common",
             "type": "node",
             "dest": "./",
             "compile" : true
         },
         {
-            "module": "../Common/azurerest-common",
+            "module": "../Common/azurestackrest-common",
             "type": "node",
             "dest": "./",
             "compile" : true

@@ -4,7 +4,7 @@ import fs = require('fs');
 import * as ParameterParser from './parameterparser'
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
-//var azureStackRESTUtility = require ('azurestack-common/azurestackrestutility.js');
+var azureStackRESTUtility = require ('azurestackrest-common/azurestackrestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var deployUtility = require('webdeployment-common/utility.js');
@@ -59,7 +59,7 @@ async function run() {
 
         if(environmentName && environmentName == azureStackEnvironment) {
             if(!endPoint["envAuthUrl"]) {
-                //azureStackRESTUtility.populateAzureRmDependencyData(endPoint);
+                azureStackRESTUtility.populateAzureRmDependencyData(endPoint);
             } else {
                 endPoint["envAuthUrl"] =  endPoint["envAuthUrl"].trim("/") + "/";
             }
