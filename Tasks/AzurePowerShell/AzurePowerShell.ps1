@@ -6,6 +6,8 @@ $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
+$targetAzurePs = Get-VstsInput -Name TargetAzurePs
+$customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -19,10 +21,28 @@ if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
+if($targetAzurePs -eq "OtherVersion") {
+    $targetAzurePs = $customTargetAzurePs.Trim()
+}
+
+$pattern = "[0-9]+\.[0-9]+\.[0-9]+"
+$regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+if(-not $regex.IsMatch($targetAzurePs))
+{
+    #add the loc string in task.json
+    throw (Get-VstsLocString -Key InvalidVersion -ArgumentList $targetAzurePs)
+}
+
+if($env:AGENT_NAME -eq "Hosted Agent")
+{
+    $env:PSModulePath = $env:PSModulePath -ireplace "azurerm_2.1.0","azurerm_$targetAzurePs" 
+    $env:PSModulePath = $env:PSModulePath -ireplace "azure_2.1.0","azure_$targetAzurePs" 
+}
+
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure
+    Initialize-Azure -azurePsVersion $targetAzurePs
 
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null

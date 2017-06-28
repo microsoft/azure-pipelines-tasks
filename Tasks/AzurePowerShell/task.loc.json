@@ -15,12 +15,13 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 113,
-    "Patch": 4
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 0
   },
   "demands": [
-    "azureps"
+    "azureps",
+    "PowerShell -gtVersion 5"
   ],
   "minimumAgentVersion": "1.95.0",
   "inputs": [
@@ -99,6 +100,28 @@
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "TargetAzurePs",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetAzurePs",
+      "defaultValue": "2.1.0",
+      "required": false,
+      "options": {
+        "2.1.0": "2.1.0",
+        "3.5.0": "3.5.0",
+        "4.1.0": "4.1.0",
+        "OtherVersion": "Select Other Version"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
+    },
+    {
+      "name": "CustomTargetAzurePs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "TargetAzurePs = OtherVersion"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

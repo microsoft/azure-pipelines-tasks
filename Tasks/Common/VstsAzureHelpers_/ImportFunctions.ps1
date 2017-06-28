@@ -3,33 +3,34 @@
     param(
         [Parameter(Mandatory = $true)]
         [ValidateSet('Azure', 'AzureRM')]
-        [string[]]$PreferredModule)
+        [string[]]$PreferredModule,
+        [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if ($PreferredModule -contains 'Azure' -and $PreferredModule -contains 'AzureRM') {
             # Attempt to import Azure and AzureRM.
-            $azure = (Import-FromModulePath -Classic:$true) -or (Import-FromSdkPath -Classic:$true)
-            $azureRM = (Import-FromModulePath -Classic:$false) -or (Import-FromSdkPath -Classic:$false)
+            $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
+            $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
             if (!$azure -and !$azureRM) {
                 throw (Get-VstsLocString -Key AZ_ModuleNotFound)
             }
         } elseif ($PreferredModule -contains 'Azure') {
             # Attempt to import Azure but fallback to AzureRM.
-            if (!(Import-FromModulePath -Classic:$true) -and
-                !(Import-FromSdkPath -Classic:$true) -and
-                !(Import-FromModulePath -Classic:$false) -and
-                !(Import-FromSdkPath -Classic:$false))
+            if (!(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
+                !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion) -and
+                !(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
+                !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
             {
                 throw (Get-VstsLocString -Key AZ_ModuleNotFound)
             }
         } else {
             # Attempt to import AzureRM but fallback to Azure.
-            if (!(Import-FromModulePath -Classic:$false) -and
-                !(Import-FromSdkPath -Classic:$false) -and
-                !(Import-FromModulePath -Classic:$true) -and
-                !(Import-FromSdkPath -Classic:$true))
+            if (!(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
+                !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion) -and
+                !(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
+                !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
             {
                 throw (Get-VstsLocString -Key AZ_ModuleNotFound)
             }
@@ -48,7 +49,8 @@
 function Import-FromModulePath {
     [CmdletBinding()]
     param(
-        [switch]$Classic)
+        [switch]$Classic,
+        [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -68,7 +70,7 @@ function Import-FromModulePath {
 
         # Import the module.
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
-        $module = Import-Module -Name $module.Path -Global -PassThru
+        $module = Import-Module -Name $module.Path  -RequiredVersion $azurePsVersion -Global -PassThru
         Write-Verbose "Imported module version: $($module.Version)"
 
         if ($Classic) {
@@ -97,8 +99,9 @@ function Import-FromModulePath {
 
 function Import-FromSdkPath {
     [CmdletBinding()]
-    param([switch]$Classic)
-
+    param([switch]$Classic,
+          [string] $azurePsVersion)
+#not using the azurepsversion parameter anywhere in this function. This function is seemingly not required
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($Classic) {

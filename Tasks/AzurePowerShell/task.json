@@ -15,12 +15,13 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 113,
-        "Patch": 4
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 0
     },
     "demands": [
-        "azureps"
+        "azureps",
+        "PowerShell -gtVersion 5"
     ],
     "minimumAgentVersion": "1.95.0",
     "inputs": [
@@ -99,6 +100,28 @@
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             },
             "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+        },
+        {
+            "name": "TargetAzurePs",
+            "type": "pickList",
+            "label": "Target Azure PowerShell",
+            "defaultValue": "2.1.0",
+            "required": false,
+            "options":{
+                "2.1.0": "2.1.0",
+                "3.5.0": "3.5.0",
+                "4.1.0": "4.1.0",
+                "OtherVersion": "Select Other Version"
+            },
+            "helpMarkDown": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.5.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Select Other Version\""
+        },
+        {
+            "name": "CustomTargetAzurePs",
+            "type": "string",
+            "label": "Custom Target Azure PowerShell",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "TargetAzurePs = OtherVersion"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
