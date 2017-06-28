@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -167,6 +167,8 @@
     "DebugLogNotFound": "ms-resource:loc.messages.DebugLogNotFound",
     "NpmFailed": "ms-resource:loc.messages.NpmFailed",
     "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
-    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog"
+    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
+    "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
+    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc"
   }
 }

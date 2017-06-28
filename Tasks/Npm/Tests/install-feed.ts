@@ -17,6 +17,7 @@ tmr.mockNpmCommand('install', {
     code: 0,
     stdout: 'npm install successful'
 } as TaskLibAnswerExecResult);
+tmr.answers.rmRF[path.join(process.cwd(), '.npmrc')] = { success: true };
 tmr.RegisterLocationServiceMocks();
 
 tmr.run();
