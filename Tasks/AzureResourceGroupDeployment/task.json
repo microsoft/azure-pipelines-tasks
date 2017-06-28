@@ -380,6 +380,12 @@
         "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
         "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
         "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
-        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
+        "TemplateFilePatternMatchingMoreThanOneFile": "Template file pattern matching more than one file: %s",
+        "TemplateParameterFilePatternMatchingMoreThanOneFile": "Template parameters file pattern matching more than one file: %s",
+        "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+        "TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+        "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
+        "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s"
     }
 }

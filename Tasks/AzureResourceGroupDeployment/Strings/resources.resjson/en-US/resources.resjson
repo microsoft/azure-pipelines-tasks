@@ -149,5 +149,11 @@
   "loc.messages.OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
   "loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
   "loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
-  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
+  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
+  "loc.messages.TemplateFilePatternMatchingMoreThanOneFile": "Template file pattern matching more than one file: %s",
+  "loc.messages.TemplateParameterFilePatternMatchingMoreThanOneFile": "Template parameters file pattern matching more than one file: %s",
+  "loc.messages.TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+  "loc.messages.TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+  "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
+  "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s"
 }

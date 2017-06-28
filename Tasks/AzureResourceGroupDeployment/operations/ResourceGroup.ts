@@ -1,8 +1,3 @@
-/// <reference path="../../../definitions/node.d.ts" /> 
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
-/// <reference path="../../../definitions/Q.d.ts" />
-/// <reference path="../../../definitions/vso-node-api.d.ts" /> 
-
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
@@ -219,9 +214,22 @@ export class ResourceGroup {
     private getDeploymentDataForLinkedArtifact(): Deployment {
         var template: Object;
         try {
-            tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile)));
-            tl.debug("Loaded CSM File");
+            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile);
+            if (fileMatches.length > 1) {
+                throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
+            }
+            if (fileMatches.length < 1) {
+                throw new Error(tl.loc("TemplateFilePatternMatchingNoFile"));
+            }
+            var csmFilePath = fileMatches[0];
+            if (!fs.lstatSync(csmFilePath).isDirectory()) {
+                tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
+                template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile)));
+                tl.debug("Loaded CSM File");
+            } else {
+                throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+            }
+
         }
         catch (error) {
             throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
@@ -230,11 +238,21 @@ export class ResourceGroup {
         var parameters = {};
         try {
             if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
-                if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
-                    tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile)));
+                var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmParametersFile);
+                if (fileMatches.length > 1) {
+                    throw new Error(tl.loc("TemplateParameterFilePatternMatchingMoreThanOneFile", fileMatches));
+                }
+                if (fileMatches.length < 1) {
+                    throw new Error(tl.loc("TemplateParameterFilePatternMatchingNoFile"));
+                }
+                var csmParametersFilePath = fileMatches[0];
+                if (!fs.lstatSync(csmFilePath).isDirectory()) {
+                    tl.debug("Loading Parameters File.. " + csmParametersFilePath);
+                    var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
                     tl.debug("Loaded Parameters File");
                     parameters = parameterFile["parameters"];
+                } else {
+                    throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
                 }
             }
         }

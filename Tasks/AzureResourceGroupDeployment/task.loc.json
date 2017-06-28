@@ -379,6 +379,12 @@
     "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed",
     "DeploymentGroupEndpointUrlCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty",
     "DeploymentGroupEndpointPatTokenCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty",
-    "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter"
+    "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter",
+    "TemplateFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateFilePatternMatchingMoreThanOneFile",
+    "TemplateParameterFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingMoreThanOneFile",
+    "TemplateFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateFilePatternMatchingNoFile",
+    "TemplateParameterFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingNoFile",
+    "ParametersPatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile",
+    "CsmFilePatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile"
   }
 }
