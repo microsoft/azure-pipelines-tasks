@@ -1,4 +1,5 @@
 
+
 # Azure Key Vault Task
 
 ### Overview
@@ -45,4 +46,21 @@ Open the Settings blade for the vault, choose Access policies, then Add new.In t
  
  * **Key Vault**\*: Select the name of the Key vault from which the secrets need to be downloaded.
  
- * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.  This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. For example, if there is a secret name: connectionString, a task variable "connectionString" is created with the latest fetched value of the respective secret from Azure key vault. And this secret variable would be available to be consumed in subsequent tasks.
+ * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.  This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. 
+
+For example, if there is a secret name: connectionString, a task variable "connectionString" is created with the latest fetched value of the respective secret from Azure key vault. And this secret variable would be available to be consumed in subsequent tasks.
+
+If it is a certificate ( example: a PFX file) that is fetched from the vault, then the task variable would contain the content of the PFX in string format. To retrieve the PFX file from the task variable, following sample powerShell code can be used:
+$kvSecretBytes = [System.Convert]::FromBase64String($(PfxSecret))
+$certCollection = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+$certCollection.Import($kvSecretBytes,$null,[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
+
+If the certificate file needs to be stored on the hard disk then it is good practice to encrypt it with a password:
+#Get the file created
+$password = <password>
+$protectedCertificateBytes = $certCollection.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12, $password)
+$pfxPath = [Environment]::GetFolderPath("Desktop") + "\MyCert.pfx"
+[System.IO.File]::WriteAllBytes($pfxPath, $protectedCertificateBytes)
+
+More help can be found [here](https://blogs.technet.microsoft.com/kv/2016/09/26/get-started-with-azure-key-vault-certificates).
+
