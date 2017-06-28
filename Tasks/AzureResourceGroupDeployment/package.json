@@ -2,9 +2,6 @@
   "name": "AzureResourceGroupDeployment",
   "main": "main.js",
   "dependencies": {
-    "azurestackrest-common": "file:..\\..\\_build\\Tasks\\Common\\azurestackrest-common",
-    "strip-json-comments": "1.0.4",
-    "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "^0.9.20"
+    "strip-json-comments": "1.0.4"
   }
 }

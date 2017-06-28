@@ -14,7 +14,7 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials, subscriptionId);
 
-        this.apiVersion = '2016-09-01';
+        this.apiVersion = '2015-06-15';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
 

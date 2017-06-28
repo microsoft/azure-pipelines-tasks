@@ -5,7 +5,7 @@ import path = require('path');
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
 var extensionManage = require('./extensionmanage.js');
-var azureStackRESTUtility = require ('azurestackrest-common/azurestackrestutility.js');
+var azureStackRESTUtility = require ('azurestack-common/azurestackrestutility.js');
 
 var azureStackEnvironment = "AzureStack";
 

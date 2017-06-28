@@ -4,7 +4,7 @@
 import tl = require("vsts-task-lib/task");
 import msRestAzure = require("./../operations/azure-rest/azure-arm-common");
 
-var azureStackRESTUtility = require ('azurestackrest-common/azurestackrestutility.js'); 
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
 var azureStackEnvironment = "AzureStack";
 
 class TokenCredentials {
@@ -54,39 +54,6 @@ export class AzureRGTaskParameters {
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
 
-    constructor() {
-        try {
-            var connectedService = tl.getInput("ConnectedServiceName", true);
-            this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            this.resourceGroupName = tl.getInput("resourceGroupName", true);
-            this.action = tl.getInput("action");
-            this.location = tl.getInput("location");
-            this.templateLocation = tl.getInput("templateLocation");
-            if (this.templateLocation === "Linked artifact") {
-                this.csmFile = tl.getPathInput("csmFile");
-                this.csmParametersFile = tl.getPathInput("csmParametersFile");
-            } else {
-                this.csmFileLink = tl.getInput("csmFileLink");
-                this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
-            }
-            this.overrideParameters = tl.getInput("overrideParameters");
-            this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
-            this.deploymentGroupName = tl.getInput("deploymentGroupName");
-            this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
-            var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
-            if(deploymentGroupEndpointName){
-                this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
-            }
-            this.outputVariable = tl.getInput("outputVariable");
-            this.deploymentMode = tl.getInput("deploymentMode");
-            this.credentials = this.getARMCredentials(connectedService);
-            this.deploymentGroupProjectName = tl.getInput("project");
-        }
-        catch (error) {
-            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
-        }
-    }
-
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
         if (endpointAuth.scheme === 'Token') {
@@ -109,24 +76,64 @@ export class AzureRGTaskParameters {
         }
     }
 
-    private getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
+    private  async getARMCredentials(connectedService: string){
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         var environment: string = tl.getEndpointDataParameter(connectedService, 'environment', true);
+        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', true);
         
         if(environment != null && environment == azureStackEnvironment) {
-            if(!envAuthorityUrl) {
-                var endPoint = azureStackRESTUtility.populateAzureRmDependencyData({"url":armUrl});
+            if(!envAuthorityUrl || !activeDirectoryResourceId) {
+                var endPoint =  await azureStackUtility.initializeAzureStackData({"url":armUrl});
                 envAuthorityUrl = endPoint["environmentAuthorityUrl"];
-            }   
+                activeDirectoryResourceId = endPoint["activeDirectoryServiceEndpointResourceId"];
+            } 
         } else {
             envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
+            activeDirectoryResourceId = armUrl;
         }
 
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl);
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId);
         return credentials;
     }
+
+    public getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
+    {
+        return new Promise<AzureRGTaskParameters>(async (resolve, reject) => {
+            try {
+                var connectedService = tl.getInput("ConnectedServiceName", true);
+                this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+                this.resourceGroupName = tl.getInput("resourceGroupName", true);
+                this.action = tl.getInput("action");
+                this.location = tl.getInput("location");
+                this.templateLocation = tl.getInput("templateLocation");
+                if (this.templateLocation === "Linked artifact") {
+                    this.csmFile = tl.getPathInput("csmFile");
+                    this.csmParametersFile = tl.getPathInput("csmParametersFile");
+                } else {
+                    this.csmFileLink = tl.getInput("csmFileLink");
+                    this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
+                }
+                this.overrideParameters = tl.getInput("overrideParameters");
+                this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
+                this.deploymentGroupName = tl.getInput("deploymentGroupName");
+                this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
+                var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
+                if(deploymentGroupEndpointName){
+                    this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
+                }
+                this.outputVariable = tl.getInput("outputVariable");
+                this.deploymentMode = tl.getInput("deploymentMode");
+                this.credentials = await this.getARMCredentials(connectedService);
+                this.deploymentGroupProjectName = tl.getInput("project");
+                resolve(this);
+            }
+            catch (error) {
+                reject(tl.loc("ARGD_ConstructorFailed", error.message));
+            }
+        });
+    }    
 }

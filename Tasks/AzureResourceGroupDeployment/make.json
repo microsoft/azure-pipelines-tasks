@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/azurestackrest-common",
+            "module": "../Common/azurestack-common",
             "type": "node",
             "dest": "./",
             "compile" : true
