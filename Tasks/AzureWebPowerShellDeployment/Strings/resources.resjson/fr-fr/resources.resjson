@@ -25,5 +25,5 @@
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Les fichiers à déployer avec le modèle de recherche {0} sont introuvables",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Détection de plusieurs fichiers à déployer correspondant au modèle de recherche {0}. Il ne peut y en avoir qu'un seul.",
   "loc.messages.FailedtodeployWebsiteError0": "Échec du déploiement du site web. Erreur : {0}",
-  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
+  "loc.messages.DeprecatedWarning": "La tâche 'Azure App Service : Classic' sera bientôt dépréciée et remplacée par la tâche 'Déploiement Azure App Service'. Nous vous recommandons de migrer votre processus de génération ou de mise en production pour qu'il utilise la tâche 'Déploiement Azure App Service'. Pour plus de détails, consultez https://go.microsoft.com/fwlink/?LinkID=613750."
 }
