@@ -411,7 +411,7 @@ export class VirtualMachineExtensions {
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{resourceType}': resourceType,
+                '{resourceType}': getComputeResourceTypeString(resourceType),
                 '{resourceName}': resourceName
             }
         );
@@ -472,7 +472,7 @@ export class VirtualMachineExtensions {
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{resourceType}': resourceType,
+                '{resourceType}': getComputeResourceTypeString(resourceType),
                 '{resourceName}': resourceName,
                 '{vmExtensionName}': vmExtensionName
             }
@@ -522,7 +522,7 @@ export class VirtualMachineExtensions {
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{resourceType}': resourceType,
+                '{resourceType}': getComputeResourceTypeString(resourceType),
                 '{resourceName}': resourceName,
                 '{vmExtensionName}': vmExtensionName
             }
@@ -580,7 +580,7 @@ export class VirtualMachineExtensions {
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{resourceType}': resourceType,
+                '{resourceType}': getComputeResourceTypeString(resourceType),
                 '{resourceName}': resourceName,
                 '{vmExtensionName}': vmExtensionName
             }
@@ -706,7 +706,7 @@ export class VirtualMachineScaleSets {
             (error) => callback(error));
     }
 
-    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, vmExtension: Model.VMExtension, options, callback: azureServiceClient.ApiCallback) {
+    public updateImage(resourceGroupName: string, vmssName: string, imageUrl: string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -757,11 +757,6 @@ export class VirtualMachineScaleSets {
                 // update VM extension
                 var oldExtensionProfile: Model.ExtensionProfile = vmss.properties.virtualMachineProfile.extensionProfile;
                 var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile };
-                if(!!vmExtension) {
-                    var newExtensionProfile = this.getUpdatedExtensionProfile(oldExtensionProfile, vmExtension);
-                    virtualMachineProfile.extensionProfile = newExtensionProfile;
-                }
-
                 var properties: Model.VMSSProperties = { "virtualMachineProfile": virtualMachineProfile };
                 var patchBody: Model.VMSS = {
                     "id": vmss["id"],
@@ -806,23 +801,13 @@ export class VirtualMachineScaleSets {
                     (error) => callback(error));
         });
     }
+}
 
-    private getUpdatedExtensionProfile(extensionProfile: Model.ExtensionProfile, vmExtension: Model.VMExtension): Model.ExtensionProfile {
-        if(!vmExtension) {
-            return extensionProfile;
-        }
-
-        var newExtensionProfile: Model.ExtensionProfile = { extensions: []};
-        if(!!extensionProfile && !!extensionProfile.extensions) {
-            extensionProfile.extensions.forEach((extension: Model.VMExtension) => {
-                if(extension.properties.type !== vmExtension.properties.type &&
-                extension.properties.publisher !== vmExtension.properties.publisher) {
-                    newExtensionProfile.extensions.push(extension);
-                }
-            });
-        }
-
-        newExtensionProfile.extensions.push(vmExtension);
-        return newExtensionProfile;
+export function getComputeResourceTypeString(resourceType: Model.ComputeResourceType): string {
+    switch (resourceType) {
+        case Model.ComputeResourceType.VirtualMachine:
+            return "virtualMachines"
+        case Model.ComputeResourceType.VirtualMachineScaleSet:
+            return "virtualMachineScaleSets"
     }
 }
