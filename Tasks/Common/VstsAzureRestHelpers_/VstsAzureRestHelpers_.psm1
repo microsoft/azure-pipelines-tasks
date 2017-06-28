@@ -137,81 +137,6 @@ function Get-UsernamePasswordAccessToken {
     }
 }
 
-function Get-EnvironmentAuthUrl {
-    [CmdletBinding()]
-    param([Parameter(Mandatory=$true)] $endpoint)
-
-    if($endpoint.Data.environmentAuthorityUrl)
-    {
-        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
-    }
-    else
-    {
-        if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq "AzureStack"))
-        {
-            $Endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
-        } 
-        else 
-        {
-            $envAuthUrl = $script:defaultEnvironmentAuthUri
-            
-        }
-    }
-    
-    return $envAuthUrl
-}
-
-<#
-    Adds Azure Stack environment to use with AzureRM command-lets when targeting Azure Stack
-#>
-function Add-AzureStackDependencyData {
-    param (
-        [Parameter(mandatory=$true, HelpMessage="The Admin ARM endpoint of the Azure Stack Environment")]
-        $endpoint
-    )
-
-    $EndpointURI = $endpoint.Url.TrimEnd("/")
-
-    $Domain = ""
-    try {
-        $uriendpoint = [System.Uri] $EndpointURI
-        $i = $EndpointURI.IndexOf('.')
-        $Domain = ($EndpointURI.Remove(0,$i+1)).TrimEnd('/')
-    }
-    catch {
-        Write-Error "The specified ARM endpoint was invalid"
-    }
-
-    $ResourceManagerEndpoint = $EndpointURI
-    $stackdomain = $Domain
-
-    $AzureKeyVaultDnsSuffix="vault.$($stackdomain)".ToLowerInvariant()
-    $AzureKeyVaultServiceEndpointResourceId= $("https://vault.$stackdomain".ToLowerInvariant())
-    $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
-
-    Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
-    $endpointData = Invoke-RestMethod -Method Get -Uri "$($EndpointURI.ToString().TrimEnd('/'))/metadata/endpoints?api-version=2015-01-01" -ErrorAction Stop
-
-    if($endpointData) {
-        $graphEndpoint = $endpointData.graphEndpoint
-        $activeDirectoryEndpoint = $endpointData.authentication.loginEndpoint.TrimEnd('/') + "/"
-        $activeDirectoryServiceEndpointResourceId = $endpointData.authentication.audiences[0]
-        $galleryEndpoint = $endpointData.galleryEndpoint
-
-        $Endpoint["galleryUrl"] = $galleryEndpoint
-        $Endpoint["resourceManagerUrl"] = $ResourceManagerEndpoint
-        $Endpoint["activeDirectoryAuthority"] = $activeDirectoryEndpoint
-        $Endpoint["environmentAuthorityUrl"] = $activeDirectoryEndpoint
-        $Endpoint["graphUrl"] = $graphEndpoint
-        $Endpoint["activeDirectoryServiceEndpointResourceId"] = $activeDirectoryServiceEndpointResourceId
-        $Endpoint["AzureKeyVaultDnsSuffix"] = $AzureKeyVaultDnsSuffix
-    } else {
-        throw "Unable to fetch Azure Stack Dependency Data."
-    }
-
-    return $Endpoint
-}
-
 # Get the Bearer Access Token from the Endpoint
 function Get-SpnAccessToken {
     [CmdletBinding()]
@@ -220,7 +145,11 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
-    $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
+    $envAuthUrl = $script:defaultEnvironmentAuthUri
+    if($endpoint.Data.environmentAuthorityUrl)
+    {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
 
     $azureUri = Get-AzureUri $endpoint
 
