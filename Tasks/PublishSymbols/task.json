@@ -16,7 +16,6 @@
         "Patch": "1"
     },
     "minimumAgentVersion": "1.95.0",
-    "instanceNameFormat": "Publish symbols path: ",
     "groups": [
         {
             "name": "advanced",
@@ -135,9 +134,10 @@
             "groupName": "advanced"
         }
     ],
+    "instanceNameFormat": "Publish symbols path",
     "execution": {
         "PowerShell3": {
-            "target": "PublishSymbolsTask.ps1"
+            "target": "PublishSymbols.ps1"
         }
     },
     "messages": {

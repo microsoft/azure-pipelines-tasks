@@ -47,7 +47,7 @@ function Download-SymbolClient([string]$symbolServiceUri, [string]$directory)
 {
     $clientFetchUrl = $symbolServiceUri + "/_apis/symbol/client/exe" # Replace with symbol/client/task after M118 gets deployed
 
-    "Downloading $($clientFetchUrl) to $($directory)" | Write-Verbose
+    "Downloading $clientFetchUrl to $directory" | Write-Verbose
 
     $symbolAppZip = Join-Path $directory "symbol.app.buildtask.zip"
     (New-Object System.Net.WebClient).DownloadFile($clientFetchUrl, $symbolAppZip)
@@ -64,14 +64,13 @@ function Get-SymbolClientVersion([string]$symbolServiceUri)
     $versionUrl = $symbolServiceUri + "/_apis/symbol/client/"
     try
     {
-    $versionResponse = Invoke-WebRequest -Uri $versionUrl -Method Head -UseDefaultCredentials -UseBasicParsing
+        $versionResponse = Invoke-WebRequest -Uri $versionUrl -Method Head -UseDefaultCredentials -UseBasicParsing
     }
     catch [System.Net.WebException] 
     {
         Write-Host "StatusCode '$($_.Exception.Response.StatusCode)' returned on account $symbolServiceUri"
         
-        if ($_.Exception.Response.StatusCode -eq 404)
-        {
+        if ($_.Exception.Response.StatusCode -eq 404) {
             throw "The VSTS Symbol Server feature is not enabled for this account. See https://go.microsoft.com/fwlink/?linkid=846265 for instructions on how to enable it.`n`n "
         }
         
@@ -79,14 +78,14 @@ function Get-SymbolClientVersion([string]$symbolServiceUri)
     }
     $versionHeader = $versionResponse.Headers["symbol-client-version"]
 
-    "Most recent version is $($versionHeader)" | Write-Verbose
+    "Most recent version is $versionHeader" | Write-Verbose
 
     return $versionHeader
 }
 
 function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [string]$sourcePath, [string]$expirationInDays, [string]$personalAccessToken)
 {
-    "Using endpoint $($symbolServiceUri) to create request $($requestName) with content in $($sourcePath)" | Write-Verbose
+    "Using endpoint $symbolServiceUri to create request $requestName with content in $sourcePath" | Write-Verbose
 
     # the latest symbol.app.buildtask.zip and use the assemblies in it.
     $assemblyPath = Update-SymbolClient $SymbolServiceUri $env:Temp
@@ -94,36 +93,25 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
     # Publish the files
     try
     {
-        if ( $sourcePath ) 
-        { 
+        if ( $sourcePath ) { 
             $sourcePath = $sourcePath.TrimEnd("\")
-            "Removing trailing '\' in SourcePath. New value: $($sourcePath)" | Write-Verbose
+            "Removing trailing '\' in SourcePath. New value: $sourcePath" | Write-Verbose
         }
     
         $args = "publish --service `"$symbolServiceUri`" --name `"$requestName`" --directory `"$sourcePath`"" 
 
-        if ( $expirationInDays )
-        {
+        if ( $expirationInDays ) {
              $args  += " --expirationInDays `"$expirationInDays`""
         }
 
-        if ( $personalAccessToken )
-        {
+        if ( $personalAccessToken ) {
              $args  += " --patAuth `"$personalAccessToken`""
         }
-        else
-        {
+        else {
              $args += " --aadAuth"
         }
 
-        $publishResult = Run-SymbolCommand $assemblyPath $args
-
-        if ( $publishResult )
-        {
-            "Service assigned request ID: $($publishResult.Id)" | Write-Host
-            "Request will automatically expire on $($publishResult.ExpirationDate) unless manually extended." | Write-Host
-            return $publishResult.Id
-        }
+        Run-SymbolCommand $assemblyPath $args
     }
     catch [Exception]
     {
@@ -138,10 +126,8 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 
 function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
 {
-    # Require tracelevel verbose to get JSON output
     $qarg = ""
-    if ($arguments.EndsWith("-q"))
-    {
+    if ($arguments.EndsWith("-q")) {
         $qarg = "-q"
         $arguments = $arguments.Substring(0, $arguments.Length - 2)
     }
@@ -149,59 +135,14 @@ function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
     $exe = "$assemblyPath\symbol.exe"
     $arguments += " --tracelevel verbose " + $qarg
 
-    $displayArgs = $arguments | ForEach-Object { $_ -replace "--patAuth [^ ]+","--patAuth (auth)" }
-    Write-Host "Running: $exe $displayArgs"
+    Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
 
-    $processInfo = New-Object System.Diagnostics.ProcessStartInfo
-    $processInfo.FileName = $exe
-    $processInfo.UseShellExecute = $false
-    $processInfo.RedirectStandardOutput = $true
-    $processInfo.RedirectStandardError = $true
-    $processInfo.Arguments = $arguments
-
-    $process = New-Object System.Diagnostics.Process
-    $process.StartInfo = $processInfo
-   
-    $process.Start() | Out-Null
-
-    $stdout = $process.StandardOutput.ReadToEnd()
-    $stderr = $process.StandardError.ReadToEnd()
-
-    $process.WaitForExit()
-
-    $stdout = $stdout | ForEach-Object { $_.Replace($arguments, $displayArgs) }
-
-    if ( $process.ExitCode -ne 0 )
-    {
-        Write-Host $stdout
-
-        $script:exitcode = $process.ExitCode
-        Write-Host -foregroundcolor red "ERROR: $exe exited with exit code " $process.ExitCode
-        if ($stderr) 
-        {
-            Write-Error "ERROR: $stderr"
-        }
-        throw "Failed to publish symbols"
-    }
-    else 
-    {
-        $stdout | Write-Verbose
-    }
-
-    if ( $stderr )
-    {
-        Write-Host -foregroundcolor red "ERROR: $stderr"
-    }
-
-    "$exe exited with exit code $($process.ExitCode)" | Write-Host
-
-    # Capture and convert JSON from stdout to make it look like we actually use the API
-    $stdout | where { $_ -match "({.+})" } | foreach { $matches[0] } | ConvertFrom-Json
+    "$exe exited with exit code $LASTEXITCODE" | Write-Host
 }
 
 function Unzip-SymbolClient([string]$clientZip, [string]$destinationDirectory)
 {
-    "Unzipping $($clientZip)" | Write-Verbose
+    "Unzipping $clientZip" | Write-Verbose
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($clientZip, $destinationDirectory)
@@ -219,37 +160,29 @@ function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLoc
     $clientPath = Join-Path $env:Temp $availableVersion
     $symbolClientZip = Join-Path $clientPath "symbol.app.buildtask.zip"
 
-    if ( ! $(Test-Path $symbolClientZip -PathType Leaf) )
-    {
-        "$($symbolClientZip) not found" | Write-Verbose
+    if ( ! $(Test-Path $symbolClientZip -PathType Leaf) ) {
+        "$symbolClientZip not found" | Write-Host
 
-        if ( $(Test-Path $clientPath -PathType Container) )
-        {
-            "Cleaning $($clientPath)" | Write-Verbose
-
-            Remove-Item "$($clientPath)" -recurse | Write-Verbose
+        if ( $(Test-Path $clientPath -PathType Container) ) {
+            "Cleaning $clientPath" | Write-Host
+            Remove-Item "$clientPath" -recurse | Write-Host
         }
 
-        "Creating $($clientPath)" | Write-Verbose
-
-        New-Item -ItemType directory -Path $clientPath | Write-Verbose
-
+        "Creating $clientPath" | Write-Host
+        New-Item -ItemType directory -Path $clientPath | Write-Host
         $symbolClientZip = Download-SymbolClient $symbolServiceUri $clientPath
     }
-    else
-    {
-        "$($symbolClientZip) exists" | Write-Verbose
+    else {
+        "$symbolClientZip exists" | Write-Verbose
     }
 
     $modulePath = Join-Path $clientPath "lib\net45"
 
-    if ( ! $(Test-Path $modulePath -PathType Container) )
-    {
+    if ( ! $(Test-Path $modulePath -PathType Container) ) {
         Unzip-SymbolClient $symbolClientZip $clientPath | Write-Host
     }
-    else
-    {
-        "$($symbolClientZip) already unzipped" | Write-Verbose
+    else {
+        "$symbolClientZip already unzipped" | Write-Verbose
     }
 
     "Update complete" | Write-Verbose
@@ -257,28 +190,7 @@ function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLoc
     return $modulePath
 }
 
-# -----------------------------------------------------------------------------
-# Main logic
-# -----------------------------------------------------------------------------
-$Verbose=if ($PSBoundParameters.Verbose -eq $true) { $true } else { $false }
-
 # Publish the symbols
-$publishedRequestId = Publish-Symbols $SymbolServiceUri $requestName $sourcePath $ExpirationInDays $PersonalAccessToken
+Publish-Symbols $SymbolServiceUri $requestName $sourcePath $ExpirationInDays $PersonalAccessToken
 
-if ( $publishedRequestId )
-{
-    "Request $($requestName) successfully published and assigned ID '$($publishedRequestId)'" | Write-Host
-    exit 0
-}
-else
-{
-    # CONSIDER: Cleanup partially published requests?
-    "Failed to published request $($requestName)" | Write-Error
-
-    [int]$exitCode = $lastexitcode
-
-    # Ensure build task fails even if $lastExitCode is null or 0
-    if ($exitCode -eq 0) { $exitCode = 1 }
-
-    exit $exitCode
-}
+exit $lastexitcode
