@@ -14,58 +14,50 @@ export default class VirtualMachineScaleSet {
 
     public async execute(): Promise<void> {
         var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        return new Promise<void>(async (resolve, reject) => {
-            try {
-                var result = await this._getResourceGroupForVmss(client);
-                var resourceGroupName: string = result.resourceGroupName;
-                var osType: string = result.osType;
-                if(!resourceGroupName) {
-                    return reject(tl.loc("FailedToGetRGForVMSS", this.taskParameters.vmssName));
-                }
+        var result = await this._getResourceGroupForVmss(client);
+        var resourceGroupName: string = result.resourceGroupName;
+        var osType: string = result.osType;
+        if(!resourceGroupName) {
+            throw(tl.loc("FailedToGetRGForVMSS", this.taskParameters.vmssName));
+        }
 
-                switch (this.taskParameters.action) {
-                    case "UpdateImage":
-                        var extensionMetadata: azureModel.VMExtensionMetadata = null;
-                        var customScriptExtension: azureModel.VMExtension = null;
-                        if(!!this.taskParameters.customScriptUrl) {
-                            extensionMetadata = this._getCustomScriptExtensionMetadata(osType);
-                            customScriptExtension = {
-                                name: "CustomScriptExtension" + Date.now().toString(),
-                                properties: {
-                                    type: extensionMetadata.type,
-                                    publisher: extensionMetadata.publisher,
-                                    typeHandlerVersion: extensionMetadata.typeHandlerVersion,
-                                    autoUpgradeMinorVersion: true,
-                                    settings: {
-                                        "fileUris": [ this.taskParameters.customScriptUrl ]
-                                    },
-                                    protectedSettings: {
-                                        "commandToExecute": this.taskParameters.customScriptCommand
-                                    }
-                                }
-                            };
-
-                            var matchingExtension = await this._getExistingCustomScriptExtension(client, resourceGroupName, customScriptExtension);
-                            // if extension already exists, remove it
-                            if(!!matchingExtension) {
-                                await this._deleteAndInstallCustomScriptExtension(client, resourceGroupName, matchingExtension, customScriptExtension);
-                                await this._updateImageInternal(client, resourceGroupName);
-                            } else {
-                                await this._installCustomScripExtension(client, resourceGroupName, customScriptExtension);
-                                await this._updateImageInternal(client, resourceGroupName);
+        switch (this.taskParameters.action) {
+            case "UpdateImage":
+                var extensionMetadata: azureModel.VMExtensionMetadata = null;
+                if(!!this.taskParameters.customScriptUrl) {
+                    extensionMetadata = this._getCustomScriptExtensionMetadata(osType);
+                    var customScriptExtension: azureModel.VMExtension = {
+                        name: "CustomScriptExtension" + Date.now().toString(),
+                        properties: {
+                            type: extensionMetadata.type,
+                            publisher: extensionMetadata.publisher,
+                            typeHandlerVersion: extensionMetadata.typeHandlerVersion,
+                            autoUpgradeMinorVersion: true,
+                            settings: {
+                                "fileUris": [ this.taskParameters.customScriptUrl ]
+                            },
+                            protectedSettings: {
+                                "commandToExecute": this.taskParameters.customScriptCommand
                             }
-                        } else {
-                            await this._updateImageInternal(client, resourceGroupName);
                         }
-                        break;
+                    };
+
+                    var matchingExtension = await this._getExistingCustomScriptExtension(client, resourceGroupName, customScriptExtension);
+
+                    // if extension already exists, remove it
+                    if(!!matchingExtension) {
+                        await this._deleteCustomScriptExtension(client, resourceGroupName, matchingExtension);
+                    }
+
+                    await this._installCustomScriptExtension(client, resourceGroupName, customScriptExtension);
                 }
-            } catch(error) {
-                reject(error);
-            }
-        });
+
+                await this._updateImageInternal(client, resourceGroupName);
+                break;
+        }
     }
 
-    private _getResourceGroupForVmss(client): Promise<any> {
+    private _getResourceGroupForVmss(client: armCompute.ComputeManagementClient): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             client.virtualMachineScaleSets.list(null, (error, result, request, response) => {
                 if (error) {
@@ -94,7 +86,7 @@ export default class VirtualMachineScaleSet {
         });
     }
 
-    private _getExistingCustomScriptExtension(client, resourceGroupName, customScriptExtension): Promise<azureModel.VMExtension> {
+    private _getExistingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, customScriptExtension: azureModel.VMExtension): Promise<azureModel.VMExtension> {
         return new Promise<azureModel.VMExtension>((resolve, reject) => {
             client.virtualMachineExtensions.list(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, null, (error, result, request, response) => {
                 if (error) {
@@ -117,30 +109,23 @@ export default class VirtualMachineScaleSet {
         });
     }
 
-    private _deleteAndInstallCustomScriptExtension(client, resourceGroupName, oldExtension, newExtension): Promise<void> {
+    private _deleteCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, customScriptExtension: azureModel.VMExtension): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            console.log(tl.loc("RemovingCustomScriptExtension", oldExtension.name));
-            client.virtualMachineExtensions.deleteMethod(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, oldExtension.name, (error, result, request, response) => {
+            console.log(tl.loc("RemovingCustomScriptExtension", customScriptExtension.name));
+            client.virtualMachineExtensions.deleteMethod(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, customScriptExtension.name, (error, result, request, response) => {
                 if (error) {
                     // Just log warning, do not fail
-                    tl.warning(tl.loc("RemoveVMSSExtensionsFailed", oldExtension.name, utils.getError(error)));
+                    tl.warning(tl.loc("RemoveVMSSExtensionsFailed", customScriptExtension.name, utils.getError(error)));
                 } else {
-                    console.log(tl.loc("CustomScriptExtensionRemoved", oldExtension.name));
+                    console.log(tl.loc("CustomScriptExtensionRemoved", customScriptExtension.name));
                 }
 
-                client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, newExtension.name, newExtension, (error, result, request, response) => {
-                    if (error) {
-                        return reject(tl.loc("SettingVMExtensionFailed", utils.getError(error)));
-                    }
-
-                    console.log(tl.loc("CustomScriptExtensionInstalled", newExtension.name));
-                    return resolve();
-                });
+                return resolve();
             });
         });
     }
 
-    private _installCustomScripExtension(client, resourceGroupName, customScriptExtension): Promise<void> {
+    private _installCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, customScriptExtension: azureModel.VMExtension): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, customScriptExtension.name, customScriptExtension, (error, result, request, response) => {
                 if (error) {
@@ -153,7 +138,7 @@ export default class VirtualMachineScaleSet {
         });
     }
 
-    private _updateImageInternal(client, resourceGroupName): Promise<void> {
+    private _updateImageInternal(client: armCompute.ComputeManagementClient, resourceGroupName: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachineScaleSets.updateImage(resourceGroupName, this.taskParameters.vmssName, this.taskParameters.imageUrl, null, (error, result, request, response) => {
                 if (error) {
@@ -165,7 +150,7 @@ export default class VirtualMachineScaleSet {
         });
     }
 
-    private _getCustomScriptExtensionMetadata(osType): azureModel.VMExtensionMetadata {
+    private _getCustomScriptExtensionMetadata(osType: string): azureModel.VMExtensionMetadata {
         if(osType === "Windows") {
             return <azureModel.VMExtensionMetadata>{
                 type: "CustomScriptExtension",

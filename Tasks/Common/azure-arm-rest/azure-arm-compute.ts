@@ -386,7 +386,7 @@ export class VirtualMachineExtensions {
         this.client = client;
     }
 
-    public list(resourceGroupName, resourceName, resourceType, options, callback: azureServiceClient.ApiCallback) {
+    public list(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, options, callback: azureServiceClient.ApiCallback) {
         if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
@@ -439,7 +439,7 @@ export class VirtualMachineExtensions {
             (error) => callback(error));
     }
 
-    public get(resourceGroupName, resourceName, resourceType, vmExtensionName, options, callback) {
+    public get(resourceGroupName: string, resourceName:string, resourceType: Model.ComputeResourceType, vmExtensionName: string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -493,7 +493,7 @@ export class VirtualMachineExtensions {
             (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName, resourceName, resourceType, vmExtensionName, extensionParameters, callback): void {
+    public createOrUpdate(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, extensionParameters, callback: azureServiceClient.ApiCallback): void {
         var client = this.client;
 
         if (!callback) {
@@ -557,7 +557,7 @@ export class VirtualMachineExtensions {
 
     }
 
-    public deleteMethod(resourceGroupName, resourceName, resourceType, vmExtensionName, callback) {
+    public deleteMethod(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, callback: azureServiceClient.ApiCallback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }

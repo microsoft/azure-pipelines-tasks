@@ -10,6 +10,7 @@ async function run(): Promise<void> {
     switch (taskParameters.action) {
         case "UpdateImage":
             await vmssOperation.execute();
+            break;
         default:
             throw tl.loc("InvalidAction", taskParameters.action);
     }
