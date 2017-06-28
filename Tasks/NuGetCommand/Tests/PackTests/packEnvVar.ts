@@ -22,7 +22,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory c:\\agent\\home\\directory -Properties -version XX.YY.ZZ": {
+        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version XX.YY.ZZ": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
