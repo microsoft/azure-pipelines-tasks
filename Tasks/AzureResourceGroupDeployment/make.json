@@ -5,7 +5,15 @@
             "type": "node",
             "dest": "./",
             "compile": true
+        },
+        {
+            "module": "../Common/azurestack-common",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
         }
+    ]
+}
     ],
     "rm": [
         {
