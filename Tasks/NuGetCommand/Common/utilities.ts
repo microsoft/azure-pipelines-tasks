@@ -38,67 +38,56 @@ export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string
     return data.requestUrl;
 }
 
-export function GetExternalAuthInfo(inputKey: string): auth.ExternalAuthInfo
-{
-    let externalAuthArray: auth.ExternalAuthInfo = undefined;
-    let endpointName = tl.getInput(inputKey);
-    let feedUri = tl.getEndpointUrl(endpointName, true);
-    let feedName = feedUri.replace(/\W/g, '');
-    let externalAuth = tl.getEndpointAuthorization(endpointName, true);
-    let scheme = tl.getEndpointAuthorizationScheme(endpointName, true).toLowerCase();
-
-    switch(scheme) {
-        case "token":
-            let token = externalAuth.parameters["apitoken"]; 
-            externalAuthArray = new auth.TokenExternalAuthInfo(<IPackageSource>
-                {
-                    feedName: feedName,
-                    feedUri: feedUri
-                }, 
-                token);
-            break;
-        case "usernamepassword":
-            let username = externalAuth.parameters["username"];
-            let password = externalAuth.parameters["password"];
-            externalAuthArray = new auth.UsernamePasswordExternalAuthInfo(<IPackageSource>
-                {
-                    feedName: feedName,
-                    feedUri: feedUri
-                }, 
-                username, 
-                password);
-            break;
-        case "none":
-            let apiKey = externalAuth.parameters["nugetkey"];
-            externalAuthArray = new auth.ApiKeyExternalAuthInfo(<IPackageSource>
-                {
-                    feedName: feedName,
-                    feedUri: feedUri
-                }, 
-                apiKey);
-            break;
-        default:
-            break;
-    }
-
-    return externalAuthArray;
-}
-
 export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInfo[]
 {
     let externalAuthArray: auth.ExternalAuthInfo[] = [];
-    let endpointName = tl.getInput(inputKey);
+    let endpointNames = tl.getDelimitedInput(inputKey, ',');
 
-    if (!endpointName)
+    if (!endpointNames || endpointNames.length == 0)
     {
         return externalAuthArray;
     }
 
-    let externalAuthInfo = this.GetExternalAuthInfo(inputKey);
-    if (externalAuthInfo)
-    {
-        externalAuthArray = [externalAuthInfo];
-    }
+    endpointNames.forEach((endpointName: string) => {
+        let feedUri = tl.getEndpointUrl(endpointName, true);
+        let feedName = feedUri.replace(/\W/g, '');
+        let externalAuth = tl.getEndpointAuthorization(endpointName, true);
+        let scheme = tl.getEndpointAuthorizationScheme(endpointName, true).toLowerCase();
+
+        switch(scheme) {
+            case "token":
+                let token = externalAuth.parameters["apitoken"]; 
+                externalAuthArray.push(new auth.TokenExternalAuthInfo(<IPackageSource>
+                    {
+                        feedName: feedName,
+                        feedUri: feedUri
+                    }, 
+                    token));
+                break;
+            case "usernamepassword":
+                let username = externalAuth.parameters["username"];
+                let password = externalAuth.parameters["password"];
+                externalAuthArray.push(new auth.UsernamePasswordExternalAuthInfo(<IPackageSource>
+                    {
+                        feedName: feedName,
+                        feedUri: feedUri
+                    }, 
+                    username, 
+                    password));
+                break;
+            case "none":
+                let apiKey = externalAuth.parameters["nugetkey"];
+                externalAuthArray.push(new auth.ApiKeyExternalAuthInfo(<IPackageSource>
+                    {
+                        feedName: feedName,
+                        feedUri: feedUri
+                    }, 
+                    apiKey));
+                break;
+            default:
+                break;
+        }
+    });
 
     return externalAuthArray;
 }
