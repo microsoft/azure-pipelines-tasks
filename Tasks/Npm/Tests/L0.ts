@@ -28,6 +28,37 @@ describe('Npm Task', function () {
         mockery.deregisterAll();
     });
 
+    // npm failure dumps log
+    it('npm failure dumps debug log from npm cache', (done: MochaDone) => {
+        this.timeout(1000);
+        const debugLog = 'NPM_DEBUG_LOG';
+
+        let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained(debugLog));
+
+        done();
+    });
+
+    it('npm failure dumps debug log from working directory', (done: MochaDone) => {
+        this.timeout(1000);
+        const debugLog = 'NPM_DEBUG_LOG';
+
+        let tp = path.join(__dirname, 'npm-failureDumpsLog-workingDir.js');
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained(debugLog));
+
+        done();
+    });
+
     // custom
     it('custom command should return npm version', (done: MochaDone) => {
         this.timeout(1000);
