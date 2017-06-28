@@ -2,7 +2,7 @@
   "loc.friendlyName": "Invoke REST API",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke Rest API: $(method)",
+  "loc.instanceNameFormat": "Invoke REST API: $(method)",
   "loc.input.label.connectedServiceName": "Generic Endpoint",
   "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
   "loc.input.label.method": "Method",
