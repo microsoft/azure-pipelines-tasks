@@ -120,7 +120,7 @@ function Import-FromSdkPath {
             if (Test-Path -LiteralPath $path -PathType Leaf) {
                 # Import the module.
                 Write-Host "##[command]Import-Module -Name $path -Global"
-                $module = Import-Module -Name $path -Global -PassThru
+                $module = Import-Module -Name $path -Global -RequiredVersion $azurePsVersion -PassThru
                 Write-Verbose "Imported module version: $($module.Version)"
 
                 # Store the imported module.
