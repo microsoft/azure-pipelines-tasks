@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 118,
-        "Patch": 0
+        "Minor": 119,
+        "Patch": 1
     },
     "demands": [
         "AndroidSDK",

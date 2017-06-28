@@ -66,10 +66,6 @@ async function run() {
         }
         
 
-        if(webAppKind && webAppKind === "linux") {
-            deployToSlotFlag = false;
-        }
-
         if(deployToSlotFlag) {
             if (slotName.toLowerCase() === "production") {
                 deployToSlotFlag = false;
@@ -87,7 +83,7 @@ async function run() {
         {
             tl.debug("Performing container based deployment.");
 
-            await deployWebAppImage(endPoint, resourceGroupName, webAppName);
+            await deployWebAppImage(endPoint, resourceGroupName, webAppName, deployToSlotFlag, slotName);
         }
         else
         {

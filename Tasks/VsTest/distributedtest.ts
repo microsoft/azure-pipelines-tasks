@@ -8,6 +8,9 @@ import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
+import {TestSelectorInvoker} from './testselectorinvoker';
+
+const testSelector = new TestSelectorInvoker();
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -16,7 +19,18 @@ export class DistributedTest {
     }
 
     public runDistributedTest() {
+        this.publishCodeChangesIfRequired();
         this.registerAndConfigureAgent();
+    }
+
+    private publishCodeChangesIfRequired(): void {
+        if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
+            let code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null); //todo: enable custom engine
+
+            if (code !== 0) {
+                tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
+            }
+        }
     }
 
     private async registerAndConfigureAgent() {
@@ -52,7 +66,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
-            const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters , '**\\*TestAdapter.dll' );
+            const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
                 tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters))
             }
@@ -138,7 +152,7 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                null, false, this.dtaTestConfig.overrideTestrunParameters);
+                null, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {

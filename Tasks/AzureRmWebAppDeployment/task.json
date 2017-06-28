@@ -70,7 +70,7 @@
             "name": "ServerfarmId",
             "type": "pickList",
             "label": "Serverfarm id",
-            "defaultValue": "",
+            "defaultValue": "invalidServerfarmId",
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
@@ -87,6 +87,39 @@
             "properties": {
                 "EditableOptions": "false"
             }
+        },
+        {
+            "name": "DeployToSlotFlag",
+            "type": "boolean",
+            "label": "Deploy to slot",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = linux"
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
+            "visibleRule": "DeployToSlotFlag = true"
+        },
+        {
+            "name": "SlotName",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
+            "visibleRule": "DeployToSlotFlag = true"
         },
         {
             "name": "DockerNamespace",
@@ -123,39 +156,6 @@
             "required": false,
             "visibleRule": "WebAppKind = linux",
             "helpMarkDown": "Enter the start up command."
-        },
-        {
-            "name": "DeployToSlotFlag",
-            "type": "boolean",
-            "label": "Deploy to slot",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
-        },
-        {
-            "name": "ResourceGroupName",
-            "type": "pickList",
-            "label": "Resource group",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
-            "visibleRule": "DeployToSlotFlag = true"
-        },
-        {
-            "name": "SlotName",
-            "type": "pickList",
-            "label": "Slot",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
-            "visibleRule": "DeployToSlotFlag = true"
         },
         {
             "name": "VirtualApplication",

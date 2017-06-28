@@ -9,12 +9,13 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 72
+    "Patch": 73
   },
   "demands": [
     "Cmd"
   ],
   "minimumAgentVersion": "1.83.0",
+  "deprecated": true,
   "groups": [
     {
       "name": "versioning",

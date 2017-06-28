@@ -220,7 +220,8 @@ describe('PackerBuild Suite', function() {
             process.env["__packer_fix_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();   
+            tr.run();
+            process.env["__packer_fix_fails__"] = "false";  
 
             assert(tr.failed, 'task should have failed');
             assert(tr.invokedToolCount == 2, 'should not invoke packer validate and build commands. actual: ' + tr.invokedToolCount);        
@@ -229,8 +230,7 @@ describe('PackerBuild Suite', function() {
             done();
         });
 
-        it('should fail if packer validate exits with non zero code', (done:MochaDone) => {
-            process.env["__packer_fix_fails__"] = "false";     
+        it('should fail if packer validate exits with non zero code', (done:MochaDone) => {   
             process.env["__packer_validate_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -354,7 +354,7 @@ describe('PackerBuild Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             
-            assert(tr.invokedToolCount == 3, 'should have invoked tool thrice. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount == 4, 'should have invoked tool 4 times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
@@ -376,7 +376,7 @@ describe('PackerBuild Suite', function() {
             process.env["__packer_exists__"] = "false";
             process.env["__lower_version__"] = "false";
             
-            assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount == 5, 'should have invoked tool 5 times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
@@ -427,6 +427,17 @@ describe('PackerBuild Suite', function() {
             assert(tr.invokedToolCount == 0, 'should have invoked tool not even once. actual: ' + tr.invokedToolCount);
             assert(tr.failed, 'task should fail if extraction fails');
             assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer zip extraction failed!!") != -1, "error message should be right");
+            done();
+        });
+
+        it('Should add additional parameters to builder section in builtin template', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0WindowsBuiltinTemplateAdditionalParameters.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated.json content: {\"builders\":[{\"type\":\"azure-arm\",\"ssh_pty\":\"true\"}]}") != -1, "additional parameters should be written to updated template file");
+            assert(tr.succeeded, 'task should have succeeded');
             done();
         });
 
@@ -573,6 +584,17 @@ describe('PackerBuild Suite', function() {
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("rmRF /tmp/tempdir/100") != -1, "rmRF should be called on temp template folder");
+            done();
+        });
+
+        it('Should add additional parameters to builder section in builtin template', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0LinuxBuiltinTemplateAdditionalParameters.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.stdout.indexOf("writing to file /tmp/tempdir/100/default.linux.template-builderUpdated.json content: {\"builders\":[{\"type\":\"azure-arm\",\"ssh_pty\":\"true\"}]}") != -1, "additional parameters should be written to updated template file");
+            assert(tr.succeeded, 'task should have succeeded');
             done();
         });
     }

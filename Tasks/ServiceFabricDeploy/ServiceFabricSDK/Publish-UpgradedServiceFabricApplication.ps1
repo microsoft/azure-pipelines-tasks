@@ -319,12 +319,15 @@ function Publish-UpgradedServiceFabricApplication
             return
         }
 
-        do
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-            Start-Sleep -Seconds 3
-            $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
-        } while ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted")
+        Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
+        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+        Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+                                -ActionSuccessValidator $upgradeStatusValidator `
+                                -MaxTries 2147483647 `
+                                -RetryIntervalInSeconds 3 `
+                                -RetryableExceptions @("System.Fabric.FabricTransientException") `
+                                -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 
         if($UnregisterUnusedVersions)
         {

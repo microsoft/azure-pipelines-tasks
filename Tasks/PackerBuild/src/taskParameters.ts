@@ -26,6 +26,9 @@ export default class TaskParameters {
     public deployScriptPath: string;
     public deployScriptArguments: string;
 
+    public additionalBuilderParameters: {};
+    public skipTempFileCleanupDuringVMDeprovision: boolean = true;
+
     public imageUri: string;
 
     constructor() {
@@ -49,20 +52,26 @@ export default class TaskParameters {
                     this._extractImageDetails();
                 }              
 
+                console.log(tl.loc("ResolvingDeployPackageInput"));
                 this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
-                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));
+                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));                    
+
+                console.log(tl.loc("ResolvingDeployScriptInput"));
                 var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
                 var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
                 this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
-                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));
+                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));                
                 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
             }                
 
+            console.log(tl.loc("ParsingAdditionalBuilderParameters"));
+            this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));                   
+            this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
         } 
         catch (error) {
-            throw (tl.loc("TaskParametersConstructorFailed", error.message));
+            throw (tl.loc("TaskParametersConstructorFailed", error));
         }
     }
 

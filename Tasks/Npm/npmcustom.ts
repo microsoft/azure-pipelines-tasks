@@ -11,19 +11,22 @@ export async function run(command?: string): Promise<void> {
     let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     let npmrc = util.getTempNpmrcPath();
     let npmRegistries: INpmRegistry[] = await util.getLocalNpmRegistries(workingDir);
+    let overrideNpmrc = false;
 
     let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
+            overrideNpmrc = true;
             let feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
             npmRegistries.push(await NpmRegistry.FromFeedId(feedId));
             break;
         case RegistryLocation.Npmrc:
             tl.debug(tl.loc('UseNpmrc'));
-            let endpointId = tl.getInput(NpmTaskInput.CustomEndpoint);
-            if (endpointId) {
-                npmRegistries.push(NpmRegistry.FromServiceEndpoint(endpointId, true));
+            let endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
+            if (endpointIds && endpointIds.length > 0) {
+                let endpointRegistries = endpointIds.map(e => NpmRegistry.FromServiceEndpoint(e, true));
+                npmRegistries = npmRegistries.concat(endpointRegistries);
             }
             break;
     }
@@ -38,7 +41,7 @@ export async function run(command?: string): Promise<void> {
         util.appendToNpmrc(npmrc, `${registry.auth}\n`);
     }
 
-    let npm = new NpmToolRunner(workingDir, npmrc);
+    let npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
     npm.line(command || tl.getInput(NpmTaskInput.CustomCommand, true));
 
     await npm.exec();

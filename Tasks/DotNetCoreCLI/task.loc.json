@@ -14,14 +14,52 @@
     "Agent"
   ],
   "demands": [],
+  "preview": true,
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
     "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [
+    {
+      "name": "restoreAuth",
+      "displayName": "ms-resource:loc.group.displayName.restoreAuth",
+      "isExpanded": true,
+      "visibleRule": "command = restore"
+    },
+    {
+      "name": "restoreAdvanced",
+      "displayName": "ms-resource:loc.group.displayName.restoreAdvanced",
+      "isExpanded": false,
+      "visibleRule": "command = restore"
+    },
+    {
+      "name": "pushAuth",
+      "displayName": "ms-resource:loc.group.displayName.pushAuth",
+      "isExpanded": true,
+      "visibleRule": "command = push"
+    },
+    {
+      "name": "pushAdvanced",
+      "displayName": "ms-resource:loc.group.displayName.pushAdvanced",
+      "isExpanded": false,
+      "visibleRule": "command = push"
+    },
+    {
+      "name": "packOptions",
+      "displayName": "ms-resource:loc.group.displayName.packOptions",
+      "isExpanded": false,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "packAdvanced",
+      "displayName": "ms-resource:loc.group.displayName.packAdvanced",
+      "isExpanded": false,
+      "visibleRule": "command = pack"
+    }
+  ],
   "inputs": [
     {
       "name": "command",
@@ -32,13 +70,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.command",
       "options": {
         "build": "build",
+        "push": "nuget push",
+        "pack": "pack",
         "publish": "publish",
         "restore": "restore",
+        "run": "run",
         "test": "test",
-        "run": "run"
+        "custom": "custom"
       },
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "False"
       }
     },
     {
@@ -55,15 +96,25 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.projects",
       "defaultValue": "",
-      "visibleRule": "command != publish || publishWebProjects = false",
+      "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.projects"
+    },
+    {
+      "name": "custom",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.custom",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.custom",
+      "required": true,
+      "visibleRule": "command = custom"
     },
     {
       "name": "arguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
+      "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
@@ -75,6 +126,271 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.zipAfterPublish"
+    },
+    {
+      "name": "selectOrConfig",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.selectOrConfig",
+      "defaultValue": "config",
+      "helpMarkDown": "ms-resource:loc.input.help.selectOrConfig",
+      "required": "true",
+      "options": {
+        "select": "Feed(s) I select here",
+        "config": "Feeds in my NuGet.config"
+      },
+      "groupName": "restoreAuth"
+    },
+    {
+      "name": "feedRestore",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedRestore",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.feedRestore",
+      "required": "false",
+      "groupName": "restoreAuth",
+      "visibleRule": "selectOrConfig = select",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "includeNuGetOrg",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeNuGetOrg",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.includeNuGetOrg",
+      "required": "false",
+      "groupName": "restoreAuth",
+      "visibleRule": "selectOrConfig = select"
+    },
+    {
+      "name": "nugetConfigPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.nugetConfigPath",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
+      "required": "false",
+      "groupName": "restoreAuth",
+      "visibleRule": "selectOrConfig = config"
+    },
+    {
+      "name": "externalEndpoints",
+      "type": "connectedService:ExternalNuGetFeed",
+      "label": "ms-resource:loc.input.label.externalEndpoints",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoints",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "groupName": "restoreAuth",
+      "visibleRule": "selectOrConfig = config"
+    },
+    {
+      "name": "noCache",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.noCache",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.noCache",
+      "required": "false",
+      "groupName": "restoreAdvanced"
+    },
+    {
+      "name": "packagesDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagesDirectory",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagesDirectory",
+      "required": "false",
+      "groupName": "restoreAdvanced"
+    },
+    {
+      "name": "verbosityRestore",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosityRestore",
+      "defaultValue": "Detailed",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosityRestore",
+      "required": "false",
+      "groupName": "restoreAdvanced",
+      "options": {
+        "-": "-",
+        "Quiet": "Quiet",
+        "Minimal": "Minimal",
+        "Normal": "Normal",
+        "Detailed": "Detailed",
+        "Diagnostic": "Diagnostic"
+      }
+    },
+    {
+      "name": "searchPatternPush",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.searchPatternPush",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+      "helpMarkDown": "ms-resource:loc.input.help.searchPatternPush",
+      "required": true,
+      "visibleRule": "command = push"
+    },
+    {
+      "name": "nuGetFeedType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.nuGetFeedType",
+      "required": true,
+      "defaultValue": "internal",
+      "options": {
+        "internal": "This account/collection",
+        "external": "External NuGet server (including other accounts/collections)"
+      },
+      "visibleRule": "command = push"
+    },
+    {
+      "name": "feedPublish",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feedPublish",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.feedPublish",
+      "visibleRule": "command = push && nuGetFeedType = internal"
+    },
+    {
+      "name": "externalEndpoint",
+      "type": "connectedService:ExternalNuGetFeed",
+      "label": "ms-resource:loc.input.label.externalEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoint",
+      "visibleRule": "command = push && nuGetFeedType = external"
+    },
+    {
+      "name": "searchPatternPack",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.searchPatternPack",
+      "defaultValue": "**/*.csproj",
+      "helpMarkDown": "ms-resource:loc.input.help.searchPatternPack",
+      "required": true,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "configurationToPack",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configurationToPack",
+      "defaultValue": "$(BuildConfiguration)",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationToPack",
+      "required": false,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "outputDir",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.outputDir",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.outputDir",
+      "required": false,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "nobuild",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.nobuild",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.nobuild",
+      "required": false,
+      "visibleRule": "command = pack"
+    },
+    {
+      "name": "versioningScheme",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versioningScheme",
+      "defaultValue": "off",
+      "helpMarkDown": "ms-resource:loc.input.help.versioningScheme",
+      "required": true,
+      "groupName": "packOptions",
+      "options": {
+        "off": "Off",
+        "byPrereleaseNumber": "Use the date and time",
+        "byEnvVar": "Use an environment variable",
+        "byBuildNumber": "Use the build number"
+      }
+    },
+    {
+      "name": "versionEnvVar",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionEnvVar",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.versionEnvVar",
+      "required": true,
+      "groupName": "packOptions",
+      "visibleRule": "versioningScheme = byEnvVar"
+    },
+    {
+      "name": "requestedMajorVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.requestedMajorVersion",
+      "defaultValue": "1",
+      "helpMarkDown": "ms-resource:loc.input.help.requestedMajorVersion",
+      "required": true,
+      "groupName": "packOptions",
+      "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "requestedMinorVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.requestedMinorVersion",
+      "defaultValue": "0",
+      "helpMarkDown": "ms-resource:loc.input.help.requestedMinorVersion",
+      "required": true,
+      "groupName": "packOptions",
+      "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "requestedPatchVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.requestedPatchVersion",
+      "defaultValue": "0",
+      "helpMarkDown": "ms-resource:loc.input.help.requestedPatchVersion",
+      "required": true,
+      "groupName": "packOptions",
+      "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "buildProperties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildProperties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildProperties",
+      "groupName": "packAdvanced"
+    },
+    {
+      "name": "verbosityPack",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosityPack",
+      "defaultValue": "Detailed",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosityPack",
+      "required": "false",
+      "groupName": "packAdvanced",
+      "options": {
+        "-": "-",
+        "Quiet": "Quiet",
+        "Minimal": "Minimal",
+        "Normal": "Normal",
+        "Detailed": "Detailed",
+        "Diagnostic": "Diagnostic"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feedRestore",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "feedPublish",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
@@ -84,10 +400,31 @@
     }
   },
   "messages": {
-    "noProjectFilesFound": "ms-resource:loc.messages.noProjectFilesFound",
-    "noWebProjctFound": "ms-resource:loc.messages.noWebProjctFound",
+    "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "Error_AutomaticallyVersionReleases": "ms-resource:loc.messages.Error_AutomaticallyVersionReleases",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_NoSourceSpecifiedForPush": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPush",
+    "Error_NoValueFoundForEnvVar": "ms-resource:loc.messages.Error_NoValueFoundForEnvVar",
+    "Error_NoVersionFoundInBuildNumber": "ms-resource:loc.messages.Error_NoVersionFoundInBuildNumber",
+    "Error_PackageFailure": "ms-resource:loc.messages.Error_PackageFailure",
+    "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
+    "Info_AttemptingToPackFile": "ms-resource:loc.messages.Info_AttemptingToPackFile",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
+    "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "PackagesFailedToInstall": "ms-resource:loc.messages.PackagesFailedToInstall",
+    "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
+    "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
+    "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
+    "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
+    "Warning_AutomaticallyVersionReferencedProjects": "ms-resource:loc.messages.Warning_AutomaticallyVersionReferencedProjects",
+    "Warning_MoreThanOneVersionInBuildNumber": "ms-resource:loc.messages.Warning_MoreThanOneVersionInBuildNumber",
     "dotnetCommandFailed": "ms-resource:loc.messages.dotnetCommandFailed",
-    "zipFailed": "ms-resource:loc.messages.zipFailed",
-    "noPublishFolderFoundToZip": "ms-resource:loc.messages.noPublishFolderFoundToZip"
+    "noProjectFilesFound": "ms-resource:loc.messages.noProjectFilesFound",
+    "noPublishFolderFoundToZip": "ms-resource:loc.messages.noPublishFolderFoundToZip",
+    "noWebProjctFound": "ms-resource:loc.messages.noWebProjctFound",
+    "zipFailed": "ms-resource:loc.messages.zipFailed"
   }
 }

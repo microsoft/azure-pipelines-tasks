@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
@@ -131,7 +131,7 @@
             "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this account/collection, leave this blank; the build’s credentials are used automatically.",
             "properties": {
                 "EditableOptions": "False",
-                "MultiSelect": "True"
+                "MultiSelectFlatList": "True"
             },
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = config"
@@ -238,7 +238,7 @@
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
-            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
+            "helpMarkDown": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
             "required": true,
             "visibleRule": "command = pack"
         },
@@ -408,7 +408,9 @@
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
 
         "Info_AvailableVersions": "The available versions are: %s",
+        "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
         "Info_UsingVersion": "Using version: %s",
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
@@ -434,10 +436,8 @@
         "Warning_FallBackToNuGet": "VstsNuGetPush.exe was not found, falling back to NuGet.exe.",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
         "Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
-        "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
         "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
-        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
 
         "Error_CommandNotRecognized": "The command %s was not recognized."
     }

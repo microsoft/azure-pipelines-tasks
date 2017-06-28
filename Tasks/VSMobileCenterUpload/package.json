@@ -17,9 +17,8 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks",
   "dependencies": {
-    "vsts-task-lib": "0.9.20",
+    "vsts-task-lib": "2.0.5",
     "jszip" : "^3.1.2",
-    "request": "2.72.0",
-    "glob": "^7.0.6"
+    "request": "2.72.0"
   }
 }

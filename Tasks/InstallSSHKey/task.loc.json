@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 117,
+    "Minor": 119,
     "Patch": 0
   },
   "runsOn": [
@@ -39,6 +39,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
+    },
+    {
+      "name": "sshPassphrase",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sshPassphrase",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sshPassphrase"
     },
     {
       "name": "sshKeySecureFile",
