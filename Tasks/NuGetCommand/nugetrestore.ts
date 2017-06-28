@@ -17,8 +17,7 @@ import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 
-const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
-const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
+
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -134,7 +133,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
             let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
-                let nuGetUrl: string = nuGetVersion.productVersion.a < 3 ? NUGET_ORG_V2_URL : NUGET_ORG_V3_URL;
+                let nuGetUrl: string = nuGetVersion.productVersion.a < 3 ? locationHelpers.NUGET_ORG_V2_URL : locationHelpers.NUGET_ORG_V3_URL;
                 sources.push(<IPackageSource>
                 {
                     feedName: "NuGetOrg",
