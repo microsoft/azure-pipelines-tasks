@@ -223,11 +223,11 @@ export class ResourceGroup {
             }
             var csmFilePath = fileMatches[0];
             if (!fs.lstatSync(csmFilePath).isDirectory()) {
-                tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-                template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile)));
+                tl.debug("Loading CSM Template File.. " + csmFilePath);
+                template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmFilePath)));
                 tl.debug("Loaded CSM File");
             } else {
-                throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+                throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmFilePath));
             }
 
         }
