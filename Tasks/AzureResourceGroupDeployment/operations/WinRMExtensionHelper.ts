@@ -306,7 +306,7 @@ export class WinRMExtensionHelper {
                 tl.debug("Custom Script extension is for enabling Https Listener on VM: " + vmName);
                 if (result["properties"]["provisioningState"] === 'Succeeded') {
                     try {
-                        var extensionStatus = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, fileUris);
+                        await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, fileUris);
                         extensionStatusValid = true;
                     }
                     catch (exception) {
@@ -337,10 +337,10 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async ValidateExtensionExecutionStatus(vmName: string, dnsName: string, extensionName: string, location: string, fileUris): Promise<string> {
+    private async ValidateExtensionExecutionStatus(vmName: string, dnsName: string, extensionName: string, location: string, fileUris): Promise<void> {
         tl.debug("Validating the winrm configuration custom script extension status on vm: " + vmName);
 
-        return new Promise<string>((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
                 if (error) {
                     reject(tl.loc("FailedToFetchInstanceViewVM", utils.getError(error)));
@@ -353,7 +353,7 @@ export class WinRMExtensionHelper {
                         if (extension["name"] === extensionName) {
                             for (var substatus of extension["substatuses"]) {
                                 if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && substatus["message"]) {
-                                    reject(JSON.stringify(substatus["message"]));
+                                    reject(substatus["message"]);
                                     break;
                                 }
                             }
@@ -362,7 +362,7 @@ export class WinRMExtensionHelper {
                     }
                 }
                 tl.debug("Custom Script Extension status validated for vm: " + vmName + "!!");
-                resolve("");
+                resolve();
             });
         });
     }
@@ -403,7 +403,7 @@ export class WinRMExtensionHelper {
                     return;
                 }
                 try {
-                    var extensionStatus = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris);
+                    await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris);
                 }
                 catch (exception) {
                     tl.debug("WinRMCustomScriptExtension is not valid on vm " + vmName);
