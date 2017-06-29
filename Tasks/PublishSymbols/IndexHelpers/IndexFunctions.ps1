@@ -13,16 +13,7 @@ function Invoke-IndexSources {
             return
         }
 
-        # Resolve location of pdbstr.exe.
-        $pdbstrPath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\pdbstr\pdbstr.exe"
-        $legacyPdbstrPath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\Pdbstr\pdbstr.exe"
-        if (!([System.IO.File]::Exists($pdbstrPath)) -and
-            ([System.IO.File]::Exists($legacyPdbstrPath)))
-        {		
-            $pdbstrPath = $legacyPdbstrPath		
-        }
-    
-        $pdbstrPath = Assert-VstsPath -LiteralPath $pdbstrPath -PathType Leaf -PassThru
+        $pdbstrPath = Get-PdbstrPath
 
         # Warn if spaces in the temp path.
         if ("$env:TMP".Contains(' ')) {

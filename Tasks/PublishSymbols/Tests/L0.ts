@@ -51,6 +51,9 @@ describe('PublishSymbols Suite', function () {
         it('(Get-ArtifactName) returns correct value', (done) => {
             psr.run(path.join(__dirname, 'Get-ArtifactName.ReturnsCorrectValue.ps1'), done);
         })
+        it('(Get-SymbolBinaryPathCallers) succeed', (done) => {
+            psr.run(path.join(__dirname, 'Get-SymbolBinaryPathCallers.Succeed.ps1'), done);
+        })
         it('(Get-LastTransactionId) gets id', (done) => {
             psr.run(path.join(__dirname, 'Get-LastTransactionId.GetsId.ps1'), done);
         })
