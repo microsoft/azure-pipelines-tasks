@@ -19,7 +19,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 118,
+        "Minor": 120,
         "Patch": 0
     },
     "minimumAgentVersion": "1.89.0",
@@ -73,51 +73,6 @@
             "label": "Options",
             "defaultValue": "",
             "required": false
-        },
-        {
-            "name": "selectSources",
-            "type": "radio",
-            "label": "Select Feed(s) from",
-            "defaultValue" : "PomXmlOnlySources",
-            "groupName": "sourcesAndAuth",
-            "helpMarkDown": "Select the feed(s) where the Maven repositories are sourced.",
-            "options": {
-                "PomXmlOnlySources": "sources in pom.xml",
-                "CustomizeSources": "Feed(s) I select here"
-            }
-        },
-        {
-            "name": "vstsFeedName",
-            "type": "pickList",
-            "label": "Include packages from this VSTS feed",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "sourcesAndAuth",
-            "helpMarkDown": "Feed name (username) and url account.",
-            "visibleRule": "selectSources = CustomizeSources",
-            "properties": {
-                "EditableOptions": "true"
-            }
-        },
-        {
-            "name": "includeMavenCentral",
-            "type": "boolean",
-            "label": "Include packages from Maven Central",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "sourcesAndAuth",
-            "helpMarkDown": "Include support for the repository from Maven Central.",
-            "visibleRule": "selectSources = CustomizeSources"
-        },
-        {
-            "name": "includeJCenter",
-            "type": "boolean",
-            "label": "Include packages from JCenter",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "sourcesAndAuth",
-            "helpMarkDown": "Include support for the repository from JCenter.",
-            "visibleRule": "selectSources = CustomizeSources"
         },
         {
             "name": "publishJUnitResults",
@@ -425,15 +380,6 @@
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         }
     ],
-    "dataSourceBindings": [
-        {
-        "target": "vstsFeedNames",
-        "endpointId": "tfs:feed",
-        "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-        "resultSelector": "jsonpath:$.value[*]",
-        "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-        }
-    ],
     "execution": {
         "Node": {
             "target": "maventask.js",
@@ -473,6 +419,7 @@
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
         "NoCodeCoverage": "No code coverage results were found to publish.",
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
-        "FeedTokenUnavailable": "Could not determine credentials to use for Maven feed."
+        "FeedTokenUnavailable": "Could not determine credentials to use for Maven feed.",
+        "EffectivePomInvalid": "Could not parse the effective POM."
     }
 }

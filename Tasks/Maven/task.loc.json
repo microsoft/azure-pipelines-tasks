@@ -19,7 +19,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 118,
+    "Minor": 120,
     "Patch": 0
   },
   "minimumAgentVersion": "1.89.0",
@@ -73,51 +73,6 @@
       "label": "ms-resource:loc.input.label.options",
       "defaultValue": "",
       "required": false
-    },
-    {
-      "name": "selectSources",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.selectSources",
-      "defaultValue": "PomXmlOnlySources",
-      "groupName": "sourcesAndAuth",
-      "helpMarkDown": "ms-resource:loc.input.help.selectSources",
-      "options": {
-        "PomXmlOnlySources": "sources in pom.xml",
-        "CustomizeSources": "Feed(s) I select here"
-      }
-    },
-    {
-      "name": "vstsFeedName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.vstsFeedName",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "sourcesAndAuth",
-      "helpMarkDown": "ms-resource:loc.input.help.vstsFeedName",
-      "visibleRule": "selectSources = CustomizeSources",
-      "properties": {
-        "EditableOptions": "true"
-      }
-    },
-    {
-      "name": "includeMavenCentral",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.includeMavenCentral",
-      "required": false,
-      "defaultValue": "false",
-      "groupName": "sourcesAndAuth",
-      "helpMarkDown": "ms-resource:loc.input.help.includeMavenCentral",
-      "visibleRule": "selectSources = CustomizeSources"
-    },
-    {
-      "name": "includeJCenter",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.includeJCenter",
-      "required": false,
-      "defaultValue": "false",
-      "groupName": "sourcesAndAuth",
-      "helpMarkDown": "ms-resource:loc.input.help.includeJCenter",
-      "visibleRule": "selectSources = CustomizeSources"
     },
     {
       "name": "publishJUnitResults",
@@ -425,15 +380,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
     }
   ],
-  "dataSourceBindings": [
-    {
-      "target": "vstsFeedNames",
-      "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    }
-  ],
   "execution": {
     "Node": {
       "target": "maventask.js",
@@ -473,6 +419,7 @@
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
-    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable"
+    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
+    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid"
   }
 }

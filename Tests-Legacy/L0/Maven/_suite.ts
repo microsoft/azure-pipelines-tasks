@@ -35,6 +35,9 @@ var isWindows = os.type().match(/^Win/);
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
+    process.env['TMPDIR'] = '/tmp';
+    process.env['TMP'] = '/tmp';
+    process.env['TEMP'] = '/tmp';
 }
 
 // Sets up a Maven TaskRunner instance with all of the required default settings
@@ -249,7 +252,7 @@ function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: s
             assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
             assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
             assert(taskRunner.succeeded, 'task should have succeeded');
-            assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
+            assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'),
                 'should have run maven with the correct arguments');
             assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 0,
                 'should have not uploaded a Code Analysis Report build summary');
@@ -295,15 +298,14 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have generated effective pom');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times: ' + tr.invokedToolCount);
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stderr.length == 0, 'should not have written to stderr=' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.stdout.indexOf('MAVEN_OPTS is now set to -Xmx2048m') > 0);
 
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
-                    'should have run maven without Checkstyle arguments');
                 assert(tr.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
                     'should not have uploaded a Code Analysis Report build summary');
                 done();
@@ -328,12 +330,15 @@ describe('Maven Suite', function () {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         process.env['M2_HOME'] = '/anotherHome/bin/maven/bin/mvn';
+        process.env['TMPDIR'] = '/tmp';
+        process.env['TMP'] = '/tmp';
+        process.env['TEMP'] = '/tmp';
 
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -387,8 +392,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -416,8 +421,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven2/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven2/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven2/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -501,8 +506,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven2/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven2/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven2/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -531,8 +536,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven2/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven2/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven2/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -560,8 +565,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml /o /p /t:i o /n /s package'), 'it should have run mvn -f pom.xml /o /p /t:i o /n /s package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t:i o /n /s package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml /o /p /t:i o /n /s package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -615,8 +620,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml /o /p /t /i /o /n /s build test package'), 'it should have run mvn -f pom.xml /o /p /t /i /o /n /s build test package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t /i /o /n /s build test package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml /o /p /t /i /o /n /s build test package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -642,8 +647,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml /o /p /t /i /o /n /s build test package'), 'it should have run mvn -f pom.xml /o /p /t /i /o /n /s build test package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t /i /o /n /s build test package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml /o /p /t /i /o /n /s build test package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -668,8 +673,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml /o /p /t /i /o /n /s build test package'), 'it should have run mvn -f pom.xml /o /p /t /i /o /n /s build test package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t /i /o /n /s build test package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml /o /p /t /i /o /n /s build test package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -694,8 +699,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -777,8 +782,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -838,12 +843,12 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml FAIL package'), 'it should have run mvn -f pom.xml FAIL package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml FAIL package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml FAIL package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stdout.indexOf('FAILED') >= 0, 'It should have failed');
+                assert(tr.stderr.indexOf('FAILED') >= 0, 'It should have failed');
                 done();
             })
             .fail((err) => {
@@ -886,8 +891,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -953,8 +958,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -1007,8 +1012,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should not have succeeded');
@@ -1062,8 +1067,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.succeeded, 'task should have succeeded');
 
@@ -1118,9 +1123,9 @@ describe('Maven Suite', function () {
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran(
-                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
+                    '/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
                 ), 'it should have run SQ analysis');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -1154,8 +1159,8 @@ describe('Maven Suite', function () {
             .then(() => {
                 assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'), 'it should have run mvn -f pom.xml package');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -1213,7 +1218,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
@@ -1278,7 +1283,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
 
                 // Clean up
@@ -1336,7 +1341,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package checkstyle:checkstyle'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
@@ -1401,7 +1406,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package checkstyle:checkstyle'),
                     'should have run maven with the correct arguments');
 
                 // Clean up
@@ -1459,7 +1464,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package findbugs:findbugs'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package findbugs:findbugs'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
@@ -1523,7 +1528,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package findbugs:findbugs'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package findbugs:findbugs'),
                     'should have run maven with the correct arguments');
 
                 // Clean up
@@ -1583,7 +1588,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package findbugs:findbugs'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package findbugs:findbugs'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
@@ -1655,7 +1660,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle findbugs:findbugs pmd:pmd'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package checkstyle:checkstyle findbugs:findbugs pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
@@ -1730,7 +1735,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 0,
                     'should not have uploaded a Code Analysis Report build summary');
@@ -1803,8 +1808,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode: std=' + tr.stdout + '; err=' + tr.stderr);
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');

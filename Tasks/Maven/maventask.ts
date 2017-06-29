@@ -27,10 +27,6 @@ var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
 var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);
 var mavenGoals: string[] = tl.getDelimitedInput('goals', ' ', true); // This assumes that goals cannot contain spaces
 var mavenOptions: string = tl.getInput('options', false); // Options can have spaces and quotes so we need to treat this as one string and not try to parse it
-var selectSources: string = tl.getInput('selectSources', true);
-var vstsFeedName: string = tl.getInput('vstsFeedName', false);
-var includeMavenCentral: boolean = tl.getBoolInput('includeMavenCentral', false);
-var includeJCenter: boolean = tl.getBoolInput('includeJCenter', false);
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
@@ -152,112 +148,44 @@ async function execBuild() {
             process.exit(1);
         })
         .then(function (code) {
-            return util.getMavenFeedRegistryUrl(vstsFeedName).then(function (feed) {
-                mavenFeedId = feed.mavenFeedId;
-                mavenFeedUrl = feed.mavenFeedUrl;
-                return Q.resolve("Got feed");
+            // Setup tool runner to execute Maven goals
+            var mvnRun = tl.tool(mvnExec);
+            mvnRun.arg('-f');
+            mvnRun.arg(mavenPOMFile);
+            mvnRun.arg('help:effective-pom');
+            return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
+            .then(function (repositories) {
+                tl.debug('Repositories: ' + JSON.stringify(repositories));
+                settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+
+                tl.debug('checking to see if there are settings.xml in use');
+                let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
+                if (options) {
+                    mavenOptions = '';
+                    for (let i = 0; i < options.length; ++i) {
+                        if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                            i++; // increment to the file name
+                            let suppliedSettingsXml: string = options[i];
+                            tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                            tl.debug('using settings file: ' + settingsXmlFile);
+                        } else {
+                            if (mavenOptions) {
+                                mavenOptions = mavenOptions.concat(' ');
+                            }
+                            mavenOptions = mavenOptions.concat(options[i]);
+                        }
+                    }
+                }
+                return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+            })
+            .fail(function (err) {
+                return Q.reject(err);
             });
         })
         .fail(function (err) {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {
-            // Setup tool runner to execute Maven goals
-            var mvnRun = tl.tool(mvnExec);
-            mvnRun.arg('-f');
-            mvnRun.arg(mavenPOMFile);
-            mvnRun.arg('help:effective-pom');
-            return mvnRun.execSync();
-        })
-        .fail(function (err) {
-            console.error(err.message);
-            userRunFailed = true; // Record the error and continue
-        })
-        .then(function (outputWithEffectivePom) {
-            return util.collectAllRepositoriesFromEffectivePom(outputWithEffectivePom['stdout']);
-        })
-        .fail(function (err) {
-            console.error(err.message);
-            userRunFailed = true; // Record the error and continue
-        })
-        .then(function (repositories) {
-            tl.debug('Repositories: ' + JSON.stringify(repositories));
-            if (selectSources === 'PomXmlOnlySources') {
-                tl.debug('using pom.xml; skipping task authentication');
-                return Q.resolve('true');
-            }
-            settingsXmlFile = path.join(
-                'D:\\',
-                //os.tmpdir(), 
-                'settings.xml');
-
-            tl.debug('checking to see if there are settings.xml in use');
-            let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
-            if (options) {
-                mavenOptions = '';
-                for (let i = 0; i < options.length; ++i) {
-                    if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                        i++; // increment to the file name
-                        let suppliedSettingsXml: string = options[i];
-                        tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
-                        tl.debug('using settings file: ' + settingsXmlFile);
-                    } else {
-                        if (mavenOptions) {
-                            mavenOptions.concat(' ');
-                        }
-                        mavenOptions.concat(options[i]);
-                    }
-                }
-            }
-            tl.debug('typeof=' + (typeof repositories));
-            if (mavenFeedId && repositories) {
-                repositories = [].concat(repositories);
-                repositories.push(mavenFeedId);
-            }
-            // tl.debug('typeof=' + (repositories instanceof util.RepositoryInfo[]));
-            return util.mergeServerCredentialsIntoSettingsXml(settingsXmlFile, repositories);
-        })
-        .fail(function (err) {
-            console.error(err.message);
-            userRunFailed = true; // Record the error and continue
-        })
-        // .then(function (code) {
-        //     if (selectSources === 'PomXmlOnlySources') {
-        //         tl.debug('Using only sources in the pom.xml file');
-        //         return Q.resolve(code);
-        //     }
-            
-        //     tl.debug('Insert repositories into pom');
-        //     let mavenPOMOrigFile:string = mavenPOMFile;
-        //     let mavenPOMExt: string = path.extname(mavenPOMOrigFile);
-        //     mavenPOMFile = path.join(path.dirname(mavenPOMOrigFile), path.basename(mavenPOMOrigFile)) + '-repo.';
-        //     let collision: number = 0;
-        //     let mavenPOMFileLast = mavenPOMFile;
-        //     while (tl.exist(mavenPOMFile + collision + mavenPOMExt)) {
-        //         collision++;
-        //     }
-        //     mavenPOMFile = mavenPOMFile + collision + mavenPOMExt; // Unique
-
-        //     tl.debug('Using pom file: ' + mavenPOMFile);
-        //     tl.cp(mavenPOMOrigFile, mavenPOMFile, '');
-        //     return util.readPomAsJson(mavenPOMOrigFile).fail(function (err) {
-        //         console.error(err.message);
-        //         userRunFailed = true; // Record the error and continue
-        //     })
-        //     .then(function (pomJson) {
-        //         tl.debug('writing repos to pom');
-        //         // util.insertPublicReposIntoPom(pomJson, includeJCenter, includeMavenCentral);
-        //         util.insertRepoIntoPomJson(pomJson, 
-        //             mavenFeedId, 
-        //             mavenFeedUrl);
-        //         return util.writeJsonAsPomFile(mavenPOMFile, pomJson);
-        //     })
-        // })
-        // .fail(function (err) {
-        //     console.error(err.message);
-        //     userRunFailed = true; // Record the error and continue
-        // })
         .then(function (code) {            
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
@@ -283,11 +211,7 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
-            var env = process.env;
-            env[util.accessTokenEnvSetting] = util.getAuthenticationToken();
-            return mvnRun.execSync({
-                env: env,
-            }); // Run Maven with the user specified goals
+            return mvnRun.execSync(util.getExecOptions());
         })
         .fail(function (err) {
             console.error(err.message);
