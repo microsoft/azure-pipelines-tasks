@@ -363,7 +363,7 @@ export class WinRMExtensionHelper {
     }
 
     private async AddExtensionToVM(vmName: string, dnsName: string, extensionName: string, location: string, _fileUris): Promise<any> {
-        var _commandToExecute: string = "powershell.exe -File ConfigureWinRM.ps1 " + dnsName;
+        var _commandToExecute: string = "powershell.exe -ExecutionPolicy RemoteSigned -File ConfigureWinRM.ps1 " + dnsName;
         var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
         var _virtualMachineExtensionType: string = 'CustomScriptExtension';
         var _typeHandlerVersion: string = '1.7';
