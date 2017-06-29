@@ -52,11 +52,13 @@ async function run() {
         let artifactName: string = tl.getInput('ArtifactName', true);
         let artifactType: string = tl.getInput('ArtifactType', true);
 
+       
         let hostType = tl.getVariable('system.hostType');
         if ((hostType && hostType.toUpperCase() != 'BUILD') && (artifactType.toUpperCase() !== "FILEPATH")) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
             return;
         }
+
         
         artifactType = artifactType.toLowerCase();
         let data = {
@@ -85,9 +87,19 @@ async function run() {
                 // middle
                 tl.command("artifact.associate", data, targetPath);
 
+
+                let enableConcurrency: boolean = tl.getBoolInput('EnableCopyConcurrency', false);
+                let mtConcurrencyValue = 1;
+                if (enableConcurrency) {
+
+                    mtConcurrencyValue = getConcurrencyValue();
+
+                }
+
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
-                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)}`
+                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ConcurrencyValue ${mtConcurrencyValue} `
+
                 let powershell = new tr.ToolRunner('powershell.exe');
                 powershell.arg('-NoLogo');
                 powershell.arg('-Sta');
@@ -116,6 +128,42 @@ async function run() {
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('PublishBuildArtifactsFailed', err.message));
     }
+
+}
+
+function getConcurrencyValue(): number {
+
+    try {
+            let mtConcurrencyValue = 1;
+
+            let concurrencyValue: string = tl.getInput('CopyConcurrencyValue', false);
+
+            if (Number.isNaN(Number(concurrencyValue))) {
+                tl.warning(tl.loc('UnexpectedConcurrencyValue', concurrencyValue));
+
+            }
+            else {
+                let concurencyMTValue = parseInt(concurrencyValue);
+
+                if (concurencyMTValue < 1) {
+                    tl.warning(tl.loc('NegativeCicurrenyValue', concurrencyValue));
+
+                }
+                else if (concurencyMTValue > 128) {
+                    tl.warning(tl.loc('ExceededCocurrencyValue', concurrencyValue));
+                    mtConcurrencyValue = 128;
+                }
+                else {
+                    mtConcurrencyValue = concurencyMTValue;
+                }
+            }
+            return mtConcurrencyValue;
+        }
+    catch (exp)
+        {
+        tl.warning(tl.loc('UnexpectedConcurrencyValue', exp.message));
+        }
+
 }
 
 run();
