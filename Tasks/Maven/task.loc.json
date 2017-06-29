@@ -26,11 +26,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "sourcesAndAuth",
-      "displayName": "ms-resource:loc.group.displayName.sourcesAndAuth",
-      "isExpanded": true
-    },
-    {
       "name": "junitTestResults",
       "displayName": "ms-resource:loc.group.displayName.junitTestResults",
       "isExpanded": true

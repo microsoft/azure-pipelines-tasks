@@ -26,11 +26,6 @@
     "instanceNameFormat": "Maven $(mavenPOMFile)",
     "groups": [
         {
-            "name": "sourcesAndAuth",
-            "displayName": "Sources and authentication",
-            "isExpanded": true
-        },
-        {
             "name": "junitTestResults",
             "displayName": "JUnit Test Results",
             "isExpanded": true
