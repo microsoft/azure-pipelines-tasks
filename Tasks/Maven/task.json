@@ -19,11 +19,7 @@
     ],
     "version": {
         "Major": 1,
-<<<<<<< HEAD
-        "Minor": 119,
-=======
         "Minor": 120,
->>>>>>> 86b7539f6... #970919: Maven feed authentication; make headless
         "Patch": 0
     },
     "minimumAgentVersion": "1.89.0",

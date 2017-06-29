@@ -1088,8 +1088,6 @@ describe('Maven Suite', function () {
             });
     });
 
-<<<<<<< HEAD
-=======
     it('Maven with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
@@ -1144,7 +1142,6 @@ describe('Maven Suite', function () {
             });
     });
 
->>>>>>> 86b7539f6... #970919: Maven feed authentication; make headless
     it('Maven build with publish test results', (done) => {
         setResponseFile('response.json');
         var tr = new trm.TaskRunner('Maven', true);
@@ -1811,13 +1808,8 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-<<<<<<< HEAD
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should NOT have run SQ analysis in issues mode');
-                assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
-=======
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode: std=' + tr.stdout + '; err=' + tr.stderr);
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
->>>>>>> 86b7539f6... #970919: Maven feed authentication; make headless
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
