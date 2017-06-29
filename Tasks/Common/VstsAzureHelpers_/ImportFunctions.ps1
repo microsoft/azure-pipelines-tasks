@@ -101,7 +101,7 @@ function Import-FromSdkPath {
     [CmdletBinding()]
     param([switch]$Classic,
           [string] $azurePsVersion)
-#not using the azurepsversion parameter anywhere in this function. This function is seemingly not required
+
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($Classic) {
@@ -117,7 +117,7 @@ function Import-FromSdkPath {
 
             $path = [System.IO.Path]::Combine($programFiles, $partialPath)
             Write-Verbose "Checking if path exists: $path"
-            if (Test-Path -LiteralPath $path -PathType Leaf) {
+            if (Test-Path -LiteralPath $path -PathType Leaf -and Get-SdkVersion -eq $azurePsVersion) {
                 # Import the module.
                 Write-Host "##[command]Import-Module -Name $path -Global"
                 $module = Import-Module -Name $path -Global -RequiredVersion $azurePsVersion -PassThru
@@ -139,3 +139,17 @@ function Import-FromSdkPath {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
+
+function Get-SdkVersion {
+
+    Trace-VstsEnteringInvocation $MyInvocation
+
+    $regKey = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    $installedApplications = Get-ItemProperty -Path $regKey
+    $SdkVersion = ($installedApplications | Where-Object { $_.DisplayName -and $_.DisplayName.Contains("Microsoft Azure PowerShell") } | Select-Object -First 1).DisplayVersion
+    return $SdkVersion
+
+    Trace-VstsLeavingInvocation $MyInvocation
+}
+
+
