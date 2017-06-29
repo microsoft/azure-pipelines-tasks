@@ -1,4 +1,4 @@
-{
+60{
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 59
+        "Patch": 60
     },
     "demands": [
         "vstest"
