@@ -63,14 +63,14 @@ function Import-FromModulePath {
 
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$name' from the module path."
-        $module = Get-Module -Name $name -ListAvailable | Select-Object -First 1
+        $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion}
         if (!$module) {
             return $false
         }
 
         # Import the module.
-        Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
-        $module = Import-Module -Name $module.Path  -RequiredVersion $azurePsVersion -Global -PassThru
+        Write-Host "##[command]Import-Module -Name $($module.Path) -RequiredVersion $azurePsVersion -Global"
+        $module = Import-Module -Name $module.Path -RequiredVersion $azurePsVersion -Global -PassThru
         Write-Verbose "Imported module version: $($module.Version)"
 
         if ($Classic) {
