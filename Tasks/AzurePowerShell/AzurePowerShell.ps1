@@ -26,10 +26,9 @@ if($targetAzurePs -eq "OtherVersion") {
 }
 
 $pattern = "[0-9]+\.[0-9]+\.[0-9]+"
-$regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+$regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 if(-not $regex.IsMatch($targetAzurePs))
 {
-    #add the loc string in task.json
     throw (Get-VstsLocString -Key InvalidVersion -ArgumentList $targetAzurePs)
 }
 

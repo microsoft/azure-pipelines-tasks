@@ -109,7 +109,7 @@
             "required": false,
             "options":{
                 "2.1.0": "2.1.0",
-                "3.5.0": "3.5.0",
+                "3.5.0": "3.6.0",
                 "4.1.0": "4.1.0",
                 "OtherVersion": "Select Other Version"
             },
@@ -132,6 +132,7 @@
     },
     "messages": {
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
+        "InvalidVersion": "The Target Azure PowerShell version '{0}' specified is not in the correct format. Please check the format."
     }
 }

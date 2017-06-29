@@ -109,7 +109,7 @@
       "required": false,
       "options": {
         "2.1.0": "2.1.0",
-        "3.5.0": "3.5.0",
+        "3.5.0": "3.6.0",
         "4.1.0": "4.1.0",
         "OtherVersion": "Select Other Version"
       },
@@ -132,6 +132,7 @@
   },
   "messages": {
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
-    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "InvalidVersion": "ms-resource:loc.messages.InvalidVersion"
   }
 }

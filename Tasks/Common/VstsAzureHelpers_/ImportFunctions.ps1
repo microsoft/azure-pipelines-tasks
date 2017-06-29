@@ -4,6 +4,7 @@
         [Parameter(Mandatory = $true)]
         [ValidateSet('Azure', 'AzureRM')]
         [string[]]$PreferredModule,
+        [Parameter(Mandatory = $true)]
         [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -50,6 +51,7 @@ function Import-FromModulePath {
     [CmdletBinding()]
     param(
         [switch]$Classic,
+        [Parameter(Mandatory = $true)]
         [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -100,6 +102,7 @@ function Import-FromModulePath {
 function Import-FromSdkPath {
     [CmdletBinding()]
     param([switch]$Classic,
+          [Parameter(Mandatory = $true)]
           [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -119,7 +122,7 @@ function Import-FromSdkPath {
             Write-Verbose "Checking if path exists: $path"
             if (Test-Path -LiteralPath $path -PathType Leaf -and Get-SdkVersion -eq $azurePsVersion) {
                 # Import the module.
-                Write-Host "##[command]Import-Module -Name $path -Global"
+                Write-Host "##[command]Import-Module -Name $path -Global -RequiredVersion $azurePsVersion"
                 $module = Import-Module -Name $path -Global -RequiredVersion $azurePsVersion -PassThru
                 Write-Verbose "Imported module version: $($module.Version)"
 
