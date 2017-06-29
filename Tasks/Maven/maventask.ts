@@ -130,8 +130,6 @@ async function execBuild() {
     ccReportTask = await execEnableCodeCoverage();
     var userRunFailed: boolean = false;
     var codeAnalysisFailed: boolean = false;
-    let mavenFeedUrl:string = null;
-    let mavenFeedId:string = null;
 
     // Setup tool runner that executes Maven only to retrieve its version
     var mvnGetVersion = tl.tool(mvnExec);
