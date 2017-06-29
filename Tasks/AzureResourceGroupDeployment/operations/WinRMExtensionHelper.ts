@@ -152,7 +152,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddNetworkSecurityRuleConfigForWinRMPort() : Promise<any> {
+    private async AddNetworkSecurityRuleConfigForWinRMPort(): Promise<any> {
         var ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var rulePriority: number = 3986;
         var winrmHttpsPort: string = "5986";
@@ -307,10 +307,9 @@ export class WinRMExtensionHelper {
                 if (result["properties"]["provisioningState"] === 'Succeeded') {
                     extensionStatusValid = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, fileUris);
                 }
-
-                if (!extensionStatusValid) {
-                    await this.RemoveExtensionFromVM(extensionName, vmName);
-                }
+            }
+            if (!extensionStatusValid) {
+                await this.RemoveExtensionFromVM(extensionName, vmName);
             }
         }
         if (!extensionStatusValid) {
@@ -345,7 +344,7 @@ export class WinRMExtensionHelper {
                 if (result["properties"]["instanceView"] && result["properties"]["instanceView"]["extensions"]) {
                     var extensions = result["properties"]["instanceView"]["extensions"];
                     for (var extension of extensions) {
-                        if (result["name"] === extensionName) {
+                        if (extension["name"] === extensionName) {
                             for (var substatus of extension["substatuses"]) {
                                 if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
                                     invalidExecutionStatus = true;
@@ -363,7 +362,7 @@ export class WinRMExtensionHelper {
     }
 
     private async AddExtensionToVM(vmName: string, dnsName: string, extensionName: string, location: string, _fileUris): Promise<any> {
-        var _commandToExecute: string = "powershell.exe -File ConfigureWinRM.ps1 " + dnsName;
+        var _commandToExecute: string = "powershell.exe -ExecutionPolicy RemoteSigned -File ConfigureWinRM.ps1 " + dnsName;
         var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
         var _virtualMachineExtensionType: string = 'CustomScriptExtension';
         var _typeHandlerVersion: string = '1.7';
