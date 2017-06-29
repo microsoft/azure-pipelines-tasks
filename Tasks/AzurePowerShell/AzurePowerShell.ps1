@@ -32,11 +32,9 @@ if(-not $regex.IsMatch($targetAzurePs))
     throw (Get-VstsLocString -Key InvalidVersion -ArgumentList $targetAzurePs)
 }
 
-if($env:AGENT_NAME -eq "Hosted Agent")
-{
-    $env:PSModulePath = $env:PSModulePath -ireplace "azurerm_2.1.0","azurerm_$targetAzurePs" 
-    $env:PSModulePath = $env:PSModulePath -ireplace "azure_2.1.0","azure_$targetAzurePs" 
-}
+$hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_" + $targetAzurePs
+$hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_" + $targetAzurePs
+$env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
 
 try {
     # Initialize Azure.
