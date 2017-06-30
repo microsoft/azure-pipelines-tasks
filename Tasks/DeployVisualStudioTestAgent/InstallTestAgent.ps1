@@ -28,20 +28,26 @@ function InstallTestAgent2017 {
     $SetupDir = Split-Path -Path $SetupPath    
 
     $osVersion = [environment]::OSVersion.Version
-    $certFile = Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue
-    if($certFile -and -not (Test-Path -Path $certFile))
+    $certFiles = Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue
+    if($certFiles -and $certFiles.Length -gt 0)
     {
-        Write-Verbose "Installing test agent certificates"
+        Write-Verbose "Installing test agent certificates" -Verbose
         if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
             ## Windows 7 SP1. Import-PfxCertificate is not present in windows 7
-            Import-PfxCertificateWin7 -FilePath $certFile.FullName -certRootStore "CurrentUser" -certStore "My"
+            Write-Verbose "Installing agent certificate(s) for Windows 7." -Verbose
+            foreach($certFile in $certFiles)
+            {
+                Import-PfxCertificateWin7 -FilePath $certFile.FullName -CertRootStore "CurrentUser" -CertStore "My"
+            }
         }
         else {
-            Import-PfxCertificate -FilePath $certFile.FullName -CertStoreLocation Cert:\CurrentUser\My -Exportable
+            Write-Verbose "Installing agent certificate(s) for Windows 8 or above." -Verbose
+            $certFiles | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Exportable
         }
+        Write-Verbose "Successfully installed the agent certificate." -Verbose
     }
     else {
-        Write-Verbose "No test agent certificate found."
+        Write-Verbose "No test agent certificate found." -Verbose
     }
 
     $p = New-Object System.Diagnostics.Process
@@ -70,18 +76,15 @@ function Import-PfxCertificateWin7 {
     (
         [Parameter (Mandatory=$true, ValueFromPipelineByPropertyName)]
         [String]$FilePath,
-        [String]$certRootStore="CurrentUser",
-        [String]$certStore="My"
+        [String]$CertRootStore="CurrentUser",
+        [String]$CertStore="My"
     )
-    Write-Verbose "Installing agent certificate for Windows 7."
-
     $pfx = new-object System.Security.Cryptography.X509Certificates.X509Certificate2
     $pfx.import($FilePath, $pfxPass, "Exportable")
     $store = new-object System.Security.Cryptography.X509Certificates.X509Store($certStore,$certRootStore)
     $store.open("MaxAllowed")
     $store.add($pfx)
-    $store.close()
-    Write-Verbose "Successfully installed the agent certificate."
+    $store.close()    
 }
 
 function Install-Product($SetupPath, $ProductVersion, $Update) {
