@@ -26,11 +26,10 @@ function InstallTestAgent2017 {
 
     # First we need to install the certificates for TA 2017
     $SetupDir = Split-Path -Path $SetupPath    
-
-    $osVersion = [environment]::OSVersion.Version
     $certFiles = Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue
     if($certFiles -and $certFiles.Length -gt 0)
     {
+        $osVersion = [environment]::OSVersion.Version
         Write-Verbose "Installing test agent certificates" -Verbose
         if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
             ## Windows 7 SP1. Import-PfxCertificate is not present in windows 7
