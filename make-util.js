@@ -149,6 +149,17 @@ var buildNodeTask = function (taskPath, outDir) {
 }
 exports.buildNodeTask = buildNodeTask;
 
+var lintNodeTask = function (taskPath) {
+    var originalDir = pwd();
+    cd(taskPath);
+    //To lint, the task must have a tslint.json and tsconfig.json file
+    if (test('-f', rp('tslint.json')) && test('-f', rp('tsconfig.json'))) {
+        run('node ../../node_modules/tslint/bin/tslint -c tslint.json -t prose --project tsconfig.json');
+    }
+    cd(originalDir);
+}
+exports.lintNodeTask = lintNodeTask;
+
 var copyTaskResources = function (taskMake, srcPath, destPath) {
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');
