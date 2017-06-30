@@ -1,4 +1,4 @@
-function ExtractAgentArchive ($SetupArchive, $Destination) {
+﻿function ExtractAgentArchive ($SetupArchive, $Destination) {
     Write-Verbose "Extracting the archive $SetupArchive"
     Try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -25,9 +25,24 @@ function InstallTestAgent2017 {
     }
 
     # First we need to install the certificates for TA 2017
-    $SetupDir = Split-Path -Path $SetupPath
-    Write-Verbose "Installing test agent certificates"
-    Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Exportable
+    $SetupDir = Split-Path -Path $SetupPath    
+
+    $osVersion = [environment]::OSVersion.Version
+    $certFile = Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue
+    if($certFile -and -not (Test-Path -Path $certFile))
+    {
+        Write-Verbose "Installing test agent certificates"
+        if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
+            ## Windows 7 SP1. Import-PfxCertificate is not present in windows 7
+            Import-PfxCertificateWin7 -FilePath $certFile.FullName -certRootStore "CurrentUser" -certStore "My"
+        }
+        else {
+            Import-PfxCertificate -FilePath $certFile.FullName -CertStoreLocation Cert:\CurrentUser\My -Exportable
+        }
+    }
+    else {
+        Write-Verbose "No test agent certificate found."
+    }
 
     $p = New-Object System.Diagnostics.Process
     $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
@@ -48,6 +63,25 @@ function InstallTestAgent2017 {
     } 
 
     return $p.ExitCode
+}
+
+function Import-PfxCertificateWin7 {
+    param
+    (
+        [Parameter (Mandatory=$true, ValueFromPipelineByPropertyName)]
+        [String]$FilePath,
+        [String]$certRootStore="CurrentUser",
+        [String]$certStore="My"
+    )
+    Write-Verbose "Installing agent certificate for Windows 7."
+
+    $pfx = new-object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $pfx.import($FilePath, $pfxPass, "Exportable")
+    $store = new-object System.Security.Cryptography.X509Certificates.X509Store($certStore,$certRootStore)
+    $store.open("MaxAllowed")
+    $store.add($pfx)
+    $store.close()
+    Write-Verbose "Successfully installed the agent certificate."
 }
 
 function Install-Product($SetupPath, $ProductVersion, $Update) {
