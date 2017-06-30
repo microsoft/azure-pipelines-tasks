@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "commonjs",
-        "sourceMap": true,
-        "sourceRoot": "C:\\vsts-tasks-fork\\vsts-tasks\\Tasks\\AzureStorage"
+        "module": "commonjs"
     }
 }

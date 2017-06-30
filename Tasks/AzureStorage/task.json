@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -23,7 +23,6 @@
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
-            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure subscription for the storage account"
         },
@@ -31,7 +30,6 @@
             "name": "StorageAccountName",
             "type": "pickList",
             "label": "Storage Account Name",
-            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Provide the name of the Azure storage account.",
             "options": {
@@ -42,7 +40,6 @@
             "name": "ContainerName",
             "type": "string",
             "label": "Container name",
-            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Provide the container name to download from.",
             "options": {

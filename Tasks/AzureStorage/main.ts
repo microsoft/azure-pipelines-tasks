@@ -8,23 +8,17 @@ import blobUtils = require("./operations/AzureBlobUtils");
 
 function run(): Q.Promise<void> {
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
-    var azCopyExeLocation: string = path.join(__dirname, 'AzCopy', 'AzCopy.exe');
 
     var connectedServiceName = tl.getInput('ConnectedServiceName', true);
     var storageAccountName = tl.getInput('StorageAccountName', true);
-    var containerName = tl.getInput('ContainerName', true);
-    var commonVirtualPath = tl.getInput('CommonVirtualPath', false);
-    if(!commonVirtualPath) {
-        commonVirtualPath = "";
-    }
+    var containerName = tl.getInput('ContainerName', true).toLowerCase();
+    var commonVirtualPath = tl.getInput('CommonVirtualPath', false) || "";
     var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-    var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedServiceName, "serviceprincipalid", false);
 
     var credentials = getARMCredentials(connectedServiceName);
-    var armStorageClient: armStorage.StorageManagementClient = new armStorage.StorageManagementClient(credentials, subscriptionId);
-    var blobUtilsClient: blobUtils.AzureBlobUtils = new blobUtils.AzureBlobUtils(armStorageClient, azCopyExeLocation);
+    var blobUtilsClient: blobUtils.AzureBlobUtils = new blobUtils.AzureBlobUtils(credentials, subscriptionId);
 
-    return blobUtilsClient.downloadFromBlob(storageAccountName, containerName, commonVirtualPath, artifactsDirectory);
+    return blobUtilsClient.downloadBlobs(storageAccountName, containerName, commonVirtualPath, artifactsDirectory);
 }
 
 function getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {

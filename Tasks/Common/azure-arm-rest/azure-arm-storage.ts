@@ -34,7 +34,12 @@ export class StorageManagementClient extends azureServiceClient.ServiceClient {
                     break;
                 }
             }
+            if(resourceGroupName == "") {
+                deferred.reject(new Error("Storage Account Name not found"));
+            }
             deferred.resolve(resourceGroupName);
+        }).catch(function(error) {
+            deferred.reject(error);
         });
 
         return deferred.promise;
@@ -62,6 +67,8 @@ export class StorageManagementClient extends azureServiceClient.ServiceClient {
             }
 
             deferred.resolve(accessKeys);
+        }).catch(function(error) {
+            deferred.reject(error);
         });
 
         return deferred.promise;
