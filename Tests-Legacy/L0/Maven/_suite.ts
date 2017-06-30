@@ -580,7 +580,6 @@ describe('Maven Suite', function () {
 
     it('run maven with feed with settings', (done) => {
         setResponseFile('responseFeed.json');
-        // process.chdir(__dirname);
 
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
