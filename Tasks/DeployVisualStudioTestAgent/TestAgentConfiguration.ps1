@@ -162,12 +162,15 @@
 
                 $rootFolder = $ScheduleObject.GetFolder('\') #'
                 $newTask = $rootFolder.RegisterTaskDefinition("DTA", $TaskDefinition, 6, '', '', 3)
+                Write-Verbose "Starting scheduled task on Windows 7." -Verbose
+                Start-Sleep -Seconds 30
+                $p = Get-Process -Name "DTAExecutionHost"
+                $rootFolder.DeleteTask("DTA", 0)
             }
             else {
                 # Windows 8 or above
                 $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
                 $trigger = New-ScheduledTaskTrigger -AtLogOn
-                $exePath = "$SetupPath\DTAExecutionHost.exe $dtaArgs"
 
                 Unregister-ScheduledTask -TaskName "DTA" -Confirm:$false -OutVariable out -ErrorVariable err -ErrorAction SilentlyContinue | Out-Null
                 Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "DTA" -Description "DTA UI" -RunLevel Highest -OutVariable out -ErrorVariable err | Out-Null
@@ -175,12 +178,12 @@
                 
                 Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
                 Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
+
+		        Start-Sleep -Seconds 30
+		        $p = Get-Process -Name "DTAExecutionHost"
                 Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
             }
-            
-            Start-Sleep -Seconds 10
 
-            $p = Get-Process -Name "DTAExecutionHost" -ErrorAction SilentlyContinue
             if ($p) {
                 return 0
             }
