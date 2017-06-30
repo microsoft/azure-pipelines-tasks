@@ -11,6 +11,10 @@
             "code": 0,
             "stdout": "Maven package done"
         },
+        "/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t package": {
+            "code": 0,
+            "stdout": "Maven package done"
+        },
         "/home/bin/maven2/bin/mvn -version": {
             "code": 0,
             "stdout": "Maven version 1.0.0"
@@ -46,6 +50,9 @@
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
+    },
+    "cwd": {
+        "cwd": "/home"
     },
     "rmRF": {
         "target": {

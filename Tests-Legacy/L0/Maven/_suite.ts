@@ -578,6 +578,37 @@ describe('Maven Suite', function () {
             });
     })
 
+    it('run maven with feed with settings', (done) => {
+        setResponseFile('responseFeed.json');
+        // process.chdir(__dirname);
+
+        var tr = new trm.TaskRunner('Maven', true);
+        tr.setInput('mavenVersionSelection', 'Default');
+        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '/o -s settings.xml /p /t');
+        tr.setInput('goals', 'package');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('cwd', '/usr');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have calculated the effective pom');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml /o /p /t package std=' + tr.stdout + ' err=' + tr.stderr);
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('run maven with options set', (done) => {
         setResponseFile('response.json');
 
