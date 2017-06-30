@@ -60,7 +60,7 @@ function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
 }
 
 function addPropToJson(obj: any, propName:string, value: any): void {
-    if (typeof obj === 'undefined') {
+    if (!obj) {
         obj = {};
     }
 

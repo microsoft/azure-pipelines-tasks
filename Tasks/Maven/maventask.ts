@@ -153,6 +153,10 @@ async function execBuild() {
             mvnRun.arg('help:effective-pom');
             return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
             .then(function (repositories) {
+                if (!repositories || !repositories.length) {
+                    tl.debug('no repositories found in pom');
+                    return Q.resolve(true);
+                }
                 tl.debug('Repositories: ' + JSON.stringify(repositories));
                 settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
 
@@ -181,7 +185,7 @@ async function execBuild() {
             });
         })
         .fail(function (err) {
-            console.error(err.message);
+            tl.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {            
@@ -209,7 +213,7 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
-            return mvnRun.execSync(util.getExecOptions());
+            return mvnRun.exec(util.getExecOptions());
         })
         .fail(function (err) {
             console.error(err.message);
