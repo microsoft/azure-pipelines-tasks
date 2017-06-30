@@ -959,7 +959,7 @@ describe('Gradle L0 Suite', function () {
         try {
             createTemporaryFolders();
 
-            let testStgDir: string = path.join(__dirname, '_temp');
+            //let testStgDir: string = path.join(__dirname, '_temp');
 
             tr.run();
 
@@ -986,7 +986,7 @@ describe('Gradle L0 Suite', function () {
         try {
             createTemporaryFolders();
 
-            let testStgDir: string = path.join(__dirname, '_temp');
+            //let testStgDir: string = path.join(__dirname, '_temp');
 
             tr.run();
 
