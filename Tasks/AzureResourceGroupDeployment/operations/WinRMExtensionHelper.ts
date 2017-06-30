@@ -393,14 +393,13 @@ export class WinRMExtensionHelper {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, parameters, async (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("CreationOfExtensionFailed", utils.getError(error)));
-                    return;
+                    tl.debug("Addition of CustomScript Extension failed with the error: " + utils.getError(error));
                 }
-                tl.debug("Addition of extension completed for vm: " + vmName);
-                if (result["properties"]["provisioningState"] != 'Succeeded') {
-                    tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
-                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, JSON.stringify(result)));
-                    return;
+                else {
+                    tl.debug("Addition of extension completed for vm: " + vmName);
+                    if (result["properties"]["provisioningState"] != 'Succeeded') {
+                        tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName + ". Result: " + JSON.stringify(result));
+                    }
                 }
                 try {
                     await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, _fileUris);
