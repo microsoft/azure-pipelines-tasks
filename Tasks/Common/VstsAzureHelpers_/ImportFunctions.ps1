@@ -15,7 +15,7 @@
             $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
             $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
             if (!$azure -and !$azureRM) {
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound)
+                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
             }
         } elseif ($PreferredModule -contains 'Azure') {
             # Attempt to import Azure but fallback to AzureRM.
@@ -24,7 +24,7 @@
                 !(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
             {
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound)
+                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
             }
         } else {
             # Attempt to import AzureRM but fallback to Azure.
@@ -33,7 +33,7 @@
                 !(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
             {
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound)
+                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
             }
         }
 
@@ -120,7 +120,7 @@ function Import-FromSdkPath {
 
             $path = [System.IO.Path]::Combine($programFiles, $partialPath)
             Write-Verbose "Checking if path exists: $path"
-            if (Test-Path -LiteralPath $path -PathType Leaf -and Get-SdkVersion -eq $azurePsVersion) {
+            if ((Test-Path -LiteralPath $path -PathType Leaf) -and (Get-SdkVersion -eq $azurePsVersion)) {
                 # Import the module.
                 Write-Host "##[command]Import-Module -Name $path -Global -RequiredVersion $azurePsVersion"
                 $module = Import-Module -Name $path -Global -RequiredVersion $azurePsVersion -PassThru
