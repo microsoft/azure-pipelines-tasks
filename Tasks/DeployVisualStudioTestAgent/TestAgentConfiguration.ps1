@@ -172,8 +172,7 @@
                 $rootFolder = $ScheduleObject.GetFolder('\') #'
                 $newTask = $rootFolder.RegisterTaskDefinition("DTA", $TaskDefinition, 6, '', '', 3)
                 Write-Verbose "Starting scheduled task on Windows 7." -Verbose
-
-		        Start-Sleep -Seconds 30
+                Start-Sleep -Seconds 30
                 $p = Get-Process -Name "DTAExecutionHost"
                 $rootFolder.DeleteTask("DTA", 0)                
             }
