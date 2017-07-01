@@ -40,13 +40,13 @@ try {
     }
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
+    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)
 
-    if ( ($SymbolServerType -eq "FileShare") -or (-not $SkipIndexing) ) {
+    if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
         [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\bin\**\*.pdb"
-        [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)
-        $pdbFiles = @(Find-VstsFiles -LiteralDirectory $SymbolsFolder -LegacyPattern $SearchPattern)
-        #New To Replace:  $pdbFiles = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
+        # $pdbFiles = @(Find-VstsFiles -LiteralDirectory $SymbolsFolder -LegacyPattern $SearchPattern)
+        $pdbFiles = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
         Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
     }
 
@@ -86,7 +86,6 @@ try {
 
         [string]$SymbolServiceUri = (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require) -replace ".visualstudio.com",".artifacts.visualstudio.com"
         $SymbolServiceUri = $SymbolServiceUri.TrimEnd('/')
-        [string]$SourcePath = Get-VstsInput -Name 'SymbolsFolder' -Require
 
         $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
         [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
@@ -95,7 +94,20 @@ try {
             throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
         }
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
+        [string]$tmpFileName = Join-Path $env:TEMP ("SymbolFileList-" + [random]::new().Next(100) + ".txt")
+        [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
+        
+        [IO.File]::WriteAllLines($tmpFileName, [string[]]@("# FileList under $SymbolsFolder with pattern $SearchPattern", "")) # Also Truncates any existing files
+        foreach ($filename in $pdbFiles) {
+            [string]$fullFilePath = [IO.Path]::Combine($SourcePath, $filename)
+            [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
+        }
+
+        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
+
+        if (Test-Path -Path $tmpFileName) {
+            del $tmpFileName
+        }
     }
     else {
         throw "Unknown SymbolServerType : $SymbolServerType"

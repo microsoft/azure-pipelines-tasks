@@ -33,6 +33,10 @@ param(
     [ValidateNotNullOrEmpty()]
     [string] $SourcePath,
 
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [string] $SourcePathListFileName,
+
     [Parameter(Mandatory=$false)]
     [string] $ExpirationInDays,
 
@@ -45,7 +49,7 @@ param(
 # -----------------------------------------------------------------------------
 function Download-SymbolClient([string]$symbolServiceUri, [string]$directory)
 {
-    $clientFetchUrl = $symbolServiceUri + "/_apis/symbol/client/exe" # Replace with symbol/client/task after M118 gets deployed
+    $clientFetchUrl = $symbolServiceUri + "/_apis/symbol/client/task"
 
     "Downloading $clientFetchUrl to $directory" | Write-Verbose
 
@@ -106,9 +110,12 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 
         if ( $personalAccessToken ) {
              $args  += " --patAuth `"$personalAccessToken`""
-        }
-        else {
+        } else {
              $args += " --aadAuth"
+        }
+
+        if ($SourcePathListFileName) {
+            $args += " -f `"$SourcePathListFileName`""
         }
 
         Run-SymbolCommand $assemblyPath $args
@@ -126,14 +133,8 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 
 function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
 {
-    $qarg = ""
-    if ($arguments.EndsWith("-q")) {
-        $qarg = "-q"
-        $arguments = $arguments.Substring(0, $arguments.Length - 2)
-    }
-
     $exe = "$assemblyPath\symbol.exe"
-    $arguments += " --tracelevel verbose " + $qarg
+    $arguments += " --tracelevel verbose"
 
     Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
 
