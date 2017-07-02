@@ -77,9 +77,13 @@ export class ServiceClient {
         this.baseUri = this.credentials.armUrl;
         this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
     }
-
-    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
-        var requestUri = this.baseUri + uriFormat;
+	
+	public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+		return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters);
+	}
+	
+    public getRequestUriForBaseUri(baseUri: string, uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+		var requestUri = baseUri + uriFormat;
         requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
         for (var key in parameters) {
             requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
