@@ -138,20 +138,31 @@ function Import-FromSdkPath {
                     Write-Verbose "Imported module version: $($module.Version)"                    
                 }
                 else {
+                    Write-Host "##[command]Import-Module -Name $path -Global"
+                    $module = Import-Module -Name $path -Global -PassThru
+                    Write-Verbose "Imported module version: $($module.Version)"
+
+                    $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")
+                    Write-Host "##[command]Import-Module -Name $azureStorageModulePath -Global"
+                    $azureStorageModule = Import-Module -Name $azureStorageModulePath -Global -PassThru
+                    Write-Verbose "Imported module version: $($azureStorageModule.Version)"
+
                     $azureRmNestedModulesDirectory = Split-Path  -Parent (Split-Path -Parent $path)
                     $azureRmNestedModules = Get-ChildItem -Path $azureRmNestedModulesDirectory
                     foreach ($azureRmNestedModule in $azureRmNestedModules) {
+                        if($azureRmNestedModule.Name -eq "AzureRM.Profile") {
+                            continue;
+                        }
                         $azureRmNestedModulePath = $azureRmNestedModule.FullName + "\" + $azureRmNestedModule.Name + ".psd1" 
                         try {
                             Write-Host "##[command]Import-Module -Name $azureRmNestedModulePath -Global"
-                            $module = Import-Module -Name $azureRmNestedModulePath -Global -PassThru
-                            Write-Verbose "Imported module version: $($module.Version)"
+                            $azureRmSubmodule = Import-Module -Name $azureRmNestedModulePath -Global -PassThru
+                            Write-Verbose "Imported module version: $($azureRmSubmodule.Version)"
                         }
                         catch {
                             Write-Host $(Get-VstsLocString -Key AZ_AzureRmSubmoduleImportFailed -ArgumentList $azureRmNestedModulePath, $_.Exception.Message)
                         }
                     }
-                    $module = Get-Module -Name AzureRm.Profile
                 }
                 # Store the imported module.
                 if ($Classic) {
