@@ -67,7 +67,7 @@ function Import-FromModulePath {
             $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion} | Select-Object -First 1
         }
         else {
-            $module = Get-Module -Name $name -ListAvailable | Select-Object -First 1
+            $module = Get-Module -Name $name -ListAvailable | Sort-Object -Version -Descending | Select-Object -First 1
             $sdkVersion = Get-SdkVersion
             if($sdkVersion -and ($module.Version -lt $sdkVersion)) {
                 return $false
