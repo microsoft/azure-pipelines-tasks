@@ -105,13 +105,14 @@
       "name": "TargetAzurePs",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TargetAzurePs",
-      "defaultValue": "2.1.0",
+      "defaultValue": "LatestVersion",
       "required": false,
       "options": {
+        "LatestVersion": "Latest installed version",
         "2.1.0": "2.1.0",
         "3.6.0": "3.6.0",
         "4.1.0": "4.1.0",
-        "OtherVersion": "Select Other Version"
+        "OtherVersion": "Select other version"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
     },

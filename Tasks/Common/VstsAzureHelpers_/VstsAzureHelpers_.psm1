@@ -19,7 +19,6 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 function Initialize-Azure {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
         [string] $azurePsVersion)
     Trace-VstsEnteringInvocation $MyInvocation
     try {

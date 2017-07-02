@@ -4,7 +4,6 @@
         [Parameter(Mandatory = $true)]
         [ValidateSet('Azure', 'AzureRM')]
         [string[]]$PreferredModule,
-        [Parameter(Mandatory = $true)]
         [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -51,7 +50,6 @@ function Import-FromModulePath {
     [CmdletBinding()]
     param(
         [switch]$Classic,
-        [Parameter(Mandatory = $true)]
         [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -65,14 +63,24 @@ function Import-FromModulePath {
 
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$name' from the module path."
-        $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion}
+        if($azurePsVersion) {
+            $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion} | Select-Object -First 1
+        }
+        else {
+            $module = Get-Module -Name $name -ListAvailable | Select-Object -First 1
+            $sdkVersion = Get-SdkVersion
+            if($sdkVersion -and ($module.Version -lt $sdkVersion)) {
+                return $false
+            }
+        }
+
         if (!$module) {
             return $false
         }
 
         # Import the module.
-        Write-Host "##[command]Import-Module -Name $($module.Path) -RequiredVersion $azurePsVersion -Global"
-        $module = Import-Module -Name $module.Path -RequiredVersion $azurePsVersion -Global -PassThru
+        Write-Host "##[command]Import-Module -Name $($module.Path) -RequiredVersion $($module.Version) -Global"
+        $module = Import-Module -Name $module.Path -RequiredVersion $($module.Version) -Global -PassThru
         Write-Verbose "Imported module version: $($module.Version)"
 
         if ($Classic) {
@@ -102,7 +110,6 @@ function Import-FromModulePath {
 function Import-FromSdkPath {
     [CmdletBinding()]
     param([switch]$Classic,
-          [Parameter(Mandatory = $true)]
           [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -120,12 +127,32 @@ function Import-FromSdkPath {
 
             $path = [System.IO.Path]::Combine($programFiles, $partialPath)
             Write-Verbose "Checking if path exists: $path"
-            if ((Test-Path -LiteralPath $path -PathType Leaf) -and (Get-SdkVersion -eq $azurePsVersion)) {
+            if (Test-Path -LiteralPath $path -PathType Leaf) {
+                if ($azurePsVersion -and (-not (Get-SdkVersion -eq $azurePsVersion))) {
+                    continue
+                }
                 # Import the module.
-                Write-Host "##[command]Import-Module -Name $path -Global -RequiredVersion $azurePsVersion"
-                $module = Import-Module -Name $path -Global -RequiredVersion $azurePsVersion -PassThru
-                Write-Verbose "Imported module version: $($module.Version)"
-
+                if($Classic) {
+                    Write-Host "##[command]Import-Module -Name $path -Global"
+                    $module = Import-Module -Name $path -Global -PassThru
+                    Write-Verbose "Imported module version: $($module.Version)"                    
+                }
+                else {
+                    $azureRmNestedModulesDirectory = Split-Path  -Parent (Split-Path -Parent $path)
+                    $azureRmNestedModules = Get-ChildItem -Path $azureRmNestedModulesDirectory
+                    foreach ($azureRmNestedModule in $azureRmNestedModules) {
+                        $azureRmNestedModulePath = $azureRmNestedModule.FullName + "\" + $azureRmNestedModule.Name + ".psd1" 
+                        try {
+                            Write-Host "##[command]Import-Module -Name $azureRmNestedModulePath -Global"
+                            $module = Import-Module -Name $azureRmNestedModulePath -Global -PassThru
+                            Write-Verbose "Imported module version: $($module.Version)"
+                        }
+                        catch {
+                            Write-Host $(Get-VstsLocString -Key AZ_AzureRmSubmoduleImportFailed -ArgumentList $azureRmNestedModulePath, $_.Exception.Message)
+                        }
+                    }
+                    $module = Get-Module -Name AzureRm.Profile
+                }
                 # Store the imported module.
                 if ($Classic) {
                     $script:azureModule = $module
@@ -144,15 +171,15 @@ function Import-FromSdkPath {
 }
 
 function Get-SdkVersion {
-
     Trace-VstsEnteringInvocation $MyInvocation
-
-    $regKey = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
-    $installedApplications = Get-ItemProperty -Path $regKey
-    $SdkVersion = ($installedApplications | Where-Object { $_.DisplayName -and $_.DisplayName.Contains("Microsoft Azure PowerShell") } | Select-Object -First 1).DisplayVersion
-    return $SdkVersion
-
-    Trace-VstsLeavingInvocation $MyInvocation
+    try{
+        $regKey = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+        $installedApplications = Get-ItemProperty -Path $regKey
+        $SdkVersion = ($installedApplications | Where-Object { $_.DisplayName -and $_.DisplayName.Contains("Microsoft Azure PowerShell") } | Select-Object -First 1).DisplayVersion
+        return $SdkVersion
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
 }
 
 

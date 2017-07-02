@@ -17,7 +17,7 @@
   "loc.input.label.ScriptArguments": "Script Arguments",
   "loc.input.help.ScriptArguments": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters.",
   "loc.input.label.TargetAzurePs": "Target Azure PowerShell",
-  "loc.input.help.TargetAzurePs": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Select Other Version\"",
+  "loc.input.help.TargetAzurePs": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Select Other Version\". For selecting the Latest Version , choose \"Latest installed version\"",
   "loc.input.label.CustomTargetAzurePs": "Custom Target Azure PowerShell",
   "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
   "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",

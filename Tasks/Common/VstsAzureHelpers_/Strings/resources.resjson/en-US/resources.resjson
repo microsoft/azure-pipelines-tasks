@@ -6,5 +6,6 @@
   "loc.messages.AZ_RequiresMinVersion0": "The required minimum version ({0}) of the Azure PowerShell module is not installed.",
   "loc.messages.AZ_ServicePrincipalError": "There was an error with the service principal used for the deployment.",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint."
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
+  "loc.messages.AZ_AzureRmSubmoduleImportFailed": "The import of AzureRm submodule: {0} failed with the error: {1}"
 }
