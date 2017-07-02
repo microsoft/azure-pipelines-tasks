@@ -34,7 +34,7 @@ export async function initializeAzureStackData(endpoint)
 
                 var audiences = authenticationData.audiences;
                 if(audiences) {
-                    if(audiences.lenth > 0) {
+                    if(audiences.length > 0) {
                         endpoint['activeDirectoryServiceEndpointResourceId'] = audiences[0];
                     }
                 }
@@ -56,7 +56,7 @@ export async function initializeAzureStackData(endpoint)
         }
         else {
             tl.debug(body);
-            deferred.reject(response.statusMessage);
+            deferred.reject("Failed to fetch dependency data, errror message : " + response.statusMessage);
         }
     });
     return deferred.promise;
