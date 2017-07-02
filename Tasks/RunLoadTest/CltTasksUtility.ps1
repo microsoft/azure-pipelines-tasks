@@ -58,9 +58,20 @@ function UploadTestDrop($testdrop, $src)
 	$azlog = ("{0}\..\azlog" -f $src)
 	$args = ("/Source:`"{0}`" /Dest:{1} /DestSAS:{2} /S /Z:`"{3}`"" -f $src, $dest, $sas, $azlog)
 
-	Invoke-Tool -Path $azcopy -Arguments $args
-}
+	# Create a file with the arguments as the content
+    $responseFile = [System.IO.Path]::GetTempFileName()
+	[System.IO.File]::WriteAllText($responseFile, $args)
 
+	$responseFileArgs = [String]::Format("/@:""{0}""", $responseFile)
+	try {
+		Write-Verbose "Calling AzCopy tool with file $responseFile" -Verbose 
+		Invoke-Tool -Path $azcopy -Arguments $responseFileArgs
+	}
+	finally {
+		[System.IO.File]::Delete($responseFile)
+		Write-Verbose "Azcopy completed.. Deleted file $responseFile" -Verbose 
+	}
+}
 
 function GetTestRun($headers, $runId, $CltAccountUrl)
 {
