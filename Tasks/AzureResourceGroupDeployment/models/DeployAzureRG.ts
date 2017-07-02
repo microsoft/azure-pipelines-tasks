@@ -85,11 +85,19 @@ export class AzureRGTaskParameters {
         var environment: string = tl.getEndpointDataParameter(connectedService, 'environment', true);
         var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', true);
         
-        if(environment != null && environment == azureStackEnvironment) {
+        if(environment != null && environment.toLowerCase() == azureStackEnvironment.toLowerCase()) {
             if(!envAuthorityUrl || !activeDirectoryResourceId) {
                 var endPoint =  await azureStackUtility.initializeAzureStackData({"url":armUrl});
                 envAuthorityUrl = endPoint["environmentAuthorityUrl"];
                 activeDirectoryResourceId = endPoint["activeDirectoryServiceEndpointResourceId"];
+                
+                if(envAuthorityUrl == null) {
+                    throw tl.loc("UnableToFetchAuthorityURL");
+                }
+
+                if(activeDirectoryResourceId == null) {
+                    throw tl.loc("UnableToFetchActiveDirectory");
+                }
             } 
         } else {
             envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";

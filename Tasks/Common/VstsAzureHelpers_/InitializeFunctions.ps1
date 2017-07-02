@@ -45,11 +45,10 @@ function Initialize-AzureSubscription {
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
-    }
-
-    if($environmentName -eq "AzureStack")
-    {
-        Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
+        if($environmentName -eq "AzureStack")
+        {
+            Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
+        }
     }
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
@@ -250,7 +249,7 @@ function Add-AzureStackAzureRmEnvironment {
         $Domain = ($EndpointURI.Remove(0,$i+1)).TrimEnd('/')
     }
     catch {
-        Write-Error "The specified ARM endpoint was invalid"
+        Write-Error (Get-VstsLocString -Key AZ_InvalidARMEndpoint)
     }
 
     $ResourceManagerEndpoint = $EndpointURI
