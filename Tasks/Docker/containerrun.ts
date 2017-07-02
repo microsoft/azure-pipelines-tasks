@@ -13,6 +13,11 @@ export function run(connection: ContainerConnection): any {
         command.arg("-d");
     }
 
+    var privileged = tl.getBoolInput("privileged");
+    if (privileged) {
+        command.arg("--privileged");
+    }
+
     var entrypoint = tl.getInput("entrypoint");
     if (entrypoint) {
         command.arg(["--entrypoint", entrypoint]);
@@ -57,6 +62,10 @@ export function run(connection: ContainerConnection): any {
 
     tl.getDelimitedInput("volumes", "\n").forEach(volume => {
         command.arg(["-v", volume]);
+    });
+
+    tl.getDelimitedInput("devices", "\n").forEach(device => {
+        command.arg(["--device", device]);
     });
 
     var workDir = tl.getInput("workDir");
