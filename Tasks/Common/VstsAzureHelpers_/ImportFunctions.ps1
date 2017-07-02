@@ -128,7 +128,7 @@ function Import-FromSdkPath {
             $path = [System.IO.Path]::Combine($programFiles, $partialPath)
             Write-Verbose "Checking if path exists: $path"
             if (Test-Path -LiteralPath $path -PathType Leaf) {
-                if ($azurePsVersion -and (-not (Get-SdkVersion -eq $azurePsVersion))) {
+                if ($azurePsVersion -and (-not ($(Get-SdkVersion) -eq $azurePsVersion))) {
                     continue
                 }
                 # Import the module.
