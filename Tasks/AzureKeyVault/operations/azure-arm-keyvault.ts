@@ -1,5 +1,5 @@
-import msRestAzure = require("./azure-arm-common");
-import azureServiceClient = require("./AzureServiceClient");
+import msRestAzure = require('azure-arm-rest/azure-arm-common');
+import azureServiceClient = require("azure-arm-rest/AzureServiceClient");
 import tl = require('vsts-task-lib/task');
 
 export class AzureKeyVaultSecret {
@@ -34,7 +34,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         var url = nextLink;
         if (!url)
         {
-            url = this.getRequestUri(
+            url = this.getRequestUriForBaseUri(
                 this.keyVaultUrl,
                 '/secrets',
                 {},
@@ -92,7 +92,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
-        httpRequest.uri = this.getRequestUri(
+        httpRequest.uri = this.getRequestUriForBaseUri(
             this.keyVaultUrl,
             '/secrets/{secretName}',
             {
