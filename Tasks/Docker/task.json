@@ -197,7 +197,8 @@
             },
             "label": "Devices",
             "visibleRule": "action = Run an image",
-            "helpMarkDown": "Devices to map from the host. Specify each device-file:device-file on a new line."
+            "helpMarkDown": "Devices to map from the host. Specify each device-file:device-file on a new line.",
+            "groupName": "advanced"
         },
         {
             "name": "envVars",
@@ -245,7 +246,8 @@
             "label": "Privileged",
             "defaultValue": "false",
             "visibleRule": "action = Run an image",
-            "helpMarkDown": "Give the container privileges on the host."
+            "helpMarkDown": "Give the container privileges on the host.",
+            "groupName": "advanced"
         },
         {
             "name": "restartPolicy",
