@@ -52,11 +52,24 @@ export async function initializeAzureStackData(endpoint)
                 endpoint['portalEndpoint'] = obj.portalEndpoint;
             }
             
+            var endpointUrl =  endpoint.url;
+            endpointUrl += (endpointUrl.lastIndexOf("/") == endpointUrl.length-1) ? "":"/";
+            var domain = "";
+            try {
+                var index = endpointUrl.indexOf('.');
+                domain =  endpointUrl.remove(0, index+1);
+                domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
+            } catch(error) {
+                deferred.reject(tl.loc("SpecifiedAzureRmEndpointIsInvalid", endpointUrl));
+            }
+
+            endpoint['AzureKeyVaultDnsSuffix'] = ("vault" + domain).toLowerCase();
+            endpoint['AzureKeyVaultServiceEndpointResourceId'] = ("https://vault." + domain).toLowerCase();
             deferred.resolve(endpoint);
         }
         else {
             tl.debug(body);
-            deferred.reject("Failed to fetch dependency data, errror message : " + response.statusMessage);
+            deferred.reject(tl.loc("FailedToFetchAzureStackDependencyData", response.statusMessage));
         }
     });
     return deferred.promise;
