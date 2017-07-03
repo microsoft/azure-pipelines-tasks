@@ -57,7 +57,7 @@ export async function initializeAzureStackData(endpoint)
             var domain = "";
             try {
                 var index = endpointUrl.indexOf('.');
-                domain =  endpointUrl.remove(0, index+1);
+                domain = endpointUrl.substring(index+1);
                 domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
             } catch(error) {
                 deferred.reject(tl.loc("SpecifiedAzureRmEndpointIsInvalid", endpointUrl));
