@@ -299,7 +299,7 @@ export class WinRMExtensionHelper {
         tl.debug("VM DNS: " + dnsName);
 
         tl.debug("Checking if the extension " + extensionName + " is present on vm " + vmName);
-        var result = await this.GetExtension(vmName, extensionName);
+        var result = await this.GetCustomScriptExtension(vmName);
         tl.debug("Matching extension: " + JSON.stringify(result));
         var extensionStatusValid = false;
         if (result) {
@@ -326,20 +326,20 @@ export class WinRMExtensionHelper {
         tl.debug("Addition of Custom Script Extension is completed on vm: " + vmName);
     }
 
-    private GetExtension(vmName: string, extensionName: string): Promise<any> {
+    private GetCustomScriptExtension(vmName: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachineExtensions.list(this.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, null, async (error, result, request, response) => {
                 if (error) {
                     reject(tl.loc("ListingOfExtensionsFailed", vmName, utils.getError(error)));
                     return;
                 }
-                
+
                 tl.debug("Result of listing the extensions: " + JSON.stringify(result));
-                var extensions : az.VMExtension[] = result || [];
+                var extensions: az.VMExtension[] = result || [];
                 var matchingExtension: az.VMExtension = null;
                 extensions.forEach((extension: az.VMExtension) => {
-                    if(extension.properties.type == "CustomScriptExtension" &&
-                    extension.properties.publisher == "Microsoft.Compute"){
+                    if (extension.properties.type == "CustomScriptExtension" &&
+                        extension.properties.publisher == "Microsoft.Compute") {
                         matchingExtension = extension;
                     }
                 });
@@ -359,6 +359,7 @@ export class WinRMExtensionHelper {
                 }
                 var extensionPresent: boolean = false;
                 tl.debug("Got the Instance View of the virtualMachine " + vmName + ": " + JSON.stringify(result));
+                var errorMessage = null;
                 if (result["properties"]["instanceView"] && result["properties"]["instanceView"]["extensions"]) {
                     var extensions = result["properties"]["instanceView"]["extensions"];
                     for (var extension of extensions) {
@@ -366,7 +367,7 @@ export class WinRMExtensionHelper {
                             extensionPresent = true;
                             for (var substatus of extension["substatuses"]) {
                                 if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && substatus["message"]) {
-                                    reject(substatus["message"]);
+                                    errorMessage = substatus["message"];
                                     break;
                                 }
                             }
@@ -374,11 +375,16 @@ export class WinRMExtensionHelper {
                         }
                     }
                 }
-                if(!extensionPresent){
-                    reject("Extension not found on the vm: " + vmName);
+                if (!extensionPresent) {
+                    errorMessage = tl.loc("ExtensionNotFound", vmName);
                 }
-                tl.debug("Custom Script Extension status validated for vm: " + vmName + "!!");
-                resolve();
+                if (errorMessage) {
+                    reject(errorMessage);
+                }
+                else {
+                    tl.debug("Custom Script Extension status validated for vm: " + vmName + "!!");
+                    resolve();
+                }
             });
         });
     }
@@ -409,12 +415,12 @@ export class WinRMExtensionHelper {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, parameters, async (error, result, request, response) => {
                 if (error) {
-                    console.log(tl.loc("CreationOfExtensionFailed", utils.getError(error)));
+                    console.log(tl.loc("CreationOfExtensionFailed", vmName, utils.getError(error)));
                 }
                 else {
                     tl.debug("Addition of extension completed for vm: " + vmName);
                     if (result["properties"]["provisioningState"] != 'Succeeded') {
-                        console.log(tl.loc("ProvisioningStatusOfExtensionIsNotSucceeded", vmName ));
+                        console.log(tl.loc("ProvisioningStatusOfExtensionIsNotSucceeded", vmName));
                         tl.debug("Result: " + JSON.stringify(result));
                     }
                 }
@@ -423,7 +429,7 @@ export class WinRMExtensionHelper {
                 }
                 catch (exception) {
                     tl.debug("WinRMCustomScriptExtension is not valid on vm " + vmName);
-                    reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, exception));
+                    reject(tl.loc("ARG_SetExtensionFailedForVm", vmName, exception));
                     return;
                 }
                 tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
