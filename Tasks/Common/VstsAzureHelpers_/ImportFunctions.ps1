@@ -14,7 +14,7 @@
             $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
             $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
             if (!$azure -and !$azureRM) {
-                if($azurePsVersion) {
+                if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
                 } 
                 else {
@@ -28,7 +28,7 @@
                 !(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
             {
-                if($azurePsVersion) {
+                if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
                 } 
                 else {
@@ -42,7 +42,7 @@
                 !(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
             {
-                if($azurePsVersion) {
+                if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
                 } 
                 else {
@@ -78,19 +78,18 @@ function Import-FromModulePath {
 
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$name' from the module path."
-        if($azurePsVersion) {
+        if ($azurePsVersion) {
             $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion} | Select-Object -First 1
+            if (!$module) {
+                return $false
+            }
         }
         else {
             $module = Get-Module -Name $name -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
             $sdkVersion = Get-SdkVersion
-            if($sdkVersion -and ($module.Version -lt $sdkVersion)) {
+            if ((!$module) -or ($sdkVersion -and ($module.Version -lt [version]$sdkVersion))) {
                 return $false
             }
-        }
-
-        if (!$module) {
-            return $false
         }
 
         # Import the module.
@@ -191,9 +190,10 @@ function Import-AzureRmSubmodulesFromSdkPath {
     Write-Verbose "Imported module version: $($azureStorageModule.Version)"
 
     $azureRmNestedModulesDirectory = Split-Path  -Parent (Split-Path -Parent $path)
-    $azureRmNestedModules = Get-ChildItem -Path $azureRmNestedModulesDirectory
+    $azureRmNestedModules = Get-ChildItem -Path $azureRmNestedModulesDirectory -Directory
     foreach ($azureRmNestedModule in $azureRmNestedModules) {
-        if($azureRmNestedModule.Name -eq "AzureRM.Profile") {
+        #AzureRM.Profile module has already been imported
+        if ($azureRmNestedModule.Name -eq "AzureRM.Profile") {
             continue;
         }
         $azureRmNestedModulePath = $azureRmNestedModule.FullName + "\" + $azureRmNestedModule.Name + ".psd1" 
