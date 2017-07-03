@@ -85,7 +85,21 @@ foreach ($variableSet in $variableSets) {
         $expectedModule = @{ Version = [version]'2.3.4.5' }
         Register-Mock Import-Module { $expectedModule } -Name $psd1 -Global -PassThru
     }
-
+    
+    if($variableSet.Classic -eq $false) {
+        $expectedStorageModule = @{ Version = [version]'3.1.0' }
+        $partialStorageModulePath = "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1"
+        if($variableSet.FoundInProgramFilesX86) {
+            $wowStorageModulePath = [System.IO.Path]::Combine(${env:ProgramFiles(x86)}, $partialStorageModulePath)
+            Register-Mock Import-Module { $expectedStorageModule } -Name $wowStorageModulePath -Global -PassThru
+        }
+        if($variableSet.FoundInProgramFiles) {
+            $storageModulePath = [System.IO.Path]::Combine($env:ProgramFiles, $partialStorageModulePath)
+            Register-Mock Import-Module { $expectedStorageModule } -Name $storageModulePath -Global -PassThru
+        }
+        Register-Mock Import-Module
+        Register-Mock Get-ChildItem
+    }
     # Clear the private module variables.
     & $module { $script:azureModule = $null ; $script:azureRMProfileModule = $null }
 

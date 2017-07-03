@@ -7,6 +7,7 @@ param()
 # Arrange the task inputs.
 Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "$PSScriptRoot/RemovesFunctionsAndVariables_TargetScript.ps1" } -- -Name ScriptPath
+Register-Mock Get-VstsInput { "4.1.0" } -- -Name TargetAzurePs
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {

@@ -144,6 +144,7 @@ describe('General Suite', function () {
             'npm',
             'node.js',
             'PowerShell',
+            'PowerShell -gtVersion 5.0',
             'SqlPackage',
             'VisualStudio',
             'VisualStudio_IDE',

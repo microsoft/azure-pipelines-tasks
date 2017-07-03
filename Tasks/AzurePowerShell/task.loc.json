@@ -21,7 +21,7 @@
   },
   "demands": [
     "azureps",
-    "PowerShell -gtVersion 5"
+    "powershell -gtVersion 5.0"
   ],
   "minimumAgentVersion": "1.95.0",
   "inputs": [

@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "$PSScriptRoot/DoesNotUnravelOutput_TargetScript.ps1" } -- -Name ScriptPath
+Register-Mock Get-VstsInput { "4.1.0" } -- -Name TargetAzurePs
 Register-Mock Initialize-Azure
 
 # Act.

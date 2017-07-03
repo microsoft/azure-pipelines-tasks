@@ -6,6 +6,7 @@ param()
 Unregister-Mock Get-VstsInput
 Register-Mock Get-VstsInput { "InlineScript" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { ",@( 'item 1', 'item 2')" } -- -Name Inline
+Register-Mock Get-VstsInput { "4.1.0" } -- -Name TargetAzurePs
 Register-Mock Initialize-Azure
 
 # Act.
