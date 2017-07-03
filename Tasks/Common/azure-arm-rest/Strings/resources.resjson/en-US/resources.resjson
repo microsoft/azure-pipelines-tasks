@@ -34,5 +34,6 @@
   "loc.messages.VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
   "loc.messages.VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
   "loc.messages.VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
-  "loc.messages.VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date."
+  "loc.messages.VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date.",
+  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null."
 }

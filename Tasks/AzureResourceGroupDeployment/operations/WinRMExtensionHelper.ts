@@ -321,7 +321,7 @@ export class WinRMExtensionHelper {
 
     private GetExtension(vmName: string, extensionName: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            this.computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
+            this.computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the extension for the vm: " + vmName + "!!");
                     return resolve(null);
@@ -386,7 +386,7 @@ export class WinRMExtensionHelper {
 
         console.log(tl.loc("AddExtension", extensionName, vmName));
         return new Promise<any>((resolve, reject) => {
-            this.computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
+            this.computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, parameters, async (error, result, request, response) => {
                 if (error) {
                     reject(tl.loc("CreationOfExtensionFailed", utils.getError(error)));
                     return;
@@ -409,7 +409,7 @@ export class WinRMExtensionHelper {
         tl.debug("Removing the extension " + extensionName + "from vm " + vmName);
         //delete the extension
         return new Promise<any>((resolve, reject) => {
-            this.computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, async (error, result, request, response) => {
+            this.computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to delete the extension " + extensionName + " on the vm " + vmName + ", with error Message: " + util.inspect(error, { depth: null }));
                     reject(tl.loc("FailedToDeleteExtension"));
