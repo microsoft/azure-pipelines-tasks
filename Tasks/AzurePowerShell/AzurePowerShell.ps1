@@ -34,6 +34,7 @@ if($regex.IsMatch($targetAzurePs)) {
     $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
 }
 elseif($targetAzurePs -eq "LatestVersion") {
+    # For Hosted Agent, the Latest Version is 4.1.0
     $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_4.1.0"
     $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_4.1.0"
     $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
