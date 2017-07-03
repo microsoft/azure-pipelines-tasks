@@ -4,12 +4,11 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import httpClient = require('vso-node-api/HttpClient');
 import restClient = require('vso-node-api/RestClient');
-var deasync = require('deasync');
 
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var restObj = new restClient.RestCallbackClient(httpObj);
 
-export async function initializeAzureStackData(endpoint)
+export async function initializeAzureStackData(endpoint): Promise<any>
 {
     var deferred = Q.defer<any>();
     var headers = {

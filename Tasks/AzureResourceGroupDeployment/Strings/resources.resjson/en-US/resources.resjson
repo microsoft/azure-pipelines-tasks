@@ -149,5 +149,7 @@
   "loc.messages.OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
   "loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
   "loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
-  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
+  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
+  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
+  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
 }

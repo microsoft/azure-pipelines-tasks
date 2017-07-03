@@ -76,7 +76,7 @@ export class AzureRGTaskParameters {
         }
     }
 
-    private  async getARMCredentials(connectedService: string){
+    private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);

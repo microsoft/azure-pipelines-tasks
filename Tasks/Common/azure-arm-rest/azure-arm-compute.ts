@@ -16,7 +16,7 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
 
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
-        this.apiVersion = '2016-03-30';
+        this.apiVersion = '2015-06-15';
 
         if (!options)
             options = {};
