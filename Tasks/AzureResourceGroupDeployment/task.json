@@ -345,7 +345,7 @@
         "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
         "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
         "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+        "ARG_SetExtensionFailedForVm": "StdErr Message: Failed to set extension on Virtual Machine %s of Resource Group %s with error: %s",
         "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
         "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
         "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
@@ -381,6 +381,8 @@
         "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
         "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
         "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
-        "ResourceNameCannotBeNull": "Resource name cannot be null."
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of CustomScriptExtension is not succeeded on vm: '%s'.",
+        "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s' with error '%s'"
     }
 }
