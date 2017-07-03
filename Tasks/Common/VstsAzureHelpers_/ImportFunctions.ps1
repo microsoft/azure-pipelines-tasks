@@ -16,8 +16,7 @@
             if (!$azure -and !$azureRM) {
                 if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
-                } 
-                else {
+                } else {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version")
                 }
             }
@@ -30,8 +29,7 @@
             {
                 if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
-                } 
-                else {
+                } else {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version")
                 }
             }
@@ -44,8 +42,7 @@
             {
                 if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
-                } 
-                else {
+                } else {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version")
                 }
             }

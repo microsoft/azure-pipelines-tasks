@@ -28,12 +28,12 @@ if($targetAzurePs -eq "OtherVersion") {
 $pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
 $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 
-if($regex.IsMatch($targetAzurePs)) {
+if ($regex.IsMatch($targetAzurePs)) {
     $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_" + $targetAzurePs
     $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_" + $targetAzurePs
     $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
 }
-elseif($targetAzurePs -eq "LatestVersion") {
+elseif ($targetAzurePs -eq "LatestVersion") {
     # For Hosted Agent, the Latest Version is 4.1.0
     $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_4.1.0"
     $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_4.1.0"
