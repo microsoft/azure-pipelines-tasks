@@ -25,7 +25,7 @@ if($targetAzurePs -eq "OtherVersion") {
     $targetAzurePs = $customTargetAzurePs.Trim()
 }
 
-$pattern = "[0-9]+\.[0-9]+\.[0-9]+"
+$pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
 $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 
 if($regex.IsMatch($targetAzurePs)) {
