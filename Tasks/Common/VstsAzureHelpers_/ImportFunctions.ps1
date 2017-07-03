@@ -14,7 +14,12 @@
             $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
             $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
             if (!$azure -and !$azureRM) {
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
+                if($azurePsVersion) {
+                    throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
+                } 
+                else {
+                    throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version")
+                }
             }
         } elseif ($PreferredModule -contains 'Azure') {
             # Attempt to import Azure but fallback to AzureRM.
@@ -23,7 +28,12 @@
                 !(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
             {
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
+                if($azurePsVersion) {
+                    throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
+                } 
+                else {
+                    throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version")
+                }
             }
         } else {
             # Attempt to import AzureRM but fallback to Azure.
@@ -32,7 +42,12 @@
                 !(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
             {
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
+                if($azurePsVersion) {
+                    throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
+                } 
+                else {
+                    throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version")
+                }
             }
         }
 
