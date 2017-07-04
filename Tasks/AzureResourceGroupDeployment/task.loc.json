@@ -381,6 +381,9 @@
     "DeploymentGroupEndpointPatTokenCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty",
     "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter",
     "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
+    "ProvisioningStatusOfExtensionIsNotSucceeded": "ms-resource:loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded",
+    "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
+    "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
   }
