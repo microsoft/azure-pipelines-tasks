@@ -151,7 +151,7 @@
   "loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
   "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
   "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null.",
-  "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of CustomScriptExtension is not succeeded on vm: '%s'."
+  "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of CustomScriptExtension is not succeeded on vm: '%s'.",
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
   "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
 }
