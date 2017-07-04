@@ -2,10 +2,10 @@
     "id": "f08193a6-74a6-4ea1-82d7-a9966b50666d",
     "name": "AzureStorage",
     "friendlyName": "Azure Storage",
-    "description": "Download packages friom Azure Storage Account",
+    "description": "Download packages from Azure Storage Account",
     "helpMarkDown": "",
     "category": "Deploy",
-    "releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
+    "releaseNotes": "Works with Xplat agents (Windows)",
     "visibility": [
         "Build",
         "Release"
@@ -53,6 +53,17 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "(Optional) Provide the sub-folder path inside the container.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "DestinationDirectory",
+            "type": "string",
+            "label": "Destination directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "required": true,
+            "helpMarkDown": "Provide the destination directory where artifacts will be downloaded.",
             "options": {
                 "EditableOptions": "True"
             }

@@ -7,18 +7,17 @@ import armStorage = require("azure-arm-rest/azure-arm-storage");
 import blobUtils = require("./operations/AzureBlobUtils");
 
 function run(): Q.Promise<void> {
-    var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
-
     var connectedServiceName = tl.getInput('ConnectedServiceName', true);
     var storageAccountName = tl.getInput('StorageAccountName', true);
     var containerName = tl.getInput('ContainerName', true).toLowerCase();
     var commonVirtualPath = tl.getInput('CommonVirtualPath', false) || "";
+    var destinationDirectory = tl.getInput('DestinationDirectory', true);
     var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 
     var credentials = getARMCredentials(connectedServiceName);
     var blobUtilsClient: blobUtils.AzureBlobUtils = new blobUtils.AzureBlobUtils(credentials, subscriptionId);
 
-    return blobUtilsClient.downloadBlobs(storageAccountName, containerName, commonVirtualPath, artifactsDirectory);
+    return blobUtilsClient.downloadBlobs(storageAccountName, containerName, commonVirtualPath, destinationDirectory);
 }
 
 function getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
