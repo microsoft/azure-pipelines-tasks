@@ -48,6 +48,9 @@ foreach ($variableSet in $variableSets) {
     # Assert.
     Assert-AreEqual $true $result
     Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -Global -PassThru
+    if ($variableSet.Modules.Length -eq 2) {
+        Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru
+    }
 
     if ($variableSet.Classic) {
         Assert-AreEqual $variableSet.Modules[0] (& $module { $script:azureModule })

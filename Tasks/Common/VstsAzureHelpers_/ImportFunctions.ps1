@@ -105,7 +105,11 @@ function Import-FromModulePath {
             if (!$profileModule) {
                 throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
             }
-            $script:azureRMProfileModule = $profileModule
+
+            # Import and then store the AzureRM.profile module.
+            Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global"
+            $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru
+            Write-Verbose "Imported module version: $($script:azureRMProfileModule.Version)"
         }
 
         return $true
