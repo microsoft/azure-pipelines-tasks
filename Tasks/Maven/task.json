@@ -19,7 +19,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 119,
+        "Minor": 120,
         "Patch": 0
     },
     "minimumAgentVersion": "1.89.0",
@@ -56,17 +56,17 @@
             "helpMarkDown": "Relative path from the repository root to the Maven POM file."
         },
         {
-            "name": "options",
-            "type": "string",
-            "label": "Options",
-            "defaultValue": "",
-            "required": false
-        },
-        {
             "name": "goals",
             "type": "string",
             "label": "Goal(s)",
             "defaultValue": "package",
+            "required": false
+        },
+        {
+            "name": "options",
+            "type": "string",
+            "label": "Options",
+            "defaultValue": "",
             "required": false
         },
         {
@@ -412,6 +412,9 @@
         "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
-        "NoCodeCoverage": "No code coverage results were found to publish."
+        "NoCodeCoverage": "No code coverage results were found to publish.",
+        "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
+        "FeedTokenUnavailable": "Could not determine credentials to use for Maven feed.",
+        "EffectivePomInvalid": "Could not parse the effective POM."
     }
 }

@@ -36,6 +36,7 @@
         "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
         "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
         "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date.",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty."
     }
 }

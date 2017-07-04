@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 42
+    "Patch": 55
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -53,6 +53,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
       "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "EnableCopyConcurrency",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.EnableCopyConcurrency",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.EnableCopyConcurrency",
+      "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "CopyConcurrencyValue",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.CopyConcurrencyValue",
+      "defaultValue": 8,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CopyConcurrencyValue",
+      "visibleRule": "ArtifactType = FilePath && EnableCopyConcurrency = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -65,6 +83,9 @@
   "messages": {
     "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
-    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed"
+    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
+    "UnexpectedConcurrencyValue": "ms-resource:loc.messages.UnexpectedConcurrencyValue",
+    "NegativeCicurrenyValue": "ms-resource:loc.messages.NegativeCicurrenyValue",
+    "ExceededCocurrencyValue": "ms-resource:loc.messages.ExceededCocurrencyValue"
   }
 }
