@@ -36,7 +36,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Get-Module
     Unregister-Mock Import-Module
     Register-Mock Get-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Name -ListAvailable
-    Register-Mock Import-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Path -RequiredVersion "4.1.0" -Global -PassThru
+    Register-Mock Import-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Path -Global -PassThru
     if ($variableSet.Modules.Length -eq 2) {
         Register-Mock Get-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Name -ListAvailable
         Register-Mock Import-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Path -Global -PassThru
@@ -47,7 +47,7 @@ foreach ($variableSet in $variableSets) {
 
     # Assert.
     Assert-AreEqual $true $result
-    Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -RequiredVersion "4.1.0" -Global -PassThru
+    Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -Global -PassThru
     if ($variableSet.Modules.Length -eq 2) {
         Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru
     }

@@ -90,8 +90,8 @@ function Import-FromModulePath {
         }
 
         # Import the module.
-        Write-Host "##[command]Import-Module -Name $($module.Path) -RequiredVersion $($module.Version) -Global"
-        $module = Import-Module -Name $module.Path -RequiredVersion $($module.Version) -Global -PassThru
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
+        $module = Import-Module -Name $module.Path -Global -PassThru
         Write-Verbose "Imported module version: $($module.Version)"
 
         if ($Classic) {
