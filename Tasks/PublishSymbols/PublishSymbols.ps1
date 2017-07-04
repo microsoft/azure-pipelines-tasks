@@ -48,6 +48,10 @@ try {
         # $pdbFiles = @(Find-VstsFiles -LiteralDirectory $SymbolsFolder -LegacyPattern $SearchPattern)
         $pdbFiles = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
         Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
+        
+        if (-not $pdbFiles -and $SearchPattern.Contains(';')) {
+            throw "No files found, You might want to use newlines instead of ';' to seperate search patterns"
+        }
     }
 
     # Index the sources.

@@ -109,13 +109,14 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
         }
 
         if ( $personalAccessToken ) {
-             $args  += " --patAuth `"$personalAccessToken`""
+            $env:SYMBOL_PAT_AUTH_TOKEN = $personalAccessToken
+            $args  += " --patAuthEnvVar SYMBOL_PAT_AUTH_TOKEN"
         } else {
-             $args += " --aadAuth"
+            $args += " --aadAuth"
         }
 
         if ($SourcePathListFileName) {
-            $args += " -f `"$SourcePathListFileName`""
+            $args += " --fileListFileName `"$SourcePathListFileName`""
         }
 
         Run-SymbolCommand $assemblyPath $args
@@ -129,6 +130,10 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
         # which I find more clear
         throw  $_
     }
+    finally
+    {
+        $env:SYMBOL_PAT_AUTH_TOKEN = ''
+    }
 }
 
 function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
@@ -138,7 +143,9 @@ function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
 
     Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
 
-    "$exe exited with exit code $LASTEXITCODE" | Write-Host
+    if ($LASTEXITCODE -ne 0) {
+        throw "$exe exited with exit code $LASTEXITCODE"
+    }
 }
 
 function Unzip-SymbolClient([string]$clientZip, [string]$destinationDirectory)

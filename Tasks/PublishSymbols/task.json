@@ -34,7 +34,7 @@
         },
         {
             "name": "SearchPattern",
-            "type": "string",
+            "type": "multiLine",
             "label": "Search pattern",
             "defaultValue": "**/bin/**/*.pdb",
             "required": true,
