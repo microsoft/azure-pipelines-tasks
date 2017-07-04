@@ -22,6 +22,12 @@ $variableSets = @(
                 Name = 'AzureRM'
                 Path = 'Path to AzureRM'
                 Version = [version]'4.1.0'
+                NestedModules = @(
+                    @{
+                        Name = 'AzureRM.Profile'
+                        Path = 'Path to AzureRM.profile'
+                    }
+                )
             }
             @{
                 Name = 'AzureRM.profile'
@@ -38,7 +44,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Name -ListAvailable
     Register-Mock Import-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Path -Global -PassThru
     if ($variableSet.Modules.Length -eq 2) {
-        Register-Mock Get-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Name -ListAvailable
+        Register-Mock Get-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Name
         Register-Mock Import-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Path -Global -PassThru
     }
 
