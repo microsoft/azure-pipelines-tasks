@@ -101,7 +101,7 @@ function Import-FromModulePath {
             # The AzureRM module was imported.
 
             # Validate the AzureRM.profile module can be found.
-            $profileModule = Get-Module -Name AzureRM.profile -ListAvailable | Select-Object -First 1
+            $profileModule = (Get-Module -Name AzureRM).NestedModules | Where-Object { $_.Name.toLower() -eq "azurerm.profile" }
             if (!$profileModule) {
                 throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
             }
