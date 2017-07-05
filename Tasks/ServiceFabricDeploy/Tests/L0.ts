@@ -36,5 +36,8 @@ describe('ServiceFabricDeploy Suite', function () {
         it('No auth deploy', (done) => {
             psr.run(path.join(__dirname, 'NoAuthDeploy.ps1'), done);
         })
+        it('Windows auth deploy', (done) => {
+            psr.run(path.join(__dirname, 'WindowsAuthDeploy.ps1'), done);
+        })
     }
 });

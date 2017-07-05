@@ -109,7 +109,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'a/b/c/x.dsym/x1.txt': true,
         'a/b/c/x.dsym/x2.txt': true
     },
-    'glob' : {
+    'findMatch' : {
         'a/**/*.dsym': [
             'a/b/c/x.dsym'
         ],

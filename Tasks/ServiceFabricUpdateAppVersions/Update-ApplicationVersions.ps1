@@ -65,11 +65,19 @@ try {
 
             $oldAppPackagePath = Join-Path $oldDropLocation $newAppPackagePath.SubString((Get-VstsTaskVariable -Name Build.SourcesDirectory -Require).Length + 1)
             $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
-            $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
+            if (Test-Path $oldAppManifestPath)
+            {
+                $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
 
-            # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-            # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
-            $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
+                # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
+                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
+                $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
+            }
+            else
+            {
+                Write-Warning (Get-VstsLocString -Key NoManifestInPreviousBuild)
+                $updateAllVersions = $true 
+            }
         }
         else
         {

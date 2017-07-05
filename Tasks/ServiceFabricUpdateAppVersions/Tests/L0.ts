@@ -42,6 +42,9 @@ describe('ServiceFabricUpdateAppVersions Suite', function () {
         it('(Update-ApplicationVersions) app version prefix changed', (done) => {
             psr.run(path.join(__dirname, 'Update-ApplicationVersions.VersionPrefixChanged.ps1'), done);
         })
+        it('(Update-ApplicationVersions) old app manifest not found', (done) => {
+            psr.run(path.join(__dirname, 'Update-ApplicationVersions.OldManifestNotFound.ps1'), done);
+        })
         it('(Update-ServiceVersions) no changes', (done) => {
             psr.run(path.join(__dirname, 'Update-ServiceVersions.NoChanges.ps1'), done);
         })

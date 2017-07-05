@@ -8,6 +8,7 @@ import settingsHelper = require('./settingshelper');
 import vstestVersion = require('./vstestversion');
 import * as utils from './helpers';
 import * as outStream from './outputstream';
+import * as testselectorinvoker from './testselectorinvoker';
 
 let os = require('os');
 let regedit = require('regedit');
@@ -239,7 +240,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     return defer.promise;
 }
 
-function generateResponseFile(discoveredTests: string): Q.Promise<string> {
+function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile: string): Q.Promise<string> {
     const startTime = perf();
     let endTime: number;
     let elapsedTime: number;
@@ -304,7 +305,9 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
             'context': tiaConfig.context,
             'platform': platformInput,
             'configuration': configurationInput,
-            'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile
+            'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
+            'testCaseFilterOutputFile' : testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
+            'isCustomEngineEnabled' : String(!utils.Helper.isNullOrWhitespace(tiaConfig.userMapFile))
         },
         silent: null,
         failOnStdErr: null,
@@ -318,94 +321,6 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
             elapsedTime = endTime - startTime;
             tl.debug(tl.loc('GenerateResponseFilePerfTime', elapsedTime));
             defer.resolve(respFile);
-        })
-        .fail(function (err) {
-            defer.reject(err);
-        });
-
-    return defer.promise;
-}
-
-function publishCodeChanges(): Q.Promise<string> {
-    const startTime = perf();
-    let endTime: number;
-    let elapsedTime: number;
-    let pathFilters: string;
-    let definitionRunId: string;
-    let definitionId: string;
-    let prFlow: string;
-    let rebaseLimit: string;
-    let sourcesDirectory: string;
-    const defer = Q.defer<string>();
-
-    let newprovider = 'true';
-    if (getTIALevel() === 'method') {
-        newprovider = 'false';
-    }
-
-    const selectortool = tl.tool(getTestSelectorLocation());
-    selectortool.arg('PublishCodeChanges');
-
-    if (tiaConfig.context === 'CD') {
-        // Release context. Passing Release Id.
-        definitionRunId = tl.getVariable('Release.ReleaseId');
-        definitionId = tl.getVariable('release.DefinitionId');
-    } else {
-        // Build context. Passing build id.
-        definitionRunId = tl.getVariable('Build.BuildId');
-        definitionId = tl.getVariable('System.DefinitionId');
-    }
-
-    if (tiaConfig.isPrFlow && tiaConfig.isPrFlow.toUpperCase() === 'TRUE') {
-        prFlow = 'true';
-    } else {
-        prFlow = 'false';
-    }
-
-    if (tiaConfig.tiaRebaseLimit) {
-        rebaseLimit = tiaConfig.tiaRebaseLimit;
-    }
-
-    if (typeof tiaConfig.tiaFilterPaths !== 'undefined') {
-        pathFilters = tiaConfig.tiaFilterPaths.trim();
-    } else {
-        pathFilters = '';
-    }
-
-    if (typeof tiaConfig.sourcesDir !== 'undefined') {
-        sourcesDirectory = tiaConfig.sourcesDir.trim();
-    } else {
-        sourcesDirectory = '';
-    }
-
-    selectortool.exec({
-        cwd: null,
-        env: {
-            'collectionurl': tl.getVariable('System.TeamFoundationCollectionUri'),
-            'projectid': tl.getVariable('System.TeamProject'),
-            'definitionrunid': definitionRunId,
-            'definitionid': definitionId,
-            'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
-            'sourcesdir': sourcesDirectory,
-            'newprovider': newprovider,
-            'prflow': prFlow,
-            'rebaselimit': rebaseLimit,
-            'baselinefile': tiaConfig.baseLineBuildIdFile,
-            'context': tiaConfig.context,
-            'filter': pathFilters
-        },
-        silent: null,
-        failOnStdErr: null,
-        ignoreReturnCode: null,
-        outStream: null,
-        errStream: null,
-        windowsVerbatimArguments: null
-    })
-        .then(function (code) {
-            endTime = perf();
-            elapsedTime = endTime - startTime;
-            tl.debug(tl.loc('PublishCodeChangesPerfTime', elapsedTime));
-            defer.resolve(String(code));
         })
         .fail(function (err) {
             defer.reject(err);
@@ -465,9 +380,9 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     return defer.promise;
 }
 
-function getVstestTestsList(vsVersion: number): Q.Promise<string> {
+function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, outputFile: string): Q.Promise<string> {
     const defer = Q.defer<string>();
-    const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    const tempFile = outputFile;
     tl.debug('Discovered tests listed at: ' + tempFile);
     const argsArray: string[] = [];
 
@@ -486,8 +401,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     argsArray.push('/ListFullyQualifiedTests');
     argsArray.push('/ListTestsTargetPath:' + tempFile);
-    if (vstestConfig.testcaseFilter) {
-        argsArray.push('/TestCaseFilter:' + vstestConfig.testcaseFilter);
+    if (testCaseFilter) {
+        argsArray.push('/TestCaseFilter:' + testCaseFilter);
     }
     if (vstestConfig.pathtoCustomTestAdapters) {
         if (pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
@@ -525,13 +440,26 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     return defer.promise;
 }
 
-function cleanFiles(responseFile: string, listFile: string): void {
+function getVstestTestsList(vsVersion: number): Q.Promise<string> {
+    const defer = Q.defer<string>();
+    const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tl.debug('Discovered tests listed at: ' + tempFile);
+    const argsArray: string[] = [];
+
+    return getVstestTestsListInternal(vsVersion, vstestConfig.testcaseFilter, tempFile);
+}
+
+function cleanFiles(responseFile: string, listFile: string, testCaseFilterFile: string, testCaseFilterOutput: string): void {
     tl.debug('Deleting the response file ' + responseFile);
     tl.rmRF(responseFile, true);
     tl.debug('Deleting the discovered tests file ' + listFile);
     tl.rmRF(listFile, true);
     tl.debug('Deleting the baseline build id file ' + tiaConfig.baseLineBuildIdFile);
     tl.rmRF(tiaConfig.baseLineBuildIdFile, true);
+    tl.debug('Deleting test case filter file ' + testCaseFilterFile);
+    tl.rmRF(testCaseFilterFile, true);
+    tl.debug('Deleting test case filter output file' + testCaseFilterOutput);
+    tl.rmRF(testCaseFilterOutput, true);
 }
 
 function deleteVstestDiagFile(): void {
@@ -541,14 +469,30 @@ function deleteVstestDiagFile(): void {
     }
 }
 
+function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: string, testCaseFilterOutput: string) {
+    if (utils.Helper.pathExistsAsFile(testCaseFilterFile)) {
+        let filters = utils.Helper.readFileContentsSync(testCaseFilterFile, 'utf-8');
+        getVstestTestsListInternal(vsVersion, filters, testCaseFilterOutput);
+    }
+}
+
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
     const defer = Q.defer<number>();
     if (isTiaAllowed()) {
-        publishCodeChanges()
-            .then(function (status) {
+        let testCaseFilterFile = "";
+        let testCaseFilterOutput = "";
+        if (tiaConfig.userMapFile) {
+            testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+            testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
+        }
+        
+        let testselector = new testselectorinvoker.TestSelectorInvoker();
+        let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile);
+        if(code === 0) {
                 getVstestTestsList(vsVersion)
                     .then(function (listFile) {
-                        generateResponseFile(listFile)
+                        discoverTestFromFilteredFilter(vsVersion, testCaseFilterFile, testCaseFilterOutput);
+                        generateResponseFile(listFile, testCaseFilterOutput)
                             .then(function (responseFile) {
                                 if (isEmptyResponseFile(responseFile)) {
                                     tl.debug('Empty response file detected. All tests will be executed.');
@@ -569,7 +513,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     defer.resolve(1);
                                                 })
                                                 .finally(function () {
-                                                    cleanFiles(responseFile, listFile);
+                                                    cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                     tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
                                                     tl.rmRF(tiaConfig.runIdFile, true);
                                                 });
@@ -578,7 +522,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             defer.resolve(code);
                                         })
                                         .finally(function () {
-                                            cleanFiles(responseFile, listFile);
+                                            cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                         });
                                 } else {
                                     responseContainsNoTests(responseFile)
@@ -597,7 +541,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         defer.resolve(1);
                                                     })
                                                     .finally(function () {
-                                                        cleanFiles(responseFile, listFile);
+                                                        cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                         tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
                                                         tl.rmRF(tiaConfig.runIdFile, true);
                                                     });
@@ -621,7 +565,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                         defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
-                                                                        cleanFiles(responseFile, listFile);
+                                                                        cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                                         tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
                                                                         tl.rmRF(tiaConfig.runIdFile, true);
                                                                     });
@@ -630,7 +574,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                 defer.resolve(code);
                                                             })
                                                             .finally(function () {
-                                                                cleanFiles(responseFile, listFile);
+                                                                cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                             });
                                                     })
                                                     .fail(function (err) {
@@ -653,7 +597,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                         defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
-                                                                        cleanFiles(responseFile, listFile);
+                                                                        cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                                         tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
                                                                         tl.rmRF(tiaConfig.runIdFile, true);
                                                                     });
@@ -661,7 +605,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             .fail(function (code) {
                                                                 defer.resolve(code);
                                                             }).finally(function () {
-                                                                cleanFiles(responseFile, listFile);
+                                                                cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                             });
                                                     })
                                                     .fail(function (err) {
@@ -714,9 +658,9 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
                         defer.resolve(1);
                     });
-            })
-            .fail(function (err) {
-                tl.error(err);
+            }
+            else
+            {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                     .then(function (code) {
@@ -726,7 +670,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     .fail(function (code) {
                         defer.resolve(code);
                     });
-            });
+            }
     } else {
         tl.debug('Non TIA mode of test execution');
         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
@@ -778,7 +722,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     try {
-        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters).
+        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters, false).
             then(function (ret) {
                 newSettingsFile = ret;
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
@@ -905,16 +849,9 @@ function isTiaAllowed(): boolean {
     return false;
 }
 
-function getTIALevel() {
-    if (tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE') {
-        return 'method';
-    }
-    return 'file';
-}
-
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     return utils.Helper.readFileContents(filePath, 'utf-8').then(function (resp) {
-        if (resp === '/Tests:' || resp === '/TestCaseFilter:') {
+        if (resp === '/Tests:"' || resp === '/Tests:' || resp === '/TestCaseFilter:') {
             return true;
         }
         else {

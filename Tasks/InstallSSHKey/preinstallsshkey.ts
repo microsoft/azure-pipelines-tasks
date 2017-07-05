@@ -14,6 +14,8 @@ async function run() {
     try {
         let publicKey: string = tl.getInput('sshPublicKey', true).trim();
         let knownHostsEntry: string = tl.getInput('hostName', true).trim();
+        let passphrase: string = tl.getInput('sshPassphrase', false);
+        passphrase = !passphrase ? passphrase : passphrase.trim();
 
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -31,7 +33,7 @@ async function run() {
             sshTool.runAgent();
         }
 
-        sshTool.installKey(publicKey, privateKeyLocation);
+        await sshTool.installKey(publicKey, privateKeyLocation, passphrase);
         util.setKnownHosts(knownHostsEntry);
     } catch(err) {
         tl.setResult(tl.TaskResult.Failed, err);

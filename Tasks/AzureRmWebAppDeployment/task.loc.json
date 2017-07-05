@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 7
+    "Patch": 10
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -70,7 +70,7 @@
       "name": "ServerfarmId",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ServerfarmId",
-      "defaultValue": "",
+      "defaultValue": "invalidServerfarmId",
       "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
       "properties": {
@@ -89,6 +89,39 @@
         "EditableOptions": "false",
         "PopulateDefaultValue": "true"
       }
+    },
+    {
+      "name": "DeployToSlotFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = linux"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "DeployToSlotFlag = true"
+    },
+    {
+      "name": "SlotName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SlotName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
+      "visibleRule": "DeployToSlotFlag = true"
     },
     {
       "name": "DockerNamespace",
@@ -125,39 +158,6 @@
       "required": false,
       "visibleRule": "WebAppKind = linux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
-    },
-    {
-      "name": "DeployToSlotFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
-    },
-    {
-      "name": "ResourceGroupName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ResourceGroupName",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "DeployToSlotFlag = true"
-    },
-    {
-      "name": "SlotName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.SlotName",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
-      "visibleRule": "DeployToSlotFlag = true"
     },
     {
       "name": "VirtualApplication",

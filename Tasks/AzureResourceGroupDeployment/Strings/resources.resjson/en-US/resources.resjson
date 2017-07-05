@@ -114,7 +114,7 @@
   "loc.messages.SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
   "loc.messages.SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
   "loc.messages.OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-  "loc.messages.ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+  "loc.messages.ARG_SetExtensionFailedForVm": "StdErr Message: Failed to set extension on Virtual Machine %s of Resource Group %s with error: %s",
   "loc.messages.InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
   "loc.messages.AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
   "loc.messages.InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
@@ -149,5 +149,7 @@
   "loc.messages.OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
   "loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
   "loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
-  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
+  "loc.messages.ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
+  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null.",
+  "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of CustomScriptExtension is not succeeded on vm: '%s'."
 }

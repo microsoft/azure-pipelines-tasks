@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 20
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -181,6 +181,7 @@
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
-    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage"
+    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed"
   }
 }

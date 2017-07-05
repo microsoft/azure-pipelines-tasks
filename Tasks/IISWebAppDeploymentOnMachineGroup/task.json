@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 20
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
@@ -179,6 +179,7 @@
         "FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
         "FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
         "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
-        "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation."
+        "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
+        "PackageDeploymentFailed": "Failed to deploy web package to IIS website."
     }
 }

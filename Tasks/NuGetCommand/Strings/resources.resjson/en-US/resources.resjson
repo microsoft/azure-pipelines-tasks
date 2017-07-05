@@ -40,7 +40,7 @@
   "loc.input.label.verbosityPush": "Verbosity",
   "loc.input.help.verbosityPush": "Specifies the amount of detail displayed in the output.",
   "loc.input.label.searchPatternPack": "Path to csproj or nuspec file(s) to pack",
-  "loc.input.help.searchPatternPack": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
+  "loc.input.help.searchPatternPack": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
   "loc.input.label.configurationToPack": "Configuration to Package",
   "loc.input.help.configurationToPack": "When using a csproj file this specifies the configuration to package",
   "loc.input.label.outputDir": "Package Folder",
@@ -87,7 +87,9 @@
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
   "loc.messages.Info_AvailableVersions": "The available versions are: %s",
+  "loc.messages.Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+  "loc.messages.Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
   "loc.messages.Info_UsingVersion": "Using version: %s",
   "loc.messages.Info_UsingToolPath": "Using tool path: %s",
   "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
@@ -111,9 +113,7 @@
   "loc.messages.Warning_FallBackToNuGet": "VstsNuGetPush.exe was not found, falling back to NuGet.exe.",
   "loc.messages.Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
   "loc.messages.Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
-  "loc.messages.Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
   "loc.messages.Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
-  "loc.messages.Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
   "loc.messages.Error_CommandNotRecognized": "The command %s was not recognized."
 }

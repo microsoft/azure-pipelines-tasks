@@ -26,7 +26,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/test/path/to/my.ipa": true
     },
-    "glob" : {
+    "findMatch" : {
         "/test/path/to/my.ipa": [
             "/test/path/to/my.ipa"
         ]

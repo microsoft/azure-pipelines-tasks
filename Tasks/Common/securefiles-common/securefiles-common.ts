@@ -8,7 +8,7 @@ export class SecureFileHelpers {
     serverConnection: vsts.WebApi;
 
     constructor() {
-        let serverUrl: string = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
+        let serverUrl: string = tl.getVariable('System.TeamFoundationCollectionUri');
         let serverCreds: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
         let authHandler = vsts.getPersonalAccessTokenHandler(serverCreds);
 

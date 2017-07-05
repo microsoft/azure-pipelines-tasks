@@ -6,6 +6,9 @@ import * as tl from "vsts-task-lib/task";
 
 import * as locationApi from "./LocationApi";
 
+export const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
+export const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
+
 function getUriForAccessMapping(mapping: locationApi.AccessMapping): string {
     let accessPoint = mapping.accessPoint;
     if (!accessPoint.endsWith("/")) {

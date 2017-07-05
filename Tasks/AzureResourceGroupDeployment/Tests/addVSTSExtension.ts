@@ -32,9 +32,9 @@ process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.wi
 process.env["ENDPOINT_URL_PatEndpoint"] = "https://testking123.visualstudio.com";
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tr.registerMock('./azure-rest/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
-tr.registerMock('./azure-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
-tr.registerMock('./azure-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
+tr.registerMock('azure-arm-rest/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
+tr.registerMock('azure-arm-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
+tr.registerMock('azure-arm-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 
 
 tr.run();

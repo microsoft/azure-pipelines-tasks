@@ -100,7 +100,9 @@ function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifact
         prepareRunner.arg(['--app-path', app]);
         addStringArg('--project-dir', 'calabashProjectDir', true, prepareRunner);
         addStringArg('--sign-info', 'signInfo', false, prepareRunner);
-        addStringArg('--config-path', 'calabashConfigFile', false, prepareRunner);
+        if (tl.filePathSupplied('calabashConfigFile')) {
+            addStringArg('--config-path', 'calabashConfigFile', false, prepareRunner);
+        }
         addStringArg('--profile', 'calabashProfile', false, prepareRunner);
         addBooleanArg('--skip-config-check', 'calabashSkipConfigCheck', prepareRunner);
     } else if (framework === 'uitest') {
