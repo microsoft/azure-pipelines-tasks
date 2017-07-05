@@ -11,6 +11,7 @@ const uuid = require('node-uuid');
 export function getDistributedTestConfigurations() {
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
+    dtaConfiguration.useVsTestConsole = 'true';
 
     if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
         throw (tl.loc('vs2013NotSupportedInDta'));
@@ -33,13 +34,10 @@ export function getDistributedTestConfigurations() {
     }
     tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
     if (useVsTestConsole) {
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
-    }
-    else {
-        dtaConfiguration.useVsTestConsole = 'true';
-    }
+    }    
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
