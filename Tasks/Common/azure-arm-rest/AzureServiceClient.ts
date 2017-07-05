@@ -126,7 +126,7 @@ export class ServiceClient {
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
 
         var httpResponse = await this.beginRequestInternal(request);
-        if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+        if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
             // The access token might have expire. Re-issue the request after refreshing the token.
             token = await this.credentials.getToken(true);
             request.headers["Authorization"] = "Bearer " + token;
