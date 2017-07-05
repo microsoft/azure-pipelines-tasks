@@ -106,17 +106,6 @@
                 "MultiSelectFlatList": "true"
             }
         },
-         {
-            "groupName": "customRegistries",
-            "name": "customEndpoint",
-            "label": "Credentials for registries outside this account/collection",
-            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
-            "type": "connectedService:externalnpmregistry",
-            "visibleRule": "customRegistry = useNpmrc",
-            "properties": {
-                "MultiSelectFlatList": "true"
-            }
-        },
         {
             "groupName": "publishRegistries",
             "name": "publishRegistry",
@@ -192,6 +181,7 @@
         "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
         "TestDebugLog": "Trying debug log location: %s",
         "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
-        "RestoringProjectNpmrc": "Restoring project .npmrc"
+        "RestoringProjectNpmrc": "Restoring project .npmrc",
+        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory"
     }
 }

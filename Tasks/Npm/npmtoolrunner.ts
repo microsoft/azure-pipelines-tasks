@@ -27,7 +27,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         let cacheOptions = { silent: true } as tr.IExecSyncOptions;
-        if (!fs.lstatSync(workingDirectory).isDirectory()) {
+        if (!tl.stats(workingDirectory).isDirectory()) {
             throw new Error(tl.loc('WorkingDirectoryNotDirectory'));
         }
         this.cacheLocation = tl.execSync('npm', 'config get cache', this._prepareNpmEnvironment(cacheOptions)).stdout.trim();

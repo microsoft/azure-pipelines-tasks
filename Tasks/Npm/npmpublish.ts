@@ -30,8 +30,8 @@ export async function run(command?: string): Promise<void> {
     // For publish, always override their project .npmrc
     let npm = new NpmToolRunner(workingDir, npmrc, true);
     let Command = 'publish';
-    let verboseCheck = tl.getInput(NpmTaskInput.Verbose, false);
-    if (verboseCheck == "true") {
+    let verboseCheck = tl.getBoolInput(NpmTaskInput.Verbose, false);
+    if (verboseCheck) {
         Command += " --verbose";
    }
     npm.line(Command);

@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -108,17 +108,6 @@
       }
     },
     {
-      "groupName": "customRegistries",
-      "name": "customEndpoint",
-      "label": "ms-resource:loc.input.label.customEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
-      "type": "connectedService:externalnpmregistry",
-      "visibleRule": "customRegistry = useNpmrc",
-      "properties": {
-        "MultiSelectFlatList": "true"
-      }
-    },
-    {
       "groupName": "publishRegistries",
       "name": "publishRegistry",
       "label": "ms-resource:loc.input.label.publishRegistry",
@@ -193,6 +182,7 @@
     "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
     "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
     "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
-    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc"
+    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
+    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory"
   }
 }
