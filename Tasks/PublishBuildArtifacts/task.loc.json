@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 55
+    "Minor": 120,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -55,22 +55,22 @@
       "visibleRule": "ArtifactType = FilePath"
     },
     {
-      "name": "EnableCopyConcurrency",
+      "name": "Parallel",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.EnableCopyConcurrency",
+      "label": "ms-resource:loc.input.label.Parallel",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.EnableCopyConcurrency",
+      "helpMarkDown": "ms-resource:loc.input.help.Parallel",
       "visibleRule": "ArtifactType = FilePath"
     },
     {
-      "name": "CopyConcurrencyValue",
+      "name": "ParallelCount",
       "type": "int",
-      "label": "ms-resource:loc.input.label.CopyConcurrencyValue",
+      "label": "ms-resource:loc.input.label.ParallelCount",
       "defaultValue": 8,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.CopyConcurrencyValue",
-      "visibleRule": "ArtifactType = FilePath && EnableCopyConcurrency = true"
+      "helpMarkDown": "ms-resource:loc.input.help.ParallelCount",
+      "visibleRule": "ArtifactType = FilePath && Parallel = true"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -84,8 +84,6 @@
     "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
-    "UnexpectedConcurrencyValue": "ms-resource:loc.messages.UnexpectedConcurrencyValue",
-    "NegativeCicurrenyValue": "ms-resource:loc.messages.NegativeCicurrenyValue",
-    "ExceededCocurrencyValue": "ms-resource:loc.messages.ExceededCocurrencyValue"
+    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount"
   }
 }

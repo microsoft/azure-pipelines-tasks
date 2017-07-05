@@ -4,7 +4,7 @@
         "C:\\bin\\release": true
     },
   "exec": {
-    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\subdir\\drop' -ConcurrencyValue 1": {
+    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\subdir\\drop' -ParallelCount 1": {
       "stdout": "test stdout from robocopy middle-man",
       "stderr": "",
       "code": 1
