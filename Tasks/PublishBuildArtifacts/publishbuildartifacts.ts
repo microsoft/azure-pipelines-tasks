@@ -87,18 +87,15 @@ async function run() {
                 // middle
                 tl.command("artifact.associate", data, targetPath);
 
-
-                let enableConcurrency: boolean = tl.getBoolInput('EnableCopyConcurrency', false);
-                let mtConcurrencyValue = 1;
-                if (enableConcurrency) {
-
-                    mtConcurrencyValue = getConcurrencyValue();
-
+                let parallel: boolean = tl.getBoolInput('Parallel', false);
+                let parallelCount = 1;
+                if (parallel) {
+                    parallelCount = getParallelCount();
                 }
 
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
-                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ConcurrencyValue ${mtConcurrencyValue} `
+                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
 
                 let powershell = new tr.ToolRunner('powershell.exe');
                 powershell.arg('-NoLogo');
@@ -131,39 +128,28 @@ async function run() {
 
 }
 
-function getConcurrencyValue(): number {
-
-    try {
-            let mtConcurrencyValue = 1;
-
-            let concurrencyValue: string = tl.getInput('CopyConcurrencyValue', false);
-
-            if (Number.isNaN(Number(concurrencyValue))) {
-                tl.warning(tl.loc('UnexpectedConcurrencyValue', concurrencyValue));
-
-            }
-            else {
-                let concurencyMTValue = parseInt(concurrencyValue);
-
-                if (concurencyMTValue < 1) {
-                    tl.warning(tl.loc('NegativeCicurrenyValue', concurrencyValue));
-
-                }
-                else if (concurencyMTValue > 128) {
-                    tl.warning(tl.loc('ExceededCocurrencyValue', concurrencyValue));
-                    mtConcurrencyValue = 128;
-                }
-                else {
-                    mtConcurrencyValue = concurencyMTValue;
-                }
-            }
-            return mtConcurrencyValue;
+function getParallelCount(): number {
+    let result = 8;
+    let inputValue: string = tl.getInput('ParallelCount', false);
+    if (Number.isNaN(Number(inputValue))) {
+        tl.warning(tl.loc('UnexpectedParallelCount', inputValue));
+    }
+    else {
+        let parsedInput = parseInt(inputValue);
+        if (parsedInput < 1) {
+            tl.warning(tl.loc('UnexpectedParallelCount', parsedInput));
+            result = 1;
         }
-    catch (exp)
-        {
-        tl.warning(tl.loc('UnexpectedConcurrencyValue', exp.message));
+        else if (parsedInput > 128) {
+            tl.warning(tl.loc('UnexpectedParallelCount', parsedInput));
+            result = 128;
         }
+        else {
+            result = parsedInput;
+        }
+    }
 
+    return result;
 }
 
 run();
