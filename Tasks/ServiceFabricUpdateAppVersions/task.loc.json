@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 9
+    "Patch": 11
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -37,7 +37,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSuffix",
       "defaultValue": ".$(Build.BuildNumber)",
-      "required": true
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
     },
     {
       "name": "versionBehavior",
@@ -120,6 +121,7 @@
     "PreviousBuildNumberLabel": "ms-resource:loc.messages.PreviousBuildNumberLabel",
     "PreviousBuildLocationLabel": "ms-resource:loc.messages.PreviousBuildLocationLabel",
     "NoPreviousSuccessfulBuild": "ms-resource:loc.messages.NoPreviousSuccessfulBuild",
+    "NoManifestInPreviousBuild": "ms-resource:loc.messages.NoManifestInPreviousBuild",
     "UpdatedApplicationTypeVersion": "ms-resource:loc.messages.UpdatedApplicationTypeVersion",
     "UpdatedServiceVerison": "ms-resource:loc.messages.UpdatedServiceVerison",
     "UpdatedPackageVerison": "ms-resource:loc.messages.UpdatedPackageVerison",

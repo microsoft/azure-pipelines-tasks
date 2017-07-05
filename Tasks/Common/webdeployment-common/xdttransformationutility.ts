@@ -21,13 +21,17 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 *
 */
 export function applyXdtTransformation(sourceFile, transformFile) {
-    var cttBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'cttCommand.bat';
+
     var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
-    var cttArgs = ' s:"' + sourceFile + '" t:"' + transformFile + '" d:"' + sourceFile + '" pw';
-    var cttCommand = '"' + cttPath + '" ' + cttArgs + '\n';
-    tl.writeFile(cttBatchFile, cttCommand);
-    tl.debug("Running command" + cttCommand);
-    var cttExecutionResult = tl.execSync("cmd", ['/C', cttBatchFile]);
+    var cttArgsArray= [
+        "s:" + sourceFile,
+        "t:" + transformFile,
+        "d:" + sourceFile,
+        "pw"
+    ];
+    
+    tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
+    var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
         throw new Error(tl.loc("XdtTransformationErrorWhileTransforming", sourceFile, transformFile));
     }
@@ -40,8 +44,9 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 * @param    transformConfigs  The array of transform config names, ex : ["Release.config", "EnvName.config"]
 * 
 */
-export function basicXdtTransformation(rootFolder, transformConfigs) {
+export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
     var sourceXmlFiles = expandWildcardPattern(rootFolder, '**/*.config');
+    var isTransformationApplied = false;
     Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
         var sourceBasename = path.win32.basename(sourceXmlFile, ".config");    
         transformConfigs.forEach( function(transformConfig) {
@@ -49,7 +54,15 @@ export function basicXdtTransformation(rootFolder, transformConfigs) {
             if(sourceXmlFiles[transformXmlFile]) {
                 tl.debug('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
                 applyXdtTransformation(sourceXmlFile, transformXmlFile);
+                isTransformationApplied = true;
             }
         });
-    });    
+    });
+    if(!isTransformationApplied) {
+        tl.warning(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason1'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason2'));
+    }
+
+    return isTransformationApplied;
 }

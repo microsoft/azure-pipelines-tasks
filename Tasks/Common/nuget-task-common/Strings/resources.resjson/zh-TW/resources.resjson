@@ -1,5 +1,14 @@
 {
   "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "偵測到 NuGet 擴充功能載入器路徑 (NUGET_EXTENSIONS_PATH 環境變數)。使用內建 NuGet 用戶端時會忽略擴充功能",
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "偵測到 NuGet 擴充功能載入器路徑 (NUGET_EXTENSIONS_PATH 環境變數): %s",
-  "loc.messages.NGCommon_UnableToFindTool": "找不到工具 %s"
+  "loc.messages.NGCommon_UnableToFindTool": "找不到工具 %s",
+  "loc.messages.Info_AvailableVersions": "可用的版本: %s",
+  "loc.messages.Info_ResolvedToolFromCache": "已從工具快取中解析: %s",
+  "loc.messages.Info_UsingVersion": "使用版本: %s",
+  "loc.messages.Info_UsingToolPath": "使用工具路徑: %s",
+  "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "您正在使用查詢比對版本字串。當 NuGet 更新為新的版本時，除了行為可能會有所改變之外，也可能會有重大變更。",
+  "loc.messages.Error_NoVersionWasFoundWhichMatches": "找不到任何版本與輸入 %s 相符",
+  "loc.messages.Error_NoUrlWasFoundWhichMatches": "找不到 %s 的下載 URL",
+  "loc.messages.Error_NuGetToolInstallerFailer": "工具安裝失敗: %s",
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
 }

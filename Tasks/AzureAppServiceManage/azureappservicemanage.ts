@@ -2,7 +2,8 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
-var kuduLogUtil = require('azurerest-common/kududeploymentstatusutility.js');
+var kuduLogUtil = require('azurerest-common/utility.js');
+var extensionManage = require('./extensionmanage.js');
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
@@ -27,6 +28,26 @@ async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, 
     }
 }
 
+async function waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName) {
+
+    while(true) {
+        var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+        if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state")) {
+            tl.debug('App Service State : ' + appServiceDetails.properties.state);
+            if(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running") {
+                tl.debug('App Service is in Running State');
+                break;
+            }
+            else {
+                tl.debug('App Service State : ' + appServiceDetails.properties.state);
+                continue;
+            }
+        }
+        tl.debug('Unable to find state of the App Service.');
+        break;
+    }
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -40,16 +61,17 @@ async function run() {
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
-        var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+        var extensionList = tl.getInput('ExtensionsList', false);
+        var extensionOutputVariables = tl.getInput('OutputVariable');
         var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var taskResult = true;
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
 
         var endPoint = new Array();
-        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
-        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', true);
-        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', true);
+        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
+        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
+        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
@@ -60,14 +82,27 @@ async function run() {
         switch(action) {
             case "Start Azure App Service": {
                 console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;
             }
             case "Stop Azure App Service": {
                 console.log(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
+            case "Install Extensions": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                tl.debug('Retrieved publishing Profile');
+                var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
+                var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, extensionList.split(','), extensionOutputVariablesArray);
+                if(!anyExtensionInstalled) {
+                    tl.debug('No new extension installed. Skipping Restart App Service.');
+                    break;
+                }
+            }
             case "Restart Azure App Service": {
                 console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;
             }
             case "Swap Slots": {

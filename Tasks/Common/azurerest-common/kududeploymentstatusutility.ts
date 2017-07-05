@@ -1,22 +1,5 @@
 import tl = require('vsts-task-lib/task');
-
-export function generateDeploymentId(): string{
-    var buildUrl = tl.getVariable('build.buildUri');
-    var releaseUrl = tl.getVariable('release.releaseUri');
-
-    var buildId = tl.getVariable('build.buildId');
-    var releaseId = tl.getVariable('release.releaseId');
-
-    if(releaseUrl !== undefined) {
-        return releaseId + Date.now();
-    }
-    else if(buildUrl !== undefined) {
-        return buildId + Date.now();
-    }
-    else {
-        throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
-    }
-}
+var utility = require('./utility.js');
 
 export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSuccess: boolean, customMessage, deploymentId: string): any {
     
@@ -34,14 +17,14 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
 	var releaseName = tl.getVariable('release.releaseName');
 
     var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
-    var teamProject = tl.getVariable('system.teamProject');
+    var teamProject = tl.getVariable('system.teamProjectId');
 
  	var commitId = tl.getVariable('build.sourceVersion');
  	var repoName = tl.getVariable('build.repository.name');
  	var repoProvider = tl.getVariable('build.repository.provider');
 
     var buildOrReleaseUrl = "" ;
-    deploymentId = deploymentId ? deploymentId : generateDeploymentId();
+    deploymentId = deploymentId ? deploymentId : utility.generateDeploymentId();
 
     if(releaseUrl !== undefined) {
         buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";

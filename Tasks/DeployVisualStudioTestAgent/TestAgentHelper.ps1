@@ -196,7 +196,7 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
         Write-Verbose ($instances | Format-List * | Out-String)
 
         return $instances |
-            Where-Object { $_.Version.Major -eq 15 -and $_.Version.Minor -eq 0 } |
+            Where-Object { $_.Version.Major -eq 15 } |
             Sort-Object -Descending -Property Version |
             Select-Object -First 1
     } catch {
@@ -204,5 +204,24 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
     }
 }
 
-
-
+function Remove-Service([String] $ServiceName)
+{
+    if(Get-Service $ServiceName -ErrorAction SilentlyContinue)
+    {
+        $service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'")
+        Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose
+        if($service)
+        {
+            $service.StopService()
+            $deleteServiceCode = $service.Delete()
+            if($deleteServiceCode -ne 0)
+            {
+                Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
+            }
+        }
+    }
+    else
+    {
+        Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
+    }
+}

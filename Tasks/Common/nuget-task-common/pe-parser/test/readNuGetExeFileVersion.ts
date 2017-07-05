@@ -52,6 +52,11 @@ class NuGetVersion {
 
 const nuGetVersions: NuGetVersion[] = [
     new NuGetVersion(
+        "https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe",
+        new VersionInfoVersion(4, 0, 0, 2283),
+        "4.0.0.2283"
+    ),
+    new NuGetVersion(
         "https://dist.nuget.org/win-x86-commandline/v3.5.0-rc1/NuGet.exe",
         new VersionInfoVersion(3, 5, 0, 1737),
         "3.5.0-rtm-1737"

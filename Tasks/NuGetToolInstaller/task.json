@@ -1,0 +1,57 @@
+{
+    "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7C5D",
+    "name": "NuGetToolInstaller",
+    "friendlyName": "NuGet Tool Installer",
+    "description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet Restore and NuGet Command steps.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "preview": true,
+    "satisfies": ["NuGet"],
+    "demands": [],
+    "instanceNameFormat": "Use NuGet $(versionSpec)",
+    "inputs": [{
+        "name": "versionSpec",
+        "type": "string",
+        "label": "Version of NuGet.exe to install",
+        "defaultValue": "4.0.0",
+        "required": true,
+        "helpMarkDown": "A version or version range that specifies the NuGet version to make available on the path. Use x as a wildcard. See the [list of available NuGet versions](http://dist.nuget.org/tools.json).\n\nIf you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
+        },
+        {
+            "name": "checkLatest",
+            "type": "boolean",
+            "label": "Always download the latest matching version",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Always check for and download the latest available version of NuGet.exe which satisfies the version spec. This option will also always incur download time, even if the selected version of NuGet is already cached.\n\nEnabling this option could cause unexpected build breaks when a new version of NuGet is released."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "nugettoolinstaller.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "Info_AvailableVersions": "The available versions are: %s",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_UsingVersion": "Using version: %s",
+        "Info_UsingToolPath": "Using tool path: %s",
+        "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+        "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+        "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+    }
+}

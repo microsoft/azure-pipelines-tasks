@@ -568,6 +568,10 @@ var createResjson = function (task, taskPath) {
         resources['loc.instanceNameFormat'] = task.instanceNameFormat;
     }
 
+    if (task.hasOwnProperty('releaseNotes')) {
+        resources['loc.releaseNotes'] = task.releaseNotes;
+    }
+
     if (task.hasOwnProperty('groups')) {
         task.groups.forEach(function (group) {
             if (group.hasOwnProperty('name')) {
@@ -607,6 +611,10 @@ var createTaskLocJson = function (taskPath) {
     taskLoc.helpMarkDown = 'ms-resource:loc.helpMarkDown';
     taskLoc.description = 'ms-resource:loc.description';
     taskLoc.instanceNameFormat = 'ms-resource:loc.instanceNameFormat';
+    if (taskLoc.hasOwnProperty('releaseNotes')) {
+        taskLoc.releaseNotes = 'ms-resource:loc.releaseNotes';
+    }
+
     if (taskLoc.hasOwnProperty('groups')) {
         taskLoc.groups.forEach(function (group) {
             if (group.hasOwnProperty('name')) {
@@ -912,7 +920,7 @@ var createHotfixLayout = function (packagePath, taskName) {
     var scriptContent = '# Hotfix created from branch: ' + branch + os.EOL;
     scriptContent += '# Commit: ' + commitInfo + os.EOL;
     scriptContent += '$ErrorActionPreference=\'Stop\'' + os.EOL;
-    scriptContent += 'Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot\\task.zip' + os.EOL;
+    scriptContent += 'Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot\\tasks.zip' + os.EOL;
     fs.writeFileSync(scriptPath, scriptContent);
 
     // link the non-aggregated tasks zip

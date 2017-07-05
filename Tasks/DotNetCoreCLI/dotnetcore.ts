@@ -1,28 +1,58 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 import fs = require("fs");
-import nutil = require("nuget-task-common/Utility");
 var archiver = require('archiver');
+
+import * as restoreCommand from './restorecommand';
+import * as packCommand from './packcommand';
+import * as pushCommand from './pushcommand';
+
 
 export class dotNetExe {
     private command: string;
-    private projects: string;
+    private projects: string[];
     private arguments: string;
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
     private outputArgument: string = "";
-    private remainingArguments: string[] = [];
+    private outputArgumentIndex: number = 0;
 
     constructor() {
         this.command = tl.getInput("command");
-        this.projects = tl.getInput("projects", false);
-        this.arguments = tl.getInput("arguments", false);
+        this.projects = tl.getDelimitedInput("projects", "\n", false);
+        this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
     }
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        if (this.command === "custom") {
+            this.command = tl.getInput("custom", true);
+        }
+
+        switch(this.command) {
+            case "build":
+            case "publish":
+            case "run":
+            case "test":
+                await this.executeBasicCommand();
+                break;
+            case "restore":
+                await restoreCommand.run();
+                break;
+            case "pack":
+                await packCommand.run();
+                break;
+            case "push":
+                await pushCommand.run();
+                break;
+            default:
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        }
+    }
+
+    private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
@@ -32,36 +62,35 @@ export class dotNetExe {
         if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
             projectFiles = this.getProjectFiles();
         }
-
+        var failedProjects: string[] = [];
         for (var fileIndex in projectFiles) {
             var projectFile = projectFiles[fileIndex];
-            try {
-                var dotnet = tl.tool(dotnetPath);
-                dotnet.arg(this.command);
-                dotnet.arg(projectFile);
-                if (this.remainingArguments.length > 0) {
-                    dotnet.arg(this.remainingArguments);
-                }
-
-                if (this.isPublishCommand() && this.outputArgument) {
-                    var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-                    dotnet.arg("--output");
-                    dotnet.arg(output);
-                }
-
-                var result = dotnet.execSync();
-                if (result.code != 0) {
-                    var error = result.stderr.replace("\r", "%0D");
-                    tl.error(error.replace("\n", "%0A"));
-                    tl.setResult(result.code, tl.loc("dotnetCommandFailed", result.code));
-                }
-
-                await this.zipAfterPublishIfRequired(projectFile);
+            var dotnet = tl.tool(dotnetPath);
+            dotnet.arg(this.command);
+            dotnet.arg(projectFile);
+            var dotnetArguments = this.arguments;
+            if (this.isPublishCommand() && this.outputArgument) {
+                var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                dotnetArguments = this.replaceOutputArgument(output);
             }
-            catch (err) {
-                tl.setResult(1, err.message);
+            dotnet.line(dotnetArguments);
+            try {
+                var result = await dotnet.exec();
+                await this.zipAfterPublishIfRequired(projectFile);
+            } catch (err) {
+                tl.error(err);
+                failedProjects.push(projectFile);
             }
         }
+        if (failedProjects.length > 0) {
+            throw tl.loc("dotnetCommandFailed", failedProjects);
+        }
+    }
+
+    private replaceOutputArgument(modifiedOutput: string) {
+        var str = this.arguments;
+        var index = this.outputArgumentIndex;
+        return str.substr(0, index) + str.substr(index).replace(this.outputArgument, modifiedOutput);
     }
 
     private async zipAfterPublishIfRequired(projectFile: string) {
@@ -71,8 +100,8 @@ export class dotNetExe {
                 outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
             }
             else {
-                var pattern = path.dirname(projectFile) + "/**/publish";
-                var files = nutil.resolveFilterSpec(pattern, "", true, true);
+                var pattern = "**/publish";
+                var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
                     if (fs.lstatSync(file).isDirectory) {
@@ -86,7 +115,7 @@ export class dotNetExe {
             if (outputSource) {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
-                tl.rmRF(outputSource, true);
+                tl.rmRF(outputSource);
             }
             else {
                 tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
@@ -105,7 +134,7 @@ export class dotNetExe {
                 resolve(target);
             });
 
-            output.on('error', function(error) {
+            output.on('error', function (error) {
                 reject(error);
             });
 
@@ -127,7 +156,7 @@ export class dotNetExe {
         var escaped = false;
         var arg = '';
         var i = 0;
-        var append = function(c) {
+        var append = function (c) {
             // we only escape double quotes.
             if (escaped && c !== '"') {
                 arg += '\\';
@@ -135,7 +164,7 @@ export class dotNetExe {
             arg += c;
             escaped = false;
         };
-        var nextArg = function() {
+        var nextArg = function () {
             arg = '';
             for (; i < argString.length; i++) {
                 var c = argString.charAt(i);
@@ -173,13 +202,11 @@ export class dotNetExe {
             var tokenUpper = token.toUpperCase();
             if (this.isPublishCommand() && (tokenUpper === "--OUTPUT" || tokenUpper === "-O")) {
                 isOutputOption = true;
+                this.outputArgumentIndex = i;
             }
             else if (isOutputOption) {
                 this.outputArgument = token;
                 isOutputOption = false;
-            }
-            else {
-                this.remainingArguments.push(token);
             }
 
             token = nextArg();
@@ -190,17 +217,17 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = "**/project.json;**/*.csproj;**/*.vbproj";
+            projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = nutil.resolveFilterSpec(projectPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), true);
+        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
         if (!projectFiles || !projectFiles.length) {
             tl.warning(tl.loc("noProjectFilesFound"));
             return [];
         }
 
         if (searchWebProjects) {
-            projectFiles = projectFiles.filter(function(file, index, files): boolean {
+            projectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);
                 return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
@@ -224,4 +251,4 @@ export class dotNetExe {
 }
 
 var exe = new dotNetExe();
-exe.execute().catch((reason) => tl.setResult(1, reason));
+exe.execute().catch((reason) => tl.setResult(tl.TaskResult.Failed, reason));

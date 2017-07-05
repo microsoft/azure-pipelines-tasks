@@ -12,13 +12,13 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 112,
-    "Patch": 1
+    "Minor": 119,
+    "Patch": 0
   },
   "groups": [
     {
@@ -70,7 +70,7 @@
       "groupName": "archive",
       "visibleRule": "archiveType = tar",
       "options": {
-        "default": "gz",
+        "gz": "gz",
         "bz2": "bz2",
         "xz": "xz",
         "none": "None"

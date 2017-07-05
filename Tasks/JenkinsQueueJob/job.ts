@@ -80,7 +80,7 @@ export class Job {
             this.identifier = url.parse(this.taskUrl).path.substr(1);
             var jobStringIndex: number = this.identifier.indexOf('job/');
             if (jobStringIndex > 0) {
-                // can fall into here if the jenkins endpoint is not at the server root; e.g. serverUrl/jenkins instead of serverUrl 
+                // can fall into here if the jenkins endpoint is not at the server root; e.g. serverUrl/jenkins instead of serverUrl
                 this.identifier = this.identifier.substr(jobStringIndex);
             }
         }
@@ -91,7 +91,7 @@ export class Job {
     }
 
     /**
-     * All changes to the job state should be routed through here.  
+     * All changes to the job state should be routed through here.
      * This defines all and validates all state transitions.
      */
     changeState(newState: JobState) {
@@ -167,13 +167,19 @@ export class Job {
     }
 
     setStreaming(executableNumber: number): void {
+        // If we aren't waiting for the job to finish then we should end it now
+        if (!this.queue.taskOptions.captureConsole) { // transition to Finishing
+            this.changeState(JobState.Streaming);
+            this.changeState(JobState.Finishing);
+            return;
+        }
         if (this.state == JobState.New || this.state == JobState.Locating) {
             this.executableNumber = executableNumber;
             this.executableUrl = Util.addUrlSegment(this.taskUrl, this.executableNumber.toString());
             this.changeState(JobState.Streaming);
             // log the jobs starting block
             this.consoleLog(this.getBlockMessage('Jenkins job started: ' + this.name + '\n' + this.executableUrl));
-            // log any pending jobs 
+            // log any pending jobs
             if (this.queue.findActiveConsoleJob() == null) {
                 console.log('Jenkins job pending: ' + this.executableUrl);
             }
@@ -249,19 +255,19 @@ export class Job {
             var resultCode: string = this.parsedExecutionResult.result.toUpperCase();
             // codes map to fields in http://hudson-ci.org/javadoc/hudson/model/Result.html
             if (resultCode == 'SUCCESS') {
-                return 'Success';
+                return tl.loc('succeeded');
             } else if (resultCode == 'UNSTABLE') {
-                return 'Unstable';
+                return tl.loc('unstable');
             } else if (resultCode == 'FAILURE') {
-                return 'Failure';
+                return tl.loc('failed');
             } else if (resultCode == 'NOT_BUILT') {
-                return 'Not built';
+                return tl.loc('notbuilt');
             } else if (resultCode == 'ABORTED') {
-                return 'Aborted';
+                return tl.loc('aborted');
             } else {
                 return resultCode;
             }
-        } else return 'Unknown';
+        } else return tl.loc('unknown');
     }
 
     initialize() {
@@ -275,7 +281,7 @@ export class Job {
                     });
                 }
                 thisJob.search.resolveIfKnown(thisJob); // could change state
-                var newState: JobState = (thisJob.state == JobState.New) ? JobState.Locating : thisJob.state; // another call back could also change state 
+                var newState: JobState = (thisJob.state == JobState.New) ? JobState.Locating : thisJob.state; // another call back could also change state
                 var nextWorkDelay: number = (newState == JobState.Locating) ? thisJob.queue.taskOptions.pollIntervalMillis : thisJob.workDelay;
                 thisJob.stopWork(nextWorkDelay, newState);
             } else {
@@ -289,7 +295,7 @@ export class Job {
 
     /**
      * Checks the success of the job
-     * 
+     *
      * JobState = Finishing, transition to Downloading, Done, or Queued possible
      */
     finish(): void {
@@ -403,7 +409,7 @@ export class Job {
 
     /**
      * Streams the Jenkins console.
-     * 
+     *
      * JobState = Streaming, transition to Finishing possible.
      */
     streamConsole(): void {

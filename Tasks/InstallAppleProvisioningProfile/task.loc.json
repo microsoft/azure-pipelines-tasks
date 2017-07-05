@@ -1,0 +1,59 @@
+{
+  "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+  "name": "InstallAppleProvisioningProfile",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 119,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "xcode"
+  ],
+  "minimumAgentVersion": "2.116.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "provProfileSecureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.provProfileSecureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSecureFile"
+    },
+    {
+      "name": "removeProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.removeProfile",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeProfile"
+    }
+  ],
+  "prejobexecution": {
+    "Node": {
+      "target": "preinstallprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "postinstallprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {}
+}

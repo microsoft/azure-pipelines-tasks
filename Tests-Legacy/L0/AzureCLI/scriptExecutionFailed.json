@@ -1,7 +1,7 @@
 {
   "which": {
     "bash": "/usr/local/bin/bash",
-    "azure": "/usr/local/bin/azure",
+    "az": "/usr/local/bin/az",
     "scriptfail.bat" : "scriptfail.bat",
     "scriptfail.sh" : "scriptfail.sh"
   },
@@ -21,38 +21,30 @@
       "stdout":"cmd execution failed",
       "stderr": "cmd stderr"
     },
-    "/usr/local/bin/azure config mode asm": {
+    "/usr/local/bin/az account import subscriptions.publishsettings": {
       "code": 0,
       "stdout": "azure output here"
     },
-    "/usr/local/bin/azure config mode arm": {
+    "/usr/local/bin/az login --service-principal -u id -p key --tenant tenant": {
       "code": 0,
       "stdout": "azure output here"
     },
-    "/usr/local/bin/azure account import subscriptions.publishsettings": {
+    "/usr/local/bin/az login --service-principal -u idf -p keyf --tenant tenantf": {
       "code": 0,
       "stdout": "azure output here"
     },
-    "/usr/local/bin/azure login -u id -p key --tenant tenant --service-principal": {
+    "/usr/local/bin/az account set --subscription sName": {
       "code": 0,
       "stdout": "azure output here"
     },
-    "/usr/local/bin/azure login -u idf -p keyf --tenant tenantf --service-principal": {
-      "code": 0,
-      "stdout": "azure output here"
-    },
-    "/usr/local/bin/azure account set sName": {
-      "code": 0,
-      "stdout": "azure output here"
-    },
-    "/usr/local/bin/azure account clear -s sName": {
+    "/usr/local/bin/az account clear": {
       "code": 0,
       "stdout": "azure output here"
     }
   },
   "checkPath" : {
     "/usr/local/bin/bash": true,
-    "/usr/local/bin/azure": true,
+    "/usr/local/bin/az": true,
     "scriptfail.sh" : true,
     "scriptfail.bat" : true
   },
@@ -62,6 +54,9 @@
     "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONID": "sId",
     "ENDPOINT_URL_AzureClassic":"https://www.sampleServiceUrl.net/",
     "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID": "id",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY": "key",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID": "tenant",
     "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName"
   }
 }

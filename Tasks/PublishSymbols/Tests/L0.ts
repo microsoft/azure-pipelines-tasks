@@ -6,15 +6,13 @@ import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('PublishSymbols Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -23,10 +21,12 @@ describe('PublishSymbols Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('(Add-DbghelpLibrary) loads if not loaded', (done) => {
             psr.run(path.join(__dirname, 'Add-DbghelpLibrary.LoadsIfNotLoaded.ps1'), done);
         })
@@ -50,6 +50,9 @@ describe('PublishSymbols Suite', function () {
         })
         it('(Get-ArtifactName) returns correct value', (done) => {
             psr.run(path.join(__dirname, 'Get-ArtifactName.ReturnsCorrectValue.ps1'), done);
+        })
+        it('(Get-SymbolBinaryPathCallers) succeed', (done) => {
+            psr.run(path.join(__dirname, 'Get-SymbolBinaryPathCallers.Succeed.ps1'), done);
         })
         it('(Get-LastTransactionId) gets id', (done) => {
             psr.run(path.join(__dirname, 'Get-LastTransactionId.GetsId.ps1'), done);

@@ -18,6 +18,9 @@ tr.setInput('WebAppUri', 'someuri');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
@@ -116,7 +119,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common/kuduutility.js', {
+tr.registerMock('./kuduutility.js', {
     getVirtualAndPhysicalPaths : function() {
         return ["/virtualApp", "/test/path"]
     },
@@ -190,6 +193,14 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateAzureRMWebAppConfigDetails: function() {
         console.log("Successfully updated scmType to VSTSRM");
+    },
+    getAzureRMWebAppMetadata: function() {
+        return {
+            properties: {}
+        }
+    },
+    updateAzureRMWebAppMetadata: function() {
+        console.log("Successfully updated Web App metadata");
     }
 });
 

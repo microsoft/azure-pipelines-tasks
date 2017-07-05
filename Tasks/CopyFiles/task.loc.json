@@ -10,15 +10,15 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 113,
+    "Minor": 117,
     "Patch": 0
   },
-  "releaseNotes": "Match pattern consistency.",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
   "minimumAgentVersion": "1.91.0",
   "groups": [

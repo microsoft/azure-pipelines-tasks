@@ -1,0 +1,96 @@
+{
+  "id": "9C3E8943-130D-4C78-AC63-8AF81DF62DFB",
+  "name": "InvokeRESTAPI",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "Server"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 2
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "method",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.method",
+      "required": "true",
+      "defaultValue": "POST",
+      "options": {
+        "OPTIONS": "OPTIONS",
+        "GET": "GET",
+        "HEAD": "HEAD",
+        "POST": "POST",
+        "PUT": "PUT",
+        "DELETE": "DELETE",
+        "TRACE": "TRACE",
+        "PATCH": "PATCH"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.method"
+    },
+    {
+      "name": "headers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.headers",
+      "required": "false",
+      "defaultValue": "{\n\"Content-Type\":\"application/json\"\n}",
+      "properties": {
+        "resizable": "true",
+        "rows": "3",
+        "maxLength": "500"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.headers"
+    },
+    {
+      "name": "body",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.body",
+      "required": "false",
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "3",
+        "maxLength": "2000"
+      },
+      "visibleRule": "method != GET && method != HEAD"
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForCompletion",
+      "Required": "false",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+    }
+  ],
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId": "$(connectedServiceName)",
+        "EndpointUrl": "$(endpoint.url)",
+        "Method": "$(method)",
+        "Body": "$(body)",
+        "Headers": "$(headers)",
+        "WaitForCompletion": "$(waitForCompletion)"
+      }
+    }
+  }
+}

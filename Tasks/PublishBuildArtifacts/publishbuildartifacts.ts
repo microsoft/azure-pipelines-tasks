@@ -52,6 +52,14 @@ async function run() {
         let artifactName: string = tl.getInput('ArtifactName', true);
         let artifactType: string = tl.getInput('ArtifactType', true);
 
+       
+        let hostType = tl.getVariable('system.hostType');
+        if ((hostType && hostType.toUpperCase() != 'BUILD') && (artifactType.toUpperCase() !== "FILEPATH")) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
+            return;
+        }
+
+        
         artifactType = artifactType.toLowerCase();
         let data = {
             artifacttype: artifactType,
@@ -79,9 +87,16 @@ async function run() {
                 // middle
                 tl.command("artifact.associate", data, targetPath);
 
+                let parallel: boolean = tl.getBoolInput('Parallel', false);
+                let parallelCount = 1;
+                if (parallel) {
+                    parallelCount = getParallelCount();
+                }
+
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
-                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)}`
+                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
+
                 let powershell = new tr.ToolRunner('powershell.exe');
                 powershell.arg('-NoLogo');
                 powershell.arg('-Sta');
@@ -110,6 +125,31 @@ async function run() {
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('PublishBuildArtifactsFailed', err.message));
     }
+
+}
+
+function getParallelCount(): number {
+    let result = 8;
+    let inputValue: string = tl.getInput('ParallelCount', false);
+    if (Number.isNaN(Number(inputValue))) {
+        tl.warning(tl.loc('UnexpectedParallelCount', inputValue));
+    }
+    else {
+        let parsedInput = parseInt(inputValue);
+        if (parsedInput < 1) {
+            tl.warning(tl.loc('UnexpectedParallelCount', parsedInput));
+            result = 1;
+        }
+        else if (parsedInput > 128) {
+            tl.warning(tl.loc('UnexpectedParallelCount', parsedInput));
+            result = 128;
+        }
+        else {
+            result = parsedInput;
+        }
+    }
+
+    return result;
 }
 
 run();

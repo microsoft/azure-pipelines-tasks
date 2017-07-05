@@ -10,12 +10,11 @@ export class TestAgent {
         while(currentRetryCount > 0) {
             currentRetryCount--;
             try {
-                const testAgentName: string = tl.getVariable('Agent.MachineName');
                 const envUrlRef: any = { Url: environment.environmentUri };
-                const machineNameRef = { Name: testAgentName };
+                const machineNameRef: any = { Name: environment.agentName };
                 // TODO : Change any to appropriate types once promiseme package is avialable
                 const testAgent: any = {
-                                    Name: testAgentName,
+                                    Name: environment.agentName,
                                     Capabilities: [],
                                     DtlEnvironment: envUrlRef,
                                     DtlMachine: machineNameRef };

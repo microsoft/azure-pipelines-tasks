@@ -12,12 +12,12 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 114,
+    "Minor": 116,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -146,13 +146,15 @@
     }
   },
   "messages": {
-    "FTPConnected": "ms-resource:loc.messages.FTPConnected",
     "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
+    "ConnectPort": "ms-resource:loc.messages.ConnectPort",
+    "Disconnected": "ms-resource:loc.messages.Disconnected",
+    "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
+    "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
+    "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
     "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
-    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
-    "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
-    "Disconnected": "ms-resource:loc.messages.Disconnected",
-    "ConnectPort": "ms-resource:loc.messages.ConnectPort"
+    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes"
   }
 }

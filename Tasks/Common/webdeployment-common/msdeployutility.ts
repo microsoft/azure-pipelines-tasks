@@ -6,6 +6,7 @@ import path = require('path');
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
+const ERROR_FILE_NAME = "error.txt";
 
 /**
  * Constructs argument for MSDeploy command
@@ -34,27 +35,40 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp=\'" + webAppPackage + "\'";
-        msDeployCmdArgs += " -dest:iisApp=\'" + webApplicationDeploymentPath + "\'";
+        msDeployCmdArgs += " -source:IisApp=\"'" + webAppPackage + "'\"";
+        msDeployCmdArgs += " -dest:iisApp=\"'" + webApplicationDeploymentPath + "'\"";
     }
-    else {       
-        msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
+    else {
+        if (webAppPackage && webAppPackage.toLowerCase().endsWith('.war')) {
+            tl.debug('WAR: webAppPackage = ' + webAppPackage);
+            let warFile = path.basename(webAppPackage.slice(0, webAppPackage.length - '.war'.length));
+            let warExt = webAppPackage.slice(webAppPackage.length - '.war'.length)
+            tl.debug('WAR: warFile = ' + warFile);
+            warFile = (virtualApplication) ? warFile + "/" + virtualApplication + warExt : warFile + warExt;
+            tl.debug('WAR: warFile = ' + warFile);
+            msDeployCmdArgs += " -source:contentPath=\"'" + webAppPackage + "'\"";
+            // tomcat, jetty location on server => /site/webapps/
+            tl.debug('WAR: dest = /site/webapps/' + warFile);
+            msDeployCmdArgs += " -dest:contentPath=\"'/site/webapps/" + warFile + "'\"";
+        } else {
+            msDeployCmdArgs += " -source:package=\"'" + webAppPackage + "'\"";
 
-        if(isParamFilePresentInPacakge) {
-            msDeployCmdArgs += " -dest:auto";
-        }
-        else {
-            msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
+            if(isParamFilePresentInPacakge) {
+                msDeployCmdArgs += " -dest:auto";
+            }
+            else {
+                msDeployCmdArgs += " -dest:contentPath=\"'" + webApplicationDeploymentPath + "'\"";
+            }
         }
     }
 
     if(publishingProfile != null) {
-        msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-        msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+        msDeployCmdArgs += ",ComputerName=\"'https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "'\",";
+        msDeployCmdArgs += "UserName=\"'" + publishingProfile.userName + "'\",Password=\"'" + publishingProfile.userPWD + "'\",AuthType=\"'Basic'\"";
     }
     
     if(isParamFilePresentInPacakge) {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
+        msDeployCmdArgs += " -setParam:name=\"'IIS Web Application Name'\",value=\"'" + webApplicationDeploymentPath + "'\"";
     }
 
     if(takeAppOfflineFlag) {
@@ -167,7 +181,7 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
  * 2. Checks if there is file in use error , suggest to try app offline.
  */
 export function redirectMSDeployErrorToConsole() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
     
     if(tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
@@ -186,4 +200,21 @@ export function redirectMSDeployErrorToConsole() {
 
         tl.rmRF(msDeployErrorFilePath);
     }
+}
+
+export function shouldRetryMSDeploy() {
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
+    
+    if(tl.exist(msDeployErrorFilePath)) {
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
+
+        if(errorFileContent !== "") {
+            if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
+                tl.warning(errorFileContent);
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

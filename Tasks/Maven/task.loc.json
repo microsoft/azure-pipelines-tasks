@@ -11,7 +11,7 @@
   ],
   "runsOn": [
     "Agent",
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "demands": [
@@ -19,7 +19,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 113,
+    "Minor": 120,
     "Patch": 0
   },
   "minimumAgentVersion": "1.89.0",
@@ -56,17 +56,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },
     {
-      "name": "options",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.options",
-      "defaultValue": "",
-      "required": false
-    },
-    {
       "name": "goals",
       "type": "string",
       "label": "ms-resource:loc.input.label.goals",
       "defaultValue": "package",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
       "required": false
     },
     {
@@ -140,6 +140,16 @@
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
       "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
+      "visibleRule": "codeCoverageTool != None"
     },
     {
       "name": "javaHomeSelection",
@@ -250,6 +260,33 @@
       "label": "ms-resource:loc.input.label.sqConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectName",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectKey",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqProjectVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sqProjectVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqProjectVersion",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },
@@ -374,6 +411,10 @@
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
-    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
+    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
+    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid"
   }
 }

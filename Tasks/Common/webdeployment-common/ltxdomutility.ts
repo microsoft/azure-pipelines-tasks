@@ -37,7 +37,7 @@ function buildLookUpTable(node) {
         if(nodeName){
             nodeName = nodeName.toLowerCase();
             var listOfNodes = xmlDomLookUpTable[nodeName];
-            if(listOfNodes == null ){
+            if(listOfNodes == null || !(Array.isArray(listOfNodes))) {
                 listOfNodes = [];
                 xmlDomLookUpTable[nodeName] = listOfNodes;
             }
@@ -82,7 +82,7 @@ export function getChildElementsByTagName(node, tagName) {
             }
             var liveChildNodes = getChildElementsByTagName(children[i], tagName);
             if(liveChildNodes && liveChildNodes.length > 0){
-            	liveNodes.concat(liveChildNodes);
+            	liveNodes = liveNodes.concat(liveChildNodes);
             }
         }
     }

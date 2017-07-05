@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 113,
+        "Minor": 120,
         "Patch": 0
     },
     "demands": [
@@ -35,6 +35,55 @@
             "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all sub folders."
         },
         {
+            "name": "msbuildLocationMethod",
+            "type": "radio",
+            "label": "MSBuild",
+            "required": false,
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
+            "name": "msbuildVersion",
+            "type": "pickList",
+            "label": "MSBuild Version",
+            "required": false,
+            "defaultValue": "latest",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options": {
+                "latest": "Latest",
+                "15.0": "MSBuild 15.0",
+                "14.0": "MSBuild 14.0",
+                "12.0": "MSBuild 12.0",
+                "4.0": "MSBuild 4.0"
+            }
+        },
+        {
+            "name": "msbuildArchitecture",
+            "type": "pickList",
+            "label": "MSBuild Architecture",
+            "defaultValue": "x86",
+            "required": false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+            "visibleRule": "msbuildLocationMethod = version",
+            "options": {
+                "x86": "MSBuild x86",
+                "x64": "MSBuild x64"
+            }
+        },
+        {
+            "name": "msbuildLocation",
+            "type": "string",
+            "label": "Path to MSBuild",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to MSBuild.",
+            "visibleRule": "msbuildLocationMethod = location"
+        },
+        {
             "name": "platform",
             "type": "string",
             "label": "Platform",
@@ -54,7 +103,7 @@
             "label": "MSBuild Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on Mac)."
+            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on macOS)."
         },
         {
             "name": "clean",
@@ -89,7 +138,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally record timeline details for each project."
+            "helpMarkDown": "Optionally record timeline details for each project (Windows only)."
         },
         {
             "name": "createLogFile",
@@ -98,59 +147,6 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Optionally create a log file (Windows only).",
-            "groupName": "advanced"
-        },
-        {
-            "name": "msbuildLocationMethod",
-            "type": "radio",
-            "label": "MSBuild",
-            "required": false,
-            "groupName": "advanced",
-            "defaultValue": "version",
-            "options": {
-                "version": "Version",
-                "location": "Specify Location"
-            }
-        },
-        {
-            "name": "msbuildVersion",
-            "type": "pickList",
-            "label": "MSBuild Version",
-            "required": false,
-            "groupName": "advanced",
-            "defaultValue": "15.0",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild(Mono) will be used.",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "latest": "Latest",
-                "15.0": "MSBuild 15.0",
-                "14.0": "MSBuild 14.0",
-                "12.0": "MSBuild 12.0",
-                "4.0": "MSBuild 4.0"
-            }
-        },
-        {
-            "name": "msbuildArchitecture",
-            "type": "pickList",
-            "label": "MSBuild Architecture",
-            "defaultValue": "x86",
-            "required": false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
-            "groupName": "advanced",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "x86": "MSBuild x86",
-                "x64": "MSBuild x64"
-            }
-        },
-        {
-            "name": "msbuildLocation",
-            "type": "string",
-            "label": "Path to MSBuild",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.",
-            "visibleRule": "msbuildLocationMethod = location",
             "groupName": "advanced"
         }
     ],
@@ -168,7 +164,8 @@
         }
     },
     "messages": {
-        "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
-        "MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
+        "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
+        "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
+        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
     }
 }

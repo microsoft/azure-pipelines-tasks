@@ -5,11 +5,9 @@ class Utils {
     }
 
     public static getError(error: any) {
-        tl.debug(JSON.stringify(error));
         if (error && error.message) {
             return error.message;
         }
-
         return error;
     }
 }

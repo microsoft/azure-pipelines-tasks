@@ -1,6 +1,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import sign = require('ios-signing-common/ios-signing-common');
+import utils = require('./xcodeutils');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
@@ -11,7 +12,10 @@ async function run() {
         //--------------------------------------------------------
         // Tooling
         //--------------------------------------------------------
-        tl.setEnvVar('DEVELOPER_DIR', tl.getInput('xcodeDeveloperDir', false));
+        var devDir = tl.getInput('xcodeDeveloperDir', false);
+        if (devDir) {
+            tl.setVariable('DEVELOPER_DIR', devDir);
+        }
 
         var useXctool: boolean = tl.getBoolInput('useXctool', false);
         var tool: string = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
@@ -31,7 +35,7 @@ async function run() {
         //--------------------------------------------------------
         var ws: string = tl.getPathInput('xcWorkspacePath', false, false);
         if (tl.filePathSupplied('xcWorkspacePath')) {
-            var workspaceMatches = tl.glob(ws);
+            var workspaceMatches = tl.findMatch(workingDir, ws, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
             tl.debug("Found " + workspaceMatches.length + ' workspaces matching.');
 
             if (workspaceMatches.length > 0) {
@@ -130,10 +134,11 @@ async function run() {
                 var keychainPwd: string = '_xcodetask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
-                await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
+                await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd, false);
                 xcode_otherCodeSignFlags = 'OTHER_CODE_SIGN_FLAGS=--keychain=' + keychain;
                 xcb.arg(xcode_otherCodeSignFlags);
                 keychainToDelete = keychain;
+                utils.setTaskState('XCODE_KEYCHAIN_TO_DELETE', keychainToDelete);
 
                 //find signing identity
                 var signIdentity = await sign.findSigningIdentity(keychain);
@@ -150,6 +155,7 @@ async function run() {
                 }
                 if (removeProfile && provProfileUUID) {
                     profileToDelete = provProfileUUID;
+                    utils.setTaskState('XCODE_PROFILE_TO_DELETE', profileToDelete);
                 }
             }
 
@@ -223,8 +229,7 @@ async function run() {
                 //check for pattern in testResultsFiles
                 if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
                     tl.debug('Pattern found in testResultsFiles parameter');
-                    var allFiles: string[] = tl.find(workingDir);
-                    var matchingTestResultsFiles: string[] = tl.match(allFiles, testResultsFiles, { matchBase: true });
+                    var matchingTestResultsFiles: string[] = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
                 }
                 else {
                     tl.debug('No pattern found in testResultsFiles parameter');
@@ -265,7 +270,7 @@ async function run() {
                 tl.debug('Packaging apps using xcrun.');
                 var buildOutputPath: string = tl.resolve(outPath, 'build.sym');
                 tl.debug('buildOutputPath: ' + buildOutputPath);
-                var appFolders: string[] = tl.glob(buildOutputPath + '/**/*.app');
+                var appFolders: string[] = tl.findMatch(buildOutputPath, '**/*.app', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
                 if (appFolders) {
                     tl.debug(appFolders.length + ' apps found for packaging.');
                     var xcrunPath: string = tl.which('xcrun', true);
@@ -322,7 +327,7 @@ async function run() {
                 }
                 await xcodeArchive.exec();
 
-                var archiveFolders: string[] = tl.glob(archiveFolderRoot + '/**/*.xcarchive');
+                var archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
                 if (archiveFolders && archiveFolders.length > 0) {
                     tl.debug(archiveFolders.length + ' archives found for exporting.');
 
@@ -336,7 +341,7 @@ async function run() {
                         // Automatically try to detect the export-method to use from the provisioning profile
                         // embedded in the .xcarchive file
                         var archiveToCheck: string = archiveFolders[0];
-                        var embeddedProvProfile: string[] = tl.glob(archiveToCheck + '/**/embedded.mobileprovision');
+                        var embeddedProvProfile: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
                         if (embeddedProvProfile && embeddedProvProfile.length > 0) {
                             tl.debug('embedded prov profile = ' + embeddedProvProfile);
                             exportMethod = await sign.getProvisioningProfileType(embeddedProvProfile[0]);
@@ -373,7 +378,7 @@ async function run() {
                     }
                     // delete if it already exists, otherwise export will fail
                     if (tl.exist(exportPath)) {
-                        tl.rmRF(exportPath, false);
+                        tl.rmRF(exportPath);
                     }
 
                     for (var i = 0; i < archiveFolders.length; i++) {
@@ -405,6 +410,7 @@ async function run() {
         if (keychainToDelete) {
             try {
                 await sign.deleteKeychain(keychainToDelete);
+                utils.setTaskState('XCODE_KEYCHAIN_TO_DELETE', '');
             } catch (err) {
                 tl.debug('Failed to delete temporary keychain. Error = ' + err);
                 tl.warning(tl.loc('TempKeychainDeleteFailed', keychainToDelete));
@@ -415,6 +421,7 @@ async function run() {
         if (profileToDelete) {
             try {
                 await sign.deleteProvisioningProfile(profileToDelete);
+                utils.setTaskState('XCODE_PROFILE_TO_DELETE', '');
             } catch (err) {
                 tl.debug('Failed to delete provisioning profile. Error = ' + err);
                 tl.warning(tl.loc('ProvProfileDeleteFailed', profileToDelete));

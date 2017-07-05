@@ -20,7 +20,7 @@ tmr.setInput('dsymPath', '/test/path/to/symbols.dSYM');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "glob": {
+    "findMatch": {
         "/test/path/to/one.ipa": [
             "/test/path/to/one.ipa"
         ],

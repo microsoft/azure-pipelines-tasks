@@ -12,9 +12,9 @@
     "author": "Microsoft",
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 112,
-        "Patch": 1
+        "Major": 2,
+        "Minor": 120,
+        "Patch": 0
     },
     "groups": [
         {
@@ -40,6 +40,23 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server."
+        },
+        {
+            "name": "isMultibranchJob",
+            "type": "boolean",
+            "label": "Job is of Multibranch Pipeline type",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "This job is of Multibranch Pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
+        },
+        {
+            "name": "multibranchPipelineBranch",
+            "type": "string",
+            "label": "Multibranch Pipeline Branch",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "isMultibranchJob = true",
+            "helpMarkDown": "Queue this Multibranch Pipeline job on the specified branch. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
         },
         {
             "name": "captureConsole",
@@ -82,6 +99,12 @@
             }
         }
     ],
+    "outputVariables" : [
+        {
+            "name" : "JENKINS_JOB_ID",
+            "description" : "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
+        }
+    ],
     "execution": {
         "Node": {
             "target": "jenkinsqueuejobtask.js",
@@ -89,6 +112,19 @@
         }
     },
     "messages": {
-        "JenkinsJobQueued": "Jenkins job queued"
+        "FailedToGenerateSummary": "Failed to generate build summary.",
+        "succeeded": "succeeded",
+        "unstable": "unstable",
+        "failed": "failed",
+        "notbuilt": "not built",
+        "aborted": "aborted",
+        "unknown": "unknown",
+        "console": "console",
+        "JenkinsPipelineComplete": "Jenkins pipeline complete",
+        "JenkinsJobComplete": "Jenkins job complete",
+        "JenkinsJobQueued": "Jenkins job queued",
+        "JenkinsPipelineFailed": "Jenkins pipeline failed",
+        "JenkinsJobFailed": "Jenkins job failed",
+        "JenkinsJobFailedtoQueue": "Jenkins job failed to queue"
     }
 }

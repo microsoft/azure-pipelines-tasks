@@ -12,12 +12,12 @@
     ],
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 114,
+        "Minor": 116,
         "Patch": 0
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
@@ -146,13 +146,15 @@
         }
     },
     "messages": {
-        "FTPConnected": "connected: %s",
         "CleanRemoteDir": "cleaning remote directory: %s",
+        "ConnectPort": "connecting to: %s:%s",
+        "Disconnected": "disconnected",
+        "DisconnectHost": "disconnecting from: %s",
+        "FTPConnected": "connected: %s",
+        "FTPNoHostSpecified": "The FTP server URL must include a host name",
+        "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
         "UploadRemoteDir": "uploading files to remote directory: %s",
         "UploadSucceedMsg": "FTP upload successful %s",
-        "UploadSucceedRes": "FTP upload successful",
-        "DisconnectHost": "disconnecting from: %s",
-        "Disconnected": "disconnected",
-        "ConnectPort": "connecting to: %s:%s"
+        "UploadSucceedRes": "FTP upload successful"
     }
 }

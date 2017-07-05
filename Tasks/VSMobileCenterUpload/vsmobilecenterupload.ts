@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib/task');
 import request = require('request');
 import Q = require('q');
 import fs = require('fs');
+import os = require('os');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
@@ -57,7 +58,12 @@ function responseHandler(defer, err, res, body, handler: () => void) {
 
     tl.debug(`---- http call status code: ${res.statusCode}`);
     if (res.statusCode < 200 || res.statusCode >= 300) {
-        let message = JSON.stringify(body) || `http response code: ${res.statusCode}`;
+        let message = JSON.stringify(body);
+        if (!message) {
+            message = `http response code: ${res.statusCode}`;
+        } else {
+            message = message.concat(os.EOL + `http response code: ${res.statusCode}`);
+        }
         defer.reject(message);
         return;
     }
@@ -74,7 +80,8 @@ function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: stri
     let headers = {
         "Content-Type": "application/json",
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
     request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -96,7 +103,8 @@ function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Pr
     let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
     let headers = {
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
     let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -118,7 +126,8 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     tl.debug(`---- url: ${commitReleaseUrl}`);
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let commitBody = { "status": "committed" };
@@ -144,7 +153,8 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
 
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let publishBody = {
@@ -165,36 +175,36 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
 /**
  * If the input is a single file, upload this file without any processing.
  * If the input is a single folder, zip it's content. The archive name is the folder's name
- * If the input is a set of folders, zip the folders so they appear on the root of the archive. The archive name is the parent folder's name.
+ * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
-function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> { 
+function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
     tl.debug("-- Prepare symbols");
-    let defer = Q.defer<string>(); 
+    let defer = Q.defer<string>();
 
     if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
-        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`) 
+        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
 
         // single file - Android source mapping txt file 
-        defer.resolve(symbolsPaths[0]); 
-    } else if (symbolsPaths.length > 0) { 
-        tl.debug(`.. archiving: ${symbolsPaths}`); 
+        defer.resolve(symbolsPaths[0]);
+    } else if (symbolsPaths.length > 0) {
+        tl.debug(`.. archiving: ${symbolsPaths}`);
 
         let symbolsRoot = utils.findCommonParent(symbolsPaths);
         let zipPath = utils.getArchivePath(symbolsRoot);
-        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot); 
+        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
 
-        utils.createZipFile(zipStream, zipPath). 
-            then(() => { 
-                tl.debug(`---- symbols arechive file: ${zipPath}`) 
-                defer.resolve(zipPath); 
-            }); 
+        utils.createZipFile(zipStream, zipPath).
+            then(() => {
+                tl.debug(`---- symbols arechive file: ${zipPath}`)
+                defer.resolve(zipPath);
+            });
     } else {
-        defer.resolve(null); 
+        defer.resolve(null);
     }
 
 
-    return defer.promise; 
-} 
+    return defer.promise;
+}
 
 function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
@@ -205,7 +215,8 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
 
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
@@ -234,7 +245,8 @@ function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Pr
     let headers = {
         "x-ms-blob-type": "BlockBlob",
         "Content-Length": stat.size,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
@@ -254,7 +266,8 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
     tl.debug(`---- url: ${commitSymbolsUrl}`);
     let headers = {
         "X-API-Token": token,
-        "User-Agent": userAgent
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS"
     };
 
     let commitBody = { "status": "committed" };
@@ -270,7 +283,7 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
 function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnError: boolean, packParentFolder: boolean): string[] {
     tl.debug("-- Expanding symbols path pattern to a list of paths");
-    
+
     let symbolsPaths: string[] = [];
 
     if (symbolsType === "Apple") {
@@ -278,20 +291,41 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
         // multiple dSYM folder paths for Apple application.
         let dsymPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
-        dsymPaths.forEach(dsymFolder => {
-            if (dsymFolder) {
-                let folderPath = utils.checkAndFixFilePath(dsymFolder, continueOnError);
-                // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
-                if (folderPath) {
-                    symbolsPaths.push(folderPath);
+        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
+        if (dsymPaths) {
+            dsymPaths.forEach(dsymFolder => {
+                if (dsymFolder) {
+                    let folderPath = utils.checkAndFixFilePath(dsymFolder, continueOnError);
+                    // The path can be null if continueIfSymbolsNotFound is true and the folder does not exist.
+                    if (folderPath) {
+                        symbolsPaths.push(folderPath);
+                    }
                 }
-            }
-        })
+            })
+        }
+    } else if (symbolsType === "UWP") {
+        // User can specifay a symbols path pattern that selects 
+        // multiple PDB paths for UWP application.
+        let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
+
+        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
+        if (pdbPaths) {
+            pdbPaths.forEach(pdbFile => {
+                if (pdbFile) {
+                    let pdbPath = utils.checkAndFixFilePath(pdbFile, continueOnError);
+                    // The path can be null if continueIfSymbolsNotFound is true and the file does not exist.
+                    if (pdbPath) {
+                        symbolsPaths.push(pdbPath);
+                    }
+                }
+            })
+        }
     } else {
         // For all other application types user can specifay a symbols path pattern 
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
+        // Resolved paths can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
         if (symbolsFile) {
             let filePath = utils.checkAndFixFilePath(symbolsFile, continueOnError);
             // The path can be null if continueIfSymbolsNotFound is true and the file/folder does not exist.
@@ -327,6 +361,13 @@ async function run() {
 
         let appSlug: string = tl.getInput('appSlug', true);
         let appFilePattern: string = tl.getInput('app', true);
+
+        /* The task has support for different symbol types but Mobile Center server only support Apple currently, add back these types in the task.json when support is available in Mobile Center.
+        "AndroidJava": "Android (Java)",
+        "AndroidNative": "Android (native C/C++)",
+        "Windows": "Windows 8.1",
+        "UWP": "Universal Windows Platform (UWP)"
+        */
         let symbolsType: string = tl.getInput('symbolsType', false);
         let symbolVariableName = null;
         switch (symbolsType) {
@@ -335,6 +376,9 @@ async function run() {
                 break;
             case "AndroidJava":
                 symbolVariableName = "mappingTxtPath";
+                break;
+            case "UWP":
+                symbolVariableName = "pdbPath";
                 break;
             default:
                 symbolVariableName = "symbolsPath";

@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 114,
+    "Minor": 117,
     "Patch": 0
   },
   "demands": [
@@ -343,6 +343,12 @@
   "execution": {
     "Node": {
       "target": "xcode.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "postxcode.js",
       "argumentFormat": ""
     }
   },

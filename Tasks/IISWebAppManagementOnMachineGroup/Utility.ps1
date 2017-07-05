@@ -1,64 +1,208 @@
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
 
-function Manage-IISWebSite
+function Set-IISWebSite
 {
-    Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolNameForWebsite) -physicalPathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsernameForWebsite) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
-    Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint
-    
-    if ($actionIISWebsite -ieq "CreateOrUpdateWebsite" -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
-    {
-        $websitePhysicalPathAuthCredentials = Get-CustomCredentials -username $websiteAuthUserName -password $websiteAuthUserPassword
-    }
+    param (
+        [string] $actionIISWebsite,
+        [string] $websiteName,
+        [string] $startStopWebsiteName,
+        [string] $physicalPath,
+        [string] $physicalPathAuth,
+        [string] $physicalPathAuthUserName,
+        [string] $physicalPathAuthUserPassword ,
 
-    if ($createOrUpdateAppPoolForWebsite -ieq "true" -and $appPoolIdentityForWebsite -ieq "SpecificUser") 
-    {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForWebsite -password $appPoolPasswordForWebsite
-    }
+        [string] $addBinding,
+        [string] $protocol,
+        [string] $ipAddress,
+        [string] $port,
+        [string] $serverNameIndication ,
+        [string] $hostNameWithOutSNI,
+        [string] $hostNameWithHttp,
+        [string] $hostNameWithSNI,
+        [string] $sslCertThumbPrint,
+        [string] $bindings,
 
-    Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createOrUpdateAppPoolForWebsite -AppPoolName $appPoolNameForWebsite -DotNetVersion $dotNetVersionForWebsite -PipeLineMode $pipeLineModeForWebsite -AppPoolIdentity $appPoolIdentityForWebsite -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+        [string] $createOrUpdateAppPool,
+        [string] $appPoolName,
+        [string] $dotNetVersion,
+        [string] $pipeLineMode,
+        [string] $appPoolIdentity,
+        [string] $appPoolUsername,
+        [string] $appPoolPassword,
+
+        [string] $configureAuthentication,
+        [string] $anonymousAuthentication,
+        [string] $basicAuthentication,
+        [string] $windowsAuthentication,
+
+        [string] $appCmdCommands
+    )
+
+    switch ($actionIISWebsite) 
+    {
+        "CreateOrUpdateWebsite" 
+        {
+            Repair-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername)
+            
+            if($addBinding -eq "true") 
+            {
+                if([string]::IsNullOrWhiteSpace($bindings)) {
+                    $bindingsArray = @(@{
+                        protocol = $protocol.Trim();
+                        ipAddress = $ipAddress.Trim();
+                        port = $port.Trim();
+                        sniFlag = $serverNameIndication;
+                        sslThumbprint = Test-SSLCertificateThumbprint -sslCertThumbPrint $sslCertThumbPrint -ipAddress $ipAddress -protocol $protocol -port $port ;
+                        hostname = Get-Hostname -port $port -hostNameWithSNI $hostNameWithSNI -hostNameWithHttp $hostNameWithHttp -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication ;
+                    })
+                }
+                else {
+                    $bindingsArray = Validate-Bindings -bindings $bindings
+                }
+            }
+
+            if($physicalPathAuth -ieq "WebsiteWindowsAuth") 
+            {
+                $physicalPathAuthCredentials = Get-CustomCredentials -username $physicalPathAuthUserName -password $physicalPathAuthUserPassword
+            }
+
+            if ($createOrUpdateAppPool -eq "true") 
+            {
+                if($appPoolIdentity -ieq "SpecificUser") 
+                {
+                    $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword
+                }
+
+                Write-Verbose "Initiating action 'create or update' website with user specified application pool."
+                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Bindings $bindingsArray -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
+            }
+            else 
+            {
+                Write-Verbose "Initiating action 'create or update' website"
+                Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $physicalPath -PhysicalPathAuth $physicalPathAuth -PhysicalPathAuthCredentials $physicalPathAuthCredentials -AddBinding $addBinding -Bindings $bindingsArray -configureAuthentication $configureAuthentication -anonymousAuthentication $anonymousAuthentication -basicAuthentication $basicAuthentication -windowsAuthentication $windowsAuthentication -AppCmdCommands $appCmdCommands
+            }
+        }
+        {($_ -eq "StartWebsite") -or ($_ -eq "StopWebsite")}
+        {
+            Repair-Inputs -siteName ([ref]$startStopWebsiteName)
+            
+            Invoke-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $startStopWebsiteName -AppCmdCommands $appCmdCommands
+        }
+        default 
+        {
+            throw (Get-VstsLocString -Key "InvalidActionIISWebsite" -ArgumentList $actionIISWebsite)
+        }
+    }    
 }
 
-function Manage-IISVirtualDirectory
+function Set-IISVirtualDirectory
 {
-    Trim-Inputs -siteName ([ref]$parentWebsiteNameForVD) -virtualPath ([ref]$virtualPathForVD) -physicalPath ([ref]$physicalPathForVD) -physicalPathAuthuser ([ref]$vdAuthUserName)
-    Validate-Inputs -virtualPath $virtualPathForVD
+    param (
+        [string] $parentWebsiteName,
+        [string] $virtualPath,
+        [string] $physicalPath,
+        [string] $PhysicalPathAuth,
+        [string] $physicalPathAuthUserName,
+        [string] $physicalPathAuthUserPassword,
+        [string] $appCmdCommands
+    )
 
-    if ($vdPhysicalPathAuth -ieq "VDWindowsAuth") 
+    Repair-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName)
+    Test-Inputs -virtualPath $virtualPath
+
+    if ($PhysicalPathAuth -eq "VDWindowsAuth") 
     {
-        $vdPhysicalPathAuthCredentials = Get-CustomCredentials -username $vdAuthUserName -password $vdAuthUserPassword     
+        $PhysicalPathAuthCredentials = Get-CustomCredentials -username $physicalPathAuthUserName -password $physicalPathAuthUserPassword     
     }
 
-    Execute-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteNameForVD -VirtualPath $virtualPathForVD -PhysicalPath $physicalPathForVD -PhysicalPathAuth $vdPhysicalPathAuth -PhysicalPathAuthCredentials $vdPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+    Write-Verbose "Initiating action 'create or update' virtual directory."
+    Invoke-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $PhysicalPathAuth -PhysicalPathAuthCredentials $PhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
 }
 
-function Manage-IISWebApplication 
+function Set-IISWebApplication 
 {
-    Trim-Inputs -siteName ([ref]$parentWebsiteNameForApplication) -virtualPath ([ref]$virtualPathForApplication) -physicalPath ([ref]$physicalPathForApplication) -physicalPathAuthuser ([ref]$applicationAuthUserName) -poolName ([ref]$appPoolNameForApplication) -appPoolUser ([ref]$appPoolUsernameForApplication) 
-    Validate-Inputs -virtualPath $virtualPathForApplication
+    param (
+        [string] $parentWebsiteName,
+        [string] $virtualPath,
+        [string] $physicalPath,
+        [string] $physicalPathAuth,
+        [string] $physicalPathAuthUserName,
+        [string] $physicalPathAuthUserPassword,
 
-    if ($applicationPhysicalPathAuth -ieq "ApplicationWindowsAuth") 
+        [string] $createOrUpdateAppPool,
+        [string] $appPoolName,
+        [string] $dotNetVersion,
+        [string] $pipeLineMode,
+        [string] $appPoolIdentity,
+        [string] $appPoolUsername,
+        [string] $appPoolPassword,
+        [string] $appCmdCommands
+    )
+
+    Repair-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
+    Test-Inputs -virtualPath $virtualPath
+
+    if ($physicalPathAuth -eq "ApplicationWindowsAuth") 
     {
-        $applicationPhysicalPathAuthCredentials = Get-CustomCredentials -username $applicationAuthUserName -password $applicationAuthUserPassword     
+        $applicationPhysicalPathAuthCredentials = Get-CustomCredentials -username $physicalPathAuthUserName -password $physicalPathAuthUserPassword     
     }
 
-    if ($createOrUpdateAppPoolForApplication -ieq "true" -and $appPoolIdentityForApplication -ieq "SpecificUser") 
+    if ($createOrUpdateAppPool -eq "true") 
     {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForApplication -password $appPoolPasswordForApplication
+        if($appPoolIdentity -ieq "SpecificUser") 
+        {
+            $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword
+        }
+        
+        Write-Verbose "Initiating action 'create or update' application with user specified application pool."
+        Invoke-Main -CreateApplication $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
     }
-
-    Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteNameForApplication -VirtualPath $virtualPathForApplication -PhysicalPath $physicalPathForApplication -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -CreateAppPool $createOrUpdateAppPoolForApplication -AppPoolName $appPoolNameForApplication -DotNetVersion $dotNetVersionForApplication -PipeLineMode $pipeLineModeForApplication -AppPoolIdentity $appPoolIdentityForApplication -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+    else 
+    {
+        Write-Verbose "Initiating action 'create or update' application."
+        Invoke-Main -CreateApplication $true -WebsiteName $parentWebsiteName -VirtualPath $virtualPath -PhysicalPath $physicalPath -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+    }
 }
 
-function Manage-IISApplicationPool
+function Set-IISApplicationPool
 {
-    Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
+    param (
+        [string] $actionIISApplicationPool,
+        [string] $appPoolName,
+        [string] $startStopRecycleAppPoolName,
+        [string] $dotNetVersion,
+        [string] $pipeLineMode,
+        [string] $appPoolIdentity,
+        [string] $appPoolUsername,
+        [string] $appPoolPassword,
+        [string] $appCmdCommands
+    ) 
 
-    if ($actionIISApplicationPool -ieq "CreateOrUpdateAppPool" -and $appPoolIdentity -ieq "SpecificUser") 
+    switch ($actionIISApplicationPool) 
     {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
-    }
+        "CreateOrUpdateAppPool" 
+        {
+            Repair-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
 
-    Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+            if($appPoolIdentity -ieq "SpecificUser") 
+            {
+                $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
+            }
+
+            Write-Verbose "Initiating action 'create or update' application pool."
+            Invoke-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+        }
+        {($_ -eq "StartAppPool") -or ($_ -eq "StopAppPool") -or ($_ -eq "RecycleAppPool")}
+        {
+            Repair-Inputs -poolName ([ref]$startStopRecycleAppPoolName)
+
+            Invoke-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $startStopRecycleAppPoolName -AppCmdCommands $appCmdCommands
+        }
+        default 
+        {
+            throw (Get-VstsLocString -Key "InvalidActionIISAppPool" -ArgumentList $actionIISApplicationPool)
+        }
+    }
 }
 
 function Get-CustomCredentials {
@@ -74,7 +218,7 @@ function Get-CustomCredentials {
     return $credentials
 }
 
-function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
+function Repair-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
@@ -84,11 +228,11 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
     if ($physicalPath -ne $null) 
     {
-        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').Trim('\', ' ')
+        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').TrimEnd('\')
     }
     if ($virtualPath -ne $null) 
     {
-        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ')
+        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\')
     }
     if ($poolName -ne $null) 
     {
@@ -102,29 +246,90 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     {
         $physicalPathAuthuser.Value = $physicalPathAuthuser.Value.Trim()
     }
-    if ($sslCertThumbPrint -ne $null) 
-    {
-        $sslCertThumbPrint.Value = $sslCertThumbPrint.Value.Trim()
-    }
 }
 
-function Validate-Inputs 
+function Test-Inputs
 {
     param (
-        [string] $virtualPath,
-        [string] $sslCertThumbPrint
+        [string] $virtualPath
     )
-
-    if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
-    {
-        if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
-        {
-            throw (Get-VstsLocString -Key "InvalidSslThumbprint" )
-        }
-    }
 
     if((-not [string]::IsNullOrWhiteSpace($virtualPath)) -and (-not $virtualPath.StartsWith("/")))
     {
         throw (Get-VstsLocString -Key "InvalidVirtualPath")
     }
+}
+
+function Get-HostName
+{
+    param(
+        [string]$protocol,
+        [string]$hostNameWithHttp,
+        [string]$hostNameWithSNI,
+        [string]$hostNameWithOutSNI,
+        [string]$sni
+    )
+    $hostName = [string]::Empty
+
+    if($protocol -eq "http")
+    {
+        $hostName = $hostNameWithHttp
+    }
+    elseif($sni -eq "true")
+    {
+        $hostName = $hostNameWithSNI
+    }
+    else
+    {
+        $hostName = $hostNameWithOutSNI
+    }
+    return $hostName
+}
+
+function Test-SSLCertificateThumbprint {
+    param (
+        [string] $sslCertThumbPrint,
+        [string] $ipAddress,
+        [string] $protocol,
+        [string] $port
+    )
+
+    if($protocol -eq "https") {
+        if(-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint))
+        {
+            if([regex]::IsMatch($sslCertThumbPrint, "[^a-fA-F0-9]+"))
+            {
+                Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharactersInBinding" -ArgumentList $protocol, $ipAddress, $port)
+            }
+
+            $sslCertThumbPrint = [Regex]::Replace($sslCertThumbPrint, "[^a-fA-F0-9]+" , "")
+            
+            if(-not [regex]::IsMatch($sslCertThumbPrint, "^[a-fA-F0-9]{40}$")){
+                throw (Get-VstsLocString -Key "InvalidSslThumbprintInBinding" -ArgumentList $protocol, $ipAddress, $port)
+            }
+
+            # Mark the SSL thumbprint value to be a secret value 
+            Write-Host "##vso[task.setvariable variable=f13679253bf44b74afbd244ae83ca735;isSecret=true]$sslCertThumbprint"
+            return $sslCertThumbPrint
+        }
+        else {
+            throw (Get-VstsLocString -Key "SSLCertificateThumbprintMissingInHttpsBinding" -ArgumentList $protocol, $ipAddress, $port)
+        }
+    }
+}
+
+function Validate-Bindings {
+    param (
+        [string] $bindings
+    )
+    
+    $bindingsObj = $bindings | ConvertFrom-Json 
+
+    foreach ($binding in $bindingsObj.bindings) {
+        if($binding.protocol -eq "https") {
+            $binding.sslThumbprint = Test-SSLCertificateThumbprint -sslCertThumbPrint $binding.sslThumbprint -ipAddress $binding.ipAddress -protocol $binding.protocol -port $binding.port
+        }
+    }
+
+    return $bindingsObj.bindings
 }

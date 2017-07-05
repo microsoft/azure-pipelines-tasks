@@ -11,12 +11,12 @@
         "Release"
     ],
     "runsOn": [
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",

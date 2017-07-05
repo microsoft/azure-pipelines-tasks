@@ -47,6 +47,7 @@ $dacpacFile = Get-VstsInput -Name "dacpacFile"
 $sqlFile = Get-VstsInput -Name "sqlFile" 
 $inlineSql = Get-VstsInput -Name "inlineSql"
 $targetMethod = Get-VstsInput -Name "targetMethod"
+$serverName = Get-VstsInput -Name "serverName" -Require
 $databaseName = Get-VstsInput -Name "databaseName" -Require
 $authscheme = Get-VstsInput -Name "authscheme" -Require
 $sqlUsername = Get-VstsInput -Name "sqlUsername"
@@ -60,7 +61,7 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 
 Try
 {
-    $serverName = "localhost"
+
     if ($taskType -ne "dacpac")
     {
         $additionalArguments = $additionalArgumentsSql
@@ -76,23 +77,18 @@ Try
     if ($taskType -eq "dacpac")
     {
         $dacpacFile = Get-SingleFile -pattern $dacpacFile
-        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        Invoke-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
     {
-
-        $connectionString = Escape-SpecialChars -str $connectionString
-        $sqlPassword = Escape-SpecialChars -str $sqlPassword
-        $additionalArguments = Escape-SpecialChars -str $additionalArguments
-        $databaseName = Escape-SpecialChars -str $databaseName
         if ($taskType -eq "sqlQuery")
         {
             $sqlFile = Get-SingleFile -pattern $sqlFile
-        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
         }
         else 
         {
-            Execute-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            Invoke-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
         }
     }
 }

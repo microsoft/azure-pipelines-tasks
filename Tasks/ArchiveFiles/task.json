@@ -12,13 +12,13 @@
     ],
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 112,
-        "Patch": 1
+        "Minor": 119,
+        "Patch": 0
     },
     "groups": [
         {
@@ -70,7 +70,7 @@
             "groupName": "archive",
             "visibleRule": "archiveType = tar",
             "options": {
-                "default": "gz",
+                "gz": "gz",
                 "bz2": "bz2",
                 "xz": "xz",
                 "none": "None"
@@ -104,7 +104,7 @@
     "messages": {
         "Filename": "files=%s",
         "TarExists": "Intermediate tar: %s already exists.  Attempting to add files to it.",
-        "RemoveBeforeCreation": "removing existing archive file before creation: %s",
+        "RemoveBeforeCreation": "Removing existing archive file before creation: %s",
         "AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
         "ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
         "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",

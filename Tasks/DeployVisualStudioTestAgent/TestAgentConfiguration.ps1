@@ -36,6 +36,17 @@
             Write-Warning $_
         }
 
+        $TestWindowPath = $null
+        $VsPath = $null
+        if ($TestAgentVersion -eq "15.0") {
+            $instance = Get-VisualStudio_15_0
+            if ($instance) {
+                $VsPath = [System.IO.Path]::Combine($instance.Path, "Common7", "IDE")
+                $TestWindowPath = [System.IO.Path]::Combine($VsPath, "CommonExtensions", "Microsoft", "TestWindow")
+                Write-Verbose "VS path $VsPath; Test window path $TestWindowPath" -Verbose
+            }
+        }
+
         # Fix Assembly Redirections
         # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
         # Redirection to Newton Json 8.0
@@ -78,7 +89,16 @@
         Write-Verbose "TestAgentVersion                : ($TestAgentVersion)"
         Write-Verbose "****************************************************************"
         
-        $DtaAgentClient = New-Object MS.VS.TestService.Client.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
+        Try
+        {
+            $DtaAgentClient = New-Object MS.VS.TestService.Client.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
+        }
+        Catch
+        {
+            Write-Verbose "Unable to connect to Team Foundation Server, Check if TFS is reachable from the test agent. Exception Details : "
+            Write-Verbose $_.Exception | format-list -force
+            throw "Unable to connect to Team Foundation Server"
+        }
 
         if(-not $DtaAgentClient){
             throw "Unable to register the agent with Team Foundation Server"
@@ -100,6 +120,10 @@
             $Processinfo.EnvironmentVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
             $Processinfo.EnvironmentVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
             $Processinfo.EnvironmentVariables.Add("DTA.TestPlatformVersion", $TestAgentVersion);
+            if ($VsPath) {
+                $Processinfo.EnvironmentVariables.Add("DTA.VisualStudio.Path", $VsPath);
+                $Processinfo.EnvironmentVariables.Add("DTA.TestWindow.Path", $TestWindowPath);
+            }
             $Processinfo.UseShellExecute = $false
             $Processinfo.LoadUserProfile = $false
             $Processinfo.CreateNoWindow = $true
@@ -117,24 +141,60 @@
         
             throw "Unable to start DTAExecutionHost process"
         }
-        else
-        {
+        else {
             $dtaArgs = "DTA.AccessToken:$PersonalAccessToken DTA.AgentId:$($DtaAgent.Id) DTA.EnvironmentUri:$EnvironmentUrl DTA.TeamFoundationCollectionUri:$TfsCollection DTA.TestPlatformVersion:$TestAgentVersion"
-            $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
-            $trigger = New-ScheduledTaskTrigger -AtLogOn
-            $exePath = "$SetupPath\DTAExecutionHost.exe $dtaArgs"
-
-            Unregister-ScheduledTask -TaskName "DTA" -Confirm:$false -OutVariable out -ErrorVariable err -ErrorAction SilentlyContinue | Out-Null
-            Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "DTA" -Description "DTA UI" -RunLevel Highest -OutVariable out -ErrorVariable err | Out-Null
-            Write-Verbose "Registering scheduled task output: $out error: $err" -Verbose
             
-            Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
-            Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
-            Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
+            $osVersion = [environment]::OSVersion.Version
+            if($osVersion.Major -lt "6" -or ($osVersion.Major -eq "6" -and $osVersion.Minor -lt "1")){
+                throw "Unsupported Windows operating system"
+            }
 
-            $p = Get-Process -Name "DTAExecutionHost" -ErrorAction SilentlyContinue
-            if($p) {
-                return 0;
+            if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
+                ## Windows 7 SP1
+                $ScheduleObject = New-Object -ComObject Schedule.Service
+                $ScheduleObject.Connect()
+
+                $TaskDefinition = $ScheduleObject.NewTask(0) 
+                $TaskDefinition.RegistrationInfo.Description = "DTA UI"
+                $TaskDefinition.Settings.Enabled = $true
+                $TaskDefinition.Settings.AllowDemandStart = $true
+                $TaskDefinition.Settings.DisallowStartIfOnBatteries = $true
+                $TaskDefinition.Settings.StartWhenAvailable = $true
+
+                $triggers = $TaskDefinition.Triggers
+                $trigger = $triggers.Create(7) # Start task immediatly after creating/updating
+                $trigger.ExecutionTimeLimit = 'PT0S' # No time limit
+
+                $action = $TaskDefinition.Actions.Create(0)
+                $action.Path = "$SetupPath\DTAExecutionHost.exe"
+                $action.Arguments = $dtaArgs
+
+                $rootFolder = $ScheduleObject.GetFolder('\') #'
+                $newTask = $rootFolder.RegisterTaskDefinition("DTA", $TaskDefinition, 6, '', '', 3)
+                Write-Verbose "Starting scheduled task on Windows 7." -Verbose
+                Start-Sleep -Seconds 30
+                $p = Get-Process -Name "DTAExecutionHost"
+                $rootFolder.DeleteTask("DTA", 0)                
+            }
+            else {
+                # Windows 8 or above
+                $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
+                $trigger = New-ScheduledTaskTrigger -AtLogOn
+
+                Unregister-ScheduledTask -TaskName "DTA" -Confirm:$false -OutVariable out -ErrorVariable err -ErrorAction SilentlyContinue | Out-Null
+                Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "DTA" -Description "DTA UI" -RunLevel Highest -OutVariable out -ErrorVariable err | Out-Null
+                Write-Verbose "Registering scheduled task output: $out error: $err" -Verbose
+                
+                Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
+                Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
+
+		        Start-Sleep -Seconds 30
+		        $p = Get-Process -Name "DTAExecutionHost"
+                Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
+            }
+
+            if ($p) {
+                return 0
             }
             
             throw "Unable to start DTAExecutionHost process"

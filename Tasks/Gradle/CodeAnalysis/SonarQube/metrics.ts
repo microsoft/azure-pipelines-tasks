@@ -103,7 +103,7 @@ export class SonarQubeMetrics {
      */
     public fetchAnalysisDetails(analysisId?: string): Q.Promise<Object> {
         // Use the cache if available
-        if (!this.analysisDetails) {
+        if (this.analysisDetails) {
             return Q.when(this.analysisDetails);
         }
 

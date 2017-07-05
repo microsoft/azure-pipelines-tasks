@@ -9,13 +9,13 @@
     "Release"
   ],
   "runsOn": [
-    "MachineGroup"
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 2
+    "Minor": 3,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
@@ -80,6 +80,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
     },
     {
+      "name": "ServerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "defaultValue": "localhost",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
+    },
+    {
       "name": "DatabaseName",
       "type": "string",
       "label": "ms-resource:loc.input.label.DatabaseName",
@@ -93,7 +102,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.AuthScheme",
       "required": true,
-      "defaultValue": "Windows Authentication",
+      "defaultValue": "windowsAuthentication",
       "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
       "options": {
         "windowsAuthentication": "Windows Authentication",

@@ -2,7 +2,7 @@
     "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
     "name": "CopyFiles",
     "friendlyName": "Copy Files",
-    "description": "Copy files from source folder to target folder using minimatch patterns (The minimatch patterns will only match file paths, not folder paths)",
+    "description": "Copy files from source folder to target folder using match patterns (The match patterns will only match file paths, not folder paths)",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
     "category": "Utility",
     "visibility": [
@@ -10,12 +10,12 @@
     ],
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 113,
+        "Minor": 117,
         "Patch": 0
     },
     "releaseNotes": "Match pattern consistency.",
@@ -43,7 +43,7 @@
             "label": "Contents",
             "defaultValue": "**",
             "required": true,
-            "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)"
+            "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of match patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)"
         },
         {
             "name": "TargetFolder",

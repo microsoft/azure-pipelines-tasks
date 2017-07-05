@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 114,
+        "Minor": 119,
         "Patch": 1
     },
     "groups": [
@@ -37,7 +37,7 @@
             "label": "App Slug",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}"
+            "helpMarkDown": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://mobile.azure.com/apps, and the resulting URL is in the format of [https://mobile.azure.com/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://mobile.azure.com/users/{username}/apps/{app_identifier}). If you are using orgs, the app slug is of the format **{orgname}/{app_identifier}**."
         },
         {
             "name": "app",
@@ -55,10 +55,7 @@
             "defaultValue": "Apple",
             "groupName": "symbols",
             "options": {
-                "Apple": "Apple",
-                "AndroidJava": "Android (Java)",
-                "AndroidNative": "Android (native C/C++)",
-                "Windows": "Windows"
+                "Apple": "Apple"
             }
         },
         {
@@ -68,7 +65,17 @@
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to the symbols folder.",
-            "visibleRule": "symbolsType = Windows || symbolsType == AndroidNative"
+            "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
+        },
+        {
+            "name": "pdbPath",
+            "type": "filePath",
+            "label": "Symbols Path (*.pdb)",
+            "defaultValue": "**/*.pdb",
+            "groupName": "symbols",
+            "required": false,
+            "helpMarkDown": "Relative path from the repo root to PDB symbols files. Path may contain wildcards.",
+            "visibleRule": "symbolsType = UWP"
         },
         {
             "name": "dsymPath",
@@ -76,7 +83,7 @@
             "label": "dSYM Path",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Relative path from the repo root to dSYM folder.",
+            "helpMarkDown": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
             "visibleRule": "symbolsType = Apple"
         },
         {
@@ -94,7 +101,7 @@
             "label": "Include All Items in Parent Folder",
             "groupName": "symbols",
             "required": false,
-            "helpMarkDown": "Upload the selected symbols file / folder and all other items inside the same parent folder, this is required for React Native apps."
+            "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
         },
         {
             "name": "releaseNotesSelection",

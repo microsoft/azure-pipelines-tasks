@@ -12,6 +12,9 @@ tr.setInput('UseWebDeploy', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
@@ -88,8 +91,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 }
 
-
-import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
@@ -165,6 +166,14 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateAzureRMWebAppConfigDetails: function() {
         console.log("Successfully updated scmType to VSTSRM");
+    },
+    getAzureRMWebAppMetadata: function() {
+        return {
+            properties: {}
+        }
+    },
+    updateAzureRMWebAppMetadata: function() {
+        console.log("Successfully updated Web App metadata");
     }
 });
 
@@ -189,7 +198,13 @@ tr.registerMock('fs', {
     },
     fsyncSync: function(fd) {
         return true;
-    }
+    },
+    fstat: fs.fstat,
+    read: fs.read,
+    open: fs.open,
+    writeFile: fs.writeFile,
+    symlink: fs.symlink,
+    stat: fs.stat
 });
 
 tr.setAnswers(a);

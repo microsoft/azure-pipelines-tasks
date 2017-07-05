@@ -1,8 +1,8 @@
 {
   "name": "vsts-tasks-dotnetcoreexe",
-  "version": "0.1.0",
+  "version": "2.0.2",
   "description": "Dotnet core exe",
-  "main": "dotnetexe.js",
+  "main": "dotnetcore.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20",
-    "nuget-task-common": "file:../Common/nuget-task-common",
+    "vsts-task-lib": "2.0.5",
     "q": "^1.4.1",
-    "vso-node-api": "^5.0.5",
-    "archiver": "1.2.0"
+    "archiver": "1.0.1",
+    "xmlreader": "^0.2.3",
+    "vso-node-api": "6.0.1-preview"
   }
 }

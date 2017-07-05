@@ -27,7 +27,7 @@ export class JobSearch {
         this.queue = queue;
         this.taskUrl = taskUrl;
         this.identifier = identifier;
-        
+
         this.initialize().fail((err) => {
             throw err;
         });
@@ -67,7 +67,9 @@ export class JobSearch {
                         tl.debug("parsedBody for: " + apiTaskUrl + ": " + JSON.stringify(parsedBody));
                         thisSearch.initialized = true;
                         thisSearch.parsedTaskBody = parsedBody;
-                        thisSearch.initialSearchBuildNumber = parsedBody.lastBuild.number;
+                        // if this is the first time this job is triggered, there will be no lastBuild information, and we assume the
+                        // build number is 1 in this case
+                        thisSearch.initialSearchBuildNumber = (parsedBody.lastBuild) ? parsedBody.lastBuild.number : 1;
                         thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber;
                         thisSearch.searchDirection = -1;  // start searching backwards
                         defer.resolve(null);
@@ -261,19 +263,19 @@ export class JobSearch {
                     tl.debug("parsedBody for: " + url + ": " + JSON.stringify(parsedBody));
 
                     /**
-                     * This is the list of all reasons for this job execution to be running.  
+                     * This is the list of all reasons for this job execution to be running.
                      * Jenkins may 'join' several pipelined jobs so all will be listed here.
-                     * e.g. suppose A -> C and B -> C.  If both A & B scheduled C around the same time before C actually started, 
+                     * e.g. suppose A -> C and B -> C.  If both A & B scheduled C around the same time before C actually started,
                      * Jenkins will join these requests and only run C once.
                      * So, for all jobs being tracked (within this code), one is consisdered the main job (which will be followed), and
                      * all others are considered joined and will not be tracked further.
                      */
-                    var findCauses = function(actions) { 
+                    var findCauses = function(actions) {
                         for (var i in actions) {
                             if (actions[i].causes) {
-                                return actions[i].causes; 
+                                return actions[i].causes;
                             }
-                        } 
+                        }
 
                         return null;
                     };

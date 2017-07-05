@@ -22,19 +22,20 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("MGAgentHandlerMajorVersion") > 0, "Since agent major version has been upgraded, modify the task version and also in the loc string; both are in task.json.");
+            assert(tr.stdout.indexOf("DGAgentHandlerMajorVersion") > 0, "Since agent major version has been upgraded, modify the task version and also in the loc string; both are in task.json.");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
@@ -47,15 +48,67 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Successfully removed failed extensions - Create or update RG", (done) => {
+    it("Task fails when incorrect PAT token endpoint is given - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
-        process.env["resourceGroupName"] = "dummy_ProvisioningOfMachineGroupExtensionFailed";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["resourceGroupName"] = "IncorrectPat";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been tried to be added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "TeamServicesAgent should have been tried to be deleted from the VM, since the installation failed");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "TeamServicesAgent should have been deleted successfully");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Task fails when PAT service endpoint not of type Token is given  - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "dummy";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Basic\"}";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("loc_mock_OnlyTokenAuthAllowed") > 0, "TeamServicesAgent should not have been added on the VM");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Successfully removed failed extensions - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "dummy_ProvisioningOfDeploymentGroupExtensionFailed";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -78,17 +131,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "noVMs";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") <= 0, "Deployment group agent should not have been added since there are no VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied since there are no VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") <= 0, "TeamServicesAgent should not have been added since there are no VMs");
@@ -106,17 +160,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "StoppedVM";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all vms");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all vms");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied ");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added");
@@ -135,17 +190,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "TransitioningVM";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.failed, "Should have failed");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "virtualMachineExtensions.createOrUpdate function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added on all vms");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") <= 0, "Deployment group agent should not have been added on all vms");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_VMTransitioningSkipExtensionAddition") > 0, "VM is transitionin. Adding extension should be skipped and task aborted.");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") < 0, "TeamServicesAgent should not have been added on the VM. Task is supposed to abort before that.");
@@ -163,17 +219,18 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "false";
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied because option is not checked");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
@@ -191,15 +248,16 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Select Resource Group";
         process.env["resourceGroupName"] = "dummy";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "a";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
@@ -216,15 +274,16 @@ describe('Azure Resource Group Deployment', function () {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "NonWindowsVM";
-        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") > 0, "Deployment group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
@@ -247,11 +306,12 @@ describe('Azure Resource Group Deployment', function () {
         process.env["outputVariable"] = "";
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added on all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentAddedOnAllVMs") <= 0, "Deployment group agent should not have been added on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM, since option was not specified");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
@@ -268,14 +328,15 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have deleted VM");
-            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have been tried to be deleted from VM");
-            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Deployment group agent should have been tried to be deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Deployment group agent should have been deleted from VM");
             done();
         }
         catch (error) {
@@ -289,15 +350,16 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") > 0, "Machine group agent should have been deleted from all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") > 0, "Deployment group agent should have been deleted from all VMs");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have started to be deleted from VM");
-            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Deployment group agent should have started to be deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Deployment group agent should have been deleted from VM");
             done();
         }
         catch (error) {
@@ -311,12 +373,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "noVMs";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted since there are no VMs");
             assert(tr.stdout.indexOf("loc_mock_VM_Delete") <= 0, "Should not have deleted VM since no vms present");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") <= 0, "Should not have called virtualMachines.deleteMethod function from azure-sdk");
@@ -333,12 +396,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "StoppedVM";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted from all VMs");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted from all VMs");
             assert(tr.stdout.indexOf("loc_mock_VM_Delete") > 0, "Should have deleted VM");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Should have tried to deleted extension");
             assert(tr.stdout.indexOf("loc_mock_DeleteAgentManually") > 0, "Deletion warning should have been prompted");
@@ -356,12 +420,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "noVMs";
         process.env["outputVariable"] = "";
+        process.env["ENDPOINT_AUTH_PatEndpoint"] = "{\"parameters\":{\"apitoken\":\"PAT\"},\"scheme\":\"Token\"}";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted since there are not vms");
+            assert(tr.stdout.indexOf("loc_mock_DGAgentDeletedFromAllVMs") <= 0, "Deployment group agent should not have been deleted since there are not vms");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Delete Resource Group function should have been called");
             done();
@@ -372,7 +437,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    /*it('Successfully triggered createOrUpdate deployment', (done) => {
+    it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
@@ -385,14 +450,14 @@ describe('Azure Resource Group Deployment', function () {
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
-            console.log("STDOUT", tr.stdout);   
+            console.log("STDOUT", tr.stdout);
             done(error);
         }
     });
     it('Create or Update RG, failed on faulty CSM template file', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
-        process.env["csmFile"] = "\\faultyCSM.json";
-        process.env["csmParametersFile"] = "\\faultyCSM.json";
+        process.env["csmFile"] = "faultyCSM.json";
+        process.env["csmParametersFile"] = "faultyCSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -405,6 +470,23 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
         done();
+    });
+    it('Create or Update RG, succeeded on CSM template file with comments', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMwithComments.json";
+        process.env["csmParametersFile"] = "CSMwithComments.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
     });
     it('Selected Resource Group successfully', (done) => {
         let tp = path.join(__dirname, 'selectResourceGroup.js');
@@ -482,8 +564,25 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Task should have succeeded");
-            assert(tr.stdout.indexOf("loc_mock_VM_Stop") > 0, "Should have started VM");
+            assert(tr.stdout.indexOf("loc_mock_VM_Stop") > 0, "Should have stopped VM");
             assert(tr.stdout.indexOf("virtualMachines.powerOff is called") > 0, "Should have called virtualMachines.powerOff function from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it('Stopped VMs with deallocating', (done) => {
+        let tp = path.join(__dirname, 'VMOperations.js');
+        process.env["operation"] = "StopWithDeallocate";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_VM_Deallocate") > 0, "Should have deallocated VM");
+            assert(tr.stdout.indexOf("virtualMachines.deallocate is called") > 0, "Should have called virtualMachines.deallocate function from azure-sdk");
             done();
         }
         catch (error) {
@@ -532,7 +631,7 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("Enabling winrm for virtual machine") <= 0, "Should not enable winrm if the Operating System is not windows");
             done();
@@ -552,13 +651,13 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rule for the LB");
             assert(tr.stdout.indexOf("Enabling winrm for virtual machine") > 0, "Should add Custom Script Extension to the virual machine");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called on vm customVM") > 0, "Should try getting the extension on the virtual machine");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try getting the extension on the virtual machine");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should call createOrUpdate of virtual Machine extensions");
-            assert(tr.stdout.indexOf("Addition of extension completed for vmcustomVM") > 0, "Should be able to add the extension");
+            assert(tr.stdout.indexOf("Addition of extension completed for vm: customVM") > 0, "Should be able to add the extension");
             assert(tr.stdout.indexOf("Provisioning of CustomScriptExtension on vm customVM is in Succeeded State") > 0, "Provisioning of the Custom Script Extension should be in succeeded state");
             assert(tr.stdout.indexOf("Trying to add a network security group rule") <= 0, "Shouldn't try adding NSG rule");
             done();
@@ -579,14 +678,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not try adding custom Script Extension as winrmHttps Listener is already enabled");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -605,14 +704,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -630,14 +729,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -656,14 +755,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -681,13 +780,13 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -705,13 +804,13 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not enable winrm as it is already present");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -729,14 +828,14 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should get the status for Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -745,7 +844,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension is present on the VM, status is succeeded, substatus is succeeded', (done) => {
+    it('WinRM Custom Script Extension is present on the VM, status is succeeded, substatus is succeeded', (done) => {
         //No LB
         //1 VM
         //No NSG
@@ -756,18 +855,18 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should get the list of all the Custom Script Extensions");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not add Custom Script Extension");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -776,7 +875,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension is present on the VM , status is succeeded, substatus is failed', (done) => {
+    it('WinRM Custom Script Extension is present on the VM , status is succeeded, substatus is failed', (done) => {
         //No LB
         //1 VM
         //No NSG
@@ -787,17 +886,16 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
-            assert(tr.succeeded, "Task should have succeeded");
+        try {
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension present");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -806,7 +904,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension is present on the VM, status is failed', (done) => {
+    it('WinRM Custom Script Extension is present on the VM, status is failed', (done) => {
         //No LB
         //1 VM
         //No NSG
@@ -817,17 +915,16 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
-            assert(tr.succeeded, "Task should have succeeded");
+        try {
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "The extensions on the vm should be listed to get the extension of concern");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "Should remove the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") <= 0, "Should not try to get the substatus of the extension");
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");            
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
         catch (error) {
@@ -847,19 +944,18 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should add the extension");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should Validate the Custom Script Extension");
-            assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Shouldn't try to add NSG rule");
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
             done();
         }
         catch (error) {
@@ -868,7 +964,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension present is not for enabling WinRMHttpsListener', (done) => {
+    it('WinRM Custom Script Extension present is not for enabling WinRMHttpsListener', (done) => {
         // No LB
         // 1 VM, No Nsg
         let tp = path.join(__dirname, 'EnablePrereq.js');
@@ -878,15 +974,15 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachines.get is called") <= 0, "Trying to get the extension on the Virtual machines");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "The extensions on the vm should be listed to get the extension of concern");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should update the extension to enable WinrmHttps Listener");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try to add NSG rule");
             done();
         }
@@ -896,7 +992,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script is not present, VM has NSG associated', (done) => {
+    it('WinRM Custom Script is not present, VM has NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionNotPresentNSGPresent";
         process.env["csmFile"] = "CSM.json";
@@ -904,16 +1000,16 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Shouldn't try to add NSG rule");
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
             done();
         }
         catch (error) {
@@ -922,7 +1018,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('1 LB 1 VM, Custom Script extension is not present, VM has NSG associated', (done) => {
+    it('1 LB 1 VM, WinRM Custom Script extension is not present, VM has NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBOneVMExtensionNotPresentNSGPresent";
         process.env["csmFile"] = "CSM.json";
@@ -930,17 +1026,17 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try to list all the Custom Script Extensions");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");     
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");
             done();
         }
         catch (error) {
@@ -949,7 +1045,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('1 LB 2 Vms, Custom Script Extension is not present, VMs have NSG associated', (done) => {
+    it('1 LB 2 Vms, WinRM Custom Script Extension is not present, VMs have NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBTwoVMsExtensionNotPresentNSGPresent";
         process.env["csmFile"] = "CSM.json";
@@ -957,17 +1053,17 @@ describe('Azure Resource Group Deployment', function () {
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
-        try{
+        try {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
-            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");    
+            assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");            
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try to get the Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
-            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");            
-            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");       
-            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");     
+            assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
+            assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
+            assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Should add NSG Rules");
             done();
         }
         catch (error) {
@@ -975,5 +1071,26 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });*/
+    });
+    it('WinRM Custom Script Extension is not present, but some other CustomScriptExtension is present', (done) => {
+        let tp = path.join(__dirname, 'EnablePrereq.js');
+        process.env["resourceGroupName"] = "SomeOtherCustomScriptExtensionPresent";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try to get the Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "Should try to delete the already existing Custom Script extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 });

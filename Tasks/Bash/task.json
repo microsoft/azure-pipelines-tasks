@@ -1,0 +1,76 @@
+{
+    "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
+    "name": "Bash",
+    "friendlyName": "Bash",
+    "description": "Run a Bash script on Mac, Linux, or Windows",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 3,
+        "Minor": 120,
+        "Patch": 0
+    },
+    "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
+    "preview": true,
+    "minimumAgentVersion": "2.115.0",
+    "instanceNameFormat": "Bash Script",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "script",
+            "type": "multiLine",
+            "label": "Script",
+            "required": true,
+            "defaultValue": "# Write your commands here",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            },
+            "helpMarkDown": ""
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnStderr",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "bash.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "JS_ExitCode": "Bash exited with code '%s'.",
+        "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
+        "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system."
+    }
+}

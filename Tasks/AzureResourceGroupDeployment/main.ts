@@ -20,19 +20,16 @@ function run(): Promise<void> {
         case "Stop":
         case "Restart":
         case "Delete":
+        case "StopWithDeallocate":
             return virtualMachineOperation.execute();
         default:
             throw tl.loc("InvalidAction", taskParameters.action);
     }
 }
 
-try {
-    tl.setResourcePath(path.join(__dirname, "task.json"));
-}
-catch (err) {
-    tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));
-    process.exit();
-}
+var taskManifestPath = path.join(__dirname, "task.json");
+tl.debug("Setting resource path to " + taskManifestPath);
+tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
    tl.setResult(tl.TaskResult.Succeeded, "")

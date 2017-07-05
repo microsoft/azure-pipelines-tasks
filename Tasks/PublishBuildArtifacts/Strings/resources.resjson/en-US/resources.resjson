@@ -11,6 +11,12 @@
   "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The file share to which to copy the files",
+  "loc.input.label.Parallel": "Parallel Copy",
+  "loc.input.help.Parallel": "True to enable parallel copy.",
+  "loc.input.label.ParallelCount": "Parallel Count",
+  "loc.input.help.ParallelCount": "Parallelism to perform the copy. Must be at least 1 and not greater than 128.",
   "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent.",
-  "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "This task can be used to publish to server drop within a Build job only.",
+  "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
+  "loc.messages.UnexpectedParallelCount": "Unexpected parallel count '%s'. Please enter a number between 1 and 128."
 }

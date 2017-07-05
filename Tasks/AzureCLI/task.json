@@ -5,6 +5,7 @@
     "description": "Run a Shell or Batch script with Azure CLI commands against an azure subscription",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
+    "releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with Xplat agents (Windows, Linux or OSX)\n- For working with Azure CLI 1.0 (node based), switch to task version 0.0\n- Limitations:\n - No support for Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -12,15 +13,15 @@
     ],
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [],
     "version": {
-        "Major": 0,
-        "Minor": 2,
-        "Patch": 7
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1
     },
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
     "groups": [
         {
@@ -31,34 +32,11 @@
     ],
     "inputs": [
         {
-            "name": "connectedServiceNameSelector",
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "defaultValue": "connectedServiceNameARM",
-            "required": true,
-            "helpMarkDown": "Select the Azure connection type for the Deployment",
-            "options": {
-                "connectedServiceName": "Azure Classic",
-                "connectedServiceNameARM": "Azure Resource Manager"
-            }
-        },
-        {
             "name": "connectedServiceNameARM",
             "type": "connectedService:AzureRM",
-            "label": "AzureRM Subscription",
-            "defaultValue": "",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
+            "label": "Azure subscription",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment"
-        },
-        {
-            "name": "connectedServiceName",
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "visibleRule": "connectedServiceNameSelector = connectedServiceName",
-            "required": true,
-            "helpMarkDown": "Select the Azure Classic subscription for the deployment"
+            "helpMarkDown": "Select an Azure resource manager subscription for the deployment"
         },
         {
             "name": "scriptLocation",
@@ -66,10 +44,10 @@
             "label": "Script Location",
             "defaultValue": "scriptPath",
             "required": true,
-            "helpMarkDown": "Type of script: File Path or Inline Script",
+            "helpMarkDown": "Type of script: File path or Inline script",
             "options": {
-                "inlineScript": "Inline Script",
-                "scriptPath": "Script Path"
+                "inlineScript": "Inline script",
+                "scriptPath": "Script path"
             }
         },
         {
@@ -88,7 +66,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "scriptLocation = inlineScript",
-            "helpMarkDown": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: azure --version || azure account show \n\n example for batch: call  azure --version || call azure account show",
+            "helpMarkDown": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: az --version || az account show \n\n example for batch: call  az --version || call az account show",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
@@ -101,7 +79,10 @@
             "label": "Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Arguments passed to the script"
+            "helpMarkDown": "Arguments passed to the script",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
         },
         {
             "name": "cwd",
@@ -131,6 +112,8 @@
     "messages": {
         "ScriptReturnCode": "Script exited with return code: %d",
         "ScriptFailed": "Script failed with error: %s",
-        "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Certificate and Username Password for Azure Classic and Service Principal for AzureRM"
+        "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Service Principal for AzureRM",
+        "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
+        "FailedToLogout": "The following error occured while logging out: %s"
     }
 }

@@ -3,7 +3,7 @@
     "name": "QuickPerfTest",
     "friendlyName": "Cloud-based Web Performance Test",
     "description": "Runs a quick web performance test in the cloud with Visual Studio Team Services",
-    "helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203).",
+    "helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 22
     },
     "demands": [
         "msbuild",
@@ -78,7 +78,7 @@
             "type": "pickList",
             "label": "Load Location",
             "required": false,
-            "helpMarkDown": "Geographical region to generate the load from. See help for more details.",
+            "helpMarkDown": "Geographical region to generate the load from.",
             "defaultValue": "Default",
             "options": {
                 "Default": "Default",
@@ -114,7 +114,7 @@
             "name": "avgResponseTimeThreshold",
             "type": "string",
             "label": "Fail test if Avg.Response Time(ms) exceeds",
-            "helpMarkDown": "Load test run duration in seconds.",
+            "helpMarkDown": "Average response time above which the load test outcome is considered unsuccessful.",
             "defaultValue": "0"
         }
     ],

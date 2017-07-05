@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 114,
+    "Minor": 119,
     "Patch": 1
   },
   "groups": [
@@ -55,10 +55,7 @@
       "defaultValue": "Apple",
       "groupName": "symbols",
       "options": {
-        "Apple": "Apple",
-        "AndroidJava": "Android (Java)",
-        "AndroidNative": "Android (native C/C++)",
-        "Windows": "Windows"
+        "Apple": "Apple"
       }
     },
     {
@@ -68,7 +65,17 @@
       "groupName": "symbols",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.symbolsPath",
-      "visibleRule": "symbolsType = Windows || symbolsType == AndroidNative"
+      "visibleRule": "symbolsType == AndroidNative || symbolsType = Windows"
+    },
+    {
+      "name": "pdbPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.pdbPath",
+      "defaultValue": "**/*.pdb",
+      "groupName": "symbols",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pdbPath",
+      "visibleRule": "symbolsType = UWP"
     },
     {
       "name": "dsymPath",

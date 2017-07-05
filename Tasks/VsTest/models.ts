@@ -1,11 +1,22 @@
-export interface ExecutabaleInfo {
-    version: number;
-    location: string;
-}
+import * as version from './vstestversion';
 
 export interface TestConfigurations {
+    testSelection: string;
+
+    // ranjanar : TODO : Plan for better modelling of these
+    // Test Assembly Related Properties
     sourceFilter: string[];
     testcaseFilter: string;
+
+    // Test Plan related Properties
+    testplan: number;
+    testSuites: number[];
+    testPlanConfigId: number;
+
+    // Test Run Related Properties
+    onDemandTestRunId: string;
+
+    // Common Properties
     settingsFile: string;
     testDropLocation: string; // search folder
     overrideTestrunParameters: string;
@@ -17,19 +28,15 @@ export interface TestConfigurations {
     vsTestLocationMethod: string;
     vsTestVersion: string;
     vsTestLocation: string;
+    vsTestVersionDetais: version.VSTestVersion;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
     runTestsInIsolation: boolean;
-    vs15HelperPath: string;
-    testSelection: string; // "testPlan" as selection string
-    testplan: number;
-    testSuites: number[];
-    testPlanConfigId: number;
+    otherConsoleOptions: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
-    onDemandTestRunId: string;
     testConfigurationMapping: string; // TODO : What is this?
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;
@@ -41,12 +48,13 @@ export interface DtaEnvironment {
     patToken: string;
     environmentUri: string;
     dtaHostLogFilePath: string;
+    agentName: string;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
-    publishRunAttachments: string;    
+    publishRunAttachments: string;
     vstestDiagFile: string;
-    ignoreVstestFailure: string;    
+    ignoreVstestFailure: string;
 }
 
 export interface TiaConfiguration {
@@ -60,4 +68,7 @@ export interface TiaConfiguration {
     useNewCollector: boolean;
     isPrFlow: string;
     context: string;
+    useTestCaseFilterInResponseFile: string;
+    userMapFile: string;
+    disableEnablingDataCollector: boolean;
 }

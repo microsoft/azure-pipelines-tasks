@@ -9,56 +9,84 @@ function Check-ServerName
     }
 }
 
-function Get-AgentStartIPAddress
+function Get-FormattedSqlUsername
 {
-    $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
-    $vssCredential = [string]$endpoint.auth.parameters.AccessToken
+    param(
+        [String] $sqlUserName,
+        [String] $serverName
+    )
 
-    $vssUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
-    if ($vssUri.IndexOf("visualstudio.com", [System.StringComparison]::OrdinalIgnoreCase) -ne -1) {
-        # This hack finds the DTL uri for a hosted account. Note we can't support devfabric since the
-        # there subdomain is not used for DTL endpoint
-        $vssUri = $vssUri.Replace("visualstudio.com", "vsdtl.visualstudio.com")
+    if ($serverName)
+    {
+        $serverNameSplittedArgs = $serverName.Trim().Split(".")
+        if ($serverNameSplittedArgs.Length -gt 0)
+        {
+            $sqlServerFirstName = $serverNameSplittedArgs[0]
+            if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
+            {
+                $sqlUsername = $sqlUsername + "@" + $serverName 
+            }
+        }
     }
 
-    Write-Verbose "Querying VSTS uri '$vssUri' to get external ip address"
-
-    # Getting start ip address from dtl service
-    Write-Verbose "Getting external ip address by making call to dtl service"
-    $vssUri = $vssUri + "/_apis/vslabs/ipaddress"
-    $username = ""
-    $password = $vssCredential
-
-    $basicAuth = ("{0}:{1}" -f $username, $password)
-    $basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
-    $basicAuth = [System.Convert]::ToBase64String($basicAuth)
-    $headers = @{Authorization=("Basic {0}" -f $basicAuth)}
-
-    $response = Invoke-RestMethod -Uri $($vssUri) -headers $headers -Method Get -ContentType "application/json"
-    Write-Verbose "Response: $response"
-
-    return $response.Value
+    return $sqlUsername
 }
 
-function Get-AgentIPAddress
+function Get-AgentIPRange
 {
-    param([String] $startIPAddress,
-          [String] $endIPAddress,
-          [String] [Parameter(Mandatory = $true)] $ipDetectionMethod)
+    param(
+        [String] $serverName,
+        [String] $sqlUserName,
+        [String] $sqlPassword
+    )
 
-    [HashTable]$IPAddress = @{}
-    if($ipDetectionMethod -eq "IPAddressRange")
+    [hashtable] $IPRange = @{}
+
+    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+    $env:SQLCMDPASSWORD = $sqlPassword
+
+    $formattedSqlUsername = $sqlUserName
+
+    if($sqlUserName)
     {
-        $IPAddress.StartIPAddress = $startIPAddress
-        $IPAddress.EndIPAddress = $endIPAddress
-    }
-    elseif($ipDetectionMethod -eq "AutoDetect")
-    {
-        $IPAddress.StartIPAddress = Get-AgentStartIPAddress
-        $IPAddress.EndIPAddress = $IPAddress.StartIPAddress
+        $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
     }
 
-    return $IPAddress
+    $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+    
+    Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
+
+    $ErrorActionPreference = 'Continue'
+
+    $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+
+    $ErrorActionPreference = 'Stop'
+
+    if($errors.Count -gt 0)
+    {
+        $errMsg = $errors[0].ToString()
+        Write-Verbose "Error Message : $errMsg"
+        $output = $errMsg
+    }
+
+    if($output)
+    {
+        Write-Verbose "Message To Parse: $output"
+
+        $pattern = "([0-9]+)\.([0-9]+)\.([0-9]+)\."
+        $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+        if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
+        {
+            $ipRangePrefix = $regex.Match($output).Groups[0].Value;
+            Write-Verbose "IP Range Prefix $ipRangePrefix"
+
+            $IPRange.StartIPAddress = $ipRangePrefix + '0'
+            $IPRange.EndIPAddress = $ipRangePrefix + '255'
+        }
+    }
+
+    return $IPRange
 }
 
 function Get-Endpoint
@@ -147,18 +175,7 @@ function Get-SqlPackageCommandArguments
 
         if($sqlUsername)
         {
-            if ($serverName)
-            {
-                $serverNameSplittedArgs = $serverName.Trim().Split(".")
-                if ($serverNameSplittedArgs.Length -gt 0)
-                {
-                    $sqlServerFirstName = $serverNameSplittedArgs[0]
-                    if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
-                    {
-                        $sqlUsername = $sqlUsername + "@" + $serverName 
-                    }
-                }
-            }
+            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
 
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))

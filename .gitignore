@@ -1,6 +1,7 @@
 node_modules/
 _temp/
 .vscode
+.DS_Store
 gulp-tsc-tmp-*
 .gulp-tsc-tmp-*
 
@@ -16,7 +17,7 @@ gulp-tsc-tmp-*
 *.suo
 *.user
 *.sln.docstates
-/.vs
+.vs/
 
 # Build results
 [Dd]ebug/

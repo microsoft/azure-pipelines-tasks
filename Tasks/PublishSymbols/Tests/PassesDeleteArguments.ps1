@@ -20,6 +20,7 @@ Register-Mock Get-VstsInput { '123' } -- -Name 'SymbolsMaximumWaitTime' -Default
 Register-Mock Get-VstsInput { $true } -- -Name 'Delete' -AsBool
 Register-Mock Get-VstsInput { 'Some input symbols path' } -- -Name 'SymbolsPath' -Require
 Register-Mock Get-VstsInput { 'Some transaction ID' } -- -Name 'TransactionId' -Require
+$env:PublishSymbols_Debug = $null
 
 # Act.
 & $PSScriptRoot\..\PublishSymbols.ps1

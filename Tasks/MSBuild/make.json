@@ -3,17 +3,31 @@
         {
             "module": "../Common/MSBuildHelpers",
             "type": "ps"
+        },
+        {
+            "module": "../Common/MSBuildHelpers",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/msbuildhelpers/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
         }
     ],
     "externals": {
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.7.1",
+                "version": "0.8.2",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
                         "source": [
+                            "*.dll",
                             "*.ps1",
                             "*.psd1",
                             "*.psm1",

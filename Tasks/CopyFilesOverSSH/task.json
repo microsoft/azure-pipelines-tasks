@@ -11,13 +11,13 @@
     ],
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 3
+        "Minor": 115,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -44,7 +44,7 @@
             "label": "Source folder",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The source folder for the files to copy to the remote machine.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+            "helpMarkDown": "The source folder of the files to copy to the remote machine.  When empty, the root of the repository (build) or artifacts directory (release) is used, which is $(System.DefaultWorkingDirectory).  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repository. Example: $(Agent.BuildDirectory)"
         },
         {
             "name": "contents",
@@ -59,7 +59,7 @@
             "type": "string",
             "label": "Target folder",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Target folder on the remote machine to where files will be copied. Example: /home/user/MySite."
         },
         {
@@ -68,7 +68,7 @@
             "label": "Clean target folder",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Delete all existing files in the target folder before copying.",
+            "helpMarkDown": "Delete all existing files and subfolders in the target folder before copying.",
             "groupName": "advanced"
         },
         {
@@ -77,7 +77,16 @@
             "label": "Overwrite",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Replace existing files in the target folder.",
+            "helpMarkDown": "Replace existing files in and beneath the target folder.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnEmptySource",
+            "type": "boolean",
+            "label": "Fail if no files found to copy",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fail if no matching files to be copied are found under the source folder.",
             "groupName": "advanced"
         },
         {

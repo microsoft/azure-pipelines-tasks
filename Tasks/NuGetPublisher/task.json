@@ -2,23 +2,24 @@
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f25b",
     "name": "NuGetPublisher",
     "friendlyName": "NuGet Publisher",
-    "description": "Uploads nupkg files to a NuGet server",
+    "description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this account/collection, and uses NuGet 4 by default.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627417)",
     "category": "Package",
     "author": "Lawrence Gripper",
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 30
+        "Patch": 35
     },
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [
         "Cmd"
     ],
     "minimumAgentVersion": "1.83.0",
+    "deprecated": true,
     "groups": [
         {
             "name": "advanced",
@@ -99,6 +100,7 @@
             "options": {
                 "3.3.0": "3.3.0",
                 "3.5.0.1829": "3.5.0",
+                "4.0.0.2283": "4.0.0",
                 "custom": "Custom"
             }
         },

@@ -15,6 +15,8 @@ import JobState = job.JobState;
 import jobsearch = require('./jobsearch');
 import JobSearch = jobsearch.JobSearch;
 
+import util = require('./util');
+
 export class JobQueue {
     taskOptions: TaskOptions;
 
@@ -80,7 +82,7 @@ export class JobQueue {
         var running = [];
         for (var i in this.allJobs) {
             var job = this.allJobs[i];
-            if (job.state == JobState.Streaming || job.state==JobState.Downloading || job.state == JobState.Finishing) {
+            if (job.state == JobState.Streaming || job.state == JobState.Downloading || job.state == JobState.Finishing) {
                 running.push(job);
             }
         }
@@ -179,25 +181,26 @@ export class JobQueue {
     }
 
     writeFinalMarkdown(complete: boolean) {
-        tl.debug('writing summary markdown');
-        var thisQueue = this;
-        var tempDir = shell.tempdir();
-        var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + this.rootJob.name + '_' + this.rootJob.executableNumber + '.md');
-        tl.debug('markdown location: ' + linkMarkdownFile);
-        var tab: string = "  ";
-        var paddingTab: number = 4;
-        var markdownContents = walkHierarchy(this.rootJob, "", 0);
+        let colorize = (s) => {
+            // 'Success' is green, everything else is red
+            let color = 'red';
+            if (s === tl.loc('succeeded')) {
+                color = 'green';
+            }
+
+            return `<font color='${color}'>${s}</font>`
+        }
 
         function walkHierarchy(job: Job, indent: string, padding: number): string {
             var jobContents = indent + '<ul style="padding-left:' + padding + '">\n';
 
             // if this job was joined to another follow that one instead
             job = findWorkingJob(job);
-            
+
             if (job.executableNumber == -1) {
-                jobContents += indent + job.name + ' ' + job.getResultString() + '<br>\n';
+                jobContents += indent + job.name + ' ' + colorize(job.getResultString()) + '<br />\n';
             } else {
-                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + job.getResultString() + '<br>\n';
+                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString()) + '<br />\n';
             }
 
             var childContents = "";
@@ -216,36 +219,125 @@ export class JobQueue {
             }
         }
 
-        fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
-            tl.debug('writeFinalMarkdown().writeFile().callback()');
+        function createPipelineReport(job: Job, taskOptions: TaskOptions, report): string {
+            let authority = util.getUrlAuthority(job.executableUrl);
 
-            if (err) {
-                //don't fail the build -- there just won't be a link
-                console.log('Error creating link to Jenkins job: ' + err);
-            } else {
-                console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
+            let getStageUrl = (authority, stage) => {
+                let result = '';
+                if (stage && stage['_links']
+                          && stage['_links']['self']
+                          && stage['_links']['self']['href'])
+                {
+                    result = stage['_links']['self']['href'];
+                    //remove the api link
+                    result = result.replace('/wfapi/describe', '');
+                }
+
+                return `${authority}${result}`;
+            };
+
+
+            let convertStatus = (s) => {
+                let status = s.toLowerCase();
+                if (status === 'success') {
+                    status = tl.loc('succeeded');
+                }
+
+                return status;
             }
 
-            var message: string = null;
-            if (complete) {
-                if (thisQueue.taskOptions.capturePipeline) {
-                    message = 'Jenkins pipeline complete';
-                } else if (thisQueue.taskOptions.captureConsole) {
-                    message = 'Jenkins job complete';
-                } else {
-                    message = 'Jenkins job queued';
-                }
-                tl.setResult(tl.TaskResult.Succeeded, message);
-            } else {
-                if (thisQueue.taskOptions.capturePipeline) {
-                    message = 'Jenkins pipeline failed';
-                } else if (thisQueue.taskOptions.captureConsole) {
-                    message = 'Jenkins job failed';
-                } else {
-                    message = 'Jenkins job failed to queue';
-                }
-                tl.setResult(tl.TaskResult.Failed, message);
+            // Top level pipeline job status
+            let jobContent = '<ul style="padding-left: 0">';
+            let jobName = taskOptions.jobName;
+            if (taskOptions.isMultibranchPipelineJob) {
+                jobName = `${jobName}/${taskOptions.multibranchPipelineBranch}`;
             }
+            jobContent += '[' + jobName + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString());
+            if (job.getResultString() !== tl.loc('succeeded')) {
+                jobContent += ` ([${tl.loc('console')}](${job.executableUrl}/console))`
+            }
+            jobContent += '<br />';
+
+            // For each stage, write its status
+            let stageContents = '';
+            for (let stage of report['stages']) {
+                let stageUrl = getStageUrl(authority, stage);
+                stageContents += '[' + stage["name"] + '](' + stageUrl + ') ' + colorize(convertStatus(stage.status))+'<br />';
+            }
+
+            if (stageContents) {
+                jobContent += '<ul style="padding-left: 4">\n';
+                jobContent += stageContents;
+                jobContent += '</ul>';
+            }
+
+            //close out the element for the entire job
+            jobContent += '</ul>';
+            return jobContent;
+        }
+
+        function generatePipelineReport(job: Job, taskOptions: TaskOptions, callback: (pipelineReport: string) => void) {
+            util.getPipelineReport(job, taskOptions)
+                .then((body) => {
+                    if (body) {
+                        let parsedBody = JSON.parse(body);
+                        callback(createPipelineReport(job, taskOptions, parsedBody));
+                    } else {
+                        callback(tl.loc('FailedToGenerateSummary'));
+                    }
+                })
+        }
+
+        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent: string) => void) {
+            util.isPipelineJob(job, taskOptions)
+                .then((isPipeline) => {
+                    if (isPipeline) {
+                        generatePipelineReport(job, taskOptions, callback);
+                    } else {
+                        callback(walkHierarchy(job, "", 0));
+                    }
+                })
+        }
+
+        tl.debug('writing summary markdown');
+        var thisQueue = this;
+        var tempDir = shell.tempdir();
+        var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + this.rootJob.name + '_' + this.rootJob.executableNumber + '.md');
+        tl.debug('markdown location: ' + linkMarkdownFile);
+        var tab: string = "  ";
+        var paddingTab: number = 4;
+        generateMarkdownContent(this.rootJob, thisQueue.taskOptions, (markdownContents) => {
+            fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
+                tl.debug('writeFinalMarkdown().writeFile().callback()');
+
+                if (err) {
+                    //don't fail the build -- there just won't be a link
+                    console.log('Error creating link to Jenkins job: ' + err);
+                } else {
+                    console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
+                }
+
+                var message: string = null;
+                if (complete) {
+                    if (thisQueue.taskOptions.capturePipeline) {
+                        message = tl.loc('JenkinsPipelineComplete');
+                    } else if (thisQueue.taskOptions.captureConsole) {
+                        message = tl.loc('JenkinsJobComplete');
+                    } else {
+                        message = tl.loc('JenkinsJobQueued');
+                    }
+                    tl.setResult(tl.TaskResult.Succeeded, message);
+                } else {
+                    if (thisQueue.taskOptions.capturePipeline) {
+                        message = tl.loc('JenkinsPipelineFailed');
+                    } else if (thisQueue.taskOptions.captureConsole) {
+                        message = tl.loc('JenkinsJobFailed');
+                    } else {
+                        message = tl.loc('JenkinsJobFailedtoQueue');
+                    }
+                    tl.setResult(tl.TaskResult.Failed, message);
+                }
+            });
         });
     }
 }

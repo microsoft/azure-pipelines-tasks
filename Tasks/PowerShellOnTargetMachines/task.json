@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 46
+        "Patch": 47
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -90,6 +90,9 @@
             "defaultValue": "",
             "groupName": "deployment",
             "required": false,
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            },
             "helpMarkDown": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test"
         },
         {

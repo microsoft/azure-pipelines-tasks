@@ -1,8 +1,10 @@
 import * as path from "path";
-
 import * as tl from "vsts-task-lib/task";
-
 import * as ngToolRunner from "./NuGetToolRunner";
+import * as vsts from "vso-node-api/WebApi";
+import {VersionInfo} from "./pe-parser/VersionResource";
+import locationHelpers = require("./LocationHelpers");
+import * as url from "url";
 
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
 export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean, includeFolders?: boolean): string[] {
@@ -149,7 +151,10 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
 
 export function getBundledNuGetLocation(uxOption: string): string {
     let nuGetDir;
-    if (uxOption === "3.5.0.1829") {
+    if (uxOption === "4.0.0.2283") {
+        nuGetDir = "NuGet/4.0.0";
+    }
+    else if (uxOption === "3.5.0.1829") {
         nuGetDir = "NuGet/3.5.0";
     }
     else if (uxOption === "3.3.0") {
@@ -181,4 +186,35 @@ export function setConsoleCodePage() {
     if (tl.osType() === 'Windows_NT') {
         tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
     }
+}
+
+export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string, nuGetVersion: VersionInfo): Promise<string>
+{
+    const ApiVersion = "3.0-preview.1";
+    let PackagingAreaName: string = "nuget";
+    // If no version is received, V3 is assumed
+    let PackageAreaId: string = nuGetVersion && nuGetVersion.productVersion.a < 3 ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA" : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
+
+    let credentialHandler = vsts.getBearerHandler(accessToken);
+    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+    // The second element contains the transformed packaging URL
+    let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
+
+    if (!packagingCollectionUrl)
+    {
+        packagingCollectionUrl = collectionUrl;
+    }
+
+    const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
+    if (overwritePackagingCollectionUrl) {
+        tl.debug("Overwriting packaging collection URL");
+        packagingCollectionUrl = overwritePackagingCollectionUrl;
+    }
+
+    let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
+    let coreApi = vssConnection.getCoreApi();
+
+    let data = await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+
+    return data.requestUrl;
 }

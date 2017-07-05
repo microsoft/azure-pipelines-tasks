@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 21
   },
   "demands": [
     "msbuild",
@@ -29,18 +29,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
-      "name": "TestSettings",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.TestSettings",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.TestSettings"
-    },
-    {
       "name": "TestDrop",
-      "type": "filePath",
+      "type": "string",
       "label": "ms-resource:loc.input.label.TestDrop",
-      "defaultValue": "",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.TestDrop"
     },
@@ -51,6 +43,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.LoadTest"
+    },
+    {
+      "name": "TestSettings",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TestSettings",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TestSettings"
     },
     {
       "name": "ThresholdLimit",

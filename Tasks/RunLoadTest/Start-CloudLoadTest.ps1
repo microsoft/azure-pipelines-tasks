@@ -9,7 +9,7 @@ $env:BUILD_BUILDID,
 [String] [Parameter(Mandatory = $false)]
 $connectedServiceName,
 
-[String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+[String] [Parameter(Mandatory = $false)]
 $TestSettings,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
 $TestDrop,
@@ -24,6 +24,7 @@ $MachineType
 $global:userAgent = "CloudLoadTestBuildTask"
 $global:apiVersion = "api-version=1.0"
 $global:ScopedTestDrop = $TestDrop
+$global:RunTestSettingsFile = $TestSettings
 $ThresholdExceeded = $false
 $MonitorThresholds = $false
 
@@ -74,14 +75,14 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
-Write-Output "Test settings = $testSettings"
-Write-Output "Test drop = $testDrop"
-Write-Output "Load test = $loadTest"
-Write-Output "Load generator machine type = $machineType"
+Write-Output "Test settings = $TestSettings"
+Write-Output "Test drop = $TestDrop"
+Write-Output "Load test = $LoadTest"
+Write-Output "Load generator machine type = $MachineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
-ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testSettings $testDrop $loadTest
+ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $TestSettings $TestDrop $LoadTest
 
 #Setting monitoring of Threshold rule appropriately
 if ($ThresholdLimit -and $ThresholdLimit -ge 0)
@@ -166,25 +167,29 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	{
 		$thresholdMessage=("{0} thresholds violated." -f $thresholdsViolatedCount)
 		$thresholdImage="bowtie-status-error"
+		$thresholdImageLabel="Error"
 	}
 	elseif ($thresholdsViolatedCount -gt 1)
 	{
 		$thresholdMessage=("{0} thresholds violated." -f $thresholdsViolatedCount)
 		$thresholdImage="bowtie-status-warning"
+		$thresholdImageLabel="Warning"
 	}
 	elseif ($thresholdsViolatedCount -eq 1)
 	{
 		$thresholdMessage=("{0} threshold violated." -f $thresholdsViolatedCount)
 		$thresholdImage="bowtie-status-warning"
+		$thresholdImageLabel="Warning"
 	}
 	else
 	{
 		$thresholdMessage="No thresholds violated."
 		$thresholdImage="bowtie-status-success"
+		$thresholdImageLabel="Success"
 	}
 	
 	
-	$summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
+	$summary = ('<span class="bowtie-icon {3}" role="img" aria-label="{5}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage, $thresholdImageLabel)
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
 	UploadSummaryMdReport $summaryFile
 }

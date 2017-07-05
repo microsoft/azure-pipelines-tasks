@@ -10,12 +10,14 @@ import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("./azure-rest/azure-arm-resource");
+import armResource = require("azure-arm-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
-import mgExtensionHelper = require("./MachineGroupExtensionHelper");
+import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
+import fileEncoding = require('./FileEncoding');
 
+var stripJsonComments = require("strip-json-comments");
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
@@ -35,13 +37,13 @@ export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private winRMExtensionHelper: winRM.WinRMExtensionHelper;
-    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
+    private deploymentGroupExtensionHelper: dgExtensionHelper.DeploymentGroupExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
-        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
+        this.deploymentGroupExtensionHelper = new dgExtensionHelper.DeploymentGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
     }
 
@@ -55,7 +57,7 @@ export class ResourceGroup {
 
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromResourceGroup();
+            var extDelPromise = this.deploymentGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
                 var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -85,13 +87,17 @@ export class ResourceGroup {
 
     private writeDeploymentErrors(error) {
         console.log(tl.loc("ErrorsInYourDeployment", error.code));
-        tl.error(error.message);
-        if (error.details) {
-            tl.error(tl.loc("Details"));
-            for (var i = 0; i < error.details.length; i++) {
-                var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
-                tl.error(errorMessage);
+        if (error.message) {
+            tl.error(error.message);
+            if (error.details) {
+                tl.error(tl.loc("Details"));
+                for (var i = 0; i < error.details.length; i++) {
+                    var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                    tl.error(errorMessage);
+                }
             }
+        } else {
+            tl.error(error);
         }
     }
 
@@ -108,8 +114,8 @@ export class ResourceGroup {
         if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM) {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
-        else if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqMG) {
-            await this.machineGroupExtensionHelper.addExtensionOnResourceGroup();
+        else if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqDG) {
+            await this.deploymentGroupExtensionHelper.addExtensionOnResourceGroup();
         }
     }
 
@@ -145,15 +151,39 @@ export class ResourceGroup {
         return depName;
     }
 
-    private updateOverrideParameters(parameters: Object): Object {
+    private castToType(value: string, type: string) {
+        switch (type) {
+            case "int":
+                return parseInt(value);
+            case "object":
+                return JSON.parse(value);
+            case "secureObject":
+                return JSON.parse(value);
+            case "array":
+                return JSON.parse(value);
+            case "bool":
+                return value === "true";
+            default:
+                // Sending as string
+                break;
+        }
+        return value;
+    }
+
+    private updateOverrideParameters(template: Object, parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
-        var override = parameterParser(this.taskParameters.overrideParameters);
-        for (var key in override) {
+        var overrideParameters = parameterParser(this.taskParameters.overrideParameters);
+        for (var key in overrideParameters) {
             tl.debug("Overriding key: " + key);
-            parameters[key] = override[key];
-        }
+            try {
+                overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
+            } catch (error) {
+                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+            }
+            parameters[key] = overrideParameters[key];
 
+        }
         return parameters;
     }
 
@@ -170,17 +200,17 @@ export class ResourceGroup {
         });
     }
 
-    private downloadParametersFile(url): Promise<string> {
+    private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             httpObj.get("GET", url, {}, (error, result, contents) => {
                 if (error) {
-                    return reject(tl.loc("ParametersFileFetchFailed", error));
+                    return reject(tl.loc("FileFetchFailed", url, error));
                 }
                 if (result.statusCode === 200)
                     resolve(contents);
                 else {
                     var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
-                    return reject(tl.loc("ParametersFileFetchFailed", errorMessage));
+                    return reject(tl.loc("FileFetchFailed", url, errorMessage));
                 }
             });
         });
@@ -190,11 +220,11 @@ export class ResourceGroup {
         var template: Object;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(fs.readFileSync(this.taskParameters.csmFile, 'UTF-8'));
+            template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile)));
             tl.debug("Loaded CSM File");
         }
         catch (error) {
-            throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+            throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
         }
 
         var parameters = {};
@@ -202,18 +232,18 @@ export class ResourceGroup {
             if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
                 if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
                     tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
+                    var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile)));
                     tl.debug("Loaded Parameters File");
-                    parameters = JSON.parse(parameterFile).parameters;
+                    parameters = parameterFile["parameters"];
                 }
             }
         }
         catch (error) {
-            throw (tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
+            throw new Error(tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(parameters);
+            parameters = this.updateOverrideParameters(template, parameters);
         }
 
         var deployment = new Deployment({
@@ -234,8 +264,8 @@ export class ResourceGroup {
 
         if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
             if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-                var contents = await this.downloadParametersFile(this.taskParameters.csmParametersFileLink)
-                parameters = JSON.parse(contents).parameters;
+                var contents = await this.downloadFile(this.taskParameters.csmParametersFileLink);
+                parameters = JSON.parse(stripJsonComments(contents)).parameters;
             }
             else {
                 deployment.properties["parametersLink"] = {
@@ -245,7 +275,17 @@ export class ResourceGroup {
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
-            parameters = this.updateOverrideParameters(parameters);
+            tl.debug("Downloading CSM Template File.. " + this.taskParameters.csmFileLink);
+            var templateFile = await this.downloadFile(this.taskParameters.csmFileLink);
+            var template;
+            try {
+                var template = JSON.parse(stripJsonComments(templateFile));
+                tl.debug("Loaded CSM File");
+            }
+            catch (error) {
+                throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+            }
+            parameters = this.updateOverrideParameters(template, parameters);
             deployment.properties["parameters"] = parameters;
         }
 
@@ -303,7 +343,7 @@ export class ResourceGroup {
         await this.performAzureDeployment(armClient, deployment);
     }
 
-    private enablePrereqMG = "ConfigureVMWithMGAgent";
+    private enablePrereqDG = "ConfigureVMWithDGAgent";
     private enablePrereqWinRM = "ConfigureVMwithWinRM";
     private enablePrereqNone = "None";
 }

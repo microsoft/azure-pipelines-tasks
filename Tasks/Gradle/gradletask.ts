@@ -15,6 +15,7 @@ import { CheckstyleTool } from './CodeAnalysis/Common/CheckstyleTool';
 import { FindbugsTool } from './CodeAnalysis/Common/FindbugsTool';
 import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
 import { ICodeCoverageEnabler } from 'codecoverage-tools/codecoverageenabler';
+import ccUtil = require('codecoverage-tools/codecoverageutilities');
 import javacommons = require('java-common/java-common');
 
 // Configure the JVM associated with this run.
@@ -85,9 +86,14 @@ function isMultiModuleProject(wrapperScript: string): boolean {
     return false;
 }
 
-function publishCodeCoverage(isCodeCoverageOpted: boolean, codeCoverageTool: string,
-                             summaryFile: string, reportDirectory: string): void {
+
+async function publishCodeCoverage(isCodeCoverageOpted: boolean, failIfCoverageEmpty: boolean,
+                             codeCoverageTool: string, summaryFile: string, reportDirectory: string) {
     if (isCodeCoverageOpted) {
+        tl.debug('publishCodeCoverage');
+        if (failIfCoverageEmpty && await ccUtil.isCodeCoverageFileEmpty(summaryFile, codeCoverageTool)) {
+            throw tl.loc('NoCodeCoverage');
+        }
         if (tl.exist(summaryFile)) {
             tl.debug('Summary file = ' + summaryFile);
             tl.debug('Report directory = ' + reportDirectory);
@@ -159,6 +165,7 @@ async function run() {
         let javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
         let codeCoverageTool: string = tl.getInput('codeCoverageTool');
         let isCodeCoverageOpted: boolean = (typeof codeCoverageTool !== 'undefined' && codeCoverageTool && codeCoverageTool.toLowerCase() !== 'none');
+        let failIfCodeCoverageEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         let publishJUnitResults: boolean = tl.getBoolInput('publishJUnitResults');
         let testResultsFiles: string = tl.getInput('testResultsFiles', true);
         let inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
@@ -260,7 +267,7 @@ async function run() {
 
         // We should always publish test results and code coverage
         publishTestResults(publishJUnitResults, testResultsFiles);
-        publishCodeCoverage(isCodeCoverageOpted, codeCoverageTool, summaryFile, reportDirectory);
+        await publishCodeCoverage(isCodeCoverageOpted, failIfCodeCoverageEmpty, codeCoverageTool, summaryFile, reportDirectory);
 
         if (gradleResult === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'Build succeeded.');

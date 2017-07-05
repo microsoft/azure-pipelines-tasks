@@ -1,0 +1,8 @@
+{
+  "name": "vsts-tasks-packerbuild",
+  "main":"main.js",
+  "dependencies": {
+    "vsts-task-lib" : "^2.0.0-preview",
+    "decompress-zip": "0.3.0"
+  }
+}

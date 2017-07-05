@@ -6,9 +6,7 @@ param()
 . $PSScriptRoot\..\IndexHelpers\IndexFunctions.ps1
 $env:TMP = "$env:TMP _"
 Register-Mock Write-Warning
-$script:pdbstrExePath = 'SomeDrive:\SomeDir\pdbstr.exe'
-Register-Mock Get-VstsTaskVariable { 'SomeDrive:\AgentHome' } -- -Name Agent.HomeDirectory -Require
-Register-Mock Assert-VstsPath { $script:pdbstrExePath } -- -LiteralPath "SomeDrive:\AgentHome\Externals\Pdbstr\pdbstr.exe" -PathType Leaf -PassThru
+Register-Mock Get-PdbstrPath { "SomeDrive:\AgentHome\...\pdbstr.exe" }
 Register-Mock Push-Location
 Register-Mock Add-DbghelpLibrary { -1234 }
 $script:sourcesRoot = 'SomeDrive:\SomeSourcesRoot'

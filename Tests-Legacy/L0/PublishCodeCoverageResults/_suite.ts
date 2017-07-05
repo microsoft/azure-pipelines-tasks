@@ -3,9 +3,7 @@
 
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
-import psm = require('../../lib/psRunner');
 import path = require('path');
-import shell = require('shelljs');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -59,7 +57,33 @@ describe('Publish Code Coverage Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
+                //assert(false, tr.stdout);
                 assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=\/user\/admin\/summary.xml;additionalcodecoveragefiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish code coverage results.');
+
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Publish code coverage results conditionally fail with empty results', (done) => {
+        setResponseFile('publishCCEmptyResponse.json');
+
+        var tr = new trm.TaskRunner('PublishCodeCoverageResults');
+
+        tr.setInput('codeCoverageTool', 'JaCoCo');
+        tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
+        tr.setInput('additionalCodeCoverageFiles', "/some/*pattern");
+        tr.setInput('failIfCoverageEmpty', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.stdErrContained('No code coverage results were found to publish.'));
+                assert(tr.failed, 'task should have failed');
+                assert(tr.invokedToolCount == 0, 'should exit before running PublishCodeCoverageResults');
 
                 done();
             })
