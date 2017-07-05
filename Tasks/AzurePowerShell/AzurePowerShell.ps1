@@ -24,6 +24,7 @@ if ($scriptArguments -match '[\r\n]') {
 if($targetAzurePs -eq "OtherVersion") {
     $targetAzurePs = $customTargetAzurePs.Trim()
 }
+. "$PSScriptRoot\Utility.ps1"
 $targetAzurePs = Update-PSModulePath -targetAzurePs $targetAzurePs
 try {
     # Initialize Azure.
@@ -94,7 +95,7 @@ finally {
     }
 }
 
-function Update-PSModulePath {
+<#function Update-PSModulePath {
     [CmdletBinding()]
     param([string] $targetAzurePs)
 
@@ -146,4 +147,4 @@ function Get-LatestModule {
         $resultFolder = ""
     }
     return $resultFolder
-}
+}#>
