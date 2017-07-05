@@ -107,14 +107,15 @@ function Update-PSModulePath {
     }
     elseif ($targetAzurePs -eq "LatestVersion") {
         # For Hosted Agent, the Latest Version is 4.1.0
-        $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"  #$env:SystemDrive + "\Modules\AzureRm_4.1.0"
-        $hostedAgentAzureModulePath =   Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"    #$env:SystemDrive + "\Modules\Azure_4.1.0"
+        $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
+        $hostedAgentAzureModulePath =   Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         $targetAzurePs = ""
     }
     else {
         throw (Get-VstsLocString -Key InvalidVersion -ArgumentList $targetAzurePs)
     }
     $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
+    $env:PSModulePath.TrimStart(';')
     return $targetAzurePs
 }
 
