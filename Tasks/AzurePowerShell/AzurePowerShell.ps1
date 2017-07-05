@@ -108,7 +108,7 @@ function Update-PSModulePath {
     elseif ($targetAzurePs -eq "LatestVersion") {
         # For Hosted Agent, the Latest Version is 4.1.0
         $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
-        $hostedAgentAzureModulePath =   Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
+        $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
         $targetAzurePs = ""
     }
     else {
