@@ -1,5 +1,4 @@
 import * as tl from 'vsts-task-lib/task';
-
 import { NpmTaskInput, RegistryLocation } from './constants';
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
@@ -30,8 +29,12 @@ export async function run(command?: string): Promise<void> {
 
     // For publish, always override their project .npmrc
     let npm = new NpmToolRunner(workingDir, npmrc, true);
-    npm.line('publish');
-
+    let Command = 'publish';
+    let verboseCheck = tl.getInput(NpmTaskInput.Verbose, false);
+    if (verboseCheck == "true") {
+        Command += " --verbose";
+   }
+    npm.line(Command);
     await npm.exec();
 
     tl.rmRF(npmrc);

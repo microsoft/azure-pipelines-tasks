@@ -5,6 +5,7 @@ import * as Q from 'q';
 
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
+import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
 
 import * as util from './util';
 
@@ -26,6 +27,9 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         let cacheOptions = { silent: true } as tr.IExecSyncOptions;
+        if (!fs.lstatSync(workingDirectory).isDirectory()) {
+            throw new Error(tl.loc('WorkingDirectoryNotDirectory'));
+        }
         this.cacheLocation = tl.execSync('npm', 'config get cache', this._prepareNpmEnvironment(cacheOptions)).stdout.trim();
     }
 
@@ -34,6 +38,7 @@ export class NpmToolRunner extends tr.ToolRunner {
 
         this._saveProjectNpmrc();
         return super.exec(options).then(
+
             (code: number): number => {
                 this._restoreProjectNpmrc();
                 return code;
@@ -44,7 +49,7 @@ export class NpmToolRunner extends tr.ToolRunner {
                     throw reason;
                 });
             }
-        );
+         );
     }
 
     public execSync(options?: tr.IExecSyncOptions): tr.IExecSyncResult {

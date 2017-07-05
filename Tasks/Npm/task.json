@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "runsOn": [
         "Agent",
@@ -22,8 +22,8 @@
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
-            "name": "customRegistries",
             "displayName": "Custom registries and authentication",
+            "name": "customRegistries",
             "isExpanded": false,
             "visibleRule": "command = install || command = custom"
         },
@@ -32,6 +32,11 @@
             "displayName": "Destination registry and authentication",
             "isExpanded": true,
             "visibleRule": "command = publish"
+        },
+        {   "displayName": "Advanced Options",
+            "name": "advanced",
+            "isExpanded": false,
+            "visibleRule": "command = install || command = publish"
         }
     ],
     "inputs": [
@@ -53,6 +58,13 @@
             "label": "Working folder with package.json",
             "helpMarkDown": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
             "type": "filePath"
+        },
+        {
+            "groupName": "advanced",
+            "name": "verbose",
+            "label": "Verbose logging",
+            "helpMarkDown": "Select to print more information to the console on run",
+            "type": "boolean"
         },
         {
             "name": "customCommand",
@@ -84,6 +96,17 @@
             "required": true
         },
         {
+            "groupName": "customRegistries",
+            "name": "customDEndpoint",
+            "label": "Credentials for registries outside this account/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "type": "connectedService:externalnpmregistry",
+            "visibleRule": "customRegistry = useNpmrc",
+            "properties": {
+                "MultiSelectFlatList": "true"
+            }
+        },
+         {
             "groupName": "customRegistries",
             "name": "customEndpoint",
             "label": "Credentials for registries outside this account/collection",

@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 11
   },
   "runsOn": [
     "Agent",
@@ -22,8 +22,8 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "customRegistries",
       "displayName": "ms-resource:loc.group.displayName.customRegistries",
+      "name": "customRegistries",
       "isExpanded": false,
       "visibleRule": "command = install || command = custom"
     },
@@ -32,6 +32,12 @@
       "displayName": "ms-resource:loc.group.displayName.publishRegistries",
       "isExpanded": true,
       "visibleRule": "command = publish"
+    },
+    {
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "name": "advanced",
+      "isExpanded": false,
+      "visibleRule": "command = install || command = publish"
     }
   ],
   "inputs": [
@@ -53,6 +59,13 @@
       "label": "ms-resource:loc.input.label.workingDir",
       "helpMarkDown": "ms-resource:loc.input.help.workingDir",
       "type": "filePath"
+    },
+    {
+      "groupName": "advanced",
+      "name": "verbose",
+      "label": "ms-resource:loc.input.label.verbose",
+      "helpMarkDown": "ms-resource:loc.input.help.verbose",
+      "type": "boolean"
     },
     {
       "name": "customCommand",
@@ -82,6 +95,17 @@
       "type": "pickList",
       "visibleRule": "customRegistry = useFeed",
       "required": true
+    },
+    {
+      "groupName": "customRegistries",
+      "name": "customDEndpoint",
+      "label": "ms-resource:loc.input.label.customDEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.customDEndpoint",
+      "type": "connectedService:externalnpmregistry",
+      "visibleRule": "customRegistry = useNpmrc",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     },
     {
       "groupName": "customRegistries",
