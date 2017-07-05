@@ -50,7 +50,7 @@ try {
         Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
         
         if (-not $pdbFiles -and $SearchPattern.Contains(';')) {
-            throw "No files found, You might want to use newlines instead of ';' to seperate search patterns"
+            throw "No files found. Use newlines instead of ';' to separate search patterns."
         }
     }
 
