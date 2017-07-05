@@ -99,17 +99,12 @@ function Import-FromModulePath {
             $script:azureModule = $module
         } else {
             # The AzureRM module was imported.
-
             # Validate the AzureRM.profile module can be found.
             $profileModule = (Get-Module -Name AzureRM).NestedModules | Where-Object { $_.Name.toLower() -eq "azurerm.profile" }
             if (!$profileModule) {
                 throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
             }
-
-            # Import and then store the AzureRM.profile module.
-            Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global"
-            $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru
-            Write-Verbose "Imported module version: $($script:azureRMProfileModule.Version)"
+            $script:azureRMProfileModule = $profileModule
         }
 
         return $true
@@ -169,7 +164,8 @@ function Get-SdkVersion {
     try{
         $regKey = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
         $installedApplications = Get-ItemProperty -Path $regKey
-        $SdkVersion = ($installedApplications | Where-Object { $_.DisplayName -and $_.DisplayName.Contains("Microsoft Azure PowerShell") } | Select-Object -First 1).DisplayVersion
+        $SdkVersion = ($installedApplications | Where-Object { $_.DisplayName -and $_.DisplayName.toLower().Contains("microsoft azure powershell") } | Select-Object -First 1).DisplayVersion
+        Write-Verbose "The installed sdk version is: $SdkVersion"
         return $SdkVersion
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
@@ -180,27 +176,29 @@ function Import-AzureRmSubmodulesFromSdkPath {
     [CmdletBinding()]
     param([string] $path,
           [string] $programFiles)
-
+    
+    # Azure.Storage submodule needs to be imported first
     $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")
     Write-Host "##[command]Import-Module -Name $azureStorageModulePath -Global"
     $azureStorageModule = Import-Module -Name $azureStorageModulePath -Global -PassThru
     Write-Verbose "Imported module version: $($azureStorageModule.Version)"
 
+    # Try to import all the AzureRM submodules
     $azureRmNestedModulesDirectory = Split-Path  -Parent (Split-Path -Parent $path)
     $azureRmNestedModules = Get-ChildItem -Path $azureRmNestedModulesDirectory -Directory
     foreach ($azureRmNestedModule in $azureRmNestedModules) {
         #AzureRM.Profile module has already been imported
-        if ($azureRmNestedModule.Name -eq "AzureRM.Profile") {
+        if ($azureRmNestedModule.Name.toLower() -eq "azurerm.profile") {
             continue;
         }
-        $azureRmNestedModulePath = $azureRmNestedModule.FullName + "\" + $azureRmNestedModule.Name + ".psd1" 
+        $azureRmNestedModulePath = [System.IO.Path]::Combine($azureRmNestedModule.FullName, $azureRmNestedModule.Name + ".psd1") 
         try {
             Write-Verbose "##[command]Import-Module -Name $azureRmNestedModulePath -Global"
             $azureRmSubmodule = Import-Module -Name $azureRmNestedModulePath -Global -PassThru
             Write-Verbose "Imported module version: $($azureRmSubmodule.Version)"
         }
         catch {
-            Write-Verbose $(Get-VstsLocString -Key AZ_AzureRmSubmoduleImportFailed -ArgumentList $azureRmNestedModulePath, $_.Exception.Message)
+            Write-Verbose $("The import of the AzureRM submodule \'$azureRmNestedModulePath\' failed with the error: $($_.Exception.Message)")
         }
     }
 }
