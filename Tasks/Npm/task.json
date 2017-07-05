@@ -97,7 +97,7 @@
         },
         {
             "groupName": "customRegistries",
-            "name": "customDEndpoint",
+            "name": "customEndpoint",
             "label": "Credentials for registries outside this account/collection",
             "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
             "type": "connectedService:externalnpmregistry",
