@@ -176,8 +176,12 @@ export class ServiceClient {
             nextRequest.method = 'GET';
             nextRequest.uri = nextLinkUrl;
             var response = await this.beginRequest(nextRequest);
-            if (response.statusCode == 200 && response.body.value) {
-                result.concat(response.body.value)
+            if (response.statusCode == 200 && response.body) {
+                if (response.body.value) {
+                    result = result.concat(response.body.value);
+                }
+
+                nextLinkUrl = response.body.nextLink;
             }
             else {
                 return new ApiResult(ToError(response));
