@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "runsOn": [
         "Agent",
@@ -245,7 +245,7 @@
         {
             "name": "configurationToPack",
             "type": "string",
-            "label": "Configuration to Package",
+            "label": "Configuration to package",
             "defaultValue": "$(BuildConfiguration)",
             "helpMarkDown": "When using a csproj file this specifies the configuration to package",
             "required": false,
@@ -254,7 +254,7 @@
         {
             "name": "outputDir",
             "type": "filePath",
-            "label": "Package Folder",
+            "label": "Package folder",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
             "helpMarkDown": "Folder where packages will be created. If empty, packages will be created alongside the csproj or nuspec file.",
             "required": false,

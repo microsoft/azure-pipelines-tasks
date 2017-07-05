@@ -3,7 +3,7 @@
     "name": "NuGetToolInstaller",
     "friendlyName": "NuGet Tool Installer",
     "description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet Restore and NuGet Command steps.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
     "category": "Tool",
     "runsOn": [
         "Agent",
