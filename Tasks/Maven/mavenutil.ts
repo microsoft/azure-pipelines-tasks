@@ -5,6 +5,7 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import locationHelpers = require("nuget-task-common/LocationHelpers"); // TODO: refactor
+import systemToken = require('utility-common/accesstoken');
 
 import * as url from "url";
 import * as str from 'string';
@@ -169,21 +170,8 @@ export function mergeCredentialsIntoSettingsXml(settingsXmlFile:string, reposito
     }
 }
 
-// TODO: refactor this method out from NPM, NuGet and Maven into a common module
-function getSystemAccessToken(): string {
-    tl.debug('Getting credentials for account feeds');
-    let auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-    if (auth.scheme === 'OAuth') {
-        tl.debug('Got auth token');
-        return auth.parameters['AccessToken'];
-    }
-    else {
-        tl.warning(tl.loc('FeedTokenUnavailable'));
-    }
-}
-
 function getAuthenticationToken() {
-    return base64.encode(utf8.encode('VSTS:' + getSystemAccessToken()));
+    return base64.encode(utf8.encode('VSTS:' + systemToken.getSystemAccessToken()));
 }
 
 function insertRepoJsonIntoPomJson(pomJson:any, repoJson:any) {
