@@ -98,9 +98,9 @@
     },
     {
       "groupName": "customRegistries",
-      "name": "customDEndpoint",
-      "label": "ms-resource:loc.input.label.customDEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.customDEndpoint",
+      "name": "customEndpoint",
+      "label": "ms-resource:loc.input.label.customEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
       "type": "connectedService:externalnpmregistry",
       "visibleRule": "customRegistry = useNpmrc",
       "properties": {
