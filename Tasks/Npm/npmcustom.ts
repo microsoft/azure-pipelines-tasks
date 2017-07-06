@@ -12,8 +12,8 @@ export async function run(command?: string): Promise<void> {
     let npmrc = util.getTempNpmrcPath();
     let npmRegistries: INpmRegistry[] = await util.getLocalNpmRegistries(workingDir);
     let overrideNpmrc = false;
-    let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
 
+    let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('UseFeed'));
@@ -30,10 +30,8 @@ export async function run(command?: string): Promise<void> {
             }
             break;
     }
-           
 
     for (let registry of npmRegistries) {
-
         if (registry.authOnly === false) {
             tl.debug(tl.loc('UsingRegistry', registry.url));
             util.appendToNpmrc(npmrc, `registry=${registry.url}\n`);
