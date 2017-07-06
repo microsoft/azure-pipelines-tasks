@@ -27,7 +27,7 @@ export class WebRequestOptions {
 export async function beginRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
     let i = 0;
     let retryCount = options ? options.retryCount : 5;
-    let retryInterval = options ? options.retryIntervalInSeconds : 5;
+    let retryIntervalInSeconds = options ? options.retryIntervalInSeconds : 5;
     let retriableErrorCodes = options ? options.retriableErrorCodes : ["ETIMEDOUT"];
 
     while (i++ < retryCount) {
@@ -36,7 +36,7 @@ export async function beginRequest(request: WebRequest, options?: WebRequestOpti
         }
         catch (error) {
             if (retriableErrorCodes && retriableErrorCodes.indexOf(error.code) != -1) {
-                await sleepFor(5);
+                await sleepFor(retryIntervalInSeconds);
             }
             else {
                 throw error;
