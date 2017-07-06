@@ -1,21 +1,9 @@
 import tl = require('vsts-task-lib/task');
 import util = require("util")
 import msRestAzure = require("./azure-arm-common");
+import webClient = require("./webClient");
 var httpClient = require('vso-node-api/HttpClient');
 var httpCallbackClient = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-
-export class WebRequest {
-    public method;
-    public uri;
-    public body;
-    public headers;
-}
-
-export class WebResponse {
-    public statusCode;
-    public headers;
-    public body;
-}
 
 export class ApiResult {
     public error;
@@ -42,7 +30,7 @@ export interface ApiCallback {
     (error: any, result?: any, request?: any, response?: any): void
 }
 
-export function ToError(response: WebResponse): AzureError {
+export function ToError(response: webClient.WebResponse): AzureError {
     var error = new AzureError();
     error.statusCode = response.statusCode;
     error.message = response.body
@@ -77,13 +65,13 @@ export class ServiceClient {
         this.baseUri = this.credentials.armUrl;
         this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
     }
-	
-	public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
-		return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters);
-	}
-	
+
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+        return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters);
+    }
+
     public getRequestUriForBaseUri(baseUri: string, uriFormat: string, parameters: {}, queryParameters?: string[]): string {
-		var requestUri = baseUri + uriFormat;
+        var requestUri = baseUri + uriFormat;
         requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
         for (var key in parameters) {
             requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
@@ -115,7 +103,7 @@ export class ServiceClient {
         return headers;
     }
 
-    public async beginRequest(request: WebRequest): Promise<WebResponse> {
+    public async beginRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
         var token = await this.credentials.getToken();
 
         request.headers = request.headers || {};
@@ -125,22 +113,22 @@ export class ServiceClient {
         }
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
 
-        var httpResponse = await this.beginRequestInternal(request);
+        var httpResponse = await webClient.beginRequest(request);
         if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
             // The access token might have expire. Re-issue the request after refreshing the token.
             token = await this.credentials.getToken(true);
             request.headers["Authorization"] = "Bearer " + token;
-            httpResponse = await this.beginRequestInternal(request);
+            httpResponse = await webClient.beginRequest(request);
         }
 
         return httpResponse;
     }
 
-    public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
+    public async getLongRunningOperationResult(response: webClient.WebResponse, timeoutInMinutes?: number): Promise<webClient.WebResponse> {
         timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
         var waitIndefinitely = timeoutInMinutes == 0;
-        var request = new WebRequest();
+        var request = new webClient.WebRequest();
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
         if (!request.uri) {
@@ -148,7 +136,7 @@ export class ServiceClient {
         }
 
         while (true) {
-            response = await this.beginRequest(request);
+            response = await webClient.beginRequest(request);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
                 // If timeout; throw;
                 if (!waitIndefinitely && timeout < new Date().getTime()) {
@@ -172,10 +160,10 @@ export class ServiceClient {
     public async accumulateResultFromPagedResult(nextLinkUrl: string): Promise<ApiResult> {
         var result = [];
         while (nextLinkUrl) {
-            var nextRequest = new WebRequest();
+            var nextRequest = new webClient.WebRequest();
             nextRequest.method = 'GET';
             nextRequest.uri = nextLinkUrl;
-            var response = await this.beginRequest(nextRequest);
+            var response = await webClient.beginRequest(nextRequest);
             if (response.statusCode == 200 && response.body) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -206,39 +194,6 @@ export class ServiceClient {
                 throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
             }
         }
-    }
-
-    private toWebResponse(response, body): WebResponse {
-        var res = new WebResponse();
-
-        if (response) {
-            res.statusCode = response.statusCode;
-            res.headers = response.headers;
-            if (body) {
-                try {
-                    res.body = JSON.parse(body);
-                }
-                catch (error) {
-                    res.body = body;
-                }
-            }
-        }
-        return res;
-    }
-
-    private beginRequestInternal(request: WebRequest): Promise<WebResponse> {
-        tl.debug(util.format("[%s]%s", request.method, request.uri));
-        return new Promise<WebResponse>((resolve, reject) => {
-            httpCallbackClient.send(request.method, request.uri, request.body, request.headers, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                }
-                else {
-                    var httpResponse = this.toWebResponse(response, body);
-                    resolve(httpResponse);
-                }
-            });
-        });
     }
 
     private sleepFor(sleepDurationInSeconds): Promise<any> {
