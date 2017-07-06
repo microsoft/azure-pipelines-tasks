@@ -24,26 +24,8 @@ if ($scriptArguments -match '[\r\n]') {
 if($targetAzurePs -eq "OtherVersion") {
     $targetAzurePs = $customTargetAzurePs.Trim()
 }
-
-$pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
-$regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-if ($regex.IsMatch($targetAzurePs)) {
-    $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_" + $targetAzurePs
-    $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_" + $targetAzurePs
-    $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-}
-elseif ($targetAzurePs -eq "LatestVersion") {
-    # For Hosted Agent, the Latest Version is 4.1.0
-    $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_4.1.0"
-    $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_4.1.0"
-    $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-    $targetAzurePs = ""
-}
-else {
-    throw (Get-VstsLocString -Key InvalidVersion -ArgumentList $targetAzurePs)
-}
-
+. "$PSScriptRoot\Utility.ps1"
+$targetAzurePs = Update-PSModulePath -targetAzurePs $targetAzurePs
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
