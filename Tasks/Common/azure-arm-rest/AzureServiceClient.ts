@@ -113,12 +113,12 @@ export class ServiceClient {
         }
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
 
-        var httpResponse = await webClient.beginRequest(request);
+        var httpResponse = await webClient.sendRequest(request);
         if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
             // The access token might have expire. Re-issue the request after refreshing the token.
             token = await this.credentials.getToken(true);
             request.headers["Authorization"] = "Bearer " + token;
-            httpResponse = await webClient.beginRequest(request);
+            httpResponse = await webClient.sendRequest(request);
         }
 
         return httpResponse;
@@ -136,7 +136,7 @@ export class ServiceClient {
         }
 
         while (true) {
-            response = await webClient.beginRequest(request);
+            response = await this.beginRequest(request);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
                 // If timeout; throw;
                 if (!waitIndefinitely && timeout < new Date().getTime()) {

@@ -24,7 +24,7 @@ export class WebRequestOptions {
     public retryIntervalInSeconds: number;
 }
 
-export async function beginRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
+export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
     let i = 0;
     let retryCount = options ? options.retryCount : 5;
     let retryIntervalInSeconds = options ? options.retryIntervalInSeconds : 5;

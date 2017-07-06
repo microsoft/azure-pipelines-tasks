@@ -70,7 +70,7 @@ export class ApplicationTokenCredentials {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
         };
 
-        webClient.beginRequest(webRequest).then(
+        webClient.sendRequest(webRequest).then(
             (response: webClient.WebResponse) => {
                 if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
