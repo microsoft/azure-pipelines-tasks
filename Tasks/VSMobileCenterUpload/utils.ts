@@ -153,7 +153,7 @@ export function resolvePaths(pattern: string, continueOnError?: boolean, packPar
     tl.debug("....... path pattern: " + (pattern || ""));
 
     if (pattern) {
-        let matches = tl.glob(pattern);
+        let matches = tl.findMatch(null, pattern);
 
         if (!matches || matches.length === 0) {
             if (continueOnError) {

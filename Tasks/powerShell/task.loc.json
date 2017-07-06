@@ -35,7 +35,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
       "required": true,
-      "defaultValue": "# Write your powershell commands here.\n# Use the Environment input below to map secret variables into environment variables.\n\nWrite-Host \"Hello World\"",
+      "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -98,7 +98,9 @@
     }
   },
   "messages": {
+    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_InvalidErrorActionPreference": "ms-resource:loc.messages.JS_InvalidErrorActionPreference",
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
     "PS_InvalidErrorActionPreference": "ms-resource:loc.messages.PS_InvalidErrorActionPreference",
     "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode"

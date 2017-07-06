@@ -5,24 +5,6 @@ Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
-    # TODO MOVE ASSERT-VSTSAGENT TO THE TASK LIB AND LOC
-    function Assert-VstsAgent {
-        [CmdletBinding()]
-        param(
-            [Parameter(Mandatory = $true)]
-            [version]$Minimum)
-
-        if ($Minimum -lt ([version]'2.104.1')) {
-            Write-Error "Assert-Agent requires the parameter to be 2.104.1 or higher"
-            return
-        }
-
-        $agent = Get-VstsTaskVariable -Name 'agent.version'
-        if (!$agent -or (([version]$agent) -lt $Minimum)) {
-            Write-Error "Agent version $Minimum or higher is required."
-        }
-    }
-
     # Get inputs.
     $input_errorActionPreference = Get-VstsInput -Name 'errorActionPreference' -Default 'Stop'
     switch ($input_errorActionPreference.ToUpperInvariant()) {
@@ -42,12 +24,12 @@ try {
     # Generate the script contents.
     $contents = @()
     $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
-    $contents += $input_script
-    if (!$ignoreLASTEXITCODE) {
+    $contents += "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    if (!$input_ignoreLASTEXITCODE) {
         $contents += 'if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {'
-        $contents += '    Write-Verbose ''Last exit code is not set.'''
+        $contents += '    Write-Host ''##vso[task.debug]$LASTEXITCODE is not set.'''
         $contents += '} else {'
-        $contents += '    Write-Verbose (''$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
+        $contents += '    Write-Host (''##vso[task.debug]$LASTEXITCODE: {0}'' -f $LASTEXITCODE)'
         $contents += '    exit $LASTEXITCODE'
         $contents += '}'
     }

@@ -1,20 +1,20 @@
 {
     "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
     "name": "AzureVmssDeployment",
-    "friendlyName": "Azure VM Scale set Deployment (PREVIEW)",
-    "description": "Deploy virtual machine scale set image",
-    "helpMarkDown": "[More Information](https://aka.ms/azurevmsstaskreadme)",
+    "friendlyName": "Azure VM scale set Deployment (PREVIEW)",
+    "description": "Deploy Virtual Machine scale set image",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
     "category": "Deploy",
-    "releaseNotes": "- Updates azure virtual machine scale set with a custom image.\n- Works with Xplat agents (Windows, Linux or OSX).",
+    "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
     "visibility": [
         "Build",
         "Release"
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 0,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -27,6 +27,12 @@
         {
             "name": "Image",
             "displayName": "Image Details",
+            "isExpanded": true,
+            "visibleRule": "action = UpdateImage"
+        },
+        {
+            "name": "StartupConfiguration",
+            "displayName": "Configure start-up",
             "isExpanded": true,
             "visibleRule": "action = UpdateImage"
         }
@@ -56,7 +62,7 @@
         {
             "name": "vmssName",
             "type": "pickList",
-            "label": "VMSS",
+            "label": "Virtual Machine scale set name",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of scale set. Note that image can be updated only for a scale set which is running a custom image. If a scale set is using platform/gallery image, then image update operation will fail.",
@@ -71,14 +77,32 @@
             "defaultValue": "",
             "required": true,
             "groupName": "Image",
-            "helpMarkDown": "Specify the URL of image VHD. If it is a azure storage blob url, the storage account location should be same as scale set location."
+            "helpMarkDown": "Specify the URL of image VHD. If it is an Azure storage blob url, the storage account location should be same as scale set location."
+        },
+        {
+            "name": "customScriptUrl",
+            "type": "string",
+            "label": "Custom script url",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "Specify the URL of the script to run using custom script VM extension. This should be a publically accessible url. This script can be used to set start-up environment for application(if any) being deployed through custom image. In other words, application configuration management can be achieved using this script.<br/>E.g. the script can set a machine level environment variable and the application can then consume envionment variable. This enables usage of same VHD image across multiple deployments."
+        },
+        {
+            "name": "customScriptCommand",
+            "type": "string",
+            "label": "Command",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "Command to be run to execute custom script. Arguments can also be provided in command. Release variables can be used which makes it easy to use pass secrets.<br/>For powershell script, use something like \"powershell .\\&lt;script-name&gt;.ps1 &lt;arguments&gt;\". For shell script use something like \"bash ./&lt;script-name&gt;.sh &lt;arguments&gt;\",  Example usages:<br/>1. \".\\SetEnv.cmd\" will set some environment variabels which will be used by application when starting.<br/>2. \"powershell .\\Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd)\" will update connection string in web.config of web application.<br/>3. \"bash ./install-secrets.sh --key-vault-type prod -key serviceprincipalkey\" will create an encrypted file containing service principal key."
         }
     ],
     "dataSourceBindings": [
         {
             "target": "vmssName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureVirtualMachineScaleSetsNames"
+            "dataSourceName": "AzureVirtualMachineScaleSetNames"
         }
     ],
     "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
@@ -105,6 +129,13 @@
         "VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
         "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
         "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
-        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date."
+        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date.",
+        "GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
+        "CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
+        "CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
+        "RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
+        "RemoveVMSSExtensionsFailed": "Failed to remove extension %s. Error: %s.",
+        "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error:%s.",
+        "ResourceNameCannotBeNull": "Resource name cannot be null."
     }
 }

@@ -8,7 +8,7 @@
   "loc.group.displayName.executionOptions": "Execution options",
   "loc.group.displayName.reportingOptions": "Reporting options",
   "loc.input.label.testSelector": "Select tests using",
-  "loc.input.help.testSelector": "Specify the means to select tests",
+  "loc.input.help.testSelector": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
   "loc.input.label.testAssemblyVer2": "Test assemblies",
   "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
   "loc.input.label.testPlan": "Test plan",
@@ -87,7 +87,6 @@
   "loc.messages.ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
   "loc.messages.VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
   "loc.messages.runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
-  "loc.messages.tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
   "loc.messages.overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
   "loc.messages.vstestVersionInvalid": "Given test platform version %s is not supported.",
   "loc.messages.configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
@@ -115,7 +114,7 @@
   "loc.messages.pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
   "loc.messages.testAssembliesSelector": "Test assemblies",
   "loc.messages.testPlanSelector": "Test plan",
-  "loc.messages.testRunSelector": "Test run (for on-demand runs)",
-  "loc.messages.testRunIdInvalid": "The test selection is 'Test run (for on-demand runs)', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id (for on-demand runs) : '%s'"
+  "loc.messages.testRunSelector": "Test run",
+  "loc.messages.testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
+  "loc.messages.testRunIdInput": "Test run Id : '%s'"
 }

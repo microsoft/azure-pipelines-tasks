@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [],
@@ -68,7 +68,7 @@
       "properties": {
         "resizable": "true",
         "rows": "3",
-        "maxLength": "500"
+        "maxLength": "2000"
       },
       "visibleRule": "method != GET && method != HEAD"
     },

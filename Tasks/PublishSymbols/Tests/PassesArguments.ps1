@@ -26,6 +26,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Register-Mock Get-VstsInput { 'Some input symbols folder' } -ParametersEvaluator { $Name -eq 'SymbolsFolder' }
     Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
     Register-Mock Get-VstsInput { $treatNotIndexedAsWarning } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
+    $env:PublishSymbols_Debug = $null
 
     # Act.
     & $PSScriptRoot\..\PublishSymbols.ps1
