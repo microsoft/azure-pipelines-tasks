@@ -18,7 +18,9 @@ function Update-PSModulePath {
     else {
         throw (Get-VstsLocString -Key InvalidVersion -ArgumentList $targetAzurePs)
     }
-    $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $hostedAgentAzureModulePath + ";" + $env:PSModulePath
+    $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
+    $env:PSModulePath.TrimStart(';')
+    $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
     $env:PSModulePath.TrimStart(';')
     return $targetAzurePs
 }
