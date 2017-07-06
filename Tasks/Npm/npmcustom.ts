@@ -16,7 +16,6 @@ export async function run(command?: string): Promise<void> {
 
     switch (registryLocation) {
         case RegistryLocation.Feed:
-            console.log("npmcustom line 19 " + NpmTaskInput.Verbose)
             tl.debug(tl.loc('UseFeed'));
             overrideNpmrc = true;
             let feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
