@@ -30,12 +30,12 @@ export async function beginRequest(request: WebRequest, options?: WebRequestOpti
     let retryIntervalInSeconds = options ? options.retryIntervalInSeconds : 5;
     let retriableErrorCodes = options ? options.retriableErrorCodes : ["ETIMEDOUT"];
 
-    while (i++ < retryCount) {
+    while (true) {
         try {
             return await beginRequestInternal(request);
         }
         catch (error) {
-            if (retriableErrorCodes && retriableErrorCodes.indexOf(error.code) != -1) {
+            if (retriableErrorCodes && retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
                 await sleepFor(retryIntervalInSeconds);
             }
             else {
