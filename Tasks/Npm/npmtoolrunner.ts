@@ -38,7 +38,6 @@ export class NpmToolRunner extends tr.ToolRunner {
 
         this._saveProjectNpmrc();
         return super.exec(options).then(
-
             (code: number): number => {
                 this._restoreProjectNpmrc();
                 return code;
@@ -90,7 +89,7 @@ export class NpmToolRunner extends tr.ToolRunner {
             options.env = process.env;
         }
 
-        if (this.dbg) {
+        if (this.dbg || tl.getBoolInput(NpmTaskInput.Verbose, false)) {            
             options.env['NPM_CONFIG_LOGLEVEL'] = 'verbose';
         }
 
