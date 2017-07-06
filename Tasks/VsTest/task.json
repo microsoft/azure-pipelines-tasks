@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 60
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [
         "vstest"
@@ -233,6 +233,40 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "distributeTestsOption",
+            "type": "pickList",
+            "label": "Distribute Tests",
+            "defaultValue": "byAgents",
+            "required": false,
+            "helpMarkDown": "Distribute tests across number of agents. This option currently can be used only when running with the multi-agent phase setting in Release pipeline. It will be ignored in Build pipeline.",
+            "groupName": "executionOptions",
+             "options": {
+                 "byAgents": "Based on number of agents"
+            }
+        },
+        {
+            "name": "distributeByAgentsOption",
+            "type": "radio",
+            "required": true,
+            "defaultValue": "distributeAcrossAgents",
+            "options": {
+                "distributeAcrossAgents": "Distribute evenly across agents",
+                "distributeByTestBatch": "Distribute by test batches"
+            },
+            "visibleRule": "distributeTestsOption = byAgents",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "distributeByTestBatchOption",
+            "type": "string",
+            "label": "Specify batch size",
+            "defaultValue": "10",
+            "required": true,
+            "visibleRule": "distributeByAgentsOption = distributeByTestBatch",
+            "helpMarkDown": "Total number of tests will be divided into multiple batches. Each batch will contain the specified number of test cases.",
+            "groupName": "executionOptions"
+        },
+        {
             "name": "runInParallel",
             "type": "boolean",
             "label": "Run tests in parallel on multi-core machines",
@@ -380,6 +414,7 @@
         "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
+        "numberOfTestCasesPerSlice": "Distributed test execution, number of testcases per slice : %s",
         "testSelectorInput": "Test selector : %s",
         "searchFolderInput": "Search folder : %s",
         "testFilterCriteriaInput": "Test filter criteria : %s",

@@ -9,7 +9,7 @@ import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations() {
-    const dtaConfiguration = {} as models.DtaTestConfigurations;
+    const dtaConfiguration = new models.DtaTestConfigurations();
     initTestConfigurations(dtaConfiguration);
 
     if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
@@ -32,6 +32,15 @@ export function getDistributedTestConfigurations() {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
     tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
+
+    const distributeOption = tl.getInput('distributeByAgentsOption');
+    if (distributeOption && distributeOption === 'distributeByTestBatch') {
+        const batchSize = parseInt(tl.getInput('distributeByTestBatchOption'));
+        if (!isNaN(batchSize)) {
+            dtaConfiguration.numberOfTestCasesPerSlice = batchSize;
+        }
+        tl._writeLine(tl.loc('numberOfTestCasesPerSlice', dtaConfiguration.numberOfTestCasesPerSlice));
+    }
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
