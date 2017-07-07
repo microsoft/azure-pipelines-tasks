@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 13
     },
     "runsOn": [
         "Agent",
@@ -22,8 +22,8 @@
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
-            "displayName": "Custom registries and authentication",
             "name": "customRegistries",
+            "displayName": "Custom registries and authentication",
             "isExpanded": false,
             "visibleRule": "command = install || command = custom"
         },
@@ -33,7 +33,7 @@
             "isExpanded": true,
             "visibleRule": "command = publish"
         },
-        {   "displayName": "Advanced Options",
+        {   "displayName": "Advanced",
             "name": "advanced",
             "isExpanded": false,
             "visibleRule": "command = install || command = publish"
