@@ -26,6 +26,6 @@ tmr.mockNpmCommand('mockcmd', {
     stdout: 'npm custom successful'
 } as TaskLibAnswerExecResult);
 tmr.answers["stats"] = {};
-tmr.answers["stats"]["" + process.cwd()] = {"isDirectory":true};
+tmr.answers["stats"][process.cwd()] = {"isDirectory":true};
 
 tmr.run();
