@@ -12,7 +12,8 @@ let tmr = new NpmMockHelper(taskPath);
 tmr.setDebugState(true);
 tmr.setInput(NpmTaskInput.Command, NpmCommand.Custom);
 tmr.setInput(NpmTaskInput.WorkingDir, '');
-tmr.answers["stats"] = {"C:\\vsts-tasks\\Tests": {"isDirectory":true}};
+tmr.answers["stats"] = {};
+tmr.answers["stats"]["" + process.cwd()] = {"isDirectory":true};
 tmr.setInput(NpmTaskInput.CustomCommand, '-v');
 tmr.mockNpmCommand('-v', {
     code: 0,
