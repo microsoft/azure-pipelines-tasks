@@ -48,7 +48,7 @@ export class NpmToolRunner extends tr.ToolRunner {
                     throw reason;
                 });
             }
-         );
+        );
     }
 
     public execSync(options?: tr.IExecSyncOptions): tr.IExecSyncResult {
