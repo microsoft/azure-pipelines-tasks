@@ -88,6 +88,7 @@ export class AzureRGTaskParameters {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
         if (endpointAuth.scheme === 'Token') {
             var hostUrl = tl.getEndpointUrl(deploymentGroupEndpointName, true);
+            hostUrl = this.truncateHostUrlIfRequired(hostUrl);
             var patToken: string = endpointAuth.parameters["apitoken"];
             if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
                 throw new Error(tl.loc("DeploymentGroupEndpointUrlCannotBeEmpty"));
@@ -104,6 +105,14 @@ export class AzureRGTaskParameters {
             console.log(msg);
             throw (msg);
         }
+    }
+
+    private truncateHostUrlIfRequired(hostUrl: string): string {
+        var stringToCheckForHostedAccount = ".visualstudio.com";
+        if (hostUrl.indexOf(stringToCheckForHostedAccount) != -1) {
+            hostUrl = hostUrl.split(stringToCheckForHostedAccount)[0].split("https://")[0];
+        }
+        return hostUrl;
     }
 
     private getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
