@@ -25,5 +25,6 @@ tmr.mockNpmCommand('mockcmd', {
     code: 0,
     stdout: 'npm custom successful'
 } as TaskLibAnswerExecResult);
+tmr.answers["stats"] = {"C:\\vsts-tasks\\Tests": {"isDirectory":true}};
 
 tmr.run();

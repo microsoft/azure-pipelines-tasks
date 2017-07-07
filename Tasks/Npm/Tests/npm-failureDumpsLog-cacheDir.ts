@@ -17,6 +17,7 @@ tmr.mockNpmCommand('custom', {
     stdout: 'some npm failure'
 } as TaskLibAnswerExecResult);
 tmr.answers.exist['C:\\mock\\cache\\npm-debug.log'] = false;
+tmr.answers["stats"] = {"C:\\mock\\cache": {"isDirectory":true}};
 tmr.answers.findMatch['*-debug.log'] = [
     'C:\\mock\cache\\_logs\\someRandomNpm-debug.log'
 ];
