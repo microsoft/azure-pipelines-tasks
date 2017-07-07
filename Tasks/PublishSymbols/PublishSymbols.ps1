@@ -15,25 +15,25 @@ try {
     # Import the localized strings.
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+    # Output dependency paths
+    Import-Module $PSScriptRoot\SymbolsCommon.psm1
+    $debug = [System.Convert]::ToBoolean($env:PublishSymbols_Debug)
+    if ($debug)
+    {
+        $pdbstrPath = Get-PdbstrPath
+        Write-Host "Get-PdbstrPath: $pdbstrPath"
+        $dbghelpPath = Get-DbghelpPath
+        Write-Host "Get-DbghelpPath: $dbghelpPath"
+        $symstorePath = Get-SymStorePath
+        Write-Host "Get-SymStorePath: $symstorePath"
+    }
+
     [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Require
     
     if ($SymbolServerType -eq "FileShare") {
         # Get common inputs.
         [int]$SymbolsMaximumWaitTime = Get-VstsInput -Name 'SymbolsMaximumWaitTime' -Default '0' -AsInt
         [timespan]$SymbolsMaximumWaitTime = if ($SymbolsMaximumWaitTime -gt 0) { [timespan]::FromMinutes($SymbolsMaximumWaitTime) } else { [timespan]::FromHours(2) }
-
-        # Output dependency paths
-        Import-Module $PSScriptRoot\SymbolsCommon.psm1
-        $debug = [System.Convert]::ToBoolean($env:PublishSymbols_Debug)
-        if ($debug)
-        {
-            $pdbstrPath = Get-PdbstrPath
-            Write-Host "Get-PdbstrPath: $pdbstrPath"
-            $dbghelpPath = Get-DbghelpPath
-            Write-Host "Get-DbghelpPath: $dbghelpPath"
-            $symstorePath = Get-SymStorePath
-            Write-Host "Get-SymStorePath: $symstorePath"
-        }
 
         # Unpublish symbols.
         if ([bool]$Delete = Get-VstsInput -Name 'Delete' -AsBool) {
