@@ -60,7 +60,7 @@
       },
       {
         "name": "VstsTaskSdk",
-        "version": "0.7.1",
+        "version": "0.9.0",
         "repository": "https://www.powershellgallery.com/api/v2/",
         "cp": [
           {
@@ -68,6 +68,7 @@
               "*.ps1",
               "*.psd1",
               "*.psm1",
+              "*.dll",
               "lib.json",
               "Strings"
             ],
