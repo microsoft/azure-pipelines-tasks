@@ -84,8 +84,10 @@ export class AzureRGTaskParameters {
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         var environment: string = tl.getEndpointDataParameter(connectedService, 'environment', true);
         var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', true);
-        
+        var isAzureStackEnvironment = false;
+
         if(environment != null && environment.toLowerCase() == azureStackEnvironment.toLowerCase()) {
+            isAzureStackEnvironment = true;
             if(!envAuthorityUrl || !activeDirectoryResourceId) {
                 var endPoint =  await azureStackUtility.initializeAzureStackData({"url":armUrl});
                 envAuthorityUrl = endPoint["environmentAuthorityUrl"];
@@ -104,44 +106,41 @@ export class AzureRGTaskParameters {
             activeDirectoryResourceId = armUrl;
         }
 
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId);
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, isAzureStackEnvironment);
         return credentials;
     }
 
-    public getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
+    public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
     {
-        return new Promise<AzureRGTaskParameters>(async (resolve, reject) => {
-            try {
-                var connectedService = tl.getInput("ConnectedServiceName", true);
-                this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-                this.resourceGroupName = tl.getInput("resourceGroupName", true);
-                this.action = tl.getInput("action");
-                this.location = tl.getInput("location");
-                this.templateLocation = tl.getInput("templateLocation");
-                if (this.templateLocation === "Linked artifact") {
-                    this.csmFile = tl.getPathInput("csmFile");
-                    this.csmParametersFile = tl.getPathInput("csmParametersFile");
-                } else {
-                    this.csmFileLink = tl.getInput("csmFileLink");
-                    this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
-                }
-                this.overrideParameters = tl.getInput("overrideParameters");
-                this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
-                this.deploymentGroupName = tl.getInput("deploymentGroupName");
-                this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
-                var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
-                if(deploymentGroupEndpointName){
-                    this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
-                }
-                this.outputVariable = tl.getInput("outputVariable");
-                this.deploymentMode = tl.getInput("deploymentMode");
-                this.credentials = await this.getARMCredentials(connectedService);
-                this.deploymentGroupProjectName = tl.getInput("project");
-                resolve(this);
+        try {
+            var connectedService = tl.getInput("ConnectedServiceName", true);
+            this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+            this.resourceGroupName = tl.getInput("resourceGroupName", true);
+            this.action = tl.getInput("action");
+            this.location = tl.getInput("location");
+            this.templateLocation = tl.getInput("templateLocation");
+            if (this.templateLocation === "Linked artifact") {
+                this.csmFile = tl.getPathInput("csmFile");
+                this.csmParametersFile = tl.getPathInput("csmParametersFile");
+            } else {
+                this.csmFileLink = tl.getInput("csmFileLink");
+                this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             }
-            catch (error) {
-                reject(tl.loc("ARGD_ConstructorFailed", error.message));
+            this.overrideParameters = tl.getInput("overrideParameters");
+            this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
+            this.deploymentGroupName = tl.getInput("deploymentGroupName");
+            this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
+            var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
+            if(deploymentGroupEndpointName){
+                this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
-        });
+            this.outputVariable = tl.getInput("outputVariable");
+            this.deploymentMode = tl.getInput("deploymentMode");
+            this.credentials = await this.getARMCredentials(connectedService);
+            this.deploymentGroupProjectName = tl.getInput("project");
+            return this;
+        } catch (error) {
+            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
+        }
     }    
 }

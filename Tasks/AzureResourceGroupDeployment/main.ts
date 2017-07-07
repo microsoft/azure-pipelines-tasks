@@ -25,8 +25,6 @@ function run(): Promise<void> {
             default:
                 throw tl.loc("InvalidAction", taskParameters.action);
         }
-    }).catch((error) => {
-        throw error;
     });
     
 }

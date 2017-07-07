@@ -16,9 +16,10 @@ export class ApplicationTokenCredentials {
     public armUrl: string;
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
+    public isAzureStackEnvironment: boolean;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, armUrl: string, authorityUrl: string, activeDirectoryResourceId: string) {
+    constructor(clientId: string, domain: string, secret: string, armUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error(tl.loc("ClientIdCannotBeEmpty"));
         }
@@ -42,6 +43,10 @@ export class ApplicationTokenCredentials {
         if (!Boolean(activeDirectoryResourceId) || typeof activeDirectoryResourceId.valueOf() !== 'string') {
             throw new Error(tl.loc("activeDirectoryResourceIdUrlCannotBeEmpty"));
         }
+
+        if(!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
+            isAzureStackEnvironment = false;
+        }
     
         this.clientId = clientId;
         this.domain = domain;
@@ -49,6 +54,7 @@ export class ApplicationTokenCredentials {
         this.armUrl = armUrl;
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
+        this.isAzureStackEnvironment = isAzureStackEnvironment;
     }
 
 
