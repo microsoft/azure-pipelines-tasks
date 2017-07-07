@@ -5,7 +5,7 @@ import * as Q from 'q';
 
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
+import {NpmTaskInput} from './constants';
 
 import * as util from './util';
 
