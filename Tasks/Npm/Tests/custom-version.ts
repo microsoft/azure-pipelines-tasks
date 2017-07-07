@@ -13,7 +13,6 @@ tmr.setDebugState(true);
 tmr.setInput(NpmTaskInput.Command, NpmCommand.Custom);
 tmr.setInput(NpmTaskInput.WorkingDir, '');
 tmr.answers["stats"] = {"C:\\vsts-tasks\\Tests": {"isDirectory":true}};
-
 tmr.setInput(NpmTaskInput.CustomCommand, '-v');
 tmr.mockNpmCommand('-v', {
     code: 0,

@@ -19,7 +19,6 @@ tmr.mockNpmCommand('custom', {
 tmr.answers.exist[path.join("C:\\mock\\workingDir", "npm-debug.log")] = true;
 tmr.answers["stats"] = {"C:\\mock\\workingDir": {"isDirectory":true}};
 
-
 let mockFs = require('fs');
 tmr.registerMock('fs', mockFs);
 mockFs.readFile = (a, b, cb) => {

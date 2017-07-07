@@ -13,7 +13,6 @@ tmr.setInput(NpmTaskInput.Command, NpmCommand.Install);
 tmr.setInput(NpmTaskInput.WorkingDir, '');
 tmr.setInput(NpmTaskInput.CustomRegistry, RegistryLocation.Npmrc);
 tmr.answers["stats"] = {"C:\\vsts-tasks\\Tests": {"isDirectory":true}};
-
 tmr.mockNpmCommand('install', {
     code: 0,
     stdout: 'npm install successful'

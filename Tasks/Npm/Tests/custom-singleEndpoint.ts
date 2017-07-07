@@ -20,7 +20,6 @@ let auth = {
         'apitoken': 'AUTHTOKEN'
     }
 };
-
 tmr.mockServiceEndpoint('1', 'http://example.com/1/', auth);
 tmr.mockNpmCommand('mockcmd', {
     code: 0,
