@@ -161,8 +161,7 @@ export function mergeCredentialsIntoSettingsXml(settingsXmlFile:string, reposito
         return readXmlFileAsJson(settingsXmlFile).then(insertServer)
         .fail(function() {
             let json:any = {};
-            mavenSettingsJsonInsertServer(json, null);
-            return writeJsonAsSettingsFile(settingsXmlFile, json);
+            return insertServer(json);
         });
     } else {
         tl.debug('no repositories...exitting');
