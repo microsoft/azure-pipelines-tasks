@@ -74,7 +74,8 @@ export class TestSelectorInvoker {
                 'context': tiaConfig.context,
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : "",
-                'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : ""
+                'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : "",
+                'AGENT_VERSION': tl.getVariable('AGENT.VERSION')
             },
             silent: null,
             failOnStdErr: null,

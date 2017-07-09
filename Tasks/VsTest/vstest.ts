@@ -218,7 +218,8 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
             'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
             'resultfile': resultFile,
             'runidfile': tiaConfig.runIdFile,
-            'context': tiaConfig.context
+            'context': tiaConfig.context,
+            'AGENT_VERSION': tl.getVariable('AGENT.VERSION')
         },
         silent: null,
         failOnStdErr: null,
@@ -307,7 +308,8 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
             'configuration': configurationInput,
             'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
             'testCaseFilterOutputFile' : testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
-            'isCustomEngineEnabled' : String(!utils.Helper.isNullOrWhitespace(tiaConfig.userMapFile))
+            'isCustomEngineEnabled' : String(!utils.Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
+            'AGENT_VERSION': tl.getVariable('AGENT.VERSION')
         },
         silent: null,
         failOnStdErr: null,
