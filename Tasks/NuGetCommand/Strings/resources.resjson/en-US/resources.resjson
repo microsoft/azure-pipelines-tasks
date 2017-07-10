@@ -44,7 +44,7 @@
   "loc.input.label.configurationToPack": "Configuration to package",
   "loc.input.help.configurationToPack": "When using a csproj file this specifies the configuration to package",
   "loc.input.label.outputDir": "Package folder",
-  "loc.input.help.outputDir": "Folder where packages will be created. If empty, packages will be created alongside the csproj or nuspec file.",
+  "loc.input.help.outputDir": "Folder where packages will be created. If empty, packages will be created at the source root.",
   "loc.input.label.versioningScheme": "Automatic package versioning",
   "loc.input.help.versioningScheme": "Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version your package. **Note:** Under Options set the build number format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
   "loc.input.label.includeReferencedProjects": "Include referenced projects",
