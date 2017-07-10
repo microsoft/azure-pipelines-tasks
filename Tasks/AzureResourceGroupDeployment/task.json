@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 10
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -60,7 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
-                "StopWithDeallocate":  "Stop and deallocate virtual machines", 
+                "StopWithDeallocate":  "Stop and deallocate virtual machines",
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -204,7 +204,7 @@
                 "EditableOptions": "True"
             }
         },
-        
+
         {
             "name": "deploymentGroupName",
             "type": "pickList",
@@ -345,14 +345,14 @@
         "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
         "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
         "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+        "ARG_SetExtensionFailedForVm": "Standard Error Message: Failed to set extension on Virtual Machine %s. Error: %s",
         "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
         "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
         "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
         "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
         "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
-        "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
+        "CreationOfExtensionFailed": "Failed to add the extension to the vm: '%s'. Error: %s",
         "AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
         "AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
         "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
@@ -386,6 +386,10 @@
         "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
         "TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
         "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
-        "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s"
+        "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
+        "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
+        "ExtensionNotFound": "Extension not found on the vm: %s"
     }
 }

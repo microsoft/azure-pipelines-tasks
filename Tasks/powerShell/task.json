@@ -35,7 +35,7 @@
             "type": "multiLine",
             "label": "Script",
             "required": true,
-            "defaultValue": "# Write your powershell commands here.\n# Use the Environment input below to map secret variables into environment variables.\n\nWrite-Host \"Hello World\"",
+            "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

@@ -19,8 +19,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 119,
-    "Patch": 0
+    "Minor": 120,
+    "Patch": 2
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -56,17 +56,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },
     {
-      "name": "options",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.options",
-      "defaultValue": "",
-      "required": false
-    },
-    {
       "name": "goals",
       "type": "string",
       "label": "ms-resource:loc.input.label.goals",
       "defaultValue": "package",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
       "required": false
     },
     {
@@ -412,6 +412,8 @@
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
+    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid"
   }
 }

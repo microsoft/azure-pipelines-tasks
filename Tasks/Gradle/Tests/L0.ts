@@ -4,6 +4,7 @@
 import assert = require('assert');
 import path = require('path');
 import os = require('os');
+import process = require('process');
 import fs = require('fs');
 
 import * as ttm from 'vsts-task-lib/mock-test';
@@ -105,6 +106,8 @@ describe('Gradle L0 Suite', function () {
     this.timeout(20000);
 
     before((done) => {
+        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
+        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         done();
     });
 

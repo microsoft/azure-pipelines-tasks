@@ -18,6 +18,7 @@ tmr.mockNpmCommand('publish', {
     stdout: 'npm publish successful'
 } as TaskLibAnswerExecResult);
 tmr.answers.rmRF[path.join('workingDir', '.npmrc')] = { success: true };
+tmr.answers["stats"] = {"workingDir": {"isDirectory":true}};
 tmr.RegisterLocationServiceMocks();
 
 tmr.run();
