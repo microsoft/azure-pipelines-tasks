@@ -1,14 +1,8 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
-var httpClient = require('vso-node-api/HttpClient');
-var util = require('util');
 import webClient = require("./webClient");
-
-var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-
-var azureApiVersion = 'api-version=2016-08-01';
-
+var util = require('util');
 
 export class ApplicationTokenCredentials {
     private clientId: string;

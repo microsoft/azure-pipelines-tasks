@@ -3,7 +3,6 @@ import util = require("util")
 var httpClient = require('vso-node-api/HttpClient');
 var httpCallbackClient = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 
-
 export class WebRequest {
     public method: string;
     public uri: string;
@@ -32,7 +31,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
 
     while (true) {
         try {
-            return await beginRequestInternal(request);
+            return await sendReqeustInternal(request);
         }
         catch (error) {
             if (retriableErrorCodes && retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
@@ -41,12 +40,11 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
             else {
                 throw error;
             }
-
         }
     }
 }
 
-function beginRequestInternal(request: WebRequest): Promise<WebResponse> {
+function sendReqeustInternal(request: WebRequest): Promise<WebResponse> {
     tl.debug(util.format("[%s]%s", request.method, request.uri));
     return new Promise<WebResponse>((resolve, reject) => {
         httpCallbackClient.send(request.method, request.uri, request.body, request.headers, (error, response, body) => {

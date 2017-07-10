@@ -2,8 +2,6 @@ import tl = require('vsts-task-lib/task');
 import util = require("util")
 import msRestAzure = require("./azure-arm-common");
 import webClient = require("./webClient");
-var httpClient = require('vso-node-api/HttpClient');
-var httpCallbackClient = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 
 export class ApiResult {
     public error;
