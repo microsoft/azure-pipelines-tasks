@@ -257,7 +257,7 @@ describe('NuGetCommand Suite', function () {
 
         tr.run()
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version x.y.z-CI-22220101-010101'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');

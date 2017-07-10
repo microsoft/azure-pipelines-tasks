@@ -2,6 +2,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
 import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
 import * as auth from 'nuget-task-common/Authentication'
+import * as nugetPackUtils from '../Common/NuGetPackUtilities'
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -113,10 +114,10 @@ export class NugetMockHelper {
         });
     }
 
-        public registerNuGetPackUtilsMock() {
+    public registerNuGetPackUtilsMock(date: Date) {
         this.tmr.registerMock('./Common/NuGetPackUtilities', {
-            getUtcDateString: function() {
-                return 'YYYYMMDD-HHMMSS';
+            getNowUtcDateString: function() {
+                return nugetPackUtils.getUtcDateString(date);
             }
         });
     }
