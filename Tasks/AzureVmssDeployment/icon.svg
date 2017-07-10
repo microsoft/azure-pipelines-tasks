@@ -1,108 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1024"
-   height="1024"
-   id="svg2"
-   version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="icon.svg"
-   inkscape:export-filename="C:\Users\Jamie\Sources\vsts-tasks\Tasks\DeployAzureResourceGroup\icon.png"
-   inkscape:export-xdpi="2.8099999"
-   inkscape:export-ydpi="2.8099999">
-  <defs
-     id="defs10" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="3440"
-     inkscape:window-height="1377"
-     id="namedview8"
-     showgrid="true"
-     inkscape:snap-bbox="true"
-     inkscape:bbox-nodes="true"
-     inkscape:object-nodes="true"
-     inkscape:zoom="0.7186292"
-     inkscape:cx="134.72037"
-     inkscape:cy="378.79866"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2">
-    <inkscape:grid
-       type="xygrid"
-       id="grid4148"
-       spacingx="32"
-       spacingy="32"
-       empspacing="4" />
-  </sodipodi:namedview>
-  <metadata
-     id="metadata4">
-    <rdf:RDF>
-      <cc:Work>
-        <dc:subject>
-                    Compute
-                </dc:subject>
-        <dc:identifier>
-                    virtual-machines
-                </dc:identifier>
-        <dc:title></dc:title>
-        <dc:format>
-                    image/svg+xml
-                </dc:format>
-        <dc:publisher>
-                    Amido Limited
-                </dc:publisher>
-        <dc:creator>
-                    Richard Slater
-                </dc:creator>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <path
-     d="M 512,224 224,337.77778 512,480 800,337.77778 Z"
-     id="path4142"
-     style="fill:#3999c6;fill-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     d="m 224,384 -1e-5,320.63868 L 480,832 480,512 Z"
-     id="path4140"
-     style="fill:#59b4d9;fill-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     d="M 800,384 544,512 544,832 800,704 Z"
-     id="path6"
-     style="fill:#abd9ec;fill-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#424242;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:34.62200165;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
-     d="m 287.72461,190.42969 c -2.72391,-0.0309 -5.41667,0.58138 -7.85938,1.78711 L 128.07617,264.48438 128,768 278.4082,857.74805 c 7.9627,5.44533 18.8401,3.33229 24.18502,-4.69814 5.34492,-8.03044 3.0955,-18.88045 -5.00142,-24.12413 l -134.96875,-79.4707 0.0762,-463.10742 132.04883,-62.8711 c 7.36264,-3.37842 11.39826,-11.41057 9.71422,-19.33434 -1.68403,-7.92377 -8.63744,-13.62043 -16.73766,-13.71253 z"
-     id="path4159"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cccccsccccsc" />
-  <path
-     inkscape:connector-curvature="0"
-     id="path4172"
-     d="m 737.20889,190.42969 c 2.72391,-0.0309 5.41667,0.58138 7.85938,1.78711 L 896.85733,264.48438 896,768 746.5253,857.74805 c -7.9627,5.44533 -18.8401,3.33229 -24.18502,-4.69814 -5.34492,-8.03044 -3.0955,-18.88045 5.00142,-24.12413 l 134.03525,-79.4707 0.85733,-463.10742 -132.04883,-62.8711 c -7.36264,-3.37842 -11.39826,-11.41057 -9.71422,-19.33434 1.68403,-7.92377 8.63744,-13.62043 16.73766,-13.71253 z"
-     style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#424242;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:34.62200165;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
-     sodipodi:nodetypes="cccccsccccsc"
-     inkscape:export-xdpi="2.8099999"
-     inkscape:export-ydpi="2.8099999" />
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by Microsoft Visio, SVG Export VM Scale Set mono.svg Page-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="0.528323in" height="0.531484in"
+		viewBox="0 0 38.0393 38.2669" xml:space="preserve" color-interpolation-filters="sRGB" class="st2">
+	<v:documentProperties v:langID="1033" v:viewMarkup="false">
+		<v:userDefs>
+			<v:ud v:nameU="visTLShowProps" v:prompt="" v:val="VT0(0):26"/>
+		</v:userDefs>
+	</v:documentProperties>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#0078d7;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st2 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>Page-1</title>
+		<v:pageProperties v:drawingScale="1" v:pageScale="1" v:drawingUnits="19" v:shadowOffsetX="2.83465"
+				v:shadowOffsetY="-2.83465" v:shadowType="1"/>
+		<g id="shape1123-1" v:mID="1123" v:groupContext="shape" transform="translate(0.375,-0.375)">
+			<title>VM Scale Set</title>
+			<path d="M23.57 21.89 C23.6 21.89 23.62 21.88 23.64 21.87 L28.63 18.99 C28.68 18.97 28.71 18.92 28.71 18.86 C28.71 18.81
+						 28.68 18.76 28.63 18.73 L23.61 15.84 C23.56 15.81 23.51 15.81 23.46 15.84 L18.47 18.71 C18.42 18.74 18.4
+						 18.79 18.4 18.84 C18.4 18.9 18.42 18.95 18.47 18.97 L23.49 21.87 C23.52 21.88 23.54 21.89 23.57 21.89 ZM22.85
+						 28.92 C22.87 28.92 22.9 28.92 22.92 28.91 C22.97 28.88 23 28.83 23 28.77 L23 22.98 C23 22.93 22.97 22.88
+						 22.92 22.85 L17.92 19.97 C17.87 19.94 17.81 19.94 17.76 19.97 C17.72 19.99 17.69 20.04 17.69 20.1 L17.69
+						 25.89 C17.69 25.94 17.72 25.99 17.76 26.02 L22.77 28.9 C22.79 28.92 22.82 28.92 22.85 28.92 ZM24.26 28.92
+						 C24.29 28.92 24.32 28.92 24.34 28.91 L29.34 26.02 C29.39 25.99 29.42 25.94 29.42 25.89 L29.42 20.14 C29.42
+						 20.08 29.39 20.03 29.34 20 C29.29 19.98 29.24 19.98 29.19 20 L24.19 22.89 C24.14 22.92 24.11 22.97 24.11
+						 23.02 L24.11 28.77 C24.11 28.83 24.14 28.88 24.19 28.9 C24.21 28.92 24.24 28.92 24.26 28.92 ZM22.16 11.98
+						 L19.09 10.21 C19.04 10.18 18.98 10.18 18.94 10.21 L15.86 11.98 L10.32 11.98 C9.47 11.98 8.78 12.75 8.78
+						 13.6 L8.78 24.98 L6.64 24.98 L6.64 8.55 L30.82 8.52 L30.82 11.98 L22.16 11.98 ZM27.27 32.79 L35.57 32.79
+						 C36.42 32.79 37.29 32.03 37.29 31.18 L37.29 13.6 C37.29 12.75 36.42 11.98 35.57 11.98 L32.99 11.98 L32.99
+						 7.98 C32.99 7.12 32.12 6.36 31.27 6.36 L28.51 6.36 L28.51 2.37 C28.52 1.51 27.65 0.75 26.79 0.75 L1.55 0.75
+						 C0.69 0.75 0 1.52 0 2.37 L0 19.95 C0 20.8 0.69 21.56 1.55 21.56 L4.48 21.56 L4.48 25.56 C4.48 26.41 5.17
+						 27.17 6.03 27.17 L8.78 27.17 L8.78 31.18 C8.78 32.03 9.47 32.79 10.32 32.79 L19.51 32.79 C20.44 36.08 19.19
+						 36.55 13.71 36.55 L13.71 38.27 L32.35 38.27 L32.35 36.55 C26.87 36.55 26.33 36.08 27.27 32.79 ZM35.35 30.6
+						 L11.16 30.6 L11.16 14.18 L35.35 14.14 L35.35 30.6 ZM17.66 6.36 L14.61 4.6 C14.56 4.58 14.51 4.58 14.46 4.6
+						 L11.41 6.36 L6.03 6.36 C5.17 6.36 4.48 7.12 4.48 7.98 L4.48 19.37 L2.16 19.37 L2.16 2.94 L26.35 2.91 L26.35
+						 6.36 L17.66 6.36 Z" class="st1"/>
+		</g>
+	</g>
 </svg>
