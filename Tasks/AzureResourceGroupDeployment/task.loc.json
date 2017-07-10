@@ -380,15 +380,12 @@
     "DeploymentGroupEndpointUrlCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty",
     "DeploymentGroupEndpointPatTokenCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty",
     "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter",
-<<<<<<< HEAD
-=======
     "TemplateFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateFilePatternMatchingMoreThanOneFile",
     "TemplateParameterFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingMoreThanOneFile",
     "TemplateFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateFilePatternMatchingNoFile",
     "TemplateParameterFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingNoFile",
     "ParametersPatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile",
     "CsmFilePatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile",
->>>>>>> origin/master
     "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
     "ProvisioningStatusOfExtensionIsNotSucceeded": "ms-resource:loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded",
     "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
