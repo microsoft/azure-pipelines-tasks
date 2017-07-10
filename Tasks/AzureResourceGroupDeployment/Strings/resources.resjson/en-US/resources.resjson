@@ -114,14 +114,14 @@
   "loc.messages.SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
   "loc.messages.SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
   "loc.messages.OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-  "loc.messages.ARG_SetExtensionFailedForVm": "StdErr Message: Failed to set extension on Virtual Machine %s of Resource Group %s with error: %s",
+  "loc.messages.ARG_SetExtensionFailedForVm": "Standard Error Message: Failed to set extension on Virtual Machine %s. Error: %s",
   "loc.messages.InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
   "loc.messages.AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
   "loc.messages.InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
   "loc.messages.InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
   "loc.messages.AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
   "loc.messages.FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
-  "loc.messages.CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
+  "loc.messages.CreationOfExtensionFailed": "Failed to add the extension to the vm: '%s'. Error: %s",
   "loc.messages.AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
   "loc.messages.AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
   "loc.messages.DeletionSucceeded": "Deletion of extension on vm %s succeeded",
@@ -157,5 +157,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
   "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null.",
-  "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of CustomScriptExtension is not succeeded on vm: '%s'."
+  "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
+  "loc.messages.ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
+  "loc.messages.ExtensionNotFound": "Extension not found on the vm: %s"
 }

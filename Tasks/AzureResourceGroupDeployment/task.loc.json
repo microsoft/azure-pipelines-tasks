@@ -386,6 +386,9 @@
     "TemplateParameterFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingNoFile",
     "ParametersPatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile",
     "CsmFilePatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile",
-    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull"
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
+    "ProvisioningStatusOfExtensionIsNotSucceeded": "ms-resource:loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded",
+    "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
+    "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound"
   }
 }

@@ -32,11 +32,13 @@ var faultyCSM = path.join(__dirname, "faultyCSM.json");
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
-        "CSM.json" : [CSMJson],
-        "CSMwithComments.json" : [CSMwithComments],
-        "defaults.json" : [defaults],
-        "faultyCSM.json" : [faultyCSM],
-        "" : [""]
+        "CSM.json": [CSMJson],
+        "CSMwithComments.json": [CSMwithComments],
+        "defaults.json": [defaults],
+        "faultyCSM.json": [faultyCSM],
+        "CSMNotThere.json": [],
+        "CSMmultiple.json": [CSMJson, CSMJson],
+        "": [""]
     }
 };
 
