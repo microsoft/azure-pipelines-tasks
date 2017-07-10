@@ -29,12 +29,6 @@
       "displayName": "ms-resource:loc.group.displayName.Image",
       "isExpanded": true,
       "visibleRule": "action = UpdateImage"
-    },
-    {
-      "name": "StartupConfiguration",
-      "displayName": "ms-resource:loc.group.displayName.StartupConfiguration",
-      "isExpanded": true,
-      "visibleRule": "action = UpdateImage"
     }
   ],
   "inputs": [
@@ -78,24 +72,6 @@
       "required": true,
       "groupName": "Image",
       "helpMarkDown": "ms-resource:loc.input.help.imageUrl"
-    },
-    {
-      "name": "customScriptUrl",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.customScriptUrl",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "ms-resource:loc.input.help.customScriptUrl"
-    },
-    {
-      "name": "customScriptCommand",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.customScriptCommand",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
     }
   ],
   "dataSourceBindings": [
