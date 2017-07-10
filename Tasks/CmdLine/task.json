@@ -34,7 +34,7 @@
             "type": "multiLine",
             "label": "Script",
             "required": true,
-            "defaultValue": "echo Write your commands here\necho Use the Environment input below to map secret variables into environment variables",
+            "defaultValue": "echo Write your commands here",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

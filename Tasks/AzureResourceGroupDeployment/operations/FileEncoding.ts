@@ -1,6 +1,7 @@
 //File Encoding detected to be : utf-32be, which is not supported by Node.js
 //'Unable to detect encoding of file ' + typeCode
 //'File buffer is too short to detect encoding type'
+
 var fs = require('fs');
 import tl = require('vsts-task-lib');
 

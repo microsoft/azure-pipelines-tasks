@@ -103,6 +103,5 @@
   "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
   "loc.messages.NoCodeCoverage": "No code coverage results were found to publish.",
   "loc.messages.EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
-  "loc.messages.FeedTokenUnavailable": "Could not determine credentials to use for Maven feed.",
   "loc.messages.EffectivePomInvalid": "Could not parse the effective POM."
 }

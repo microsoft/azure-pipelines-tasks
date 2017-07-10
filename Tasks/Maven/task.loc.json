@@ -20,7 +20,7 @@
   "version": {
     "Major": 1,
     "Minor": 120,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -414,7 +414,6 @@
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
-    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid"
   }
 }
