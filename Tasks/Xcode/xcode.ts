@@ -336,13 +336,15 @@ async function run() {
                     var exportMethod: string;
                     var exportTeamId: string;
                     var exportOptionsPlist: string;
+                    var exportProvProfile: string;
 
+                    var archiveToCheck: string = archiveFolders[0];
                     if (exportOptions === 'auto') {
                         // Automatically try to detect the export-method to use from the provisioning profile
                         // embedded in the .xcarchive file
-                        var archiveToCheck: string = archiveFolders[0];
                         var embeddedProvProfile: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
                         if (embeddedProvProfile && embeddedProvProfile.length > 0) {
+                            exportProvProfile = embeddedProvProfile[0];
                             tl.debug('embedded prov profile = ' + embeddedProvProfile);
                             exportMethod = await sign.getProvisioningProfileType(embeddedProvProfile[0]);
                             tl.debug('Using export method = ' + exportMethod);
@@ -368,6 +370,23 @@ async function run() {
                         tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
                         if (exportTeamId) {
                             tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
+                        }
+
+                        if (xcodeVersion >= 9 && !automaticSigningWithXcode && exportOptions === 'auto') {
+                            // Xcode 9 manual signing, set code sign style = manual
+                            tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
+
+                            // add provisioning profiles to the exportOptions plist
+                            // find bundle Id from Info.plist and prov profile name from the embedded profile
+                            let embeddedInfoPlist: string[] = tl.findMatch(archiveToCheck, 'Info.plist', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+                            let bundleId: string = '*';
+                            if (embeddedInfoPlist && embeddedInfoPlist.length > 0) {
+                                bundleId = await sign.getBundleIdFromPlist(embeddedInfoPlist[0])
+                            }
+                            tl.debug('Bundle ID obtained for the archive = ' + bundleId);
+                            let profileName: string = await sign.getProvisioningProfileName(exportProvProfile);
+                            tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
+                            tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
                         }
                     }
 

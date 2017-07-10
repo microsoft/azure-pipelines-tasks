@@ -193,6 +193,47 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     }
 }
 
+/**
+ * Find the Name of the provisioning profile
+ * @param provProfilePath
+ * @returns {string} Name
+ */
+export async function getProvisioningProfileName(provProfilePath: string) {
+
+    //find the provisioning profile UUID
+    var provProfileDetails: string;
+    var getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
+    getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+    getProvProfileDetailsCmd.on('stdout', function (data) {
+        if (data) {
+            if (provProfileDetails) {
+                provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
+            } else {
+                provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
+            }
+        }
+    })
+    await getProvProfileDetailsCmd.exec();
+
+    if (provProfileDetails) {
+        //write the provisioning profile to a plist
+        var tmpPlist = '_xcodetasktmp.plist';
+        fs.writeFileSync(tmpPlist, provProfileDetails);
+    } else {
+        throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
+    }
+
+    //use PlistBuddy to figure out the Name
+    let provProfileName: string = await printFromPlist('Name', tmpPlist);
+
+    //delete the temporary plist file
+    var deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
+    deletePlistCommand.arg(['-f', tmpPlist]);
+    await deletePlistCommand.exec();
+
+    tl.debug('getProvisioningProfileName: profile name = ' + provProfileName);
+    return provProfileName;
+}
 
 /**
  * Find the type of the provisioning profile - development, app-store or ad-hoc
@@ -260,6 +301,17 @@ export async function getProvisioningProfileType(provProfilePath: string) {
     return provProfileType;
 }
 
+/**
+ * Find the bundle identifier in the specified Info.plist
+ * @param plistPath 
+ * @returns {string} bundle identifier
+ */
+export async function getBundleIdFromPlist(plistPath: string) {
+    let bundleId: string = await printFromPlist('ApplicationProperties:CFBundleIdentifier', plistPath);
+    tl.debug('getBundleIdFromPlist bundleId = ' + bundleId);
+    return bundleId;
+}
+
 async function printFromPlist(itemToPrint: string, plistPath: string) {
     var plist = tl.which('/usr/libexec/PlistBuddy', true);
     var plistTool: ToolRunner = tl.tool(plist);
@@ -268,7 +320,7 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
     var printedValue: string;
     plistTool.on('stdout', function (data) {
         if (data) {
-            printedValue = data.toString();
+            printedValue = data.toString().trim();
         }
     });
 
