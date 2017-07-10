@@ -46,17 +46,18 @@ export async function run(nuGetPath: string): Promise<void> {
         nutil.setConsoleCodePage();
 
         // Get list of files to pusblish
-        let searchPattern = tl.getPathInput("searchPatternPush", true, false);
+        let searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
 
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!useLegacyFind) {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(searchPattern);
+            filesList = nutil.resolveFilterSpec(searchPatternInput);
         }
 
         filesList.forEach(packageFile => {

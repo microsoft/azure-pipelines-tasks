@@ -59,6 +59,9 @@ export class NugetMockHelper {
     
     public registerNugetUtilityMock(projectFile: string[]) {
         this.tmr.registerMock('nuget-task-common/Utility', {
+            getPatternsArrayFromInput: function(input) {
+                return [input];
+            },
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
@@ -77,6 +80,27 @@ export class NugetMockHelper {
             },
             getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion) {
                 return 'https://vsts/packagesource';
+            }
+        });
+    }
+
+        public registerNugetUtilityMockUnix() {
+        this.tmr.registerMock('nuget-task-common/Utility', {
+            getPatternsArrayFromInput: function(input) {
+                return [input];
+            },
+            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
+                return ["~/myagent/_work/1/s/single.sln"];
+            },
+            getBundledNuGetLocation: function(version) {
+                return '~/myagent/_work/_tasks/NuGet/nuget.exe';
+            },
+            locateCredentialProvider: function(path) {
+                return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
+            },
+            setConsoleCodePage: function() {
+                var tlm = require('vsts-task-lib/mock-task');
+                tlm.debug(`setting console code page`);
             }
         });
     }

@@ -40,7 +40,7 @@
   "loc.input.label.verbosityPush": "Verbosity",
   "loc.input.help.verbosityPush": "Specifies the amount of detail displayed in the output.",
   "loc.input.label.searchPatternPack": "Path to csproj or nuspec file(s) to pack",
-  "loc.input.help.searchPatternPack": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
+  "loc.input.help.searchPatternPack": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '!'. Example: `**\\*.csproj;!**\\*.Tests.csproj`",
   "loc.input.label.configurationToPack": "Configuration to package",
   "loc.input.help.configurationToPack": "When using a csproj file this specifies the configuration to package",
   "loc.input.label.outputDir": "Package folder",

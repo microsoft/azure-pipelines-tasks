@@ -22,7 +22,7 @@ class PackOptions implements INuGetCommandOptions {
 export async function run(nuGetPath: string): Promise<void> {
     nutil.setConsoleCodePage();
 
-    let searchPattern = tl.getPathInput("searchPatternPack", true);
+    let searchPatternInput = tl.getPathInput("searchPatternPack", true);
     let configuration = tl.getInput("configurationToPack");
     let versioningScheme = tl.getInput("versioningScheme");
     let includeRefProj = tl.getBoolInput("includeReferencedProjects");
@@ -113,10 +113,11 @@ export async function run(nuGetPath: string): Promise<void> {
         if (!useLegacyFind) {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(searchPattern);
+            filesList = nutil.resolveFilterSpec(searchPatternInput);
         }
 
         tl.debug(`Found ${filesList.length} files`);

@@ -39,16 +39,17 @@ export async function run(nuGetPath: string): Promise<void> {
         nutil.setConsoleCodePage();
 
         // Reading inputs
-        let solution = tl.getPathInput("solution", true, false);
+        let solutionPattern = tl.getPathInput("solution", true, false);
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!useLegacyFind) {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, solution, findOptions, matchOptions);
+            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(solutionPattern);
+            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(solution, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+            filesList = nutil.resolveFilterSpec(solutionPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
         }
         filesList.forEach(solutionFile => {
             if (!tl.stats(solutionFile).isFile()) {
