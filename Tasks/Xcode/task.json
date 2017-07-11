@@ -171,7 +171,7 @@
             "label": "Automatic Signing",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this if you have an Xcode 8 or Xcode 9 project setup for Automatic Signing.",
+            "helpMarkDown": "Select this if you have an Xcode 8 or Xcode 9 project configured for Automatic Signing.",
             "groupName": "sign"
         },
         {

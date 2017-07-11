@@ -33,7 +33,7 @@
   "loc.input.label.exportOptionsPlist": "Export Options Plist",
   "loc.input.help.exportOptionsPlist": "Path to a plist file that configures archive exporting.",
   "loc.input.label.xcode8AutomaticSigning": "Automatic Signing",
-  "loc.input.help.xcode8AutomaticSigning": "Select this if you have an Xcode 8 or Xcode 9 project setup for Automatic Signing.",
+  "loc.input.help.xcode8AutomaticSigning": "Select this if you have an Xcode 8 or Xcode 9 project configured for Automatic Signing.",
   "loc.input.label.teamId": "Team ID",
   "loc.input.help.teamId": "Specify the 10 digit developer Team ID. This is required if you are a member of multiple development teams.",
   "loc.input.label.signMethod": "Override Using",

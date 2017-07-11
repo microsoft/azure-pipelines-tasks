@@ -345,8 +345,8 @@ async function run() {
                         var embeddedProvProfile: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
                         if (embeddedProvProfile && embeddedProvProfile.length > 0) {
                             exportProvProfile = embeddedProvProfile[0];
-                            tl.debug('embedded prov profile = ' + embeddedProvProfile);
-                            exportMethod = await sign.getProvisioningProfileType(embeddedProvProfile[0]);
+                            tl.debug('embedded prov profile = ' + exportProvProfile);
+                            exportMethod = await sign.getProvisioningProfileType(exportProvProfile);
                             tl.debug('Using export method = ' + exportMethod);
                             if (!exportMethod) {
                                 tl.warning(tl.loc('ExportMethodNotIdentified'));
