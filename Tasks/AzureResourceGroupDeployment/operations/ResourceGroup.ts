@@ -339,6 +339,15 @@ export class ResourceGroup {
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
+                    if (result["properties"] && result["properties"]["outputs"]) {
+                        var prefix = "DeploymentOutputs.";
+                        for (var key in result["properties"]["outputs"]) {
+                            if (result["properties"]["outputs"][key] && result["properties"]["outputs"][key]["type"] == "String") {
+                                tl.command("task.setvariable", { "isOutput": "true", "variable": prefix + key }, "");
+                                console.log("setting variable: " + prefix + key + " value: " + result["properties"]["outputs"][key]["value"])
+                            }
+                        }
+                    }
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });
