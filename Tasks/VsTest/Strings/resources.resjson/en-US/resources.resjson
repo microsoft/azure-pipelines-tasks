@@ -97,7 +97,7 @@
   "loc.messages.distributedTestWorkflow": "In distributed testing flow",
   "loc.messages.dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
   "loc.messages.numberOfTestCasesPerSlice": "Distributed test execution, number of testcases per slice : %s",
-  "loc.messages.IgnoringNumberOfTestCasesPerSlice": "Invalid number of testcases per slice provided. Using the default testcase batching size.",
+  "loc.messages.IgnoringNumberOfTestCasesPerSlice": "Invalid number of testcases per batch provided. Using the default testcase batching size.",
   "loc.messages.testSelectorInput": "Test selector : %s",
   "loc.messages.searchFolderInput": "Search folder : %s",
   "loc.messages.testFilterCriteriaInput": "Test filter criteria : %s",
