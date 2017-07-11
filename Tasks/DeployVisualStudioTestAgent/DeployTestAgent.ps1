@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param()
- 
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
@@ -17,6 +17,7 @@ try {
     $testPlatform               = Get-VstsInput -Name testPlatform -Require
     $agentLocation              = Get-VstsInput -Name agentLocation
     $updateTestAgent            = Get-VstsInput -Name updateTestAgent
+    $executionType              = Get-TaskVariable -Name "System.ParallelExecutionType"
 
     # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
     $logonAutomatically = $runAsProcess
@@ -39,6 +40,11 @@ try {
     Write-Host "updateTestAgent          = $updateTestAgent"
     Write-Host "****************************************************************"
 
+    # Check for the parallel execution conditions
+    if ($executionType -and (($executionType -ieq "multimachine") -or ($executionType -ieq "multiconfiguration"))) {
+        throw (Get-LocalizedString -Key "Visual Studio Test Agent Deployment is not supported in MultiMachine/MultiConfiguration parallel execution type. Please refer this blog for more details https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/")
+    }
+
     $downloadTestAgentScript            = "$PSScriptRoot\DownloadTestAgent.ps1"
     $setupTestMachineForUITestsScript   = "$PSScriptRoot\SetupTestMachineForUITests.ps1"
     $TestAgentConfigurationScript       = "$PSScriptRoot\TestAgentConfiguration.ps1"
@@ -49,7 +55,7 @@ try {
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
     # Redirection to Newton Json 8.0
-    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\Newtonsoft.Json.dll") 
+    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\Newtonsoft.Json.dll")
     $onAssemblyResolve = [System.ResolveEventHandler] {
         param($sender, $e)
         if ($e.Name -eq "Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed") { return $jsonAssembly }
@@ -63,7 +69,7 @@ try {
     # Import the Task.Internal dll that has all the cmdlets we need for Build
     Import-Module "$PSScriptRoot\modules\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
     Import-Module "$PSScriptRoot\modules\MS.TF.Task.TestPlatform.Acquisition.dll"
-    
+
     Write-Verbose "Getting Access Token for the Run"
     $endpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
     $personalAccessToken = [string]($endpoint.auth.parameters.AccessToken)
@@ -99,7 +105,7 @@ try {
         $deployParams.Add("agentlocation", $agentLocation)
         $deployParams.Add("updatetestagent", $updateTestAgent)
         $deployParams.Add("datacollectiononly", $isDataCollectionOnly)
-        
+
         $deployTestPlatform = New-Object 'MS.TF.Task.TestPlatform.Acquisition.DeployTestAgent'
         $deployTestPlatform.Start($deployParams)
     }
@@ -110,4 +116,4 @@ try {
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
-} 
+}
