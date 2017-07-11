@@ -34,10 +34,24 @@ export function getDistributedTestConfigurations() {
     }
     tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
+    dtaConfiguration.numberOfTestCasesPerSlice = 0;
+    const distributeOption = tl.getInput('distributeTestsOption');
+    if (distributeOption && distributeOption === 'distributeByTestBatch') {
+        const batchSize = parseInt(tl.getInput('distributeByTestBatchOption'));
+        if (!isNaN(batchSize) && batchSize > 0) {
+            dtaConfiguration.numberOfTestCasesPerSlice = batchSize;
+        } else {
+            //fallback to default value in case of invalid input
+            tl.warning(tl.loc('IgnoringNumberOfTestCasesPerSlice'));
+            dtaConfiguration.numberOfTestCasesPerSlice = 10;
+        }
+        tl._writeLine(tl.loc('numberOfTestCasesPerSlice', dtaConfiguration.numberOfTestCasesPerSlice));
+    }
+
     const useVsTestConsole = tl.getVariable('UseVsTestConsole');
     if (useVsTestConsole) {
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
-    }    
+    }
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;

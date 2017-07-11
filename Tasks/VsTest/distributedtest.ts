@@ -181,6 +181,8 @@ export class DistributedTest {
         // In the phases world we will distribute based on number of agents
         utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
         utils.Helper.setEnvironmentVariableToString(envVars, 'maxagentphaseslicing', this.dtaTestConfig.numberOfAgentsInPhase.toString());
+        utils.Helper.setEnvironmentVariableToString(envVars, 'numberoftestcasesperslice',
+                this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });
         await this.cleanUp(settingsFile);
