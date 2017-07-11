@@ -3,10 +3,9 @@ import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
 
-import * as restoreCommand from './restorecommand';
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
-
+import * as restoreCommand from './restorecommand';
 
 export class dotNetExe {
     private command: string;
@@ -31,7 +30,7 @@ export class dotNetExe {
             this.command = tl.getInput("custom", true);
         }
 
-        switch(this.command) {
+        switch (this.command) {
             case "build":
             case "publish":
             case "run":
@@ -61,6 +60,13 @@ export class dotNetExe {
         var projectFiles = [""];
         if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
             projectFiles = this.getProjectFiles();
+            if (projectFiles.length == 0) {
+                if (this.command === "test") {
+                    tl.warning(tl.loc("noProjectFilesFound"));
+                } else {
+                    throw tl.loc("noProjectFilesFound");
+                }
+            }
         }
         var failedProjects: string[] = [];
         for (var fileIndex in projectFiles) {
@@ -118,7 +124,7 @@ export class dotNetExe {
                 tl.rmRF(outputSource);
             }
             else {
-                tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
+                throw tl.loc("noPublishFolderFoundToZip", projectFile);
             }
         }
     }
@@ -222,7 +228,6 @@ export class dotNetExe {
 
         var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
         if (!projectFiles || !projectFiles.length) {
-            tl.warning(tl.loc("noProjectFilesFound"));
             return [];
         }
 
@@ -234,7 +239,7 @@ export class dotNetExe {
             });
 
             if (!projectFiles.length) {
-                tl.warning(tl.loc("noWebProjctFound"));
+                tl.error(tl.loc("noWebProjctFound"));
             }
         }
 
