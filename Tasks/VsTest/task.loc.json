@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "vstest"
@@ -247,15 +247,15 @@
     {
       "name": "distributeByAgentsOption",
       "type": "radio",
-      "required": true,
+      "label": "ms-resource:loc.input.label.distributeByAgentsOption",
+      "required": false,
       "defaultValue": "distributeAcrossAgents",
       "options": {
         "distributeAcrossAgents": "Distribute evenly across agents",
         "distributeByTestBatch": "Distribute by test batches"
       },
       "visibleRule": "distributeTestsOption = byAgents",
-      "groupName": "executionOptions",
-      "label": "ms-resource:loc.input.label.distributeByAgentsOption"
+      "groupName": "executionOptions"
     },
     {
       "name": "distributeByTestBatchOption",

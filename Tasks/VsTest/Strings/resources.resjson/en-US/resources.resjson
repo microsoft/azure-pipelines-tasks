@@ -40,6 +40,7 @@
   "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `-key1 value1 -key2 value2`",
   "loc.input.label.distributeTestsOption": "Distribute Tests",
   "loc.input.help.distributeTestsOption": "Distribute tests across number of agents. This option currently can be used only when running with the multi-agent phase setting in Release pipeline. It will be ignored in Build pipeline.",
+  "loc.input.label.distributeByAgentsOption": "Distribute Test options",
   "loc.input.label.distributeByTestBatchOption": "Specify batch size",
   "loc.input.help.distributeByTestBatchOption": "Total number of tests will be divided into multiple batches. Each batch will contain the specified number of test cases.",
   "loc.input.label.runInParallel": "Run tests in parallel on multi-core machines",
