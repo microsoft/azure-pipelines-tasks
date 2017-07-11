@@ -3,7 +3,7 @@
     param(
         [Parameter(Mandatory = $true)]
         [ValidateSet('Azure', 'AzureRM')]
-        [string[]]$PreferredModule,
+        [string[]] $PreferredModule,
         [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -61,7 +61,7 @@
 function Import-FromModulePath {
     [CmdletBinding()]
     param(
-        [switch]$Classic,
+        [switch] $Classic,
         [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -78,6 +78,7 @@ function Import-FromModulePath {
         if ($azurePsVersion) {
             $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion} | Select-Object -First 1
             if (!$module) {
+                Write-Verbose "No module found with name: $name, version: $azurePsVersion"
                 return $false
             }
         }
@@ -118,7 +119,7 @@ function Import-FromModulePath {
 
 function Import-FromSdkPath {
     [CmdletBinding()]
-    param([switch]$Classic,
+    param([switch] $Classic,
           [string] $azurePsVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation

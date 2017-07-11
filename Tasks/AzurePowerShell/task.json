@@ -112,7 +112,7 @@
                 "2.1.0": "2.1.0",
                 "3.6.0": "3.6.0",
                 "4.1.0": "4.1.0",
-                "OtherVersion": "Select other version"
+                "OtherVersion": "Specify other version"
             },
             "helpMarkDown": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Select Other Version\". For selecting the Latest Version , choose \"Latest installed version\""
         },
@@ -134,6 +134,6 @@
     "messages": {
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
-        "InvalidVersion": "The Target Azure PowerShell version '{0}' specified is not in the correct format. Please check the format."
+        "InvalidVersion": "The Target Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
     }
 }

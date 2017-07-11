@@ -112,7 +112,7 @@
         "2.1.0": "2.1.0",
         "3.6.0": "3.6.0",
         "4.1.0": "4.1.0",
-        "OtherVersion": "Select other version"
+        "OtherVersion": "Specify other version"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
     },
