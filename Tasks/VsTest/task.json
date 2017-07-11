@@ -247,7 +247,8 @@
         {
             "name": "distributeByAgentsOption",
             "type": "radio",
-            "required": true,
+            "label": "Distribute Test options",
+            "required": false,
             "defaultValue": "distributeAcrossAgents",
             "options": {
                 "distributeAcrossAgents": "Distribute evenly across agents",

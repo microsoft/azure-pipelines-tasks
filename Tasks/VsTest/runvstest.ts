@@ -13,9 +13,18 @@ try {
     const testType = tl.getInput('testSelector');
     tl.debug('Value of Test Selector :' + testType);
 
+    let isDistributedRun = false;
+
+    const distributeOption = tl.getInput('distributeByAgentsOption');
+    if (distributeOption && distributeOption === 'distributeByTestBatch') {
+        isDistributedRun = true;
+    }
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+        isDistributedRun = true;
+    }
 
+    if (isDistributedRun) {
         tl._writeLine(tl.loc('distributedTestWorkflow'));
         tl._writeLine('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
@@ -29,4 +38,3 @@ try {
 } catch (error) {
     tl.setResult(tl.TaskResult.Failed, error);
 }
-
