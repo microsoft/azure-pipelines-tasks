@@ -114,7 +114,7 @@
                 "4.1.0": "4.1.0",
                 "OtherVersion": "Specify other version"
             },
-            "helpMarkDown": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Select Other Version\". For selecting the Latest Installed Version , choose \"Latest installed version\""
+            "helpMarkDown": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Specify Other Version\". For selecting the Latest Installed Version , choose \"Latest installed version\""
         },
         {
             "name": "CustomTargetAzurePs",
