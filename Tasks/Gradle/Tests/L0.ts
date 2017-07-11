@@ -9,11 +9,11 @@ import fs = require('fs');
 
 import * as ttm from 'vsts-task-lib/mock-test';
 
-import { BuildOutput, BuildEngine } from '../CodeAnalysis/Common/BuildOutput';
-import { PmdTool } from '../CodeAnalysis/Common/PmdTool';
-import { CheckstyleTool } from '../CodeAnalysis/Common/CheckstyleTool';
-import { FindbugsTool } from '../CodeAnalysis/Common/FindbugsTool';
-import { AnalysisResult } from '../CodeAnalysis/Common/AnalysisResult';
+import { BuildOutput, BuildEngine } from 'sonarqube-common/Common/BuildOutput';
+import { PmdTool } from 'sonarqube-common/Common/PmdTool';
+import { CheckstyleTool } from 'sonarqube-common/Common/CheckstyleTool';
+import { FindbugsTool } from 'sonarqube-common/Common/FindbugsTool';
+import { AnalysisResult } from 'sonarqube-common/Common/AnalysisResult';
 
 let isWindows: RegExpMatchArray = os.type().match(/^Win/);
 let gradleWrapper: string = isWindows ? 'gradlew.bat' : 'gradlew';

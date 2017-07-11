@@ -1,4 +1,3 @@
-/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
 import Q = require('q');
 import glob = require('glob');
 

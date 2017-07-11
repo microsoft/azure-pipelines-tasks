@@ -24,11 +24,11 @@
     "cp": [
         {
             "source": [
-                "CodeAnalysis/checkstyle.gradle",
-                "CodeAnalysis/checkstyle.xml",
-                "CodeAnalysis/pmd.gradle",
-                "CodeAnalysis/sonar.gradle",
-                "CodeAnalysis/findbugs.gradle"
+                "../Common/sonarqube-common/checkstyle.gradle",
+                "../Common/sonarqube-common/checkstyle.xml",
+                "../Common/sonarqube-common/pmd.gradle",
+                "../Common/sonarqube-common/sonar.gradle",
+                "../Common/sonarqube-common/findbugs.gradle"
             ],
             "dest": "CodeAnalysis/"
         }
