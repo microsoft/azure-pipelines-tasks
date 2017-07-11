@@ -80,9 +80,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         ],
         "**/embedded.mobileprovision": [
             "/user/build/testScheme.xcarchive/Products/Applications/testScheme.app/embedded.mobileprovision"
-        ],
-        "Info.plist": [
-            "/user/build/testScheme.xcarchive/Info.plist"
         ]
     },
     "exec": {
@@ -166,7 +163,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "embedded prov profile details here"
         },
-        "/usr/libexec/PlistBuddy -c Print ApplicationProperties:CFBundleIdentifier /user/build/testScheme.xcarchive/Info.plist" : {
+        "/usr/libexec/PlistBuddy -c Print CFBundleIdentifier /user/build/testScheme.xcarchive/Products/Applications/testScheme.app/Info.plist" : {
             "code": 0,
             "stdout": "com.test.bundleIdentifier"
         },

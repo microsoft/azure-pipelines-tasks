@@ -369,6 +369,7 @@
     "ExportMethodNotIdentified": "ms-resource:loc.messages.ExportMethodNotIdentified",
     "ExportOptionsPlistInvalidFilePath": "ms-resource:loc.messages.ExportOptionsPlistInvalidFilePath",
     "SchemeRequiredForArchive": "ms-resource:loc.messages.SchemeRequiredForArchive",
-    "WorkspaceOrProjectRequiredForArchive": "ms-resource:loc.messages.WorkspaceOrProjectRequiredForArchive"
+    "WorkspaceOrProjectRequiredForArchive": "ms-resource:loc.messages.WorkspaceOrProjectRequiredForArchive",
+    "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist"
   }
 }

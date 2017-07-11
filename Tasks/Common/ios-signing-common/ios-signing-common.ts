@@ -307,7 +307,7 @@ export async function getProvisioningProfileType(provProfilePath: string) {
  * @returns {string} bundle identifier
  */
 export async function getBundleIdFromPlist(plistPath: string) {
-    let bundleId: string = await printFromPlist('ApplicationProperties:CFBundleIdentifier', plistPath);
+    let bundleId: string = await printFromPlist('CFBundleIdentifier', plistPath);
     tl.debug('getBundleIdFromPlist bundleId = ' + bundleId);
     return bundleId;
 }

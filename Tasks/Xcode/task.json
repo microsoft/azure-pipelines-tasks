@@ -369,6 +369,7 @@
         "ExportMethodNotIdentified": "Failed to identify the export method to use automatically from the archive file. This might cause errors during build or produce an invalid package. Set `Export Options` to `Specify` or `Plist`.",
         "ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file.",
         "SchemeRequiredForArchive": "Scheme needs to be specified to generate the package with xcodebuild archive and export.",
-        "WorkspaceOrProjectRequiredForArchive": "Workspace or Project path needs to be specified to generate the package with xcodebuild archive and export."
+        "WorkspaceOrProjectRequiredForArchive": "Workspace or Project path needs to be specified to generate the package with xcodebuild archive and export.",
+        "FailedToGenerateExportOptionsPlist": "Failed to automatically generate an Export Options Plist to export an IPA. Please specify an Export Options Plist in the Package Options."
     }
 }
