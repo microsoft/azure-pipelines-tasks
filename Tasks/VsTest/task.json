@@ -242,6 +242,7 @@
                 "distributeAcrossAgents": "Distribute evenly across agents",
                 "distributeByTestBatch": "Distribute by test batches"
             },
+            "helpMarkDown": "<ul><li>Select distribute evenly across agents to distribute the tests among agent(s). This option currently can be used only when running with the multi-agent phase setting in Release pipeline. It will be ignored in Build pipeline.</li><li>Select distribute by test batches to divide the tests into multiple batches. Each batch will contain the specified number of test cases, which can be executed by single/multiple agents.</li></ui>",
             "groupName": "executionOptions"
         },
         {

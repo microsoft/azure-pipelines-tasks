@@ -242,6 +242,7 @@
         "distributeAcrossAgents": "Distribute evenly across agents",
         "distributeByTestBatch": "Distribute by test batches"
       },
+      "helpMarkDown": "ms-resource:loc.input.help.distributeTestsOption",
       "groupName": "executionOptions"
     },
     {
