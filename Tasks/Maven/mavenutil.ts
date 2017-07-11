@@ -281,7 +281,7 @@ export function collectFeedRepositoriesFromEffectivePom(mavenOutput:string): Q.P
 export function getExecOptions(): tr.IExecOptions {
     var env = process.env;
     env[accessTokenEnvSetting] = getAuthenticationToken();
-    return {
+    return <tr.IExecOptions> {
         env: env,
     };
 }

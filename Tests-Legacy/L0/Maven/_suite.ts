@@ -14,17 +14,17 @@ import shell = require('shelljs');
 import tr = require('../../lib/vsts-task-lib/toolrunner');
 import tl = require('../../lib/vsts-task-lib/toolrunner');
 
-let sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
-let VstsServerUtils = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils').VstsServerUtils;
-let SonarQubeRunSettings = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings').SonarQubeRunSettings;
-let ISonarQubeServer = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/server').ISonarQubeServer;
-let SonarQubeEndpoint = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint').SonarQubeEndpoint;
-let SonarQubeReportBuilder = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder').SonarQubeReportBuilder;
-let SonarQubeMetrics = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics').SonarQubeMetrics;
-let SonarQubeMeasurementUnit = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics').SonarQubeMeasurementUnit;
+let sqCommon = require('../../../Tasks/Common/sonarqube-common/SonarQube/common');
+let VstsServerUtils = require('../../../Tasks/Common/sonarqube-common/SonarQube/vsts-server-utils').VstsServerUtils;
+let SonarQubeRunSettings = require('../../../Tasks/Common/sonarqube-common/SonarQube/run-settings').SonarQubeRunSettings;
+let ISonarQubeServer = require('../../../Tasks/Common/sonarqube-common/SonarQube/server').ISonarQubeServer;
+let SonarQubeEndpoint = require('../../../Tasks/Common/sonarqube-common/SonarQube/endpoint').SonarQubeEndpoint;
+let SonarQubeReportBuilder = require('../../../Tasks/Common/sonarqube-common/SonarQube/report-builder').SonarQubeReportBuilder;
+let SonarQubeMetrics = require('../../../Tasks/Common/sonarqube-common/SonarQube/metrics').SonarQubeMetrics;
+let SonarQubeMeasurementUnit = require('../../../Tasks/Common/sonarqube-common/SonarQube/metrics').SonarQubeMeasurementUnit;
 import {MockSonarQubeServer} from './server-mock';
 
-let FileSystemInteractions = require('../../../Tasks/Maven/CodeAnalysis/Common/FileSystemInteractions').FileSystemInteractions;
+let FileSystemInteractions = require('../../../Tasks/Common/sonarqube-common/Common/FileSystemInteractions').FileSystemInteractions;
 
 import http = require('http');
 import {IncomingMessage} from 'http';
