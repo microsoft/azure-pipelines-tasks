@@ -11,9 +11,9 @@ function Update-PSModulePathForHostedAgent {
         $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$"
     }
     $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
-    $env:PSModulePath.TrimStart(';')
+    $env:PSModulePath = $env:PSModulePath.TrimStart(';')
     $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-    $env:PSModulePath.TrimStart(';')
+    $env:PSModulePath = $env:PSModulePath.TrimStart(';')
 }
 
 function Get-LatestModule {
