@@ -159,5 +159,6 @@
   "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null.",
   "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
   "loc.messages.ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
-  "loc.messages.ExtensionNotFound": "Extension not found on the vm: %s"
+  "loc.messages.ExtensionNotFound": "Extension not found on the vm: %s",
+  "loc.messages.AddedOutputVariable": "Updated output variable 'DeploymentGroups'. Follow this link: https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/outputvariable.md to learn how to use it in your defintion"
 }
