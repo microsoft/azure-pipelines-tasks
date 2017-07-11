@@ -1,4 +1,3 @@
-/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
 import tl = require('vsts-task-lib/task');
 
 export class SonarQubeEndpoint {
