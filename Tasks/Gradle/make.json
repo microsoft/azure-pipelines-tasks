@@ -11,6 +11,11 @@
             "compile": true
         },
         {
+            "module": "../Common/sonarqube-common",
+            "type": "node",
+            "compile": true
+        },
+        {
             "module": "../Common/utility-common",
             "type": "node",
             "compile": true
@@ -33,6 +38,7 @@
             "items": [
                 "node_modules/java-common/node_modules/vsts-task-lib",
                 "node_modules/codecoverage-tools/node_modules/vsts-task-lib",
+                "node_modules/sonarqube-common/node_modules/vsts-task-lib",
                 "node_modules/utility-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
