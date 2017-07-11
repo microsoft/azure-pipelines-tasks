@@ -403,7 +403,7 @@
         "distributedTestWorkflow": "In distributed testing flow",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
         "numberOfTestCasesPerSlice": "Distributed test execution, number of testcases per slice : %s",
-        "IgnoringNumberOfTestCasesPerSlice": "Invalid number of testcases per slice provided. Using the default testcase batching size.",
+        "IgnoringNumberOfTestCasesPerSlice": "Invalid number of testcases per batch provided. Using the default testcase batching size.",
         "testSelectorInput": "Test selector : %s",
         "searchFolderInput": "Search folder : %s",
         "testFilterCriteriaInput": "Test filter criteria : %s",
