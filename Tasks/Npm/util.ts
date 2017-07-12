@@ -49,7 +49,6 @@ export async function getLocalNpmRegistries(workingDir: string): Promise<INpmReg
         for (let registry of await getLocalRegistries(npmrcPath)) {
             localNpmRegistries.push(await NpmRegistry.FromFeedId(getFeedIdFromRegistry(registry), true));
         }
-    return localNpmRegistries;
     }
 
     return localNpmRegistries;
