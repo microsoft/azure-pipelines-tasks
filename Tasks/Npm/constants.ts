@@ -14,6 +14,7 @@ export class NpmTaskInput {
     public static Command: string = 'command';
     public static WorkingDir: string = 'workingDir';
     public static CustomCommand: string = 'customCommand';
+    public static Verbose: string = 'verbose';
     public static CustomRegistry: string = 'customRegistry';
     public static CustomFeed: string = 'customFeed';
     public static CustomEndpoint: string = 'customEndpoint';
