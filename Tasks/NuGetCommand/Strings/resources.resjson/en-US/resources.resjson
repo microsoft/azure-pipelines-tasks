@@ -34,7 +34,7 @@
   "loc.input.label.feedPublish": "Target feed",
   "loc.input.help.feedPublish": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
   "loc.input.label.allowPackageConflicts": "Allow duplicates to be skipped",
-  "loc.input.help.allowPackageConflicts": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+  "loc.input.help.allowPackageConflicts": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
   "loc.input.label.externalEndpoint": "NuGet server",
   "loc.input.help.externalEndpoint": "The NuGet service endpoint that contains the external NuGet server’s credentials.",
   "loc.input.label.verbosityPush": "Verbosity",
@@ -115,5 +115,6 @@
   "loc.messages.Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
   "loc.messages.Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
   "loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+  "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
   "loc.messages.Error_CommandNotRecognized": "The command %s was not recognized."
 }

@@ -168,7 +168,7 @@ export async function run(nuGetPath: string): Promise<void> {
             tl.warning(tl.loc("Warning_AllowDuplicatesOnlyAvailableHosted"));
         }
 
-        let useVstsNuGetPush = shouldUseVstsNuGetPush(isInternalFeed, continueOnConflict);
+        let useVstsNuGetPush = shouldUseVstsNuGetPush(isInternalFeed, continueOnConflict, nuGetPath);
         let vstsPushPath = undefined;
         if (useVstsNuGetPush) {
             vstsPushPath = vstsNuGetPushToolUtilities.getBundledVstsNuGetPushLocation();
@@ -285,7 +285,7 @@ async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IV
     throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush"));
 }
 
-function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean): boolean {
+function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {
     if (!isInternalFeed)
     {   
         tl.debug('Pushing to an external feed so NuGet.exe will be used.');
@@ -325,6 +325,11 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         {
             tl.warning(tl.loc("Warning_ForceNuGetCannotSkipConflicts"));
         }
+        return false;
+    }
+
+    if (!(tl.osType() === 'Windows_NT' || !nugetExePath.trim().toLowerCase().endsWith(".exe"))) {
+        tl.warning(tl.loc("Warning_SkipConflictsNotSupportedUnixAgents"));
         return false;
     }
 

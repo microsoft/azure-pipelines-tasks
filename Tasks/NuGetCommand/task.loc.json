@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -430,6 +430,7 @@
     "Warning_ForceNuGetCannotSkipConflicts": "ms-resource:loc.messages.Warning_ForceNuGetCannotSkipConflicts",
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
+    "Warning_SkipConflictsNotSupportedUnixAgents": "ms-resource:loc.messages.Warning_SkipConflictsNotSupportedUnixAgents",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized"
   }
 }
