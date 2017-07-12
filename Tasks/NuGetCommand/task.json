@@ -325,6 +325,28 @@
             "visibleRule": "versioningScheme = byPrereleaseNumber"
         },
         {
+            "name": "packTimezone",
+            "type": "pickList",
+            "label": "Time zone",
+            "defaultValue": "utc",
+            "helpMarkDown": "Specifies the desired time zone used to produce the version of the package.",
+            "required": "false",
+            "groupName": "packOptions",
+            "options": {
+                "utc": "UTC",
+                "local": "Agent local time"
+            },
+            "visibleRule": "versioningScheme = byPrereleaseNumber"
+        },
+        {
+            "name": "includeSymbols",
+            "type": "boolean",
+            "label": "Create symbols package",
+            "defaultValue": "false",
+            "helpMarkDown": "Specifies that the package contains sources and symbols. When used with a .nuspec file, this creates a regular NuGet package file and the corresponding symbols package.",
+            "groupName": "packOptions"
+        },
+        {
             "name": "buildProperties",
             "type": "string",
             "label": "Additional build properties",

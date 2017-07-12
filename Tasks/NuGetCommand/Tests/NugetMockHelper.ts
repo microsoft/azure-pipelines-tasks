@@ -118,7 +118,7 @@ export class NugetMockHelper {
 
     public registerNuGetPackUtilsMock(date: Date) {
         this.tmr.registerMock('./Common/NuGetPackUtilities', {
-            getNowUtcDateString: function() {
+            getNowDateString: function(timezone: string) {
                 return nugetPackUtils.getUtcDateString(date);
             }
         });

@@ -48,7 +48,7 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nuspec"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-let date: Date = new Date(Date.UTC(2222, 1, 1, 1, 1, 1, 0));
+let date: Date = new Date(Date.UTC(2222, 0, 1, 1, 1, 1, 0));
 nmh.registerNuGetPackUtilsMock(date);
 
 tmr.run();

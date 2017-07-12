@@ -322,6 +322,28 @@
       "visibleRule": "versioningScheme = byPrereleaseNumber"
     },
     {
+      "name": "packTimezone",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packTimezone",
+      "defaultValue": "utc",
+      "helpMarkDown": "ms-resource:loc.input.help.packTimezone",
+      "required": "false",
+      "groupName": "packOptions",
+      "options": {
+        "utc": "UTC",
+        "local": "Agent local time"
+      },
+      "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "includeSymbols",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeSymbols",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.includeSymbols",
+      "groupName": "packOptions"
+    },
+    {
       "name": "buildProperties",
       "type": "string",
       "label": "ms-resource:loc.input.label.buildProperties",

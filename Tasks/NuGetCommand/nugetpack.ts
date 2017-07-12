@@ -13,6 +13,7 @@ class PackOptions implements INuGetCommandOptions {
         public includeReferencedProjects: boolean,
         public version: string,
         public properties: string[],
+        public createSymbolsPackage: boolean,
         public verbosity: string,
         public configFile: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings
@@ -30,8 +31,10 @@ export async function run(nuGetPath: string): Promise<void> {
     let majorVersion = tl.getInput("requestedMajorVersion");
     let minorVersion = tl.getInput("requestedMinorVersion");
     let patchVersion = tl.getInput("requestedPatchVersion");
+    let timezone = tl.getInput("packTimezone");
     let propertiesInput = tl.getInput("buildProperties");
     let verbosity = tl.getInput("verbosityPack");
+    let createSymbolsPackage = tl.getBoolInput("includeSymbols");
     let outputDir = undefined;
 
     try 
@@ -59,7 +62,7 @@ export async function run(nuGetPath: string): Promise<void> {
             case "byPrereleaseNumber":
                 tl.debug(`Getting prerelease number`);
 
-                let nowUtcString = packUtils.getNowUtcDateString();
+                let nowUtcString = packUtils.getNowDateString(timezone);
                 version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowUtcString}`;
                 break;
             case "byEnvVar":
@@ -146,6 +149,7 @@ export async function run(nuGetPath: string): Promise<void> {
             includeRefProj,
             version,
             props,
+            createSymbolsPackage,
             verbosity,
             undefined,
             environmentSettings);
@@ -182,6 +186,7 @@ function packAsync(file: string, options: PackOptions): Q.Promise<number> {
     }
 
     nugetTool.argIf(options.includeReferencedProjects, "-IncludeReferencedProjects")
+    nugetTool.argIf(options.createSymbolsPackage, "-Symbols")
 
     if (options.version) {
         nugetTool.arg("-version");
