@@ -14,11 +14,7 @@ import shell = require('shelljs');
 import tr = require('../../lib/vsts-task-lib/toolrunner');
 import tl = require('../../lib/vsts-task-lib/toolrunner');
 
-let sqCommon = require('../../../Tasks/Common/sonarqube-common/SonarQube/common');
-let VstsServerUtils = require('../../../Tasks/Common/sonarqube-common/SonarQube/vsts-server-utils').VstsServerUtils;
 let SonarQubeRunSettings = require('../../../Tasks/Common/sonarqube-common/SonarQube/run-settings').SonarQubeRunSettings;
-let ISonarQubeServer = require('../../../Tasks/Common/sonarqube-common/SonarQube/server').ISonarQubeServer;
-let SonarQubeEndpoint = require('../../../Tasks/Common/sonarqube-common/SonarQube/endpoint').SonarQubeEndpoint;
 let SonarQubeReportBuilder = require('../../../Tasks/Common/sonarqube-common/SonarQube/report-builder').SonarQubeReportBuilder;
 let SonarQubeMetrics = require('../../../Tasks/Common/sonarqube-common/SonarQube/metrics').SonarQubeMetrics;
 let SonarQubeMeasurementUnit = require('../../../Tasks/Common/sonarqube-common/SonarQube/metrics').SonarQubeMeasurementUnit;

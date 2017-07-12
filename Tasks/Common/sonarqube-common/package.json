@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "fs-extra": "^0.30.0",
+    "request": "^2.74.0",
     "glob": "7.1.0",
     "os": "^0.1.1",
     "string": "^3.3.1",
