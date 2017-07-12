@@ -39,6 +39,14 @@ require({
     "Run an image": "./containerrun",
     "Run a Docker command": "./containercommand"
 }[action]).run(connection)
+.then((result) => {
+    // Write the output of the command to the configured output variable
+    const outputVariable = tl.getInput("outputVariableName", false);
+    if (outputVariable !== null) {
+        tl.setVariable(outputVariable, result);
+        tl.debug(`Set ${outputVariable} to: ${result}`);
+    }
+})
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
     connection.close();

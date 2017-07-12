@@ -272,6 +272,13 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "defaultValue": "",
+      "helpMarkdown": "Variable to write the output of the Docker command to. Only supply the variable name and do not include `$(...)`.",
+      "label": "ms-resource:loc.input.label.outputVariableName",
+      "name": "outputVariableName",
+      "type": "string"
     }
   ],
   "dataSourceBindings": [

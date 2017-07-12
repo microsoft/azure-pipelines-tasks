@@ -37,13 +37,23 @@ export default class ContainerConnection {
 
     public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions) {
         var errlines = [];
+        var result = "";
+        command.on("stdout", data => {
+            var dataAsString = data + "";
+            if (result.length > 0) {
+                result += " ";
+            }
+            // Add all stdout lines to the result string, but replace newline by a space because passing the result with newlines to a second Docker command doesn't work.
+            // E.g. if you first do 'docker images -aq', and want to pass that to 'docker rmi', it needs to get it's output split by spaces instead of newlines.
+            result += dataAsString.replace(/[\r\n]+/g, " ");
+        });
         command.on("errline", line => {
             errlines.push(line);
         });
         return command.exec(options).fail(error => {
             errlines.forEach(line => tl.error(line));
             throw error;
-        });
+        }).then(() => result);
     }
 
     public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): void {
