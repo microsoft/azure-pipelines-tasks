@@ -482,7 +482,7 @@ describe('Gradle L0 Suite', function () {
         }
     });
 
-    it('Gradle with SQ in a PR build - SQ issues mode analysis', function (done) {
+    it('Gradle with SQ in a PR build - SQ normal analysis', function (done) {
         let tp: string = path.join(__dirname, 'L0SQInPRBuildSQIssuesModeAnalysis.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -494,7 +494,7 @@ describe('Gradle L0 Suite', function () {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
-            assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json`), 'sq issues mode');
+            assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`), 'sq issues mode run normally');
 
             cleanTemporaryFolders();
 
@@ -680,35 +680,6 @@ describe('Gradle L0 Suite', function () {
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`),
-                   'should have run the gradle wrapper with the appropriate SonarQube arguments');
-
-            assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,
-                   'should not have uploaded a SonarQube Analysis Report build summary');
-
-            cleanTemporaryFolders();
-
-            done();
-        } catch (err) {
-            console.log(tr.stdout);
-            console.log(tr.stderr);
-            console.log(err);
-            done(err);
-        }
-    });
-
-    it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
-        let tp: string = path.join(__dirname, 'L0SQFailsTaskReportMissingPRBuild.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        try {
-            createTemporaryFolders();
-
-            tr.run();
-
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
-            assert(tr.stderr.length < 1, 'should not have written to stderr');
-            assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json`),
                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,
