@@ -31,6 +31,8 @@ export class NugetMockHelper {
             getNuGet: function(versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
+            cacheBundledNuGet_4_0_0: function()
+            {}
         } )
     }
     

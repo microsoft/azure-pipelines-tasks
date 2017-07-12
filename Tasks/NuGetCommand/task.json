@@ -81,7 +81,7 @@
             "name": "selectOrConfig",
             "type": "radio",
             "label": "Feeds to use",
-            "defaultValue": "config",
+            "defaultValue": "select",
             "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {

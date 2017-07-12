@@ -159,7 +159,11 @@ export async function run(nuGetPath: string): Promise<void> {
         // Setting creds in the temp NuGet.config if needed
         await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
 
-        let configFile = nuGetConfigHelper.tempNugetConfigPath;
+        // Use config file if:
+        //     - User selected "Select feeds" option
+        //     - User selected "NuGet.config" option and the nuGetConfig input has a value
+        let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
+        let configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
 
         try {
             let restoreOptions = new RestoreOptions(
