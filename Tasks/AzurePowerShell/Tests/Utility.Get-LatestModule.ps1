@@ -29,8 +29,12 @@ $mockDirectoryStructure = @(
 
 Register-Mock Get-ChildItem { $mockDirectoryStructure } -- -Directory -Path "C:\Modules"
 
+# Act
 $result = Get-LatestModule -patternToMatch $azureRmModulePattern -patternToExtract $versionPattern
+# Assert
 Assert-AreEqual $result.toLower() $azureRmModulePath
 
+# Act
 $result = Get-LatestModule -patternToMatch $azureModulePattern -patternToExtract $versionPattern
+# Assert
 Assert-AreEqual $result.toLower() $azureModulePath

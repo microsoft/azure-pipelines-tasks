@@ -39,6 +39,7 @@ $temp = $env:PSModulePath
 
 foreach ($variableSet in $variableSets) {
     $env:PSModulePath = $temp
+    # Arrange
     Unregister-Mock Get-LatestModule
     if($variableSet.azureRmModuleExist) {
         Register-Mock Get-LatestModule { $azureRmModulePath } -- -patternToMatch $azureRmModulePattern -patternToExtract $versionPattern
@@ -52,8 +53,10 @@ foreach ($variableSet in $variableSets) {
         Register-Mock Get-LatestModule { "" } -- -patternToMatch $azureModulePattern -patternToExtract $versionPattern
     }
 
+    # Act
     Update-PSModulePathForHostedAgent -targetAzurePs $variableSet.targetAzurePsVersion
     
+    # Assert
     if($variableSet.azureRmModuleExist) {
         Assert-IsGreaterThan -1 $env:PSModulePath.toLower().IndexOf($azureRmModulePath)
     } else {
