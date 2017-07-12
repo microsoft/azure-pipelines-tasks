@@ -46,12 +46,10 @@ export async function getLocalNpmRegistries(workingDir: string): Promise<INpmReg
     let npmrcPath = path.join(workingDir, '.npmrc');
 
     if (tl.exist(npmrcPath)) {
-        let npmRegistries: INpmRegistry[] = [];
         for (let registry of await getLocalRegistries(npmrcPath)) {
-            npmRegistries.push(await NpmRegistry.FromFeedId(getFeedIdFromRegistry(registry), true));
+            localNpmRegistries.push(await NpmRegistry.FromFeedId(getFeedIdFromRegistry(registry), true));
         }
-
-        localNpmRegistries = localNpmRegistries.concat(npmRegistries);
+    return localNpmRegistries;
     }
 
     return localNpmRegistries;
