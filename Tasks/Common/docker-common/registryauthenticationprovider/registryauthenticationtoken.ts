@@ -12,7 +12,7 @@ export default class RegistryServerAuthenticationToken {
     private username: string;
     private password: string;
     private email: string;
-    private XMetaSourceClient: string; 
+    private xMetaSourceClient: string; 
     
     constructor(username: string, authenticationPassword: string, registry: string, email: string, xMetaSourceClient: string) {
         
@@ -24,7 +24,7 @@ export default class RegistryServerAuthenticationToken {
         this.password = authenticationPassword;
         this.username = username;
         this.email = email;
-        this.XMetaSourceClient = xMetaSourceClient;
+        this.xMetaSourceClient = xMetaSourceClient;
     }
     
     public getUsername(): string {
@@ -44,7 +44,7 @@ export default class RegistryServerAuthenticationToken {
     }
     
     public getDockerConfig(): string {
-        var auths = util.format('{"auths": { "%s": {"auth": "%s", "email": "%s" } }, "HttpHeaders":{"X-Meta-Source-Client":"%s"} }', this.registry,new Buffer(this.username+":"+this.password).toString('base64'),this.email, this.XMetaSourceClient);
+        var auths = util.format('{"auths": { "%s": {"auth": "%s", "email": "%s" } }, "HttpHeaders":{"X-Meta-Source-Client":"%s"} }', this.registry,new Buffer(this.username+":"+this.password).toString('base64'),this.email, this.xMetaSourceClient);
         return auths;
     }
 }
