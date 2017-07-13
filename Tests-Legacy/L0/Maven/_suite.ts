@@ -14,13 +14,13 @@ import shell = require('shelljs');
 import tr = require('../../lib/vsts-task-lib/toolrunner');
 import tl = require('../../lib/vsts-task-lib/toolrunner');
 
-let SonarQubeRunSettings = require('../../../Tasks/Common/sonarqube-common/SonarQube/run-settings').SonarQubeRunSettings;
-let SonarQubeReportBuilder = require('../../../Tasks/Common/sonarqube-common/SonarQube/report-builder').SonarQubeReportBuilder;
-let SonarQubeMetrics = require('../../../Tasks/Common/sonarqube-common/SonarQube/metrics').SonarQubeMetrics;
-let SonarQubeMeasurementUnit = require('../../../Tasks/Common/sonarqube-common/SonarQube/metrics').SonarQubeMeasurementUnit;
+let SonarQubeRunSettings = require('../../../Tasks/Common/codeanalysis-common/SonarQube/run-settings').SonarQubeRunSettings;
+let SonarQubeReportBuilder = require('../../../Tasks/Common/codeanalysis-common/SonarQube/report-builder').SonarQubeReportBuilder;
+let SonarQubeMetrics = require('../../../Tasks/Common/codeanalysis-common/SonarQube/metrics').SonarQubeMetrics;
+let SonarQubeMeasurementUnit = require('../../../Tasks/Common/codeanalysis-common/SonarQube/metrics').SonarQubeMeasurementUnit;
 import {MockSonarQubeServer} from './server-mock';
 
-let FileSystemInteractions = require('../../../Tasks/Common/sonarqube-common/Common/FileSystemInteractions').FileSystemInteractions;
+let FileSystemInteractions = require('../../../Tasks/Common/codeanalysis-common/Common/FileSystemInteractions').FileSystemInteractions;
 
 import http = require('http');
 import {IncomingMessage} from 'http';
