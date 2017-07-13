@@ -49,6 +49,52 @@ function IsAutoLogonDisabled()
     return $true
 }
 
+function IsDontShowUISetInRegistryPath($registryPath)
+{
+    if (-not (Test-Path $registryPath))
+    {
+        Write-Verbose -Message "Registry path $registryPath not found" -Verbose
+        return $false
+    }
+
+    $dontShowUI = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).DontShowUI
+    if ([string]::IsNullOrEmpty($dontShowUI))
+    {
+        Write-Verbose -Message "Registry path $registryPath found. DontShowUI key is not set." -Verbose
+        return $false
+    }
+    elseif($dontShowUI -eq "1")
+    {
+        return $true
+    }    
+     elseif($dontShowUI -eq "0")
+    {
+        Write-Verbose -Message "Registry path $registryPath found. DontShowUI key is set to 0." -Verbose
+        return $false
+    }
+}
+
+function IsWindowsErrorReportingDontShowUISet($TestUserDomain, $TestUserName)
+{  
+    if( -not(IsDontShowUISetInRegistryPath -registryPath "HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting"))
+    {
+        $filter = "name = '" + $TestUserName +"' AND domain = '" + $TestUserDomain + "'" 
+        $user = Get-WmiObject win32_useraccount -Filter $filter
+        
+        if($user.SID) { 
+            $hkuPath = "HKU:\" + $user.SID + "\SOFTWARE\Microsoft\Windows\Windows Error Reporting"
+            New-PSDrive -PSProvider Registry -Name HKU -Root HKEY_USERS
+            if( -not(IsDontShowUISetInRegistryPath -registryPath $hkuPath))
+            {
+                Write-Verbose "Windows Error Reporting DontShowUI not set" -Verbose
+            }
+        }
+        else{
+            Write-Verbose "Windows Error Reporting DontShowUI not set" -Verbose
+        }
+    }
+}
+
 function LegalNoticeKeysAreNotEmpty([string] $registryPath)
 {
     if (-not (Test-Path $registryPath))
@@ -743,6 +789,7 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 
     Set-DisableScreenSaverReg | Out-Null
     ConfigurePowerOptions | Out-Null
+    IsWindowsErrorReportingDontShowUISet -TestUserDomain $Domain -TestUserName $TestUser
 
     $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserDomain $Domain -TestUserName $TestUser
     if(-not $isTestUserLogged)
@@ -761,4 +808,4 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
     return 0
 }
 
-return SetupTestMachine -TestUserName $testUserName -TestUserPassword $testUserPassword -EnvironmentURL $environmentURL
+    return SetupTestMachine -TestUserName $testUserName -TestUserPassword $testUserPassword -EnvironmentURL $environmentURL
