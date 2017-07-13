@@ -7,13 +7,13 @@ import os = require('os');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import { IExecOptions } from 'vsts-task-lib/toolrunner';
 
-import sqCommon = require('./CodeAnalysis/SonarQube/common');
-import sqGradle = require('./CodeAnalysis/gradlesonar');
-import { CodeAnalysisOrchestrator } from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
-import { BuildOutput, BuildEngine } from './CodeAnalysis/Common/BuildOutput';
-import { PmdTool } from './CodeAnalysis/Common/PmdTool';
-import { CheckstyleTool } from './CodeAnalysis/Common/CheckstyleTool';
-import { FindbugsTool } from './CodeAnalysis/Common/FindbugsTool';
+import sqCommon = require('sonarqube-common/SonarQube/common');
+import sqGradle = require('sonarqube-common/gradlesonar');
+import { CodeAnalysisOrchestrator } from 'sonarqube-common/Common/CodeAnalysisOrchestrator';
+import { BuildOutput, BuildEngine } from 'sonarqube-common/Common/BuildOutput';
+import { PmdTool } from 'sonarqube-common/Common/PmdTool';
+import { CheckstyleTool } from 'sonarqube-common/Common/CheckstyleTool';
+import { FindbugsTool } from 'sonarqube-common/Common/FindbugsTool';
 import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
 import { ICodeCoverageEnabler } from 'codecoverage-tools/codecoverageenabler';
 import ccUtil = require('codecoverage-tools/codecoverageutilities');
@@ -154,7 +154,7 @@ function setJavaHome(javaHomeSelection: string): void {
 function getExecOptions(): IExecOptions {
     var env = process.env;
     env[accessTokenEnvSetting] = systemToken.getSystemAccessToken();
-    return {
+    return <IExecOptions> {
         env: env,
     };
 }
