@@ -44,8 +44,14 @@ try {
             # Delete the symbol store transaction.
             [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath' -Require
             [string]$TransactionId = Get-VstsInput -Name 'TransactionId' -Require
-            Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
-            Invoke-UnpublishSymbols -Share $SymbolsPath -TransactionId $TransactionId -MaximumWaitTime $SymbolsMaximumWaitTime -SemaphoreMessage $SemaphoreMessage
+
+            if ($SymbolsPath.StartsWith("#https://")) {
+                # TODO: Handle Symbol Deletion via Artifact Service
+            }
+            else {
+                Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
+                Invoke-UnpublishSymbols -Share $SymbolsPath -TransactionId $TransactionId -MaximumWaitTime $SymbolsMaximumWaitTime -SemaphoreMessage $SemaphoreMessage
+            }
             return
         }
 
@@ -129,6 +135,10 @@ try {
             [string]$fullFilePath = [IO.Path]::Combine($SourcePath, $filename)
             [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
         }
+
+        [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
+        [string] $requestUrl = "#$SymbolServiceUri/DefaultCollection/_apis/Symbol/requests?requestName=$encodedRequestName"
+        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolStore" -Properties @{}
 
         & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
 
