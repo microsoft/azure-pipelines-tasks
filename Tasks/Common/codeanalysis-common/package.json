@@ -1,5 +1,5 @@
 {
-  "name": "sonarqube-common",
+  "name": "codeanalysis-common",
   "version": "1.0.0",
   "author": "Microsoft Corporation",
   "description": "Build with Gradle",
@@ -18,7 +18,7 @@
     "cheerio": "^0.22.0",
     "strip-bom": "^3.0.0"
   },
-  "main": "VSTS Tasks SonarQube",
+  "main": "VSTS Tasks Code Analysis",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
