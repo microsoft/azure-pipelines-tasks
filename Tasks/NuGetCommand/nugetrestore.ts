@@ -17,8 +17,6 @@ import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 
-
-
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
         public nuGetPath: string,

@@ -33,7 +33,7 @@ describe('NuGetCommand Suite', function () {
 
         tr.run()
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
@@ -68,7 +68,7 @@ describe('NuGetCommand Suite', function () {
 
         tr.run()
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NoCache -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NoCache -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -100,8 +100,8 @@ describe('NuGetCommand Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet on single.sln');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet on double.sln');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet on single.sln');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive'), 'it should have run NuGet on double.sln');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -117,8 +117,8 @@ describe('NuGetCommand Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet on single.sln');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet on double.sln');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet on single.sln');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\double\\double.sln -NonInteractive'), 'it should have run NuGet on double.sln');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
@@ -134,7 +134,7 @@ describe('NuGetCommand Suite', function () {
 
         tr.run()
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
-        assert(tr.ran('/usr/bin/mono c:\\from\\tool\\installer\\nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive -ConfigFile ~/myagent/_work/1\\tempNuGet_.config'), 'it should have run NuGet with mono');
+        assert(tr.ran('/usr/bin/mono c:\\from\\tool\\installer\\nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive'), 'it should have run NuGet with mono');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
