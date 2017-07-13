@@ -65,7 +65,7 @@ export default class ContainerConnection {
 
     public close(): void {
         if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
-            del.sync(this.certsDir);
+            del.sync(this.configurationDirPath);
         }
         if (this.certsDir && fs.existsSync(this.certsDir)) {
             del.sync(this.certsDir);
