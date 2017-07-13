@@ -192,7 +192,7 @@ export class DeploymentGroupExtensionHelper {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = this.publisher;
             var extensionType: string = this.extensionType;
-            var collectionUri = this.taskParameters.tokenCredentials.getHostUrl();
+            var collectionUri = this.taskParameters.tokenCredentials.getAccountName();
             var teamProject = this.taskParameters.deploymentGroupProjectName;
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] === '/') {
