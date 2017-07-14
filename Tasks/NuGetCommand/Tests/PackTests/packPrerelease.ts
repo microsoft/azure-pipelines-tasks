@@ -24,7 +24,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version x.y.z-CI-YYYYMMDD-HHMMSS": {
+        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version x.y.z-CI-22220101-010101": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -48,6 +48,7 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nuspec"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-nmh.registerNuGetPackUtilsMock();
+let date: Date = new Date(Date.UTC(2222, 0, 1, 1, 1, 1, 0));
+nmh.registerNuGetPackUtilsMock(date);
 
 tmr.run();
