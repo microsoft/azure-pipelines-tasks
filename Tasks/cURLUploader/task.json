@@ -8,8 +8,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 23
+        "Minor": 121,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -88,6 +88,7 @@
         "CurlFailed": "curl failed with error: %s",
         "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
         "UploadingFiles": "Uploading file(s): %s",
-        "CurlNotFound": "curl was not found in the PATH."
+        "CurlNotFound": "curl was not found in the PATH.",
+        "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d"
     }
 }

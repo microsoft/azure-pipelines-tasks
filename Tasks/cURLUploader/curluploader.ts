@@ -41,6 +41,7 @@ async function run() {
         var curlRunner: trm.ToolRunner = tl.tool('curl');
 
         // Resolve files for the specified value or pattern
+        let uploadCount = 1;
         if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
             // No pattern found, check literal path to a single file
             tl.checkPath(filesPattern, "filesPattern");
@@ -72,6 +73,7 @@ async function run() {
                 throw new Error(tl.loc('NoMatchingFilesFound', filesPattern));
             }
 
+            uploadCount = uploadFilesList.length;
             var uploadFiles = '{' + uploadFilesList.join(',') + '}'
         }
         tl.debug(tl.loc('UploadingFiles', uploadFiles));
@@ -108,8 +110,22 @@ async function run() {
             curlRunner.arg(userPassCombo);
         }
 
+        let output:string = '';
+        curlRunner.on('stdout', (buffer: Buffer) => {
+            process.stdout.write(buffer);
+            output = output.concat(buffer ? buffer.toString() : '');
+        });
+
         var code: number = await curlRunner.exec();
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('CurlReturnCode', code));
+
+        let outputMatch:RegExpMatchArray = output.match(/[\n\r]100\s/g);
+        let completed: number = outputMatch ? outputMatch.length : 0;
+        tl.debug('Successfully uploaded: ' + completed);
+        if (completed != uploadCount) {
+            tl.debug('Tested output [' + output + ']');
+            tl.warning(tl.loc('NotAllFilesUploaded', completed, uploadCount));
+        }
     }
     catch(err) {
         tl.error(err.message);

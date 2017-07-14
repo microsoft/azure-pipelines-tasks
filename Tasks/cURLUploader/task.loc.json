@@ -8,8 +8,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 23
+    "Minor": 121,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -88,6 +88,7 @@
     "CurlFailed": "ms-resource:loc.messages.CurlFailed",
     "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
     "UploadingFiles": "ms-resource:loc.messages.UploadingFiles",
-    "CurlNotFound": "ms-resource:loc.messages.CurlNotFound"
+    "CurlNotFound": "ms-resource:loc.messages.CurlNotFound",
+    "NotAllFilesUploaded": "ms-resource:loc.messages.NotAllFilesUploaded"
   }
 }

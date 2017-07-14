@@ -20,5 +20,6 @@
   "loc.messages.CurlFailed": "curl failed with error: %s",
   "loc.messages.NoMatchingFilesFound": "No matching files were found with search pattern: %s",
   "loc.messages.UploadingFiles": "Uploading file(s): %s",
-  "loc.messages.CurlNotFound": "curl was not found in the PATH."
+  "loc.messages.CurlNotFound": "curl was not found in the PATH.",
+  "loc.messages.NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d"
 }
