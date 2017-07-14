@@ -105,7 +105,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
         
-        // If there was no nuGetConfigPath, NuGetConfigHelper will create one
+        // If there was no nuGetConfigPath, NuGetConfigHelper will create a temp one
         let nuGetConfigHelper = new NuGetConfigHelper2(
                     nuGetPath,
                     nuGetConfigPath,

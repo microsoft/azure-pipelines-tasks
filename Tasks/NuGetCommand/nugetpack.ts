@@ -62,8 +62,8 @@ export async function run(nuGetPath: string): Promise<void> {
             case "byPrereleaseNumber":
                 tl.debug(`Getting prerelease number`);
 
-                let nowUtcString = packUtils.getNowDateString(timezone);
-                version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowUtcString}`;
+                let nowDateTimeString = packUtils.getNowDateString(timezone);
+                version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowDateTimeString}`;
                 break;
             case "byEnvVar":
                 tl.debug(`Getting version from env var: ${versionEnvVar}`);

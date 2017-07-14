@@ -17,17 +17,27 @@ export function getNowDateString(timezone: string): string {
 }
 
 export function getUtcDateString(now: Date): string {
-    // Month is zero-based, so adding one
-    let month: number = now.getUTCMonth() + 1;
-    return `${now.getUTCFullYear()}${getTwoDigitNumber(month)}${getTwoDigitNumber(now.getUTCDate())}-${getTwoDigitNumber(now.getUTCHours())}${getTwoDigitNumber(now.getUTCMinutes())}${getTwoDigitNumber(now.getUTCSeconds())}`;
+    let year: string = "" + now.getUTCFullYear();
+    let month: string = getTwoDigitNumberString(now.getUTCMonth() + 1); // Month is zero-based, so adding one
+    let date: string = getTwoDigitNumberString(now.getUTCDate());
+    let hours: string = getTwoDigitNumberString(now.getUTCHours());
+    let minutes: string = getTwoDigitNumberString(now.getUTCMinutes());
+    let seconds: string = getTwoDigitNumberString(now.getUTCSeconds());
+
+    return `${year}${month}${date}-${hours}${minutes}${seconds}`;
 }
 
 export function getLocalDateString(now: Date): string {
-    // Month is zero-based, so adding one
-    let month: number = now.getMonth() + 1;    
-    return `${now.getFullYear()}${getTwoDigitNumber(month)}${getTwoDigitNumber(now.getDate())}-${getTwoDigitNumber(now.getHours())}${getTwoDigitNumber(now.getMinutes())}${getTwoDigitNumber(now.getSeconds())}`;
+    let year: string = "" + now.getFullYear();
+    let month: string = getTwoDigitNumberString(now.getMonth() + 1); // Month is zero-based, so adding one
+    let date: string = getTwoDigitNumberString(now.getDate());
+    let hours: string = getTwoDigitNumberString(now.getHours());
+    let minutes: string = getTwoDigitNumberString(now.getMinutes());
+    let seconds: string = getTwoDigitNumberString(now.getSeconds());
+
+    return `${year}${month}${date}-${hours}${minutes}${seconds}`;
 }
 
-function getTwoDigitNumber(number: number): string {
-    return number < 10? '0'+ number : '' + number;
+function getTwoDigitNumberString(number: number): string {
+    return number < 10 ? '0' + number : '' + number;
 }

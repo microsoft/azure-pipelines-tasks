@@ -58,7 +58,7 @@
   "loc.input.label.requestedPatchVersion": "Patch",
   "loc.input.help.requestedPatchVersion": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.packTimezone": "Time zone",
-  "loc.input.help.packTimezone": "Specifies the desired time zone used to produce the version of the package.",
+  "loc.input.help.packTimezone": "Specifies the desired time zone used to produce the version of the package. Selecting UTC is recommended if you're using hosted build agents as their date and time might differ.",
   "loc.input.label.includeSymbols": "Create symbols package",
   "loc.input.help.includeSymbols": "Specifies that the package contains sources and symbols. When used with a .nuspec file, this creates a regular NuGet package file and the corresponding symbols package.",
   "loc.input.label.buildProperties": "Additional build properties",

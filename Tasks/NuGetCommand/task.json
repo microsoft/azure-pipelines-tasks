@@ -329,7 +329,7 @@
             "type": "pickList",
             "label": "Time zone",
             "defaultValue": "utc",
-            "helpMarkDown": "Specifies the desired time zone used to produce the version of the package.",
+            "helpMarkDown": "Specifies the desired time zone used to produce the version of the package. Selecting UTC is recommended if you're using hosted build agents as their date and time might differ.",
             "required": "false",
             "groupName": "packOptions",
             "options": {
