@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 55
+    "Minor": 120,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -55,24 +55,23 @@
       "visibleRule": "ArtifactType = FilePath"
     },
     {
-      "name": "EnableCopyConcurrency",
+      "name": "Parallel",
       "type": "boolean",
-      "label": "Enable Copy Concurrency",
+      "label": "Parallel Copy",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Select the option to Enable Copy Concurrency so that you will get improved copy time and enter the value in Copy Concurrency TextBox below. ",
+      "helpMarkDown": "True to enable parallel copy.",
       "visibleRule": "ArtifactType = FilePath"
     },
     {
-      "name": "CopyConcurrencyValue",
+      "name": "ParallelCount",
       "type": "int",
-      "label": "Copy Concurrency Value",
+      "label": "Parallel Count",
       "defaultValue": 8,
       "required": false,
-      "helpMarkDown": "This is for the Multi threaded option to get concurrency in copy time which specifies to do multi-threaded copies with n threads (default 8). n must be at least 1 and not greater than 128.",
-      "visibleRule": "ArtifactType = FilePath && EnableCopyConcurrency = true"
+      "helpMarkDown": "Parallelism to perform the copy. Must be at least 1 and not greater than 128.",
+      "visibleRule": "ArtifactType = FilePath && Parallel = true"
     }
-
   ],
   "instanceNameFormat": "Publish Artifact: $(ArtifactName)",
   "execution": {
@@ -85,10 +84,6 @@
     "ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent.",
     "ErrorHostTypeNotSupported": "This task can be used to publish to server drop within a Build job only.",
     "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
-    "UnexpectedConcurrencyValue": "Unexpected copyConcurrencyValue Number it should be integer positive number between 1 - 128,value you entered is: '%s'",
-    "NegativeCicurrenyValue": "Check copyConcurrencyValue for positive Number greater than 1,value you entered is: '%s'",
-    "ExceededCocurrencyValue": "Check copyConcurrencyValue, it should be between 1 -128, value you entered is: '%s'"
-
-
+    "UnexpectedParallelCount": "Unexpected parallel count '%s'. Please enter a number between 1 and 128."
   }
 }

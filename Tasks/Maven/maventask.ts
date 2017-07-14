@@ -6,14 +6,14 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('./CodeAnalysis/SonarQube/common');
-import sqMaven = require('./CodeAnalysis/mavensonar');
+import sqCommon = require('codeanalysis-common/SonarQube/common');
+import sqMaven = require('codeanalysis-common/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
-import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
-import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
-import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
-import {PmdTool} from './CodeAnalysis/Common/PmdTool';
-import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
+import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
+import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
+import {PmdTool} from 'codeanalysis-common/Common/PmdTool';
+import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
 import util = require('./mavenutil');
 

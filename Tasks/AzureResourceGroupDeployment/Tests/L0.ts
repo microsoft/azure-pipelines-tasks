@@ -11,12 +11,12 @@ function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Azure Resource Group Deployment', function () {
+describe('Azure Resource Group Deployment', function() {
     this.timeout(30000);
     before((done) => {
         done();
     });
-    after(function () {
+    after(function() {
     });
     it("Successfully added Team Services Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
@@ -1093,4 +1093,81 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
+
+    it('createOrUpdate deployment should fail when no template file is found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMNotThere.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateFilePatternMatchingNoFile") > 0, "should have printed TemplateFilePatternMatchingNoFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when multiple template files are found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMmultiple.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateFilePatternMatchingMoreThanOneFile") > 0, "should have printed TemplateFilePatternMatchingMoreThanOneFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when no parameter file is found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSMNotThere.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateParameterFilePatternMatchingNoFile") > 0, "should have printed TemplateParameterFilePatternMatchingNoFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when multiple template files are found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSMmultiple.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateParameterFilePatternMatchingMoreThanOneFile") > 0, "should have printed TemplateFilePatternMatchingMoreThanOneFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
 });

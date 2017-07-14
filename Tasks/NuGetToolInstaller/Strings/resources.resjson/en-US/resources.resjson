@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet Tool Installer",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
   "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet Restore and NuGet Command steps.",
   "loc.instanceNameFormat": "Use NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "Version of NuGet.exe to install",

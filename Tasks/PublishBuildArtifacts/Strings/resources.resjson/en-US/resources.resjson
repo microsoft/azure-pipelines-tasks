@@ -11,14 +11,12 @@
   "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The file share to which to copy the files",
-  "loc.input.label.EnableCopyConcurrency": "Enable Copy Concurrency",
-  "loc.input.help.EnableCopyConcurrency": "Select the option to Enable Copy Concurrency so that you will get improved copy time and enter the value in Copy Concurrency TextBox below. ",
-  "loc.input.label.CopyConcurrencyValue": "Copy Concurrency Value",
-  "loc.input.help.CopyConcurrencyValue": "This is for the Multi threaded option to get concurrency in copy time which specifies to do multi-threaded copies with n threads (default 8). n must be at least 1 and not greater than 128.",
+  "loc.input.label.Parallel": "Parallel Copy",
+  "loc.input.help.Parallel": "True to enable parallel copy.",
+  "loc.input.label.ParallelCount": "Parallel Count",
+  "loc.input.help.ParallelCount": "Parallelism to perform the copy. Must be at least 1 and not greater than 128.",
   "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent.",
   "loc.messages.ErrorHostTypeNotSupported": "This task can be used to publish to server drop within a Build job only.",
   "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
-  "loc.messages.UnexpectedConcurrencyValue": "Unexpected copyConcurrencyValue Number it should be integer positive number between 1 - 128,value you entered is: '%s'",
-  "loc.messages.NegativeCicurrenyValue": "Check copyConcurrencyValue for positive Number greater than 1,value you entered is: '%s'",
-  "loc.messages.ExceededCocurrencyValue": "Check copyConcurrencyValue, it should be between 1 -128, value you entered is: '%s'"
+  "loc.messages.UnexpectedParallelCount": "Unexpected parallel count '%s'. Please enter a number between 1 and 128."
 }

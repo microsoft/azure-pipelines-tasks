@@ -78,12 +78,14 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
         tl.debug('Searching for latest Visual Studio');
         const vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
+            testConfig.vsTestVersion = "15.0";
             return vstestconsole15Path;
         }
 
         // fallback
         tl.debug('Unable to find an instance of Visual Studio 2017..');
         tl.debug('Searching for Visual Studio 2015..');
+        testConfig.vsTestVersion = "14.0";
         return getVSTestLocation(14);
     }
 

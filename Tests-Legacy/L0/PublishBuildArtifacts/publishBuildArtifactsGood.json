@@ -5,17 +5,17 @@
         "C:\\bin\\release": true
     },
   "exec": {
-    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\subdir\\drop' -ConcurrencyValue 1": {
+    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\subdir\\drop' -ParallelCount 1": {
       "stdout": "test stdout from robocopy (no trailing slashes)",
       "stderr": "",
       "code": 0
     },
-    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release\\.' -Target '\\\\UNCShare\\subdir\\drop' -ConcurrencyValue 1": {
+    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release\\.' -Target '\\\\UNCShare\\subdir\\drop' -ParallelCount 1": {
       "stdout": "test stdout from robocopy (source with trailing slash)",
       "stderr": "",
       "code": 0
     },
-    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\drop\\.' -ConcurrencyValue 1": {
+    "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\drop\\.' -ParallelCount 1": {
       "stdout": "test stdout from robocopy (target with trailing slash)",
       "stderr": "",
       "code": 0

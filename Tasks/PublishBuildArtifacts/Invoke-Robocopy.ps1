@@ -6,8 +6,8 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Target,
 
-	[Parameter(Mandatory = $false)]
-    [string]$ConcurrencyValue =1)
+	[Parameter(Mandatory = $true)]
+    [int]$ParallelCount)
 
 # This script translates the output from robocopy into UTF8. Node has limited
 # built-in support for encodings.
@@ -36,7 +36,7 @@ $writer = New-Object System.IO.StreamWriter($stdout, $utf8)
 # PowerShell 4, Write-Host and Out-Default do not consider the updated stream writer.
 
 # Print the ##command.
-[System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ConcurrencyValue `"$Source`" `"$Target`" *")
+[System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" *")
 
 # The $OutputEncoding variable instructs PowerShell how to interpret the output
 # from the external command.
@@ -59,7 +59,7 @@ $OutputEncoding = [System.Text.Encoding]::Default
 #
 # Note, the output from robocopy needs to be iterated over. Otherwise PowerShell.exe
 # will launch the external command in such a way that it inherits the streams.
-& robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ConcurrencyValue $Source $Target * 2>&1 |
+& robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target * 2>&1 |
     ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
