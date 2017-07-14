@@ -124,7 +124,7 @@ async function run() {
         tl.debug('Successfully uploaded: ' + completed);
         if (completed != uploadCount) {
             tl.debug('Tested output [' + output + ']');
-            tl.warning(tl.loc('AllFilesNotUploaded', completed, uploadCount));
+            tl.warning(tl.loc('NotAllFilesUploaded', completed, uploadCount));
         }
     }
     catch(err) {
