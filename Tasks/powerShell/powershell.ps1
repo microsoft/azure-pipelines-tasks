@@ -17,14 +17,37 @@ try {
     }
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name 'ignoreLASTEXITCODE' -AsBool
-    $input_script = Get-VstsInput -Name 'script'
     $input_workingDirectory = Get-VstsInput -Name 'workingDirectory' -Require
     Assert-VstsPath -LiteralPath $input_workingDirectory -PathType 'Container'
+    $input_targetType = Get-VstsInput -Name 'targetType'
+    if ("$input_targetType".ToUpperInvariant() -eq "FILEPATH") {
+        $input_filePath = Get-VstsInput -Name 'filePath' -Require
+        try {
+            Assert-VstsPath -LiteralPath $input_filePath -PathType Leaf
+        } catch {
+            Write-Error (Get-VstsLocString -Key 'PS_InvalidFilePath' -ArgumentList $input_filePath)
+        }
+
+        if (!$input_filePath.ToUpperInvariant().EndsWith('.PS1')) {
+            Write-Error (Get-VstsLocString -Key 'PS_InvalidFilePath' -ArgumentList $input_filePath)
+        }
+
+        $input_arguments = Get-VstsInput -Name 'arguments'
+    } else {
+        $input_script = Get-VstsInput -Name 'script'
+    }
 
     # Generate the script contents.
+    Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = @()
     $contents += "`$ErrorActionPreference = '$input_errorActionPreference'"
-    $contents += "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
+        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
+        Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
+    } else {
+        $contents += "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    }
+
     if (!$input_ignoreLASTEXITCODE) {
         $contents += 'if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {'
         $contents += '    Write-Host ''##vso[task.debug]$LASTEXITCODE is not set.'''
