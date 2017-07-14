@@ -355,7 +355,7 @@
         {
             "target": "WebAppKind",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppKind",
+            "dataSourceName": "AzureAppKind",
             "parameters": {
                 "ServerfarmId": "$(WebAppName)"
             },
