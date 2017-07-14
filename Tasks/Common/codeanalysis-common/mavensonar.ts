@@ -11,7 +11,7 @@ import {SonarQubeEndpoint} from './SonarQube/endpoint';
 import sqCommon = require('./SonarQube/common');
 
 // Applies any applicable SonarQube arguments to the supplied ToolRunner.
-export function applySonarQubeArgs(mvnsq: ToolRunner, execFileJacoco?: string): ToolRunner {
+export function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
     if (!sqCommon.isSonarQubeAnalysisEnabled()) {
         return mvnsq;
     }
