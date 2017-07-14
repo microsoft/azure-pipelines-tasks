@@ -222,7 +222,6 @@ describe('Docker Suite', function() {
             tr.run();
             process.env["__container_type__"] = "Container Registry";
             process.env["__qualifyImageName__"] = "false";
-            console.log(tr.stdout);
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
