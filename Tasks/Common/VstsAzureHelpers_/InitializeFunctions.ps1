@@ -261,16 +261,45 @@ function Add-AzureStackAzureRmEnvironment {
 
     # Check if endpoint data contains required data.
     if($Endpoint.data.GraphUrl -eq $null)
-    {
-        Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
-        $endpointData = Invoke-RestMethod -Method Get -Uri "$($EndpointURI.ToString().TrimEnd('/'))/metadata/endpoints?api-version=2015-01-01" -ErrorAction Stop
+    { 
+        $azureStackEndpointUri = $EndpointURI.ToString() + "/metadata/endpoints?api-version=2015-01-01"
+        $proxyUri = Get-ProxyUri $azureStackEndpointUri
 
-        $aadAuthorityEndpoint = $endpointData.authentication.loginEndpoint
-        $graphEndpoint = $endpointData.graphEndpoint
-        $graphAudience = $endpointData.graphEndpoint
-        $activeDirectoryEndpoint = $endpointData.authentication.loginEndpoint.TrimEnd('/') + "/"
-        $activeDirectoryServiceEndpointResourceId = $endpointData.authentication.audiences[0]
-        $galleryEndpoint = $endpointData.galleryEndpoint
+        Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
+        if ($proxyUri -eq $null)
+        {
+            Write-Verbose "No proxy settings"
+            $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
+        }
+        else
+        {
+            Write-Verbose "Using Proxy settings"
+            $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop 
+        }
+
+        if ($endpointData)
+        {
+            $authenticationData = $endpointData.authentication;
+            if ($authenticationData)
+            {
+                $loginEndpoint = $authenticationData.loginEndpoint
+                if($loginEndpoint)
+                {
+                    $aadAuthorityEndpoint = $loginEndpoint
+                    $activeDirectoryEndpoint = $loginEndpoint.TrimEnd('/') + "/"
+                }
+
+                $audiences = $authenticationData.audiences
+                if($audiences.Count -gt 0)
+                {
+                    $activeDirectoryServiceEndpointResourceId = $audiences[0]
+                }
+            }
+
+            $graphEndpoint = $endpointData.graphEndpoint
+            $graphAudience = $endpointData.graphEndpoint
+            $galleryEndpoint = $endpointData.galleryEndpoint
+        }
     }
     else
     {
@@ -306,4 +335,26 @@ function Add-AzureStackAzureRmEnvironment {
     }
 
     return Add-AzureRmEnvironment @azureEnvironmentParams
+}
+
+function Get-ProxyUri
+{
+    param([String] [Parameter(Mandatory=$true)] $serverUrl)
+    
+    $proxyUri = [System.Uri]($env:AGENT_PROXYURL)
+    Write-Verbose -Verbose ("Reading proxy from the AGENT_PROXYURL environment variable. Proxy url specified={0}" -f $proxyUri.OriginalString)
+
+    if($proxyUri -eq $null)
+    {
+        $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
+        $proxyUri = $proxy.GetProxy("$serverUrl")
+        Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
+    }
+
+    if($serverUrl -eq $null -or ([System.Uri]$serverUrl).Host -eq $proxyUri.Host)
+    {
+        return $null
+    }
+
+    return $proxyUri
 }

@@ -6,7 +6,8 @@ import virtualMachine = require("./operations/VirtualMachine");
 import resourceGroup = require("./operations/ResourceGroup");
 
 function run(): Promise<void> {
-    return new deployAzureRG.AzureRGTaskParameters().getAzureRGTaskParameters().then((taskParameters) => {
+    var azureRGTaskParameters = new deployAzureRG.AzureRGTaskParameters();
+    return azureRGTaskParameters.getAzureRGTaskParameters().then((taskParameters) => {
         var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
         var virtualMachineOperation = new virtualMachine.VirtualMachine(taskParameters);
         switch (taskParameters.action) {

@@ -155,5 +155,7 @@
   "loc.messages.ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
   "loc.messages.ExtensionNotFound": "Extension not found on the vm: %s",
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, errror message : {0}"
 }
