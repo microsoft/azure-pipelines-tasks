@@ -25,8 +25,8 @@ if ($scriptArguments -match '[\r\n]') {
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
 
-if($targetAzurePs -eq $otherVersion) {
-    if($customTargetAzurePs -eq $null) {
+if ($targetAzurePs -eq $otherVersion) {
+    if ($customTargetAzurePs -eq $null) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
     } else {
         $targetAzurePs = $customTargetAzurePs.Trim()        
@@ -36,7 +36,7 @@ if($targetAzurePs -eq $otherVersion) {
 $pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
 $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
 
-if($targetAzurePs -eq $latestVersion) {
+if ($targetAzurePs -eq $latestVersion) {
     $targetAzurePs = ""
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
