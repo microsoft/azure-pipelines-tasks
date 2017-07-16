@@ -42,15 +42,15 @@ foreach ($variableSet in $variableSets) {
     # Arrange
     Unregister-Mock Get-LatestModule
     if($variableSet.azureRmModuleExist) {
-        Register-Mock Get-LatestModule { $azureRmModulePath } -- -patternToMatch $azureRmModulePattern -patternToExtract $versionPattern
+        Register-Mock Get-LatestModule { $azureRmModulePath } -- -patternToMatch $azureRmModulePattern -patternToExtract $versionPattern -Classic:$false
     } else {
-        Register-Mock Get-LatestModule { "" } -- -patternToMatch $azureRmModulePattern -patternToExtract $versionPattern
+        Register-Mock Get-LatestModule { "" } -- -patternToMatch $azureRmModulePattern -patternToExtract $versionPattern -Classic:$false
     }
 
     if($variableSet.azureModuleExist) {
-        Register-Mock Get-LatestModule { $azureModulePath } -- -patternToMatch $azureModulePattern -patternToExtract $versionPattern
+        Register-Mock Get-LatestModule { $azureModulePath } -- -patternToMatch $azureModulePattern -patternToExtract $versionPattern -Classic:$true
     } else {
-        Register-Mock Get-LatestModule { "" } -- -patternToMatch $azureModulePattern -patternToExtract $versionPattern
+        Register-Mock Get-LatestModule { "" } -- -patternToMatch $azureModulePattern -patternToExtract $versionPattern -Classic:$true
     }
 
     # Act

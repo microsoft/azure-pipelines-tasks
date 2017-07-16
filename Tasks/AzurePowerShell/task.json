@@ -103,7 +103,7 @@
         {
             "name": "TargetAzurePs",
             "type": "pickList",
-            "label": "Target Azure PowerShell",
+            "label": "Azure PowerShell Version",
             "defaultValue": "LatestVersion",
             "required": false,
             "options":{
@@ -113,12 +113,13 @@
                 "4.1.0": "4.1.0",
                 "OtherVersion": "Specify other version"
             },
-            "helpMarkDown": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Specify Other Version\". For selecting the Latest Installed Version , choose \"Latest installed version\""
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.6.0, 4.1.0.\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+
         },
         {
             "name": "CustomTargetAzurePs",
             "type": "string",
-            "label": "Custom Target Azure PowerShell",
+            "label": "Preferred Azure PowerShell Version",
             "defaultValue": "",
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion"
@@ -133,6 +134,6 @@
     "messages": {
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
-        "InvalidVersion": "The Target Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
+        "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
     }
 }

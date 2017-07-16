@@ -165,7 +165,7 @@ function Import-FromSdkPath {
 
 function Get-SdkVersion {
     Trace-VstsEnteringInvocation $MyInvocation
-    try{
+    try {
         $regKey = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
         $installedApplications = Get-ItemProperty -Path $regKey
         $SdkVersion = ($installedApplications | Where-Object { $_.DisplayName -and $_.DisplayName.toLower().Contains("microsoft azure powershell") } | Select-Object -First 1).DisplayVersion

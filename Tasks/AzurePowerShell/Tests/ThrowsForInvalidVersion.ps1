@@ -12,4 +12,4 @@ Register-Mock Get-VstsInput { "x.y.z" } -- -Name CustomTargetAzurePs
 # Act/Assert.
 Assert-Throws {
     & $PSScriptRoot\..\AzurePowerShell.ps1
-} -MessagePattern "InvalidVersion*x.y.z"
+} -MessagePattern "InvalidAzurePsVersion*x.y.z"

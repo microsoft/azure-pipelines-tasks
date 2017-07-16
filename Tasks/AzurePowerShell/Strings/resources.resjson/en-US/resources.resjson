@@ -16,10 +16,10 @@
   "loc.input.help.Inline": "Enter the script to execute.",
   "loc.input.label.ScriptArguments": "Script Arguments",
   "loc.input.help.ScriptArguments": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters.",
-  "loc.input.label.TargetAzurePs": "Target Azure PowerShell",
-  "loc.input.help.TargetAzurePs": "The target Azure PowerShell Version, can be one of 3 values: 2.1.0, 3.6.0, 4.1.0 in case of HostedAgent, otherwise for specifying any other version on private agent, choose \"Specify Other Version\". For selecting the Latest Installed Version , choose \"Latest installed version\"",
-  "loc.input.label.CustomTargetAzurePs": "Custom Target Azure PowerShell",
+  "loc.input.label.TargetAzurePs": "Azure PowerShell Version",
+  "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.6.0, 4.1.0.\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
+  "loc.input.label.CustomTargetAzurePs": "Preferred Azure PowerShell Version",
   "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
   "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
-  "loc.messages.InvalidVersion": "The Target Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
+  "loc.messages.InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
 }
