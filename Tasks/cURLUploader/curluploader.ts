@@ -64,7 +64,7 @@ async function run() {
             var allFiles = tl.find(findPathRoot);
 
             // Now matching the pattern against all files
-            var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true}).map( (s) => {
+            var uploadFilesList = tl.match(allFiles, filesPattern, undefined, {matchBase: true}).map( (s) => {
                 return isWin ? s.replace(/\\/g, '/') : s;
             });
 
