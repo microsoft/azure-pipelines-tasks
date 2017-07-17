@@ -51,7 +51,7 @@
             "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The service endpoint with the credentials for the server authenication.",
+            "helpMarkDown": "The service endpoint with the credentials for the server authentication.",
             "visibleRule": "authType = ServiceEndpoint"
         },
         {
@@ -84,7 +84,7 @@
         {
             "name": "remotePath",
             "type": "string",
-            "label": "Remote directory",
+            "label": "Remote Directory",
             "defaultValue": "/upload/$(Build.BuildId)/",
             "required": false,
             "helpMarkDown": "If supplied, this is the sub-folder on the remote server for the URL supplied in the credentials."
@@ -121,6 +121,6 @@
         "UploadingFiles": "Uploading file(s): %s",
         "CurlNotFound": "curl was not found in the PATH.",
         "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d",
-        "IncompleteEndpoint": "The service endpoint does not contain all required fields"
+        "IncompleteEndpoint": "The service endpoint does not contain all required fields."
     }
 }
