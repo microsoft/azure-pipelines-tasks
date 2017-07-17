@@ -59,7 +59,9 @@ async function run() {
             var inlineScript: string = tl.getInput('inline', true);
             const scriptHeader:string = '#!';
             if (inlineScript && !inlineScript.startsWith(scriptHeader)) {
-                inlineScript = '#!/bin/bash' + os.EOL + inlineScript;
+                const bashHeader: string =  '#!/bin/bash';
+                tl.debug('No script header detected.  Adding: ' + bashHeader);
+                inlineScript = bashHeader + os.EOL + inlineScript;
             }
             scriptFile = path.join(os.tmpdir(), 'sshscript_' + new Date().getTime()); // default name
             try {
