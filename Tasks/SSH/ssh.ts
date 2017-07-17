@@ -55,6 +55,19 @@ async function run() {
 
         if(runOptions === 'commands') {
             commands = tl.getDelimitedInput('commands', '\n', true);
+        } else if (runOptions === 'inline') {
+            var inlineScript: string = tl.getInput('inline', true);
+            const scriptHeader:string = '#!';
+            if (inlineScript && !inlineScript.startsWith(scriptHeader)) {
+                inlineScript = '#!/bin/bash' + os.EOL + inlineScript;
+            }
+            scriptFile = path.join(os.tmpdir(), 'sshscript_' + new Date().getTime()); // default name
+            try {
+                fs.writeFileSync(scriptFile, inlineScript);
+            } catch (err) {
+                this.deleteFile(scriptFile);
+                throw err;
+            }
         } else {
             scriptFile = tl.getPathInput('scriptPath', true, true);
             args = tl.getInput('args')
@@ -83,7 +96,7 @@ async function run() {
                         commands[i], sshClientConnection, remoteCmdOptions);
                     tl.debug('Command ' + commands[i] + ' completed with return code = ' + returnCode);
                 }
-            } else if (runOptions === 'script') {
+            } else { // both other runOptions: inline and script
                 //setup script path on remote machine relative to user's $HOME directory
                 var remoteScript = './' + path.basename(scriptFile);
                 var remoteScriptPath = '"' + remoteScript + '"';
