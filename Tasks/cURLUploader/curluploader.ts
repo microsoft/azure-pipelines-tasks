@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import os = require('os');
 import trm = require('vsts-task-lib/toolrunner');
+import URL = require('url');
 
 var firstWildcardIndex = function (str) {
     var idx = str.indexOf('*');
@@ -25,11 +26,33 @@ async function run() {
         var isWin = os.type().match(/^Win/); 
 
         var filesPattern: string = tl.getInput('files', true);
-        var username: string = tl.getInput('username', false);
-        var password: string = tl.getInput('password', false);
-        var url: string = tl.getInput('url', true); 
         var redirectStderr: boolean = tl.getBoolInput('redirectStderr', false);
         var options: string = tl.getInput('options', false);
+
+        let url: string = ''; 
+        let username: string = '';
+        let password: string = '';
+        let authType: string = tl.getInput('authType', false);
+        if (authType === 'ServiceEndpoint') {
+            let serviceEndpointID: string = tl.getInput('serviceEndpoint', true);
+            let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(serviceEndpointID, false);
+            username = serviceEndpoint.parameters['username'];
+            password = serviceEndpoint.parameters['password'];
+            url = URL.format(URL.parse(tl.getEndpointUrl(serviceEndpointID, false)));
+            if (!username || !password || !url) {
+                throw new Error(tl.loc('IncompleteEndpoint'));
+            }
+        } else {
+            username = tl.getInput('username', false);
+            password = tl.getInput('password', false);
+            url = tl.getInput('url', true); 
+        }
+        url = url.trim();
+
+        let remotePath: string = tl.getInput('remotePath', false);
+        if (remotePath) {
+            url = url + '/' + remotePath.replace(/\\/gi, "/").trim();
+        }
 
         // Find location of curl 
         var curlPath: string = tl.which('curl');
