@@ -33,6 +33,16 @@ try {
         'ApplicationName' = $applicationName
     }
 
+    $usePreviewApi = $false
+    $regKey = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -ErrorAction SilentlyContinue
+    if ($regKey)
+    {
+        if ($regKey.FabricVersion.StartsWith('255.255'))
+        {
+            $usePreviewApi = $true
+        }
+    }
+
     # Test the compose file
     Write-Host (Get-VstsLocString -Key CheckingComposeFile)
     $valid = Test-ServiceFabricApplicationPackage -ComposeFilePath $composeFilePath -ErrorAction Stop
@@ -88,8 +98,17 @@ try {
             }
         }
 
-        $deployParameters['RepositoryUserName'] = $username
-        $deployParameters['RepositoryPassword'] = $password
+        if ($usePreviewApi)
+        {
+            $deployParameters['RepositoryUserName'] = $username
+            $deployParameters['RepositoryPassword'] = $password
+        }
+        else
+        {
+            $deployParameters['RegistryUserName'] = $username
+            $deployParameters['RegistryPassword'] = $password
+        }
+
         $deployParameters['PasswordEncrypted'] = $isEncrypted
     }
 
@@ -106,7 +125,14 @@ try {
         $getStatusParameters['TimeoutSec'] = $getStatusTimeoutSec
     }
 
-    $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    if ($usePreviewApi)
+    {
+        $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    }
+    else
+    {
+        $existingApplication = Get-ServiceFabricComposeApplicationStatus @getStatusParameters
+    }
     if ($existingApplication -ne $null)
     {
         Write-Host (Get-VstsLocString -Key RemovingApplication -ArgumentList $applicationName)
@@ -117,7 +143,14 @@ try {
         {
             Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.ComposeApplicationStatus)
             Start-Sleep -Seconds 3
-            $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+            if ($usePreviewApi)
+            {
+                $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+            }
+            else
+            {
+                $existingApplication = Get-ServiceFabricComposeApplicationStatus @getStatusParameters
+            }
         }
         while ($existingApplication -ne $null)
         Write-Host (Get-VstsLocString -Key ApplicationRemoved)
@@ -127,7 +160,14 @@ try {
     New-ServiceFabricComposeApplication @deployParameters
 
     Write-Host (Get-VstsLocString -Key WaitingForDeploy)
-    $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    if ($usePreviewApi)
+    {
+        $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    }
+    else
+    {
+        $newApplication = Get-ServiceFabricComposeApplicationStatus @getStatusParameters
+    }
     while (($newApplication -eq $null) -or `
            ($newApplication.ComposeApplicationStatus -eq 'Provisioning') -or `
            ($newApplication.ComposeApplicationStatus -eq 'Creating'))
@@ -141,7 +181,14 @@ try {
             Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
         }
         Start-Sleep -Seconds 3
-        $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+        if ($usePreviewApi)
+        {
+            $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+        }
+        else
+        {
+            $newApplication = Get-ServiceFabricComposeApplicationStatus @getStatusParameters
+        }
     }
     Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
 
