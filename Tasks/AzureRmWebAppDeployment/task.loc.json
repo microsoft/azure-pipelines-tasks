@@ -85,7 +85,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = linux"
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = applinux"
     },
     {
       "name": "ResourceGroupName",
@@ -357,7 +357,7 @@
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureAppKind",
       "parameters": {
-        "ServerfarmId": "$(WebAppName)"
+        "WebAppName": "$(WebAppName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
     },
