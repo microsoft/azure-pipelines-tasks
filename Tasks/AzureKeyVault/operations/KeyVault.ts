@@ -141,7 +141,7 @@ export class KeyVault {
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
-                    console.log("##vso[task.setvariable variable=" + secretName + ";issecret=true;]" + secretValue);
+                    console.log("##vso[task.setvariable variable=" + secretName + ";issecret=true;]'" + secretValue + "'");
                 }
                 
                 return resolve();
