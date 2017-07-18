@@ -1,6 +1,7 @@
 import msRestAzure = require('azure-arm-rest/azure-arm-common');
 import azureServiceClient = require("azure-arm-rest/AzureServiceClient");
 import tl = require('vsts-task-lib/task');
+import webClient = require("azure-arm-rest/webClient");
 
 export class AzureKeyVaultSecret {
     name: string;
@@ -41,14 +42,14 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 ['maxresults=25']);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
         httpRequest.uri = url;
 
         console.log(tl.loc("DownloadingSecretsUsing", url));
         
-        this.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var result = [];
             if (response.statusCode == 200) {
                 if (response.body.value) {
@@ -57,20 +58,11 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 var listOfSecrets = this.convertToAzureKeyVaults(result);
 
                 if (response.body.nextLink) {
-                    this.getSecrets(response.body.nextLink, (error, listOfSecretsFromNextLink, request, response) => {
-                        if (error) {
-                            callback(error);
-                        }
-
-                        if (!!listOfSecretsFromNextLink)
-                        {
-                            tl.debug("listOfSecretsFromNextLink: " + listOfSecretsFromNextLink.length);
-                            listOfSecretsFromNextLink.forEach(element => {
-                                listOfSecrets.push(element);
-                            });
-                        }
-                        callback(null, listOfSecrets);
-                    });
+                    var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
+                    }
+                    result = result.concat(this.convertToAzureKeyVaults(nextResult.result));
                 }
                 else {
                     return new azureServiceClient.ApiResult(null, listOfSecrets);
@@ -89,7 +81,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
         httpRequest.uri = this.getRequestUriForBaseUri(
@@ -101,7 +93,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         );
 
         console.log(tl.loc("DownloadingSecretValue", secretName));
-        this.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 var result = response.body.value;
                 return new azureServiceClient.ApiResult(null, result);
