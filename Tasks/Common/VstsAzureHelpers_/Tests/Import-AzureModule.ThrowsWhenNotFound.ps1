@@ -17,5 +17,5 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Import-FromSdkPath
 
     # Act/Assert.
-    Assert-Throws { & $module Import-AzureModule -PreferredModule $variableSet.PreferredModule } -MessagePattern AZ_ModuleNotFound
+    Assert-Throws { & $module Import-AzureModule -PreferredModule $variableSet.PreferredModule -azurePsVersion "4.1.0" } -MessagePattern "AZ_ModuleNotFound 4.1.0"
 }

@@ -15,9 +15,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 113,
-        "Patch": 5
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -99,6 +99,32 @@
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             },
             "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+        },
+        {
+            "name": "TargetAzurePs",
+            "type": "pickList",
+            "label": "Azure PowerShell Version",
+            "defaultValue": "LatestVersion",
+            "required": false,
+            "options":{
+                "LatestVersion": "Latest installed version",
+                "2.1.0": "2.1.0",
+                "3.5.0": "3.5.0",
+                "3.6.0": "3.6.0",
+                "4.1.0": "4.1.0",
+                "OtherVersion": "Specify other version"
+            },
+            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.6.0, 4.1.0.\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
+
+        },
+        {
+            "name": "CustomTargetAzurePs",
+            "type": "string",
+            "label": "Preferred Azure PowerShell Version",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "TargetAzurePs = OtherVersion",
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
@@ -109,6 +135,7 @@
     },
     "messages": {
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
+        "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
     }
 }
