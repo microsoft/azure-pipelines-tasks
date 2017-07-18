@@ -124,7 +124,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.*,2.3.* is not supported"
+            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
