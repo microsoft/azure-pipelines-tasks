@@ -14,6 +14,7 @@
             $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
             $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
             if (!$azure -and !$azureRM) {
+                Discover-AvailableAzureModules
                 if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
                 } else {
@@ -27,6 +28,7 @@
                 !(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
             {
+                Discover-AvailableAzureModules
                 if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
                 } else {
@@ -40,6 +42,7 @@
                 !(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
             {
+                Discover-AvailableAzureModules
                 if ($azurePsVersion) {
                     throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion)
                 } else {
@@ -207,4 +210,10 @@ function Import-AzureRmSubmodulesFromSdkPath {
     }
 }
 
-
+function Discover-AvailableAzureModules {
+    $env:PSModulePath = $env:SystemDrive + "\Modules;" + $env:PSModulePath
+    Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Azure")
+    Get-Module -Name Azure -ListAvailable | Select-Object Name,Version | ft
+    Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "AzureRM")
+    Get-Module -Name AzureRM -ListAvailable | Select-Object Name,Version | ft
+}
