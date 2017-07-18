@@ -34,7 +34,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
             return await sendReqeustInternal(request);
         }
         catch (error) {
-            if (retriableErrorCodes && retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
+            if (retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
                 tl.debug(util.format("Encountered a retriable error:%s. Message: %s.", error.code, error.message));
                 await sleepFor(retryIntervalInSeconds);
             }
