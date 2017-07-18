@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 115,
+        "Minor": 121,
         "Patch": 0
     },
     "demands": [],
@@ -46,7 +46,8 @@
             "defaultValue": "commands",
             "options": {
                 "commands": "Commands",
-                "script": "Shell script"
+                "script": "Script File",
+                "inline": "Inline Script"
             },
             "helpMarkDown": "Choose to either run shell commands or a shell script on the remote machine."
         },
@@ -71,6 +72,19 @@
             "required": true,
             "visibleRule": "runOptions = script",
             "helpMarkDown": "Path to the shell script file to run on the remote machine."
+        },
+        {
+            "name": "inline",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "runOptions = inline",
+            "helpMarkDown": "Write the shell script to run on the remote machine.",
+            "properties": {
+                "resizable": "true",
+                "rows": "10"
+            }
         },
         {
             "name": "args",
