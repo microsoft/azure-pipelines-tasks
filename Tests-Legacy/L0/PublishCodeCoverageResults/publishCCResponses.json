@@ -8,6 +8,9 @@
             "/someDir/someFile1"
         ]
     },
+    "exist": {
+        "/user/admin/summary.xml": true
+    },
     "findMatch": {
         "/some/*pattern": [
             "some/path/one",
