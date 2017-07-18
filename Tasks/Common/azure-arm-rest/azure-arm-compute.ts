@@ -778,7 +778,8 @@ export class VirtualMachineScaleSets {
                 httpRequest.body = JSON.stringify(patchBody);
 
                 // patch VMSS image
-                console.log(tl.loc("VMSSUpdateImage", vmssName, imageUrl));
+                console.log(tl.loc("NewVMSSImageUrl", imageUrl));
+                console.log(tl.loc("VMSSUpdateImage", vmssName));
                 this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
                     var deferred = Q.defer<azureServiceClient.ApiResult>();
                     var statusCode = response.statusCode;
