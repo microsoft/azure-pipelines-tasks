@@ -7,7 +7,7 @@
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 121,
         "Patch": 0
     },
@@ -35,12 +35,33 @@
             "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders."
         },
         {
+            "name": "authType",
+            "type": "pickList",
+            "label": "Authentication Method",
+            "defaultValue": "ServiceEndpoint",
+            "helpMarkDown": "",
+            "options": {
+                "ServiceEndpoint": "Service Endpoint",
+                "UserAndPass": "Username and Password"
+            }
+        },
+        {
+            "name": "serviceEndpoint",
+            "type": "connectedService:Generic",
+            "label": "Service Endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The service endpoint with the credentials for the server authentication.",
+            "visibleRule": "authType = ServiceEndpoint"
+        },
+        {
             "name": "username",
             "type": "string",
             "label": "Username",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the username for server authentication."
+            "helpMarkDown": "Specify the username for server authentication.",
+            "visibleRule": "authType = UserAndPass"
         },
         {
             "name": "password",
@@ -48,7 +69,8 @@
             "label": "Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value."
+            "helpMarkDown": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
+            "visibleRule": "authType = UserAndPass"
         },
         {
             "name": "url",
@@ -56,7 +78,16 @@
             "label": "URL",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`."
+            "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`.",
+            "visibleRule": "authType = UserAndPass"
+        },
+        {
+            "name": "remotePath",
+            "type": "string",
+            "label": "Remote Directory",
+            "defaultValue": "/upload/$(Build.BuildId)/",
+            "required": false,
+            "helpMarkDown": "If supplied, this is the sub-folder on the remote server for the URL supplied in the credentials."
         },
         {
             "name": "options",
@@ -89,6 +120,7 @@
         "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
         "UploadingFiles": "Uploading file(s): %s",
         "CurlNotFound": "curl was not found in the PATH.",
-        "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d"
+        "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d",
+        "IncompleteEndpoint": "The service endpoint does not contain all required fields."
     }
 }
