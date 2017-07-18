@@ -106,8 +106,8 @@ describe('Gradle L0 Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
-        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
+        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = '{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}';
+        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = 'https://example.visualstudio.com/defaultcollection';
         done();
     });
 

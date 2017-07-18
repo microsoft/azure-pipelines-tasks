@@ -151,10 +151,10 @@ function setJavaHome(javaHomeSelection: string): void {
 }
 
 function getExecOptions(): IExecOptions {
-    var env = process.env;
+    const env = process.env;
     env[accessTokenEnvSetting] = systemToken.getSystemAccessToken();
     return <IExecOptions> {
-        env: env,
+        env: env
     };
 }
 
