@@ -121,7 +121,8 @@
       "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "TargetAzurePs = OtherVersion"
+      "visibleRule": "TargetAzurePs = OtherVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
