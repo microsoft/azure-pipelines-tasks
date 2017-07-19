@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 117,
+        "Minor": 121,
         "Patch": 0
     },
     "demands": [
@@ -91,7 +91,7 @@
             "name": "packageTool",
             "type": "pickList",
             "label": "Create Package (IPA) using",
-            "defaultValue": "xcrun",
+            "defaultValue": "xcodebuild",
             "required": true,
             "helpMarkDown": "Choose the tool to use for generating the IPA.",
             "options": {
@@ -168,10 +168,10 @@
         {
             "name": "xcode8AutomaticSigning",
             "type": "boolean",
-            "label": "Xcode 8 Automatic Signing",
+            "label": "Automatic Signing",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing.",
+            "helpMarkDown": "Select this if you have an Xcode 8 or Xcode 9 project configured for Automatic Signing.",
             "groupName": "sign"
         },
         {
@@ -369,6 +369,7 @@
         "ExportMethodNotIdentified": "Failed to identify the export method to use automatically from the archive file. This might cause errors during build or produce an invalid package. Set `Export Options` to `Specify` or `Plist`.",
         "ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file.",
         "SchemeRequiredForArchive": "Scheme needs to be specified to generate the package with xcodebuild archive and export.",
-        "WorkspaceOrProjectRequiredForArchive": "Workspace or Project path needs to be specified to generate the package with xcodebuild archive and export."
+        "WorkspaceOrProjectRequiredForArchive": "Workspace or Project path needs to be specified to generate the package with xcodebuild archive and export.",
+        "FailedToGenerateExportOptionsPlist": "Failed to automatically generate an Export Options Plist to export an IPA. Please specify an Export Options Plist in the Package Options."
     }
 }
