@@ -96,7 +96,7 @@ describe('Docker Compose Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
             tr.run();
-            console.log(tr.stdout);
+
             process.env["__command__"] = "Build services";
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
