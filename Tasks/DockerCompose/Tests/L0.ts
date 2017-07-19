@@ -78,7 +78,7 @@ describe('Docker Compose Suite', function() {
     } else {
 
         it('Runs successfully for linux docker compose service build', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0Windows.js');
+            let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
             tr.run();
@@ -92,7 +92,7 @@ describe('Docker Compose Suite', function() {
         });
 
         it('Runs successfully for linux docker compose push service', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0Windows.js');
+            let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
             tr.run();
@@ -107,7 +107,7 @@ describe('Docker Compose Suite', function() {
         });
 
         it('Runs successfully for linux docker compose run service', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0Windows.js');
+            let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Run services";
             tr.run();
@@ -122,7 +122,7 @@ describe('Docker Compose Suite', function() {
         });
 
         it('Runs successfully for linux docker compose push service with ACR', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0Windows.js');
+            let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Push services";
             process.env["__container_type__"] = "Azure Container Registry";
