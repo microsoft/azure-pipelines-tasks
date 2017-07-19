@@ -21,25 +21,24 @@ class Credential {
 function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promise<any> {
     const defer = Q.defer<any>();
 
-    request
-        .get({url: url, strictSSL: strictSSL}, (err, res, body) => {
-            if (res && body && res.statusCode === 200)  {
-                defer.resolve(JSON.parse(body));
-            } else {
-                if (res && res.statusCode) {
-                   tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
+    request.get({url: url, strictSSL: strictSSL}, (err, res, body) => {
+                if (res && body && res.statusCode === 200)  {
+                    defer.resolve(JSON.parse(body));
+                } else {
+                    if (res && res.statusCode) {
+                    tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
+                    }
+                    if (body) {
+                        tl.debug(body);
+                    }
+                    defer.reject(new Error(tl.loc('ServerCallFailed')));
                 }
-                if (body) {
-                    tl.debug(body);
-                }
-                defer.reject(new Error(tl.loc('ServerCallFailed')));
-            }
-        })
-        .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', (err) => {
-            //TODO: Do we even need an 'error' handler here if we're just re-throwing?
-            defer.reject(new Error(err.message));
-        });
+            })
+            .auth(cred.mUsername, cred.mPassword, true)
+            .on('error', (err) => {
+                //TODO: Do we even need an 'error' handler here if we're just re-throwing?
+                defer.reject(new Error(err.message));
+            });
 
     return defer.promise;
 }
@@ -48,20 +47,19 @@ function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Cre
     const defer = Q.defer<number>();
     const lastSuccessfulUrl: string = `${serverEndpointUrl}/job/${jobName}/api/json?tree=lastSuccessfulBuild[id,displayname]`;
 
-    getRequest(lastSuccessfulUrl, cred, strictSSL)
-    .then((result) => {
-        if (result && result['lastSuccessfulBuild']) {
-            let lastSuccessfulBuildId = result['lastSuccessfulBuild']['id'];
-            if (lastSuccessfulBuildId) {
-                defer.resolve(lastSuccessfulBuildId);
+    getRequest(lastSuccessfulUrl, cred, strictSSL).then((result) => {
+            if (result && result['lastSuccessfulBuild']) {
+                const lastSuccessfulBuildId = result['lastSuccessfulBuild']['id'];
+                if (lastSuccessfulBuildId) {
+                    defer.resolve(lastSuccessfulBuildId);
+                } else {
+                    defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
+                }
             } else {
                 defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
             }
-        } else {
-            defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
-        }
-    })
-    .fail((err) => { defer.reject(err); });
+        })
+        .fail((err) => { defer.reject(err); });
 
     return defer.promise;
 }
@@ -70,24 +68,23 @@ function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, j
     const defer = Q.defer<string[]>();
     const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/api/json?tree=artifacts[*]`;
 
-    getRequest(artifactQueryUrl, cred, strictSSL)
-    .then((result) => {
-        if (result && result['artifacts']) {
-            let artifacts = result['artifacts'];
-            if (artifacts.length === 0) {
-                defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
+    getRequest(artifactQueryUrl, cred, strictSSL).then((result) => {
+            if (result && result['artifacts']) {
+                const artifacts = result['artifacts'];
+                if (artifacts.length === 0) {
+                    defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
+                } else {
+                    const artifactsRelativePaths = result['artifacts'].map((artifact) => {
+                        return artifact['relativePath'];
+                    });
+                    defer.resolve(artifactsRelativePaths);
+                }
             } else {
-                let artifactsRelativePaths = result['artifacts'].map((artifact) => {
-                    return artifact['relativePath'];
-                });
-                defer.resolve(artifactsRelativePaths);
+                // no artifacts for this job
+                defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
             }
-        } else {
-            // no artifacts for this job
-            defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
-        }
-    })
-    .fail((err) => { defer.reject(err); });
+        })
+        .fail((err) => { defer.reject(err); });
 
     return defer.promise;
 }
