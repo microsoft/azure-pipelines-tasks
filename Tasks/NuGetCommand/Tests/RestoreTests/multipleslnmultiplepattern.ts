@@ -9,7 +9,7 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
 nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'restore');
-tmr.setInput('solution', '**//*.sln');
+tmr.setInput('solution', '**//*.pattern1;**//*.pattern2');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
@@ -40,7 +40,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
 	}, 
     "findMatch": {
-        "**//*.sln" : ["c:\\agent\\home\\directory\\single.sln", "c:\\agent\\home\\directory\\double\\double.sln"]
+        "**//*.pattern1;**//*.pattern2" : ["c:\\agent\\home\\directory\\single.sln", "c:\\agent\\home\\directory\\double\\double.sln"]
     }
 };
 nmh.setAnswers(a);

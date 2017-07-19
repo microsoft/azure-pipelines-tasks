@@ -151,6 +151,9 @@ async function execBuild() {
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
             mvnRun.arg('help:effective-pom');
+            if(mavenOptions) {
+                mvnRun.line(mavenOptions);   
+            }
             return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
             .then(function (repositories) {
                 if (!repositories || !repositories.length) {

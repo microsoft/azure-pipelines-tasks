@@ -17,7 +17,7 @@ try {
     $testPlatform               = Get-VstsInput -Name testPlatform -Require
     $agentLocation              = Get-VstsInput -Name agentLocation
     $updateTestAgent            = Get-VstsInput -Name updateTestAgent
-    $executionType              = Get-TaskVariable -Name "System.ParallelExecutionType"
+    $executionType              = Get-VstsTaskVariable -Name "System.ParallelExecutionType"
 
     # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
     $logonAutomatically = $runAsProcess

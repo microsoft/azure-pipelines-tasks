@@ -46,17 +46,18 @@ export async function run(nuGetPath: string): Promise<void> {
         nutil.setConsoleCodePage();
 
         // Get list of files to pusblish
-        let searchPattern = tl.getPathInput("searchPatternPush", true, false);
+        let searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
 
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!useLegacyFind) {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(searchPattern);
+            filesList = nutil.resolveFilterSpec(searchPatternInput);
         }
 
         filesList.forEach(packageFile => {
@@ -167,7 +168,7 @@ export async function run(nuGetPath: string): Promise<void> {
             tl.warning(tl.loc("Warning_AllowDuplicatesOnlyAvailableHosted"));
         }
 
-        let useVstsNuGetPush = shouldUseVstsNuGetPush(isInternalFeed, continueOnConflict);
+        let useVstsNuGetPush = shouldUseVstsNuGetPush(isInternalFeed, continueOnConflict, nuGetPath);
         let vstsPushPath = undefined;
         if (useVstsNuGetPush) {
             vstsPushPath = vstsNuGetPushToolUtilities.getBundledVstsNuGetPushLocation();
@@ -284,7 +285,7 @@ async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IV
     throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush"));
 }
 
-function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean): boolean {
+function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {
     if (!isInternalFeed)
     {   
         tl.debug('Pushing to an external feed so NuGet.exe will be used.');
@@ -324,6 +325,11 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
         {
             tl.warning(tl.loc("Warning_ForceNuGetCannotSkipConflicts"));
         }
+        return false;
+    }
+
+    if (!(tl.osType() === 'Windows_NT' || !nugetExePath.trim().toLowerCase().endsWith(".exe"))) {
+        tl.warning(tl.loc("Warning_SkipConflictsNotSupportedUnixAgents"));
         return false;
     }
 

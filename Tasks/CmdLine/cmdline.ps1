@@ -12,6 +12,7 @@ try {
     Assert-VstsPath -LiteralPath $input_workingDirectory -PathType 'Container'
 
     # Generate the script contents.
+    Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
 
     # Write the script to disk.

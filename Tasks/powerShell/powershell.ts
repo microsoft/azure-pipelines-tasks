@@ -10,25 +10,47 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get inputs.
-        let errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
-        switch (errorActionPreference.toUpperCase()) {
+        let input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
+        switch (input_errorActionPreference.toUpperCase()) {
             case 'STOP':
             case 'CONTINUE':
             case 'SILENTLYCONTINUE':
                 break;
             default:
-                throw new Error(tl.loc('JS_InvalidErrorActionPreference', errorActionPreference));
+                throw new Error(tl.loc('JS_InvalidErrorActionPreference', input_errorActionPreference));
         }
-        let failOnStderr = tl.getBoolInput('failOnStderr', false);
-        let ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
-        let script: string = tl.getInput('script', false) || '';
-        let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+        let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
+        let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
+        let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+        let input_filePath: string;
+        let input_arguments: string;
+        let input_script: string;
+        let input_targetType: string = tl.getInput('targetType') || '';
+        if (input_targetType.toUpperCase() == 'FILEPATH') {
+            input_filePath = tl.getPathInput('filePath', /*required*/ true);
+            if (!tl.stats(input_filePath).isFile() || !input_filePath.toUpperCase().match(/\.PS1$/)) {
+                throw new Error(tl.loc('JS_InvalidFilePath', input_filePath));
+            }
+
+            input_arguments = tl.getInput('arguments') || '';
+        }
+        else {
+            input_script = tl.getInput('script', false) || '';
+        }
 
         // Generate the script contents.
+        console.log(tl.loc('GeneratingScript'));
         let contents: string[] = [];
-        contents.push(`$ErrorActionPreference = '${errorActionPreference}'`);
-        contents.push(script);
-        if (!ignoreLASTEXITCODE) {
+        contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
+        if (input_targetType.toUpperCase() == 'FILEPATH') {
+            contents.push(`. '${input_filePath.replace("'", "''")}' ${input_arguments}`.trim());
+            console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
+        }
+        else {
+            contents.push(input_script);
+        }
+
+        if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
             contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
             contents.push(`} else {`);
@@ -56,7 +78,7 @@ async function run() {
             .arg('-File')
             .arg(filePath);
         let options = <tr.IExecOptions>{
-            cwd: workingDirectory,
+            cwd: input_workingDirectory,
             failOnStdErr: false,
             errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
             outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
@@ -65,7 +87,7 @@ async function run() {
 
         // Listen for stderr.
         let stderrFailure = false;
-        if (failOnStderr) {
+        if (input_failOnStderr) {
             powershell.on('stderr', (data) => {
                 stderrFailure = true;
             });
