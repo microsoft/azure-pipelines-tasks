@@ -26,7 +26,7 @@ function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promis
                     defer.resolve(JSON.parse(body));
                 } else {
                     if (res && res.statusCode) {
-                    tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
+                        tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
                     }
                     if (body) {
                         tl.debug(body);
