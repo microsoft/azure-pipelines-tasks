@@ -28,14 +28,12 @@
         "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
         "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
         "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
-        "GetVMSSFailedWillRetry": "Failed to get VMSS details with resource group %s and name %s. Error: %s. Will retry.",
         "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
-        "VMSSUpdateImage": "Updating VMSS %s image to %s",
-        "WaitingForVMSSImageUpdateCompletion": "Waiting for VMSS image to get updated..",
-        "VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
         "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
         "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
-        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date.",
+        "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+        "NewVMSSImageUrl": "Url for new VMSS image: %s.",
+        "VMSSUpdateImage": "Updating VMSS %s to use new image...",
         "ResourceNameCannotBeNull": "Resource name cannot be null."
     }
 }

@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("action", "UpdateImage");
+tr.setInput("action", "Update image");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : "testvmss1");
 tr.setInput("imageUrl", process.env["imageUrlAlreadyUptoDate"] === "true" ? "http://old-url" : "https://someurl");
