@@ -1,6 +1,7 @@
 import msRestAzure = require("./azure-arm-common");
 import tl = require('vsts-task-lib/task');
 import util = require("util");
+import webClient = require("./webClient");
 import azureServiceClient = require("./AzureServiceClient");
 import Model = require("./azureModels");
 import Q = require("q");
@@ -63,7 +64,7 @@ export class VirtualMachines {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines',
@@ -73,7 +74,7 @@ export class VirtualMachines {
         );
 
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -121,7 +122,7 @@ export class VirtualMachines {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}',
             {
@@ -133,7 +134,7 @@ export class VirtualMachines {
         // Set Headers
         httpRequest.headers = this.client.setCustomHeaders(options);
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
@@ -163,7 +164,7 @@ export class VirtualMachines {
         }
 
         // Create object
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/restart',
             {
@@ -175,13 +176,13 @@ export class VirtualMachines {
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.body = null;
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 202) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -210,7 +211,7 @@ export class VirtualMachines {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/start',
             {
@@ -220,14 +221,14 @@ export class VirtualMachines {
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.body = null;
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -256,7 +257,7 @@ export class VirtualMachines {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/powerOff',
@@ -265,14 +266,14 @@ export class VirtualMachines {
                 '{vmName}': vmName
             }
         );
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -301,7 +302,7 @@ export class VirtualMachines {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/deallocate',
@@ -310,14 +311,14 @@ export class VirtualMachines {
                 '{vmName}': vmName
             }
         );
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -347,7 +348,7 @@ export class VirtualMachines {
         }
 
         // Create object
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}',
@@ -357,14 +358,14 @@ export class VirtualMachines {
             }
         );
         httpRequest.body = null;
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202 && statusCode != 204) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
                         // Generate Response
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
@@ -405,7 +406,7 @@ export class VirtualMachineExtensions {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions',
@@ -417,7 +418,7 @@ export class VirtualMachineExtensions {
         );
 
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -466,7 +467,7 @@ export class VirtualMachineExtensions {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
@@ -479,7 +480,7 @@ export class VirtualMachineExtensions {
         );
         httpRequest.body = null;
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
@@ -516,7 +517,7 @@ export class VirtualMachineExtensions {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
@@ -536,13 +537,13 @@ export class VirtualMachineExtensions {
         }
 
         // Send request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
                         var result = { properties: { "provisioningState": operationResponse.body.status } };
                         deferred.resolve(new azureServiceClient.ApiResult(null, result));
@@ -575,7 +576,7 @@ export class VirtualMachineExtensions {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/{resourceType}/{resourceName}/extensions/{vmExtensionName}',
             {
@@ -587,13 +588,13 @@ export class VirtualMachineExtensions {
         );
 
         // Send request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode !== 202 && response.statusCode !== 204) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.statusCode === 200) {
                         deferred.resolve(new azureServiceClient.ApiResult(null));
                     } else {
@@ -624,13 +625,13 @@ export class VirtualMachineScaleSets {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets', {});
 
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -679,7 +680,7 @@ export class VirtualMachineScaleSets {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmssName}',
             {
@@ -692,7 +693,7 @@ export class VirtualMachineScaleSets {
         // Set Headers
         httpRequest.headers = this.client.setCustomHeaders(options);
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
@@ -764,7 +765,7 @@ export class VirtualMachineScaleSets {
                     "properties":  properties
                 };
 
-                var httpRequest = new azureServiceClient.WebRequest();
+                var httpRequest = new webClient.WebRequest();
                 httpRequest.method = 'PATCH';
                 httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmssName}',
                     {
@@ -780,12 +781,12 @@ export class VirtualMachineScaleSets {
                 // patch VMSS image
                 console.log(tl.loc("NewVMSSImageUrl", imageUrl));
                 console.log(tl.loc("VMSSUpdateImage", vmssName));
-                this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+                this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
                     var deferred = Q.defer<azureServiceClient.ApiResult>();
                     var statusCode = response.statusCode;
                     if (response.statusCode == 200) {
                         // wait for image update to complete
-                        this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                        this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                             if (operationResponse.body.status === "Succeeded") {
                                 deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                             }
