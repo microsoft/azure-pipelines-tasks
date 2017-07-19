@@ -7,7 +7,7 @@ import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
 
-var request = require('request');
+const request = require('request');
 
 class Credential {
     mUsername: string;
@@ -20,7 +20,7 @@ class Credential {
 }
 
 function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promise<any> {
-    let defer = Q.defer<any>();
+    const defer = Q.defer<any>();
 
     request
         .get({url: url, strictSSL: strictSSL}, (err, res, body) => {
@@ -28,7 +28,7 @@ function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promis
                 defer.resolve(JSON.parse(body));
             } else {
                 if (res && res.statusCode) {
-                   tl.debug(tl.loc('ServerCallErrorCode', res.statusCode)); 
+                   tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
                 }
                 if (body) {
                     tl.debug(body);
@@ -37,19 +37,19 @@ function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promis
             }
         })
         .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', err => {
+        .on('error', (err) => {
             defer.reject(new Error(err));
         });
 
-        return defer.promise;
+    return defer.promise;
 }
 
 function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Credential, strictSSL: boolean): Q.Promise<number> {
-    let defer = Q.defer<number>();
-    let lastSuccessfulUrl = `${serverEndpointUrl}/job/${jobName}/api/json?tree=lastSuccessfulBuild[id,displayname]`;
+    const defer = Q.defer<number>();
+    const lastSuccessfulUrl: string = `${serverEndpointUrl}/job/${jobName}/api/json?tree=lastSuccessfulBuild[id,displayname]`;
 
     getRequest(lastSuccessfulUrl, cred, strictSSL)
-    .then( result => {
+    .then((result) => {
         if (result && result['lastSuccessfulBuild']) {
             let lastSuccessfulBuildId = result['lastSuccessfulBuild']['id'];
             if (lastSuccessfulBuildId) {
@@ -61,24 +61,23 @@ function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Cre
             defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
         }
     })
-    .fail(err => {defer.reject(err)});
+    .fail((err) => { defer.reject(err); });
 
     return defer.promise;
 }
 
-function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, jobBuildId: number, 
-        cred: Credential, strictSSL: boolean): Q.Promise<string[]> {
-    let defer = Q.defer<string[]>();
-    let artifactQueryUrl = `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/api/json?tree=artifacts[*]`;
+function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, jobBuildId: number, cred: Credential, strictSSL: boolean): Q.Promise<string[]> {
+    const defer = Q.defer<string[]>();
+    const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/api/json?tree=artifacts[*]`;
 
     getRequest(artifactQueryUrl, cred, strictSSL)
-    .then(result => { 
+    .then((result) => {
         if (result && result['artifacts']) {
             let artifacts = result['artifacts'];
             if (artifacts.length === 0) {
                 defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
             } else {
-                let artifactsRelativePaths = result['artifacts'].map(artifact => {
+                let artifactsRelativePaths = result['artifacts'].map((artifact) => {
                     return artifact['relativePath'];
                 });
                 defer.resolve(artifactsRelativePaths);
@@ -88,24 +87,24 @@ function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, j
             defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
         }
     })
-    .fail(err => {defer.reject(err)});
+    .fail((err) => { defer.reject(err); });
 
-    return defer.promise
+    return defer.promise;
 }
 
-async function download(url: string, localFile: string, cred: Credential, strictSSL: boolean) {
-    tl.debug(tl.loc("DownloadFileTo", url, localFile));
+async function download(url: string, localFile: string, cred: Credential, strictSSL: boolean): Promise<void> {
+    tl.debug(tl.loc('DownloadFileTo', url, localFile));
     await request.get( {url: url, strictSSL: strictSSL} )
         .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', err => {
+        .on('error', (err) => {
             throw new Error(err);
         })
         .pipe(fs.createWriteStream(localFile));
 
-    tl.debug(tl.loc("FileSuccessfullyDownloaded", localFile));
+    tl.debug(tl.loc('FileSuccessfullyDownloaded', localFile));
 }
 
-function getArtifactUrl(serverEndpointUrl: string, jobName: string, jobBuildId: number, relativePath: string) {
+function getArtifactUrl(serverEndpointUrl: string, jobName: string, jobBuildId: number, relativePath: string): string {
     return `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/artifact/${relativePath}`;
 }
 
@@ -113,47 +112,46 @@ async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        let serverEndpoint: string = tl.getInput('serverEndpoint', true);
-        let serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
+        const serverEndpoint: string = tl.getInput('serverEndpoint', true);
+        const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
 
-        let serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
-        let username: string = serverEndpointAuth['parameters']['username'];
-        let password: string = serverEndpointAuth['parameters']['password'];
-        let cred: Credential = (username && password) ? new Credential(username, password) : new Credential("", "");
+        const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
+        const username: string = serverEndpointAuth['parameters']['username'];
+        const password: string = serverEndpointAuth['parameters']['password'];
+        const cred: Credential = (username && password) ? new Credential(username, password) : new Credential('', '');
 
-        let jobName: string = tl.getInput('jobName', true);
-        let localPathRoot: string = tl.getPathInput('saveTo', true);
+        const jobName: string = tl.getInput('jobName', true);
+        const localPathRoot: string = tl.getPathInput('saveTo', true);
 
-        let strictSSL: boolean = ("true" !== tl.getEndpointDataParameter(serverEndpoint, "acceptUntrustedCerts", true));
+        const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
 
-        let jenkinsBuild: string = tl.getInput("jenkinsBuild", true);
+        const jenkinsBuild: string = tl.getInput('jenkinsBuild', true);
         let buildId: number;
-        if (jenkinsBuild === "LastSuccessfulBuild") {
+        if (jenkinsBuild === 'LastSuccessfulBuild') {
             tl.debug(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
             buildId = await getLastSuccessful(serverEndpointUrl, jobName, cred, strictSSL);
         } else {
-            let buildIdStr = tl.getInput("jenkinsBuildNumber");
+            const buildIdStr: string = tl.getInput('jenkinsBuildNumber');
             buildId = parseInt(buildIdStr);
         }
         tl.debug(tl.loc('GetArtifactsFromBuildNumber', buildId, jobName));
 
-        let artifactsRelativePaths = await getArtifactsRelativePaths(serverEndpointUrl, jobName,
-                buildId, cred, strictSSL);
-        artifactsRelativePaths.forEach(relativePath => {
-            let localPath = path.resolve(localPathRoot, relativePath);
-            let dir = path.dirname(localPath);
+        const artifactsRelativePaths: string[] = await getArtifactsRelativePaths(serverEndpointUrl, jobName, buildId, cred, strictSSL);
+        artifactsRelativePaths.forEach((relativePath) => {
+            const localPath: string = path.resolve(localPathRoot, relativePath);
+            const dir: string = path.dirname(localPath);
             if (!tl.exist(dir)) {
                 tl.mkdirP(dir);
             }
 
-            let artifactUrl = getArtifactUrl(serverEndpointUrl, jobName, buildId, relativePath);
+            const artifactUrl: string = getArtifactUrl(serverEndpointUrl, jobName, buildId, relativePath);
+            //Q: Are we supposed to await on this download call?
             download(artifactUrl, localPath, cred, strictSSL);
         });
-
-    } catch (e) {
-        tl.debug(e.message);
-        tl._writeError(e);
-        tl.setResult(tl.TaskResult.Failed, e.message);
+    } catch (err) {
+        tl.debug(err.message);
+        tl._writeError(err);
+        tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
 
