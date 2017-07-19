@@ -6,8 +6,7 @@ import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
-
-const request = require('request');
+import request = require('request');
 
 class Credential {
     mUsername: string;
@@ -38,7 +37,8 @@ function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promis
         })
         .auth(cred.mUsername, cred.mPassword, true)
         .on('error', (err) => {
-            defer.reject(new Error(err));
+            //TODO: Do we even need an 'error' handler here if we're just re-throwing?
+            defer.reject(new Error(err.message));
         });
 
     return defer.promise;
@@ -97,7 +97,8 @@ async function download(url: string, localFile: string, cred: Credential, strict
     await request.get( {url: url, strictSSL: strictSSL} )
         .auth(cred.mUsername, cred.mPassword, true)
         .on('error', (err) => {
-            throw new Error(err);
+            //TODO: Do we even need an 'error' handler here if we're just re-throwing?
+            throw new Error(err.message);
         })
         .pipe(fs.createWriteStream(localFile));
 
