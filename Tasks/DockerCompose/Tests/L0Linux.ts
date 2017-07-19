@@ -49,9 +49,9 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
-        "docker push dir2_web:latest": {
+        "docker push 100_web:latest": {
             "code": 0,
-            "stdout": "sucessfully pushed dir2_web:latest"
+            "stdout": "sucessfully pushed 100_web:latest"
         },
         "docker-compose -f /tmp/tempdir/100/docker-compose.yml up": {
             "code": 0,
@@ -59,9 +59,9 @@ let a: any = <any>{
         },
         "docker-compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/.docker-compose.12345.yml config":{
             "code": 0,
-            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/dir2_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/100_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
-        "docker push ajgtestacr1.azurecr.io/dir2_web:latest":{
+        "docker push ajgtestacr1.azurecr.io/100_web:latest":{
             "code": 0,
             "stdout": "successfully pushed with qualified image"
         }
