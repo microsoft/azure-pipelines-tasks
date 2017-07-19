@@ -1,7 +1,6 @@
 "use strict";
 
 import * as del from "del";
-import * as fs from "fs";
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
@@ -10,6 +9,7 @@ import * as DockerComposeUtils from "./dockercomposeutils";
 
 import ContainerConnection from "./containerconnection"
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import * as Utils from "./utils";
 
 export default class DockerComposeConnection extends ContainerConnection {
     private dockerComposePath: string;
@@ -56,7 +56,7 @@ export default class DockerComposeConnection extends ContainerConnection {
                 return;
             }
             var agentDirectory = tl.getVariable("Agent.HomeDirectory");
-            this.finalComposeFile = path.join(agentDirectory, ".docker-compose." + Date.now() + ".yml");
+            this.finalComposeFile = path.join(agentDirectory, Utils.getFinalComposeFileName());
             var services = {};
             if (qualifyImageNames) {
                 for (var serviceName in images) {
@@ -68,7 +68,7 @@ export default class DockerComposeConnection extends ContainerConnection {
                     image: images[serviceName]
                 };
             }
-            fs.writeFileSync(this.finalComposeFile, yaml.safeDump({
+            Utils.writeFileSync(this.finalComposeFile, yaml.safeDump({
                 version: this.dockerComposeVersion,
                 services: services
             }, { lineWidth: -1 } as any));
