@@ -1,8 +1,8 @@
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as taskLib from 'vsts-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
-import * as path from "path";
-
+import * as path from 'path';
+import * as commandHelper from './CommandHelper';
 interface INuGetTools {
     nugetexe: INuGetVersionInfo[]
 }
@@ -22,6 +22,7 @@ enum NuGetReleaseStage
 
 const NUGET_TOOL_NAME: string = 'NuGet';
 const NUGET_EXE_FILENAME: string = 'nuget.exe';
+const NUGET_VERSION_4_0_0: string = '4.0.0';
 
 export const NUGET_EXE_TOOL_PATH_ENV_VAR: string = 'NuGetExeToolPath';
 
@@ -80,7 +81,7 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     }
 
     console.log(taskLib.loc("Info_UsingVersion", version));
-    toolPath= toolLib.findLocalTool('NuGet', version);
+    toolPath= toolLib.findLocalTool(NUGET_TOOL_NAME, version);
 
     if (addNuGetToPath){
         console.log(taskLib.loc("Info_UsingToolPath", toolPath));
@@ -92,6 +93,16 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 
     return fullNuGetPath;
 }
+
+export async function cacheBundledNuGet_4_0_0() {
+    if (!toolLib.findLocalTool(NUGET_TOOL_NAME, NUGET_VERSION_4_0_0)) {   
+        taskLib.debug('Placing bundled NuGet.exe 4.0.0 in tool lib cache');
+        
+        let bundledNuGet4Location: string = getBundledNuGet_4_0_0_Location();
+        toolLib.cacheFile(bundledNuGet4Location, NUGET_EXE_FILENAME, NUGET_TOOL_NAME, NUGET_VERSION_4_0_0);
+    }
+}
+
 
 function GetRestClientOptions(): restm.IRequestOptions
 {
@@ -122,4 +133,21 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     }
 
     return releasedVersions.find(x => x.version === version);
+}
+
+
+
+function getBundledNuGet_4_0_0_Location(): string {
+    const nugetPaths: string[] = ['NuGet/4.0.0/'];
+
+    let taskNodeModulesPath: string = path.dirname(__dirname);
+    let taskRootPath: string = path.dirname(taskNodeModulesPath);
+    const toolPath = commandHelper.locateTool("NuGet",
+    <commandHelper.LocateOptions>{
+        root: taskRootPath,
+        searchPath: nugetPaths,
+        toolFilenames: ['NuGet.exe', 'nuget.exe'],
+    });
+
+    return toolPath;
 }

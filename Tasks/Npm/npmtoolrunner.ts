@@ -5,6 +5,7 @@ import * as Q from 'q';
 
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
+import {NpmTaskInput} from './constants';
 
 import * as util from './util';
 
@@ -26,6 +27,9 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         let cacheOptions = { silent: true } as tr.IExecSyncOptions;
+        if (!tl.stats(workingDirectory).isDirectory()) {
+            throw new Error(tl.loc('WorkingDirectoryNotDirectory'));
+        }
         this.cacheLocation = tl.execSync('npm', 'config get cache', this._prepareNpmEnvironment(cacheOptions)).stdout.trim();
     }
 
@@ -85,7 +89,7 @@ export class NpmToolRunner extends tr.ToolRunner {
             options.env = process.env;
         }
 
-        if (this.dbg) {
+        if (this.dbg || tl.getBoolInput(NpmTaskInput.Verbose, false)) {            
             options.env['NPM_CONFIG_LOGLEVEL'] = 'verbose';
         }
 

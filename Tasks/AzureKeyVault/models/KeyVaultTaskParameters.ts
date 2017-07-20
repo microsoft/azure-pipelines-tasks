@@ -1,7 +1,7 @@
 /// <reference path="../typings/index.d.ts" />
 
+import msRestAzure = require('azure-arm-rest/azure-arm-common');
 import tl = require("vsts-task-lib/task");
-import msRestAzure = require("./../operations/azure-rest/azure-arm-common");
 import util = require("util")
 
 export class KeyVaultTaskParameters {

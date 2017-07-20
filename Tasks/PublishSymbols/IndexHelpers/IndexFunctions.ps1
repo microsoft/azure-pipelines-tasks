@@ -13,16 +13,7 @@ function Invoke-IndexSources {
             return
         }
 
-        # Resolve location of pdbstr.exe.
-        $pdbstrPath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\pdbstr\pdbstr.exe"
-        $legacyPdbstrPath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\Pdbstr\pdbstr.exe"
-        if (!([System.IO.File]::Exists($pdbstrPath)) -and
-            ([System.IO.File]::Exists($legacyPdbstrPath)))
-        {		
-            $pdbstrPath = $legacyPdbstrPath		
-        }
-    
-        $pdbstrPath = Assert-VstsPath -LiteralPath $pdbstrPath -PathType Leaf -PassThru
+        $pdbstrPath = Get-PdbstrPath
 
         # Warn if spaces in the temp path.
         if ("$env:TMP".Contains(' ')) {
@@ -50,6 +41,13 @@ function Invoke-IndexSources {
                 #    Write-Verbose "Skipping: $symbolsFilePath"
                 #    continue
                 #}
+
+                $bytes = Get-Content $symbolsFilePath -Encoding byte -TotalCount 4
+                $data = [System.Text.Encoding]::ASCII.GetString($bytes)
+                if ($data.equals("BSJB")) {
+                    Write-Verbose "Skipping: $symbolsFilePath because it is a Portable PDB"
+                    continue
+                }
 
                 # Get the source file paths embedded in the symbols file.
                 [string[]]$sourceFilePaths = Get-SourceFilePaths -SymbolsFilePath $symbolsFilePath -SourcesRootPath $provider.SourcesRootPath -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning

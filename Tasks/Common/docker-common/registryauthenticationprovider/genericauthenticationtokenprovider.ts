@@ -19,7 +19,7 @@ export default class GenericAuthenticationTokenProvider extends AuthenticationTo
     public getAuthenticationToken(): RegistryAuthenticationToken {
         
         if(this.registryAuth) {    
-            return new RegistryAuthenticationToken(this.registryAuth["username"], this.registryAuth["password"], this.registryAuth["registry"], this.registryAuth["email"]);
+            return new RegistryAuthenticationToken(this.registryAuth["username"], this.registryAuth["password"], this.registryAuth["registry"], this.registryAuth["email"], "generic/vsts");
         }
         
         return null;

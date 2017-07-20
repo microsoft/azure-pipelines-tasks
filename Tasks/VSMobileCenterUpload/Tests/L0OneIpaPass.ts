@@ -83,7 +83,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/test/path/to/my.ipa": true,
         "/test/path/to/mappings.txt": true
     },
-    "glob" : {
+    "findMatch" : {
         "/test/path/to/mappings.txt": [
             "/test/path/to/mappings.txt"
         ],

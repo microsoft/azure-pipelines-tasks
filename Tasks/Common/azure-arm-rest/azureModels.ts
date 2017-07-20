@@ -158,3 +158,8 @@ export interface VMExtensionMetadata {
     publisher: string;
     typeHandlerVersion: string;
 }
+
+export enum ComputeResourceType {
+    VirtualMachine,
+    VirtualMachineScaleSet
+}

@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 120,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "preview": true,
@@ -32,11 +32,42 @@
   ],
   "inputs": [
     {
+      "name": "targetType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.targetType",
+      "required": false,
+      "defaultValue": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.targetType",
+      "options": {
+        "filePath": "File Path",
+        "inline": "Inline"
+      }
+    },
+    {
+      "name": "filePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.filePath",
+      "visibleRule": "targetType = filePath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.filePath"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "visibleRule": "targetType = filePath",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
       "name": "script",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
+      "visibleRule": "targetType = inline",
       "required": true,
-      "defaultValue": "# Write your commands here\n# Use the Environment input below to map secret variables into environment variables",
+      "defaultValue": "# Write your commands here",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -69,7 +100,10 @@
     }
   },
   "messages": {
+    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
+    "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed"
   }

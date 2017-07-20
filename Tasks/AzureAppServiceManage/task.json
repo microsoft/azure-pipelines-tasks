@@ -1,7 +1,7 @@
 {
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
-    "friendlyName": "Azure App Service Manage (PREVIEW)",
+    "friendlyName": "Azure App Service Manage",
     "description": "Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 10
+        "Patch": 12
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",

@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 115,
+    "Minor": 121,
     "Patch": 0
   },
   "demands": [],
@@ -46,7 +46,8 @@
       "defaultValue": "commands",
       "options": {
         "commands": "Commands",
-        "script": "Shell script"
+        "script": "Script File",
+        "inline": "Inline Script"
       },
       "helpMarkDown": "ms-resource:loc.input.help.runOptions"
     },
@@ -71,6 +72,19 @@
       "required": true,
       "visibleRule": "runOptions = script",
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inline",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "ms-resource:loc.input.help.inline",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
     },
     {
       "name": "args",

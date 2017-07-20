@@ -1,3 +1,5 @@
+#requires -Module SymbolsCommon,VstsTaskSdk
+
 [CmdletBinding()]
 param()
 

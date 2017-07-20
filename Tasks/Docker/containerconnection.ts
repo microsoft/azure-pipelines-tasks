@@ -8,6 +8,7 @@ import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as imageUtils from "./containerimageutils";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import * as os from "os";
 
 export default class ContainerConnection {
     private dockerPath: string;
@@ -17,7 +18,7 @@ export default class ContainerConnection {
     private certPath: string;
     private keyPath: string;
     private registryAuth: { [key: string]: string };
-    private registryHost: string;
+    private configurationDirPath: string;
 
     constructor() {
         this.dockerPath = tl.which("docker", true);
@@ -63,11 +64,8 @@ export default class ContainerConnection {
     }
 
     public close(): void {
-        if (this.registryHost) {
-            var command = this.createCommand();
-            command.arg("logout");
-            command.arg(this.registryHost);
-            command.execSync();
+        if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
+            del.sync(this.configurationDirPath);
         }
         if (this.certsDir && fs.existsSync(this.certsDir)) {
             del.sync(this.certsDir);
@@ -107,16 +105,32 @@ export default class ContainerConnection {
             this.registryAuth["username"] = authenticationToken.getUsername();
             this.registryAuth["password"] = authenticationToken.getPassword();
             this.registryAuth["registry"] = authenticationToken.getLoginServerUrl();
-            
-            var command = this.createCommand();
+
             if (this.registryAuth) {
-                command.arg("login");
-                command.arg(["-u", this.registryAuth["username"]]);
-                command.arg(["-p", this.registryAuth["password"]]);
-                command.arg(this.registryAuth["registry"]);
-                command.execSync();
-                this.registryHost = this.registryAuth["registry"];
+                this.configurationDirPath  = this.getDockerConfigDirPath();
+                process.env["DOCKER_CONFIG"] = this.configurationDirPath;
+                var json = authenticationToken.getDockerConfig();
+                var configurationFilePath = path.join(this.configurationDirPath, "config.json");
+                fs.writeFileSync(configurationFilePath, json);
             }
         }
+    }
+
+    private getDockerConfigDirPath(): string {
+        var configDir = path.join(this.getTempDirectory(), "DockerConfig_"+Date.now());
+        this.ensureDirExists(configDir);
+
+        return configDir;
+    } 
+
+    private ensureDirExists(dirPath : string) : void
+    {
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath);
+        }
+    }
+
+    private getTempDirectory(): string {
+        return os.tmpdir();
     }
 }

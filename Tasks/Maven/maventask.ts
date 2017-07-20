@@ -6,15 +6,16 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('./CodeAnalysis/SonarQube/common');
-import sqMaven = require('./CodeAnalysis/mavensonar');
+import sqCommon = require('codeanalysis-common/SonarQube/common');
+import sqMaven = require('codeanalysis-common/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
-import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
-import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
-import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
-import {PmdTool} from './CodeAnalysis/Common/PmdTool';
-import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
+import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
+import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
+import {PmdTool} from 'codeanalysis-common/Common/PmdTool';
+import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
+import util = require('./mavenutil');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -47,6 +48,7 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
+
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
@@ -136,6 +138,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
+    let settingsXmlFile: string = null;
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -147,6 +150,56 @@ async function execBuild() {
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
+            mvnRun.arg('help:effective-pom');
+            if(mavenOptions) {
+                mvnRun.line(mavenOptions);   
+            }
+            return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
+            .then(function (repositories) {
+                if (!repositories || !repositories.length) {
+                    tl.debug('no repositories found in pom');
+                    return Q.resolve(true);
+                }
+                tl.debug('Repositories: ' + JSON.stringify(repositories));
+                settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+
+                tl.debug('checking to see if there are settings.xml in use');
+                let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
+                if (options) {
+                    mavenOptions = '';
+                    for (let i = 0; i < options.length; ++i) {
+                        if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                            i++; // increment to the file name
+                            let suppliedSettingsXml: string = options[i];
+                            tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                            tl.debug('using settings file: ' + settingsXmlFile);
+                        } else {
+                            if (mavenOptions) {
+                                mavenOptions = mavenOptions.concat(' ');
+                            }
+                            mavenOptions = mavenOptions.concat(options[i]);
+                        }
+                    }
+                }
+                return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+            })
+            .fail(function (err) {
+                return Q.reject(err);
+            });
+        })
+        .fail(function (err) {
+            tl.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {            
+            // Setup tool runner to execute Maven goals
+            var mvnRun = tl.tool(mvnExec);
+            mvnRun.arg('-f');
+            mvnRun.arg(mavenPOMFile);
+            if (settingsXmlFile) {
+                mvnRun.arg('-s');
+                mvnRun.arg(settingsXmlFile);
+            }
             mvnRun.line(mavenOptions);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
@@ -155,7 +208,7 @@ async function execBuild() {
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
+            mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
@@ -163,13 +216,16 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
-            return mvnRun.exec(); // Run Maven with the user specified goals
+            return mvnRun.exec(util.getExecOptions());
         })
         .fail(function (err) {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
+            if (code && code['code'] != 0) {
+                userRunFailed = true;
+            }
             // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
 
             // The files won't be created if the build failed, and the user should probably fix their build first.
@@ -197,6 +253,7 @@ async function execBuild() {
                 publishJUnitTestResults(testResultsFiles);
             }
             publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
                 // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
                 if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
