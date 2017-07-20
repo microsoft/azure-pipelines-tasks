@@ -11,7 +11,7 @@ const uuid = require('node-uuid');
 export function getDistributedTestConfigurations() {
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.useVsTestConsole = 'true';
+    dtaConfiguration.useVsTestConsole = 'false';
 
     if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
         throw (tl.loc('vs2013NotSupportedInDta'));
