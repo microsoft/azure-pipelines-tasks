@@ -45,8 +45,8 @@ try {
             [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath' -Require
             [string]$TransactionId = Get-VstsInput -Name 'TransactionId' -Require
 
-            if ($SymbolsPath.StartsWith("#https://")) {
-                # TODO: Handle Symbol Deletion via Artifact Service
+            if ($SymbolsPath.StartsWith("https://")) {
+                Write-Host "Received url for FileShare deletion"
             }
             else {
                 Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
@@ -137,8 +137,8 @@ try {
         }
 
         [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
-        [string] $requestUrl = "#$SymbolServiceUri/DefaultCollection/_apis/Symbol/requests?requestName=$encodedRequestName"
-        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolStore" -Properties @{}
+        [string] $requestUrl = "$SymbolServiceUri/DefaultCollection/_apis/Symbol/requests?requestName=$encodedRequestName"
+        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
         & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
 
