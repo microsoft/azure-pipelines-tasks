@@ -13,7 +13,7 @@ import * as testselectorinvoker from './testselectorinvoker';
 
 let os = require('os');
 let regedit = require('regedit');
-let uuid = require('node-uuid');
+let uuid = require('uuid');
 let fs = require('fs');
 let xml2js = require('xml2js');
 let perf = require('performance-now');

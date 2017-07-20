@@ -111,6 +111,9 @@ export class DistributedTest {
             // and writes info to stdout directly
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
+                if (line.length === 0) {
+                    return;
+                }
                 if (line.startsWith('Web method')) {
                     console.log('##vso[task.debug]' + line);
                 } else {

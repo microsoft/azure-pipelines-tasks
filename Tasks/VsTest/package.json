@@ -2,9 +2,6 @@
   "name": "vsts-tasks-vstest",
   "description": "VSTS VSTEST Task",
   "main": "VSTest.js",
-  "scripts": {
-    "preinstall": "npm install E:\\Repo\\vsts-node-api\\_build\\"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/vsts-tasks.git"
@@ -18,7 +15,8 @@
   "dependencies": {
     "performance-now": "0.2.0",
     "string": "^3.3.1",
-    "vso-node-api": "file:../../../vsts-node-api/_build",
+    "uuid": "^3.1.0",
+    "vso-node-api": "6.0.4-preview",
     "vsts-task-lib": "2.0.6",
     "xml2js": "0.4.16"
   },

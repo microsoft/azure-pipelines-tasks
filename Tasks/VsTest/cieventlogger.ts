@@ -1,7 +1,7 @@
 import * as tl from 'vsts-task-lib/task';
 
-const area: string = 'TestExecutionTask';
-const feature: string = 'TaskExecution';
+const area: string = 'TestExecution';
+const feature: string = 'TestExecutionTask';
 
 const collectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
 
@@ -16,5 +16,9 @@ function getDefaultProps() {
 }
 
 export function publishEvent(properties: { [key: string]: any }): void {
-    tl.publishTelemetry(area, feature, properties);
+    try {
+        tl.publishTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
+    } catch (err) {
+        //ignore
+    }
 }

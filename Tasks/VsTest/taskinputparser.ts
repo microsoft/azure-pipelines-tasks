@@ -6,7 +6,7 @@ import * as models from './models';
 import * as utils from './helpers';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 export function getDistributedTestConfigurations() {
     const dtaConfiguration = {} as models.DtaTestConfigurations;
