@@ -2,6 +2,7 @@ import path = require("path");
 import tl = require("vsts-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import azureModel = require('azure-arm-rest/azureModels');
+import azureStorage = require('azure-storage-transfer');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")
 
@@ -13,7 +14,12 @@ export default class VirtualMachineScaleSet {
     }
 
     public async execute(): Promise<void> {
-        var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var blobService = azureStorage.createBlobTransferService();
+        blobService.uploadBlobs("cdcsd", "ede");
+        return;
+
+
+        /*var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         var result = await this._getResourceGroupForVmss(client);
         var resourceGroupName: string = result.resourceGroupName;
         var osType: string = result.osType;
@@ -56,6 +62,7 @@ export default class VirtualMachineScaleSet {
                 await this._updateImageInternal(client, resourceGroupName);
                 break;
         }
+        */
     }
 
     private _getResourceGroupForVmss(client: armCompute.ComputeManagementClient): Promise<any> {

@@ -14,6 +14,7 @@ if(!(process.env["customScriptNotSpecified"] === "true")) {
 }
 tr.setInput("customScriptCommand", "powershell .\file.ps1 args");
 
+    //process.env["vmssListFailed"] = "true";
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";

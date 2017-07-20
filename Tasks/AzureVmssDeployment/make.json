@@ -5,12 +5,19 @@
             "type": "node",
             "dest": "./",
             "compile" : true
+        },
+        {
+            "module": "../Common/azure-storage-transfer",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
         }
     ],
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib"
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
+                "node_modules/azure-storage-transfer/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }

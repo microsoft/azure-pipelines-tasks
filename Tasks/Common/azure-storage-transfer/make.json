@@ -1,0 +1,10 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://bishalpackerimages.blob.core.windows.net/azcopy/azcopylinux.zip",
+                "dest": "./AzCopyXplat/"
+            }
+        ]
+    }
+}

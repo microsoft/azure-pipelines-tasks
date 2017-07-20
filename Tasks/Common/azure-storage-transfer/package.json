@@ -1,0 +1,19 @@
+{
+  "name": "azure-storage-transfer",
+  "version": "1.0.0",
+  "description": "Common Lib for Azure storage transfer",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "q": "1.4.1",
+    "vsts-task-lib": "^0.9.20"
+  }
+}
