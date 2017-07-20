@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
@@ -5,53 +7,48 @@ import path = require('path');
 import shell = require('shelljs');
 import url = require('url');
 import Q = require('q');
+import request = require('request');
 
-// node js modules
-var request = require('request');
-
-import job = require('./job');
-import Job = job.Job;
-import JobState = job.JobState;
-import jobqueue = require('./jobqueue');
-import JobQueue = jobqueue.JobQueue;
+import { Job, JobState } from './job';
+import { JobQueue } from './jobqueue';
 
 import util = require('./util');
 
 export class JobSearch {
-    taskUrl: string; // URL for the job definition
-    identifier: string; // identifier of the job this search is for
-    queue: JobQueue;
-    searchingFor: Job[] = [];
+    private taskUrl: string; // URL for the job definition
+    private identifier: string; // identifier of the job this search is for
+    private queue: JobQueue;
+    private searchingFor: Job[] = [];
 
     constructor(queue: JobQueue, taskUrl: string, identifier: string) {
         this.queue = queue;
         this.taskUrl = taskUrl;
         this.identifier = identifier;
 
-        this.initialize().fail((err) => {
+        this.Initialize().fail((err) => {
             throw err;
         });
     }
 
-    foundCauses : any[] = []; // all found causes indexed by executableNumber
+    private foundCauses : any[] = []; // all found causes indexed by executableNumber
 
-    initialized: boolean = false;
-    parsedTaskBody: any; // the parsed task body of the job definition
-    initialSearchBuildNumber: number = -1; // the intial, most likely build number for child jobs
-    nextSearchBuildNumber: number = -1; // the next build number to check
-    searchDirection: number = -1; // the direction to search, start by searching backwards
+    public Initialized: boolean = false;
+    public ParsedTaskBody: any; // the parsed task body of the job definition
+    private initialSearchBuildNumber: number = -1; // the intial, most likely build number for child jobs
+    private nextSearchBuildNumber: number = -1; // the next build number to check
+    private searchDirection: number = -1; // the direction to search, start by searching backwards
 
-    working: boolean = false;
-    workDelay: number = 0;
+    private working: boolean = false;
+    private workDelay: number = 0;
 
-    initialize(): Q.Promise<void> {
-        var defer: Q.Deferred<void> = Q.defer<void>();
-        var thisSearch : JobSearch = this;
-        if (!thisSearch.initialized) { //only initialize once
-            var apiTaskUrl : string = util.addUrlSegment(thisSearch.taskUrl, "/api/json");
+    public Initialize(): Q.Promise<void> {
+        const defer: Q.Deferred<void> = Q.defer<void>();
+        const thisSearch: JobSearch = this;
+        if (!thisSearch.Initialized) { //only initialize once
+            const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json');
             tl.debug('getting job task URL:' + apiTaskUrl);
-            request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.taskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
-                if (!thisSearch.initialized) { // only initialize once
+            request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
+                if (!thisSearch.Initialized) { // only initialize once
                     if (err) {
                         if (err.code == 'ECONNRESET') {
                             tl.debug(err);
@@ -60,13 +57,13 @@ export class JobSearch {
                         } else {
                             defer.reject(err);
                         }
-                    } else if (httpResponse.statusCode != 200) {
+                    } else if (httpResponse.statusCode !== 200) {
                         defer.reject(util.getFullErrorMessage(httpResponse, 'Unable to retrieve job: ' + thisSearch.identifier));
                     } else {
-                        var parsedBody: any = JSON.parse(body);
-                        tl.debug("parsedBody for: " + apiTaskUrl + ": " + JSON.stringify(parsedBody));
-                        thisSearch.initialized = true;
-                        thisSearch.parsedTaskBody = parsedBody;
+                        const parsedBody: any = JSON.parse(body);
+                        tl.debug(`parsedBody for: ${apiTaskUrl} : ${JSON.stringify(parsedBody)}`);
+                        thisSearch.Initialized = true;
+                        thisSearch.ParsedTaskBody = parsedBody;
                         // if this is the first time this job is triggered, there will be no lastBuild information, and we assume the
                         // build number is 1 in this case
                         thisSearch.initialSearchBuildNumber = (parsedBody.lastBuild) ? parsedBody.lastBuild.number : 1;
@@ -77,14 +74,14 @@ export class JobSearch {
                 } else {
                     defer.resolve(null);
                 }
-            }).auth(thisSearch.queue.taskOptions.username, thisSearch.queue.taskOptions.password, true);
+            }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         } else { // already initialized
             defer.resolve(null);
         }
         return defer.promise;
     }
 
-    doWork() {
+    public DoWork(): void {
         if (this.working) { // return if already working
             return;
         } else {
@@ -95,13 +92,13 @@ export class JobSearch {
         }
     }
 
-    stopWork(delay: number) {
+    private stopWork(delay: number): void {
         this.workDelay = delay;
         this.working = false;
         this.searchingFor = [];
     }
 
-    searchFor(job: Job): void {
+    public searchFor(job: Job): void {
         if (this.working) {
             return;
         } else {
@@ -109,27 +106,27 @@ export class JobSearch {
         }
     }
 
-    determineMainJob(executableNumber: number, callback) {
-        var thisSearch: JobSearch = this;
+    public DetermineMainJob(executableNumber: number, callback): void {
+        const thisSearch: JobSearch = this;
         if (!thisSearch.foundCauses[executableNumber]) {
             util.fail('No known exeuction number: ' + executableNumber + ' for job: ' + thisSearch.identifier);
         } else {
-            var causes : any = thisSearch.foundCauses[executableNumber];
-            var causesThatRan: Job[] = []; // these are all the causes for this executableNumber that are running/ran
-            var causesThatMayRun: Job[] = []; // these are the causes for this executableNumber that could run in the future
-            var causesThatWontRun: Job[] = []; // these are the causes for this executableNumber that will never run
-            for (var i in causes) {
-                var job = thisSearch.queue.findJob(causes[i].upstreamUrl, causes[i].upstreamBuild);
+            const causes : any = thisSearch.foundCauses[executableNumber];
+            const causesThatRan: Job[] = []; // these are all the causes for this executableNumber that are running/ran
+            const causesThatMayRun: Job[] = []; // these are the causes for this executableNumber that could run in the future
+            const causesThatWontRun: Job[] = []; // these are the causes for this executableNumber that will never run
+            for (const i in causes) {
+                const job: Job = thisSearch.queue.FindJob(causes[i].upstreamUrl, causes[i].upstreamBuild);
                 if (job) { // we know about it
-                    if (job.state == JobState.Streaming ||
-                        job.state == JobState.Finishing ||
-                        job.state == JobState.Downloading ||
-                        job.state == JobState.Queued ||
-                        job.state == JobState.Done) {
+                    if (job.State === JobState.Streaming ||
+                        job.State === JobState.Finishing ||
+                        job.State === JobState.Downloading ||
+                        job.State === JobState.Queued ||
+                        job.State === JobState.Done) {
                         causesThatRan.push(job);
-                    } else if (job.state == JobState.New || job.state == JobState.Locating) {
+                    } else if (job.State === JobState.New || job.State === JobState.Locating) {
                         causesThatMayRun.push(job);
-                    } else if (job.state == JobState.Joined || job.state == JobState.Cut) {
+                    } else if (job.State === JobState.Joined || job.State === JobState.Cut) {
                         causesThatWontRun.push(job);
                     } else {
                         util.fail('Illegal state: ' + job);
@@ -137,13 +134,13 @@ export class JobSearch {
                 }
             }
 
-            var masterJob: Job = null; // there can be only one
-            var potentialMasterJobs: Job[] = []; // the list of all potential jobs that could be master
-            for (var i in causesThatRan) {
-                var causeThatRan: Job = causesThatRan[i];
-                var child : Job = findChild(causeThatRan);
+            let masterJob: Job = null; // there can be only one
+            let potentialMasterJobs: Job[] = []; // the list of all potential jobs that could be master
+            for (const i in causesThatRan) {
+                const causeThatRan: Job = causesThatRan[i];
+                const child: Job = findChild(causeThatRan);
                 if (child != null) {
-                    if (child.state == JobState.Streaming || child.state == JobState.Finishing || child.state == JobState.Done) {
+                    if (child.State === JobState.Streaming || child.State === JobState.Finishing || child.State === JobState.Done) {
                         if (masterJob == null) {
                             masterJob = child;
                         } else {
@@ -160,12 +157,12 @@ export class JobSearch {
                 potentialMasterJobs = potentialMasterJobs.slice(1); // and remove it from here
             }
 
-            var secondaryJobs: Job[] = [];
+            let secondaryJobs: Job[] = [];
             if (masterJob != null) { // secondaryJobs are only possible once a master is assigned
                 secondaryJobs = potentialMasterJobs;
-                for (var i in causesThatWontRun) {
-                    var causeThatWontRun : Job = causesThatWontRun[i];
-                    var child : Job = findChild(causeThatWontRun);
+                for (const i in causesThatWontRun) {
+                    const causeThatWontRun: Job = causesThatWontRun[i];
+                    const child: Job = findChild(causeThatWontRun);
                     if (child != null) {
                         secondaryJobs.push(child);
                     }
@@ -175,10 +172,10 @@ export class JobSearch {
             callback(masterJob, secondaryJobs);
 
             function findChild(parent: Job): Job {
-                for (var i in parent.children) {
-                    var child: Job = parent.children[i];
-                    if (thisSearch.identifier == child.identifier) {
-                        return child
+                for (const i in parent.Children) {
+                    const child: Job = parent.Children[i];
+                    if (thisSearch.identifier === child.Identifier) {
+                        return child;
                     }
                 }
                 return null;
@@ -186,28 +183,28 @@ export class JobSearch {
         }
     }
 
-    resolveIfKnown(job: Job): boolean {
-        var thisSearch: JobSearch = this;
-        if (job.state != JobState.New && job.state != JobState.Locating) {
+    public ResolveIfKnown(job: Job): boolean {
+        const thisSearch: JobSearch = this;
+        if (job.State !== JobState.New && job.State !== JobState.Locating) {
             return true; // some other callback found it
-        } else if (job.parent == null) { // root -- move straight to streaming
-            job.setStreaming(job.executableNumber);
+        } else if (job.Parent == null) { // root -- move straight to streaming
+            job.SetStreaming(job.ExecutableNumber);
             return true;
-        } else if (job.parent.state == JobState.Joined || job.parent.state == JobState.Cut) {
-            job.cut(); // the parent was joined or cut, so cut the child
+        } else if (job.Parent.State === JobState.Joined || job.Parent.State === JobState.Cut) {
+            job.Cut(); // the parent was joined or cut, so cut the child
             return true;
         } else {
-            for (var executableNumber in thisSearch.foundCauses) {
-                var resolved : boolean = false;
-                thisSearch.determineMainJob(parseInt(executableNumber), function (mainJob: Job, secondaryJobs: Job[]) {
+            for (const executableNumber in thisSearch.foundCauses) {
+                let resolved: boolean = false;
+                thisSearch.DetermineMainJob(parseInt(executableNumber), function (mainJob: Job, secondaryJobs: Job[]) {
                     if (job == mainJob) { // job is the main job -- so make sure it's running
-                        job.setStreaming(parseInt(executableNumber));
+                        job.SetStreaming(parseInt(executableNumber));
                         resolved = true;
                         return;
                     } else {
-                        for (var i in secondaryJobs) {
+                        for (const i in secondaryJobs) {
                             if (job == secondaryJobs[i]) { // job is a secondary job, so join it to the main one
-                                job.setJoined(mainJob);
+                                job.SetJoined(mainJob);
                                 resolved = true;
                                 return;
                             }
@@ -229,15 +226,15 @@ export class JobSearch {
      * intial start point and searches forward until the job is found, or a 404 is reached and no more jobs
      * are queued.  At any point, the search also ends if the job is joined to another job.
      */
-    locateExecution() {
-        var thisSearch: JobSearch = this;
+    private locateExecution() {
+        const thisSearch: JobSearch = this;
 
         tl.debug('locateExecution()');
         // first see if we already know about everything we are searching for
-        var foundAll: boolean = true;
-        for (var i in thisSearch.searchingFor) {
-            var job: Job = thisSearch.searchingFor[i];
-            var found: boolean = thisSearch.resolveIfKnown(job);
+        let foundAll: boolean = true;
+        for (const i in thisSearch.searchingFor) {
+            const job: Job = thisSearch.searchingFor[i];
+            const found: boolean = thisSearch.ResolveIfKnown(job);
             foundAll = foundAll && found;
         }
 
@@ -245,22 +242,22 @@ export class JobSearch {
             thisSearch.stopWork(0); // found everything we were looking for
             return;
         } else {
-            var url : string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + "/api/json");
+            const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json');
             tl.debug('pipeline, locating child execution URL:' + url);
-            request.get({ url: url, strictSSL: thisSearch.queue.taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
+            request.get({ url: url, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('locateExecution().requestCallback()');
                 if (err) {
                     util.handleConnectionResetError(err); // something went bad
-                    thisSearch.stopWork(thisSearch.queue.taskOptions.pollIntervalMillis);
+                    thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
                     return;
-                } else if (httpResponse.statusCode == 404) {
+                } else if (httpResponse.statusCode === 404) {
                     // try again in the future
-                    thisSearch.stopWork(thisSearch.queue.taskOptions.pollIntervalMillis);
-                } else if (httpResponse.statusCode != 200) {
+                    thisSearch.stopWork(thisSearch.queue.TaskOptions.pollIntervalMillis);
+                } else if (httpResponse.statusCode !== 200) {
                     util.failReturnCode(httpResponse, 'Job pipeline tracking failed to read downstream project');
                 } else {
-                    var parsedBody: any = JSON.parse(body);
-                    tl.debug("parsedBody for: " + url + ": " + JSON.stringify(parsedBody));
+                    const parsedBody: any = JSON.parse(body);
+                    tl.debug(`parsedBody for: ${url} : ${JSON.stringify(parsedBody)}`);
 
                     /**
                      * This is the list of all reasons for this job execution to be running.
@@ -270,8 +267,8 @@ export class JobSearch {
                      * So, for all jobs being tracked (within this code), one is consisdered the main job (which will be followed), and
                      * all others are considered joined and will not be tracked further.
                      */
-                    var findCauses = function(actions) {
-                        for (var i in actions) {
+                    const findCauses = function(actions) {
+                        for (const i in actions) {
                             if (actions[i].causes) {
                                 return actions[i].causes;
                             }
@@ -280,17 +277,17 @@ export class JobSearch {
                         return null;
                     };
 
-                    var causes : any = findCauses(parsedBody.actions);
+                    const causes: any = findCauses(parsedBody.actions);
                     thisSearch.foundCauses[thisSearch.nextSearchBuildNumber] = causes;
-                    thisSearch.determineMainJob(thisSearch.nextSearchBuildNumber, function (mainJob: Job, secondaryJobs: Job[]) {
+                    thisSearch.DetermineMainJob(thisSearch.nextSearchBuildNumber, function (mainJob: Job, secondaryJobs: Job[]) {
                         if (mainJob != null) {
                             //found the mainJob, so make sure it's running!
-                            mainJob.setStreaming(thisSearch.nextSearchBuildNumber);
+                            mainJob.SetStreaming(thisSearch.nextSearchBuildNumber);
                         }
                     });
 
                     if (thisSearch.searchDirection < 0) { // currently searching backwards
-                        if (thisSearch.nextSearchBuildNumber <= 1 || parsedBody.timestamp < thisSearch.queue.rootJob.parsedExecutionResult.timestamp) {
+                        if (thisSearch.nextSearchBuildNumber <= 1 || parsedBody.timestamp < thisSearch.queue.RootJob.ParsedExecutionResult.timestamp) {
                             //either found the very first job, or one that was triggered before the root job was; need to change search directions
                             thisSearch.searchDirection = 1;
                             thisSearch.nextSearchBuildNumber = thisSearch.initialSearchBuildNumber + 1;
@@ -302,7 +299,7 @@ export class JobSearch {
                     }
                     return thisSearch.stopWork(0); // immediately poll again because there might be more jobs
                 }
-            }).auth(thisSearch.queue.taskOptions.username, thisSearch.queue.taskOptions.password, true);
+            }).auth(thisSearch.queue.TaskOptions.username, thisSearch.queue.TaskOptions.password, true);
         }
     }
 }
