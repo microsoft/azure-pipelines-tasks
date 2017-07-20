@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 51
+        "Patch": 62
     },
     "demands": [
         "vstest"
@@ -48,12 +48,12 @@
             "label": "Select tests using",
             "defaultValue": "testAssemblies",
             "required": true,
-            "helpMarkDown": "Specify the means to select tests",
+            "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
             "groupName": "testSelection",
             "options": {
                 "testAssemblies": "Test assemblies",
                 "testPlan": "Test plan",
-                "testRun": "Test run (for on-demand runs)"
+                "testRun": "Test run"
             }
         },
         {
@@ -184,7 +184,7 @@
                 "location": "Specific location"
             }
         },
-        {  
+        {
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "Test platform version",
@@ -374,7 +374,6 @@
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
-        "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
@@ -393,12 +392,17 @@
         "testPlanInput": "Test plan Id : %s",
         "testplanConfigInput": "Test plan configuration Id : %s",
         "testSuiteSelected": "Test suite Id selected: %s",
-        "testAssemblyFilterInput": "Test assembly filter : %s",
+        "testAssemblyFilterInput": "Test assemblies : %s",
         "vsVersionSelected": "VisualStudio version selected for test execution : %s",
         "runTestsLocally": "Run the tests locally using %s",
         "vstestLocationSpecified": "%s, specified location : %s",
         "uitestsparallel": "Running UI tests in parallel on the same machine can lead to errors. Consider disabling the ‘run in parallel’ option or run UI tests using a separate task. To learn more, see https://aka.ms/paralleltestexecution ",
         "pathToCustomAdaptersInvalid": "Path to custom adapters '%s' should be a directory and it should exist.",
-        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path."
+        "pathToCustomAdaptersContainsNoAdapters": "Path to custom adapters '%s' does not contain any test adapters, provide a valid path.",
+        "testAssembliesSelector": "Test assemblies",
+        "testPlanSelector": "Test plan",
+        "testRunSelector": "Test run",
+        "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
+        "testRunIdInput": "Test run Id : '%s'"
     }
 }

@@ -9,51 +9,82 @@
     "Build"
   ],
   "author": "Microsoft Corporation",
+  "preview": true,
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 36
+    "Patch": 1
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
     {
-      "name": "SymbolsPath",
+      "name": "SymbolsFolder",
       "type": "string",
-      "label": "ms-resource:loc.input.label.SymbolsPath",
-      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.SymbolsFolder",
+      "defaultValue": "$(Build.SourcesDirectory)",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SymbolsPath"
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
     },
     {
       "name": "SearchPattern",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.SearchPattern",
       "defaultValue": "**/bin/**/*.pdb",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
     },
     {
-      "name": "SymbolsFolder",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.SymbolsFolder",
-      "defaultValue": "",
+      "name": "IndexSources",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.IndexSources",
+      "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
+      "helpMarkDown": "ms-resource:loc.input.help.IndexSources"
     },
     {
-      "name": "SkipIndexing",
+      "name": "PublishSymbols",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.SkipIndexing",
-      "defaultValue": "false",
+      "label": "ms-resource:loc.input.label.PublishSymbols",
+      "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SkipIndexing",
+      "helpMarkDown": "ms-resource:loc.input.help.PublishSymbols"
+    },
+    {
+      "name": "SymbolServerType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SymbolServerType",
+      "required": true,
+      "defaultValue": "TeamServices",
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolServerType",
+      "options": {
+        "TeamServices": "Team Services",
+        "FileShare": "File share"
+      },
+      "visibleRule": "PublishSymbols = true"
+    },
+    {
+      "name": "SymbolsPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsPath",
+      "visibleRule": "PublishSymbols = true && SymbolServerType = FileShare"
+    },
+    {
+      "name": "DetailedLog",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DetailedLog",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DetailedLog",
       "groupName": "advanced"
     },
     {

@@ -336,15 +336,15 @@ async function run() {
                     var exportMethod: string;
                     var exportTeamId: string;
                     var exportOptionsPlist: string;
+                    var archiveToCheck: string = archiveFolders[0];
+                    var embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
 
                     if (exportOptions === 'auto') {
                         // Automatically try to detect the export-method to use from the provisioning profile
                         // embedded in the .xcarchive file
-                        var archiveToCheck: string = archiveFolders[0];
-                        var embeddedProvProfile: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-                        if (embeddedProvProfile && embeddedProvProfile.length > 0) {
-                            tl.debug('embedded prov profile = ' + embeddedProvProfile);
-                            exportMethod = await sign.getProvisioningProfileType(embeddedProvProfile[0]);
+                        if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
+                            tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
+                            exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
                             tl.debug('Using export method = ' + exportMethod);
                             if (!exportMethod) {
                                 tl.warning(tl.loc('ExportMethodNotIdentified'));
@@ -368,6 +368,31 @@ async function run() {
                         tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
                         if (exportTeamId) {
                             tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
+                        }
+
+                        if (xcodeVersion >= 9 && !automaticSigningWithXcode && exportOptions === 'auto') {
+                            // Xcode 9 manual signing, set code sign style = manual
+                            tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
+
+                            // add provisioning profiles to the exportOptions plist
+                            // find bundle Id from Info.plist and prov profile name from the embedded profile in each .app package
+                            tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
+
+                            for (let i = 0; i < embeddedProvProfiles.length; i++) {
+                                let embeddedProvProfile: string = embeddedProvProfiles[i];
+                                let profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
+                                tl.debug('embedded provisioning profile = ' + embeddedProvProfile + ', profile name = ' + profileName);
+
+                                let embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
+                                let bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
+                                tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
+
+                                if (!profileName || !bundleId) {
+                                    throw tl.loc('FailedToGenerateExportOptionsPlist');
+                                }
+
+                                tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
+                            }
                         }
                     }
 

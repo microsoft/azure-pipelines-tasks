@@ -1,4 +1,4 @@
-function ExtractAgentArchive ($SetupArchive, $Destination) {
+﻿function ExtractAgentArchive ($SetupArchive, $Destination) {
     Write-Verbose "Extracting the archive $SetupArchive"
     Try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -25,9 +25,29 @@ function InstallTestAgent2017 {
     }
 
     # First we need to install the certificates for TA 2017
-    $SetupDir = Split-Path -Path $SetupPath
-    Write-Verbose "Installing test agent certificates"
-    Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Exportable
+    $SetupDir = Split-Path -Path $SetupPath    
+    $certFiles = Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue
+    if($certFiles -and $certFiles.Length -gt 0)
+    {
+        $osVersion = [environment]::OSVersion.Version
+        Write-Verbose "Installing test agent certificates" -Verbose
+        if ($osVersion.Major -eq "6" -and $osVersion.Minor -eq "1") {
+            ## Windows 7 SP1. Import-PfxCertificate is not present in windows 7
+            Write-Verbose "Installing agent certificate(s) for Windows 7." -Verbose
+            foreach($certFile in $certFiles)
+            {
+                Import-PfxCertificateWin7 -FilePath $certFile.FullName -CertRootStore "CurrentUser" -CertStore "My"
+            }
+        }
+        else {
+            Write-Verbose "Installing agent certificate(s) for Windows 8 or above." -Verbose
+            $certFiles | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Exportable
+        }
+        Write-Verbose "Successfully installed the agent certificate." -Verbose
+    }
+    else {
+        Write-Verbose "No test agent certificate found." -Verbose
+    }
 
     $p = New-Object System.Diagnostics.Process
     $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
@@ -48,6 +68,22 @@ function InstallTestAgent2017 {
     } 
 
     return $p.ExitCode
+}
+
+function Import-PfxCertificateWin7 {
+    param
+    (
+        [Parameter (Mandatory=$true, ValueFromPipelineByPropertyName)]
+        [String]$FilePath,
+        [String]$CertRootStore="CurrentUser",
+        [String]$CertStore="My"
+    )
+    $pfx = new-object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $pfx.import($FilePath, $pfxPass, "Exportable")
+    $store = new-object System.Security.Cryptography.X509Certificates.X509Store($certStore,$certRootStore)
+    $store.open("MaxAllowed")
+    $store.add($pfx)
+    $store.close()    
 }
 
 function Install-Product($SetupPath, $ProductVersion, $Update) {

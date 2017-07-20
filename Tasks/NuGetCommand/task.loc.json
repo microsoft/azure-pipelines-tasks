@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -80,7 +80,7 @@
       "name": "selectOrConfig",
       "type": "radio",
       "label": "ms-resource:loc.input.label.selectOrConfig",
-      "defaultValue": "config",
+      "defaultValue": "select",
       "helpMarkDown": "ms-resource:loc.input.help.selectOrConfig",
       "required": "true",
       "options": {
@@ -130,7 +130,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.externalEndpoints",
       "properties": {
         "EditableOptions": "False",
-        "MultiSelect": "True"
+        "MultiSelectFlatList": "True"
       },
       "groupName": "restoreAuth",
       "visibleRule": "selectOrConfig = config"
@@ -322,6 +322,28 @@
       "visibleRule": "versioningScheme = byPrereleaseNumber"
     },
     {
+      "name": "packTimezone",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packTimezone",
+      "defaultValue": "utc",
+      "helpMarkDown": "ms-resource:loc.input.help.packTimezone",
+      "required": "false",
+      "groupName": "packOptions",
+      "options": {
+        "utc": "UTC",
+        "local": "Agent local time"
+      },
+      "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "includeSymbols",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeSymbols",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.includeSymbols",
+      "groupName": "packOptions"
+    },
+    {
       "name": "buildProperties",
       "type": "string",
       "label": "ms-resource:loc.input.label.buildProperties",
@@ -402,7 +424,9 @@
     "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
@@ -426,10 +450,9 @@
     "Warning_FallBackToNuGet": "ms-resource:loc.messages.Warning_FallBackToNuGet",
     "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",
     "Warning_ForceNuGetCannotSkipConflicts": "ms-resource:loc.messages.Warning_ForceNuGetCannotSkipConflicts",
-    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
-    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
+    "Warning_SkipConflictsNotSupportedUnixAgents": "ms-resource:loc.messages.Warning_SkipConflictsNotSupportedUnixAgents",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized"
   }
 }

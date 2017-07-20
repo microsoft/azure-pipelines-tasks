@@ -9,17 +9,16 @@ import * as versionFinder from './versionfinder';
 const uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations() {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
+    dtaConfiguration.useVsTestConsole = 'true';
 
     if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
         throw (tl.loc('vs2013NotSupportedInDta'));
     }
 
     if (dtaConfiguration.tiaConfig.tiaEnabled) {
-        tl.warning(tl.loc('tiaNotSupportedInDta'));
-        dtaConfiguration.tiaConfig.tiaEnabled = false;
+        dtaConfiguration.tiaConfig = getTiaConfiguration();
     }
     if (dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
@@ -33,9 +32,12 @@ export function getDistributedTestConfigurations() {
     if (!isNaN(totalJobsInPhase)) {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
-    tl._writeLine(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
+    console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    if (useVsTestConsole) {
+        dtaConfiguration.useVsTestConsole = useVsTestConsole;
+    }
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
@@ -94,32 +96,29 @@ function getDtaInstanceId(): number {
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.testSelection = tl.getInput('testSelector');
-    tl._writeLine(tl.loc('testSelectorInput', testConfiguration.testSelection));
+    getTestSelectorBasedInputs(testConfiguration);
 
     testConfiguration.testDropLocation = tl.getInput('searchFolder');
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation))
     {
         testConfiguration.testDropLocation = path.resolve(testConfiguration.testDropLocation);
     }
-    tl._writeLine(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
-
-    testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
-    tl._writeLine(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
+    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
     {
         testConfiguration.settingsFile = path.resolve(testConfiguration.settingsFile);
     }
-    tl._writeLine(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
+    console.log(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
 
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
 
     testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
-    tl._writeLine(tl.loc('runInParallelInput', testConfiguration.runInParallel));
+    console.log(tl.loc('runInParallelInput', testConfiguration.runInParallel));
 
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
-    tl._writeLine(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
+    console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
 
     testConfiguration.tiaConfig = getTiaConfiguration();
 
@@ -133,65 +132,78 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         throw new Error(tl.loc('pathToCustomAdaptersInvalid', testConfiguration.pathtoCustomTestAdapters));
     }
 
-    tl._writeLine(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
+    console.log(tl.loc('pathToCustomAdaptersInput', testConfiguration.pathtoCustomTestAdapters));
 
     testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
-    tl._writeLine(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
+    console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));
 
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
-    tl._writeLine(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
+    console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
 
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
 
-    if (testConfiguration.testSelection.toLowerCase() === 'testplan') {
-        testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
-        tl._writeLine(tl.loc('testPlanInput', testConfiguration.testplan));
-
-        testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
-        tl._writeLine(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
-
-        const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
-        testConfiguration.testSuites = new Array<number>();
-        testSuiteStrings.forEach(element => {
-            const testSuiteId = parseInt(element);
-            tl._writeLine(tl.loc('testSuiteSelected', testSuiteId));
-            testConfiguration.testSuites.push(testSuiteId);
-        });
-    } else {
-        testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-        tl._writeLine(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
-    }
-
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
     if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
         if (utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
-            tl._writeLine('vsTestVersion is null or empty');
+            console.log('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
         if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
             && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
         }
-        tl._writeLine(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
+        console.log(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
-        tl._writeLine(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
+        console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
     }
 
     if (tl.getBoolInput('uiTests') && testConfiguration.runInParallel) {
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    // only to facilitate the writing of unit tests 
-    testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
-    if (!testConfiguration.vs15HelperPath) {
-        testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
-    }
-
     versionFinder.getVsTestRunnerDetails(testConfiguration);
+}
+
+function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations) {
+    const testSelection = testConfiguration.testSelection.toLowerCase();
+    switch (testSelection) {
+        case 'testplan':
+            console.log(tl.loc('testSelectorInput', tl.loc('testPlanSelector')));
+            testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
+            console.log(tl.loc('testPlanInput', testConfiguration.testplan));
+
+            testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+            console.log(tl.loc('testplanConfigInput', testConfiguration.testPlanConfigId));
+
+            const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+            testConfiguration.testSuites = new Array<number>();
+            testSuiteStrings.forEach(element => {
+                const testSuiteId = parseInt(element);
+                console.log(tl.loc('testSuiteSelected', testSuiteId));
+                testConfiguration.testSuites.push(testSuiteId);
+            });
+            break;
+        case 'testassemblies':
+            console.log(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));
+            testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+            console.log(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
+
+            testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
+            console.log(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));
+            break;
+        case 'testrun':
+            console.log(tl.loc('testSelectorInput', tl.loc('testRunSelector')));
+            testConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+            if (parseInt(testConfiguration.onDemandTestRunId) <= 0) {
+                throw new Error(tl.loc('testRunIdInvalid', testConfiguration.onDemandTestRunId));
+            }
+            console.log(tl.loc('testRunIdInput', testConfiguration.onDemandTestRunId));
+            break;
+    }
 }
 
 function getTiaConfiguration(): models.TiaConfiguration {
@@ -225,5 +237,16 @@ function getTiaConfiguration(): models.TiaConfiguration {
     if (releaseuri) {
         tiaConfiguration.context = 'CD';
     }
+
+    // User map file
+    tiaConfiguration.userMapFile = tl.getVariable('tia.usermapfile');
+
+    // disable editing settings file to switch on data collector
+    if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
+        tiaConfiguration.disableEnablingDataCollector = true;
+    } else {
+        tiaConfiguration.disableEnablingDataCollector = false;
+    }
+
     return tiaConfiguration;
 }

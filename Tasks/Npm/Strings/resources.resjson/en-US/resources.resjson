@@ -5,10 +5,13 @@
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.customRegistries": "Custom registries and authentication",
   "loc.group.displayName.publishRegistries": "Destination registry and authentication",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.command": "Command",
   "loc.input.help.command": "The command and arguments which will be passed to npm for execution.",
   "loc.input.label.workingDir": "Working folder with package.json",
   "loc.input.help.workingDir": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
+  "loc.input.label.verbose": "Verbose logging",
+  "loc.input.help.verbose": "Select to print more information to the console on run",
   "loc.input.label.customCommand": "Command and arguments",
   "loc.input.help.customCommand": "Custom command to run, e.g. \"dist-tag ls mypackage\".",
   "loc.input.label.customRegistry": "Registries to use",
@@ -39,5 +42,12 @@
   "loc.messages.UsingRegistry": "Using registry: %s",
   "loc.messages.AddingAuthRegistry": "Adding auth for registry: %s",
   "loc.messages.FoundLocalRegistries": "Found %d registries in this account/collection",
-  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s"
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
+  "loc.messages.DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
+  "loc.messages.NpmFailed": "Npm failed with return code: %s",
+  "loc.messages.FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
+  "loc.messages.TestDebugLog": "Trying debug log location: %s",
+  "loc.messages.OverridingProjectNpmrc": "Overriding project .npmrc: %s",
+  "loc.messages.RestoringProjectNpmrc": "Restoring project .npmrc",
+  "loc.messages.WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory"
 }

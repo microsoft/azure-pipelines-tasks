@@ -21,10 +21,10 @@ try {
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
 
-        tl._writeLine(tl.loc('distributedTestWorkflow'));
-        tl._writeLine('======================================================');
+        console.log(tl.loc('distributedTestWorkflow'));
+        console.log('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
-        tl._writeLine('======================================================');
+        console.log('======================================================');
         ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution.toLowerCase(), testtype: testType.toLowerCase() });
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);

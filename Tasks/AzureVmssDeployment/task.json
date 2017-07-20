@@ -1,0 +1,115 @@
+{
+    "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
+    "name": "AzureVmssDeployment",
+    "friendlyName": "Azure VM scale set Deployment (PREVIEW)",
+    "description": "Deploy Virtual Machine scale set image",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
+    "category": "Deploy",
+    "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 3
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Image",
+            "displayName": "Image Details",
+            "isExpanded": true,
+            "visibleRule": "action = Update image || action = UpdateImage"
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "Update image",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Action to be performed on the scale set.",
+            "options": {
+                "Update image": "Update image"
+            }
+        },
+        {
+            "name": "vmssName",
+            "type": "pickList",
+            "label": "Virtual Machine scale set name",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the name of scale set. Note that image can be updated only for a scale set which is running a custom image. If a scale set is using platform/gallery image, then image update operation will fail.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "imageUrl",
+            "type": "string",
+            "label": "Image url",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Image",
+            "helpMarkDown": "Specify the URL of image VHD. If it is an Azure storage blob url, the storage account location should be same as scale set location."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "vmssName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachineScaleSetNames"
+        }
+    ],
+    "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "InvalidAction": "This action is not defined. Check with the task author.",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "TaskConstructorFailed": "Task failed while initializing. Error: %s",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VMSSListFetchFailed": "Failed to fetch VMSS details. Error: %s",
+        "NoVMSSFound": "No VMSS found with name %s.",
+        "FailedToGetRGForVMSS": "Failed to get resource group information for VMSS %s.",
+        "VMSSImageUpdateFailed": "Failed to update image for VMSS %s. Error: %s",
+        "UpdatedVMSSImage": "Successfully updated VMSS image.",
+        "GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
+        "CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
+        "CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
+        "RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
+        "RemoveVMSSExtensionsFailed": "Failed to remove VM extension %s. Error: %s.",
+        "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error: %s.",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+        "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
+        "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+        "NewVMSSImageUrl": "Url for new VMSS image: %s.",
+        "VMSSUpdateImage": "Updating VMSS %s to use new image...",
+        "ResourceNameCannotBeNull": "Resource name cannot be null."
+    }
+}

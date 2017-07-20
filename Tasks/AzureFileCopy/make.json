@@ -20,18 +20,19 @@
                 "dest": "./"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M116.3/DeploymentUtilities.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M118.1/DeploymentUtilities.zip",
                 "dest": "./"
             }
         ],
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.7.1",
+                "version": "0.8.2",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
                         "source": [
+                            "*.dll",
                             "*.ps1",
                             "*.psd1",
                             "*.psm1",

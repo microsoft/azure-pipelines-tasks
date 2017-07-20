@@ -39,6 +39,7 @@ export var TemplateVariableClientIdName = "client_id";
 export var TemplateVariableClientSecretName = "client_secret";
 export var TemplateVariableTenantIdName = "tenant_id";
 export var TemplateVariableObjectIdName = "object_id";
+export var TemplateVariableSkipCleanName = "skip_clean";
 
 export var PackerLogTokenImageUri = "OSDiskUri";
 export var PackerLogTokenStorageLocation = "StorageAccountLocation";

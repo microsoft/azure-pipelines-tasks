@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 5
     },
     "runsOn": [
         "Agent",
@@ -81,7 +81,7 @@
             "name": "selectOrConfig",
             "type": "radio",
             "label": "Feeds to use",
-            "defaultValue": "config",
+            "defaultValue": "select",
             "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {
@@ -131,7 +131,7 @@
             "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this account/collection, leave this blank; the build’s credentials are used automatically.",
             "properties": {
                 "EditableOptions": "False",
-                "MultiSelect": "True"
+                "MultiSelectFlatList": "True"
             },
             "groupName": "restoreAuth",
             "visibleRule": "selectOrConfig = config"
@@ -206,7 +206,7 @@
             "label": "Allow duplicates to be skipped",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -238,14 +238,14 @@
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
-            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
+            "helpMarkDown": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '!'. Example: `**\\*.csproj;!**\\*.Tests.csproj`",
             "required": true,
             "visibleRule": "command = pack"
         },
         {
             "name": "configurationToPack",
             "type": "string",
-            "label": "Configuration to Package",
+            "label": "Configuration to package",
             "defaultValue": "$(BuildConfiguration)",
             "helpMarkDown": "When using a csproj file this specifies the configuration to package",
             "required": false,
@@ -254,9 +254,9 @@
         {
             "name": "outputDir",
             "type": "filePath",
-            "label": "Package Folder",
+            "label": "Package folder",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
-            "helpMarkDown": "Folder where packages will be created. If empty, packages will be created alongside the csproj or nuspec file.",
+            "helpMarkDown": "Folder where packages will be created. If empty, packages will be created at the source root.",
             "required": false,
             "visibleRule": "command = pack"
         },
@@ -323,6 +323,28 @@
             "required": true,
             "groupName": "packOptions",
             "visibleRule": "versioningScheme = byPrereleaseNumber"
+        },
+        {
+            "name": "packTimezone",
+            "type": "pickList",
+            "label": "Time zone",
+            "defaultValue": "utc",
+            "helpMarkDown": "Specifies the desired time zone used to produce the version of the package. Selecting UTC is recommended if you're using hosted build agents as their date and time might differ.",
+            "required": "false",
+            "groupName": "packOptions",
+            "options": {
+                "utc": "UTC",
+                "local": "Agent local time"
+            },
+            "visibleRule": "versioningScheme = byPrereleaseNumber"
+        },
+        {
+            "name": "includeSymbols",
+            "type": "boolean",
+            "label": "Create symbols package",
+            "defaultValue": "false",
+            "helpMarkDown": "Specifies that the package contains sources and symbols. When used with a .nuspec file, this creates a regular NuGet package file and the corresponding symbols package.",
+            "groupName": "packOptions"
         },
         {
             "name": "buildProperties",
@@ -408,7 +430,9 @@
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
 
         "Info_AvailableVersions": "The available versions are: %s",
+        "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
         "Info_UsingVersion": "Using version: %s",
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
@@ -434,10 +458,9 @@
         "Warning_FallBackToNuGet": "VstsNuGetPush.exe was not found, falling back to NuGet.exe.",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
         "Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
-        "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
         "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
-        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
+        "Warning_SkipConflictsNotSupportedUnixAgents" : "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
 
         "Error_CommandNotRecognized": "The command %s was not recognized."
     }

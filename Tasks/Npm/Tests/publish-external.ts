@@ -20,11 +20,12 @@ let auth = {
     }
 };
 tmr.mockServiceEndpoint('SomeEndpointId', 'http://url', auth);
-tmr.setExecResponse('npm publish', {
+tmr.mockNpmCommand('publish', {
     code: 0,
     stdout: 'npm publish successful'
 } as TaskLibAnswerExecResult);
-tmr.answers.rmRF['workingDir\\.npmrc'] = { success: true };
+tmr.answers.rmRF[path.join('workingDir', '.npmrc')] = { success: true };
+tmr.answers["stats"] = {"workingDir": {"isDirectory":true}};
 tmr.RegisterLocationServiceMocks();
 
 tmr.run();

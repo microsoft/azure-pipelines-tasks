@@ -50,15 +50,20 @@ export async function downloadPackage(collectionUrl: string, credentialHandler: 
 	
 	await new Promise((resolve, reject) => {
 		feedConnection.getCoreApi().restClient.get(packageUrl, ApiVersion, null, { responseIsCollection: false }, async function (error, status, result) {
-			if (!!error && status != 200) {
-				reject(tl.loc("FailedToGetPackageMetadata", error));
+			if (!!error || status != 200) {
+				return reject(tl.loc("FailedToGetPackageMetadata", error));
 			}
 
 			var packageType = result.protocolType.toLowerCase();
 			var packageName = result.name;
 
 			if (packageType == "nuget") {
-				var downloadUrl = await getDownloadUrl(packageConnection.getCoreApi().vsoClient, feedId, packageName, version);
+				
+				var getDownloadUrlPromise = getDownloadUrl(packageConnection.getCoreApi().vsoClient, feedId, packageName, version)
+				getDownloadUrlPromise.catch((error) => {
+					return reject(error)
+				});
+				var downloadUrl = await getDownloadUrlPromise;
 				
 				if (!tl.exist(downloadPath)) {
 					tl.mkdirP(downloadPath);
@@ -68,18 +73,29 @@ export async function downloadPackage(collectionUrl: string, credentialHandler: 
 				var unzipLocation = path.join(downloadPath, "");
 
 				console.log(tl.loc("StartingDownloadOfPackage", packageName, zipLocation));
-				await downloadNugetPackage(packageConnection.getCoreApi(), downloadUrl, zipLocation);
+				
+				var downloadNugetPackagePromise = downloadNugetPackage(packageConnection.getCoreApi(), downloadUrl, zipLocation);
+				downloadNugetPackagePromise.catch((error) => {
+					return reject(error)
+				});
+				await downloadNugetPackagePromise;
+
 				console.log(tl.loc("ExtractingNugetPackage", packageName, unzipLocation));
-				await unzip(zipLocation, unzipLocation);
+
+				var unzipPromise = unzip(zipLocation, unzipLocation);
+				unzipPromise.catch((error) => {
+					return reject(error)
+				});
+				await unzipPromise;
 				
 				if (tl.exist(zipLocation)) {
 					tl.rmRF(zipLocation, false);
 				}
 
-				resolve();
+				return resolve();
 			}
 			else {
-				reject(tl.loc("PackageTypeNotSupported"));
+				return reject(tl.loc("PackageTypeNotSupported"));
 			}
 		});
 	});
@@ -88,19 +104,30 @@ export async function downloadPackage(collectionUrl: string, credentialHandler: 
 export async function getNuGetPackageUrl(vsoClient: vsom.VsoClient, feedId: string, packageId: string): Promise<string> {
 	var PackagingAreaName = "Packaging";
 	var PackageAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
-
-	var data = await vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId, packageId: packageId });
-
-	return data.requestUrl;
+	
+	return new Promise<string>((resolve, reject) => {
+		var getVersioningDataPromise = vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId, packageId: packageId });
+		getVersioningDataPromise.then((result) => {
+			return resolve(result.requestUrl); 
+		});
+		getVersioningDataPromise.catch((error) => {
+			return reject(error)
+		});
+	});
 }
 
 export async function getDownloadUrl(vsoClient: vsom.VsoClient, feedId: string, packageName: string, version: string): Promise<string> {
 	var NugetArea = "NuGet"
 	var PackageVersionContentResourceId = "6EA81B8C-7386-490B-A71F-6CF23C80B388"
-
-	var data = await vsoClient.getVersioningData(ApiVersion, NugetArea, PackageVersionContentResourceId, { feedId: feedId, packageName: packageName, packageVersion: version });
-
-	return data.requestUrl;
+	return new Promise<string>((resolve, reject) => {
+		var getVersioningDataPromise = vsoClient.getVersioningData(ApiVersion, NugetArea, PackageVersionContentResourceId, { feedId: feedId, packageName: packageName, packageVersion: version });
+		getVersioningDataPromise.then((result) => {
+			return resolve(result.requestUrl); 
+		});
+		getVersioningDataPromise.catch((error) => {
+			return reject(error)
+		});
+	});
 }
 
 export async function downloadNugetPackage(coreApi: corem.ICoreApi, downloadUrl: string, downloadPath: string): Promise<void> {
@@ -110,17 +137,17 @@ export async function downloadNugetPackage(coreApi: corem.ICoreApi, downloadUrl:
 		coreApi.restClient.httpClient.getStream(downloadUrl, accept, function (error, status, result) {
 			tl.debug("Downloading package from url: " + downloadUrl);
 			tl.debug("Download status: " + status);
-			if (!!error && status != 200) {
-				reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, error));
+			if (!!error || status != 200) {
+				return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, error));
 			}
 
 			result.pipe(file);
 			result.on("end", () => {
 				console.log(tl.loc("PackageDownloadSuccessful"));
-				resolve();
+				return resolve();
 			});
 			result.on("error", err => {
-				reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, err));
+				return reject(tl.loc("FailedToDownloadNugetPackage", downloadUrl, err));
 			});
 		});
 	});
@@ -139,11 +166,11 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 
 		var unzipper = new DecompressZip(zipLocation);
 		unzipper.on('error', err => {
-			reject(tl.loc("ExtractionFailed", err))
+			return reject(tl.loc("ExtractionFailed", err))
 		});
 		unzipper.on('extract', log => {
 			tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-			resolve();
+			return resolve();
 		});
 
 		unzipper.extract({

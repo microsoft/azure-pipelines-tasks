@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -22,8 +22,8 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "customRegistries",
       "displayName": "ms-resource:loc.group.displayName.customRegistries",
+      "name": "customRegistries",
       "isExpanded": false,
       "visibleRule": "command = install || command = custom"
     },
@@ -32,6 +32,12 @@
       "displayName": "ms-resource:loc.group.displayName.publishRegistries",
       "isExpanded": true,
       "visibleRule": "command = publish"
+    },
+    {
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "name": "advanced",
+      "isExpanded": false,
+      "visibleRule": "command = install || command = publish"
     }
   ],
   "inputs": [
@@ -53,6 +59,13 @@
       "label": "ms-resource:loc.input.label.workingDir",
       "helpMarkDown": "ms-resource:loc.input.help.workingDir",
       "type": "filePath"
+    },
+    {
+      "groupName": "advanced",
+      "name": "verbose",
+      "label": "ms-resource:loc.input.label.verbose",
+      "helpMarkDown": "ms-resource:loc.input.help.verbose",
+      "type": "boolean"
     },
     {
       "name": "customCommand",
@@ -89,7 +102,10 @@
       "label": "ms-resource:loc.input.label.customEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
       "type": "connectedService:externalnpmregistry",
-      "visibleRule": "customRegistry = useNpmrc"
+      "visibleRule": "customRegistry = useNpmrc",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     },
     {
       "groupName": "publishRegistries",
@@ -160,6 +176,13 @@
     "UsingRegistry": "ms-resource:loc.messages.UsingRegistry",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
-    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl"
+    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",
+    "DebugLogNotFound": "ms-resource:loc.messages.DebugLogNotFound",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
+    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
+    "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
+    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
+    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory"
   }
 }

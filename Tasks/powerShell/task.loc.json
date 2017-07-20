@@ -15,14 +15,13 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 2,
-    "Patch": 3
+    "Major": 2,
+    "Minor": 120,
+    "Patch": 1
   },
-  "demands": [
-    "DotNetFramework"
-  ],
-  "minimumAgentVersion": "1.102",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "preview": true,
+  "minimumAgentVersion": "2.115.0",
   "groups": [
     {
       "name": "advanced",
@@ -32,76 +31,114 @@
   ],
   "inputs": [
     {
-      "name": "scriptType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.scriptType",
+      "name": "targetType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.targetType",
+      "required": false,
       "defaultValue": "filePath",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.scriptType",
+      "helpMarkDown": "ms-resource:loc.input.help.targetType",
       "options": {
-        "inlineScript": "Inline Script",
-        "filePath": "File Path"
+        "filePath": "File Path",
+        "inline": "Inline"
       }
     },
     {
-      "name": "scriptName",
+      "name": "filePath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.scriptName",
-      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.filePath",
+      "visibleRule": "targetType = filePath",
       "required": true,
-      "visibleRule": "scriptType = filePath",
-      "helpMarkDown": "ms-resource:loc.input.help.scriptName"
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.filePath"
     },
     {
       "name": "arguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.arguments",
-      "defaultValue": "",
+      "visibleRule": "targetType = filePath",
       "required": false,
+      "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
-      "name": "workingFolder",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.workingFolder",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
-      "groupName": "advanced"
-    },
-    {
-      "name": "inlineScript",
+      "name": "script",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.inlineScript",
-      "defaultValue": "# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"",
+      "label": "ms-resource:loc.input.label.script",
+      "visibleRule": "targetType = inline",
       "required": true,
-      "helpMarkDown": "",
-      "visibleRule": "scriptType = inlineScript",
+      "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"",
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "500"
-      }
+        "maxLength": "5000"
+      },
+      "helpMarkDown": ""
     },
     {
-      "name": "failOnStandardError",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.failOnStandardError",
-      "defaultValue": "true",
+      "name": "errorActionPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.errorActionPreference",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "ignoreLASTEXITCODE",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreLASTEXITCODE",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreLASTEXITCODE",
+      "groupName": "advanced"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShellExe": {
-      "target": "$(scriptName)",
-      "argumentFormat": "$(arguments)",
-      "workingDirectory": "$(workingFolder)",
-      "inlineScript": "$(inlineScript)",
-      "scriptType": "$(scriptType)",
-      "failOnStandardError": "$(failOnStandardError)"
+    "PowerShell3": {
+      "target": "powershell.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "powershell.js",
+      "argumentFormat": ""
     }
+  },
+  "messages": {
+    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
+    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
+    "JS_InvalidErrorActionPreference": "ms-resource:loc.messages.JS_InvalidErrorActionPreference",
+    "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
+    "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
+    "PS_FormattedCommand": "ms-resource:loc.messages.PS_FormattedCommand",
+    "PS_InvalidErrorActionPreference": "ms-resource:loc.messages.PS_InvalidErrorActionPreference",
+    "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
+    "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode"
   }
 }

@@ -2,12 +2,18 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://testselector.blob.core.windows.net/testselector/3843116/TestSelector.zip",
+                "url": "https://testselector.blob.core.windows.net/testselector/3986143/TestSelector.zip",
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/3886036/TestExecution.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/4007693/TestExecution.zip",
                 "dest": "./Modules"
+            }
+        ],
+        "files": [
+            {
+                "url": "https://github.com/Microsoft/vswhere/releases/download/1.0.62/vswhere.exe",
+                "dest": "./vswhere.exe"
             }
         ]
     }

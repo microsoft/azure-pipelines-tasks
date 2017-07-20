@@ -28,16 +28,11 @@ export async function run(command?: string): Promise<void> {
     util.appendToNpmrc(npmrc, `registry=${npmRegistry.url}\n`);
     util.appendToNpmrc(npmrc, `${npmRegistry.auth}\n`);
 
-    let npm = new NpmToolRunner(workingDir, npmrc);
+    // For publish, always override their project .npmrc
+    let npm = new NpmToolRunner(workingDir, npmrc, true);
     npm.line('publish');
 
-    // We delete their project .npmrc so it won't override our user .npmrc
-    const projectNpmrc = `${workingDir}\\.npmrc`;
-    util.saveFile(projectNpmrc);
-    tl.rmRF(projectNpmrc);
-
     await npm.exec();
-    util.restoreFile(projectNpmrc);
 
     tl.rmRF(npmrc);
     tl.rmRF(util.getTempPath());

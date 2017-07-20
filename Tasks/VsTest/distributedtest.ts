@@ -9,6 +9,9 @@ import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
 import * as ci from './cieventlogger';
+import {TestSelectorInvoker} from './testselectorinvoker';
+
+const testSelector = new TestSelectorInvoker();
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -17,7 +20,18 @@ export class DistributedTest {
     }
 
     public runDistributedTest() {
+        this.publishCodeChangesIfRequired();
         this.registerAndConfigureAgent();
+    }
+
+    private publishCodeChangesIfRequired(): void {
+        if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
+            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null); //todo: enable custom engine
+
+            if (code !== 0) {
+                tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
+            }
+        }
     }
 
     private async registerAndConfigureAgent() {
@@ -56,8 +70,10 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
-            const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters , '**\\*TestAdapter.dll' );
+            const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
                 tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters));
             }
@@ -96,9 +112,9 @@ export class DistributedTest {
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
                 if (line.startsWith('Web method')) {
-                    tl._outStream.write('##vso[task.debug]' + line);
+                    console.log('##vso[task.debug]' + line);
                 } else {
-                    tl._outStream.write(line);
+                    console.log(line);
                 }
             });
         });
@@ -106,7 +122,7 @@ export class DistributedTest {
         proc.stderr.on('data', (c) => {
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
-                tl._errStream.write(line);
+                console.error(line);
             });
         });
 
@@ -143,7 +159,7 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                null, false, this.dtaTestConfig.overrideTestrunParameters);
+                null, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {
@@ -180,7 +196,7 @@ export class DistributedTest {
         //cleanup the runsettings file
         if (temporarySettingsFile && this.dtaTestConfig.settingsFile !== temporarySettingsFile) {
             try {
-                tl.rmRF(temporarySettingsFile, true);
+                tl.rmRF(temporarySettingsFile);
             } catch (error) {
                 //Ignore.
             }

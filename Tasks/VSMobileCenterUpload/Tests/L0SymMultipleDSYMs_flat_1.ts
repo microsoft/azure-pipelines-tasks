@@ -113,7 +113,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'a/b/c/y.dsym': true,
         'a/b/c/y.dsym/y1.txt': true
     },
-    'glob' : {
+    'findMatch' : {
         'a/b/c/(x|y).dsym': [
             'a/b/c/x.dsym',
             'a/b/c/y.dsym'

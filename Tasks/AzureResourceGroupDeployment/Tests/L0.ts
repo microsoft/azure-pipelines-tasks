@@ -11,12 +11,12 @@ function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Azure Resource Group Deployment', function () {
+describe('Azure Resource Group Deployment', function() {
     this.timeout(30000);
     before((done) => {
         done();
     });
-    after(function () {
+    after(function() {
     });
     it("Successfully added Team Services Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
@@ -655,7 +655,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rule for the LB");
             assert(tr.stdout.indexOf("Enabling winrm for virtual machine") > 0, "Should add Custom Script Extension to the virual machine");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called on vm customVM") > 0, "Should try getting the extension on the virtual machine");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try getting the extension on the virtual machine");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should call createOrUpdate of virtual Machine extensions");
             assert(tr.stdout.indexOf("Addition of extension completed for vm: customVM") > 0, "Should be able to add the extension");
             assert(tr.stdout.indexOf("Provisioning of CustomScriptExtension on vm customVM is in Succeeded State") > 0, "Provisioning of the Custom Script Extension should be in succeeded state");
@@ -833,7 +833,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should get the status for Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
@@ -844,7 +844,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension is present on the VM, status is succeeded, substatus is succeeded', (done) => {
+    it('WinRM Custom Script Extension is present on the VM, status is succeeded, substatus is succeeded', (done) => {
         //No LB
         //1 VM
         //No NSG
@@ -861,7 +861,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should get the list of all the Custom Script Extensions");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
@@ -875,7 +875,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension is present on the VM , status is succeeded, substatus is failed', (done) => {
+    it('WinRM Custom Script Extension is present on the VM , status is succeeded, substatus is failed', (done) => {
         //No LB
         //1 VM
         //No NSG
@@ -887,7 +887,6 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
 
         try {
-            assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
@@ -905,7 +904,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension is present on the VM, status is failed', (done) => {
+    it('WinRM Custom Script Extension is present on the VM, status is failed', (done) => {
         //No LB
         //1 VM
         //No NSG
@@ -917,15 +916,14 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
 
         try {
-            assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("loadBalancers.list is called") > 0, "loadBalancers.list should have been called");
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "The extensions on the vm should be listed to get the extension of concern");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "Should remove the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should add the extension");
-            assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") <= 0, "Should not try to get the substatus of the extension");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try adding NSG rule");
             done();
         }
@@ -955,7 +953,6 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should add the extension");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should Validate the Custom Script Extension");
-            assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") > 0, "Shouldn't try to add NSG rule");
             assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
@@ -967,7 +964,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script Extension present is not for enabling WinRMHttpsListener', (done) => {
+    it('WinRM Custom Script Extension present is not for enabling WinRMHttpsListener', (done) => {
         // No LB
         // 1 VM, No Nsg
         let tp = path.join(__dirname, 'EnablePrereq.js');
@@ -983,7 +980,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Updating the load balancers with the appropriate Inbound Nat rules") <= 0, "Shouldn't add Inbound Nat Rules to the LB");
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") <= 0, "LoadBalancers.createOrUpdate should not have been called");
             assert(tr.stdout.indexOf("Updating the NIC of the concerned vms") <= 0, "The NIC of the VMs should not be updated");
-            assert(tr.stdout.indexOf("virtualMachines.get is called") <= 0, "Trying to get the extension on the Virtual machines");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "The extensions on the vm should be listed to get the extension of concern");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should update the extension to enable WinrmHttps Listener");
             assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.createOrUpdate is called: Added rule Name VSO-Custom-WinRM-Https-Port to the security Group") <= 0, "Shouldn't try to add NSG rule");
@@ -995,7 +992,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Custom Script is not present, VM has NSG associated', (done) => {
+    it('WinRM Custom Script is not present, VM has NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionNotPresentNSGPresent";
         process.env["csmFile"] = "CSM.json";
@@ -1021,7 +1018,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('1 LB 1 VM, Custom Script extension is not present, VM has NSG associated', (done) => {
+    it('1 LB 1 VM, WinRM Custom Script extension is not present, VM has NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBOneVMExtensionNotPresentNSGPresent";
         process.env["csmFile"] = "CSM.json";
@@ -1035,7 +1032,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try to list all the Custom Script Extensions");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
             assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
@@ -1048,7 +1045,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('1 LB 2 Vms, Custom Script Extension is not present, VMs have NSG associated', (done) => {
+    it('1 LB 2 Vms, WinRM Custom Script Extension is not present, VMs have NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBTwoVMsExtensionNotPresentNSGPresent";
         process.env["csmFile"] = "CSM.json";
@@ -1062,7 +1059,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("loadBalancers.createOrUpdate is called") > 0, "LoadBalancers.createOrUpdate should have been called");
             assert(tr.stdout.indexOf("networkInterfaces.list is called") > 0, "The network Interfaces of the vms should be listed");
             assert(tr.stdout.indexOf("networkInterfaces.createOrUpdate is called") > 0, "The network Interfaces of the vms should be updated with appropriate Inbound Nat Rules of LB");
-            assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should try to get the Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try to get the Custom Script Extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
             assert(tr.stdout.indexOf("networkSecurityGroups.list is called") > 0, "Should list the Network Security Groups");
             assert(tr.stdout.indexOf("securityRules.get is called") > 0, "Should try to get the security rule");
@@ -1075,4 +1072,102 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
+    it('WinRM Custom Script Extension is not present, but some other CustomScriptExtension is present', (done) => {
+        let tp = path.join(__dirname, 'EnablePrereq.js');
+        process.env["resourceGroupName"] = "SomeOtherCustomScriptExtensionPresent";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > 0, "Should try to get the Custom Script Extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "Should try to delete the already existing Custom Script extension");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "Should enable winrm Https Listener");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when no template file is found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMNotThere.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateFilePatternMatchingNoFile") > 0, "should have printed TemplateFilePatternMatchingNoFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when multiple template files are found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMmultiple.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateFilePatternMatchingMoreThanOneFile") > 0, "should have printed TemplateFilePatternMatchingMoreThanOneFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when no parameter file is found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSMNotThere.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateParameterFilePatternMatchingNoFile") > 0, "should have printed TemplateParameterFilePatternMatchingNoFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it('createOrUpdate deployment should fail when multiple template files are found', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSMmultiple.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(!tr.succeeded, "Should have failed");
+            assert(tr.stdout.indexOf("TemplateParameterFilePatternMatchingMoreThanOneFile") > 0, "should have printed TemplateFilePatternMatchingMoreThanOneFile")
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") < 0, "deployments.createOrUpdate function should not have been called from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
 });

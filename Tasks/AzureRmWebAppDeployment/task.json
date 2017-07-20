@@ -2,7 +2,7 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
+    "description": "Update Azure App Services, Function Apps, Mobile Apps using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 7
+        "Patch": 11
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -43,7 +43,7 @@
             "name": "ApplicationSettings",
             "displayName": "Application Settings",
             "isExpanded": true,
-            "visibleRule": "WebAppKind = linux"
+            "visibleRule": "WebAppKind = applinux"
         }
     ],
     "inputs": [
@@ -67,18 +67,6 @@
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
         },
         {
-            "name": "ServerfarmId",
-            "type": "pickList",
-            "label": "Serverfarm id",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "WebAppName = invalidwebappname",
-            "properties": {
-                "EditableOptions": "false",
-                "PopulateDefaultValue": "true"
-            }
-        },
-        {
             "name": "WebAppKind",
             "type": "pickList",
             "label": "Web app kind",
@@ -91,49 +79,13 @@
             }
         },
         {
-            "name": "DockerNamespace",
-            "type": "string",
-            "label": "Registry or Namespace",
-            "defaultValue": "",
-            "required": true,
-            "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
-        },
-        {
-            "name": "DockerRepository",
-            "type": "string",
-            "label": "Repository",
-            "defaultValue": "",
-            "required": true,
-            "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
-        },
-        {
-            "name": "DockerImageTag",
-            "type": "string",
-            "label": "Tag",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
-        },
-        {
-            "name": "StartupCommand",
-            "type": "string",
-            "label": "Startup command ",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "WebAppKind = linux",
-            "helpMarkDown": "Enter the start up command."
-        },
-        {
             "name": "DeployToSlotFlag",
             "type": "boolean",
             "label": "Deploy to slot",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = applinux"
         },
         {
             "name": "ResourceGroupName",
@@ -158,6 +110,42 @@
             },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "DeployToSlotFlag = true"
+        },
+        {
+            "name": "DockerNamespace",
+            "type": "string",
+            "label": "Registry or Namespace",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "WebAppKind = applinux",
+            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
+        },
+        {
+            "name": "DockerRepository",
+            "type": "string",
+            "label": "Repository",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "WebAppKind = applinux",
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+        },
+        {
+            "name": "DockerImageTag",
+            "type": "string",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKind = applinux",
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
+        },
+        {
+            "name": "StartupCommand",
+            "type": "string",
+            "label": "Startup command ",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKind = applinux",
+            "helpMarkDown": "Enter the start up command."
         },
         {
             "name": "VirtualApplication",
@@ -365,22 +353,13 @@
             }
         },
         {
-            "target": "ServerfarmId",
+            "target": "WebAppKind",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMServerfarmId",
+            "dataSourceName": "AzureAppKind",
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             },
-            "resultTemplate": "{\"Value\":\"{{{serverFarmId}}}\",\"DisplayValue\":\"{{{serverFarmId}}}\"}"
-        },
-        {
-            "target": "WebAppKind",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppKind",
-            "parameters": {
-                "ServerfarmId": "$(ServerfarmId)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{kind}}}\",\"DisplayValue\":\"{{{kind}}}\"}"
+            "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
         },
         {
             "target": "SlotName",

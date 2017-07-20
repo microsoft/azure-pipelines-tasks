@@ -53,10 +53,6 @@ async function run() {
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
-        if(webAppKind && webAppKind === "linux") {
-            deployToSlotFlag = false;
-        }
-
         if(deployToSlotFlag) {
             if (slotName.toLowerCase() === "production") {
                 deployToSlotFlag = false;
@@ -70,11 +66,11 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(webAppKind && webAppKind === "linux" && dockerNamespace)
+        if(webAppKind && webAppKind.indexOf("linux") !== -1 && dockerNamespace)
         {
             tl.debug("Performing container based deployment.");
 
-            await deployWebAppImage(endPoint, resourceGroupName, webAppName);
+            await deployWebAppImage(endPoint, resourceGroupName, webAppName, deployToSlotFlag, slotName);
         }
         else
         {

@@ -43,5 +43,6 @@
   "loc.messages.WaitingForDeploy": "Waiting for deploy...",
   "loc.messages.CurrentStatus": "Current Status: {0}",
   "loc.messages.DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
-  "loc.messages.CheckingComposeFile": "Checking compose file"
+  "loc.messages.CheckingComposeFile": "Checking compose file",
+  "loc.messages.UsingPreviewAPI": "Using the preview APIs"
 }

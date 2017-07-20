@@ -15,7 +15,8 @@
     "script_arguments": "",
     "package_path": "",
     "package_name": "",
-    "capture_name_prefix": ""
+    "capture_name_prefix": "",
+    "skip_clean":""
   },
   "builders": [{
         "type": "azure-arm",
@@ -66,6 +67,7 @@
         "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
         "inline": [
             "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
-        ]
+        ],
+        "skip_clean": "{{user `skip_clean`}}"
     }]
 }

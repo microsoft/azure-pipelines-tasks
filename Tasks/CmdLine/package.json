@@ -2,7 +2,7 @@
   "name": "vsts-cmdline-task",
   "version": "1.0.0",
   "description": "VSTS Command Line Task",
-  "main": "cmdlinetask.js",
+  "main": "cmdline.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20"
+    "uuid": "^3.0.1",
+    "vsts-task-lib": "2.0.5"
   }
 }
