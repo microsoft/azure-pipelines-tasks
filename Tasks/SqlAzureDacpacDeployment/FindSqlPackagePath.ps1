@@ -183,15 +183,18 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
 {
     $sqlDataTierFrameworkRegKeyWow = "HKLM:", "SOFTWARE", "Wow6432Node", "Microsoft", "Microsoft SQL Server", "Data-Tier Application Framework" -join [System.IO.Path]::DirectorySeparatorChar
     $sqlDataTierFrameworkRegKey = "HKLM:", "SOFTWARE", "Microsoft", "Microsoft SQL Server", "Data-Tier Application Framework" -join [System.IO.Path]::DirectorySeparatorChar
+
     if (-not (Test-Path $sqlDataTierFrameworkRegKey))
     {
         $sqlDataTierFrameworkRegKey = $sqlDataTierFrameworkRegKeyWow
     }
+
     if ((Test-Path $sqlDataTierFrameworkRegKey))
     {
         $keys = Get-Item $sqlDataTierFrameworkRegKey | %{$_.GetSubKeyNames()} 
         $versions = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending
         $installedMajorVersion = 0
+
         foreach ($majorVersion in $versions)
         {
             $sqlInstallRootRegKey = "SOFTWARE", "Microsoft", "Microsoft SQL Server", "Data-Tier Application Framework", "$majorVersion" -join [System.IO.Path]::DirectorySeparatorChar
@@ -208,7 +211,9 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
                 break
             }
         }
+
         $DacInstallPath = [System.IO.Path]::Combine($sqlInstallRootPath, "SqlPackage.exe")
+        
         if (Test-Path $DacInstallPath)
         {
             Write-Verbose "Dac Framework installed with SQL Version $majorVersion found at $DacInstallPath on machine $env:COMPUTERNAME"
