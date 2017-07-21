@@ -50,6 +50,10 @@
   },
   "messages": {
     "ToolFailed": "ms-resource:loc.messages.ToolFailed",
-    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported"
+    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
+    "PrimaryUrlDownloadFailed": "ms-resource:loc.messages.PrimaryUrlDownloadFailed",
+    "LegacyUrlDownloadFailed": "ms-resource:loc.messages.LegacyUrlDownloadFailed",
+    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
+    "InstallScriptFailed": "ms-resource:loc.messages.InstallScriptFailed"
   }
 }

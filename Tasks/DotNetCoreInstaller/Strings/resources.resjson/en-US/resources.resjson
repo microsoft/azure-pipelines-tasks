@@ -8,5 +8,9 @@
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Version of .net core SDK or runtime to install.  Examples: 1.0.4, 1.1.2, 2.0.0-Preview2",
   "loc.messages.ToolFailed": "Tool install failed: %s",
-  "loc.messages.ImplicitVersionNotSupported": "Version should be an explicit version: %s"
+  "loc.messages.ImplicitVersionNotSupported": "Version should be an explicit version: %s",
+  "loc.messages.PrimaryUrlDownloadFailed": "Failed to download dotnet core package using primary URL. Will retry legacy Url. Error: %s.",
+  "loc.messages.LegacyUrlDownloadFailed": "Failed to download dotnet core package using legacy URL as well. Error: %s.",
+  "loc.messages.DownloadFailed": "Failed to download dotnet core package. Please ensure that specified version is valid.",
+  "loc.messages.InstallScriptFailed": "Install script has failed. Error: %s."
 }

@@ -47,6 +47,10 @@
     },
     "messages": {
         "ToolFailed": "Tool install failed: %s",
-        "ImplicitVersionNotSupported": "Version should be an explicit version: %s"
+        "ImplicitVersionNotSupported": "Version should be an explicit version: %s",
+        "PrimaryUrlDownloadFailed": "Failed to download dotnet core package using primary URL. Will retry legacy Url. Error: %s.",
+        "LegacyUrlDownloadFailed": "Failed to download dotnet core package using legacy URL as well. Error: %s.",
+        "DownloadFailed": "Failed to download dotnet core package. Please ensure that specified version is valid.",
+        "InstallScriptFailed": "Install script has failed. Error: %s."
     }
 }

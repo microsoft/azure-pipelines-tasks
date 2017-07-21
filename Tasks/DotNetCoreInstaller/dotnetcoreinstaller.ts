@@ -1,7 +1,6 @@
 import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as trm from 'vsts-task-lib/toolrunner';
-//import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
 import { chmodSync } from 'fs';
@@ -26,15 +25,18 @@ async function getDotnetCore(packageType: string, version: string): Promise<void
         toolPath = await acquireDotNetCore(packageType, version);
     }
 
-    //
     // prepend the tools path. instructs the agent to prepend for future tasks
-    //
     toolLib.prependPath(toolPath);
     console.log(taskLib.which("dotnet"));
 }
 
+function getCachedToolName(packageType: string): string {
+    // use short names to not unnecessarily run into path limit issues
+    return packageType === 'runtime' ? 'dncr' : 'dncs';
+}
+
 function getLocalTool(packageType: string, version:string): string {
-    let cachedToolName = packageType === 'runtime' ? 'dncr' : 'dncs';
+    let cachedToolName = getCachedToolName(packageType);
     return toolLib.findLocalTool(cachedToolName, version);
 }
 
@@ -43,12 +45,14 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
     let downloadPath: string;
 
     try {
+        // try primary url
         if (!!downloadUrls[0]) {
             downloadPath = await toolLib.downloadTool(downloadUrls[0]);
         }
     } catch (error1) {
         console.log(taskLib.loc("PrimaryUrlDownloadFailed", error1));
         try {
+            // try secondary url
             if (!!downloadUrls[1]) {
                 downloadPath = await toolLib.downloadTool(downloadUrls[1]);
             }
@@ -58,6 +62,7 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
         }
     }
 
+    // extract
     let extPath: string;
     if (taskLib.osType().match(/^Win/)) {
         extPath = await toolLib.extractZip(downloadPath);
@@ -66,7 +71,8 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
         extPath = await toolLib.extractTar(downloadPath);
     }
 
-    let cachedToolName = packageType === 'runtime' ? 'dncr' : 'dncs';
+    // cache package
+    let cachedToolName = getCachedToolName(packageType);
     return await toolLib.cacheDir(extPath, cachedToolName, version);
 }
 
@@ -139,11 +145,6 @@ function getDownloadUrls(packageType: string, version: string): string[] {
 var taskManifestPath = path.join(__dirname, "task.json");
 taskLib.debug("Setting resource path to " + taskManifestPath);
 taskLib.setResourcePath(taskManifestPath);
-
-// TODO: Remove these
-// taskLib.setVariable("Agent.ToolsDirectory", "C:\\work\\dotnetcore\\debugging\\_tools")
-// taskLib.setVariable("Agent.TempDirectory", "C:\\work\\dotnetcore\\debugging\\_temp")
-// taskLib.setVariable("Agent.Version", "2.115.0");
 
 run().then((result) =>
    taskLib.setResult(taskLib.TaskResult.Succeeded, "")
