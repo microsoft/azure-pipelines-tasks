@@ -65,7 +65,7 @@ export default class ContainerConnection {
 
     public close(): void {
         if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
-            del.sync(this.configurationDirPath);
+            del.sync(this.configurationDirPath, {force: true});
         }
         if (this.certsDir && fs.existsSync(this.certsDir)) {
             del.sync(this.certsDir);
@@ -101,7 +101,7 @@ export default class ContainerConnection {
         
         if (authenticationToken) {     
             this.registryAuth = {};
-     
+
             this.registryAuth["username"] = authenticationToken.getUsername();
             this.registryAuth["password"] = authenticationToken.getPassword();
             this.registryAuth["registry"] = authenticationToken.getLoginServerUrl();
@@ -119,7 +119,6 @@ export default class ContainerConnection {
     private getDockerConfigDirPath(): string {
         var configDir = path.join(this.getTempDirectory(), "DockerConfig_"+Date.now());
         this.ensureDirExists(configDir);
-
         return configDir;
     } 
 
