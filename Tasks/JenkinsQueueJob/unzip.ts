@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
@@ -8,15 +10,14 @@ import unzip = require('./unzip');
 
 import * as Util from './util';
 
-
-var win = tl.osType().match(/^Win/);
+const win = tl.osType().match(/^Win/);
 tl.debug('win: ' + win);
 
 // extractors
-var xpUnzipLocation: string = win ? null : xpUnzipLocation = tl.which('unzip', false);
-var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
+let xpUnzipLocation: string = win ? null : tl.which('unzip', false);
+let winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
-export function unzip(file: string, destinationFolder: string) {
+export function unzip(file: string, destinationFolder: string): void {
     if (win) {
         sevenZipExtract(file, destinationFolder);
     } else {
@@ -24,12 +25,12 @@ export function unzip(file: string, destinationFolder: string) {
     }
 }
 
-function unzipExtract(file: string, destinationFolder: string) {
+function unzipExtract(file: string, destinationFolder: string): void {
     tl.debug('Extracting file: ' + file);
-    if (typeof xpUnzipLocation == "undefined") {
+    if (typeof xpUnzipLocation == 'undefined') {
         xpUnzipLocation = tl.which('unzip', true);
     }
-    var unzip = tl.tool(xpUnzipLocation);
+    const unzip: tr.ToolRunner = tl.tool(xpUnzipLocation);
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
@@ -37,19 +38,19 @@ function unzipExtract(file: string, destinationFolder: string) {
     return handleExecResult(unzip.execSync(getOptions()), file);
 }
 
-function sevenZipExtract(file: string, destinationFolder: string) {
+function sevenZipExtract(file: string, destinationFolder: string): void {
     tl.debug('Extracting file: ' + file);
-    var sevenZip = tl.tool(winSevenZipLocation);
+    const sevenZip: tr.ToolRunner  = tl.tool(winSevenZipLocation);
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
     return handleExecResult(sevenZip.execSync(getOptions()), file);
 }
 
-function handleExecResult(execResult: tr.IExecResult, file: string) {
+function handleExecResult(execResult: tr.IExecResult, file: string): void {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
-        var message = 'Extraction failed for file: ' + file +
+        const message: string = 'Extraction failed for file: ' + file +
             '\ncode: ' + execResult.code +
             '\nstdout: ' + execResult.stdout +
             '\nstderr: ' + execResult.stderr +
@@ -59,7 +60,7 @@ function handleExecResult(execResult: tr.IExecResult, file: string) {
 }
 
 function getOptions(): tr.IExecOptions {
-    var execOptions: tr.IExecOptions = <any>{
+    const execOptions: tr.IExecOptions = <any> {
         silent: true,
         outStream: new Util.StringWritable({ decodeStrings: false }),
         errStream: new Util.StringWritable({ decodeStrings: false }),
