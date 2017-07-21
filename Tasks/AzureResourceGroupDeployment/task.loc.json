@@ -390,6 +390,10 @@
     "ProvisioningStatusOfExtensionIsNotSucceeded": "ms-resource:loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded",
     "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
     "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound",
-    "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable"
+    "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
+    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData"
   }
 }

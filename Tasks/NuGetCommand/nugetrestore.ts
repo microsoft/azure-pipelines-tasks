@@ -17,8 +17,6 @@ import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 
-
-
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
         public nuGetPath: string,
@@ -39,16 +37,17 @@ export async function run(nuGetPath: string): Promise<void> {
         nutil.setConsoleCodePage();
 
         // Reading inputs
-        let solution = tl.getPathInput("solution", true, false);
+        let solutionPattern = tl.getPathInput("solution", true, false);
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!useLegacyFind) {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, solution, findOptions, matchOptions);
+            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(solutionPattern);
+            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(solution, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+            filesList = nutil.resolveFilterSpec(solutionPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
         }
         filesList.forEach(solutionFile => {
             if (!tl.stats(solutionFile).isFile()) {
@@ -106,7 +105,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
         
-        // If there was no nuGetConfigPath, NuGetConfigHelper will create one
+        // If there was no nuGetConfigPath, NuGetConfigHelper will create a temp one
         let nuGetConfigHelper = new NuGetConfigHelper2(
                     nuGetPath,
                     nuGetConfigPath,
@@ -158,7 +157,11 @@ export async function run(nuGetPath: string): Promise<void> {
         // Setting creds in the temp NuGet.config if needed
         await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
 
-        let configFile = nuGetConfigHelper.tempNugetConfigPath;
+        // Use config file if:
+        //     - User selected "Select feeds" option
+        //     - User selected "NuGet.config" option and the nuGetConfig input has a value
+        let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
+        let configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
 
         try {
             let restoreOptions = new RestoreOptions(
