@@ -4,6 +4,7 @@ import * as trm from 'vsts-task-lib/toolrunner';
 //import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
+import { chmodSync } from 'fs';
 
 async function run() {
     let packageType = taskLib.getInput('packageType', true);
@@ -29,6 +30,7 @@ async function getDotnetCore(packageType: string, version: string): Promise<void
     // prepend the tools path. instructs the agent to prepend for future tasks
     //
     toolLib.prependPath(toolPath);
+    console.log(taskLib.which("dotnet"));
 }
 
 function getLocalTool(packageType: string, version:string): string {
@@ -70,6 +72,9 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
 
 function getDownloadUrls(packageType: string, version: string): string[] {
     let scriptRunner: trm.ToolRunner;
+    let primaryUrlSearchString: string;
+    let legacyUrlSearchString: string;
+
     if(taskLib.osType().match(/^Win/)) {
         let escapedScript = path.join(__dirname, 'externals', 'install-dotnet.ps1').replace(/'/g, "''");
         let command = `& '${escapedScript}' -Version ${version} -DryRun`
@@ -81,8 +86,12 @@ function getDownloadUrls(packageType: string, version: string): string[] {
         scriptRunner = taskLib.tool(powershellPath)
             .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
             .arg(command);
+
+        primaryUrlSearchString = "dotnet-install: Primary - ";
+        legacyUrlSearchString = "dotnet-install: Legacy - ";
     } else {
         let escapedScript = path.join(__dirname, 'externals', 'install-dotnet.sh').replace(/'/g, "''");
+        chmodSync(escapedScript, "777");
         scriptRunner = taskLib.tool(taskLib.which(escapedScript, true));
         scriptRunner.arg('--version');
         scriptRunner.arg(version);
@@ -90,6 +99,9 @@ function getDownloadUrls(packageType: string, version: string): string[] {
         if(packageType === 'runtime') {
             scriptRunner.arg('--shared-runtime');
         }
+
+        primaryUrlSearchString = "dotnet-install: Payload URL: ";
+        legacyUrlSearchString = "dotnet-install: Legacy payload URL: ";
     }
 
     let result: trm.IExecSyncResult = scriptRunner.execSync();
@@ -101,8 +113,6 @@ function getDownloadUrls(packageType: string, version: string): string[] {
 
     let primaryUrl: string = null;
     let legacyUrl: string = null;
-    let primaryUrlSearchString = "dotnet-install: Primary - ";
-    let legacyUrlSearchString = "dotnet-install: Legacy - ";
     if(!!output && output.length > 0) {
         let lines: string[] = output.split(os.EOL);
         if(!!lines && lines.length > 0) {
