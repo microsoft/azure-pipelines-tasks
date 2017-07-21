@@ -151,6 +151,11 @@ export class KeyVault {
 
     private getError(error: any) {
         tl.debug(JSON.stringify(error));
+
+        if (error && error.message && error.statusCode && error.statusCode == 403) {
+            return tl.loc("AccessDeniedError", error.message);
+        }
+
         if (error && error.message) {
             return error.message;
         }
