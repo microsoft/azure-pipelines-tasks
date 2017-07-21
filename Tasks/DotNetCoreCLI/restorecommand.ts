@@ -1,14 +1,14 @@
 import * as tl from "vsts-task-lib/task";
-import * as Q  from "q";
+import * as Q from "q";
 import * as utility from './Common/utility';
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import * as auth from "nuget-task-common/Authentication";
-import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
+import { NuGetConfigHelper2 } from "nuget-task-common/NuGetConfigHelper2";
 import peParser = require('nuget-task-common/pe-parser/index');
 import * as path from "path";
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
+import { VersionInfo } from "nuget-task-common/pe-parser/VersionResource";
 import { IPackageSource } from "nuget-task-common/Authentication";
-import {IExecOptions} from "vsts-task-lib/toolrunner";
+import { IExecOptions } from "vsts-task-lib/toolrunner";
 import * as nutil from "nuget-task-common/Utility";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 
@@ -20,8 +20,11 @@ export async function run(): Promise<void> {
         const projectSearch = tl.getDelimitedInput("projects", "\n", false);
 
         // if no projectSearch strings are given, use "" to operate on the current directory
-        const projectFiles = projectSearch ? utility.getProjectFiles(projectSearch) : [""];
-
+        const projectFiles = projectSearch.length != 0 ? utility.getProjectFiles(projectSearch) : [""];
+        if (projectFiles && projectFiles.length == 0) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+            return;
+        }
         const noCache = tl.getBoolInput("noCache");
         const verbosity = tl.getInput("verbosityRestore");
         let packagesDirectory = tl.getPathInput("packagesDirectory");
@@ -50,12 +53,12 @@ export async function run(): Promise<void> {
 
         // Setting up sources, either from provided config file or from feed selection
         tl.debug('Setting up sources');
-        let nuGetConfigPath : string = undefined;
+        let nuGetConfigPath: string = undefined;
         let selectOrConfig = tl.getInput("selectOrConfig");
 
         // This IF is here in order to provide a value to nuGetConfigPath (if option selected, if user provided it)
         // and then pass it into the config helper
-        if (selectOrConfig === "config" ) {
+        if (selectOrConfig === "config") {
             nuGetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
             if (!tl.filePathSupplied("nugetConfigPath")) {
                 nuGetConfigPath = undefined;
@@ -63,48 +66,47 @@ export async function run(): Promise<void> {
         }
 
         const nuGetPath = await utility.getNuGetPath();
-        
+
         // If there was no nuGetConfigPath, NuGetConfigHelper will create one
         let nuGetConfigHelper = new NuGetConfigHelper2(
-                    nuGetPath,
-                    nuGetConfigPath,
-                    authInfo,
-                    {credProviderFolder: null, extensionsDisabled: true},
-                    null);
-        
+            nuGetPath,
+            nuGetConfigPath,
+            authInfo,
+            { credProviderFolder: null, extensionsDisabled: true },
+            null);
+
         let credCleanup = () => { return; };
-        
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
-        if (selectOrConfig === "select" ) {
+        if (selectOrConfig === "select") {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
             let feed = tl.getInput("feedRestore");
             if (feed) {
-                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, null);
+                let feedUrl: string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, null);
                 sources.push(<IPackageSource>
-                {
-                    feedName: feed,
-                    feedUri: feedUrl,
-                    isInternal: true
-                })
+                    {
+                        feedName: feed,
+                        feedUri: feedUrl,
+                        isInternal: true
+                    })
             }
 
             let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
                 sources.push(<IPackageSource>
-                {
-                    feedName: "NuGetOrg",
-                    feedUri: locationHelpers.NUGET_ORG_V3_URL,
-                    isInternal: false
-                })
+                    {
+                        feedName: "NuGetOrg",
+                        feedUri: locationHelpers.NUGET_ORG_V3_URL,
+                        isInternal: false
+                    })
             }
 
             // Creating NuGet.config for the user
-            if (sources.length > 0)
-            {
+            if (sources.length > 0) {
                 tl.debug(`Adding the following sources to the config file: ${sources.map(x => x.feedName).join(';')}`)
                 nuGetConfigHelper.addSourcesToTempNuGetConfig(sources);
-                credCleanup = () =>  { tl.rmRF(nuGetConfigHelper.tempNugetConfigPath); }
+                credCleanup = () => { tl.rmRF(nuGetConfigHelper.tempNugetConfigPath); }
                 nuGetConfigPath = nuGetConfigHelper.tempNugetConfigPath;
             }
             else {
@@ -144,7 +146,7 @@ function dotNetRestoreAsync(dotnetPath: string, projectFile: string, configFile:
     let dotnet = tl.tool(dotnetPath);
     dotnet.arg("restore");
 
-    if(projectFile) {
+    if (projectFile) {
         dotnet.arg(projectFile);
     }
 

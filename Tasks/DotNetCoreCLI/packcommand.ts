@@ -93,11 +93,11 @@ export async function run(): Promise<void> {
             filesList = nutil.resolveFilterSpec(searchPattern);
         }
 
-        if (filesList && filesList.length < 1) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+        if (filesList && filesList.length < 1 && searchPattern) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
             return;
         }
-        
+
         tl.debug(`Found ${filesList.length} files`);
         filesList.forEach(file => {
             tl.debug(`--File: ${file}`);

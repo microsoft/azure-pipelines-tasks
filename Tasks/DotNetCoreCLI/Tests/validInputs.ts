@@ -41,7 +41,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stdout": "not restored",
             "stderr": ""
-        }
+        },
+        "dotnet build": {
+            "code": 0,
+            "stdout": "built",
+            "stderr": ""
+        },
     },
     "findMatch": {
         "**/project.json": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],

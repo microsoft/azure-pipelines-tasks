@@ -29,9 +29,20 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, 'validInputs.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         assert(tr.invokedToolCount == 0, 'should not have invoked tool');
         assert(tr.failed, 'task should have failed');
+        done();
+    });
+
+    it('restore passes when zero match found with empty string', (done: MochaDone) => {
+        process.env["__projects__"] = "";
+        process.env["__command__"] = "restore";
+        let tp = path.join(__dirname, './RestoreTests/emptyProjectField.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 
@@ -176,7 +187,19 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.failed, 'task should have failed');
         done();
     });
+    
+    it('build passes when zero match found with empty string', (done: MochaDone) => {
+        process.env["__projects__"] = "";
+        process.env["__command__"] = "build";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
 
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+    
     it('test throws warning when zero match found', (done: MochaDone) => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "test";
@@ -209,8 +232,8 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
-        assert(tr.failed, 'task should have failed');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have suceeded');
 
         done();
     });
@@ -281,8 +304,8 @@ describe('DotNetCoreExe Suite', function () {
         tr.run();
 
         // TODO: Add Zip
-        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
-        assert(tr.failed, 'task should have failed');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 

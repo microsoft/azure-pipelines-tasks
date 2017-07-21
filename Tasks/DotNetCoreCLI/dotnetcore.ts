@@ -58,7 +58,7 @@ export class dotNetExe {
 
         // Use empty string when no project file is specified to operate on the current directory
         var projectFiles = [""];
-        if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
+        if (this.projects.length != 0 || (this.isPublishCommand() && this.publishWebProjects)) {
             projectFiles = this.getProjectFiles();
             if (projectFiles.length == 0) {
                 if (this.command === "test") {
