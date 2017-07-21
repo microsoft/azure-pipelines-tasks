@@ -69,7 +69,7 @@ export class dotNetExe {
             dotnet.arg(this.command);
             dotnet.arg(projectFile);
             var dotnetArguments = this.arguments;
-            if (this.isPublishCommand() && this.outputArgument) {
+            if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }

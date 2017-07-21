@@ -22,7 +22,7 @@
   "loc.input.label.zipAfterPublish": "Zip Published Projects",
   "loc.input.help.zipAfterPublish": "If true, folder created by the publish command will be zipped.",
   "loc.input.label.modifyOutputPath": "Add project name to publish path",
-  "loc.input.help.modifyOutputPath": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments.",
+  "loc.input.help.modifyOutputPath": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder.",
   "loc.input.label.selectOrConfig": "Feeds to use",
   "loc.input.help.selectOrConfig": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
   "loc.input.label.feedRestore": "Use packages from this VSTS/TFS feed",
