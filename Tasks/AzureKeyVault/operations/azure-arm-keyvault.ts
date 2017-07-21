@@ -55,16 +55,19 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
                 }
-                var listOfSecrets = this.convertToAzureKeyVaults(result);
-
+                
                 if (response.body.nextLink) {
                     var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(this.convertToAzureKeyVaults(nextResult.result));
+                    result = result.concat(nextResult.result);
+
+                    var listOfSecrets = this.convertToAzureKeyVaults(result);
+                    return new azureServiceClient.ApiResult(null, listOfSecrets);
                 }
                 else {
+                    var listOfSecrets = this.convertToAzureKeyVaults(result);
                     return new azureServiceClient.ApiResult(null, listOfSecrets);
                 }
             }

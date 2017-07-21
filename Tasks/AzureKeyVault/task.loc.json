@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -53,7 +53,8 @@
     {
       "target": "KeyVaultName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureKeyVaults"
+      "dataSourceName": "AzureKeyVaultsList",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -87,6 +88,7 @@
     "NumberOfSecretsFound": "ms-resource:loc.messages.NumberOfSecretsFound",
     "NumberOfEnabledSecretsFound": "ms-resource:loc.messages.NumberOfEnabledSecretsFound",
     "DownloadingSecretValue": "ms-resource:loc.messages.DownloadingSecretValue",
+    "AccessDeniedError": "ms-resource:loc.messages.AccessDeniedError",
     "GetSecretValueFailed": "ms-resource:loc.messages.GetSecretValueFailed",
     "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound"
   }
