@@ -1,6 +1,6 @@
 {
-  "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
-  "name": "PublishSymbols",
+  "id": "480004FC-8D0B-413B-AD64-29EF2FDA8012",
+  "name": "PublishSymbolsTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 5
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [

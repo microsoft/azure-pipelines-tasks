@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Index Sources & Publish Symbols",
+  "loc.friendlyName": "Publish Symbols - Test Version",
   "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Visual Studio Team Services Symbol Server is in private preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to participate in the private preview.",
-  "loc.description": "Index your source code and publish symbols to a file share or Visual Studio Team Services Symbol Server",
+  "loc.description": "Index your source code and publish symbols to a file share (Test Version)",
   "loc.instanceNameFormat": "Publish symbols path",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",
