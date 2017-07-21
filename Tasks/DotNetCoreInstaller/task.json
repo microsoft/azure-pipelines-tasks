@@ -1,0 +1,52 @@
+{
+    "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+    "name": "DotNetCoreInstaller",
+    "friendlyName": ".Net Core tool Installer (PREVIEW)",
+    "description": "Finds or Downloads and caches specified version spec of .Net Core SDK/runtime and adds it to the PATH.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "preview": true,
+    "satisfies": ["DotNetCore"],
+    "demands": [],
+    "instanceNameFormat": "Use .Net Core $(packageType) $(version)",
+    "inputs": [{
+            "name": "packageType",
+            "type": "pickList",
+            "label": "Package to download",
+            "defaultValue": "runtime",
+            "required": true,
+            "helpMarkDown": "Please select whether to download only runtime or full SDK.",
+            "options": {
+                "runtime": "Only runtime",
+                "sdk": "SDK(contains runtime as well)"
+            }
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.0.4",
+            "required": true,
+            "helpMarkDown": "Version of .net core SDK or runtime to install.  Examples: 1.0.4, 1.1.2, 2.0.0-Preview2"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "dotnetcoreinstaller.js"
+        }
+    },
+    "messages": {
+        "ToolFailed": "Tool install failed: %s",
+        "ImplicitVersionNotSupported": "Version should be an explicit version: %s"
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": ".Net Core tool Installer (PREVIEW)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Finds or Downloads and caches specified version spec of .Net Core SDK/runtime and adds it to the PATH.",
+  "loc.instanceNameFormat": "Use .Net Core $(packageType) $(version)",
+  "loc.input.label.packageType": "Package to download",
+  "loc.input.help.packageType": "Please select whether to download only runtime or full SDK.",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Version of .net core SDK or runtime to install.  Examples: 1.0.4, 1.1.2, 2.0.0-Preview2",
+  "loc.messages.ToolFailed": "Tool install failed: %s",
+  "loc.messages.ImplicitVersionNotSupported": "Version should be an explicit version: %s"
+}
