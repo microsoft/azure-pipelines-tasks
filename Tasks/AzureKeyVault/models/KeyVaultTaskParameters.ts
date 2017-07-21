@@ -29,10 +29,15 @@ export class KeyVaultTaskParameters {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false);
+        var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, vaultUrl, envAuthorityUrl);
+        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', true);
+ 
+        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
+        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : armUrl;
+             
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, vaultUrl, envAuthorityUrl, activeDirectoryResourceId, false);
         return credentials;
     }
 }
