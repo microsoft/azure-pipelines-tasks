@@ -4,18 +4,24 @@ import msRestAzure = require('azure-arm-rest/azure-arm-common');
 class TokenCredentials {
     private hostUrl: string;
     private patToken: string;
+    private accountName: string;
 
-    constructor(hostUrl: string, patToken: string){
-        if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
+    constructor(hostUrl: string, patToken: string, accountName: string){
+        if (!hostUrl || typeof hostUrl.valueOf() !== 'string') {
             throw new Error(tl.loc("HostUrlCannotBeEmpty"));
         }
 
-        if (typeof patToken.valueOf() !== 'string' || !patToken) {
+        if (!patToken || typeof patToken.valueOf() !== 'string') {
             throw new Error(tl.loc("PatTokenCannotBeEmpty"));
+        }
+
+        if (!accountName || typeof accountName.valueOf() !== 'string') {
+            throw new Error(tl.loc("AccountNameCannotBeEmpty"));
         }
 
         this.hostUrl = hostUrl;
         this.patToken = patToken;
+        this.accountName = accountName;
     }
 
     public getPatToken(): string{
@@ -24,6 +30,10 @@ class TokenCredentials {
 
     public getHostUrl(): string{
         return this.hostUrl;
+    }
+
+    public getAccountName(): string{
+        return this.accountName;
     }
 }
 
@@ -86,14 +96,18 @@ export class AzureRGTaskParameters {
         if (endpointAuth.scheme === 'Token') {
             var hostUrl = tl.getEndpointUrl(deploymentGroupEndpointName, true);
             var patToken: string = endpointAuth.parameters["apitoken"];
-            if (typeof hostUrl.valueOf() !== 'string' || !hostUrl) {
+            var accountName = this.getAccountNameFromHostUrl(hostUrl);
+            if (!hostUrl || typeof hostUrl.valueOf() !== 'string') {
                 throw new Error(tl.loc("DeploymentGroupEndpointUrlCannotBeEmpty"));
             }
-
-            if (typeof patToken.valueOf() !== 'string' || !patToken) {
+            if (!patToken || typeof patToken.valueOf() !== 'string') {
                 throw new Error(tl.loc("DeploymentGroupEndpointPatTokenCannotBeEmpty"));
             }
-            var credentials = new TokenCredentials(hostUrl, patToken);
+            if (!accountName || typeof accountName.valueOf() !== 'string') {
+                throw new Error(tl.loc("DeploymentGroupEndpointAccountNameCannotBeEmpty"));
+            }
+
+            var credentials = new TokenCredentials(hostUrl, patToken, accountName);
             return credentials;
         }
         else {
@@ -101,6 +115,15 @@ export class AzureRGTaskParameters {
             console.log(msg);
             throw (msg);
         }
+    }
+
+    private getAccountNameFromHostUrl(hostUrl: string): string {
+        var accountName = "";
+        var stringToCheckForHostedAccount = ".visualstudio.com";
+        if (hostUrl.indexOf(stringToCheckForHostedAccount) != -1) {
+            accountName = hostUrl.split(stringToCheckForHostedAccount)[0].split("https://")[1];
+        }
+        return accountName;
     }
 
     private getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
