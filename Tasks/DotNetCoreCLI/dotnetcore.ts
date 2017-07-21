@@ -31,7 +31,7 @@ export class dotNetExe {
             this.command = tl.getInput("custom", true);
         }
 
-        switch(this.command) {
+        switch (this.command) {
             case "build":
             case "publish":
             case "run":
@@ -97,7 +97,12 @@ export class dotNetExe {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
             if (this.outputArgument) {
-                outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                if (tl.getBoolInput("modifyOutputPath")) {
+                    outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                } else {
+                    outputSource = this.outputArgument;
+                }
+
             }
             else {
                 var pattern = "**/publish";
