@@ -7,5 +7,6 @@
   "loc.messages.AZ_ServicePrincipalError": "There was an error with the service principal used for the deployment.",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
   "loc.messages.AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
-  "loc.messages.AZ_AvailableModules": "The list of available {0} modules:"
+  "loc.messages.AZ_AvailableModules": "The list of available {0} modules:",
+  "loc.messages.AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid."
 }
