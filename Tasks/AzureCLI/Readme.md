@@ -10,7 +10,7 @@ This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azur
 - Both versions of Azure-CLI can coexist in the same system but task V1.0 logs-in using user’s subsscription into the Python based AZ CLI, where as task V0.0 logs-in to the node based Azure CLI. Hence script should ensure to include only corresponding commands.
 - Limitations:
 	- No support for Classic subscriptions. AZ CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions
-	- Currently, Hosted agents do not have AZ CLI installed, you can either install using ‘npm install -g azure-cli’ or use private agents with AZ CLI pre-installed
+	- The Azure CLI is installed on the Windows hosted agents. Go [here](https://www.visualstudio.com/en-us/docs/build/concepts/agents/hosted#software) to see the CLI version on each. You can install a different version by running ‘npm install -g azure-cli’. You can also use private agents with AZ CLI pre-installed.
 
 ## Contact Information
 Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
