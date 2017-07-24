@@ -54,6 +54,17 @@
     "PrimaryUrlDownloadFailed": "ms-resource:loc.messages.PrimaryUrlDownloadFailed",
     "LegacyUrlDownloadFailed": "ms-resource:loc.messages.LegacyUrlDownloadFailed",
     "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
-    "InstallScriptFailed": "ms-resource:loc.messages.InstallScriptFailed"
+    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
+    "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
+    "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
+    "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
+    "GettingDownloadUrls": "ms-resource:loc.messages.GettingDownloadUrls",
+    "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
+    "DownloadingPrimaryUrl": "ms-resource:loc.messages.DownloadingPrimaryUrl",
+    "DownloadingSecondaryUrl": "ms-resource:loc.messages.DownloadingSecondaryUrl",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "CachingTool": "ms-resource:loc.messages.CachingTool",
+    "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall"
   }
 }

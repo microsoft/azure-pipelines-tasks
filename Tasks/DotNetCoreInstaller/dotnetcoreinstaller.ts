@@ -8,6 +8,7 @@ import { chmodSync } from 'fs';
 async function run() {
     let packageType = taskLib.getInput('packageType', true);
     let version = taskLib.getInput('version', true).trim();
+    console.log(taskLib.loc("ToolToInstall", packageType, version));
     await getDotnetCore(packageType, version);
 }
 
@@ -22,12 +23,14 @@ async function getDotnetCore(packageType: string, version: string): Promise<void
 
     if (!toolPath) {
         // download, extract, cache
+        console.log(taskLib.loc("InstallingAfresh"));
         toolPath = await acquireDotNetCore(packageType, version);
+    } else {
+        console.log(taskLib.loc("UsingCachedTool", toolPath));
     }
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     toolLib.prependPath(toolPath);
-    console.log(taskLib.which("dotnet"));
 }
 
 function getCachedToolName(packageType: string): string {
@@ -36,6 +39,7 @@ function getCachedToolName(packageType: string): string {
 }
 
 function getLocalTool(packageType: string, version:string): string {
+    console.log(taskLib.loc("CheckingToolCache"));
     let cachedToolName = getCachedToolName(packageType);
     return toolLib.findLocalTool(cachedToolName, version);
 }
@@ -47,6 +51,7 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
     try {
         // try primary url
         if (!!downloadUrls[0]) {
+            console.log(taskLib.loc("DownloadingPrimaryUrl", downloadUrls[0]));
             downloadPath = await toolLib.downloadTool(downloadUrls[0]);
         }
     } catch (error1) {
@@ -54,16 +59,18 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
         try {
             // try secondary url
             if (!!downloadUrls[1]) {
+                console.log(taskLib.loc("DownloadingSecondaryUrl", downloadUrls[1]));
                 downloadPath = await toolLib.downloadTool(downloadUrls[1]);
             }
         } catch (error2) {
             console.log(taskLib.loc("LegacyUrlDownloadFailed", error2));
-            throw taskLib.loc("DownloadFailed");
+            throw taskLib.loc("DownloadFailed", packageType, version);
         }
     }
 
     // extract
     let extPath: string;
+    console.log(taskLib.loc("ExtractingPackage", downloadPath));
     if (taskLib.osType().match(/^Win/)) {
         extPath = await toolLib.extractZip(downloadPath);
     }
@@ -71,9 +78,12 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
         extPath = await toolLib.extractTar(downloadPath);
     }
 
-    // cache package
+    // cache tool
     let cachedToolName = getCachedToolName(packageType);
-    return await toolLib.cacheDir(extPath, cachedToolName, version);
+    console.log(taskLib.loc("CachingTool"));
+    let cachedDir =  await toolLib.cacheDir(extPath, cachedToolName, version);
+    console.log(taskLib.loc("SuccessfullyInstalled", packageType, version));
+    return cachedDir;
 }
 
 function getDownloadUrls(packageType: string, version: string): string[] {
@@ -81,6 +91,7 @@ function getDownloadUrls(packageType: string, version: string): string[] {
     let primaryUrlSearchString: string;
     let legacyUrlSearchString: string;
 
+    console.log(taskLib.loc("GettingDownloadUrls", packageType, version));
     if(taskLib.osType().match(/^Win/)) {
         let escapedScript = path.join(__dirname, 'externals', 'install-dotnet.ps1').replace(/'/g, "''");
         let command = `& '${escapedScript}' -Version ${version} -DryRun`
@@ -112,7 +123,7 @@ function getDownloadUrls(packageType: string, version: string): string[] {
 
     let result: trm.IExecSyncResult = scriptRunner.execSync();
     if(result.code != 0) {
-        throw taskLib.loc("InstallScriptFailed", result.error ? result.error.message : result.stderr);
+        throw taskLib.loc("getDownloadUrlsFailed", result.error ? result.error.message : result.stderr);
     }
 
     let output: string = result.stdout;
@@ -137,6 +148,10 @@ function getDownloadUrls(packageType: string, version: string): string[] {
                 }
             });
         }
+    }
+
+    if(!primaryUrl && !legacyUrl) {
+        throw taskLib.loc("NullDownloadUrls");
     }
 
     return [primaryUrl, legacyUrl];
