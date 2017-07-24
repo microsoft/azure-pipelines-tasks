@@ -34,6 +34,7 @@
         "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
         "NewVMSSImageUrl": "Url for new VMSS image: %s.",
         "VMSSUpdateImage": "Updating VMSS %s to use new image...",
-        "ResourceNameCannotBeNull": "Resource name cannot be null."
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty."
     }
 }
