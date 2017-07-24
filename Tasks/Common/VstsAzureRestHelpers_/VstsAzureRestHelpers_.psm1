@@ -50,10 +50,6 @@ function Get-AzureActiverDirectoryResourceId
             $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
         }
         $activeDirectoryResourceid =  $endpoint.Data.ActiveDirectoryServiceEndpointResourceId
-        if ($activeDirectoryResourceid -ne $null -and $activeDirectoryResourceid[-1] -eq '/')
-        {
-            $activeDirectoryResourceid =  $activeDirectoryResourceid.Substring(0,$activeDirectoryResourceid.Length-1)
-        }
     }
     else
     {
