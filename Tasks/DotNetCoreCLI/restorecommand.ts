@@ -20,7 +20,7 @@ export async function run(): Promise<void> {
         const projectSearch = tl.getDelimitedInput("projects", "\n", false);
 
         // if no projectSearch strings are given, use "" to operate on the current directory
-        const projectFiles = projectSearch ? utility.getProjectFiles(projectSearch) : [""];
+        const projectFiles = utility.getProjectFiles(projectSearch);
 
         const noCache = tl.getBoolInput("noCache");
         const verbosity = tl.getInput("verbosityRestore");

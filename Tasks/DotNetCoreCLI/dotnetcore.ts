@@ -6,7 +6,7 @@ var archiver = require('archiver');
 import * as restoreCommand from './restorecommand';
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
-
+import * as utility from "./Common/utility";
 
 export class dotNetExe {
     private command: string;
@@ -31,7 +31,7 @@ export class dotNetExe {
             this.command = tl.getInput("custom", true);
         }
 
-        switch(this.command) {
+        switch (this.command) {
             case "build":
             case "publish":
             case "run":
@@ -69,7 +69,7 @@ export class dotNetExe {
             dotnet.arg(this.command);
             dotnet.arg(projectFile);
             var dotnetArguments = this.arguments;
-            if (this.isPublishCommand() && this.outputArgument) {
+            if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }
@@ -97,7 +97,12 @@ export class dotNetExe {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
             if (this.outputArgument) {
-                outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                if (tl.getBoolInput("modifyOutputPath")) {
+                    outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                } else {
+                    outputSource = this.outputArgument;
+                }
+
             }
             else {
                 var pattern = "**/publish";
@@ -220,11 +225,7 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
-        if (!projectFiles || !projectFiles.length) {
-            tl.warning(tl.loc("noProjectFilesFound"));
-            return [];
-        }
+        var projectFiles = utility.getProjectFiles(projectPattern);
 
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {
