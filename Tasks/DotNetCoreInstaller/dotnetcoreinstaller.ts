@@ -1,6 +1,8 @@
 import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as trm from 'vsts-task-lib/toolrunner';
+import * as utils from "./utilities";
+
 import * as os from 'os';
 import * as path from 'path';
 import { chmodSync } from 'fs';
@@ -93,7 +95,7 @@ function getDownloadUrls(packageType: string, version: string): string[] {
 
     console.log(taskLib.loc("GettingDownloadUrls", packageType, version));
     if(taskLib.osType().match(/^Win/)) {
-        let escapedScript = path.join(__dirname, 'externals', 'install-dotnet.ps1').replace(/'/g, "''");
+        let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.ps1').replace(/'/g, "''");
         let command = `& '${escapedScript}' -Version ${version} -DryRun`
         if(packageType === 'runtime') {
             command = command.concat(" -SharedRuntime");
@@ -107,7 +109,7 @@ function getDownloadUrls(packageType: string, version: string): string[] {
         primaryUrlSearchString = "dotnet-install: Primary - ";
         legacyUrlSearchString = "dotnet-install: Legacy - ";
     } else {
-        let escapedScript = path.join(__dirname, 'externals', 'install-dotnet.sh').replace(/'/g, "''");
+        let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.sh').replace(/'/g, "''");
         chmodSync(escapedScript, "777");
         scriptRunner = taskLib.tool(taskLib.which(escapedScript, true));
         scriptRunner.arg('--version');
