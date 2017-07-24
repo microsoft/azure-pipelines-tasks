@@ -161,16 +161,16 @@ export class NuGetConfigHelper2 {
                     if (configXml.packages) {
                         throw new Error(tl.loc(
                             "NGCommon_NuGetConfigIsPackagesConfig",
-                            this.nugetConfigPath,
+                            this.nugetConfigPath || this.tempNugetConfigPath,
                             tl.getVariable("Task.DisplayName")));
                     }
                     else {
-                        throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", this.nugetConfigPath));
+                        throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", this.nugetConfigPath || this.tempNugetConfigPath));
                     }
                 }
 
                 if (!configXml.configuration.packageSources || !configXml.configuration.packageSources.add) {
-                    tl.warning(tl.loc("NGCommon_NoSourcesFoundInConfig", this.nugetConfigPath));
+                    tl.warning(tl.loc("NGCommon_NoSourcesFoundInConfig", this.nugetConfigPath || this.tempNugetConfigPath));
                     return [];
                 }
 

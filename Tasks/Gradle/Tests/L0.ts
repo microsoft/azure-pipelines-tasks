@@ -9,27 +9,27 @@ import fs = require('fs');
 
 import * as ttm from 'vsts-task-lib/mock-test';
 
-import { BuildOutput, BuildEngine } from '../CodeAnalysis/Common/BuildOutput';
-import { PmdTool } from '../CodeAnalysis/Common/PmdTool';
-import { CheckstyleTool } from '../CodeAnalysis/Common/CheckstyleTool';
-import { FindbugsTool } from '../CodeAnalysis/Common/FindbugsTool';
-import { AnalysisResult } from '../CodeAnalysis/Common/AnalysisResult';
+import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput';
+import { PmdTool } from 'codeanalysis-common/Common/PmdTool';
+import { CheckstyleTool } from 'codeanalysis-common/Common/CheckstyleTool';
+import { FindbugsTool } from 'codeanalysis-common/Common/FindbugsTool';
+import { AnalysisResult } from 'codeanalysis-common/Common/AnalysisResult';
 
 let isWindows: RegExpMatchArray = os.type().match(/^Win/);
 let gradleWrapper: string = isWindows ? 'gradlew.bat' : 'gradlew';
 
-let gradleFile: string = '/Gradle/CodeAnalysis/sonar.gradle';
+let gradleFile: string = '/Gradle/node_modules/codeanalysis-common/sonar.gradle';
 let ccCoverageXmlFile: string = 'CCReport43F6D5EF/coverage.xml';
-let checkstyleFile: string = '/Gradle/CodeAnalysis/checkstyle.gradle';
-let findbugsFile: string = '/Gradle/CodeAnalysis/findbugs.gradle';
-let pmdFile: string = '/Gradle/CodeAnalysis/pmd.gradle';
+let checkstyleFile: string = '/Gradle/node_modules/codeanalysis-common/checkstyle.gradle';
+let findbugsFile: string = '/Gradle/node_modules/codeanalysis-common/findbugs.gradle';
+let pmdFile: string = '/Gradle/node_modules/codeanalysis-common/pmd.gradle';
 // Fix up argument paths for Windows
 if (isWindows) {
-    gradleFile = '\\Gradle\\CodeAnalysis\\sonar.gradle';
+    gradleFile = '\\Gradle\\node_modules\\codeanalysis-common\\sonar.gradle';
     ccCoverageXmlFile = 'CCReport43F6D5EF\\coverage.xml';
-    checkstyleFile = '\\Gradle\\CodeAnalysis\\checkstyle.gradle';
-    findbugsFile = '\\Gradle\\CodeAnalysis\\findbugs.gradle';
-    pmdFile = '\\Gradle\\CodeAnalysis\\pmd.gradle';
+    checkstyleFile = '\\Gradle\\node_modules\\codeanalysis-common\\checkstyle.gradle';
+    findbugsFile = '\\Gradle\\node_modules\\codeanalysis-common\\findbugs.gradle';
+    pmdFile = '\\Gradle\\node_modules\\codeanalysis-common\\pmd.gradle';
 }
 
  function assertFileDoesNotExistInDir(stagingDir:string, filePath:string): void {
@@ -482,7 +482,7 @@ describe('Gradle L0 Suite', function () {
         }
     });
 
-    it('Gradle with SQ in a PR build - SQ issues mode analysis', function (done) {
+    it('Gradle with SQ in a PR build - SQ normal analysis', function (done) {
         let tp: string = path.join(__dirname, 'L0SQInPRBuildSQIssuesModeAnalysis.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -494,7 +494,7 @@ describe('Gradle L0 Suite', function () {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
-            assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json`), 'sq issues mode');
+            assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`), 'sq issues mode run normally');
 
             cleanTemporaryFolders();
 
@@ -680,35 +680,6 @@ describe('Gradle L0 Suite', function () {
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`),
-                   'should have run the gradle wrapper with the appropriate SonarQube arguments');
-
-            assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,
-                   'should not have uploaded a SonarQube Analysis Report build summary');
-
-            cleanTemporaryFolders();
-
-            done();
-        } catch (err) {
-            console.log(tr.stdout);
-            console.log(tr.stderr);
-            console.log(err);
-            done(err);
-        }
-    });
-
-    it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
-        let tp: string = path.join(__dirname, 'L0SQFailsTaskReportMissingPRBuild.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        try {
-            createTemporaryFolders();
-
-            tr.run();
-
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
-            assert(tr.stderr.length < 1, 'should not have written to stderr');
-            assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json`),
                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,

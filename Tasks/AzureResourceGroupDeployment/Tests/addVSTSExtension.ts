@@ -21,7 +21,7 @@ tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
 tr.setInput("deploymentGroupEndpoint", "PatEndpoint");
 tr.setInput("outputVariable", process.env["outputVariable"]);
 
-process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY"] = "key";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID"] = "tenant";
@@ -30,6 +30,7 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_URL_PatEndpoint"] = "https://testking123.visualstudio.com";
+process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
 
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");

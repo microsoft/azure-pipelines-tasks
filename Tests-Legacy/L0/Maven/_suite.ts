@@ -14,17 +14,13 @@ import shell = require('shelljs');
 import tr = require('../../lib/vsts-task-lib/toolrunner');
 import tl = require('../../lib/vsts-task-lib/toolrunner');
 
-let sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
-let VstsServerUtils = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils').VstsServerUtils;
-let SonarQubeRunSettings = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings').SonarQubeRunSettings;
-let ISonarQubeServer = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/server').ISonarQubeServer;
-let SonarQubeEndpoint = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint').SonarQubeEndpoint;
-let SonarQubeReportBuilder = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder').SonarQubeReportBuilder;
-let SonarQubeMetrics = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics').SonarQubeMetrics;
-let SonarQubeMeasurementUnit = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics').SonarQubeMeasurementUnit;
+let SonarQubeRunSettings = require('../../../Tasks/Common/codeanalysis-common/SonarQube/run-settings').SonarQubeRunSettings;
+let SonarQubeReportBuilder = require('../../../Tasks/Common/codeanalysis-common/SonarQube/report-builder').SonarQubeReportBuilder;
+let SonarQubeMetrics = require('../../../Tasks/Common/codeanalysis-common/SonarQube/metrics').SonarQubeMetrics;
+let SonarQubeMeasurementUnit = require('../../../Tasks/Common/codeanalysis-common/SonarQube/metrics').SonarQubeMeasurementUnit;
 import {MockSonarQubeServer} from './server-mock';
 
-let FileSystemInteractions = require('../../../Tasks/Maven/CodeAnalysis/Common/FileSystemInteractions').FileSystemInteractions;
+let FileSystemInteractions = require('../../../Tasks/Common/codeanalysis-common/Common/FileSystemInteractions').FileSystemInteractions;
 
 import http = require('http');
 import {IncomingMessage} from 'http';
@@ -595,7 +591,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom'), 'it should have calculated the effective pom');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom /o -s settings.xml /p /t'), 'it should have calculated the effective pom');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml /o /p /t package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml /o /p /t package std=' + tr.stdout + ' err=' + tr.stderr);
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');

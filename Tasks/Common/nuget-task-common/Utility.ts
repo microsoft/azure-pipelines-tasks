@@ -6,10 +6,15 @@ import {VersionInfo} from "./pe-parser/VersionResource";
 import locationHelpers = require("./LocationHelpers");
 import * as url from "url";
 
+export function getPatternsArrayFromInput(pattern: string): string[]
+{
+    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
+    return pattern.split(";").map(x => x.trim()).filter(x => !!x);
+}
+
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
 export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean, includeFolders?: boolean): string[] {
-    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
-    let patterns = filterSpec.split(";").map(x => x.trim()).filter(x => !!x);
+    let patterns = getPatternsArrayFromInput(filterSpec);
     let result = new Set<string>();
 
     patterns.forEach(pattern => {
