@@ -1,8 +1,3 @@
-/*
-  Copyright (c) Microsoft. All rights reserved.
-  Licensed under the MIT license. See LICENSE file in the project root for full license information.
-*/
-
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
@@ -25,7 +20,7 @@ var jarsigning = (fn: string) => {
     if (!jarsigner) {
         var java_home = tl.getVariable('JAVA_HOME');
         if (!java_home) {
-            onError("JAVA_HOME is not set");
+            onError(tl.loc('JavaHomeNotSet'));
         }
 
         jarsigner = path.join(java_home, 'bin', 'jarsigner');
@@ -81,7 +76,7 @@ var zipaligning = (fn: string) => {
         
         var android_home = tl.getVariable('ANDROID_HOME');
         if (!android_home) {
-            onError("ANDROID_HOME is not set");
+            onError(tl.loc('AndroidHomeNotSet'));
         }
     
         var allFiles = tl.find(path.join(android_home, 'build-tools'));
@@ -89,14 +84,14 @@ var zipaligning = (fn: string) => {
         var zipalignToolsList = tl.match(allFiles, "zipalign*", {matchBase: true});
 
         if (!zipalignToolsList || zipalignToolsList.length === 0) {
-            onError("Could not find zipalign tool inside ANDROID_HOME: " + android_home);
+            onError(tl.loc('CouldNotFindZipalignInAndroidHome', android_home));
         }
 
         zipaligner = zipalignToolsList[0];
     }
 
     if (!zipaligner) {
-         onError("Could not find zipalign tool.");
+         onError(tl.loc('CouldNotFindZipalign'));
     }
 
     var zipalignRunner = tl.createToolRunner(zipaligner);
@@ -134,6 +129,9 @@ var process = (fn: string) => {
 //-----------------------------------------------------------------------------
 // Program
 //-----------------------------------------------------------------------------
+// Configure localization
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 // Get files to be signed 
 var filesPattern = tl.getInput('files', true);
 
@@ -182,7 +180,7 @@ if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
 
     // Fail if no matching app files were found
     if (!filesList || filesList.length == 0) {
-        onError('No matching files were found with search pattern: ' + filesPattern);
+        onError(tl.loc('NoMatchingFiles', filesPattern));
     }
 }
 
