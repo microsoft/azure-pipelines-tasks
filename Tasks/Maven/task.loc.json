@@ -14,12 +14,9 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
-  "demands": [
-    "maven"
-  ],
   "version": {
     "Major": 1,
-    "Minor": 121,
+    "Minor": 122,
     "Patch": 0
   },
   "minimumAgentVersion": "1.89.0",
