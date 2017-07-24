@@ -6,7 +6,7 @@ var archiver = require('archiver');
 import * as restoreCommand from './restorecommand';
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
-
+import * as utility from "./Common/utility";
 
 export class dotNetExe {
     private command: string;
@@ -225,11 +225,7 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
-        if (!projectFiles || !projectFiles.length) {
-            tl.warning(tl.loc("noProjectFilesFound"));
-            return [];
-        }
+        var projectFiles = utility.getProjectFiles(projectPattern);
 
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {
