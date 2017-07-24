@@ -1,0 +1,67 @@
+{
+    "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+    "name": "DotNetCoreInstaller",
+    "friendlyName": ".Net Core tool Installer (PREVIEW)",
+    "description": "Finds or Downloads and caches specified version spec of .Net Core SDK/runtime and adds it to the PATH.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "preview": true,
+    "satisfies": ["DotNetCore"],
+    "demands": [],
+    "instanceNameFormat": "Use .Net Core $(packageType) $(version)",
+    "inputs": [{
+            "name": "packageType",
+            "type": "pickList",
+            "label": "Package to download",
+            "defaultValue": "runtime",
+            "required": true,
+            "helpMarkDown": "Please select whether to download only runtime or full SDK.",
+            "options": {
+                "runtime": "Only runtime",
+                "sdk": "SDK(contains runtime as well)"
+            }
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.0.4",
+            "required": true,
+            "helpMarkDown": "Version of .net core SDK or runtime to install.  Examples: 1.0.4, 1.1.2, 2.0.0-Preview2. [List of dotnet core releases](https://github.com/dotnet/core/releases)"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "dotnetcoreinstaller.js"
+        }
+    },
+    "messages": {
+        "ToolFailed": "Tool install failed: %s",
+        "ImplicitVersionNotSupported": "Version should be an explicit version: %s",
+        "PrimaryUrlDownloadFailed": "Failed to download dotnet core package using primary URL. Error: %s.",
+        "LegacyUrlDownloadFailed": "Failed to download dotnet core package using legacy URL as well. Error: %s.",
+        "DownloadFailed": "Failed to download dotnet core package. Please ensure that dotnet core %s of version %s exists. Check out: https://github.com/dotnet/core/blob/master/release-notes/download-archive.md",
+        "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
+        "UsingCachedTool": "Cached copy of dotnet core exists. No need to install afresh. Cached tool location: %s.",
+        "CheckingToolCache": "Checking if a cached copy exists for this version...",
+        "InstallingAfresh": "Cache does not contains this particular dotnet core. Will be downloaded and installed.",
+        "GettingDownloadUrls": "Getting URLs to download dotnet core %s version: %s.",
+        "NullDownloadUrls": "Could not construct download Urls. Please ensure that specified version is valid.",
+        "DownloadingPrimaryUrl": "Downloading dotnet core package from primary URL: %s",
+        "DownloadingSecondaryUrl": "Downloading dotnet core package from legacy URL: %s",
+        "ExtractingPackage": "Extracting downloaded package %s.",
+        "CachingTool": "Caching this installed tool.",
+        "SuccessfullyInstalled": "Successfully installed dotnet core %s version %s.",
+        "ToolToInstall": "Tool to install: dotnet core %s version %s."
+    }
+}
