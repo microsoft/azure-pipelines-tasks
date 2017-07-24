@@ -5,7 +5,6 @@ import * as utils from "./utilities";
 
 import * as os from 'os';
 import * as path from 'path';
-import { chmodSync } from 'fs';
 
 async function run() {
     let packageType = taskLib.getInput('packageType', true);
@@ -110,7 +109,7 @@ function getDownloadUrls(packageType: string, version: string): string[] {
         legacyUrlSearchString = "dotnet-install: Legacy - ";
     } else {
         let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.sh').replace(/'/g, "''");
-        chmodSync(escapedScript, "777");
+        utils.setFileAttribute(escapedScript, "777");
         scriptRunner = taskLib.tool(taskLib.which(escapedScript, true));
         scriptRunner.arg('--version');
         scriptRunner.arg(version);

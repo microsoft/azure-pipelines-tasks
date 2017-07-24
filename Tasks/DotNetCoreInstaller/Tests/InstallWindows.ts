@@ -9,8 +9,8 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
 tr.setInput("version", "1.0.4");
 
-process.env["Agent_ToolsDirectory"] = "C:\\agent\\_tools";
-process.env["Agent_TempDirectory"] = "C:\\agent\\_temp";
+process.env["AGENT_TOOLSDIRECTORY"] = "C:\\agent\\_tools";
+process.env["AGENT_TEMPDIRECTORY"] = "C:\\agent\\_temp";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
@@ -39,7 +39,8 @@ var ut = require('../utilities');
 tr.registerMock('./utilities', {
     getCurrentDir : function() {
         return "C:\\currDir";
-    }
+    },
+    setFileAttribute: ut.setFileAttribute
 });
 
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";

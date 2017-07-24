@@ -39,6 +39,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
                 assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
+                assert(tr.stdout.indexOf("Changing attribute for file /somedir/currdir/externals/install-dotnet.sh to 777") > -1, "should iset executable attribute for install script");           
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
                 assert(tr.stdout.indexOf("Extracting zip archieve from C:\\agent\\_temp\\someArchieve") > -1, "Should extract downloaded archieve corectly");
                 assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
@@ -138,14 +139,14 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting zip archieve from /agent/_temp/someArchieve") > -1, "Should extract downloaded archieve corectly");
+                assert(tr.stdout.indexOf("Extracting tar archieve from /agent/_temp/someArchieve") > -1, "Should extract downloaded archieve corectly");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
         });
 
-        it("[windows]should succeed if runtime installed successfully", (done) => {
+        it("[nix]should succeed if runtime installed successfully", (done) => {
             process.env["__package_type__"] = "runtime";
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);
@@ -158,14 +159,14 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-runtime-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting zip archieve from /agent/_temp/someArchieve") > -1, "Should extract downloaded archieve corectly");
+                assert(tr.stdout.indexOf("Extracting tar archieve from /agent/_temp/someArchieve") > -1, "Should extract downloaded archieve corectly");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled runtime 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
             }, tr, done);
         });
 
-        it("[windows]should not install again if cache hit", (done) => {
+        it("[nix]should not install again if cache hit", (done) => {
             process.env["__cache_hit__"] = "true";
             let tp = path.join(__dirname, "InstallNix.js");
             let tr = new ttm.MockTestRunner(tp);

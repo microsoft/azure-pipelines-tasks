@@ -9,8 +9,8 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("packageType", process.env["__package_type__"] || 'sdk');
 tr.setInput("version", "1.0.4");
 
-process.env["Agent_ToolsDirectory"] = "/agent/_tools";
-process.env["Agent_TempDirectory"] = "/agent/_temp";
+process.env["AGENT_TOOLSDIRECTORY"] = "/agent/_tools";
+process.env["AGENT_TEMPDIRECTORY"] = "/agent/_temp";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
@@ -26,6 +26,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "osType": {
         "osType": "Linux"
+    },
+    "which": {
+        "/somedir/currdir/externals/install-dotnet.sh": "/somedir/currdir/externals/install-dotnet.sh"
+    },
+    "checkPath": {
+        "/somedir/currdir/externals/install-dotnet.sh": true
     }
 };
 
@@ -33,6 +39,9 @@ var ut = require('../utilities');
 tr.registerMock('./utilities', {
     getCurrentDir : function() {
         return "/somedir/currdir";
+    },
+    setFileAttribute: function(file, mode) {
+        console.log("Changing attribute for file " + file + " to " + mode);
     }
 });
 
