@@ -315,7 +315,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './PackTests/packPrerelease.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
@@ -330,7 +330,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './PackTests/packEnvVar.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
@@ -345,7 +345,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './PackTests/packBuildNumber.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\single.csproj --output C:\\out\\dir /p:PackageVersion=1.2.3'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");

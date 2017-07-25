@@ -19,10 +19,7 @@ export async function run(): Promise<void> {
     try {
         // Get list of files to publish
         const searchPattern = tl.getPathInput("searchPatternPush", true, false);
-
-        let findOptions: tl.FindOptions = <tl.FindOptions>{};
-        let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-        const filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+        const filesList = utility.searchFiles(searchPattern);
 
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {

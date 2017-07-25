@@ -1,13 +1,18 @@
 import * as tl from "vsts-task-lib/task";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 
-export function getProjectFiles(projectPattern: string[]): string[] {
-    var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
-    if (!projectFiles || !projectFiles.length) {
-        tl.warning(tl.loc("noProjectFilesFound"));
-        return [];
+export function searchFiles(projectPattern: string | string[], basedir?: string): string[] {
+    var projectFiles: string[];
+    if (!!basedir) {
+        projectFiles = tl.findMatch(basedir, projectPattern);
+    } else {
+        projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
     }
     
+    if (!projectFiles || !projectFiles.length) {
+        return [];
+    }
+
     return projectFiles;
 }
 
