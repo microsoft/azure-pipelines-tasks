@@ -58,15 +58,12 @@ export class dotNetExe {
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
-        var projectFiles = [""];
-        if (this.projects.length != 0 || (this.isPublishCommand() && this.publishWebProjects)) {
-            projectFiles = this.getProjectFiles();
-            if (projectFiles.length == 0) {
-                if (this.command === "test") {
-                    tl.warning(tl.loc("noProjectFilesFound"));
-                } else {
-                    throw tl.loc("noProjectFilesFound");
-                }
+        var projectFiles = this.getProjectFiles();
+        if (projectFiles.length == 0) {
+            if (this.command === "test") {
+                tl.warning(tl.loc("noProjectFilesFound"));
+            } else {
+                throw tl.loc("noProjectFilesFound");
             }
         }
         var failedProjects: string[] = [];
@@ -113,7 +110,7 @@ export class dotNetExe {
             }
             else {
                 var pattern = "**/publish";
-                var files = utility.searchFiles(pattern, path.dirname(projectFile));
+                var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
                     if (fs.lstatSync(file).isDirectory) {
@@ -232,7 +229,7 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = utility.searchFiles(projectPattern);
+        var projectFiles = utility.getProjectFiles(projectPattern);
 
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {

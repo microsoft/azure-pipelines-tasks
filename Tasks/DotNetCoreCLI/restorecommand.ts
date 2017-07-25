@@ -20,9 +20,10 @@ export async function run(): Promise<void> {
         const projectSearch = tl.getDelimitedInput("projects", "\n", false);
 
         // if no projectSearch strings are given, use "" to operate on the current directory
-        const projectFiles = projectSearch.length != 0 ? utility.searchFiles(projectSearch) : [""];
+        const projectFiles = utility.getProjectFiles(projectSearch);
+
         if (projectFiles && projectFiles.length == 0) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
             return;
         }
         const noCache = tl.getBoolInput("noCache");

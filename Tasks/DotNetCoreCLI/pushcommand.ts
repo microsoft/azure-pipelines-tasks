@@ -19,8 +19,10 @@ export async function run(): Promise<void> {
     try {
         // Get list of files to publish
         const searchPattern = tl.getPathInput("searchPatternPush", true, false);
-        const filesList = utility.searchFiles(searchPattern);
-
+        let findOptions: tl.FindOptions = <tl.FindOptions>{};
+        let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+        const filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+        
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("Error_PushNotARegularFile", packageFile));

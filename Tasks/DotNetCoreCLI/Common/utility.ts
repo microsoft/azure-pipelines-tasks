@@ -1,14 +1,12 @@
 import * as tl from "vsts-task-lib/task";
 import * as nuGetGetter from "nuget-task-common/NuGetToolGetter";
 
-export function searchFiles(projectPattern: string | string[], basedir?: string): string[] {
-    var projectFiles: string[];
-    if (!!basedir) {
-        projectFiles = tl.findMatch(basedir, projectPattern);
-    } else {
-        projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
+export function getProjectFiles(projectPattern: string | string[]): string[] {
+    if (projectPattern.length == 0) {
+        return [""];
     }
-    
+    var projectFiles: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
+
     if (!projectFiles || !projectFiles.length) {
         return [];
     }
