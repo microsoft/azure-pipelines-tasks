@@ -282,7 +282,7 @@ function Locate-SqlPackageInVSLatest()
     if($vsInstallVersionSubKey)
     {
         $vsInstallVersionKeys = $vsInstallVersionSubKey.GetValueNames()
-        $vsVersionkeys = $vsInstallVersionKeys | Sort-Object @{e={$_.Name -as [int]}} -Descending
+        $vsVersionkeys = $vsInstallVersionKeys | Sort-Object @{e={$_ -as [int]}} -Descending
         $dacExtensionPath = [System.IO.Path]::Combine("Common7", "IDE", "Extensions", "Microsoft", "SQLDB", "DAC")
 
         # Iterate over each version and extract the path
@@ -291,7 +291,12 @@ function Locate-SqlPackageInVSLatest()
             $vsInstallDir = $vsInstallVersionSubKey.GetValue($key)
             $dacParentDir = $dacParentDir = [System.IO.Path]::Combine($vsInstallDir, $dacExtensionPath)
 
-            return (Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir)
+            $dacInstallPath, $dacInstallVersion = Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir
+            
+            if($dacInstallPath)
+            {
+                return $dacInstallPath, $dacInstallVersion
+            }
         }
     }
 
@@ -316,7 +321,12 @@ function Locate-SqlPackageInVS([string] $version)
         $dacExtensionPath = [System.IO.Path]::Combine("Extensions", "Microsoft", "SQLDB", "DAC")
         $dacParentDir = [System.IO.Path]::Combine($vsInstallDir, $dacExtensionPath)
 
-        return (Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir)
+        $dacInstallPath, $dacInstallVersion = Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir
+            
+        if($dacInstallPath)
+        {
+            return $dacInstallPath, $dacInstallVersion
+        }
     }
 
     return $null, 0
@@ -344,6 +354,7 @@ function Get-LatestVersionSqlPackageInDacDirectory([string] $dacParentDir)
             }
         }
     }
+
     return $null, 0
 }
 
