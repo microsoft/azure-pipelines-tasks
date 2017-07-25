@@ -22,10 +22,10 @@
     "inputs": [{
             "name": "packageType",
             "type": "pickList",
-            "label": "Package to download",
+            "label": "Package to install",
             "defaultValue": "runtime",
             "required": true,
-            "helpMarkDown": "Please select whether to download only runtime or full SDK.",
+            "helpMarkDown": "Please select whether to install only runtime or full SDK.",
             "options": {
                 "runtime": "Runtime",
                 "sdk": "SDK (contains runtime)"
@@ -37,7 +37,7 @@
             "label": "Version",
             "defaultValue": "1.0.4",
             "required": true,
-            "helpMarkDown": "Specify excat version of .NET Core SDK or runtime to install.<br/><br/>Examples:<br/>1. To install 1.0.4 SDK, use 1.0.4<br/>2. To install 1.1.2 runtime, use 1.1.2<br/>2. To install 2.0 preview 2 runtime, use 2.0.0-preview2-25407-01<br/><br/>For getting more details about exact version, refer [here](https://github.com/dotnet/core/releases)"
+            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/><br/>Examples:<br/>1. To install 1.0.4 SDK, use 1.0.4<br/>2. To install 1.1.2 runtime, use 1.1.2<br/>2. To install 2.0 preview 2 runtime, use 2.0.0-preview2-25407-01<br/><br/>For getting more details about exact version, refer [here](https://github.com/dotnet/core/releases)"
         }
     ],
     "execution": {
