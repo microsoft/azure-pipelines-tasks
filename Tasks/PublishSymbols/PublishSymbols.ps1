@@ -121,7 +121,7 @@ try {
             throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
         }
 
-        [string]$tmpFileName = Join-Path $env:TEMP ("SymbolFileList-" + [random]::new().Next(100) + ".txt")
+        [string]$tmpFileName = [IO.Path]::GetTempFileName()
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
         
         [IO.File]::WriteAllLines($tmpFileName, [string[]]@("# FileList under $SymbolsFolder with pattern $SearchPattern", "")) # Also Truncates any existing files

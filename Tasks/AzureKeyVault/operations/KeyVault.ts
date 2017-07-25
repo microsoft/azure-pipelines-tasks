@@ -28,7 +28,7 @@ export class SecretsToErrorsMapping {
         var allErrors = "";
         for (var key in this.errorsMap) {
             if (this.errorsMap.hasOwnProperty(key)) {
-                var errorMessagePerSecret = key + ": " + this.errorsMap[key];
+                var errorMessagePerSecret = key + ": " + JSON.stringify(this.errorsMap[key]);
                 allErrors = allErrors + "\n" + errorMessagePerSecret;
             }
         }

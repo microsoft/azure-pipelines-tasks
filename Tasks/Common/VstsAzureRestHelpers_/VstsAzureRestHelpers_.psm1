@@ -53,13 +53,13 @@ function Get-AzureActiverDirectoryResourceId
     }
     else
     {
-        $activeDirectoryResourceid =  $endpont.url
+        $activeDirectoryResourceid =  $endpoint.url
+        if($activeDirectoryResourceid -ne $null -and $activeDirectoryResourceid[-1] -ne '/') 
+        {
+            $activeDirectoryResourceid = $activeDirectoryResourceid + "/"
+        }
     }
 
-    if ($activeDirectoryResourceid -ne $null -and $activeDirectoryResourceid[-1] -eq '/')
-    {
-        $activeDirectoryResourceid =  $activeDirectoryResourceid.Substring(0,$activeDirectoryResourceid.Length-1)
-    }
     return $activeDirectoryResourceid
 }
 

@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -126,6 +126,15 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true, folder created by the publish command will be zipped."
+        },
+        {
+            "name": "modifyOutputPath",
+            "type": "boolean",
+            "visibleRule": "command = publish",
+            "label": "Add project name to publish path",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
         },
         {
             "name": "selectOrConfig",
