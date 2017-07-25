@@ -3,7 +3,7 @@
     "name": "DotNetCoreInstaller",
     "friendlyName": ".NET Core Tool Installer (PREVIEW)",
     "description": "Acquires a specific version of .NET Core from internet or the tools cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
     "category": "Tool",
     "runsOn": [
         "Agent",

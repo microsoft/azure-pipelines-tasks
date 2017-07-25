@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": ".NET Core Tool Installer (PREVIEW)",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "Acquires a specific version of .NET Core from internet or the tools cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
   "loc.instanceNameFormat": "Use .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "Package to install",
