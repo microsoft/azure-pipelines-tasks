@@ -111,6 +111,7 @@ try {
     }
     catch
     {
+        Write-Host "##vso[task.logissue type=error;]$_"
         Write-Host "##vso[task.complete result=Failed;]$_"
     }
 
