@@ -96,6 +96,8 @@ export async function run(): Promise<void> {
         if (filesList && filesList.length < 1 && searchPattern) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
             return;
+        } else {
+            filesList = [""];
         }
 
         tl.debug(`Found ${filesList.length} files`);

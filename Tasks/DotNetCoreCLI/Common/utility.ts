@@ -1,7 +1,7 @@
 import * as tl from "vsts-task-lib/task";
 import * as nuGetGetter from "nuget-task-common/NuGetToolGetter";
 
-export function getProjectFiles(projectPattern: string | string[]): string[] {
+export function getProjectFiles(projectPattern: string[]): string[] {
     if (projectPattern.length == 0) {
         return [""];
     }
