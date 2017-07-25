@@ -290,7 +290,6 @@ function Locate-SqlPackageInVSLatest()
         {
             $vsInstallDir = $vsInstallVersionSubKey.GetValue($key)
             $dacParentDir = $dacParentDir = [System.IO.Path]::Combine($vsInstallDir, $dacExtensionPath)
-
             $dacInstallPath, $dacInstallVersion = Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir
             
             if($dacInstallPath)
@@ -320,7 +319,6 @@ function Locate-SqlPackageInVS([string] $version)
 
         $dacExtensionPath = [System.IO.Path]::Combine("Extensions", "Microsoft", "SQLDB", "DAC")
         $dacParentDir = [System.IO.Path]::Combine($vsInstallDir, $dacExtensionPath)
-
         $dacInstallPath, $dacInstallVersion = Get-LatestVersionSqlPackageInDacDirectory -dacParentDir $dacParentDir
             
         if($dacInstallPath)
