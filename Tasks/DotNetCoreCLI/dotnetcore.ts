@@ -76,7 +76,7 @@ export class dotNetExe {
             dotnet.arg(this.command);
             dotnet.arg(projectFile);
             var dotnetArguments = this.arguments;
-            if (this.isPublishCommand() && this.outputArgument) {
+            if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }
@@ -104,7 +104,12 @@ export class dotNetExe {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
             if (this.outputArgument) {
-                outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                if (tl.getBoolInput("modifyOutputPath")) {
+                    outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                } else {
+                    outputSource = this.outputArgument;
+                }
+
             }
             else {
                 var pattern = "**/publish";
@@ -228,7 +233,7 @@ export class dotNetExe {
         }
 
         var projectFiles = utility.searchFiles(projectPattern);
-        
+
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {
                 var directory = path.dirname(file);

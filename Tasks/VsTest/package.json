@@ -2,9 +2,6 @@
   "name": "vsts-tasks-vstest",
   "description": "VSTS VSTEST Task",
   "main": "VSTest.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/vsts-tasks.git"
@@ -17,10 +14,11 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "performance-now": "0.2.0",
-    "vsts-task-lib": "2.0.0-preview",
+    "string": "^3.3.1",
+    "uuid": "^3.1.0",
     "vso-node-api": "6.0.4-preview",
-    "xml2js": "0.4.16",
-    "string": "^3.3.1"
+    "vsts-task-lib": "2.0.6",
+    "xml2js": "0.4.16"
   },
   "optionalDependencies": {
     "regedit": "2.2.6"

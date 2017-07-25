@@ -187,7 +187,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.failed, 'task should have failed');
         done();
     });
-    
+
     it('build passes when zero match found with empty string', (done: MochaDone) => {
         process.env["__projects__"] = "";
         process.env["__command__"] = "build";
@@ -199,7 +199,7 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });
-    
+
     it('test throws warning when zero match found', (done: MochaDone) => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "test";
@@ -213,9 +213,27 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('publish works with explicit project files setting modifyoutput to false', (done: MochaDone) => {
+
+        process.env["__projects__"] = '*customoutput/project.json';
+        process.env["__arguments__"] = "--configuration release --output /usr/out";
+        process.env["modifyOutput"] = "false";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool');
+        assert(tr.stdOutContained("published web3 without adding project name to path"), "shouldn't have appended the project name");
+        assert(tr.stdOutContained("published lib2 without adding project name to path"), "shouldn't have appended the project name");
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
     it('publish works with explicit project files', (done: MochaDone) => {
 
         process.env["__projects__"] = '**/project.json';
+        process.env["modifyOutput"] = "true";
+        process.env["__arguments__"] = " ";
         let tp = path.join(__dirname, 'publishInputs.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -305,6 +323,75 @@ describe('DotNetCoreExe Suite', function () {
 
         // TODO: Add Zip
         assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('publish works with no project file is specified', (done: MochaDone) => {
+
+        process.env["__projects__"] = "";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('publish fails with when the dotnet publish fails', (done: MochaDone) => {
+
+        process.env["__projects__"] = "dummy/project.json";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        assert(tr.failed, 'task should have failed');
+        done();
+    });
+
+    it('publish works with publishWebProjects option', (done: MochaDone) => {
+
+        process.env["__projects__"] = "";
+        process.env["__publishWebProjects__"] = "true";
+        process.env["modifyOutput"] = "true";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have invoked been invoked once');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('publish updates the output with the project name appended', (done: MochaDone) => {
+        process.env["__projects__"] = "*customoutput/project.json";
+        process.env["__publishWebProjects__"] = "false";
+        process.env["__arguments__"] = "--configuration release --output /usr/out"
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('publish works with zipAfterPublish option', (done: MochaDone) => {
+        // TODO
+        done();
+    });
+
+    it('publish works with zipAfterPublish and publishWebProjects option with no project file specified', (done: MochaDone) => {
+        process.env["__projects__"] = "";
+        process.env["__publishWebProjects__"] = "false";
+        process.env["__arguments__"] = "--configuration release --output /usr/out"
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        // TODO: Add Zip
+        assert(tr.invokedToolCount == 1, 'should have invoked tool two times');
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });

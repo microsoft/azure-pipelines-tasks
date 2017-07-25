@@ -128,6 +128,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.zipAfterPublish"
     },
     {
+      "name": "modifyOutputPath",
+      "type": "boolean",
+      "visibleRule": "command = publish",
+      "label": "ms-resource:loc.input.label.modifyOutputPath",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.modifyOutputPath"
+    },
+    {
       "name": "selectOrConfig",
       "type": "radio",
       "label": "ms-resource:loc.input.label.selectOrConfig",
