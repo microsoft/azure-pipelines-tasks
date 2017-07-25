@@ -22,7 +22,7 @@ export async function run(): Promise<void> {
         // if no projectSearch strings are given, use "" to operate on the current directory
         const projectFiles = utility.getProjectFiles(projectSearch);
 
-        if (projectFiles && projectFiles.length == 0) {
+        if (projectFiles.length == 0) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
             return;
         }

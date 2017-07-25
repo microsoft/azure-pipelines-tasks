@@ -84,20 +84,23 @@ export async function run(): Promise<void> {
 
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
-        if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
-        }
-        else {
-            filesList = nutil.resolveFilterSpec(searchPattern);
+        if (!searchPattern) {
+            // Use empty string when no project file is specified to operate on the current directory
+            filesList = [""];
+        } else {
+            if (!useLegacyFind) {
+                let findOptions: tl.FindOptions = <tl.FindOptions>{};
+                let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+                filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+            }
+            else {
+                filesList = nutil.resolveFilterSpec(searchPattern);
+            }
         }
 
-        if (filesList && filesList.length < 1 && searchPattern) {
+        if (!filesList || !filesList.length) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
             return;
-        } else {
-            filesList = [""];
         }
 
         tl.debug(`Found ${filesList.length} files`);

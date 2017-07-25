@@ -22,14 +22,14 @@ export async function run(): Promise<void> {
         let findOptions: tl.FindOptions = <tl.FindOptions>{};
         let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
         const filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
-        
+
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("Error_PushNotARegularFile", packageFile));
             }
         });
 
-        if (filesList && filesList.length < 1) {
+        if (filesList.length < 1) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
             return;
         }
