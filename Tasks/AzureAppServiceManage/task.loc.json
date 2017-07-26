@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 10
+    "Patch": 11
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -61,6 +61,7 @@
       "name": "SpecifySlot",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.SpecifySlot",
+      "defaultValue": "false",
       "required": false,
       "visibleRule": "Action != Swap Slots"
     },

@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 10
+        "Patch": 11
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -58,11 +58,12 @@
             "helpMarkDown": "Enter or select the name of an existing Azure App Service"
         },
         {
-            "name": "SpecifySlot",
-            "type": "boolean",
-            "label": "Specify Slot",
-            "required": false,
-            "visibleRule": "Action != Swap Slots"
+          "name": "SpecifySlot",
+          "type": "boolean",
+          "label": "Specify Slot",
+          "defaultValue": "false",
+          "required": false,
+          "visibleRule": "Action != Swap Slots"
         },
         {
             "name": "ResourceGroupName",
