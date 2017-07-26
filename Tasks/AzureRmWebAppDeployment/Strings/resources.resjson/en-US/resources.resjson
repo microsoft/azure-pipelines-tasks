@@ -86,7 +86,7 @@
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Failed to deploy App Service package using kudu service : %s",
   "loc.messages.Unabletodeploywebappresponsecode": "Unable to deploy App Service due to error code : %s",
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
-  "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be atleast 3 or above",
+  "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
