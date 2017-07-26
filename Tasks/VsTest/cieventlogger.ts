@@ -3,15 +3,12 @@ import * as tl from 'vsts-task-lib/task';
 const area: string = 'TestExecution';
 const feature: string = 'TestExecutionTask';
 
-const collectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
-
 function getDefaultProps() {
     return {
         releaseuri: tl.getVariable('Release.ReleaseUri'),
         releaseid: tl.getVariable('Release.ReleaseId'),
         builduri: tl.getVariable('Build.BuildUri'),
-        buildid: tl.getVariable('Build.Buildid'),
-        collectionuri: tl.getVariable('System.TeamFoundationCollectionUri')
+        buildid: tl.getVariable('Build.Buildid')
     };
 }
 
