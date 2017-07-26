@@ -160,6 +160,7 @@
   "loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
   "loc.messages.ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
   "loc.messages.ExtensionNotFound": "Extension not found on the vm: %s",
+  "loc.messages.AddedOutputVariable": "Updated output variable 'DeploymentGroups'. Follow this link: https://go.microsoft.com/fwlink/?linkid=853539 to learn how to use it in your defintion",
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
   "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
