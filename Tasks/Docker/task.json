@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [],
     "preview": "true",
@@ -289,8 +289,8 @@
         }
     },
     "messages": {
-        "ContainerPatternFound": "Pattern found in dockerfilepath parameter",
-        "ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
+        "ContainerPatternFound": "Pattern found in docker filepath parameter",
+        "ContainerPatternNotFound": "No pattern found in docker filepath parameter",
         "ContainerDockerFileNotFound":"No Docker file matching  %s  was found."
     }
 }
