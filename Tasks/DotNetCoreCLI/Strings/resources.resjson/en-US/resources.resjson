@@ -79,6 +79,7 @@
   "loc.messages.Info_AttemptingToPackFile": "Attempting to pack file: ",
   "loc.messages.Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
   "loc.messages.Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
+  "loc.messages.Info_NoFilesMatchedTheSearchPattern": "No files matched the search pattern.",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
   "loc.messages.Info_UsingVersion": "Using version: %s",

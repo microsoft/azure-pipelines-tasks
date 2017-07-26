@@ -3,9 +3,9 @@ import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
 
-import * as restoreCommand from './restorecommand';
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
+import * as restoreCommand from './restorecommand';
 import * as utility from "./Common/utility";
 
 export class dotNetExe {
@@ -58,9 +58,13 @@ export class dotNetExe {
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
-        var projectFiles = [""];
-        if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
-            projectFiles = this.getProjectFiles();
+        var projectFiles = this.getProjectFiles();
+        if (projectFiles.length == 0) {
+            if (this.command === "test") {
+                tl.warning(tl.loc("noProjectFilesFound"));
+            } else {
+                throw tl.loc("noProjectFilesFound");
+            }
         }
         var failedProjects: string[] = [];
         for (var fileIndex in projectFiles) {
@@ -123,7 +127,7 @@ export class dotNetExe {
                 tl.rmRF(outputSource);
             }
             else {
-                tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
+                throw tl.loc("noPublishFolderFoundToZip", projectFile);
             }
         }
     }
@@ -235,7 +239,7 @@ export class dotNetExe {
             });
 
             if (!projectFiles.length) {
-                tl.warning(tl.loc("noWebProjctFound"));
+                tl.error(tl.loc("noWebProjctFound"));
             }
         }
 
