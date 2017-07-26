@@ -58,12 +58,12 @@
             "helpMarkDown": "Enter or select the name of an existing Azure App Service"
         },
         {
-          "name": "SpecifySlot",
-          "type": "boolean",
-          "label": "Specify Slot",
-          "defaultValue": "false",
-          "required": false,
-          "visibleRule": "Action != Swap Slots"
+            "name": "SpecifySlot",
+            "type": "boolean",
+            "label": "Specify Slot",
+            "defaultValue": "false",
+            "required": false,
+            "visibleRule": "Action != Swap Slots"
         },
         {
             "name": "ResourceGroupName",
