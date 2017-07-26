@@ -339,7 +339,7 @@ export class ResourceGroup {
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
-                    if (result["properties"] && result["properties"]["outputs"]) {
+                    if (result && result["properties"] && result["properties"]["outputs"]) {
                         tl.command("task.setvariable", { "isOutput": "true", "variable": "DeploymentOutputs" }, JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable"));
                     }
