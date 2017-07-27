@@ -235,7 +235,6 @@ describe('PackerBuild Suite', function() {
 
         it('should fail if packer build exits with non zero code for custom template', (done:MochaDone) => {        
             process.env["__packer_build_fails__"] = "true";
-            process.env['MOCK_IGNORE_TEMP_PATH'] = "true";
             let tp = path.join(__dirname, 'L0CustomTemplate.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();      
