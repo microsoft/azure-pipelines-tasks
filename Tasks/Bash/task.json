@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 120,
-        "Patch": 1
+        "Minor": 121,
+        "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
     "preview": true,
