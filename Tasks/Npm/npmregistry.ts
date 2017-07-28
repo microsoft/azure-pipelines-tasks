@@ -1,6 +1,6 @@
-import * as url from 'url';
 import * as os from 'os';
 import * as tl from 'vsts-task-lib/task';
+import * as url from 'url';
 
 import { NormalizeRegistry } from './npmrcparser';
 import * as util from './util';
@@ -54,10 +54,10 @@ export class NpmRegistry implements INpmRegistry {
         }
        let lineEnd = os.EOL;
         let nerfed = util.toNerfDart(url);
-        let auth = nerfed+":username="+username + lineEnd;
-        auth += nerfed+":_password="+(new Buffer(password).toString('base64')) + lineEnd;
-        auth += nerfed+":email=" + email + lineEnd;
-        auth += nerfed+":always-auth=true";
+        let auth = nerfed + ":username=" + username + lineEnd;
+        auth += nerfed + ":_password=" + (new Buffer(password).toString('base64')) + lineEnd;
+        auth += nerfed + ":email=" + email + lineEnd;
+        auth += nerfed + ":always-auth=true";
 
         return new NpmRegistry(url, auth, authOnly);
     }
