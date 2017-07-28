@@ -15,15 +15,15 @@ async function run() {
         let workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 
         // Write the script to disk.
+        console.log(tl.loc('GeneratingScript'));
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.sh');
         await fs.writeFileSync(
             filePath,
-            '\ufeff' + script,      // Prepend the Unicode BOM character.
-            { encoding: 'utf8' });  // Since UTF8 encoding is specified, node will
-        //                          // encode the BOM into its UTF8 binary sequence.
+            script, // Don't add a BOM. It causes the script to fail on some operating systems (verified on Ubuntu 14).
+            { encoding: 'utf8' });
 
         // Create the tool runner.
         let bash = tl.tool(tl.which('bash', true))

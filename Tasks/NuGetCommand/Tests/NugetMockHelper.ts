@@ -2,6 +2,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
 import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
 import * as auth from 'nuget-task-common/Authentication'
+import * as nugetPackUtils from '../Common/NuGetPackUtilities'
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -30,6 +31,8 @@ export class NugetMockHelper {
             getNuGet: function(versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
+            cacheBundledNuGet_4_0_0: function()
+            {}
         } )
     }
     
@@ -59,6 +62,9 @@ export class NugetMockHelper {
     
     public registerNugetUtilityMock(projectFile: string[]) {
         this.tmr.registerMock('nuget-task-common/Utility', {
+            getPatternsArrayFromInput: function(input) {
+                return [input];
+            },
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
@@ -81,6 +87,27 @@ export class NugetMockHelper {
         });
     }
 
+        public registerNugetUtilityMockUnix() {
+        this.tmr.registerMock('nuget-task-common/Utility', {
+            getPatternsArrayFromInput: function(input) {
+                return [input];
+            },
+            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
+                return ["~/myagent/_work/1/s/single.sln"];
+            },
+            getBundledNuGetLocation: function(version) {
+                return '~/myagent/_work/_tasks/NuGet/nuget.exe';
+            },
+            locateCredentialProvider: function(path) {
+                return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
+            },
+            setConsoleCodePage: function() {
+                var tlm = require('vsts-task-lib/mock-task');
+                tlm.debug(`setting console code page`);
+            }
+        });
+    }
+
     public registerVstsNuGetPushRunnerMock() {
         this.tmr.registerMock('./Common/VstsNuGetPushToolUtilities', {
             getBundledVstsNuGetPushLocation: function() {
@@ -89,10 +116,10 @@ export class NugetMockHelper {
         });
     }
 
-        public registerNuGetPackUtilsMock() {
+    public registerNuGetPackUtilsMock(date: Date) {
         this.tmr.registerMock('./Common/NuGetPackUtilities', {
-            getUtcDateString: function() {
-                return 'YYYYMMDD-HHMMSS';
+            getNowDateString: function(timezone: string) {
+                return nugetPackUtils.getUtcDateString(date);
             }
         });
     }

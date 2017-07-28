@@ -7,9 +7,9 @@
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 23
+    "Major": 2,
+    "Minor": 121,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -35,12 +35,33 @@
       "helpMarkDown": "ms-resource:loc.input.help.files"
     },
     {
+      "name": "authType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.authType",
+      "defaultValue": "ServiceEndpoint",
+      "helpMarkDown": "",
+      "options": {
+        "ServiceEndpoint": "Service Endpoint",
+        "UserAndPass": "Username and Password"
+      }
+    },
+    {
+      "name": "serviceEndpoint",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint",
+      "visibleRule": "authType = ServiceEndpoint"
+    },
+    {
       "name": "username",
       "type": "string",
       "label": "ms-resource:loc.input.label.username",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.username"
+      "helpMarkDown": "ms-resource:loc.input.help.username",
+      "visibleRule": "authType = UserAndPass"
     },
     {
       "name": "password",
@@ -48,7 +69,8 @@
       "label": "ms-resource:loc.input.label.password",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.password"
+      "helpMarkDown": "ms-resource:loc.input.help.password",
+      "visibleRule": "authType = UserAndPass"
     },
     {
       "name": "url",
@@ -56,7 +78,16 @@
       "label": "ms-resource:loc.input.label.url",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.url"
+      "helpMarkDown": "ms-resource:loc.input.help.url",
+      "visibleRule": "authType = UserAndPass"
+    },
+    {
+      "name": "remotePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.remotePath",
+      "defaultValue": "/upload/$(Build.BuildId)/",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.remotePath"
     },
     {
       "name": "options",
@@ -88,6 +119,8 @@
     "CurlFailed": "ms-resource:loc.messages.CurlFailed",
     "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
     "UploadingFiles": "ms-resource:loc.messages.UploadingFiles",
-    "CurlNotFound": "ms-resource:loc.messages.CurlNotFound"
+    "CurlNotFound": "ms-resource:loc.messages.CurlNotFound",
+    "NotAllFilesUploaded": "ms-resource:loc.messages.NotAllFilesUploaded",
+    "IncompleteEndpoint": "ms-resource:loc.messages.IncompleteEndpoint"
   }
 }

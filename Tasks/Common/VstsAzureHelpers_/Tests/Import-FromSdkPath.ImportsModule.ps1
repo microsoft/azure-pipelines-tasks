@@ -85,7 +85,10 @@ foreach ($variableSet in $variableSets) {
         $expectedModule = @{ Version = [version]'2.3.4.5' }
         Register-Mock Import-Module { $expectedModule } -Name $psd1 -Global -PassThru
     }
-
+    
+    if($variableSet.Classic -eq $false) {
+        Register-Mock Import-AzureRmSubmodulesFromSdkPath
+    }
     # Clear the private module variables.
     & $module { $script:azureModule = $null ; $script:azureRMProfileModule = $null }
 

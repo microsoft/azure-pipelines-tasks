@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -53,7 +53,8 @@
         {
             "target": "KeyVaultName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureKeyVaults"
+            "dataSourceName": "AzureKeyVaultsList",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
@@ -87,6 +88,7 @@
         "NumberOfSecretsFound": "Number of secrets found in %s: %s",
         "NumberOfEnabledSecretsFound": "Number of enabled and unexpired secrets found in %s: %s",
         "DownloadingSecretValue": "Downloading secret value for: %s.",
+        "AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. Set these secret permissions in Azure portal",
         "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
         "ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault"
     }

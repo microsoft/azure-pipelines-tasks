@@ -49,11 +49,11 @@ tr.setInput('pmdAnalysisEnabled', 'true');
 //construct a string that is JSON, call JSON.parse(string), send that to ma.TaskLibAnswers
 let myAnswers: string = `{
    "exec":{
-        "gradlew.bat build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/findbugs.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+        "gradlew.bat build -I /Gradle/node_modules/codeanalysis-common/checkstyle.gradle -I /Gradle/node_modules/codeanalysis-common/findbugs.gradle -I /Gradle/node_modules/codeanalysis-common/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + Checkstyle + PMD + FindBugs"
         },
-        "gradlew build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/findbugs.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+        "gradlew build -I /Gradle/node_modules/codeanalysis-common/checkstyle.gradle -I /Gradle/node_modules/codeanalysis-common/findbugs.gradle -I /Gradle/node_modules/codeanalysis-common/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + Checkstyle + PMD + FindBugs"
         }

@@ -124,6 +124,33 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
     return deferred.promise;
 }
 
+function getAccessToken(endPoint) {
+    var deferred = Q.defer<string>();
+    var retryCounter = 0;
+
+    var getAccessTokenInternal = async function () {
+        retryCounter++;
+        await getAuthorizationToken(endPoint).then((value) => {
+            return deferred.resolve(value);
+        }, (error) => {
+            if (error.code == "ETIMEDOUT") {
+                tl.debug("Request for Auth token failed with error ETIMEDOUT. Retry Attempt: "+ retryCounter);
+                if(retryCounter <= 5) {
+                    setTimeout(getAccessTokenInternal, 5000);
+                }
+                else {
+                    deferred.reject(error);
+                }
+            }
+            else {
+                deferred.reject(error);
+            }
+        });
+    }
+    getAccessTokenInternal();
+    return deferred.promise;
+}
+
 function getAuthorizationToken(endPoint): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
@@ -148,7 +175,7 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
             deferred.resolve(JSON.parse(body).access_token);
         }
         else {
-            deferred.reject(tl.loc('CouldnotfetchacccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc('CouldnotfetchaccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
         }
     });
 
@@ -317,7 +344,7 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
 
 async function getOperationStatus(SPN, url: string) {
     var deferred = Q.defer();
-    var accessToken = await getAuthorizationToken(SPN);
+    var accessToken = await getAccessToken(SPN);
     var headers = {
         authorization: 'Bearer ' + accessToken
     };

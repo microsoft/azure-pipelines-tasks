@@ -4,6 +4,7 @@ import * as Q from 'q';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';
+import * as ci from './cieventlogger';
 
 const regedit = require('regedit');
 const xml2js = require('xml2js');
@@ -33,6 +34,8 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     const minorVersion = parseInt(versionArray[1]);
     const patchNumber = parseInt(versionArray[2]);
 
+    ci.publishEvent({ testplatform: `${majorVersion}.${minorVersion}.${patchNumber}` });
+
     if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
         tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
         throw new Error(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
@@ -51,7 +54,7 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     }
 }
 
-function locateVSTestConsole(testConfig : models.TestConfigurations) : string{
+function locateVSTestConsole(testConfig : models.TestConfigurations) : string {
     const vstestExeFolder = locateTestWindow(testConfig);
     let vstestExePath : string = vstestExeFolder;
     if (vstestExeFolder) {

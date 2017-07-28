@@ -15,9 +15,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 113,
-    "Patch": 5
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -99,6 +99,27 @@
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "TargetAzurePs",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetAzurePs",
+      "defaultValue": "LatestVersion",
+      "required": false,
+      "options": {
+        "LatestVersion": "Latest installed version",
+        "OtherVersion": "Specify other version"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
+    },
+    {
+      "name": "CustomTargetAzurePs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "TargetAzurePs = OtherVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -109,6 +130,7 @@
   },
   "messages": {
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
-    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion"
   }
 }
