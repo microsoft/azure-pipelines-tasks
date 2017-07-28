@@ -6,7 +6,7 @@ import path = require('path');
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
@@ -75,7 +75,8 @@ export class TestSelectorInvoker {
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : ''
-				'AGENT_VERSION': tl.getVariable('AGENT.VERSION')
+				'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+				'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier
             },
             silent: null,
             outStream: null,

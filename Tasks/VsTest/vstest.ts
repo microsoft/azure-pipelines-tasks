@@ -222,7 +222,8 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
             'resultfile': resultFile,
             'runidfile': tiaConfig.runIdFile,
             'context': tiaConfig.context,
-            'AGENT_VERSION': tl.getVariable('AGENT.VERSION')
+            'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+            'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
         },
         silent: null,
         failOnStdErr: null,
@@ -312,7 +313,8 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
             'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
             'testCaseFilterOutputFile' : testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
             'isCustomEngineEnabled' : String(!utils.Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
-            'AGENT_VERSION': tl.getVariable('AGENT.VERSION')
+            'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+            'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
         },
         silent: null,
         failOnStdErr: null,
@@ -492,7 +494,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
         }
 
         let testselector = new testselectorinvoker.TestSelectorInvoker();
-        let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile);
+        let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
         if(code === 0) {
                 getVstestTestsList(vsVersion)
                     .then(function (listFile) {
