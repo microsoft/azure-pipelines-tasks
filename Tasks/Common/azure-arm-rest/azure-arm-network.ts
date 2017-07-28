@@ -1,4 +1,5 @@
 import msRestAzure = require("./azure-arm-common");
+import webClient = require("./webClient");
 import tl = require('vsts-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
@@ -14,7 +15,7 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials, subscriptionId);
 
-        this.apiVersion = '2016-09-01';
+        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2015-06-15' : '2016-09-01' ;
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
 
@@ -71,7 +72,7 @@ export class loadBalancers {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri(
@@ -86,7 +87,7 @@ export class loadBalancers {
 
         //send request
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -133,7 +134,7 @@ export class loadBalancers {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
             {
@@ -143,7 +144,7 @@ export class loadBalancers {
         httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
@@ -180,7 +181,7 @@ export class loadBalancers {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
@@ -202,7 +203,7 @@ export class loadBalancers {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
                     if (operationResponse.body.status === "Succeeded") {
                         // Generate Response
                         deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
@@ -242,7 +243,7 @@ export class publicIPAddresses {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses',
             {
@@ -253,7 +254,7 @@ export class publicIPAddresses {
         httpRequest.body = null;
 
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -298,7 +299,7 @@ export class networkSecurityGroups {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups',
             {
@@ -311,7 +312,7 @@ export class networkSecurityGroups {
         httpRequest.body = null;
 
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -355,7 +356,7 @@ export class NetworkInterfaces {
             return callback(error);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces',
             {
@@ -366,7 +367,7 @@ export class NetworkInterfaces {
         httpRequest.body = null;
 
         var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -411,7 +412,7 @@ export class NetworkInterfaces {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}',
             {
@@ -424,7 +425,7 @@ export class NetworkInterfaces {
             httpRequest.body = JSON.stringify(parameters);
         }
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
@@ -474,7 +475,7 @@ export class securityRules {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}',
             {
@@ -486,7 +487,7 @@ export class securityRules {
         httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
         // Send Request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
@@ -521,7 +522,7 @@ export class securityRules {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}',
             {
@@ -536,7 +537,7 @@ export class securityRules {
             httpRequest.body = JSON.stringify(securityRuleParameters);
         }
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {

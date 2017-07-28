@@ -19,6 +19,10 @@
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/VstsNuGetPush/0.13.0/microsoft.visualstudio.services.packaging.nuget.pushtool.0.13.0.zip",
                 "dest": "./VstsNuGetPush/0.13.0/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/4.0.0.2283/NuGet.zip",
+                "dest": "./NuGet/4.0.0/"
             }
         ]
     }

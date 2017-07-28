@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 115,
+    "Minor": 122,
     "Patch": 0
   },
   "demands": [
@@ -125,5 +125,12 @@
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "AndroidHomeNotSet": "ms-resource:loc.messages.AndroidHomeNotSet",
+    "CouldNotFindZipalign": "ms-resource:loc.messages.CouldNotFindZipalign",
+    "CouldNotFindZipalignInAndroidHome": "ms-resource:loc.messages.CouldNotFindZipalignInAndroidHome",
+    "JavaHomeNotSet": "ms-resource:loc.messages.JavaHomeNotSet",
+    "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles"
   }
 }

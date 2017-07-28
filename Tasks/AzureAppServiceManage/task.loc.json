@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 11
+    "Patch": 13
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -240,7 +240,7 @@
     "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted",
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
-    "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
+    "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",

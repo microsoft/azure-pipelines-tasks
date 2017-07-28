@@ -165,11 +165,14 @@ function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLoc
     # Check latest package version.
     $availableVersion = Get-SymbolClientVersion $symbolServiceUri
 
-    $clientPath = Join-Path $env:Temp $availableVersion
+    $symbolPathRoot = Join-Path $env:APPDATA "VSOSymbolClient"
+    $clientPath = Join-Path $symbolPathRoot $availableVersion
+    $completeMarkerFile = Join-Path $clientPath "symbol.app.buildtask.complete"
     $symbolClientZip = Join-Path $clientPath "symbol.app.buildtask.zip"
+    $modulePath = Join-Path $clientPath "lib\net45"
 
-    if ( ! $(Test-Path $symbolClientZip -PathType Leaf) ) {
-        "$symbolClientZip not found" | Write-Host
+    if ( ! $(Test-Path $completeMarkerFile -PathType Leaf) ) {
+        "$completeMarkerFile not found" | Write-Host
 
         if ( $(Test-Path $clientPath -PathType Container) ) {
             "Cleaning $clientPath" | Write-Host
@@ -179,21 +182,16 @@ function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLoc
         "Creating $clientPath" | Write-Host
         New-Item -ItemType directory -Path $clientPath | Write-Host
         $symbolClientZip = Download-SymbolClient $symbolServiceUri $clientPath
-    }
-    else {
-        "$symbolClientZip exists" | Write-Verbose
-    }
 
-    $modulePath = Join-Path $clientPath "lib\net45"
-
-    if ( ! $(Test-Path $modulePath -PathType Container) ) {
         Unzip-SymbolClient $symbolClientZip $clientPath | Write-Host
+
+        [IO.File]::WriteAllBytes( $completeMarkerFile, @() )
+
+        "Update complete" | Write-Host
     }
     else {
-        "$symbolClientZip already unzipped" | Write-Verbose
+        "$completeMarkerFile exists" | Write-Host
     }
-
-    "Update complete" | Write-Verbose
 
     return $modulePath
 }

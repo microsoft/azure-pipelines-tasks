@@ -17,7 +17,7 @@ import tl = require('vsts-task-lib/task');
 export class CodeAnalysisOrchestrator {
     constructor(private tools: IAnalysisTool[]) { }
 
-    public configureBuild(toolRunner: ToolRunner): ToolRunner {
+    public configureBuild(toolRunner: ToolRunner | any): ToolRunner | any {
         if (this.checkBuildContext()) {
             for (let tool of this.tools) {
                 toolRunner = tool.configureBuild(toolRunner);

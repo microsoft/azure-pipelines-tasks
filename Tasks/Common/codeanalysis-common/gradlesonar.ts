@@ -10,7 +10,7 @@ import sqCommon = require('./SonarQube/common');
 
 // Apply arguments to enable SonarQube analysis.
 // Returns the changed toolRunner. Has no effect if SonarQube is not enabled.
-export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner): trm.ToolRunner {
+export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner | any): trm.ToolRunner | any {
     if (!sqCommon.isSonarQubeAnalysisEnabled()) {
         return gradleRun;
     }
@@ -37,7 +37,7 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner): trm.T
 
 // Points SonarQube to the CC file as it is in a non-standard location. Not required for Jacoco.
 // Returns the changed toolRunner. Has no effect if SonarQube or code coverage is not enabled.
-export function applySonarQubeCodeCoverageArguments(gradleRun: trm.ToolRunner, isCodeCoverageEnabled: boolean, ccTool: string, reportPath: string): trm.ToolRunner {
+export function applySonarQubeCodeCoverageArguments(gradleRun: trm.ToolRunner | any, isCodeCoverageEnabled: boolean, ccTool: string, reportPath: string): trm.ToolRunner | any{
     // Apply relevant arguments if both SonarQube and code coverage features are enabled
     if (sqCommon.isSonarQubeAnalysisEnabled() && isCodeCoverageEnabled && ccTool.toLowerCase() === 'cobertura' && reportPath ) {
         gradleRun.arg('-Dsonar.cobertura.reportPath=' + reportPath);

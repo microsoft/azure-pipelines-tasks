@@ -2,7 +2,7 @@
     "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
     "name": "PowerShell",
     "friendlyName": "PowerShell",
-    "description": "Run a PowerShell script on Windows, Mac, or Linux.",
+    "description": "This is an early preview. Run a PowerShell script on Windows, macOS, or Linux.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
@@ -16,10 +16,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 120,
+        "Minor": 121,
         "Patch": 0
     },
-    "releaseNotes": "Script task consistency. Added support for Mac and Linux.",
+    "releaseNotes": "This is an early preview. Script task consistency. Added support for macOS and Linux.",
     "preview": true,
     "minimumAgentVersion": "2.115.0",
     "groups": [
@@ -31,9 +31,40 @@
     ],
     "inputs": [
         {
+            "name": "targetType",
+            "type": "radio",
+            "label": "Type",
+            "required": false,
+            "defaultValue": "filePath",
+            "helpMarkDown": "Target script type: File Path or Inline",
+            "options": {
+                "filePath": "File Path",
+                "inline": "Inline"
+            }
+        },
+        {
+            "name": "filePath",
+            "type": "filePath",
+            "label": "Script Path",
+            "visibleRule": "targetType = filePath",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "visibleRule": "targetType = filePath",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+        },
+        {
             "name": "script",
             "type": "multiLine",
             "label": "Script",
+            "visibleRule": "targetType = inline",
             "required": true,
             "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"",
             "properties": {
@@ -98,11 +129,16 @@
         }
     },
     "messages": {
+        "GeneratingScript": "Generating script.",
         "JS_ExitCode": "PowerShell exited with code '%s'.",
+        "JS_FormattedCommand": "Formatted command: %s",
         "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
         "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
         "PS_ExitCode": "PowerShell exited with code '{0}'.",
+        "PS_FormattedCommand": "Formatted command: {0}",
         "PS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
         "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell."
     }
 }

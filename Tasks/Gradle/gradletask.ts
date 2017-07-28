@@ -254,8 +254,8 @@ async function run() {
             // Looks like: 'SonarQube analysis is enabled.'
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
 
-            gradleRunner = sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
-            gradleRunner = sqGradle.applySonarQubeCodeCoverageArguments(gradleRunner, isCodeCoverageOpted, codeCoverageTool, summaryFile);
+            gradleRunner = <ToolRunner> sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
+            gradleRunner = <ToolRunner> sqGradle.applySonarQubeCodeCoverageArguments(gradleRunner, isCodeCoverageOpted, codeCoverageTool, summaryFile);
         }
         gradleRunner = codeAnalysisOrchestrator.configureBuild(gradleRunner);
 

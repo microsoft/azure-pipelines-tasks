@@ -1,7 +1,7 @@
 {
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
-    "friendlyName": "Azure App Service Manage (PREVIEW)",
+    "friendlyName": "Azure App Service Manage",
     "description": "Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 11
+        "Patch": 13
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -227,7 +227,7 @@
         "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
         "StartingAppService": "Starting App Service : %s",
         "AppServicestartedsuccessfully": "App Service '%s' started successfully",
         "FailedtoStartAppService": "Failed to start App Service for '%s'. Response Code : %s (%s)",
@@ -239,8 +239,8 @@
         "FailedtoRestartAppService": "Failed to restart App Service for '%s'. Response Code : %s (%s)",
         "RestartAppServiceAccepted": "Restart request accepted by App Service : %s",
         "InvalidAction": "Invalid Action selected !",
-        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment statu. SCM endpoint is not enabled for this website.",
-        "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
+        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment status. SCM endpoint is not enabled for this website.",
+        "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
         "WebAppDoesntExist": "Web app '%s' doesn't exist.",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "StartingSwapSlot": "Requesting swap slot for Web App : %s",

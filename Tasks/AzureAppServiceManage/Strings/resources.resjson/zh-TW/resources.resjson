@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "App Service 已接受重新啟動的要求: %s",
   "loc.messages.InvalidAction": "選取的動作無效!",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "警告: 無法更新部署狀態。未啟用此網站的 SCM 端點。",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "無法擷取 Azure App Service 的存取權杖。StatusCode %s (%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "無法擷取 Azure App Service 的存取權杖。StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "Web 應用程式 '%s' 不存在。",
   "loc.messages.UnabletoretrieveWebAppID": "無法擷取 Azure App Service 的連線詳細資料: '%s'。狀態碼: %s",
   "loc.messages.StartingSwapSlot": "正在要求交換 Web 應用程式的位置: %s",

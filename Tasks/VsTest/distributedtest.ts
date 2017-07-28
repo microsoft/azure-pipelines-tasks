@@ -9,6 +9,7 @@ import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 import {TestSelectorInvoker} from './testselectorinvoker';
 
 const uuid = require('node-uuid');
@@ -46,6 +47,9 @@ export class DistributedTest {
 
         try {
             const agentId = await ta.TestAgent.createAgent(this.dtaTestConfig.dtaEnvironment, 3);
+            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, agentid: agentId,
+                agentsize: this.dtaTestConfig.numberOfAgentsInPhase});
+
             await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
             try {
@@ -58,6 +62,7 @@ export class DistributedTest {
             }
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
+            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error});
             tl.error(error);
             tl.setResult(tl.TaskResult.Failed, error);
         }
@@ -80,7 +85,7 @@ export class DistributedTest {
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
-                tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters))
+                tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters));
             }
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.CustomTestAdapters', this.dtaTestConfig.pathtoCustomTestAdapters);
         }
@@ -116,10 +121,13 @@ export class DistributedTest {
             // and writes info to stdout directly
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
+                if (line.length === 0) {
+                    return;
+                }
                 if (line.startsWith('Web method')) {
-                    tl._outStream.write('##vso[task.debug]' + line);
+                    console.log('##vso[task.debug]' + line);
                 } else {
-                    tl._outStream.write(line);
+                    console.log(line);
                 }
             });
         });
@@ -127,7 +135,7 @@ export class DistributedTest {
         proc.stderr.on('data', (c) => {
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
-                tl._errStream.write(line);
+                console.error(line);
             });
         });
 
@@ -219,7 +227,7 @@ export class DistributedTest {
         //cleanup the runsettings file
         if (temporarySettingsFile && this.dtaTestConfig.settingsFile !== temporarySettingsFile) {
             try {
-                tl.rmRF(temporarySettingsFile, true);
+                tl.rmRF(temporarySettingsFile);
             } catch (error) {
                 //Ignore.
             }
