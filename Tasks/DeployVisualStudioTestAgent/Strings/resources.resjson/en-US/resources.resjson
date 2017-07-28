@@ -24,7 +24,7 @@
   "loc.input.label.runAsProcess": "Run UI tests",
   "loc.input.help.runAsProcess": "Denotes if test agent needs to run as an interactive process, needed for Coded UI Tests.",
   "loc.input.label.isDataCollectionOnly": "Enable data collection only",
-  "loc.input.help.isDataCollectionOnly": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+  "loc.input.help.isDataCollectionOnly": "Optionally specify if test agent needs to be used only for data collection and not for running tests. Typically done on application under test(AUT) machine group.",
   "loc.input.label.testPlatform": "Test agent version",
   "loc.input.help.testPlatform": "The version of Visual Studio test agent to use. Pick an appropriate version to match the VS version using which test binaries were built.",
   "loc.input.label.agentLocation": "Test agent location",

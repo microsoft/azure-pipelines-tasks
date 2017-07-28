@@ -13,11 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 12
+        "Minor": 2,
+        "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.0.0",
+    "minimumAgentVersion": "2.119.1",
     "groups": [
         {
             "name": "AzureDetails",
@@ -237,6 +237,12 @@
             "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         }
     ],
+    "OutputVariables": [
+        {
+            "name" : "DeploymentOutputs",
+            "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+        }
+    ],
     "dataSourceBindings": [
         {
             "target": "resourceGroupName",
@@ -391,6 +397,7 @@
         "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
         "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
         "ExtensionNotFound": "Extension not found on the vm: %s",
+        "AddedOutputVariable": "Updated output variable 'DeploymentGroups'. Follow this link: https://go.microsoft.com/fwlink/?linkid=853539 to learn how to use it in your defintion",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",

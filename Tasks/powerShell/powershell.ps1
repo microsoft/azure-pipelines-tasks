@@ -71,9 +71,9 @@ try {
         ([System.Text.Encoding]::UTF8))
 
     # Prepare the external command values.
-    $powershellPath = (Get-Command -Name powershell.exe -CommandType Application).Path
+    $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
-    $arguments = "-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -File `"$filePath`""
+    $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -File `"$filePath`""
     $splat = @{
         'FileName' = $powershellPath
         'Arguments' = $arguments

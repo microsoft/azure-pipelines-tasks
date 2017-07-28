@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -126,6 +126,15 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.zipAfterPublish"
+    },
+    {
+      "name": "modifyOutputPath",
+      "type": "boolean",
+      "visibleRule": "command = publish",
+      "label": "ms-resource:loc.input.label.modifyOutputPath",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.modifyOutputPath"
     },
     {
       "name": "selectOrConfig",
@@ -411,6 +420,7 @@
     "Info_AttemptingToPackFile": "ms-resource:loc.messages.Info_AttemptingToPackFile",
     "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",
+    "Info_NoFilesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoFilesMatchedTheSearchPattern",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",

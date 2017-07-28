@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 95
+        "Patch": 97
     },
     "demands": [
         "azureps"
@@ -301,9 +301,9 @@
         "AFC_ClassicStorageAccountNotFound": "Storage account: {0} not found. Selected Connection 'Certificate' supports storage account of Azure Classic type only.",
         "AFC_GenericStorageAccountNotFound": "Storage account: {0} not found. Please specify existing storage account",
         "AFC_AzureFileCopyMoreHelp": "For more info please refer to {0}",
-        "AFC_UploadFilesStorageAccount": "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'",
-        "AFC_UploadContainerStorageAccount": "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'",
-        "AFC_UploadFileSuccessful": "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'",
+        "AFC_UploadFilesStorageAccount": "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blob prefix: '{3}'",
+        "AFC_UploadContainerStorageAccount": "Upload to container: '{0}' in storage account: '{1}' with blob prefix: '{2}' failed with error: '{3}'",
+        "AFC_UploadFileSuccessful": "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blob prefix: '{3}'",
         "AFC_IncorrectTags": "Tags have been incorrectly specified. They have to be in the format Role:Web,DB;Location:East US;Dept.:Finance,HR",
         "AFC_MachineDoesNotExist": "The following machines either do not exist in the resource group or their names have not been specified correctly: {0}. Provide the exact same machine names present in the resource group. Use comma to separate multiple machine names.",
         "AFC_MachineNameFromIdErrorAllResources": "Unable to get {0} for all resources in ResourceGroup : '{1}'",
