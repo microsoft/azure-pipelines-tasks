@@ -13,7 +13,7 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials, subscriptionId);
 
-        this.apiVersion = '2017-05-10';
+        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2016-06-01' : '2017-05-10';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {

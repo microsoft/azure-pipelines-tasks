@@ -10,9 +10,11 @@ export class ApplicationTokenCredentials {
     private secret: string;
     public armUrl: string;
     public authorityUrl: string;
+    public activeDirectoryResourceId: string;
+    public isAzureStackEnvironment: boolean;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, armUrl: string, authorityUrl: string) {
+    constructor(clientId: string, domain: string, secret: string, armUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error(tl.loc("ClientIdCannotBeEmpty"));
         }
@@ -33,12 +35,23 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("authorityUrlCannotBeEmpty"));
         }
 
+        if (!Boolean(activeDirectoryResourceId) || typeof activeDirectoryResourceId.valueOf() !== 'string') {
+            throw new Error(tl.loc("activeDirectoryResourceIdUrlCannotBeEmpty"));
+        }
+
+        if(!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
+            isAzureStackEnvironment = false;
+        }
+    
         this.clientId = clientId;
         this.domain = domain;
         this.secret = secret;
         this.armUrl = armUrl;
         this.authorityUrl = authorityUrl;
+        this.activeDirectoryResourceId = activeDirectoryResourceId;
+        this.isAzureStackEnvironment = isAzureStackEnvironment;
     }
+
 
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
@@ -55,7 +68,7 @@ export class ApplicationTokenCredentials {
         webRequest.method = "POST";
         webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
         webRequest.body = querystring.stringify({
-            resource: this.armUrl,
+            resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
             grant_type: "client_credentials",
             client_secret: this.secret

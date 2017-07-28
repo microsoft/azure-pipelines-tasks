@@ -8,6 +8,7 @@
         "AZ_ServicePrincipalError": "There was an error with the service principal used for the deployment.",
         "AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
         "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
-        "AZ_AvailableModules": "The list of available {0} modules:"
+        "AZ_AvailableModules": "The list of available {0} modules:",
+        "AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid."
     }
 }
