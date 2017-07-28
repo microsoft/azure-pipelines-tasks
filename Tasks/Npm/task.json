@@ -22,8 +22,8 @@
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
-            "name": "customRegistries",
             "displayName": "Custom registries and authentication",
+            "name": "customRegistries",
             "isExpanded": false,
             "visibleRule": "command = install || command = custom"
         },

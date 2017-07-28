@@ -22,8 +22,8 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "customRegistries",
       "displayName": "ms-resource:loc.group.displayName.customRegistries",
+      "name": "customRegistries",
       "isExpanded": false,
       "visibleRule": "command = install || command = custom"
     },
