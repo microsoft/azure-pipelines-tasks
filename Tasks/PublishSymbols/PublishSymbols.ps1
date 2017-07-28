@@ -132,7 +132,8 @@ try {
         }
 
         [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
-        [string] $requestUrl = "$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
+        # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
+        [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
         Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
         & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
