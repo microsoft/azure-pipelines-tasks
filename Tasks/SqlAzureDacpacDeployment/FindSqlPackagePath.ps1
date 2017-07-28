@@ -268,7 +268,7 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
     return $null, 0
 }
 
-function Locate-SqlPackageInVSLatest()
+function Locate-SqlPackageInVS2017()
 {
     $vsRegKeyForVersion = "SOFTWARE", "WOW6432Node", "Microsoft", "VisualStudio", "SxS", "VS7"  -join [System.IO.Path]::DirectorySeparatorChar
 
@@ -359,7 +359,7 @@ function Get-LatestVersionSqlPackageInDacDirectory([string] $dacParentDir)
 function Locate-HighestVersionSqlPackageInVS()
 {
     # Locate SqlPackage.exe in VS 2017 or above
-    $dacFullPath, $dacVersion = Locate-SqlPackageInVSLatest 
+    $dacFullPath, $dacVersion = Locate-SqlPackageInVS2017 
 
     if ($dacFullPath -ne $null)
     {
