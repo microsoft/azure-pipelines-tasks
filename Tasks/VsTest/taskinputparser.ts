@@ -186,6 +186,8 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
                 console.log(tl.loc('testSuiteSelected', testSuiteId));
                 testConfiguration.testSuites.push(testSuiteId);
             });
+            testConfiguration.sourceFilter = ['**\\*'];
+            console.log(tl.loc('testAssemblyFilterForTestPlan', testConfiguration.sourceFilter));
             break;
         case 'testassemblies':
             console.log(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));

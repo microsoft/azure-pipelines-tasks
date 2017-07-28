@@ -21,10 +21,6 @@ export class DistributedTest {
         this.dtaPid = -1;
         this.dtaTestConfig = dtaTestConfig;
         this.testSourcesFile = null;
-        if (utils.Helper.isNullOrUndefined(this.dtaTestConfig.sourceFilter)) {
-            // just **\* is enough?? or we wnat negate obj folder
-            this.dtaTestConfig.sourceFilter = ['!**\\obj\\**'];
-        }
     }
 
     public runDistributedTest() {
@@ -75,7 +71,6 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentName', this.dtaTestConfig.dtaEnvironment.agentName);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
         this.testSourcesFile = this.getTestSourcesFile();
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchTestSourcesFile', this.testSourcesFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
@@ -157,7 +152,7 @@ export class DistributedTest {
     private cleanUpDtaExeHost() {
         try {
             if (this.testSourcesFile) {
-                tl.rmRF(this.testSourcesFile, true);
+                tl.rmRF(this.testSourcesFile);
             }
         } catch (error) {
             //Ignore.
@@ -168,10 +163,16 @@ export class DistributedTest {
     private getTestSourcesFile() : string {
         try {
             const sources = tl.findMatch(this.dtaTestConfig.testDropLocation, this.dtaTestConfig.sourceFilter);
-            tl.debug('Sources count :' + sources.length);
-            tl.debug('Sources :' + sources.join('\n'));
+            tl.debug('tl match count :' + sources.length);
+            const filesMatching = [];
+            sources.forEach(function(match: string) {
+                if (!fs.lstatSync(match).isDirectory()) {
+                    filesMatching.push(match);
+                }
+            });
+            tl.debug('Files matching count :' + filesMatching.length);
             const tempFile = path.join(os.tmpdir(), 'testSources_' + uuid.v1() + '.src');
-            fs.writeFileSync(tempFile, sources.join('\n'));
+            fs.writeFileSync(tempFile, filesMatching.join('\n'));
             tl.debug('tempFile :' + tempFile);
             return tempFile;
         } catch (error) {

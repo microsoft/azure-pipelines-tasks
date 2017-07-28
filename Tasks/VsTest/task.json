@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 65
+        "Patch": 66
     },
     "demands": [
         "vstest"
@@ -393,6 +393,7 @@
         "testplanConfigInput": "Test plan configuration Id : %s",
         "testSuiteSelected": "Test suite Id selected: %s",
         "testAssemblyFilterInput": "Test assemblies : %s",
+        "testAssemblyFilterForTestPlan": "Setting the test assembly filter to '%s' for the 'Test plan'",
         "vsVersionSelected": "VisualStudio version selected for test execution : %s",
         "runTestsLocally": "Run the tests locally using %s",
         "vstestLocationSpecified": "%s, specified location : %s",
