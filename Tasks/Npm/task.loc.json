@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -22,8 +22,8 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "displayName": "ms-resource:loc.group.displayName.customRegistries",
       "name": "customRegistries",
+      "displayName": "ms-resource:loc.group.displayName.customRegistries",
       "isExpanded": false,
       "visibleRule": "command = install || command = custom"
     },
