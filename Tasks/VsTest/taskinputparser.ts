@@ -40,7 +40,7 @@ export function getDistributedTestConfigurations() {
     }
 
     // VsTest Console cannot be used for Dev14
-    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion === '14.0')
+    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0')
     {
         console.log(tl.loc('noVstestConsole'));
         dtaConfiguration.useVsTestConsole = 'false';
