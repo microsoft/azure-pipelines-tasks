@@ -27,10 +27,6 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("SecretCannotBeEmpty"));
         }
 
-        if (!Boolean(armUrl) || typeof armUrl.valueOf() !== 'string') {
-            throw new Error(tl.loc("armUrlCannotBeEmpty"));
-        }
-
         if (!Boolean(authorityUrl) || typeof authorityUrl.valueOf() !== 'string') {
             throw new Error(tl.loc("authorityUrlCannotBeEmpty"));
         }
@@ -42,7 +38,7 @@ export class ApplicationTokenCredentials {
         if(!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
             isAzureStackEnvironment = false;
         }
-    
+
         this.clientId = clientId;
         this.domain = domain;
         this.secret = secret;
@@ -52,13 +48,20 @@ export class ApplicationTokenCredentials {
         this.isAzureStackEnvironment = isAzureStackEnvironment;
     }
 
-
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
             this.token_deferred = this.getAuthorizationToken();
         }
 
         return this.token_deferred;
+    }
+
+    public getDomain(): string {
+        return this.domain;
+    }
+
+    public getClientId(): string {
+        return this.clientId;
     }
 
     private getAuthorizationToken(): Q.Promise<string> {

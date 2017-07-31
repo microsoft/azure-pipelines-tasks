@@ -5,6 +5,8 @@ import * as tl from "vsts-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
 
+import msRestAzure = require("azure-arm-rest/azure-arm-common");
+
 export default class TaskParameters {
     public templateType: string;
     public customTemplateLocation: string;
@@ -31,17 +33,19 @@ export default class TaskParameters {
 
     public imageUri: string;
 
+    public graphCredentials: msRestAzure.ApplicationTokenCredentials;
+
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
 
             if(this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
-            } else {               
+            } else {
                 this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
-                this.location = tl.getInput(constants.LocationInputName, true);  
+                this.location = tl.getInput(constants.LocationInputName, true);
 
                 this.baseImageSource = tl.getInput(constants.BaseImageSourceInputName, true);
                 if(this.baseImageSource === constants.BaseImageSourceCustomVhd) {
@@ -50,26 +54,28 @@ export default class TaskParameters {
                 } else {
                     this.builtinBaseImage = tl.getInput(constants.BuiltinBaseImageInputName, true);
                     this._extractImageDetails();
-                }              
+                }
 
                 console.log(tl.loc("ResolvingDeployPackageInput"));
                 this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
-                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));                    
+                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));
 
                 console.log(tl.loc("ResolvingDeployScriptInput"));
                 var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
                 var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
                 this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
-                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));                
-                
+                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));
+
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
-            }                
+
+                this.graphCredentials = this._getAzureADGraphCredentials(this.serviceEndpoint);
+            }
 
             console.log(tl.loc("ParsingAdditionalBuilderParameters"));
-            this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));                   
+            this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
-        } 
+        }
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error));
         }
@@ -103,5 +109,17 @@ export default class TaskParameters {
         }
 
         return inputPath;
+    }
+
+    private _getAzureADGraphCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
+        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentauthorityurl', false);
+        envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
+        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'graphUrl', false);
+        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : "https://graph.windows.net/";
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, null, envAuthorityUrl, activeDirectoryResourceId, false);
+        return credentials;
     }
 }

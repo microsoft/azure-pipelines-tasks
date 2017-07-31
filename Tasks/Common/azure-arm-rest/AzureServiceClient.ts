@@ -51,17 +51,25 @@ export class ServiceClient {
     protected generateClientRequestId: boolean;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, timeout?: number) {
+        this.validateInputs(credentials, subscriptionId);
+
+        this.credentials = credentials;
+        this.subscriptionId = subscriptionId
+        this.baseUri = this.credentials.armUrl;
+        this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
+    }
+
+    protected validateInputs(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
         if (!credentials) {
             throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
         if (!subscriptionId) {
             throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
         }
+    }
 
-        this.credentials = credentials;
-        this.subscriptionId = subscriptionId
-        this.baseUri = this.credentials.armUrl;
-        this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
+    public getCredentials(): msRestAzure.ApplicationTokenCredentials {
+        return this.credentials;
     }
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {

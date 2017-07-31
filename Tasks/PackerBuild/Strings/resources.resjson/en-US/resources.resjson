@@ -74,5 +74,8 @@
   "loc.messages.ResolvingDeployPackageInput": "Resolving deploy package path.",
   "loc.messages.ResolvingDeployScriptInput": "Resolving deploy script path.",
   "loc.messages.ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
-  "loc.messages.ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s."
+  "loc.messages.ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
+  "loc.messages.FetchingSPNDetailsRemotely": "Fetching SPN details for app id %s from azure AD graph endpoint...",
+  "loc.messages.FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
+  "loc.messages.FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s."
 }
