@@ -34,9 +34,16 @@ export function getDistributedTestConfigurations() {
     }
     console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {
+    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    if (useVsTestConsole) {        
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
+    }
+
+    // VsTest Console cannot be used for Dev14
+    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0')
+    {
+        console.log(tl.loc('noVstestConsole'));
+        dtaConfiguration.useVsTestConsole = 'false';
     }
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
