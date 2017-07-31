@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 13
+        "Patch": 14
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -61,6 +61,7 @@
             "name": "SpecifySlot",
             "type": "boolean",
             "label": "Specify Slot",
+            "defaultValue": "false",
             "required": false,
             "visibleRule": "Action != Swap Slots"
         },
