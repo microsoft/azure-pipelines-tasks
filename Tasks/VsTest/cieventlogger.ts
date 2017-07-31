@@ -1,4 +1,5 @@
 import * as tl from 'vsts-task-lib/task';
+const ver = require('semver');
 
 const area: string = 'TestExecution';
 const feature: string = 'TestExecutionTask';
@@ -14,7 +15,13 @@ function getDefaultProps() {
 
 export function publishEvent(properties: { [key: string]: any }): void {
     try {
-        tl.publishTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
+        const agent = tl.getVariable('Agent.Version');
+        if (!agent || ver.lt(agent, '2.120.0')) {
+            return;
+        }
+
+        const data = JSON.stringify(Object.assign(getDefaultProps(), properties));
+        tl.command('telemetry.publish', { 'area': area, 'feature': feature }, data);
     } catch (err) {
         //ignore
     }
