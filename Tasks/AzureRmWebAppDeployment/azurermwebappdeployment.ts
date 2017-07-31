@@ -12,6 +12,7 @@ var fileTransformationsUtility = require('webdeployment-common/fileTransformatio
 var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
 
 async function run() {
     try {
@@ -44,6 +45,7 @@ async function run() {
         var dockerNamespace = tl.getInput('DockerNamespace', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
+        var azureStackEnvironment = "AzureStack";
 
         var endPoint = new Array();
         endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
@@ -52,6 +54,25 @@ async function run() {
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+        endPoint["environment"] = tl.getEndpointDataParameter(connectedServiceName, 'environment', true);
+        endPoint["activeDirectoryResourceId"] = tl.getEndpointDataParameter(connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true);
+
+        if(endPoint["environment"] != null && endPoint["environment"].toLowerCase() == azureStackEnvironment.toLowerCase()) {
+            if(!endPoint["envAuthUrl"] || !endPoint["activeDirectoryResourceId"]) {
+                endPoint =  await azureStackUtility.initializeAzureStackData({"url":endPoint["url"]});
+                
+                if(endPoint["envAuthUrl"] == null) {
+                    throw tl.loc("UnableToFetchAuthorityURL");
+                }
+
+                if(endPoint["activeDirectoryResourceId"] == null) {
+                    throw tl.loc("UnableToFetchActiveDirectory");
+                }
+            } 
+        } else {
+            endPoint["envAuthUrl"] = (endPoint["envAuthUrl"] != null) ? endPoint["envAuthUrl"] : "https://login.windows.net/";
+            endPoint["activeDirectoryResourceId"] = endPoint["url"];
+        }
 
         if(deployToSlotFlag) {
             if (slotName.toLowerCase() === "production") {
