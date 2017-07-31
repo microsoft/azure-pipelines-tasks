@@ -32,6 +32,10 @@
                 "archiveName": "SQLCMD.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/SQLCMD/11.0/SQLCMD.zip",
                 "dest": "./"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/vswhere/1_0_62/vswhere.zip",
+                "dest": "./"
             }
         ]
     }
