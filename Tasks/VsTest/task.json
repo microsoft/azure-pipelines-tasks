@@ -403,6 +403,7 @@
         "testPlanSelector": "Test plan",
         "testRunSelector": "Test run",
         "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
-        "testRunIdInput": "Test run Id : '%s'"
+        "testRunIdInput": "Test run Id : '%s'",
+        "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
     }
 }
