@@ -1,7 +1,7 @@
 {
     "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
     "name": "DotNetCoreInstaller",
-    "friendlyName": ".NET Core Tool Installer (PREVIEW)",
+    "friendlyName": ".NET Core Tool Installer",
     "description": "Acquires a specific version of .NET Core from internet or the tools cache and adds it to the PATH. Use this task to change the version of .NET Core used in subsequent tasks.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=853651)",
     "category": "Tool",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": true,
     "satisfies": ["DotNetCore"],
@@ -37,7 +37,7 @@
             "label": "Version",
             "defaultValue": "1.0.4",
             "required": true,
-            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/><br/>Examples:<br/>1. To install 1.0.4 SDK, use 1.0.4<br/>2. To install 1.1.2 runtime, use 1.1.2<br/>2. To install 2.0 preview 2 runtime, use 2.0.0-preview2-25407-01<br/><br/>For getting more details about exact version, refer [here](https://github.com/dotnet/core/releases)"
+            "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/><br/>Examples:<br/>1. To install 1.0.4 SDK, use 1.0.4<br/>2. To install 1.1.2 runtime, use 1.1.2<br/>2. To install 2.0 preview 2 runtime, use 2.0.0-preview2-25407-01<br/><br/>For getting more details about exact version, refer [here](https://github.com/dotnet/core/blob/master/release-notes/releases.csv)"
         }
     ],
     "execution": {
@@ -47,10 +47,10 @@
     },
     "messages": {
         "ToolFailed": "Tool install failed: %s",
-        "ImplicitVersionNotSupported": "Version should be an explicit version: %s",
+        "ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
         "PrimaryUrlDownloadFailed": "Failed to download .NET Core package using primary URL. Error: %s.",
         "LegacyUrlDownloadFailed": "Failed to download .NET Core package using legacy URL as well. Error: %s.",
-        "DownloadFailed": "Failed to download .NET Core package. Please ensure that .NET Core %s of version %s exists. Check out: https://github.com/dotnet/core/blob/master/release-notes/download-archive.md",
+        "DownloadFailed": "Failed to download .NET Core package. Please ensure that .NET Core %s of version %s exists. Check out: https://github.com/dotnet/core/blob/master/release-notes/releases.csv",
         "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
         "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
         "CheckingToolCache": "Checking if a cached copy exists for this version...",
