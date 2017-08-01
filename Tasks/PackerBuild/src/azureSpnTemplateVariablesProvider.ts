@@ -52,10 +52,10 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
 
     private async getServicePrincipalObjectId(graphCredentials: msRestAzure.ApplicationTokenCredentials): Promise<string> {
         console.log(tl.loc("FetchingSPNDetailsRemotely", graphCredentials.getClientId()));
-        var client = new azureGraph.GraphManagementClient(graphCredentials, graphCredentials.activeDirectoryResourceId);
+        var client = new azureGraph.GraphManagementClient(graphCredentials);
         var servicePrincipal = null;
         try {
-            servicePrincipal = await client.servicePrincipals.GetDefaultServicePrincipal(null);
+            servicePrincipal = await client.servicePrincipals.GetServicePrincipal(null);
         } catch (error) {
             throw tl.loc("FailedToFetchSPNDetailsRemotely", error.message);
         }

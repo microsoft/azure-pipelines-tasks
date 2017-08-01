@@ -49,7 +49,7 @@ export class ServicePrincipals {
         this.client = graphClient;
     }
 
-    public async GetDefaultServicePrincipal(options): Promise<any> {
+    public async GetServicePrincipal(options): Promise<any> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
