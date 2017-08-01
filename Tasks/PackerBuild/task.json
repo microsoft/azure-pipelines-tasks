@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -23,7 +23,7 @@
             "name": "AzureDetails",
             "displayName": "Azure Details",
             "isExpanded": true,
-            "visibleRule": "templateType = builtin"            
+            "visibleRule": "templateType = builtin"
         },
         {
             "name": "DeploymentInputs",
@@ -51,7 +51,7 @@
             "required": true,
             "helpMarkDown": "Select whether you want the task to auto generate Packer template or use custom template provided by you.",
             "options": {
-                "builtin": "Auto generated",                
+                "builtin": "Auto generated",
                 "custom": "User provided"
             },
             "defaultValue": "builtin"
@@ -62,7 +62,7 @@
             "label": "Packer template location",
             "required": true,
             "helpMarkDown": "Path to a custom user-provided template.",
-            "visibleRule": "templateType = custom"            
+            "visibleRule": "templateType = custom"
         },
         {
             "name": "ConnectedServiceName",
@@ -145,7 +145,7 @@
             "label": "Base image URL",
             "required": true,
             "helpMarkDown": "Specify url of base image. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
-            "visibleRule": "baseImageSource = customVhd",            
+            "visibleRule": "baseImageSource = customVhd",
             "groupName": "DeploymentInputs"
         },
         {
@@ -153,12 +153,12 @@
             "type": "pickList",
             "label": "Base image OS",
             "required": true,
-            "defaultValue": "windows",            
+            "defaultValue": "windows",
             "options": {
                 "windows": "Windows",
                 "linux": "Linux"
             },
-            "visibleRule": "baseImageSource = customVhd",            
+            "visibleRule": "baseImageSource = customVhd",
             "groupName": "DeploymentInputs"
         },
         {
@@ -284,6 +284,9 @@
         "ResolvingDeployPackageInput": "Resolving deploy package path.",
         "ResolvingDeployScriptInput": "Resolving deploy script path.",
         "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
-        "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s."
+        "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
+        "FetchingSPNDetailsRemotely": "Fetching SPN details for app id %s from azure AD graph endpoint...",
+        "FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
+        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s."
     }
 }
