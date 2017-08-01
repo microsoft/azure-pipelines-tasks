@@ -3,6 +3,7 @@ import Q = require('q');
 import querystring = require('querystring');
 import webClient = require("./webClient");
 var util = require('util');
+var index = require("./index");
 
 export class ApplicationTokenCredentials {
     private clientId: string;
