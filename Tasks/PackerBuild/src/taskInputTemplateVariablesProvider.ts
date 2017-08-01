@@ -24,9 +24,14 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
 
         var taskParameters = packerHost.getTaskParameters();
 
-        // if custom template is used, task input variables are not required
+        // custom template variables
         if(taskParameters.templateType === constants.TemplateTypeCustom) {
             this._templateVariables = new Map<string, string>();
+            var customTemplateParameters = taskParameters.customTemplateParameters;
+            for (var key in customTemplateParameters) {
+                this._templateVariables.set(key, customTemplateParameters[key])
+            }
+
             return this._templateVariables;
         }
 

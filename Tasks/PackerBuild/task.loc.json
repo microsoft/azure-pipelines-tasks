@@ -65,6 +65,18 @@
       "visibleRule": "templateType = custom"
     },
     {
+      "name": "customTemplateParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.customTemplateParameters",
+      "required": false,
+      "defaultValue": "{}",
+      "visibleRule": "templateType = custom",
+      "helpMarkDown": "ms-resource:loc.input.help.customTemplateParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
@@ -279,12 +291,12 @@
     "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
     "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
     "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
-    "AdditionalParameterIgnored": "ms-resource:loc.messages.AdditionalParameterIgnored",
     "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
     "ResolvingDeployPackageInput": "ms-resource:loc.messages.ResolvingDeployPackageInput",
     "ResolvingDeployScriptInput": "ms-resource:loc.messages.ResolvingDeployScriptInput",
     "ParsingAdditionalBuilderParameters": "ms-resource:loc.messages.ParsingAdditionalBuilderParameters",
     "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed",
+    "ParsingCustomTemplateParameters": "ms-resource:loc.messages.ParsingCustomTemplateParameters",
     "FetchingSPNDetailsRemotely": "ms-resource:loc.messages.FetchingSPNDetailsRemotely",
     "FetchedSPNDetailsRemotely": "ms-resource:loc.messages.FetchedSPNDetailsRemotely",
     "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely"
