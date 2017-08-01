@@ -205,7 +205,7 @@
             "required": false,
             "defaultValue": "{}",
             "groupName": "Advanced",
-            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>However certain keys like builder type, access_key etc that are set by taking user input in the task cannot be overridden by adding keys here. To view/edit the additional parameters in a grid, click on “…” next to text box.",
+            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
             }
