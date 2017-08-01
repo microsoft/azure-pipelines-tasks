@@ -29,6 +29,7 @@ export default class TaskParameters {
     public deployScriptArguments: string;
 
     public additionalBuilderParameters: {};
+    public customTemplateParameters: {};
     public skipTempFileCleanupDuringVMDeprovision: boolean = true;
 
     public imageUri: string;
@@ -41,6 +42,8 @@ export default class TaskParameters {
 
             if(this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
+                console.log(tl.loc("ParsingCustomTemplateParameters"));
+                this.customTemplateParameters = JSON.parse(tl.getInput("customTemplateParameters"));
             } else {
                 this.serviceEndpoint = tl.getInput(constants.ConnectedServiceInputName, true);
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);

@@ -77,11 +77,12 @@ describe('PackerBuild Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
-            assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
-            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
+            runValidations(() => {
+                assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+                assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
-            done();
+            }, tr, done);
         });
 
         it('Creates output variables from packer log for custom windows base image', (done:MochaDone) => {
@@ -107,6 +108,7 @@ describe('PackerBuild Suite', function() {
             assert(tr.stdout.indexOf("copying basedir\\DefaultTemplates\\default.windows.template.json to F:\\somedir\\tempdir\\100") != -1, "built-in template should be copied to temp location");
             done();
         });
+
 
 
         it('Should copy builtin template to temp location for windows template', (done:MochaDone) => {
@@ -440,10 +442,11 @@ describe('PackerBuild Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
-            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated.json content: {\"builders\":[{\"type\":\"azure-arm\",\"ssh_pty\":\"true\"}]}") != -1, "additional parameters should be written to updated template file");
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
+            runValidations(() => {
+                assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+                assert(tr.stdout.indexOf("writing to file F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated.json content: {\"builders\":[{\"type\":\"amazonaws\",\"ssh_pty\":\"true\"}]}") != -1, "additional parameters should be written to updated template file");
+                assert(tr.succeeded, 'task should have succeeded');
+            }, tr, done);
         });
 
     } else {
@@ -611,7 +614,7 @@ describe('PackerBuild Suite', function() {
             tr.run();
 
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.stdout.indexOf("writing to file /tmp/tempdir/100/default.linux.template-builderUpdated.json content: {\"builders\":[{\"type\":\"azure-arm\",\"ssh_pty\":\"true\"}]}") != -1, "additional parameters should be written to updated template file");
+            assert(tr.stdout.indexOf("writing to file /tmp/tempdir/100/default.linux.template-builderUpdated.json content: {\"builders\":[{\"type\":\"amazonaws\",\"ssh_pty\":\"true\"}]}") != -1, "additional parameters should be written to updated template file");
             assert(tr.succeeded, 'task should have succeeded');
             done();
         });
