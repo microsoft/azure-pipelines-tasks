@@ -13,7 +13,7 @@
   "loc.input.label.customTemplateLocation": "Packer template location",
   "loc.input.help.customTemplateLocation": "Path to a custom user-provided template.",
   "loc.input.label.customTemplateParameters": "Template parameters",
-  "loc.input.help.customTemplateParameters": "Specify parameters which will be passed to Packer for building custom template. This should map to \"variables\" section in your custom template. E.g. if the template has a variable named \"drop-location\", then add a parameter here with name \"drop-location\" and a value which you want to use. You can link value to a release variable as well. To view/edit the additional parameters in a grid, click on \"…\" next to textbox.",
+  "loc.input.help.customTemplateParameters": "Specify parameters which will be passed to Packer for building custom template. This should map to \"variables\" section in your custom template. E.g. if the template has a variable named \"drop-location\", then add a parameter here with name \"drop-location\" and a value which you want to use. You can link the value to a release variable as well. To view/edit the additional parameters in a grid, click on \"…\" next to text box.",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for baking and storing the machine image.",
   "loc.input.label.location": "Storage location",
