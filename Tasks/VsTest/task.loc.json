@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 67
+    "Patch": 68
   },
   "demands": [
     "vstest"
@@ -403,6 +403,7 @@
     "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
     "testRunSelector": "ms-resource:loc.messages.testRunSelector",
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
-    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput"
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole"
   }
 }
