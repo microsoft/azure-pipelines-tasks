@@ -3,7 +3,6 @@
   "main": "main.js",
   "dependencies": {
     "vsts-task-lib" : "2.0.5",
-    "vso-node-api": "6.0.1-preview",
-    "strip-json-comments": "1.0.4"
+    "vso-node-api": "6.0.1-preview"
   }
 }
