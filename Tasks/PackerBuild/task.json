@@ -126,7 +126,7 @@
             "type": "pickList",
             "label": "Base image",
             "required": true,
-            "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
+            "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -205,7 +205,7 @@
             "required": false,
             "defaultValue": "{}",
             "groupName": "Advanced",
-            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to textbox.",
+            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>However certain keys like builder type, access_key etc that are set by taking user input in the task cannot be overridden by adding keys here. To view/edit the additional parameters in a grid, click on “…” next to text box.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
             }
@@ -281,7 +281,7 @@
         "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
         "PackerFixFailed": "Packer fix command failed with error : '%s'. This could happen if task does not support packer version.",
         "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
-        "ResolvedPathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
+        "ResolvedPathNotFound": "Not found any file matching pattern: %s under root folder: %s.",
         "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
         "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
         "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
