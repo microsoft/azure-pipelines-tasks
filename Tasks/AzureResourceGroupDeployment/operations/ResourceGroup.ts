@@ -12,9 +12,68 @@ var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 
-var stripJsonComments = require("strip-json-comments");
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
+
+function stripJsonComments(content) {
+    if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
+        return content;
+    }
+
+    var currentChar;
+    var nextChar;
+    var prevChar;
+    var insideQuotes = false;
+    var contentWithoutComments = '';
+    var insideComment = 0;
+    var singlelineComment = 1;
+    var multilineComment = 2;
+
+    for (var i = 0; i < content.length; i++) {
+        currentChar = content[i];
+        nextChar = i + 1 < content.length ? content[i + 1] : "";
+
+        if (insideComment) {
+            var update = false;
+            if (insideComment == singlelineComment && (currentChar + nextChar === '\r\n' || currentChar === '\n')) {
+                i--;
+                insideComment = 0;
+                continue;
+            }
+
+            if (insideComment == multilineComment && currentChar + nextChar === '*/') {
+                i++;
+                insideComment = 0;
+                continue;
+            }
+
+        } else {
+            prevChar = i - 1 >= 0 ? content[i - 1] : "";
+
+            if (currentChar == '"' && prevChar != '\\') {
+                insideQuotes = !insideQuotes
+            }
+
+            if (!insideQuotes) {
+                if (currentChar + nextChar === '//') {
+                    insideComment = singlelineComment;
+                    i++;
+                }
+
+                if (currentChar + nextChar === '/*') {
+                    insideComment = multilineComment;
+                    i++;
+                }
+            }
+        }
+
+        if (!insideComment) {
+            contentWithoutComments += content[i];
+        }
+    }
+
+    return contentWithoutComments;
+}
 
 class Deployment {
     public properties: Object;
