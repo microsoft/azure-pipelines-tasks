@@ -220,7 +220,6 @@ export class ResourceGroup {
         if (fileMatches.length < 1) {
             throw new Error(tl.loc("TemplateFilePatternMatchingNoFile"));
         }
-        console.log(tl.loc("DetectingOnlyUtf"));
         var csmFilePath = fileMatches[0];
         if (!fs.lstatSync(csmFilePath).isDirectory()) {
             tl.debug("Loading CSM Template File.. " + csmFilePath);
