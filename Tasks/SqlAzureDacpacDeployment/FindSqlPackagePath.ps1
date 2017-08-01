@@ -92,36 +92,6 @@ function Get-RegistryValueIgnoreError
     return $null
 }
 
-function Get-RegistrySubKeysIgnoreError
-{
-    param
-    (
-        [parameter(Mandatory = $true)]
-        [Microsoft.Win32.RegistryHive]
-        $RegistryHive,
-
-        [parameter(Mandatory = $true)]
-        [System.String]
-        $Key,
-
-        [parameter(Mandatory = $true)]
-        [Microsoft.Win32.RegistryView]
-        $RegistryView
-    )
-
-    try
-    {
-        $baseKey = [Microsoft.Win32.RegistryKey]::OpenBaseKey($RegistryHive, $RegistryView)
-        $subKey =  $baseKey.OpenSubKey($Key)
-        return $subKey
-    }
-    catch
-    {
-    }
-
-    return $null
-}
-
 function Get-SubKeysInFloatFormat($keys)
 {
     $targetKeys = @() 
