@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -23,7 +23,7 @@
             "name": "AzureDetails",
             "displayName": "Azure Details",
             "isExpanded": true,
-            "visibleRule": "templateType = builtin"            
+            "visibleRule": "templateType = builtin"
         },
         {
             "name": "DeploymentInputs",
@@ -51,7 +51,7 @@
             "required": true,
             "helpMarkDown": "Select whether you want the task to auto generate Packer template or use custom template provided by you.",
             "options": {
-                "builtin": "Auto generated",                
+                "builtin": "Auto generated",
                 "custom": "User provided"
             },
             "defaultValue": "builtin"
@@ -62,7 +62,19 @@
             "label": "Packer template location",
             "required": true,
             "helpMarkDown": "Path to a custom user-provided template.",
-            "visibleRule": "templateType = custom"            
+            "visibleRule": "templateType = custom"
+        },
+        {
+            "name": "customTemplateParameters",
+            "type": "multiLine",
+            "label": "Template parameters",
+            "required": false,
+            "defaultValue": "{}",
+            "visibleRule": "templateType = custom",
+            "helpMarkDown": "Specify parameters which will be passed to Packer for building custom template. This should map to \"variables\" section in your custom template. E.g. if the template has a variable named \"drop-location\", then add a parameter here with name \"drop-location\" and a value which you want to use. You can link the value to a release variable as well. To view/edit the additional parameters in a grid, click on \"…\" next to text box.",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+            }
         },
         {
             "name": "ConnectedServiceName",
@@ -114,7 +126,7 @@
             "type": "pickList",
             "label": "Base image",
             "required": true,
-            "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
+            "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -145,7 +157,7 @@
             "label": "Base image URL",
             "required": true,
             "helpMarkDown": "Specify url of base image. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
-            "visibleRule": "baseImageSource = customVhd",            
+            "visibleRule": "baseImageSource = customVhd",
             "groupName": "DeploymentInputs"
         },
         {
@@ -153,12 +165,12 @@
             "type": "pickList",
             "label": "Base image OS",
             "required": true,
-            "defaultValue": "windows",            
+            "defaultValue": "windows",
             "options": {
                 "windows": "Windows",
                 "linux": "Linux"
             },
-            "visibleRule": "baseImageSource = customVhd",            
+            "visibleRule": "baseImageSource = customVhd",
             "groupName": "DeploymentInputs"
         },
         {
@@ -193,7 +205,7 @@
             "required": false,
             "defaultValue": "{}",
             "groupName": "Advanced",
-            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>However certain keys like builder type, access_key etc that are set by taking user input in the task cannot be overridden by adding keys here. To view/edit the additional parameters in a grid, click on “…” next to textbox.",
+            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
             }
@@ -269,7 +281,7 @@
         "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
         "PackerFixFailed": "Packer fix command failed with error : '%s'. This could happen if task does not support packer version.",
         "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
-        "ResolvedPathNotFound": "Not found any file matching pattern: %s under rool folder: %s.",
+        "ResolvedPathNotFound": "Not found any file matching pattern: %s under root folder: %s.",
         "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
         "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
         "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
@@ -279,11 +291,14 @@
         "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
         "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
         "InstalledPackerVersion": "Current installed packer version is %s.",
-        "AdditionalParameterIgnored": "Additional parameter key '%s' already exists in builder '%s'. New value will be ignored.",
         "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
         "ResolvingDeployPackageInput": "Resolving deploy package path.",
         "ResolvingDeployScriptInput": "Resolving deploy script path.",
         "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
-        "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s."
+        "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
+        "ParsingCustomTemplateParameters": "Parsing custom template parameters json.",
+        "FetchingSPNDetailsRemotely": "Fetching SPN details for app id %s from azure AD graph endpoint...",
+        "FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
+        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s."
     }
 }

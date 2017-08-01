@@ -10,6 +10,7 @@ tr.setInput('customTemplateLocation', 'C:\\custom.template.json');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
 tr.setInput("additionalBuilderParameters", "{}");
+tr.setInput("customTemplateParameters", "{\"client_id\": \"abcdef\", \"drop-location\":\"C:\\\\folder 1\\\\folder-2\"}");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 
@@ -31,18 +32,18 @@ let a: any = <any>{
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate C:\\custom.template-fixed.json": {
+        "packer validate -var client_id=abcdef -var drop-location=C:\\folder 1\\folder-2 C:\\custom.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force C:\\custom.template-fixed.json": {
+        "packer build -force -var client_id=abcdef -var drop-location=C:\\folder 1\\folder-2 C:\\custom.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
          }
     },
     "exist": {
         "C:\\": true,
-        "packer": true       
+        "packer": true
     },
     "rmRF": {
         "C:\\": { 'success': true }
@@ -81,7 +82,7 @@ tr.registerMock('./utilities', {
     getCurrentDirectory: function() {
         return "basedir\\currdir";
     }
-}); 
+});
 
 tr.setAnswers(a);
 tr.run();
