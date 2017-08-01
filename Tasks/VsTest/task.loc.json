@@ -404,6 +404,8 @@
     "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
     "testRunSelector": "ms-resource:loc.messages.testRunSelector",
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
-    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput"
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
+    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound"
   }
 }

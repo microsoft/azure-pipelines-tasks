@@ -170,13 +170,18 @@ export class DistributedTest {
                     filesMatching.push(match);
                 }
             });
+
             tl.debug('Files matching count :' + filesMatching.length);
+            if (utils.Helper.isNullOrUndefined(filesMatching) || filesMatching.length === 0) {
+                throw new Error(tl.loc('noTestSourcesFound', this.dtaTestConfig.sourceFilter.toString()));
+            }
+
             const tempFile = path.join(os.tmpdir(), 'testSources_' + uuid.v1() + '.src');
             fs.writeFileSync(tempFile, filesMatching.join('\n'));
-            tl.debug('tempFile :' + tempFile);
+            tl.debug('Test Sources file :' + tempFile);
             return tempFile;
         } catch (error) {
-            throw new Error('Preparing the test sources file failed. Error :' + error);
+            throw new Error(tl.loc('testSourcesFilteringFailed', error));
         }
     }
 

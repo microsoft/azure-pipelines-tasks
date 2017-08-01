@@ -5,6 +5,7 @@ import * as localTest from './vstest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
+import * as utils from './helpers';
 
 //Starting the VsTest execution
 const taskProps = { state: 'started', result: '' };
@@ -18,14 +19,14 @@ try {
     const testType = tl.getInput('testSelector');
     tl.debug('Value of Test Selector :' + testType);
 
-    if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
+    if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multimachine')
         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
 
         console.log(tl.loc('distributedTestWorkflow'));
         console.log('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
         console.log('======================================================');
-        ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution.toLowerCase(), testtype: testType.toLowerCase() });
+        ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution, testtype: testType.toLowerCase() });
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();

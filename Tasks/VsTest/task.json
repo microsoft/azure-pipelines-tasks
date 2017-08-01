@@ -404,6 +404,8 @@
         "testPlanSelector": "Test plan",
         "testRunSelector": "Test run",
         "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
-        "testRunIdInput": "Test run Id : '%s'"
+        "testRunIdInput": "Test run Id : '%s'",
+        "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
+        "noTestSourcesFound": "No test sources found matching the given filter '%s'"
     }
 }

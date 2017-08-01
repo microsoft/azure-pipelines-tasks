@@ -65,8 +65,8 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const taskInstanceId = getDtaInstanceId();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
 
-    if (releaseId) {
-        if (parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
+    if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
+        if (!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration') {
             const jobId = tl.getVariable('System.JobId');
             dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
         } else {
@@ -186,7 +186,7 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
                 console.log(tl.loc('testSuiteSelected', testSuiteId));
                 testConfiguration.testSuites.push(testSuiteId);
             });
-            testConfiguration.sourceFilter = ['**\\*'];
+            testConfiguration.sourceFilter = ['**\\*, !**\obj\*'];
             console.log(tl.loc('testAssemblyFilterForTestPlan', testConfiguration.sourceFilter));
             break;
         case 'testassemblies':
