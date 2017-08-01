@@ -86,6 +86,7 @@ export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncodi
     if (fileEncoding == null) {
         throw new Error(tl.loc("CouldNotDetectEncoding", fileName));
     }
+    console.log(tl.loc("DetectedEncoding", fileName, fileEncoding));
     return fileEncoding;
 }
 
