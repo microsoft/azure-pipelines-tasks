@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -60,7 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
-                "StopWithDeallocate":  "Stop and deallocate virtual machines",
+                "StopWithDeallocate": "Stop and deallocate virtual machines",
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -204,7 +204,6 @@
                 "EditableOptions": "True"
             }
         },
-
         {
             "name": "deploymentGroupName",
             "type": "pickList",
@@ -239,7 +238,7 @@
     ],
     "OutputVariables": [
         {
-            "name" : "DeploymentOutputs",
+            "name": "DeploymentOutputs",
             "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
         }
     ],
