@@ -34,14 +34,27 @@ export function getDistributedTestConfigurations() {
     }
     console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {        
+    dtaConfiguration.numberOfTestCasesPerSlice = 0;
+    const distributeOption = tl.getInput('distributeTestsOption');
+    if (distributeOption && distributeOption === 'distributeByTestBatch') {
+        const batchSize = parseInt(tl.getInput('distributeByTestBatchOption'));
+        if (!isNaN(batchSize) && batchSize > 0) {
+            dtaConfiguration.numberOfTestCasesPerSlice = batchSize;
+        } else {
+            //fallback to default value in case of invalid input
+            tl.warning(tl.loc('IgnoringNumberOfTestCasesPerSlice'));
+            dtaConfiguration.numberOfTestCasesPerSlice = 10;
+        }
+        console.log(tl.loc('numberOfTestCasesPerSlice', dtaConfiguration.numberOfTestCasesPerSlice));
+    }
+
+    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    if (useVsTestConsole) {
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
     }
 
     // VsTest Console cannot be used for Dev14
-    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0')
-    {
+    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0') {
         console.log(tl.loc('noVstestConsole'));
         dtaConfiguration.useVsTestConsole = 'false';
     }
@@ -228,13 +241,12 @@ function getTiaConfiguration(): models.TiaConfiguration {
         tiaConfiguration.useNewCollector = true;
     }
 
-    var buildReason = tl.getVariable('Build.Reason');
+    const buildReason = tl.getVariable('Build.Reason');
 
     // https://www.visualstudio.com/en-us/docs/build/define/variables
-    if (buildReason && buildReason === "PullRequest") {
-        tiaConfiguration.isPrFlow = "true";
-    }
-    else {
+    if (buildReason && buildReason === 'PullRequest') {
+        tiaConfiguration.isPrFlow = 'true';
+    } else {
         tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
     }
     tiaConfiguration.useTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');

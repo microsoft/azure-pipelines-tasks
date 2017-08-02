@@ -18,9 +18,18 @@ try {
     const testType = tl.getInput('testSelector');
     tl.debug('Value of Test Selector :' + testType);
 
+    let isDistributedRun = false;
+
+    const distributeOption = tl.getInput('distributeTestsOption');
+    if (distributeOption && distributeOption === 'distributeByTestBatch') {
+        isDistributedRun = true;
+    }
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+        isDistributedRun = true;
+    }
 
+    if (isDistributedRun) {
         console.log(tl.loc('distributedTestWorkflow'));
         console.log('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
