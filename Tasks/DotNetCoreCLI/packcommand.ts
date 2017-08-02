@@ -1,10 +1,11 @@
-import * as tl from "vsts-task-lib/task";
-import * as nutil from "nuget-task-common/Utility";
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import * as path from "path";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import { IExecOptions } from "vsts-task-lib/toolrunner";
+import * as nuGetGetter from "nuget-task-common/NuGetToolGetter";
+import * as nutil from "nuget-task-common/Utility";
+import * as path from "path";
+import * as tl from "vsts-task-lib/task";
 import * as utility from './Common/utility';
+
+import { IExecOptions } from "vsts-task-lib/toolrunner";
 
 export async function run(): Promise<void> {
 
@@ -20,21 +21,18 @@ export async function run(): Promise<void> {
     let nobuild = tl.getBoolInput("nobuild");
     let outputDir = undefined;
 
-    try 
-    {
+    try {
         // If outputDir is not provided then the root working directory is set by default.
         // By requiring it, it will throw an error if it is not provided and we can set it to undefined.
         outputDir = tl.getPathInput("outputDir", true);
     }
-    catch(error)
-    {
+    catch (error) {
         outputDir = undefined;
     }
 
-    try{
+    try {
         let version: string = undefined;
-        switch(versioningScheme)
-        {
+        switch (versioningScheme) {
             case "off":
                 break;
             case "byPrereleaseNumber":
@@ -46,8 +44,7 @@ export async function run(): Promise<void> {
             case "byEnvVar":
                 tl.debug(`Getting version from env var: ${versionEnvVar}`);
                 version = tl.getVariable(versionEnvVar);
-                if(!version)
-                {
+                if (!version) {
                     tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoValueFoundForEnvVar"));
                     break;
                 }
@@ -55,49 +52,55 @@ export async function run(): Promise<void> {
             case "byBuildNumber":
                 tl.debug("Getting version number from build number")
 
-                if(tl.getVariable("SYSTEM_HOSTTYPE") === "release")
-                {
+                if (tl.getVariable("SYSTEM_HOSTTYPE") === "release") {
                     tl.setResult(tl.TaskResult.Failed, tl.loc("Error_AutomaticallyVersionReleases"));
                     return;
                 }
 
-                let buildNumber: string =  tl.getVariable("BUILD_BUILDNUMBER");
+                let buildNumber: string = tl.getVariable("BUILD_BUILDNUMBER");
                 tl.debug(`Build number: ${buildNumber}`);
 
                 let versionRegex = /\d+\.\d+\.\d+(?:\.\d+)?/;
                 let versionMatches = buildNumber.match(versionRegex);
-                if (!versionMatches)
-                {
+                if (!versionMatches) {
                     tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoVersionFoundInBuildNumber"));
                     return;
                 }
 
-                if (versionMatches.length > 1)
-                {
+                if (versionMatches.length > 1) {
                     tl.warning(tl.loc("Warning_MoreThanOneVersionInBuildNumber"))
                 }
-                
+
                 version = versionMatches[0];
                 break;
         }
 
         tl.debug(`Version to use: ${version}`);
 
-        if(outputDir && !tl.exist(outputDir))
-        {
+        if (outputDir && !tl.exist(outputDir)) {
             tl.debug(`Creating output directory: ${outputDir}`);
             tl.mkdirP(outputDir);
         }
 
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
-        if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+        if (!searchPattern) {
+            // Use empty string when no project file is specified to operate on the current directory
+            filesList = [""];
+        } else {
+            if (!useLegacyFind) {
+                let findOptions: tl.FindOptions = <tl.FindOptions>{};
+                let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+                filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+            }
+            else {
+                filesList = nutil.resolveFilterSpec(searchPattern);
+            }
         }
-        else {
-            filesList = nutil.resolveFilterSpec(searchPattern);
+
+        if (!filesList || !filesList.length) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
+            return;
         }
 
         tl.debug(`Found ${filesList.length} files`);
@@ -106,12 +109,10 @@ export async function run(): Promise<void> {
         });
 
         let props: string[] = [];
-        if(configuration && configuration !== "$(BuildConfiguration)")
-        {
+        if (configuration && configuration !== "$(BuildConfiguration)") {
             props.push(`Configuration=${configuration}`);
         }
-        if(propertiesInput)
-        {
+        if (propertiesInput) {
             props = props.concat(propertiesInput.split(";"));
         }
 
@@ -142,19 +143,19 @@ function dotnetPackAsync(dotnetPath: string, packageFile: string, outputDir: str
         dotnet.arg(outputDir);
     }
 
-    if (nobuild){
+    if (nobuild) {
         dotnet.arg("--no-build");
     }
 
     if (properties && properties.length > 0) {
-        dotnet.arg("/p:"+properties.join(";"));
+        dotnet.arg("/p:" + properties.join(";"));
     }
 
-    if(version){
-        dotnet.arg("/p:PackageVersion="+version);
+    if (version) {
+        dotnet.arg("/p:PackageVersion=" + version);
     }
 
-    if(verbosity && verbosity !== "-") {
+    if (verbosity && verbosity !== "-") {
         dotnet.arg("--verbosity");
         dotnet.arg(verbosity);
     }

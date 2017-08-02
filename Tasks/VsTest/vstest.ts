@@ -8,11 +8,12 @@ import settingsHelper = require('./settingshelper');
 import vstestVersion = require('./vstestversion');
 import * as utils from './helpers';
 import * as outStream from './outputstream';
+import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
 
 let os = require('os');
 let regedit = require('regedit');
-let uuid = require('node-uuid');
+let uuid = require('uuid');
 let fs = require('fs');
 let xml2js = require('xml2js');
 let perf = require('performance-now');
@@ -30,26 +31,27 @@ let resultsDirectory = null;
 
 export function startTest() {
     try {
-        tl._writeLine(tl.loc('runTestsLocally', 'vstest.console.exe'));
-        tl._writeLine('========================================================');
+        console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
+        console.log('========================================================');
         vstestConfig = taskInputParser.getvsTestConfigurations();
-        tl._writeLine('========================================================');
+        console.log('========================================================');
 
         tiaConfig = vstestConfig.tiaConfig;
 
-        //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
+        //Try to find the results directory for clean up.
+        // This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
         tl.debug('TestRunResults Directory : ' + resultsDirectory);
 
         // clean up old testResults
-        tl.rmRF(resultsDirectory, true);
+        tl.rmRF(resultsDirectory);
         tl.mkdirP(resultsDirectory);
 
         testAssemblyFiles = getTestAssemblies();
 
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
             deleteVstestDiagFile();
-            tl._writeLine('##vso[task.logissue type=warning;code=002004;]');
+            console.log('##vso[task.logissue type=warning;code=002004;]');
             tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
             return;
         }
@@ -64,13 +66,13 @@ export function startTest() {
                     deleteVstestDiagFile();
                 } catch (error) {
                     deleteVstestDiagFile();
-                    tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
+                    console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error;
                 }
             })
             .fail(function (err) {
                 deleteVstestDiagFile();
-                tl._writeLine('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
+                console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
                 throw err;
             });
     } catch (error) {
@@ -114,10 +116,11 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             argsArray.push('/Settings:' + settingsFile);
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
                 tl.debug('Running VsTest with settings : ');
-                utils.Helper.printMultiLineLog(settings, (logLine) => { tl._outStream.write('##vso[task.debug]' + logLine); });
+                utils.Helper.printMultiLineLog(settings, (logLine) => { console.log('##vso[task.debug]' + logLine); });
             });
         } else {
-            if (!tl.exist(settingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
+            if (!tl.exist(settingsFile)) {
+                // because this is filepath input build puts default path in the input. To avoid that we are checking this.
                 tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
                 throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
@@ -230,7 +233,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
         .then(function (code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
-            tl._writeLine('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
+            console.log('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
             tl.debug(tl.loc('UploadTestResultsPerfTime', elapsedTime));
             defer.resolve(String(code));
         })
@@ -344,7 +347,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
 
     //Re-calculate the results directory based on final runsettings and clean up again if required.
     resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
-    tl.rmRF(resultsDirectory, true);
+    tl.rmRF(resultsDirectory);
     tl.mkdirP(resultsDirectory);
 
     tl.cd(workingDirectory);
@@ -451,21 +454,21 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
 function cleanFiles(responseFile: string, listFile: string, testCaseFilterFile: string, testCaseFilterOutput: string): void {
     tl.debug('Deleting the response file ' + responseFile);
-    tl.rmRF(responseFile, true);
+    tl.rmRF(responseFile);
     tl.debug('Deleting the discovered tests file ' + listFile);
-    tl.rmRF(listFile, true);
+    tl.rmRF(listFile);
     tl.debug('Deleting the baseline build id file ' + tiaConfig.baseLineBuildIdFile);
-    tl.rmRF(tiaConfig.baseLineBuildIdFile, true);
+    tl.rmRF(tiaConfig.baseLineBuildIdFile);
     tl.debug('Deleting test case filter file ' + testCaseFilterFile);
-    tl.rmRF(testCaseFilterFile, true);
+    tl.rmRF(testCaseFilterFile);
     tl.debug('Deleting test case filter output file' + testCaseFilterOutput);
-    tl.rmRF(testCaseFilterOutput, true);
+    tl.rmRF(testCaseFilterOutput);
 }
 
 function deleteVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && pathExistsAsFile(vstestConfig.vstestDiagFile)) {
         tl.debug('Deleting vstest diag file ' + vstestConfig.vstestDiagFile);
-        tl.rmRF(vstestConfig.vstestDiagFile, true);
+        tl.rmRF(vstestConfig.vstestDiagFile);
     }
 }
 
@@ -485,7 +488,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
             testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
         }
-        
+
         let testselector = new testselectorinvoker.TestSelectorInvoker();
         let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile);
         if(code === 0) {
@@ -515,7 +518,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                 .finally(function () {
                                                     cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                     tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
-                                                    tl.rmRF(tiaConfig.runIdFile, true);
+                                                    tl.rmRF(tiaConfig.runIdFile);
                                                 });
                                         })
                                         .fail(function (code) {
@@ -543,7 +546,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     .finally(function () {
                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                         tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
-                                                        tl.rmRF(tiaConfig.runIdFile, true);
+                                                        tl.rmRF(tiaConfig.runIdFile);
                                                     });
                                             } else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
@@ -567,7 +570,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                     .finally(function () {
                                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                                         tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
-                                                                        tl.rmRF(tiaConfig.runIdFile, true);
+                                                                        tl.rmRF(tiaConfig.runIdFile);
                                                                     });
                                                             })
                                                             .fail(function (code) {
@@ -599,7 +602,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                     .finally(function () {
                                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
                                                                         tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
-                                                                        tl.rmRF(tiaConfig.runIdFile, true);
+                                                                        tl.rmRF(tiaConfig.runIdFile);
                                                                     });
                                                             })
                                                             .fail(function (code) {
@@ -641,7 +644,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             })
                                             .finally(function () {
                                                 tl.debug('Deleting the discovered tests file' + listFile);
-                                                tl.rmRF(listFile, true);
+                                                tl.rmRF(listFile);
                                             });
                                     })
                                     .fail(function (code) {
@@ -757,7 +760,7 @@ function publishTestResults(testResultsDirectory: string) {
             const tp = new tl.TestPublisher('VSTest');
             tp.publish(resultFiles, 'false', vstestConfig.buildPlatform, vstestConfig.buildConfig, vstestConfig.testRunTitle, vstestConfig.publishRunAttachments);
         } else {
-            tl._writeLine('##vso[task.logissue type=warning;code=002003;]');
+            console.log('##vso[task.logissue type=warning;code=002003;]');
             tl.warning(tl.loc('NoResultsToPublish'));
         }
     }
@@ -767,7 +770,7 @@ function cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
     if (temporarySettingsFile && vstestConfig.settingsFile !== temporarySettingsFile) {
         try {
-            tl.rmRF(temporarySettingsFile, true);
+            tl.rmRF(temporarySettingsFile);
         } catch (error) {
             //ignore. just cleanup.
         }

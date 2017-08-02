@@ -16,8 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
+<<<<<<< HEAD
     "Minor": 1,
     "Patch": 0
+=======
+    "Minor": 0,
+    "Patch": 68
+>>>>>>> master
   },
   "demands": [
     "vstest"
@@ -428,6 +433,7 @@
     "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
     "testRunSelector": "ms-resource:loc.messages.testRunSelector",
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
-    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput"
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole"
   }
 }

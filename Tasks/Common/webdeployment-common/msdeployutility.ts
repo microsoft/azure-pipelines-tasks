@@ -150,7 +150,7 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
             }
         }
         if(latestKeyVersion < 3) {
-            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", latestKeyVersion));
+            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove", latestKeyVersion));
         }
          defer.resolve(latestSubKey);
     });

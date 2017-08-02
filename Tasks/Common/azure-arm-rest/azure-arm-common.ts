@@ -1,23 +1,20 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
-var httpClient = require('vso-node-api/HttpClient');
+import webClient = require("./webClient");
 var util = require('util');
-
-var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-
-var azureApiVersion = 'api-version=2016-08-01';
-
 
 export class ApplicationTokenCredentials {
     private clientId: string;
     private domain: string;
     private secret: string;
-    public armUrl: string;
+    public baseUrl: string;
     public authorityUrl: string;
+    public activeDirectoryResourceId: string;
+    public isAzureStackEnvironment: boolean;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, armUrl: string, authorityUrl: string) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error(tl.loc("ClientIdCannotBeEmpty"));
         }
@@ -30,7 +27,7 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("SecretCannotBeEmpty"));
         }
 
-        if (!Boolean(armUrl) || typeof armUrl.valueOf() !== 'string') {
+        if (!Boolean(baseUrl) || typeof baseUrl.valueOf() !== 'string') {
             throw new Error(tl.loc("armUrlCannotBeEmpty"));
         }
 
@@ -38,11 +35,21 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("authorityUrlCannotBeEmpty"));
         }
 
+        if (!Boolean(activeDirectoryResourceId) || typeof activeDirectoryResourceId.valueOf() !== 'string') {
+            throw new Error(tl.loc("activeDirectoryResourceIdUrlCannotBeEmpty"));
+        }
+
+        if(!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
+            isAzureStackEnvironment = false;
+        }
+
         this.clientId = clientId;
         this.domain = domain;
         this.secret = secret;
-        this.armUrl = armUrl;
+        this.baseUrl = baseUrl;
         this.authorityUrl = authorityUrl;
+        this.activeDirectoryResourceId = activeDirectoryResourceId;
+        this.isAzureStackEnvironment = isAzureStackEnvironment;
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
@@ -53,31 +60,44 @@ export class ApplicationTokenCredentials {
         return this.token_deferred;
     }
 
+    public getDomain(): string {
+        return this.domain;
+    }
+
+    public getClientId(): string {
+        return this.clientId;
+    }
+
     private getAuthorizationToken(): Q.Promise<string> {
         var deferred = Q.defer<string>();
-        var oauthTokenRequestUrl = this.authorityUrl + this.domain + "/oauth2/token/";
-        var requestData = querystring.stringify({
-            resource: this.armUrl,
+
+        let webRequest = new webClient.WebRequest();
+        webRequest.method = "POST";
+        webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
+        webRequest.body = querystring.stringify({
+            resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
             grant_type: "client_credentials",
             client_secret: this.secret
         });
-        var requestHeader = {
+        webRequest.headers = {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
         };
 
-        tl.debug('Requesting for Auth Token: ' + oauthTokenRequestUrl);
-        httpObj.send('POST', oauthTokenRequestUrl, requestData, requestHeader, (error, response, body) => {
-            if (error) {
-                deferred.reject(error);
+        webClient.sendRequest(webRequest).then(
+            (response: webClient.WebResponse) => {
+                if (response.statusCode == 200) {
+                    deferred.resolve(response.body.access_token);
+                }
+                else {
+                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
+                }
+            },
+            (error) => {
+                deferred.reject(error)
             }
-            else if (response.statusCode == 200) {
-                deferred.resolve(JSON.parse(body).access_token);
-            }
-            else {
-                deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
-            }
-        });
+        );
+
         return deferred.promise;
     }
 }

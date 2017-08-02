@@ -23,6 +23,7 @@ export default class VirtualMachineScaleSet {
 
         switch (this.taskParameters.action) {
             case "UpdateImage":
+            case "Update image":
                 var extensionMetadata: azureModel.VMExtensionMetadata = null;
                 if(!!this.taskParameters.customScriptUrl) {
                     extensionMetadata = this._getCustomScriptExtensionMetadata(osType);
@@ -61,7 +62,7 @@ export default class VirtualMachineScaleSet {
         return new Promise<any>((resolve, reject) => {
             client.virtualMachineScaleSets.list(null, (error, result, request, response) => {
                 if (error) {
-                    return reject(tl.loc("VMSSListFetchFailed", this.taskParameters.vmssName, utils.getError(error)));
+                    return reject(tl.loc("VMSSListFetchFailed", utils.getError(error)));
                 }
 
                 var vmssList: azureModel.VMSS[] = result;
@@ -142,7 +143,7 @@ export default class VirtualMachineScaleSet {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachineScaleSets.updateImage(resourceGroupName, this.taskParameters.vmssName, this.taskParameters.imageUrl, null, (error, result, request, response) => {
                 if (error) {
-                    return reject(tl.loc("VMSSImageUpdateFailed", utils.getError(error)));
+                    return reject(tl.loc("VMSSImageUpdateFailed", this.taskParameters.vmssName, utils.getError(error)));
                 }
                 console.log(tl.loc("UpdatedVMSSImage"));
                 return resolve();

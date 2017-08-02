@@ -10,7 +10,7 @@
   "loc.input.label.composeFilePath": "Compose File Path",
   "loc.input.help.composeFilePath": "Path to the compose file that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.applicationName": "Application Name",
-  "loc.input.help.applicationName": "The Service Fabric Application Name of the application being deployed. Use fabric:/ as a prefix.",
+  "loc.input.help.applicationName": "Name of the application being deployed.",
   "loc.input.label.registryCredentials": "Registry Credentials Source",
   "loc.input.help.registryCredentials": "Choose if/how credentials for the docker registry will be provided.",
   "loc.input.label.dockerRegistryEndpointName": "Docker Registry Connection",
@@ -43,5 +43,6 @@
   "loc.messages.WaitingForDeploy": "Waiting for deploy...",
   "loc.messages.CurrentStatus": "Current Status: {0}",
   "loc.messages.DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
-  "loc.messages.CheckingComposeFile": "Checking compose file"
+  "loc.messages.CheckingComposeFile": "Checking compose file",
+  "loc.messages.UsingPreviewAPI": "Using the preview APIs"
 }

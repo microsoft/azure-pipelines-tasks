@@ -13,11 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 11
+    "Minor": 2,
+    "Patch": 2
   },
   "demands": [],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.119.1",
   "groups": [
     {
       "name": "AzureDetails",
@@ -236,6 +236,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
+  "OutputVariables": [
+    {
+      "name": "DeploymentOutputs",
+      "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+    }
+  ],
   "dataSourceBindings": [
     {
       "target": "resourceGroupName",
@@ -374,6 +380,7 @@
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
     "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "DetectedFileEncoding": "ms-resource:loc.messages.DetectedFileEncoding",
     "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
     "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty",
     "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed",
@@ -389,6 +396,11 @@
     "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
     "ProvisioningStatusOfExtensionIsNotSucceeded": "ms-resource:loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded",
     "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
-    "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound"
+    "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound",
+    "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
+    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData"
   }
 }

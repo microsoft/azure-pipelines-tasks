@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 120,
+        "Minor": 122,
         "Patch": 0
     },
     "demands": [
@@ -208,7 +208,7 @@
             "required": false,
             "groupName": "advanced",
             "defaultValue": "-Xmx1024m",
-            "helpMarkDown": "Sets the GRADLE_OPTS enviroment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
+            "helpMarkDown": "Sets the GRADLE_OPTS environment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
         },
         {
             "name": "sqAnalysisEnabled",
@@ -385,7 +385,7 @@
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
         "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
-        "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
+        "codeAnalysisDisabled": "Code analysis is disabled outside of the build environment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
         "NoCodeCoverage": "No code coverage results were found to publish." 

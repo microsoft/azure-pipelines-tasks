@@ -1,24 +1,18 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import stream = require('stream');
-
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
-
-var request = require('request');
-
-import task = require('./jenkinsqueuejobtask');
-import TaskOptions = task.TaskOptions;
-
-import job = require('./job');
-import Job = job.Job;
-
-import jobqueue = require('./jobqueue');
-import JobQueue = jobqueue.JobQueue;
-
+import request = require('request');
 import url = require('url');
 
-export function getFullErrorMessage(httpResponse, message: string): String {
-    var fullMessage = message +
+import { Job } from './job';
+import { JobQueue } from './jobqueue';
+import { TaskOptions } from './jenkinsqueuejobtask';
+
+export function getFullErrorMessage(httpResponse, message: string): string {
+    const fullMessage: string = message +
         '\nHttpResponse.statusCode=' + httpResponse.statusCode +
         '\nHttpResponse.statusMessage=' + httpResponse.statusMessage +
         '\nHttpResponse=\n' + JSON.stringify(httpResponse);
@@ -26,7 +20,7 @@ export function getFullErrorMessage(httpResponse, message: string): String {
 }
 
 export function failReturnCode(httpResponse, message: string): void {
-    var fullMessage = message +
+    const fullMessage: string = message +
         '\nHttpResponse.statusCode=' + httpResponse.statusCode +
         '\nHttpResponse.statusMessage=' + httpResponse.statusMessage +
         '\nHttpResponse=\n' + JSON.stringify(httpResponse);
@@ -53,7 +47,7 @@ export function convertJobName(jobName: string): string {
 }
 
 export function addUrlSegment(baseUrl: string, segment: string): string {
-    var resultUrl = null;
+    let resultUrl: string;
     if (baseUrl.endsWith('/') && segment.startsWith('/')) {
         resultUrl = baseUrl + segment.slice(1);
     } else if (baseUrl.endsWith('/') || segment.startsWith('/')) {
@@ -65,8 +59,8 @@ export function addUrlSegment(baseUrl: string, segment: string): string {
 }
 
 export function isPipelineJob(job: Job, taskOptions: TaskOptions): Q.Promise<boolean> {
-    let deferred = Q.defer<boolean>();
-    let wfapiUrl = `${job.taskUrl}/wfapi`;
+    const deferred: Q.Deferred<boolean> = Q.defer<boolean>();
+    const wfapiUrl: string = `${job.TaskUrl}/wfapi`;
     request.get({ url: wfapiUrl, strictSSL: taskOptions.strictSSL }, (err, response, body) => {
         if (response.statusCode === 200) {
             deferred.resolve(true);
@@ -79,8 +73,8 @@ export function isPipelineJob(job: Job, taskOptions: TaskOptions): Q.Promise<boo
 }
 
 export function getPipelineReport(job: Job, taskOptions: TaskOptions): Q.Promise<any> {
-    let deferred = Q.defer<any>();
-    let wfapiUrl = `${job.taskUrl}/${job.executableNumber}/wfapi/describe`;
+    const deferred: Q.Deferred<any> = Q.defer<any>();
+    const wfapiUrl: string = `${job.TaskUrl}/${job.ExecutableNumber}/wfapi/describe`;
     request.get({ url: wfapiUrl, strictSSL: taskOptions.strictSSL }, (err, response, body) => {
         if (response.statusCode === 200) {
             deferred.resolve(body);
@@ -93,9 +87,9 @@ export function getPipelineReport(job: Job, taskOptions: TaskOptions): Q.Promise
 }
 
 export function getUrlAuthority(myUrl: string): string {
-    let parsed: url.Url = url.parse(myUrl);
+    const parsed: url.Url = url.parse(myUrl);
 
-    let result = '';
+    let result: string = '';
     if (parsed.auth) {
         result += parsed.auth;
     } else {
@@ -105,13 +99,12 @@ export function getUrlAuthority(myUrl: string): string {
     }
 
     return result;
-
 }
 
 export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions): Q.Promise<Job> {
-    var defer: Q.Deferred<Job> = Q.defer<Job>();
+    const defer: Q.Deferred<Job> = Q.defer<Job>();
 
-    var poll = async () => {
+    const poll = async () => {
         await createRootJob(queueUri, jobQueue, taskOptions).then((job: Job) => {
             if (job != null) {
                 defer.resolve(job);
@@ -121,7 +114,7 @@ export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOpti
             }
         }).fail((err: any) => {
             defer.reject(err);
-        })
+        });
     };
 
     poll();
@@ -130,7 +123,7 @@ export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOpti
 }
 
 function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions): Q.Promise<Job> {
-    var defer: Q.Deferred<Job> = Q.defer<Job>();
+    const defer: Q.Deferred<Job> = Q.defer<Job>();
     tl.debug('createRootJob(): ' + queueUri);
 
     request.get({ url: queueUri, strictSSL: taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
@@ -142,22 +135,22 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
             } else {
                 defer.reject(err);
             }
-        } else if (httpResponse.statusCode != 200) {
+        } else if (httpResponse.statusCode !== 200) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job progress tracking failed to read job queue'));
         } else {
-            var parsedBody = JSON.parse(body);
-            tl.debug("parsedBody for: " + queueUri + ": " + JSON.stringify(parsedBody));
+            const parsedBody: any = JSON.parse(body);
+            tl.debug(`parsedBody for: ${queueUri} : ${JSON.stringify(parsedBody)}`);
 
             // canceled is spelled wrong in the body with 2 Ls (checking correct spelling also in case they fix it)
             if (parsedBody.cancelled || parsedBody.canceled) {
                 defer.reject('Jenkins job canceled.');
             } else {
-                var executable = parsedBody.executable;
+                const executable: any = parsedBody.executable;
                 if (!executable) {
                     // job has not actually been queued yet
                     defer.resolve(null);
                 } else {
-                    var rootJob: Job = new job.Job(jobQueue, null, parsedBody.task.url, parsedBody.executable.url, parsedBody.executable.number, parsedBody.task.name);
+                    const rootJob: Job = new Job(jobQueue, null, parsedBody.task.url, parsedBody.executable.url, parsedBody.executable.number, parsedBody.task.name);
                     defer.resolve(rootJob);
                 }
             }
@@ -168,9 +161,9 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
 }
 
 export function pollSubmitJob(taskOptions: TaskOptions): Q.Promise<string> {
-    var defer: Q.Deferred<string> = Q.defer<string>();
+    const defer: Q.Deferred<string> = Q.defer<string>();
 
-    var poll = async () => {
+    const poll = async () => {
         await getCrumb(taskOptions).then(async (crumb: string) => {
             if (crumb != null) {
                 await submitJob(taskOptions).then((queueUri: string) => {
@@ -198,27 +191,27 @@ export function pollSubmitJob(taskOptions: TaskOptions): Q.Promise<string> {
 }
 
 function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
-    var defer: Q.Deferred<string> = Q.defer<string>();
+    const defer: Q.Deferred<string> = Q.defer<string>();
     tl.debug('submitJob(): ' + JSON.stringify(taskOptions));
 
     function addCrumb(json: any): any {
         if (taskOptions.crumb && taskOptions.crumb != taskOptions.NO_CRUMB) {
             json.headers = {};
-            let splitIndex: number = taskOptions.crumb.indexOf(':');
-            let crumbName = taskOptions.crumb.substr(0, splitIndex);
-            let crumbValue = taskOptions.crumb.slice(splitIndex + 1);
+            const splitIndex: number = taskOptions.crumb.indexOf(':');
+            const crumbName: string = taskOptions.crumb.substr(0, splitIndex);
+            const crumbValue: string = taskOptions.crumb.slice(splitIndex + 1);
             json.headers[crumbName] = crumbValue;
         }
         return json;
     }
 
-    let teamBuildPostData = addCrumb(
+    const teamBuildPostData: any = addCrumb(
         {
             url: taskOptions.teamJobQueueUrl,
             form: {
                 json: JSON.stringify({
-                    "team-build": getTeamParameters(taskOptions),
-                    "parameter": parseJobParametersTeamBuild(taskOptions.jobParameters)
+                    'team-build': getTeamParameters(taskOptions),
+                    'parameter': parseJobParametersTeamBuild(taskOptions.jobParameters)
                 })
             },
             strictSSL: taskOptions.strictSSL
@@ -236,12 +229,12 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
             } else {
                 defer.reject(err);
             }
-        } else if (httpResponse.statusCode == 404) { // team-build plugin endpoint failed because it is not installed
+        } else if (httpResponse.statusCode === 404) { // team-build plugin endpoint failed because it is not installed
             console.log('Install the "Team Foundation Server Plug-in" for improved Jenkins integration\n' + taskOptions.teamPluginUrl);
             taskOptions.teamBuildPluginAvailable = false;
 
             tl.debug('httpResponse: ' + JSON.stringify(httpResponse));
-            let jobQueuePostData = addCrumb(taskOptions.parameterizedJob ?
+            const jobQueuePostData: any = addCrumb(taskOptions.parameterizedJob ?
                 {
                     url: taskOptions.jobQueueUrl,
                     formData: parseJobParameters(taskOptions.jobParameters),
@@ -266,7 +259,7 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                 } else if (httpResponse.statusCode != 201) {
                     defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
                 } else {
-                    var queueUri = addUrlSegment(httpResponse.headers.location, 'api/json');
+                    const queueUri: string = addUrlSegment(httpResponse.headers.location, 'api/json');
                     defer.resolve(queueUri);
                 }
             }).auth(taskOptions.username, taskOptions.password, true);
@@ -274,8 +267,8 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
             defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
         } else {
             taskOptions.teamBuildPluginAvailable = true;
-            let jsonBody = JSON.parse(body)
-            let queueUri = addUrlSegment(jsonBody.created, 'api/json');
+            const jsonBody: any = JSON.parse(body);
+            const queueUri: string = addUrlSegment(jsonBody.created, 'api/json');
             defer.resolve(queueUri);
         }
     }).auth(taskOptions.username, taskOptions.password, true);
@@ -284,9 +277,10 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
 }
 
 function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
-    let defer: Q.Deferred<string> = Q.defer<string>();
-    let crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
+    const defer: Q.Deferred<string> = Q.defer<string>();
+    const crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
+
     request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function (err, httpResponse, body) {
         if (err) {
             if (err.code == 'ECONNRESET') {
@@ -295,11 +289,11 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
             } else {
                 defer.reject(err);
             }
-        } else if (httpResponse.statusCode == 404) {
+        } else if (httpResponse.statusCode === 404) {
             tl.debug('crumb endpoint not found');
             taskOptions.crumb = taskOptions.NO_CRUMB;
             defer.resolve(taskOptions.NO_CRUMB);
-        } else if (httpResponse.statusCode != 200) {
+        } else if (httpResponse.statusCode !== 200) {
             failReturnCode(httpResponse, 'crumb request failed.');
             defer.reject(getFullErrorMessage(httpResponse, 'Crumb request failed.'));
         } else {
@@ -308,12 +302,12 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
             defer.resolve(taskOptions.crumb);
         }
     }).auth(taskOptions.username, taskOptions.password, true);
+
     return defer.promise;
 }
 
 export class StringWritable extends stream.Writable {
-
-    value: string = "";
+    private value: string = '';
 
     constructor(options) {
         super(options);
@@ -341,24 +335,25 @@ export class StringWritable extends stream.Writable {
  *
  */
 function parseJobParameters(jobParameters: string[]): any {
-    var formData = {};
-    for (var i = 0; i < jobParameters.length; i++) {
-        var paramLine = jobParameters[i].trim();
-        var splitIndex = paramLine.indexOf('=');
+    let formData: any = {};
+    for (let i: number = 0; i < jobParameters.length; i++) {
+        const paramLine: string = jobParameters[i].trim();
+        const splitIndex: number = paramLine.indexOf('=');
         if (splitIndex <= 0) { // either no paramValue (-1), or no paramName (0)
             throw 'Job parameters should be specified as "parameterName=parameterValue" with one name, value pair per line. Invalid parameter line: ' + jobParameters[i];
         }
-        var paramName = paramLine.substr(0, splitIndex).trim();
-        var paramValue = paramLine.slice(splitIndex + 1).trim();
+        const paramName: string = paramLine.substr(0, splitIndex).trim();
+        const paramValue: string = paramLine.slice(splitIndex + 1).trim();
         formData[paramName] = paramValue;
     }
     return formData;
 }
 
 function parseJobParametersTeamBuild(jobParameters: string[]): any {
-    let formData: any = parseJobParameters(jobParameters);
-    let jsonArray: any[] = [];
-    for (var paramName in formData) {
+    const formData: any = parseJobParameters(jobParameters);
+    const jsonArray: any[] = [];
+
+    for (const paramName in formData) {
         let json = {};
         json['name'] = paramName;
         json['value'] = formData[paramName];
@@ -368,9 +363,9 @@ function parseJobParametersTeamBuild(jobParameters: string[]): any {
 }
 
 function getTeamParameters(taskOptions: TaskOptions): any {
-    var formData = {};
-    allTeamBuildVariables.forEach(variableName => {
-        let paramValue = tl.getVariable(variableName);
+    const formData: any = {};
+    allTeamBuildVariables.forEach((variableName) => {
+        const paramValue: string = tl.getVariable(variableName);
         if (paramValue) {
             formData[variableName] = paramValue;
         }
@@ -385,7 +380,7 @@ function getTeamParameters(taskOptions: TaskOptions): any {
 }
 
 //https://www.visualstudio.com/docs/build/define/variables
-var allTeamBuildVariables: string[] = [
+const allTeamBuildVariables: string[] = [
     //control variables
     'Build.Clean',
     'Build.SyncSources',

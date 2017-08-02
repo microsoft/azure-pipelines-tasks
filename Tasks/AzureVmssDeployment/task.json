@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -28,7 +28,7 @@
             "name": "Image",
             "displayName": "Image Details",
             "isExpanded": true,
-            "visibleRule": "action = UpdateImage"
+            "visibleRule": "action = Update image || action = UpdateImage"
         }
     ],
     "inputs": [
@@ -45,12 +45,12 @@
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "UpdateImage",
+            "defaultValue": "Update image",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the scale set.",
             "options": {
-                "UpdateImage": "Update image"
+                "Update image": "Update image"
             }
         },
         {
@@ -92,26 +92,24 @@
         "TaskNotFound": "Task.json file could not be found: %s",
         "TaskConstructorFailed": "Task failed while initializing. Error: %s",
         "InvalidValue": "%s is not a valid value. The valid values are: %s",
-        "VMSSListFetchFailed": "Failed to fetch VMSS details.",
+        "VMSSListFetchFailed": "Failed to fetch VMSS details. Error: %s",
         "NoVMSSFound": "No VMSS found with name %s.",
         "FailedToGetRGForVMSS": "Failed to get resource group information for VMSS %s.",
         "VMSSImageUpdateFailed": "Failed to update image for VMSS %s. Error: %s",
         "UpdatedVMSSImage": "Successfully updated VMSS image.",
-        "VMSSUpdateImage": "Updating VMSS %s image to %s",
-        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
-        "GetVMSSFailedWillRetry": "Failed to get VMSS details with resource group %s and name %s. Error: %s. Will retry.",
-        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
-        "WaitingForVMSSImageUpdateCompletion": "Waiting for VMSS image to get updated..",
-        "VMSSImageUpdateTimedOut": "Timed out waiting for VMSS image update to complete.",
-        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
-        "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
-        "VMSSImageAlreadyUptoDate": "VMSS image is already up-to-date for %s.",
         "GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
         "CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
         "CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
         "RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
-        "RemoveVMSSExtensionsFailed": "Failed to remove extension %s. Error: %s.",
-        "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error:%s.",
+        "RemoveVMSSExtensionsFailed": "Failed to remove VM extension %s. Error: %s.",
+        "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error: %s.",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+        "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
+        "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+        "NewVMSSImageUrl": "Url for new VMSS image: %s.",
+        "VMSSUpdateImage": "Updating VMSS %s to use new image...",
         "ResourceNameCannotBeNull": "Resource name cannot be null."
     }
 }

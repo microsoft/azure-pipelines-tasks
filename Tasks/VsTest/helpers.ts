@@ -7,7 +7,7 @@ import * as models from './models';
 import * as os from 'os';
 
 const str = require('string');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
@@ -135,6 +135,9 @@ export class Helper {
     public static printMultiLineLog(multiLineString: string, logFunction: Function) {
         const lines = multiLineString.toString().split('\n');
         lines.forEach(function (line: string) {
+            if (line.length === 0) {
+                return;
+            }
             logFunction(line);
         });
     }

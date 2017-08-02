@@ -14,14 +14,14 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 122,
+    "Patch": 0
+  },
   "demands": [
     "maven"
   ],
-  "version": {
-    "Major": 1,
-    "Minor": 120,
-    "Patch": 2
-  },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

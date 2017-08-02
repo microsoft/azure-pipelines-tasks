@@ -16,8 +16,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
+<<<<<<< HEAD
         "Minor": 1,
         "Patch": 0
+=======
+        "Minor": 0,
+        "Patch": 68
+>>>>>>> master
     },
     "demands": [
         "vstest"
@@ -190,7 +195,7 @@
             "label": "Test platform version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Sutdio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
+            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
              "options": {
@@ -374,25 +379,25 @@
         "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
         "VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
         "NoResultsToPublish": "No results found to publish.",
-        "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
-        "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
+        "ErrorWhileReadingRunSettings": "Error occurred while reading run settings file. Error : %s.",
+        "ErrorWhileReadingTestSettings": "Error occurred while reading test settings file. Error : %s.",
         "RunInParallelNotSupported": "Running tests in parallel on multi-core machines is not supported with testsettings file. This option will be ignored.",
         "InvalidSettingsFile": "The specified settings file %s is invalid or does not exist. Provide a valid settings file or clear the field.",
         "UpdateThreeOrHigherRequired": "Install Visual Studio 2015 Update 3 or higher on your build agent machine to run the tests in parallel.",
-        "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
+        "ErrorOccuredWhileSettingRegistry": "Error occurred while setting registry key, Error: %s.",
         "ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
         "ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
         "ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
         "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
         "ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-        "ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
+        "ErrorWhileListingDiscoveredTests": "Error occurred while discovering the tests. All the tests will be executed for this run.",
         "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds.",
         "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds.",
         "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
         "ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
         "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
         "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
-        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
+        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnostics via the exe.config files",
         "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies.",
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
@@ -428,6 +433,7 @@
         "testPlanSelector": "Test plan",
         "testRunSelector": "Test run",
         "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
-        "testRunIdInput": "Test run Id : '%s'"
+        "testRunIdInput": "Test run Id : '%s'",
+        "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
     }
 }

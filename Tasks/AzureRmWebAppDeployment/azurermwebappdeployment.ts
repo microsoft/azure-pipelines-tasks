@@ -66,7 +66,7 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(webAppKind && webAppKind === "linux" && dockerNamespace)
+        if(webAppKind && webAppKind.indexOf("linux") !== -1 && dockerNamespace)
         {
             tl.debug("Performing container based deployment.");
 

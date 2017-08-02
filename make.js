@@ -314,10 +314,11 @@ target.testLegacy = function() {
                 var modTestCopyDest = path.join(legacyTestPath, 'L0', `Common-${modName}`);
                 if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
                     matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
-
+                }
+                var modCopySource = path.join(commonPath, modName);
+                var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
+                if (test('-e', modCopySource) && !test('-e', modCopyDest)) {
                     // copy the common module layout
-                    var modCopySource = path.join(commonPath, modName);
-                    var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
                     matchCopy('*', modCopySource, modCopyDest, { noRecurse: true, matchBase: true });
                 }
             });
