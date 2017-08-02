@@ -6,8 +6,9 @@ export default class AzureVmssTaskParameters {
     public action: string;
     public vmssName: string;
     public imageUrl: string;
-    public customScriptUrl: string;
+    public customScriptsPath: string;
     public customScriptCommand: string;
+    public customScriptsStorageAccount: string;
     public subscriptionId: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
 
@@ -18,8 +19,9 @@ export default class AzureVmssTaskParameters {
             this.vmssName = tl.getInput("vmssName", true);
             this.imageUrl = tl.getInput("imageUrl", true);
             this.action = tl.getInput("action");
-            this.customScriptUrl = tl.getInput("customScriptUrl");
+            this.customScriptsPath = tl.getInput("customScriptsPath");
             this.customScriptCommand = tl.getInput("customScriptCommand");
+            this.customScriptsStorageAccount = tl.getInput("customScriptsStorageAccount");
             this.credentials = this.getARMCredentials(connectedService);
         }
         catch (error) {
@@ -34,7 +36,7 @@ export default class AzureVmssTaskParameters {
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', false);
+        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', true);
         activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : armUrl;
         var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, false);
         return credentials;

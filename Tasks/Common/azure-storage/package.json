@@ -1,7 +1,7 @@
 {
-  "name": "azure-storage-transfer",
+  "name": "azure-storage",
   "version": "1.0.0",
-  "description": "Common Lib for Azure storage transfer",
+  "description": "Common Lib for Azure storage service",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
