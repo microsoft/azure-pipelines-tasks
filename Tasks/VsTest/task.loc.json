@@ -406,6 +406,7 @@
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
     "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
     "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
-    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound"
+    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound",
+    "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning"
   }
 }

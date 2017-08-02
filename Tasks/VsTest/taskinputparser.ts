@@ -7,6 +7,7 @@ import * as utils from './helpers';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
 const uuid = require('uuid');
+const regedit = require('regedit');
 
 export function getDistributedTestConfigurations() {
     const dtaConfiguration = {} as models.DtaTestConfigurations;
@@ -120,6 +121,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
 
+    testConfiguration.runUITests = tl.getBoolInput('uiTests');
+    logWarningForWER(testConfiguration.runUITests);
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
@@ -166,6 +169,30 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
 
     versionFinder.getVsTestRunnerDetails(testConfiguration);
+}
+
+function logWarningForWER(runUITests : boolean) {
+    if (!runUITests) {
+        return;
+    }
+
+    const regPathHKLM = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+    const regPathHKCU = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+
+    if ((!isDontShowUIRegKeySet(regPathHKLM)) && (!isDontShowUIRegKeySet(regPathHKLM))) {
+        tl.warning(tl.loc('DontShowWERUIDisabledWarning'));
+    }
+}
+
+function isDontShowUIRegKeySet(regPath: string) : boolean {
+    const regValue = 'DontShowUI';
+    regedit.list(regPath).on('data', (entry) => {
+            if (entry && entry.data && entry.data.values &&
+            entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
+                return true;
+            }
+    });
+    return false;
 }
 
 function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations) {

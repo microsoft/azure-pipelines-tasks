@@ -406,6 +406,7 @@
         "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
         "testRunIdInput": "Test run Id : '%s'",
         "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
-        "noTestSourcesFound": "No test sources found matching the given filter '%s'"
+        "noTestSourcesFound": "No test sources found matching the given filter '%s'",
+        "DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang"
     }
 }
