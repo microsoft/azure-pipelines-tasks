@@ -178,7 +178,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 
-function logWarningForWER(runUITests : boolean) {
+async function logWarningForWER(runUITests : boolean) {
     if (!runUITests) {
         return;
     }
@@ -186,20 +186,25 @@ function logWarningForWER(runUITests : boolean) {
     const regPathHKLM = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
     const regPathHKCU = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
 
-    if ((!isDontShowUIRegKeySet(regPathHKLM)) && (!isDontShowUIRegKeySet(regPathHKLM))) {
+    const isEnabledInHKCU = await isDontShowUIRegKeySet(regPathHKCU);
+    const isEnabledInHKLM = await isDontShowUIRegKeySet(regPathHKLM);
+
+    if (!isEnabledInHKCU && !isEnabledInHKLM) {
         tl.warning(tl.loc('DontShowWERUIDisabledWarning'));
     }
 }
 
-function isDontShowUIRegKeySet(regPath: string) : boolean {
+function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean>  {
+    const defer = Q.defer<boolean>();
     const regValue = 'DontShowUI';
     regedit.list(regPath).on('data', (entry) => {
             if (entry && entry.data && entry.data.values &&
             entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
-                return true;
+                defer.resolve(true);
             }
+            defer.resolve(false);
     });
-    return false;
+    return defer.promise;
 }
 
 function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations) {
