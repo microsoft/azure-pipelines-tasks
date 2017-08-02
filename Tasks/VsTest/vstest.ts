@@ -174,12 +174,20 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
     argsArray.forEach(function (arr, i) {
         argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
     });
-    fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
+
+    let otherConsoleOptions : string = '';
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        otherConsoleOptions = vstestConfig.otherConsoleOptions;
+    } 
+
+    const appendString = os.EOL + argsArray.join(os.EOL) + os.EOL + otherConsoleOptions;
+    fs.appendFile(responseFile, appendString, function (err) {
         if (err) {
             defer.reject(err);
         }
         defer.resolve(responseFile);
     });
+
     return defer.promise;
 }
 
@@ -332,7 +340,7 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     return defer.promise;
 }
 
-function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
+function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions : boolean): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
@@ -341,7 +349,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     //   => Because it should be added as ".line" inorder to pass multiple parameters
     //   => Parsing will be taken care by .line
     // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
-    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+    if (addOtherConsoleOptions && !utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
         vstest.line(vstestConfig.otherConsoleOptions);
     }
 
@@ -499,7 +507,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                             .then(function (responseFile) {
                                 if (isEmptyResponseFile(responseFile)) {
                                     tl.debug('Empty response file detected. All tests will be executed.');
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
                                         .then(function (vscode) {
                                             uploadTestResults(testResultsDirectory)
                                                 .then(function (code) {
@@ -551,7 +559,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             } else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
-                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, ['@' + updatedFile])
+                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, ['@' + updatedFile], false)
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
@@ -583,7 +591,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     .fail(function (err) {
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
@@ -626,7 +634,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                             .fail(function (err) {
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
-                                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
                                     .then(function (vscode) {
                                         uploadTestResults(testResultsDirectory)
                                             .then(function (code) {
@@ -665,7 +673,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             else
             {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
-                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
                     .then(function (code) {
                         publishTestResults(testResultsDirectory);
                         defer.resolve(code);
@@ -676,7 +684,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             }
     } else {
         tl.debug('Non TIA mode of test execution');
-        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
             .then(function (code) {
                 defer.resolve(code);
             })
