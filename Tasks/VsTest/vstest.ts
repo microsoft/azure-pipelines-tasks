@@ -438,6 +438,14 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
     }
     addVstestArgs(argsArray, vstest);
 
+    // Adding the other console options here
+    //   => Because it should be added as ".line" inorder to pass multiple parameters
+    //   => Parsing will be taken care by .line
+    // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        vstest.line(vstestConfig.otherConsoleOptions);
+    }
+    
     tl.cd(workingDirectory);
     vstest.exec(<tr.IExecOptions>{ failOnStdErr: true })
         .then(function (code) {
