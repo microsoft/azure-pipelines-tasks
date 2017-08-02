@@ -136,10 +136,11 @@ export class ResourceGroup {
 
     private createDeploymentName(): string {
         var name: string;
-        if (this.taskParameters.templateLocation == "Linked artifact")
-            name = this.taskParameters.csmFile;
-        else
+        if (this.taskParameters.templateLocation == "Linked artifact") {
+            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile)[0];
+        } else {
             name = this.taskParameters.csmFileLink;
+        }
         name = path.basename(name).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
         var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes());
@@ -244,14 +245,16 @@ export class ResourceGroup {
                 throw new Error(tl.loc("TemplateParameterFilePatternMatchingNoFile"));
             }
             var csmParametersFilePath = fileMatches[0];
-            if (!fs.lstatSync(csmFilePath).isDirectory()) {
+            if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
                 tl.debug("Loading Parameters File.. " + csmParametersFilePath);
                 try {
                     var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
                     tl.debug("Loaded Parameters File");
                     parameters = parameterFile["parameters"];
                 } catch (error) {
-                    throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
+                    if (csmParametersFilePath != tl.getVariable("System.DefaultWorkingDirectory")) {
+                        throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
+                    }
                 }
             } else {
                 throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
