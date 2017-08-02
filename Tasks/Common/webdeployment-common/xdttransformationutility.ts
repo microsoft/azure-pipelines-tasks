@@ -59,7 +59,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
         transformConfigs.forEach( function(transformConfig) {
             var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + "." + transformConfig);
             if(sourceXmlFiles[transformXmlFile.toLowerCase()]) {
-                tl.debug('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFiles[transformXmlFile.toLowerCase()]);
+                tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
                 applyXdtTransformation(sourceXmlFile, transformXmlFile);
                 isTransformationApplied = true;
             }
