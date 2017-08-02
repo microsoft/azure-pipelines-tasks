@@ -26,7 +26,7 @@ try {
         console.log('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
         console.log('======================================================');
-        ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution, testtype: testType.toLowerCase() });
+        ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution, testtype: testType });
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();

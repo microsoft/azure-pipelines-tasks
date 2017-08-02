@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -380,6 +380,7 @@
     "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
     "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
     "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "DetectedFileEncoding": "ms-resource:loc.messages.DetectedFileEncoding",
     "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
     "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty",
     "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed",

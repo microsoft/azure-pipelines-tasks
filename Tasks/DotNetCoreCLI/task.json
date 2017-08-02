@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -116,7 +116,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
-            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, rutime. The arguments depend on the command selected."
+            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
         {
             "name": "zipAfterPublish",
@@ -365,7 +365,7 @@
             "label": "Additional build properties",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
+            "helpMarkDown": "Specifies a list of token = value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
             "groupName": "packAdvanced"
         },
         {

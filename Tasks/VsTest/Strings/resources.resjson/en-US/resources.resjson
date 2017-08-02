@@ -120,5 +120,6 @@
   "loc.messages.testRunIdInput": "Test run Id : '%s'",
   "loc.messages.testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
   "loc.messages.noTestSourcesFound": "No test sources found matching the given filter '%s'",
-  "loc.messages.DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang"
+  "loc.messages.DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
+  "loc.messages.noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
 }
