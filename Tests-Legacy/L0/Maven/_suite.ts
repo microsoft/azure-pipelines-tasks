@@ -574,6 +574,35 @@ describe('Maven Suite', function () {
             });
     })
 
+    it('run maven with feed settings and spaces', (done) => {
+        setResponseFile('responseFeedWithSpaces.json');
+
+        var tr = new trm.TaskRunner('Maven', true);
+        tr.setInput('mavenVersionSelection', 'Default');
+        tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('options', '-DoptWithEscaping="{\\\"serverUri\\\": \\\"http://elasticsearch:9200\\\",\\\"username\\\": \\\"elastic\\\", \\\"password\\\": \\\"changeme\\\", \\\"connectionTimeout\\\": 30000}"');
+        tr.setInput('goals', 'package');
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml help:effective-pom -DoptWithEscaping={\"serverUri\": \"http://elasticsearch:9200\",\"username\": \"elastic\", \"password\": \"changeme\", \"connectionTimeout\": 30000}'), 'it should have calculated the effective pom');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml -s /tmp/settings.xml -DoptWithEscaping={\"serverUri\": \"http://elasticsearch:9200\",\"username\": \"elastic\", \"password\": \"changeme\", \"connectionTimeout\": 30000} package'), 'it should have run mvn -f pom.xml -s /tmp/settings.xml package');
+                assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr' + tr.stderr + ' std=' + tr.stdout);
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('run maven with feed with settings', (done) => {
         setResponseFile('responseFeed.json');
 
