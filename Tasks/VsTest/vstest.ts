@@ -175,13 +175,12 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
         argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
     });
 
-    let otherConsoleOptions : string = '';
+    let vsTestArgsString : string = os.EOL + argsArray.join(os.EOL); 
     if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
-        otherConsoleOptions = vstestConfig.otherConsoleOptions;
+        vsTestArgsString = vsTestArgsString + os.EOL + vstestConfig.otherConsoleOptions;
     } 
 
-    const appendString = os.EOL + argsArray.join(os.EOL) + os.EOL + otherConsoleOptions;
-    fs.appendFile(responseFile, appendString, function (err) {
+    fs.appendFile(responseFile, vsTestArgsString, function (err) {
         if (err) {
             defer.reject(err);
         }
