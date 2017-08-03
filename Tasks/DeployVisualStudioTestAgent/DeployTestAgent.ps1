@@ -42,7 +42,8 @@ try {
 
     # Check for the parallel execution conditions
     if ($executionType -and (($executionType -ieq "multimachine") -or ($executionType -ieq "multiconfiguration"))) {
-        throw (Get-LocalizedString -Key "Visual Studio Test Agent Deployment is not supported in MultiMachine/MultiConfiguration parallel execution type. Please refer this blog for more details https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/")
+        Write-VstsTaskError -Message (Get-VstsLocString -Key 'NotSupportedWithParallel')
+        throw Get-VstsLocString -Key 'NotSupportedWithParallel'
     }
 
     $downloadTestAgentScript            = "$PSScriptRoot\DownloadTestAgent.ps1"
@@ -76,8 +77,8 @@ try {
 
     if (!$personalAccessToken)
     {
-        Write-Host "##vso[task.logissue type=error;code=Unable to generate Personal Access Token for the user;TaskName=DTA]"
-        throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
+        Write-VstsTaskError -Message (Get-VstsLocString -Key 'InvalidAccessToken')
+        throw Get-VstsLocString -Key 'InvalidAccessToken'
     }
 
     try
