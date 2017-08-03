@@ -3,7 +3,7 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import armStorage = require('azure-arm-rest/azure-arm-storage');
 import azureModel = require('azure-arm-rest/azureModels');
-import azureStorage = require('azure-storage');
+import azureStorage = require('azure-storage-transfer');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")
 import fs = require('fs');
@@ -46,7 +46,7 @@ export default class VirtualMachineScaleSet {
             case "UpdateImage":
             case "Update image":
                 await this._configureAppUsingCustomScriptExtension(client, resourceGroupName, osType);
-                await this._updateImageInternal(client, resourceGroupName);
+                //await this._updateImageInternal(client, resourceGroupName);
                 break;
             case "Configure application start-up":
                 await this._configureAppUsingCustomScriptExtension(client, resourceGroupName, osType);
@@ -71,7 +71,7 @@ export default class VirtualMachineScaleSet {
             fileUris.push(fileUri);
         });
 
-        await blobService.uploadBlobs(this.taskParameters.customScriptsPath, containerUrl);
+        await blobService.uploadBlobs(this.taskParameters.customScriptsPath, "vststasks");
         return fileUris;
     }
 
@@ -99,8 +99,8 @@ export default class VirtualMachineScaleSet {
             let storageDetails: StorageAccountInfo = await this._getStorageAccountDetails();
             // upload custom script directory to blob storage
             let fileUris = await this._uploadCustomScriptsToBlobService(storageDetails);
-
-            var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
+            return;
+            /*var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
             var customScriptExtension: azureModel.VMExtension = {
                 name: "CustomScriptExtension" + Date.now().toString(),
                 properties: {
@@ -127,6 +127,7 @@ export default class VirtualMachineScaleSet {
             }
 
             await this._installCustomScriptExtension(client, resourceGroupName, customScriptExtension);
+            */
         }
     }
 

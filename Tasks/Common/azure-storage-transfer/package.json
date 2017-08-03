@@ -1,5 +1,5 @@
 {
-  "name": "azure-storage",
+  "name": "azure-storage-transfer",
   "version": "1.0.0",
   "description": "Common Lib for Azure storage service",
   "repository": {
@@ -14,6 +14,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "q": "1.4.1",
-    "vsts-task-lib": "^0.9.20"
+    "vsts-task-lib": "^2.0.0",
+    "azure-storage": "2.2.1"
   }
 }
