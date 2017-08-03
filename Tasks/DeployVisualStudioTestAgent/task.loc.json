@@ -162,5 +162,9 @@
     "PowerShell3": {
       "target": "DeployTestAgent.ps1"
     }
+  },
+  "messages": {
+    "InvalidAccessToken": "ms-resource:loc.messages.InvalidAccessToken",
+    "NotSupportedWithParallel": "ms-resource:loc.messages.NotSupportedWithParallel"
   }
 }
