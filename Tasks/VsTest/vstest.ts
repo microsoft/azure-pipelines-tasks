@@ -175,10 +175,10 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
         argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
     });
 
-    let vsTestArgsString : string = os.EOL + argsArray.join(os.EOL); 
+    let vsTestArgsString : string = os.EOL + argsArray.join(os.EOL);
     if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
         vsTestArgsString = vsTestArgsString + os.EOL + vstestConfig.otherConsoleOptions;
-    } 
+    }
 
     fs.appendFile(responseFile, vsTestArgsString, function (err) {
         if (err) {
@@ -186,7 +186,6 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
         }
         defer.resolve(responseFile);
     });
-
     return defer.promise;
 }
 
@@ -339,7 +338,7 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     return defer.promise;
 }
 
-function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions : boolean = true): Q.Promise<number> {
+function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean = true): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
@@ -371,7 +370,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             if (ignoreTestFailures === true) {
-                defer.resolve(0); // ignore failures.
+                defer.resolve(tl.TaskResult.Succeeded); // ignore failures.
             } else {
                 defer.resolve(code);
             }
@@ -381,10 +380,10 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
             tl.warning(tl.loc('VstestFailed'));
             if (ignoreTestFailures) {
                 tl.warning(err);
-                defer.resolve(0);
+                defer.resolve(tl.TaskResult.Succeeded);
             } else {
                 tl.error(err);
-                defer.resolve(1);
+                defer.resolve(tl.TaskResult.Failed);
             }
         });
     return defer.promise;
@@ -524,11 +523,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         defer.resolve(vscode);
                                                     }
 
-                                                    defer.resolve(0);
+                                                    defer.resolve(tl.TaskResult.Succeeded);
                                                 })
                                                 .fail(function (code) {
                                                     tl.debug('Test Run Updation failed!');
-                                                    defer.resolve(1);
+                                                    defer.resolve(tl.TaskResult.Failed);
                                                 })
                                                 .finally(function () {
                                                     cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -552,11 +551,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         if (!isNaN(+code) && +code !== 0) {
                                                             defer.resolve(+code);
                                                         }
-                                                        defer.resolve(0);
+                                                        defer.resolve(tl.TaskResult.Succeeded);
                                                     })
                                                     .fail(function (code) {
                                                         tl.debug('Test Run Updation failed!');
-                                                        defer.resolve(1);
+                                                        defer.resolve(tl.TaskResult.Failed);
                                                     })
                                                     .finally(function () {
                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -576,11 +575,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                             defer.resolve(vscode);
                                                                         }
 
-                                                                        defer.resolve(0);
+                                                                        defer.resolve(tl.TaskResult.Succeeded);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug('Test Run Updation failed!');
-                                                                        defer.resolve(1);
+                                                                        defer.resolve(tl.TaskResult.Failed);
                                                                     })
                                                                     .finally(function () {
                                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -608,11 +607,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                             defer.resolve(vscode);
                                                                         }
 
-                                                                        defer.resolve(0);
+                                                                        defer.resolve(tl.TaskResult.Succeeded);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug('Test Run Updation failed!');
-                                                                        defer.resolve(1);
+                                                                        defer.resolve(tl.TaskResult.Failed);
                                                                     })
                                                                     .finally(function () {
                                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -628,13 +627,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     })
                                                     .fail(function (err) {
                                                         tl.error(err)
-                                                        defer.resolve(1);
+                                                        defer.resolve(tl.TaskResult.Failed);
                                                     });
                                             }
                                         })
                                         .fail(function (err) {
                                             tl.error(err)
-                                            defer.resolve(1);
+                                            defer.resolve(tl.TaskResult.Failed);
                                         });
                                 }
                             })
@@ -651,11 +650,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     defer.resolve(vscode);
                                                 }
 
-                                                defer.resolve(0);
+                                                defer.resolve(tl.TaskResult.Succeeded);
                                             })
                                             .fail(function (code) {
                                                 tl.debug('Test Run Updation failed!');
-                                                defer.resolve(1);
+                                                defer.resolve(tl.TaskResult.Failed);
                                             })
                                             .finally(function () {
                                                 tl.debug('Deleting the discovered tests file' + listFile);
@@ -668,13 +667,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                             })
                             .fail(function (err) {
                                 tl.error(err)
-                                defer.resolve(1);
+                                defer.resolve(tl.TaskResult.Failed);
                             });
                     })
                     .fail(function (err) {
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
-                        defer.resolve(1);
+                        defer.resolve(tl.TaskResult.Failed);
                     });
             }
             else
@@ -717,7 +716,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         }
     } catch (e) {
         tl.error(e.message);
-        defer.resolve(1);
+        defer.resolve(tl.TaskResult.Failed);
         return defer.promise;
     }
 
