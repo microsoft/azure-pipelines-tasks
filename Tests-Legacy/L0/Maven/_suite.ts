@@ -49,6 +49,7 @@ function setupDefaultMavenTaskRunner(): trm.TaskRunner {
     taskRunner.setInput('testResultsFiles', '**/TEST-*.xml');
     taskRunner.setInput('sqAnalysisEnabled', 'false');
     taskRunner.setInput('mavenPOMFile', 'pom.xml');
+    taskRunner.setInput('mavenFeedAuthenticate', 'true');
 
     // TaskRunner system is incompatible with HTTP/HTTPS mocking due to the use of seperate processes
     taskRunner.setInput('sqAnalysisIncludeFullReport', 'false');
@@ -290,6 +291,7 @@ describe('Maven Suite', function () {
         tr.setInput('checkstyleAnalysisEnabled', 'false');
         tr.setInput('pmdAnalysisEnabled', 'false');
         tr.setInput('findbugsAnalysisEnabled', 'false');
+        tr.setInput('mavenFeedAuthenticate', 'true');        
 
         tr.run()
             .then(() => {
@@ -325,6 +327,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
         process.env['M2_HOME'] = '/anotherHome/bin/maven/bin/mvn';
         process.env['TMPDIR'] = '/tmp';
         process.env['TMP'] = '/tmp';
@@ -357,6 +360,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -384,6 +388,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -413,6 +418,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -441,6 +447,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -469,6 +476,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -498,6 +506,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -528,6 +537,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -557,6 +567,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -586,6 +597,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -616,6 +628,7 @@ describe('Maven Suite', function () {
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('cwd', '/usr');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -645,6 +658,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -673,6 +687,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -700,6 +715,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -727,6 +743,7 @@ describe('Maven Suite', function () {
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -753,6 +770,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'garbage');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -779,6 +797,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -807,6 +826,7 @@ describe('Maven Suite', function () {
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -834,6 +854,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'garbage');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -862,6 +883,7 @@ describe('Maven Suite', function () {
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('jdkVersion', '1.8');
         tr.setInput('jdkArchitecture', 'x86');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -892,6 +914,7 @@ describe('Maven Suite', function () {
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('jdkVersion', '1.5');
         tr.setInput('jdkArchitecture', 'x86');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -923,6 +946,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -1038,6 +1062,8 @@ describe('Maven Suite', function () {
         tr.setInput('sqDbUrl', 'dbURL');
         tr.setInput('sqDbUsername', 'dbUser');
         tr.setInput('sqDbPassword', 'dbPass');
+        tr.setInput('mavenFeedAuthenticate', 'true');
+
 
         tr.run()
             .then(() => {
@@ -1184,6 +1210,7 @@ describe('Maven Suite', function () {
         tr.setInput('codeCoverageTool', 'None');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {

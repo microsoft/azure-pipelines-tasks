@@ -101,6 +101,8 @@
         "/home/bin/maven/bin/mvn": true,
         "/home/bin/maven": true,
         "/home/bin/maven2": true,
+        "/user/build/a/.mavenInfo": true,
+        "/user/build/a/.mavenInfo/MavenInfo.md": true,
         "pom.xml": true
     },
     "getVariable": {
@@ -116,13 +118,28 @@
     },
     "find": {
         "/user/build": [
-            "/user/build/fun/test-123.xml"
+            "/user/build/fun/test-123.xml",
+            "/user/build/a/.mavenInfo"
         ]
     },
     "match": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
+    },
+    "mkdirP" :{
+        "/user/build/a/.mavenInfo": true
+    },
+    "exists" :{
+        "/user/build/a/.mavenInfo": true
+    },
+    "stats": {
+        "/user/build/a/.mavenInfo": {
+            "isDirectory": true
+        },
+        "/user/build/a/.mavenInfo/MavenInfo.md": {
+            "isFile": true
+        }
     },
     "rmRF": {
         "target": {
