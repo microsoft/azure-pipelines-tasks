@@ -33,16 +33,12 @@ describe('PowerShellOnTargetMachine Suite', function () {
         it('Validate Get-EnvironmentProperty Command', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateEnvProperty.ps1'), done);
         });
-
-        /*
         it('Throws if Invoke-PsOnRemote fails for a resource', (done) => {
             psr.run(path.join(__dirname, 'L0InvalidEnvFail.ps1'), done);
         });
         it('Performs deployment on all machines and works correctly for valid input for sequential run', (done) => {
             psr.run(path.join(__dirname, 'L0ValidSequentialRun.ps1'), done);
         });
-        */
-
         it('Performs deployment on all machines and works correctly for valid input for Parallel run', (done) => {
             psr.run(path.join(__dirname, 'L0ValidParallelRun.ps1'), done);
         });
