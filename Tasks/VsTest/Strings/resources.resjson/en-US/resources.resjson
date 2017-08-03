@@ -116,5 +116,6 @@
   "loc.messages.testPlanSelector": "Test plan",
   "loc.messages.testRunSelector": "Test run",
   "loc.messages.testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id : '%s'"
+  "loc.messages.testRunIdInput": "Test run Id : '%s'",
+  "loc.messages.noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
 }

@@ -6,6 +6,8 @@ import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
 
+console.log("Starting execution");
+
 //Starting the VsTest execution
 const taskProps = { state: 'started', result: '' };
 ci.publishEvent(taskProps);

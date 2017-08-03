@@ -338,6 +338,7 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     return defer.promise;
 }
 
+// tslint:disable-next-line:max-line-length
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean = true): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
