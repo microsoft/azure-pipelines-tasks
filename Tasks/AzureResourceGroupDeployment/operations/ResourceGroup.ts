@@ -311,12 +311,12 @@ export class ResourceGroup {
                     tl.debug("Loaded Parameters File");
                     parameters = parameterFile["parameters"];
                 } catch (error) {
-                    if (csmParametersFilePath != tl.getVariable("System.DefaultWorkingDirectory")) {
-                        throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
-                    }
+                    throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
                 }
             } else {
-                throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+                if (tl.filePathSupplied("csmParametersFile")) {
+                    throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+                }
             }
         }
 
