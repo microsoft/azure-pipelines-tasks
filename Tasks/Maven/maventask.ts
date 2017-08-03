@@ -152,7 +152,7 @@ async function execBuild() {
             mvnRun.arg(mavenPOMFile);
             mvnRun.arg('help:effective-pom');
             if(mavenOptions) {
-                mvnRun.line(mavenOptions);   
+                mvnRun.line(mavenOptions);
             }
             return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
             .then(function (repositories) {
@@ -164,7 +164,7 @@ async function execBuild() {
                 settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
 
                 tl.debug('checking to see if there are settings.xml in use');
-                let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
+                let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
                 if (options) {
                     mavenOptions = '';
                     for (let i = 0; i < options.length; ++i) {
