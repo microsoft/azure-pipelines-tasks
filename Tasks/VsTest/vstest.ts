@@ -174,7 +174,13 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
     argsArray.forEach(function (arr, i) {
         argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
     });
-    fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
+
+    let vsTestArgsString : string = os.EOL + argsArray.join(os.EOL);
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        vsTestArgsString = vsTestArgsString + os.EOL + vstestConfig.otherConsoleOptions;
+    }
+
+    fs.appendFile(responseFile, vsTestArgsString, function (err) {
         if (err) {
             defer.reject(err);
         }
@@ -332,7 +338,7 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     return defer.promise;
 }
 
-function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
+function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean = true): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
@@ -341,7 +347,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     //   => Because it should be added as ".line" inorder to pass multiple parameters
     //   => Parsing will be taken care by .line
     // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
-    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+    if (addOtherConsoleOptions && !utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
         vstest.line(vstestConfig.otherConsoleOptions);
     }
 
@@ -429,6 +435,14 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         vstest = tl.tool(vsTestPath);
     }
     addVstestArgs(argsArray, vstest);
+
+    // Adding the other console options here
+    //   => Because it should be added as ".line" inorder to pass multiple parameters
+    //   => Parsing will be taken care by .line
+    // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        vstest.line(vstestConfig.otherConsoleOptions);
+    }
 
     tl.cd(workingDirectory);
     vstest.exec(<tr.IExecOptions>{ failOnStdErr: true })
@@ -551,7 +565,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             } else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
-                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, ['@' + updatedFile])
+                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, ['@' + updatedFile], false)
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
