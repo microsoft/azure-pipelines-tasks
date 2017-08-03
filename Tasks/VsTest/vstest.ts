@@ -370,7 +370,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             if (ignoreTestFailures === true) {
-                defer.resolve(0); // ignore failures.
+                defer.resolve(tl.TaskResult.Succeeded); // ignore failures.
             } else {
                 defer.resolve(code);
             }
@@ -380,10 +380,10 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
             tl.warning(tl.loc('VstestFailed'));
             if (ignoreTestFailures) {
                 tl.warning(err);
-                defer.resolve(0);
+                defer.resolve(tl.TaskResult.Succeeded);
             } else {
                 tl.error(err);
-                defer.resolve(1);
+                defer.resolve(tl.TaskResult.Failed);
             }
         });
     return defer.promise;
@@ -523,11 +523,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         defer.resolve(vscode);
                                                     }
 
-                                                    defer.resolve(0);
+                                                    defer.resolve(tl.TaskResult.Succeeded);
                                                 })
                                                 .fail(function (code) {
                                                     tl.debug('Test Run Updation failed!');
-                                                    defer.resolve(1);
+                                                    defer.resolve(tl.TaskResult.Failed);
                                                 })
                                                 .finally(function () {
                                                     cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -551,11 +551,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         if (!isNaN(+code) && +code !== 0) {
                                                             defer.resolve(+code);
                                                         }
-                                                        defer.resolve(0);
+                                                        defer.resolve(tl.TaskResult.Succeeded);
                                                     })
                                                     .fail(function (code) {
                                                         tl.debug('Test Run Updation failed!');
-                                                        defer.resolve(1);
+                                                        defer.resolve(tl.TaskResult.Failed);
                                                     })
                                                     .finally(function () {
                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -575,11 +575,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                             defer.resolve(vscode);
                                                                         }
 
-                                                                        defer.resolve(0);
+                                                                        defer.resolve(tl.TaskResult.Succeeded);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug('Test Run Updation failed!');
-                                                                        defer.resolve(1);
+                                                                        defer.resolve(tl.TaskResult.Failed);
                                                                     })
                                                                     .finally(function () {
                                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -607,11 +607,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                             defer.resolve(vscode);
                                                                         }
 
-                                                                        defer.resolve(0);
+                                                                        defer.resolve(tl.TaskResult.Succeeded);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug('Test Run Updation failed!');
-                                                                        defer.resolve(1);
+                                                                        defer.resolve(tl.TaskResult.Failed);
                                                                     })
                                                                     .finally(function () {
                                                                         cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
@@ -627,13 +627,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     })
                                                     .fail(function (err) {
                                                         tl.error(err)
-                                                        defer.resolve(1);
+                                                        defer.resolve(tl.TaskResult.Failed);
                                                     });
                                             }
                                         })
                                         .fail(function (err) {
                                             tl.error(err)
-                                            defer.resolve(1);
+                                            defer.resolve(tl.TaskResult.Failed);
                                         });
                                 }
                             })
@@ -650,11 +650,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     defer.resolve(vscode);
                                                 }
 
-                                                defer.resolve(0);
+                                                defer.resolve(tl.TaskResult.Succeeded);
                                             })
                                             .fail(function (code) {
                                                 tl.debug('Test Run Updation failed!');
-                                                defer.resolve(1);
+                                                defer.resolve(tl.TaskResult.Failed);
                                             })
                                             .finally(function () {
                                                 tl.debug('Deleting the discovered tests file' + listFile);
@@ -667,13 +667,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                             })
                             .fail(function (err) {
                                 tl.error(err)
-                                defer.resolve(1);
+                                defer.resolve(tl.TaskResult.Failed);
                             });
                     })
                     .fail(function (err) {
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
-                        defer.resolve(1);
+                        defer.resolve(tl.TaskResult.Failed);
                     });
             }
             else
@@ -716,7 +716,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         }
     } catch (e) {
         tl.error(e.message);
-        defer.resolve(1);
+        defer.resolve(tl.TaskResult.Failed);
         return defer.promise;
     }
 
