@@ -42,7 +42,6 @@ try {
 
     # Check for the parallel execution conditions
     if ($executionType -and (($executionType -ieq "multimachine") -or ($executionType -ieq "multiconfiguration"))) {
-        Write-VstsTaskError -Message (Get-VstsLocString -Key 'NotSupportedWithParallel')
         throw Get-VstsLocString -Key 'NotSupportedWithParallel'
     }
 
@@ -77,7 +76,6 @@ try {
 
     if (!$personalAccessToken)
     {
-        Write-VstsTaskError -Message (Get-VstsLocString -Key 'InvalidAccessToken')
         throw Get-VstsLocString -Key 'InvalidAccessToken'
     }
 
