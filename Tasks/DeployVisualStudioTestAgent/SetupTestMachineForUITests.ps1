@@ -67,7 +67,7 @@ function IsDontShowUISetInRegistryPath($registryPath)
     {
         return $true
     }    
-     elseif($dontShowUI -eq "0")
+    elseif($dontShowUI -eq "0")
     {
         Write-Verbose -Message "Registry path $registryPath found. DontShowUI key is set to 0." -Verbose
         return $false
@@ -78,10 +78,16 @@ function IsWindowsErrorReportingDontShowUISet($TestUserDomain, $TestUserName)
 {  
     if( -not(IsDontShowUISetInRegistryPath -registryPath "HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting"))
     {
-        $filter = "name = '" + $TestUserName +"' AND domain = '" + $TestUserDomain + "'" 
-        $user = Get-WmiObject win32_useraccount -Filter $filter
+        $filter = "name = '" + $TestUserName +"' AND domain = '" + $TestUserDomain + "'"
+        $user = $null;
         
-        if($user.SID) { 
+        try {
+            $user = Get-WmiObject win32_useraccount -Filter $filter            
+        }
+        catch {          
+        }
+        
+        if($user -and $user.SID) { 
             $hkuPath = "HKU:\" + $user.SID + "\SOFTWARE\Microsoft\Windows\Windows Error Reporting"
             New-PSDrive -PSProvider Registry -Name HKU -Root HKEY_USERS
             if( -not(IsDontShowUISetInRegistryPath -registryPath $hkuPath))
