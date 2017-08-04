@@ -12,7 +12,7 @@ import * as os from 'os';
 import * as ci from './cieventlogger';
 import {TestSelectorInvoker} from './testselectorinvoker';
 
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 const testSelector = new TestSelectorInvoker();
 
