@@ -393,7 +393,6 @@
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
     "testAssemblyFilterInput": "ms-resource:loc.messages.testAssemblyFilterInput",
-    "testAssemblyFilterForTestPlan": "ms-resource:loc.messages.testAssemblyFilterForTestPlan",
     "vsVersionSelected": "ms-resource:loc.messages.vsVersionSelected",
     "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
