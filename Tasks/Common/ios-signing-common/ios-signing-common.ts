@@ -445,9 +445,11 @@ export async function getP12CommonName(p12Path: string, p12Pwd: string) {
             let subject: string[] = data.match(/subject=.+\/CN=.+\(?.+\)?.+/g);
             if (subject && subject[0]) {
                 // find the CN from the subject
-                let cn: string[] = subject[0].trim().match(/\/CN=.+\(?.+\)?/g);
+                let cn: string[] = subject[0].trim().split('/').filter((s) => {
+                    return s.startsWith('CN=')
+                });
                 if (cn && cn[0]) {
-                    commonName = cn[0].replace('/CN=', '').trim();
+                    commonName = cn[0].replace('CN=', '').trim();
                 }
             }
         }
