@@ -106,7 +106,6 @@
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
   "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
-  "loc.messages.testAssemblyFilterForTestPlan": "Setting the test assembly filter to '%s' for the 'Test plan'",
   "loc.messages.vsVersionSelected": "VisualStudio version selected for test execution : %s",
   "loc.messages.runTestsLocally": "Run the tests locally using %s",
   "loc.messages.vstestLocationSpecified": "%s, specified location : %s",
