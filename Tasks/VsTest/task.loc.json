@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 71
+    "Patch": 72
   },
   "demands": [
     "vstest"
@@ -393,6 +393,7 @@
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
     "testAssemblyFilterInput": "ms-resource:loc.messages.testAssemblyFilterInput",
+    "testAssemblyFilterForTestPlan": "ms-resource:loc.messages.testAssemblyFilterForTestPlan",
     "vsVersionSelected": "ms-resource:loc.messages.vsVersionSelected",
     "runTestsLocally": "ms-resource:loc.messages.runTestsLocally",
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
@@ -404,6 +405,9 @@
     "testRunSelector": "ms-resource:loc.messages.testRunSelector",
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
     "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
+    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound",
+    "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning",
     "noVstestConsole": "ms-resource:loc.messages.noVstestConsole"
   }
 }

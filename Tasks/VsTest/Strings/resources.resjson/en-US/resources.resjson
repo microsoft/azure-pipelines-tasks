@@ -106,6 +106,7 @@
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
   "loc.messages.testAssemblyFilterInput": "Test assemblies : %s",
+  "loc.messages.testAssemblyFilterForTestPlan": "Setting the test assembly filter to '%s' for the 'Test plan'",
   "loc.messages.vsVersionSelected": "VisualStudio version selected for test execution : %s",
   "loc.messages.runTestsLocally": "Run the tests locally using %s",
   "loc.messages.vstestLocationSpecified": "%s, specified location : %s",
@@ -117,5 +118,8 @@
   "loc.messages.testRunSelector": "Test run",
   "loc.messages.testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
   "loc.messages.testRunIdInput": "Test run Id : '%s'",
+  "loc.messages.testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
+  "loc.messages.noTestSourcesFound": "No test sources found matching the given filter '%s'",
+  "loc.messages.DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
   "loc.messages.noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
 }

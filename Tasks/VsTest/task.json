@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 71
+        "Patch": 72
     },
     "demands": [
         "vstest"
@@ -404,6 +404,9 @@
         "testRunSelector": "Test run",
         "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
         "testRunIdInput": "Test run Id : '%s'",
+        "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
+        "noTestSourcesFound": "No test sources found matching the given filter '%s'",
+        "DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
         "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
     }
 }
