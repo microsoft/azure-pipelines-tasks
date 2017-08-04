@@ -23,5 +23,5 @@
   "loc.messages.ScriptFailed": "Script failed with error: %s",
   "loc.messages.UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Service Principal for AzureRM",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
-  "loc.messages.FailedToLogout": "The following error occured while logging out: %s"
+  "loc.messages.FailedToLogout": "The following error occurred while logging out: %s"
 }

@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 18
+        "Patch": 21
     },
     "demands": [
         "sqlpackage"
@@ -205,7 +205,7 @@
                 "AutoDetect": "AutoDetect",
                 "IPAddressRange": "IPAddressRange"
             },
-            "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly."
+            "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explicitly."
         },
         {
             "name": "StartIpAddress",

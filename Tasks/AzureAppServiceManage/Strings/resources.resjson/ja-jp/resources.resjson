@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "App Service で再起動要求が承諾されました: %s",
   "loc.messages.InvalidAction": "選択したアクションは無効です。",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "警告: 配置状態を更新できません。この Web サイトに対して SCM エンドポイントが有効になっていません。",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Azure App Service のアクセス トークンをフェッチできませんでした。StatusCode %s (%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "Azure App Service のアクセス トークンをフェッチできませんでした。StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "Web アプリ '%s' が存在しません。",
   "loc.messages.UnabletoretrieveWebAppID": "Azure App Service の接続の詳細を取得できません: '%s'。状態コード: %s",
   "loc.messages.StartingSwapSlot": "Web アプリに対するスワップ スロットを要求しています: %s",

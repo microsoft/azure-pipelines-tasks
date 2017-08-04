@@ -47,6 +47,6 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nuspec"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-nmh.registerNuGetPackUtilsMock();
+nmh.registerNuGetPackUtilsMock(new Date());
 
 tmr.run();

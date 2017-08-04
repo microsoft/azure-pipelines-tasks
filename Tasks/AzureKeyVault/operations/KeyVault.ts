@@ -28,7 +28,7 @@ export class SecretsToErrorsMapping {
         var allErrors = "";
         for (var key in this.errorsMap) {
             if (this.errorsMap.hasOwnProperty(key)) {
-                var errorMessagePerSecret = key + ": " + this.errorsMap[key];
+                var errorMessagePerSecret = key + ": " + JSON.stringify(this.errorsMap[key]);
                 allErrors = allErrors + "\n" + errorMessagePerSecret;
             }
         }
@@ -141,7 +141,7 @@ export class KeyVault {
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
-                    console.log("##vso[task.setvariable variable=" + secretName + ";issecret=true;]" + secretValue);
+                    tl.setVariable(secretName, secretValue, true);
                 }
                 
                 return resolve();
@@ -151,6 +151,11 @@ export class KeyVault {
 
     private getError(error: any) {
         tl.debug(JSON.stringify(error));
+
+        if (error && error.message && error.statusCode && error.statusCode == 403) {
+            return tl.loc("AccessDeniedError", error.message);
+        }
+
         if (error && error.message) {
             return error.message;
         }

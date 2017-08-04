@@ -44,6 +44,7 @@ try {
             # Delete the symbol store transaction.
             [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath' -Require
             [string]$TransactionId = Get-VstsInput -Name 'TransactionId' -Require
+
             Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
             Invoke-UnpublishSymbols -Share $SymbolsPath -TransactionId $TransactionId -MaximumWaitTime $SymbolsMaximumWaitTime -SemaphoreMessage $SemaphoreMessage
             return
@@ -121,7 +122,7 @@ try {
             throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
         }
 
-        [string]$tmpFileName = Join-Path $env:TEMP ("SymbolFileList-" + [random]::new().Next(100) + ".txt")
+        [string]$tmpFileName = [IO.Path]::GetTempFileName()
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
         
         [IO.File]::WriteAllLines($tmpFileName, [string[]]@("# FileList under $SymbolsFolder with pattern $SearchPattern", "")) # Also Truncates any existing files
@@ -129,6 +130,10 @@ try {
             [string]$fullFilePath = [IO.Path]::Combine($SourcePath, $filename)
             [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
         }
+
+        [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
+        [string] $requestUrl = "$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
+        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
         & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
 

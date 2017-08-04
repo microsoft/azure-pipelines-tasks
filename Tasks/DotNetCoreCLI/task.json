@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 4
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -116,7 +116,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
-            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, rutime. The arguments depend on the command selected."
+            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
         {
             "name": "zipAfterPublish",
@@ -126,6 +126,15 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "If true, folder created by the publish command will be zipped."
+        },
+        {
+            "name": "modifyOutputPath",
+            "type": "boolean",
+            "visibleRule": "command = publish",
+            "label": "Add project name to publish path",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If true, folders created by the publish command will have project file name prefixed to their folder names when output path is specified explicitly in arguments. This is useful if you want to publish multiple projects to the same folder."
         },
         {
             "name": "selectOrConfig",
@@ -356,7 +365,7 @@
             "label": "Additional build properties",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
+            "helpMarkDown": "Specifies a list of token = value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
             "groupName": "packAdvanced"
         },
         {
@@ -411,6 +420,7 @@
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
         "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
+        "Info_NoFilesMatchedTheSearchPattern": "No files matched the search pattern.",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
         "Info_UsingVersion": "Using version: %s",

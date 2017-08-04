@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 6
     },
     "runsOn": [
         "Agent",
@@ -81,7 +81,7 @@
             "name": "selectOrConfig",
             "type": "radio",
             "label": "Feeds to use",
-            "defaultValue": "config",
+            "defaultValue": "select",
             "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {
@@ -163,7 +163,6 @@
             "required": "false",
             "groupName": "restoreAdvanced",
             "options": {
-                "-": "-",
                 "Quiet": "Quiet",
                 "Normal": "Normal",
                 "Detailed": "Detailed"
@@ -206,7 +205,7 @@
             "label": "Allow duplicates to be skipped",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -226,7 +225,6 @@
             "required": "false",
             "groupName": "pushAdvanced",
             "options": {
-                "-": "-",
                 "Quiet": "Quiet",
                 "Normal": "Normal",
                 "Detailed": "Detailed"
@@ -238,7 +236,7 @@
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
-            "helpMarkDown": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
+            "helpMarkDown": "Pattern to search for csproj directories to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '!'. Example: `**\\*.csproj;!**\\*.Tests.csproj`",
             "required": true,
             "visibleRule": "command = pack"
         },
@@ -325,6 +323,28 @@
             "visibleRule": "versioningScheme = byPrereleaseNumber"
         },
         {
+            "name": "packTimezone",
+            "type": "pickList",
+            "label": "Time zone",
+            "defaultValue": "utc",
+            "helpMarkDown": "Specifies the desired time zone used to produce the version of the package. Selecting UTC is recommended if you're using hosted build agents as their date and time might differ.",
+            "required": "false",
+            "groupName": "packOptions",
+            "options": {
+                "utc": "UTC",
+                "local": "Agent local time"
+            },
+            "visibleRule": "versioningScheme = byPrereleaseNumber"
+        },
+        {
+            "name": "includeSymbols",
+            "type": "boolean",
+            "label": "Create symbols package",
+            "defaultValue": "false",
+            "helpMarkDown": "Specifies that the package contains sources and symbols. When used with a .nuspec file, this creates a regular NuGet package file and the corresponding symbols package.",
+            "groupName": "packOptions"
+        },
+        {
             "name": "buildProperties",
             "type": "string",
             "label": "Additional build properties",
@@ -342,7 +362,6 @@
             "required": "false",
             "groupName": "packAdvanced",
             "options": {
-                "-": "-",
                 "Quiet": "Quiet",
                 "Normal": "Normal",
                 "Detailed": "Detailed"
@@ -438,6 +457,7 @@
         "Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
         "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+        "Warning_SkipConflictsNotSupportedUnixAgents" : "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
 
         "Error_CommandNotRecognized": "The command %s was not recognized."
     }

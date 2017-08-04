@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 10
+    "Patch": 13
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -43,7 +43,7 @@
       "name": "ApplicationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
       "isExpanded": true,
-      "visibleRule": "WebAppKind = linux"
+      "visibleRule": "WebAppKind = applinux"
     }
   ],
   "inputs": [
@@ -67,18 +67,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "ServerfarmId",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ServerfarmId",
-      "defaultValue": "invalidServerfarmId",
-      "required": false,
-      "visibleRule": "WebAppName = invalidwebappname",
-      "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
-      }
-    },
-    {
       "name": "WebAppKind",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
@@ -97,7 +85,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = linux"
+      "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = applinux"
     },
     {
       "name": "ResourceGroupName",
@@ -129,7 +117,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = linux",
+      "visibleRule": "WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -138,7 +126,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = linux",
+      "visibleRule": "WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -147,7 +135,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = linux",
+      "visibleRule": "WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -156,7 +144,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = linux",
+      "visibleRule": "WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -365,22 +353,13 @@
       }
     },
     {
-      "target": "ServerfarmId",
+      "target": "WebAppKind",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMServerfarmId",
+      "dataSourceName": "AzureAppKind",
       "parameters": {
         "WebAppName": "$(WebAppName)"
       },
-      "resultTemplate": "{\"Value\":\"{{{serverFarmId}}}\",\"DisplayValue\":\"{{{serverFarmId}}}\"}"
-    },
-    {
-      "target": "WebAppKind",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppKind",
-      "parameters": {
-        "ServerfarmId": "$(ServerfarmId)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{kind}}}\",\"DisplayValue\":\"{{{kind}}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
     },
     {
       "target": "SlotName",
@@ -407,7 +386,7 @@
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
-    "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
+    "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
@@ -423,7 +402,7 @@
     "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
     "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
     "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
-    "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove",
+    "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove",
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern",

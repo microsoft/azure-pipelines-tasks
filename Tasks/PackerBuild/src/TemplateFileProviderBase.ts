@@ -13,8 +13,8 @@ export default class TemplateFileProviderBase {
         console.log(tl.loc("OriginalTemplateLocation", initialTemplateFileLocation));
         console.log(tl.loc("CopyingTemplate", initialTemplateFileLocation, dest));
         utils.copyFile(initialTemplateFileLocation, dest);
-        console.log(tl.loc("TempTemplateLocation", dest));      
-        
+        console.log(tl.loc("TempTemplateLocation", dest));
+
         // construct new full path for template file
         var templateFileName = path.basename(initialTemplateFileLocation);
         var tempFileLocation = path.join(dest, templateFileName);
@@ -28,7 +28,7 @@ export default class TemplateFileProviderBase {
 
         try {
             templateJson = JSON.parse(content);
-        } catch (err) { 
+        } catch (err) {
             throw (tl.loc("ParsingTemplateFileContentFailed", this._templateFileLocation, err));
         }
 
@@ -54,16 +54,12 @@ export default class TemplateFileProviderBase {
     public updateTemplateBuilderSection(additionalBuilderParameters: {}) {
         if(!(Object.keys(additionalBuilderParameters).length === 0 && additionalBuilderParameters.constructor === Object)) {
             var templateJson = this.readTemplateFileJson();
-            
+
             for (var key in additionalBuilderParameters) {
                 for (var index = 0; index < templateJson["builders"].length; index++) {
                     var builder = templateJson["builders"][index];
-                    if(builder.hasOwnProperty(key)) {
-                        tl.warning(tl.loc("AdditionalParameterIgnored", key, builder["type"]));
-                    } else {
-                        builder[key] = additionalBuilderParameters[key];
-                    }   
-                }     
+                    builder[key] = additionalBuilderParameters[key];
+                }
             }
 
             var newContent = JSON.stringify(templateJson);
@@ -75,8 +71,8 @@ export default class TemplateFileProviderBase {
         if(!this._templateFileLocation) {
             return;
         }
-        
-        var templateFileDirectory = path.dirname(this._templateFileLocation);    
+
+        var templateFileDirectory = path.dirname(this._templateFileLocation);
         try{
             utils.deleteDirectory(templateFileDirectory);
         }

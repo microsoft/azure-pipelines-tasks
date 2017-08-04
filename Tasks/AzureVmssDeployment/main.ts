@@ -9,6 +9,7 @@ async function run(): Promise<void> {
     var vmssOperation = new VirtualMachineScaleSet(taskParameters);
     switch (taskParameters.action) {
         case "UpdateImage":
+        case "Update image":
             await vmssOperation.execute();
             break;
         default:

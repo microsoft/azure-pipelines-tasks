@@ -12,9 +12,68 @@ var parameterParser = require("./ParameterParser").parse;
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 
-var stripJsonComments = require("strip-json-comments");
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
+
+function stripJsonComments(content) {
+    if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
+        return content;
+    }
+
+    var currentChar;
+    var nextChar;
+    var prevChar;
+    var insideQuotes = false;
+    var contentWithoutComments = '';
+    var insideComment = 0;
+    var singlelineComment = 1;
+    var multilineComment = 2;
+
+    for (var i = 0; i < content.length; i++) {
+        currentChar = content[i];
+        nextChar = i + 1 < content.length ? content[i + 1] : "";
+
+        if (insideComment) {
+            var update = false;
+            if (insideComment == singlelineComment && (currentChar + nextChar === '\r\n' || currentChar === '\n')) {
+                i--;
+                insideComment = 0;
+                continue;
+            }
+
+            if (insideComment == multilineComment && currentChar + nextChar === '*/') {
+                i++;
+                insideComment = 0;
+                continue;
+            }
+
+        } else {
+            prevChar = i - 1 >= 0 ? content[i - 1] : "";
+
+            if (currentChar == '"' && prevChar != '\\') {
+                insideQuotes = !insideQuotes
+            }
+
+            if (!insideQuotes) {
+                if (currentChar + nextChar === '//') {
+                    insideComment = singlelineComment;
+                    i++;
+                }
+
+                if (currentChar + nextChar === '/*') {
+                    insideComment = multilineComment;
+                    i++;
+                }
+            }
+        }
+
+        if (!insideComment) {
+            contentWithoutComments += content[i];
+        }
+    }
+
+    return contentWithoutComments;
+}
 
 class Deployment {
     public properties: Object;
@@ -136,10 +195,11 @@ export class ResourceGroup {
 
     private createDeploymentName(): string {
         var name: string;
-        if (this.taskParameters.templateLocation == "Linked artifact")
-            name = this.taskParameters.csmFile;
-        else
+        if (this.taskParameters.templateLocation == "Linked artifact") {
+            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile)[0];
+        } else {
             name = this.taskParameters.csmFileLink;
+        }
         name = path.basename(name).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
         var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes());
@@ -244,7 +304,7 @@ export class ResourceGroup {
                 throw new Error(tl.loc("TemplateParameterFilePatternMatchingNoFile"));
             }
             var csmParametersFilePath = fileMatches[0];
-            if (!fs.lstatSync(csmFilePath).isDirectory()) {
+            if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
                 tl.debug("Loading Parameters File.. " + csmParametersFilePath);
                 try {
                     var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
@@ -254,7 +314,9 @@ export class ResourceGroup {
                     throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
                 }
             } else {
-                throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+                if (tl.filePathSupplied("csmParametersFile")) {
+                    throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
+                }
             }
         }
 
@@ -338,6 +400,10 @@ export class ResourceGroup {
                     if (error) {
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
+                    }
+                    if (result && result["properties"] && result["properties"]["outputs"]) {
+                        tl.command("task.setvariable", { "isOutput": "true", "variable": "DeploymentOutputs" }, JSON.stringify(result["properties"]["outputs"]));
+                        console.log(tl.loc("AddedOutputVariable"));
                     }
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
