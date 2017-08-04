@@ -53,10 +53,12 @@ export class NpmRegistry implements INpmRegistry {
                 break;
         }
        let lineEnd = os.EOL;
-        let nerfed = util.toNerfDart(url);
+        let nerfed = util.toNerfDart(url); 
+        let password64 = (new Buffer(password).toString('base64'));
+        console.log("##vso[task.setvariable variable=" + endpointId + "BASE64_PASSWORD;issecret=true;]" + password64);
+
         let auth = nerfed + ":username=" + username + lineEnd;
-        auth += nerfed + ":_password=" + (new Buffer(password).toString('base64')) + lineEnd;
-        console.log("##vso[task.setvariable variable=BASE64_PASSWORD;issecret=true;]" + (new Buffer(password).toString('base64')));
+        auth += nerfed + ":_password=" + password64 + lineEnd;
         auth += nerfed + ":email=" + email + lineEnd;
         auth += nerfed + ":always-auth=true";
 
