@@ -239,6 +239,7 @@ function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: s
     taskRunner.setInput('checkstyleAnalysisEnabled', analysisEnabled);
     taskRunner.setInput('pmdAnalysisEnabled', analysisEnabled);
     taskRunner.setInput('findbugsAnalysisEnabled', analysisEnabled);
+    taskRunner.setInput('mavenFeedAuthenticate', 'false');
 
     // Act
     return taskRunner.run()
