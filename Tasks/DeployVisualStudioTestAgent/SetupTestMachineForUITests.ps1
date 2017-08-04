@@ -808,4 +808,4 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
     return 0
 }
 
-    return SetupTestMachine -TestUserName $testUserName -TestUserPassword $testUserPassword -EnvironmentURL $environmentURL
+return SetupTestMachine -TestUserName $testUserName -TestUserPassword $testUserPassword -EnvironmentURL $environmentURL
