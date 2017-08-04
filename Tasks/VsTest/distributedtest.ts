@@ -71,7 +71,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentName', this.dtaTestConfig.dtaEnvironment.agentName);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
-        this.testSourcesFile = this.getTestSourcesFile();
+        this.testSourcesFile = this.createTestSourcesFile();
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchTestSourcesFile', this.testSourcesFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
@@ -160,7 +160,7 @@ export class DistributedTest {
         this.dtaPid = -1;
     }
 
-    private getTestSourcesFile() : string {
+    private createTestSourcesFile() : string {
         try {
             const sources = tl.findMatch(this.dtaTestConfig.testDropLocation, this.dtaTestConfig.sourceFilter);
             tl.debug('tl match count :' + sources.length);
@@ -172,12 +172,12 @@ export class DistributedTest {
             });
 
             tl.debug('Files matching count :' + filesMatching.length);
-            if (utils.Helper.isNullOrUndefined(filesMatching) || filesMatching.length === 0) {
+            if (filesMatching.length === 0) {
                 throw new Error(tl.loc('noTestSourcesFound', this.dtaTestConfig.sourceFilter.toString()));
             }
 
             const tempFile = path.join(os.tmpdir(), 'testSources_' + uuid.v1() + '.src');
-            fs.writeFileSync(tempFile, filesMatching.join('\n'));
+            fs.writeFileSync(tempFile, filesMatching.join(os.EOL));
             tl.debug('Test Sources file :' + tempFile);
             return tempFile;
         } catch (error) {
