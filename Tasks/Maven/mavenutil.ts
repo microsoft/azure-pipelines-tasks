@@ -284,3 +284,19 @@ export function getExecOptions(): tr.IExecOptions {
         env: env,
     };
 }
+
+export function publishMavenInfo(mavenInfo:string) {
+    let stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
+    let infoFilePath: string = path.join(stagingDir, 'MavenInfo.md');
+    if (!tl.exist(stagingDir)) {
+        tl.mkdirP(stagingDir);
+    }
+    tl.writeFile(infoFilePath, mavenInfo);
+    tl.debug('[Maven] Uploading build maven info from ' + infoFilePath);
+    tl.command('task.addattachment',
+                {
+                    'type': 'Distributedtask.Core.Summary',
+                    'name': 'Maven'
+                },
+                infoFilePath);
+}

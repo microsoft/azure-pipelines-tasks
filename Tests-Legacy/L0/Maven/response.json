@@ -101,6 +101,8 @@
         "/home/bin/maven/bin/mvn": true,
         "/home/bin/maven": true,
         "/home/bin/maven2": true,
+        "/tmp/.mavenInfo": true,
+        "/tmp/.mavenInfo/MavenInfo.md": true,
         "pom.xml": true
     },
     "getVariable": {
@@ -123,6 +125,20 @@
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
+    },
+    "mkdirP" :{
+        "/tmp/.mavenInfo": true
+    },
+    "exists" :{
+        "/tmp/.mavenInfo": true
+    },
+    "stats": {
+        "/tmp/.mavenInfo": {
+            "isDirectory": true
+        },
+        "/tmp/.mavenInfo/MavenInfo.md": {
+            "isFile": true
+        }
     },
     "rmRF": {
         "target": {
