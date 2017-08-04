@@ -72,9 +72,11 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const projectName = tl.getVariable('System.TeamProject');
     const taskInstanceId = getDtaInstanceId();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    const dontDistribute = tl.getBoolInput('dontDistributeAndBatch');
 
     if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
-        if (!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration') {
+        if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
+            || dontDistribute) {
             const jobId = tl.getVariable('System.JobId');
             dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
         } else {
