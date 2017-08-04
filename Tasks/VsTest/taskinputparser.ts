@@ -77,6 +77,8 @@ function initDtaEnvironment(): models.DtaEnvironment {
     if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
         if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
             || dontDistribute) {
+            // If dontDistribute irrespective of whether is None or MultiAgent or MultiConfig, we will create one run per agent
+            // run creation depends of the environment Id
             const jobId = tl.getVariable('System.JobId');
             dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
         } else {
