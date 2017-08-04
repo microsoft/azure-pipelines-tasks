@@ -159,7 +159,7 @@ async function execBuild() {
                 return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
                 .then(function (repositories) {
                     if (!repositories || !repositories.length) {
-                        tl.debug('no repositories found in pom');
+                        tl.debug('No built-in repositories were found in pom.xml');
                         util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
                         return Q.resolve(true);
                     }
@@ -197,7 +197,7 @@ async function execBuild() {
                     return Q.reject(err);
                 });
             } else {
-                tl.debug('Maven feed authentication is disabled');
+                tl.debug('Built-in Maven feed authentication is disabled');
                 return Q.resolve(true);
             }
         })

@@ -286,7 +286,7 @@ export function getExecOptions(): tr.IExecOptions {
 }
 
 export function publishMavenInfo(mavenInfo:string) {
-    let stagingDir: string = path.join(tl.getVariable('build.artifactStagingDirectory'), '.mavenInfo');
+    let stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
     let infoFilePath: string = path.join(stagingDir, 'MavenInfo.md');
     if (!tl.exist(stagingDir)) {
         tl.mkdirP(stagingDir);

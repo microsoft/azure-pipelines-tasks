@@ -243,16 +243,16 @@
             "required": false,
             "groupName": "advanced",
             "defaultValue": "-Xmx1024m",
-            "helpMarkDown": "Sets the MAVEN_OPTS environment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
+            "helpMarkDown": "Sets the MAVEN_OPTS environment variable, which is used to send command-line arguments to start the JVM. The -Xmx flag specifies the maximum memory available to the JVM."
         },
         {
             "name": "mavenFeedAuthenticate",
             "type": "boolean",
-            "label": "Authenticate Maven feeds",
+            "label": "Authenticate built-in Maven feeds",
             "required": true,
             "defaultValue": "true",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate Maven feeds from the Package Management extension. If Maven feeds are not in use, deselect to improve build times."
+            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the TFS/VSTS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
             "name": "sqAnalysisEnabled",
@@ -424,7 +424,7 @@
         "NoCodeCoverage": "No code coverage results were found to publish.",
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
         "EffectivePomInvalid": "Could not parse the effective POM.",
-        "AuthenticationNotNecessary": "No Maven feeds found requiring authentication were found. Deselect 'Authenticate Maven feeds' in the build task for faster builds.",
-        "UsingAuthFeed": "Using authenticated feed: "
+        "AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
+        "UsingAuthFeed": "Using built-in feed: "
     }
 }
