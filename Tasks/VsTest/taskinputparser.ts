@@ -233,7 +233,7 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
                 console.log(tl.loc('testSuiteSelected', testSuiteId));
                 testConfiguration.testSuites.push(testSuiteId);
             });
-            testConfiguration.sourceFilter = ['**\\*, !**\obj\*'];
+            testConfiguration.sourceFilter = ['**\\*', '!**\\obj\\*'];
             tl.debug('Setting the test source filter for the Test plan : ' + testConfiguration.sourceFilter);
             break;
         case 'testassemblies':
