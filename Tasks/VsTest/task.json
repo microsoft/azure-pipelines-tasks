@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 73
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [
         "vstest"
@@ -233,6 +233,15 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "pathtoCustomTestAdapters",
+            "type": "string",
+            "label": "Path to custom test adapters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "groupName": "executionOptions"
+        },
+        {
             "name": "runInParallel",
             "type": "boolean",
             "label": "Run tests in parallel on multi-core machines",
@@ -251,12 +260,12 @@
             "groupName": "executionOptions"
         },
         {
-            "name": "pathtoCustomTestAdapters",
-            "type": "string",
-            "label": "Path to custom test adapters",
-            "defaultValue": "",
+           "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code coverage enabled",
+            "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "helpMarkDown": "Collect code coverage information from the test run.",
             "groupName": "executionOptions"
         },
         {
@@ -265,17 +274,44 @@
             "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is run in a multi-agent phase.<br>Each of the selected test will be repeated on each agent instead.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
+            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
             "groupName": "executionOptions"
         },
         {
-           "name": "codeCoverageEnabled",
-            "type": "boolean",
-            "label": "Code coverage enabled",
-            "defaultValue": "False",
+            "name": "distributionBatchType",
+            "type": "pickList",
+            "label": "Batch tests",
+            "defaultValue": "basedOnBatchSize",
             "required": false,
-            "helpMarkDown": "Collect code coverage information from the test run.",
-            "groupName": "executionOptions"
+            "helpMarkDown": "Use this option to control how tests are batched.",
+            "groupName": "executionOptions",
+             "options": {
+                 "basedOnBatchSize": "Based on number of tests and agents"
+            }
+        },
+        {
+            "name": "distributionBasedOnAgentsOption",
+            "type": "radio",
+            "label": "Batch options",
+            "required": false,
+            "groupName": "executionOptions",
+            "defaultValue": "autoBatchSize",
+            "helpMarkDown": "Total number of tests will be divided into multiple batches. If batch size is specified, Each batch will contain the specified number of test cases.",
+            "options": {
+                "autoBatchSize": "Automatically determine the batch size",
+                "customBatchSize": "Specify a batch size"
+            },
+            "visibleRule": "distributionBatchType = basedOnBatchSize"
+        },
+        {
+            "name": "customBatchSizeValue",
+            "type": "string",
+            "label": "Number of tests per batch",
+            "defaultValue": "10",
+            "required": true,
+            "helpMarkDown": "Specify batch size",
+            "groupName": "executionOptions",
+            "visibleRule": "distributionBasedOnAgentsOption = customBatchSize"
         },
         {
             "name": "otherConsoleOptions",
@@ -416,6 +452,8 @@
         "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
         "noTestSourcesFound": "No test sources found matching the given filter '%s'",
         "DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
-        "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
+        "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console.",
+        "numberOfTestCasesPerSlice": "Distributed test execution, number of test batch(s) : %s",
+        "invalidTestBatchSize": "Invalid batch size provided: %s"
     }
 }

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 73
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -233,6 +233,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "pathtoCustomTestAdapters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "runInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runInParallel",
@@ -251,12 +260,12 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "pathtoCustomTestAdapters",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
-      "defaultValue": "",
+      "name": "codeCoverageEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
       "groupName": "executionOptions"
     },
     {
@@ -269,13 +278,40 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "codeCoverageEnabled",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
-      "defaultValue": "False",
+      "name": "distributionBatchType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.distributionBatchType",
+      "defaultValue": "basedOnBatchSize",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
-      "groupName": "executionOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.distributionBatchType",
+      "groupName": "executionOptions",
+      "options": {
+        "basedOnBatchSize": "Based on number of tests and agents"
+      }
+    },
+    {
+      "name": "distributionBasedOnAgentsOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.distributionBasedOnAgentsOption",
+      "required": false,
+      "groupName": "executionOptions",
+      "defaultValue": "autoBatchSize",
+      "helpMarkDown": "ms-resource:loc.input.help.distributionBasedOnAgentsOption",
+      "options": {
+        "autoBatchSize": "Automatically determine the batch size",
+        "customBatchSize": "Specify a batch size"
+      },
+      "visibleRule": "distributionBatchType = basedOnBatchSize"
+    },
+    {
+      "name": "customBatchSizeValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customBatchSizeValue",
+      "defaultValue": "10",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customBatchSizeValue",
+      "groupName": "executionOptions",
+      "visibleRule": "distributionBasedOnAgentsOption = customBatchSize"
     },
     {
       "name": "otherConsoleOptions",
@@ -416,6 +452,8 @@
     "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
     "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound",
     "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning",
-    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole"
+    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole",
+    "numberOfTestCasesPerSlice": "ms-resource:loc.messages.numberOfTestCasesPerSlice",
+    "invalidTestBatchSize": "ms-resource:loc.messages.invalidTestBatchSize"
   }
 }
