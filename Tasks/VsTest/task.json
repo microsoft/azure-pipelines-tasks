@@ -290,7 +290,7 @@
             }
         },
         {
-            "name": "distributionBasedOnAgentsOption",
+            "name": "batchingBasedOnAgentsOption",
             "type": "radio",
             "label": "Batch options",
             "required": false,
@@ -311,7 +311,7 @@
             "required": true,
             "helpMarkDown": "Specify batch size",
             "groupName": "executionOptions",
-            "visibleRule": "distributionBasedOnAgentsOption = customBatchSize"
+            "visibleRule": "batchingBasedOnAgentsOption = customBatchSize"
         },
         {
             "name": "otherConsoleOptions",

@@ -39,8 +39,8 @@ try {
 }
 
 function isDtaEngineRequired() : boolean {
-    const distributeOption = tl.getInput('distributionBasedOnAgentsOption');
-    if (distributeOption && distributeOption === 'customBatchSize') {
+    const batchoption = tl.getInput('batchingBasedOnAgentsOption');
+    if (batchoption && batchoption === 'customBatchSize') {
         return true;
     }
 

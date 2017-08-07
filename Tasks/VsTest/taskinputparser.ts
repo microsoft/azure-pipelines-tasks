@@ -300,11 +300,11 @@ function getTiaConfiguration(): models.TiaConfiguration {
     return tiaConfiguration;
 }
 
-function getDistributionBatchSize() {
+function getDistributionBatchSize() : number {
     const distributeOption = tl.getInput('distributionBatchType');
     if (distributeOption && distributeOption === 'basedOnBatchSize') {
         // flow if the batch type = based on agents/custom batching
-        const distributeByAgentsOption = tl.getInput('distributionBasedOnAgentsOption');
+        const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
         if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
             const batchSize = parseInt(tl.getInput('customBatchSizeValue'));
             if (!isNaN(batchSize) && batchSize > 0) {
