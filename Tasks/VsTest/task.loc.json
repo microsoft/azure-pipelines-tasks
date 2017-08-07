@@ -290,13 +290,13 @@
       }
     },
     {
-      "name": "distributionBasedOnAgentsOption",
+      "name": "batchingBasedOnAgentsOption",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.distributionBasedOnAgentsOption",
+      "label": "ms-resource:loc.input.label.batchingBasedOnAgentsOption",
       "required": false,
       "groupName": "executionOptions",
       "defaultValue": "autoBatchSize",
-      "helpMarkDown": "ms-resource:loc.input.help.distributionBasedOnAgentsOption",
+      "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnAgentsOption",
       "options": {
         "autoBatchSize": "Automatically determine the batch size",
         "customBatchSize": "Specify a batch size"
@@ -311,7 +311,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.customBatchSizeValue",
       "groupName": "executionOptions",
-      "visibleRule": "distributionBasedOnAgentsOption = customBatchSize"
+      "visibleRule": "batchingBasedOnAgentsOption = customBatchSize"
     },
     {
       "name": "otherConsoleOptions",
