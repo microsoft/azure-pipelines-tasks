@@ -72,7 +72,7 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const projectName = tl.getVariable('System.TeamProject');
     const taskInstanceId = getDtaInstanceId();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
-    const dontDistribute = tl.getBoolInput('dontDistributeAndBatch');
+    const dontDistribute = tl.getBoolInput('dontDistribute');
 
     if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
         if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')

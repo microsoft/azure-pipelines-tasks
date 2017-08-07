@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 73
+        "Patch": 75
     },
     "demands": [
         "vstest"
@@ -260,7 +260,7 @@
             "groupName": "executionOptions"
         },
         {
-            "name": "dontDistributeAndBatch",
+            "name": "dontDistribute",
             "type": "boolean",
             "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
             "defaultValue": "False",
