@@ -22,7 +22,7 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
         var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
             var transformConfigs = ["Release.config"];
-            if(environmentName && environmentName != 'Release') {
+            if(environmentName && environmentName.toLowerCase() != 'release') {
                 transformConfigs.push(environmentName + ".config");
             }
             var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
