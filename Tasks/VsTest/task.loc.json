@@ -269,12 +269,12 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "dontDistributeAndBatch",
+      "name": "dontDistribute",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.dontDistributeAndBatch",
+      "label": "ms-resource:loc.input.label.dontDistribute",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.dontDistributeAndBatch",
+      "helpMarkDown": "ms-resource:loc.input.help.dontDistribute",
       "groupName": "executionOptions"
     },
     {

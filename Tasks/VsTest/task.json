@@ -269,7 +269,7 @@
             "groupName": "executionOptions"
         },
         {
-            "name": "dontDistributeAndBatch",
+            "name": "dontDistribute",
             "type": "boolean",
             "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
             "defaultValue": "False",
