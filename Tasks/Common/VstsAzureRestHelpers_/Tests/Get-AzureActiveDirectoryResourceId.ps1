@@ -29,7 +29,7 @@ $variableSets = @(
 )
 
 foreach ($variableSet in $variableSets) {
-       
+
     Write-Verbose ('-' * 80)
     $endpoint.Data.Environment = $variableSet.environment
 
@@ -42,5 +42,4 @@ foreach ($variableSet in $variableSets) {
     # Assert.
     Assert-AreEqual $variableSet.result $result
 }
-    
 
