@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 3
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -60,7 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
-                "StopWithDeallocate":  "Stop and deallocate virtual machines",
+                "StopWithDeallocate": "Stop and deallocate virtual machines",
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -108,7 +108,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "Template",
-            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
             "visibleRule": "templateLocation = URL of the file"
         },
         {
@@ -118,7 +118,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
             "visibleRule": " templateLocation = URL of the file"
         },
         {
@@ -204,7 +204,6 @@
                 "EditableOptions": "True"
             }
         },
-
         {
             "name": "deploymentGroupName",
             "type": "pickList",
@@ -239,7 +238,7 @@
     ],
     "OutputVariables": [
         {
-            "name" : "DeploymentOutputs",
+            "name": "DeploymentOutputs",
             "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
         }
     ],
@@ -379,8 +378,9 @@
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
-        "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
+        "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+        "DetectedFileEncoding": "The detected encoding for file '%s' is '%s'",
         "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
         "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
         "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
@@ -388,7 +388,7 @@
         "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
         "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
         "TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
-        "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template paramters file pattern: %s",
+        "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
         "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
         "TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
         "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
@@ -401,6 +401,6 @@
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, errror message : {0}"
+        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}"
     }
 }

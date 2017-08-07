@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 66
+    "Patch": 74
   },
   "demands": [
     "vstest"
@@ -260,6 +260,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "dontDistribute",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dontDistribute",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dontDistribute",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "codeCoverageEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.codeCoverageEnabled",
@@ -403,6 +412,10 @@
     "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
     "testRunSelector": "ms-resource:loc.messages.testRunSelector",
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
-    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput"
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
+    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound",
+    "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning",
+    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole"
   }
 }

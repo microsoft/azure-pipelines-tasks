@@ -7,7 +7,6 @@ import * as Q from 'q';
 
 import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
 import * as npmCustom from './npmcustom';
-import * as npmInstall from './npminstall';
 import * as npmPublish from './npmpublish';
 import { GetRegistries, NormalizeRegistry } from './npmrcparser';
 import { INpmRegistry, NpmRegistry } from './npmregistry';
@@ -20,7 +19,7 @@ async function main(): Promise<void> {
     const command = tl.getInput(NpmTaskInput.Command);
     switch (command) {
         case NpmCommand.Install:
-            return npmInstall.run();
+            return npmCustom.run('install');
         case NpmCommand.Publish:
             return npmPublish.run();
         case NpmCommand.Custom:

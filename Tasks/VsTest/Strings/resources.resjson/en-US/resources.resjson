@@ -44,6 +44,8 @@
   "loc.input.help.runTestsInIsolation": "Runs the tests in an isolated process. This makes vstest.console.exe process less likely to be stopped on an error in the tests, but tests might run slower. This option currently cannot be used when running with the multi-agent phase setting.",
   "loc.input.label.pathtoCustomTestAdapters": "Path to custom test adapters",
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+  "loc.input.label.dontDistribute": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
+  "loc.input.help.dontDistribute": "Choosing this option will not distribute tests across agents when the task is run in a multi-agent phase.<br>Each of the selected test will be repeated on each agent instead.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
   "loc.input.label.codeCoverageEnabled": "Code coverage enabled",
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the test run.",
   "loc.input.label.otherConsoleOptions": "Other console options",
@@ -116,5 +118,9 @@
   "loc.messages.testPlanSelector": "Test plan",
   "loc.messages.testRunSelector": "Test run",
   "loc.messages.testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
-  "loc.messages.testRunIdInput": "Test run Id : '%s'"
+  "loc.messages.testRunIdInput": "Test run Id : '%s'",
+  "loc.messages.testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
+  "loc.messages.noTestSourcesFound": "No test sources found matching the given filter '%s'",
+  "loc.messages.DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
+  "loc.messages.noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
 }

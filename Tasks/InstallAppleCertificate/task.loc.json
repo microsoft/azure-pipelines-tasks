@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 119,
+    "Minor": 122,
     "Patch": 0
   },
   "runsOn": [
@@ -95,6 +95,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.deleteCustomKeychain",
       "visibleRule": "keychain = custom",
+      "groupName": "advanced"
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "advanced"
     }
   ],

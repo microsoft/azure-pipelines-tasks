@@ -7,11 +7,12 @@ import * as utils from './helpers';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
 const uuid = require('uuid');
+const regedit = require('regedit');
 
 export function getDistributedTestConfigurations() {
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.useVsTestConsole = 'true';
+    dtaConfiguration.useVsTestConsole = 'false';
 
     if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
         throw (tl.loc('vs2013NotSupportedInDta'));
@@ -34,9 +35,16 @@ export function getDistributedTestConfigurations() {
     }
     console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {
+    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    if (useVsTestConsole) {        
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
+    }
+
+    // VsTest Console cannot be used for Dev14
+    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0')
+    {
+        console.log(tl.loc('noVstestConsole'));
+        dtaConfiguration.useVsTestConsole = 'false';
     }
 
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
@@ -64,9 +72,13 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const projectName = tl.getVariable('System.TeamProject');
     const taskInstanceId = getDtaInstanceId();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    const dontDistribute = tl.getBoolInput('dontDistribute');
 
-    if (releaseId) {
-        if (parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
+    if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
+        if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
+            || dontDistribute) {
+            // If dontDistribute irrespective of whether is None or MultiAgent or MultiConfig, we will create one run per agent
+            // run creation depends of the environment Id
             const jobId = tl.getVariable('System.JobId');
             dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
         } else {
@@ -120,6 +132,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
 
+    testConfiguration.runUITests = tl.getBoolInput('uiTests');
+    logWarningForWER(testConfiguration.runUITests);
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
@@ -170,6 +184,35 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 
+async function logWarningForWER(runUITests : boolean) {
+    if (!runUITests) {
+        return;
+    }
+
+    const regPathHKLM = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+    const regPathHKCU = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+
+    const isEnabledInHKCU = await isDontShowUIRegKeySet(regPathHKCU);
+    const isEnabledInHKLM = await isDontShowUIRegKeySet(regPathHKLM);
+
+    if (!isEnabledInHKCU && !isEnabledInHKLM) {
+        tl.warning(tl.loc('DontShowWERUIDisabledWarning'));
+    }
+}
+
+function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean>  {
+    const defer = Q.defer<boolean>();
+    const regValue = 'DontShowUI';
+    regedit.list(regPath).on('data', (entry) => {
+            if (entry && entry.data && entry.data.values &&
+            entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
+                defer.resolve(true);
+            }
+            defer.resolve(false);
+    });
+    return defer.promise;
+}
+
 function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations) {
     const testSelection = testConfiguration.testSelection.toLowerCase();
     switch (testSelection) {
@@ -188,6 +231,8 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
                 console.log(tl.loc('testSuiteSelected', testSuiteId));
                 testConfiguration.testSuites.push(testSuiteId);
             });
+            testConfiguration.sourceFilter = ['**\\*, !**\obj\*'];
+            tl.debug('Setting the test source filter for the Test plan : ' + testConfiguration.sourceFilter);
             break;
         case 'testassemblies':
             console.log(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));

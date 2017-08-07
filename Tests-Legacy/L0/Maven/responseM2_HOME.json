@@ -68,7 +68,8 @@
     },
     "find": {
         "/user/build": [
-            "/user/build/fun/test-123.xml"
+            "/user/build/fun/test-123.xml",
+            "/user/build/a/.mavenInfo"
         ]
     },
     "match": {

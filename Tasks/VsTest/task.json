@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 66
+        "Patch": 74
     },
     "demands": [
         "vstest"
@@ -260,6 +260,15 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "dontDistribute",
+            "type": "boolean",
+            "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is run in a multi-agent phase.<br>Each of the selected test will be repeated on each agent instead.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
+            "groupName": "executionOptions"
+        },
+        {
            "name": "codeCoverageEnabled",
             "type": "boolean",
             "label": "Code coverage enabled",
@@ -403,6 +412,10 @@
         "testPlanSelector": "Test plan",
         "testRunSelector": "Test run",
         "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
-        "testRunIdInput": "Test run Id : '%s'"
+        "testRunIdInput": "Test run Id : '%s'",
+        "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
+        "noTestSourcesFound": "No test sources found matching the given filter '%s'",
+        "DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
+        "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console."
     }
 }

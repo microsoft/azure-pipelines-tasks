@@ -35,6 +35,7 @@ export interface TestConfigurations {
     runTestsInIsolation: boolean;
     otherConsoleOptions: string;
     taskInstanceIdentifier: string;
+    runUITests: boolean;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
