@@ -29,6 +29,10 @@ interface INodeVersion {
     files: string[]
 }
 
+enum HttpStatusCode {
+    NotFound = 404
+}
+
 //
 // Basic pattern:
 //      if !checkLatest
@@ -131,8 +135,28 @@ async function acquireNode(version: string): Promise<string> {
 
     let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
 
-    let downloadPath: string = await toolLib.downloadTool(downloadUrl);
+    let downloadPath: string;
 
+    try 
+    {
+        downloadPath = await toolLib.downloadTool(downloadUrl);
+    } 
+    catch (err)
+    {
+        for (let errorKey of Object.keys(err))
+        {
+            if (errorKey == 'httpStatusCode')
+            {
+                switch(err[errorKey]){
+                    case HttpStatusCode.NotFound:
+                        return await acquireNodeFromFallbackLocation(version);
+                }
+            }
+        }
+
+        throw err;
+    }
+    
     //
     // Extract
     //
@@ -156,6 +180,37 @@ async function acquireNode(version: string): Promise<string> {
     //
     let toolRoot = path.join(extPath, fileName);
     return await toolLib.cacheDir(toolRoot, 'node', version);
+}
+
+// For non LTS versions of Node, the files we need (for Windows) are sometimes located
+// in a different folder than they normally are for other versions.
+// Normally the format is similar to: https://nodejs.org/dist/v5.10.1/node-v5.10.1-win-x64.7z
+// In this case, there will be two files located at:
+//      /dist/v5.10.1/win-x64/node.exe
+//      /dist/v5.10.1/win-x64/node.lib
+// This method attempts to download and cache the resources from this alternative location.
+// Note also that the files are normally zipped but in this case they are just an exe
+// and lib file in a folder, not zipped.
+async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
+    console.log(`Attempting fallback location download for Node version: ${version}`);
+
+    let exeUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
+    let libUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+
+    let exeDownloadPath: string = await toolLib.downloadTool(exeUrl, "node.exe");
+    let libDownloadPath: string = await toolLib.downloadTool(libUrl, "node.lib");
+
+    // Create a folder where we can copy both files to. The caching mechanism uses a directory and 
+    // caches that. We can't cache straight from the temp folder because there could be other files 
+    // there that we don't want to cache.
+    let tempDownloadDirectory: string = path.join(taskLib.getVariable('Agent.TempDirectory'), 'z');
+    taskLib.mkdirP(tempDownloadDirectory);
+
+    // copy the downloaded files to temporary 'z' directory
+    taskLib.cp(exeDownloadPath, tempDownloadDirectory);
+    taskLib.cp(libDownloadPath, tempDownloadDirectory);
+
+    return await toolLib.cacheDir(tempDownloadDirectory, 'node', version);
 }
 
 run();
