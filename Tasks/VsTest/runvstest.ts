@@ -14,7 +14,7 @@ ci.publishEvent(taskProps);
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-    const useDtaExecutionEngine = validateDtaExecutionEngine();
+    const useDtaExecutionEngine = isDtaEngineRequired();
     if (useDtaExecutionEngine) {
         ci.publishEvent({ runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
                  testtype: tl.getInput('testSelector') });
@@ -38,7 +38,7 @@ try {
     ci.publishEvent(taskProps);
 }
 
-function validateDtaExecutionEngine() : boolean {
+function isDtaEngineRequired() : boolean {
     const distributeOption = tl.getInput('distributionBasedOnAgentsOption');
     if (distributeOption && distributeOption === 'customBatchSize') {
         return true;
