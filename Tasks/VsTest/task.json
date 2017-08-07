@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 72
+        "Patch": 73
     },
     "demands": [
         "vstest"
@@ -257,6 +257,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "dontDistributeAndBatch",
+            "type": "boolean",
+            "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is run in a multi-agent phase.<br>Each of the selected test will be repeated on each agent instead.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
             "groupName": "executionOptions"
         },
         {
