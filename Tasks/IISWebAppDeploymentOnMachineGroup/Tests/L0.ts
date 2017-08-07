@@ -106,8 +106,6 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsNoPackage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
-            console.log(tr);
-            console.log(tr.stdout);
 		tr.run();
 
 		assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
@@ -137,9 +135,6 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        
-            console.log(tr);
-            console.log(tr.stdout);
         var expectedErr = 'Error: loc_mock_XdtTransformationErrorWhileTransforming C:\\tempFolder\\web.config C:\\tempFolder\\web.Release.config';
         assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
