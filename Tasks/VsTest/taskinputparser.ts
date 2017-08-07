@@ -35,14 +35,18 @@ export function getDistributedTestConfigurations() {
     }
     console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
+    dtaConfiguration.numberOfTestCasesPerSlice = getDistributionBatchSize();
+    if (dtaConfiguration.numberOfTestCasesPerSlice > 0) {
+        console.log(tl.loc('numberOfTestCasesPerSlice', dtaConfiguration.numberOfTestCasesPerSlice));
+    }
+
     let useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {        
+    if (useVsTestConsole) {
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
     }
 
     // VsTest Console cannot be used for Dev14
-    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0')
-    {
+    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0') {
         console.log(tl.loc('noVstestConsole'));
         dtaConfiguration.useVsTestConsole = 'false';
     }
@@ -229,7 +233,7 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
                 console.log(tl.loc('testSuiteSelected', testSuiteId));
                 testConfiguration.testSuites.push(testSuiteId);
             });
-            testConfiguration.sourceFilter = ['**\\*, !**\obj\*'];
+            testConfiguration.sourceFilter = ['**\\*', '!**\\obj\\*'];
             tl.debug('Setting the test source filter for the Test plan : ' + testConfiguration.sourceFilter);
             break;
         case 'testassemblies':
@@ -294,4 +298,22 @@ function getTiaConfiguration(): models.TiaConfiguration {
     }
 
     return tiaConfiguration;
+}
+
+function getDistributionBatchSize() : number {
+    const distributeOption = tl.getInput('distributionBatchType');
+    if (distributeOption && distributeOption === 'basedOnBatchSize') {
+        // flow if the batch type = based on agents/custom batching
+        const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
+        if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
+            const batchSize = parseInt(tl.getInput('customBatchSizeValue'));
+            if (!isNaN(batchSize) && batchSize > 0) {
+                return batchSize;
+            } else {
+                throw new Error(tl.loc('invalidTestBatchSize', batchSize));
+            }
+        }
+        // by default we set the distribution = number of agents
+    }
+    return 0;
 }
