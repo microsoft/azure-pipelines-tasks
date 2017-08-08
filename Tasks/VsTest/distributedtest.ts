@@ -30,7 +30,7 @@ export class DistributedTest {
 
     private publishCodeChangesIfRequired(): void {
         if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
-            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null); //todo: enable custom engine
+            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig.taskInstanceIdentifier); //todo: enable custom engine
 
             if (code !== 0) {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));

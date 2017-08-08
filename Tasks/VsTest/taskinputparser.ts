@@ -183,6 +183,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         tl.warning(tl.loc('uitestsparallel'));
     }
 
+    testConfiguration.taskInstanceIdentifier = uuid.v1();
+
     versionFinder.getVsTestRunnerDetails(testConfiguration);
 }
 

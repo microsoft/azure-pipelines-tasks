@@ -34,6 +34,7 @@ export interface TestConfigurations {
     runInParallel: boolean;
     runTestsInIsolation: boolean;
     otherConsoleOptions: string;
+    taskInstanceIdentifier: string;
     runUITests: boolean;
 }
 
