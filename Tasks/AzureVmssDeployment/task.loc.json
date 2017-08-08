@@ -29,6 +29,12 @@
       "displayName": "ms-resource:loc.group.displayName.Image",
       "isExpanded": true,
       "visibleRule": "action = Update image || action = UpdateImage"
+    },
+    {
+      "name": "StartupConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.StartupConfiguration",
+      "isExpanded": true,
+      "visibleRule": "action = Configure application start-up || action = Update image || action = UpdateImage"
     }
   ],
   "inputs": [
@@ -50,7 +56,8 @@
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Update image": "Update image"
+        "Update image": "Update image",
+        "Configure application start-up": "Configure application start-up"
       }
     },
     {
@@ -72,6 +79,35 @@
       "required": true,
       "groupName": "Image",
       "helpMarkDown": "ms-resource:loc.input.help.imageUrl"
+    },
+    {
+      "name": "customScriptsPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.customScriptsPath",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "StartupConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptsPath"
+    },
+    {
+      "name": "customScriptCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customScriptCommand",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "StartupConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
+    },
+    {
+      "name": "customScriptsStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.customScriptsStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customScriptsStorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "dataSourceBindings": [
@@ -79,6 +115,11 @@
       "target": "vmssName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureVirtualMachineScaleSetNames"
+    },
+    {
+      "target": "customScriptsStorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

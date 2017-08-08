@@ -40,7 +40,8 @@ export default class BlobService {
                         let fileName = path.basename(filePath);
                         let relativePath = path.relative(source, filePath);
                         let normalizedRelativePath = self.normalizeRelativePath(relativePath);
-                        blobSvc.createBlockBlobFromLocalFile(destUrlOrContainer, baseFolder + "/" + normalizedRelativePath, filePath, function(error, result, response){
+                        //blobSvc.createBlockBlobFromLocalFile(destUrlOrContainer, baseFolder + "/" + normalizedRelativePath, filePath, function(error, result, response){
+                        blobSvc.createBlockBlobFromLocalFile(destUrlOrContainer, normalizedRelativePath, filePath, function(error, result, response){
                             if(error) {
                                 console.log(error.message);
                             }

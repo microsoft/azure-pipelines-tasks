@@ -1,13 +1,17 @@
 import path = require("path");
+import fs = require('fs');
+import os = require('os');
+import util = require('util');
 import tl = require("vsts-task-lib/task");
+
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import armStorage = require('azure-arm-rest/azure-arm-storage');
 import azureModel = require('azure-arm-rest/azureModels');
 import azureStorage = require('azure-storage-transfer');
+import compress = require('utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")
-import fs = require('fs');
-import util = require('util');
+
 
 export default class VirtualMachineScaleSet {
     private taskParameters: AzureVmssTaskParameters;
@@ -56,22 +60,22 @@ export default class VirtualMachineScaleSet {
         }
     }
 
-    private async _uploadCustomScriptsToBlobService(storageDetails: StorageAccountInfo) {
+    private async _uploadCustomScriptsToBlobService(storageDetails: StorageAccountInfo, customScriptInfo: CustomScriptsInfo) {
         let blobService = azureStorage.createBlobService(this.taskParameters.customScriptsStorageAccount, storageDetails.primaryAccessKey);
         let containerUrl = util.format("%s%s", storageDetails.primaryBlobUrl, "vststasks");
 
         // find all files under dir
-        let fileList: string[] = tl.findMatch(this.taskParameters.customScriptsPath, "**/*.*");
+        let fileList: string[] = tl.findMatch(customScriptInfo.dirPath, "**/*.*");
 
         let fileUris: string[] = [];
         fileList.forEach((filePath) => {
-            let relativePath = path.relative(this.taskParameters.customScriptsPath, filePath);
+            let relativePath = path.relative(customScriptInfo.dirPath, filePath);
             let normalizedRelativePath = utils.normalizeRelativePath(relativePath);
             let fileUri = util.format("%s/%s", containerUrl, normalizedRelativePath);
             fileUris.push(fileUri);
         });
 
-        await blobService.uploadBlobs(this.taskParameters.customScriptsPath, "vststasks");
+        await blobService.uploadBlobs(customScriptInfo.dirPath, "vststasks");
         return fileUris;
     }
 
@@ -96,11 +100,12 @@ export default class VirtualMachineScaleSet {
 
     private async _configureAppUsingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, osType: string): Promise<void> {
         if(!!this.taskParameters.customScriptsPath) {
+            let customScriptInfo: CustomScriptsInfo = this._prepareCustomScripts(osType);
             let storageDetails: StorageAccountInfo = await this._getStorageAccountDetails();
             // upload custom script directory to blob storage
-            let fileUris = await this._uploadCustomScriptsToBlobService(storageDetails);
-            return;
-            /*var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
+            let fileUris = await this._uploadCustomScriptsToBlobService(storageDetails, customScriptInfo);
+            //return;
+            var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
             var customScriptExtension: azureModel.VMExtension = {
                 name: "CustomScriptExtension" + Date.now().toString(),
                 properties: {
@@ -109,10 +114,10 @@ export default class VirtualMachineScaleSet {
                     typeHandlerVersion: extensionMetadata.typeHandlerVersion,
                     autoUpgradeMinorVersion: true,
                     settings: {
+                        "commandToExecute": customScriptInfo.command,
                         "fileUris": fileUris
                     },
                     protectedSettings: {
-                        "commandToExecute": this.taskParameters.customScriptCommand,
                         "storageAccountName": storageDetails.name,
                         "storageAccountKey": storageDetails.primaryAccessKey
                     }
@@ -127,8 +132,46 @@ export default class VirtualMachineScaleSet {
             }
 
             await this._installCustomScriptExtension(client, resourceGroupName, customScriptExtension);
-            */
+
         }
+    }
+
+    private _prepareCustomScripts(osType: string): CustomScriptsInfo {
+        let archiveDirectory = path.join(os.tmpdir(), "vstsvmss" + Date.now().toString());
+        let archiveFileName = this._getArchiveFilename();
+        let archiveExt = this._getArchiveFileExtension(osType);
+        let archiveFile = path.join(archiveDirectory, archiveFileName + archiveExt);
+        let compressionType: string = archiveExt === ".zip" ? "zip" : "targz";
+
+        if(!tl.exist(archiveDirectory)) {
+            tl.mkdirP(archiveDirectory);
+        }
+
+        compress.createArchive(this.taskParameters.customScriptsPath, compressionType, archiveFile);
+
+        if(osType === "Windows") {
+            let invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
+            tl.cp(invokerScriptPath, archiveDirectory, "-f", false);
+            let archiveName = (archiveFileName + archiveExt).replace(/'/g, "''");
+            let command = this.taskParameters.customScriptCommand.replace(/'/g, "''");
+            let invokerCommand = `powershell ./customScriptInvoker.ps1 -zipName '${archiveName}' -command '${command}'`;
+            return <CustomScriptsInfo>{
+                dirPath: archiveDirectory,
+                command: invokerCommand
+            };
+        } else {
+            let invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
+            tl.cp(invokerScriptPath, archiveDirectory, "-f", false);
+            let archiveName = (archiveFileName + archiveExt).replace(/'/g, "''");
+            let command = this.taskParameters.customScriptCommand.replace(/'/g, "''");
+            let invokerCommand = `./customScriptInvoker.sh '${archiveName}' '${command}'`;
+            console.log("Invoker command: " + invokerCommand);
+            return <CustomScriptsInfo>{
+                dirPath: archiveDirectory,
+                command: invokerCommand
+            };
+        }
+
     }
 
     private _getResourceGroupForVmss(client: armCompute.ComputeManagementClient): Promise<any> {
@@ -239,6 +282,27 @@ export default class VirtualMachineScaleSet {
             }
         }
     }
+
+    private _getArchiveFilename(): string {
+        let releaseId = tl.getVariable("release.releaseid");
+        let releaseAttempt = tl.getVariable("release.attemptnumber");
+        let filename: string = "cs-";
+        if(!!releaseId && !!releaseAttempt) {
+            filename = filename + releaseId + "-" + releaseAttempt;
+        } else {
+            filename = filename + tl.getVariable("build.buildid");
+        }
+
+        return filename;
+    }
+
+    private _getArchiveFileExtension(osType: string): string {
+        if(osType === "Windows") {
+            return ".zip";
+        } else {
+            return ".tar.gz";
+        }
+    }
 }
 
 class StorageAccountInfo {
@@ -246,4 +310,9 @@ class StorageAccountInfo {
     public resourceGroupName: string;
     public primaryBlobUrl: string;
     public primaryAccessKey: string;
+}
+
+class CustomScriptsInfo {
+    public dirPath: string;
+    public command: string;
 }
