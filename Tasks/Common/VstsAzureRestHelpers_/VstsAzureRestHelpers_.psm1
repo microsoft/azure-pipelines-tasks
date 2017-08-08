@@ -250,19 +250,72 @@ function Add-AzureStackDependencyData {
              }
         }
 
-        $Endpoint.Data["galleryUrl"] = $galleryEndpoint
-        $Endpoint.Data["resourceManagerUrl"] = $ResourceManagerEndpoint
-        $Endpoint.Data["activeDirectoryAuthority"] = $activeDirectoryEndpoint
-        $Endpoint.Data["environmentAuthorityUrl"] = $activeDirectoryEndpoint
-        $Endpoint.Data["graphUrl"] = $graphEndpoint
-        $Endpoint.Data["activeDirectoryServiceEndpointResourceId"] = $activeDirectoryServiceEndpointResourceId
-        $Endpoint.Data["AzureKeyVaultDnsSuffix"] = $AzureKeyVaultDnsSuffix
+        if($Endpoint.Data -ne $null)
+        {
+            if(-not (Has-ObjectProperty $Endpoint.Data "galleryUrl"))
+            {
+                $Endpoint.Data | Add-Member "galleryUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "resourceManagerUrl"))
+            {
+                $Endpoint.Data | Add-Member "resourceManagerUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "activeDirectoryAuthority"))
+            {
+                $Endpoint.Data | Add-Member "activeDirectoryAuthority" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "environmentAuthorityUrl"))
+            {
+                $Endpoint.Data | Add-Member "environmentAuthorityUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "graphUrl"))
+            {
+                $Endpoint.Data | Add-Member "graphUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "activeDirectoryServiceEndpointResourceId"))
+            {
+                $Endpoint.Data | Add-Member "activeDirectoryServiceEndpointResourceId" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "AzureKeyVaultDnsSuffix"))
+            {
+                $Endpoint.Data | Add-Member "AzureKeyVaultDnsSuffix" $null
+            }
+
+            $Endpoint.Data.galleryUrl = $galleryEndpoint
+            $Endpoint.Data.resourceManagerUrl = $ResourceManagerEndpoint
+            $Endpoint.Data.activeDirectoryAuthority = $activeDirectoryEndpoint
+            $Endpoint.Data.environmentAuthorityUrl = $activeDirectoryEndpoint
+            $Endpoint.Data.graphUrl = $graphEndpoint
+            $Endpoint.Data.activeDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
+            $Endpoint.Data.AzureKeyVaultDnsSuffix = $AzureKeyVaultDnsSuffix
+        }
     } 
     else 
     {
         throw "Unable to fetch Azure Stack Dependency Data."
     }
     return $Endpoint
+}
+
+function Has-ObjectProperty {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $object,
+    [Parameter(Mandatory=$true)] $propertyName) 
+
+    if(Get-Member -inputobject $object -name $propertyName -Membertype Properties)
+    {
+        return $true
+    }
+    else
+    {
+        return $false
+    }
 }
 
 # Get the Bearer Access Token from the Endpoint
