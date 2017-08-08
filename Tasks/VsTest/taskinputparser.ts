@@ -330,6 +330,8 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
             } else {
                 tl.warning(tl.loc('minimumRunTimePerBatchWarning', 60));
             }
+        } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
+            dtaTestConfiguration.runningTimePerBatch = 0;
         }
     }
     return 0;
