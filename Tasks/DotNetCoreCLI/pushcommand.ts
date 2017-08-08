@@ -34,7 +34,7 @@ export async function run(): Promise<void> {
             return;
         }
 
-        // Get the info the type of feed 
+        // Get the info the type of feed
         let nugetFeedType = tl.getInput("nuGetFeedType") || "internal";
 
         // Make sure the feed type is an expected one
@@ -79,7 +79,14 @@ export async function run(): Promise<void> {
         const tempNuGetPath = path.join(tempNuGetConfigDirectory, "nuget.config");
         tl.mkdirP(tempNuGetConfigDirectory);
 
-        const nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, { credProviderFolder: null, extensionsDisabled: true }, tempNuGetPath);
+        const nuGetConfigHelper = new NuGetConfigHelper2(
+            nuGetPath,
+            null, /* nugetConfigPath */
+            authInfo,
+            { credProviderFolder: null, extensionsDisabled: true },
+            tempNuGetPath,
+            false /* useNugetToModifyConfigFile */);
+
         let feedUri: string = undefined;
 
         if (isInternalFeed) {

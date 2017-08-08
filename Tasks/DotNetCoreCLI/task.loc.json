@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -417,6 +417,7 @@
     "Error_NoVersionFoundInBuildNumber": "ms-resource:loc.messages.Error_NoVersionFoundInBuildNumber",
     "Error_PackageFailure": "ms-resource:loc.messages.Error_PackageFailure",
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
+    "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
     "Info_AttemptingToPackFile": "ms-resource:loc.messages.Info_AttemptingToPackFile",
     "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",

@@ -6,7 +6,10 @@ import * as tl from "vsts-task-lib/task";
 
 import * as auth from "./Authentication";
 import { IPackageSource } from "./Authentication";
+import { INuGetXmlHelper } from "./INuGetXmlHelper";
 import * as ngToolRunner from "./NuGetToolRunner2";
+import { NuGetExeXmlHelper } from "./NuGetExeXmlHelper";
+import { NuGetXmlHelper } from "./NuGetXmlHelper";
 
 let xmlreader = require("xmlreader");
 
@@ -15,15 +18,20 @@ let xmlreader = require("xmlreader");
 
 export class NuGetConfigHelper2 {
     public tempNugetConfigPath = undefined;
+    private nugetXmlHelper: INuGetXmlHelper;
 
     constructor(
         private nugetPath: string,
         private nugetConfigPath: string,
         private authInfo: auth.NuGetExtendedAuthInfo,
         private environmentSettings: ngToolRunner.NuGetEnvironmentSettings,
-        private tempConfigPath: string /*optional*/)
+        private tempConfigPath: string /*optional*/,
+        private useNuGetToModifyConfigFile: boolean = true)
     {
         this.tempNugetConfigPath = tempConfigPath || this.getTempNuGetConfigPath();
+        this.nugetXmlHelper = useNuGetToModifyConfigFile ?
+            new NuGetExeXmlHelper(this.nugetPath, this.tempNugetConfigPath, this.authInfo, this.environmentSettings) :
+            new NuGetXmlHelper(this.tempNugetConfigPath);
     }
 
     public static getTempNuGetConfigBasePath() {
@@ -35,7 +43,7 @@ export class NuGetConfigHelper2 {
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
         console.log(tl.loc("Info_SavingTempConfig"));
-        
+
         let tempNuGetConfigDir = path.dirname(this.tempNugetConfigPath);
         if (!tl.exist(tempNuGetConfigDir)) {
             tl.mkdirP(tempNuGetConfigDir);
@@ -81,7 +89,7 @@ export class NuGetConfigHelper2 {
                 {
                     tl.debug('Setting auth for internal source ' + source.feedUri);
                     // Removing source first
-                    this.removeSourceFromTempNugetConfig(source);               
+                    this.removeSourceFromTempNugetConfig(source);
                     // Re-adding source with creds
                     this.addSourceWithUsernamePasswordToTempNuGetConfig(source, "VssSessionToken", this.authInfo.internalAuthInfo.accessToken);
                 }
@@ -104,12 +112,12 @@ export class NuGetConfigHelper2 {
                     {
                         case (auth.ExternalAuthType.UsernamePassword):
                             let usernamePwdAuthInfo =  externalEndpointAuthInfo as auth.UsernamePasswordExternalAuthInfo;
-                            this.removeSourceFromTempNugetConfig(source);               
+                            this.removeSourceFromTempNugetConfig(source);
                             this.addSourceWithUsernamePasswordToTempNuGetConfig(source, usernamePwdAuthInfo.username, usernamePwdAuthInfo.password);
                             break;
                         case (auth.ExternalAuthType.Token):
                             let tokenAuthInfo =  externalEndpointAuthInfo as auth.TokenExternalAuthInfo;
-                            this.removeSourceFromTempNugetConfig(source);               
+                            this.removeSourceFromTempNugetConfig(source);
                             this.addSourceWithUsernamePasswordToTempNuGetConfig(source, "CustomToken", tokenAuthInfo.token);
                             break;
                         case (auth.ExternalAuthType.ApiKey):
@@ -192,79 +200,24 @@ export class NuGetConfigHelper2 {
     }
 
     private removeSourceFromTempNugetConfig(packageSource: IPackageSource) {
-        let nugetTool = ngToolRunner.createNuGetToolRunner(this.nugetPath, this.environmentSettings, this.authInfo);
-
-        nugetTool.arg("sources");
-        nugetTool.arg("Remove");
-        nugetTool.arg("-NonInteractive");
-        nugetTool.arg("-Name");
-        nugetTool.arg(packageSource.feedName);
-        nugetTool.arg("-ConfigFile");
-        nugetTool.arg(this.tempNugetConfigPath);
-
-        // short run, use execSync 
-        nugetTool.execSync();
+        this.nugetXmlHelper.RemoveSourceFromNuGetConfig(packageSource.feedName);
     }
 
-    
+
     private addSourcesToTempNugetConfigInternal(packageSources: IPackageSource[]) {
         packageSources.forEach((source) => {
-            let nugetTool = ngToolRunner.createNuGetToolRunner(this.nugetPath, this.environmentSettings, this.authInfo);
-
-            nugetTool.arg("sources");
-            nugetTool.arg("Add");
-            nugetTool.arg("-NonInteractive");
-            nugetTool.arg("-Name");
-            nugetTool.arg(source.feedName);
-            nugetTool.arg("-Source");
-            nugetTool.arg(source.feedUri);
-            nugetTool.arg("-ConfigFile");
-            nugetTool.arg(this.tempNugetConfigPath);
-
-            // short run, use execSync
-            nugetTool.execSync();
+            this.nugetXmlHelper.AddSourceToNuGetConfig(source.feedName, source.feedUri);
         });
     }
 
     private addSourceWithUsernamePasswordToTempNuGetConfig(source: IPackageSource, username: string, password: string)
     {
-            let nugetTool = ngToolRunner.createNuGetToolRunner(this.nugetPath, this.environmentSettings, this.authInfo);
-            nugetTool.arg("sources");
-            nugetTool.arg("Add");
-            nugetTool.arg("-NonInteractive");
-            nugetTool.arg("-Name");
-            nugetTool.arg(source.feedName);
-            nugetTool.arg("-Source");
-            nugetTool.arg(source.feedUri);
-            nugetTool.arg("-ConfigFile");
-            nugetTool.arg(this.tempNugetConfigPath);
-            nugetTool.arg("-Username");
-            nugetTool.arg(username);
-            nugetTool.arg("-Password");
-            nugetTool.arg(password);
-
-            if (tl.osType() !== 'Windows_NT') {
-                // only Windows supports DPAPI. Older NuGets fail to add credentials at all if DPAPI fails. 
-                nugetTool.arg("-StorePasswordInClearText");
-            }
-
-            // short run, use execSync
-            nugetTool.execSync();
+        this.nugetXmlHelper.AddSourceToNuGetConfig(source.feedName, source.feedUri, username, password);
     }
 
     private setApiKeyForSourceInTempNuGetConfig(source: IPackageSource, apiKey: string)
     {
-            let nugetTool = ngToolRunner.createNuGetToolRunner(this.nugetPath, this.environmentSettings, this.authInfo);
-            nugetTool.arg("setapikey");
-            nugetTool.arg(apiKey);
-            nugetTool.arg("-NonInteractive");
-            nugetTool.arg("-Source");
-            nugetTool.arg(source.feedUri);
-            nugetTool.arg("-ConfigFile");
-            nugetTool.arg(this.tempNugetConfigPath);
-
-            // short run, use execSync
-            nugetTool.execSync();
+        this.nugetXmlHelper.SetApiKeyInNuGetConfig(source.feedName, apiKey);
     }
 
     private shouldGetCredentialsForFeed(source: IPackageSource): boolean {
