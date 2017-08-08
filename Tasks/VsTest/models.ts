@@ -44,6 +44,8 @@ export interface DtaTestConfigurations extends TestConfigurations {
     numberOfAgentsInPhase: number;
     useVsTestConsole: string;
     numberOfTestCasesPerSlice: number;
+    batchingType: BatchingType;
+    runningTimePerBatch: number;
 }
 
 export interface DtaEnvironment {
@@ -74,4 +76,9 @@ export interface TiaConfiguration {
     useTestCaseFilterInResponseFile: string;
     userMapFile: string;
     disableEnablingDataCollector: boolean;
+}
+
+export enum BatchingType {
+    TestCaseBased,
+    TestExecutionTimeBased
 }

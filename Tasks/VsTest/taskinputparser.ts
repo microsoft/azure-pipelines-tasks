@@ -28,17 +28,14 @@ export function getDistributedTestConfigurations() {
         tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
     }
 
-    dtaConfiguration.numberOfAgentsInPhase = 0;
+    dtaConfiguration.numberOfAgentsInPhase = 1;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
     if (!isNaN(totalJobsInPhase)) {
         dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
     }
     console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
 
-    dtaConfiguration.numberOfTestCasesPerSlice = getDistributionBatchSize();
-    if (dtaConfiguration.numberOfTestCasesPerSlice > 0) {
-        console.log(tl.loc('numberOfTestCasesPerSlice', dtaConfiguration.numberOfTestCasesPerSlice));
-    }
+    getDistributionBatchSize(dtaConfiguration);
 
     let useVsTestConsole = tl.getVariable('UseVsTestConsole');
     if (useVsTestConsole) {
@@ -300,20 +297,40 @@ function getTiaConfiguration(): models.TiaConfiguration {
     return tiaConfiguration;
 }
 
-function getDistributionBatchSize() : number {
+function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurations) {
     const distributeOption = tl.getInput('distributionBatchType');
-    if (distributeOption && distributeOption === 'basedOnBatchSize') {
+    if (distributeOption && distributeOption === 'basedOnTestCases') {
+        dtaTestConfiguration.batchingType = models.BatchingType.TestCaseBased;
         // flow if the batch type = based on agents/custom batching
         const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
         if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
             const batchSize = parseInt(tl.getInput('customBatchSizeValue'));
             if (!isNaN(batchSize) && batchSize > 0) {
-                return batchSize;
+                dtaTestConfiguration.numberOfTestCasesPerSlice = batchSize;
+                console.log(tl.loc('numberOfTestCasesPerSlice', dtaTestConfiguration.numberOfTestCasesPerSlice));
             } else {
                 throw new Error(tl.loc('invalidTestBatchSize', batchSize));
             }
         }
         // by default we set the distribution = number of agents
+    } else if (distributeOption && distributeOption === 'basedOnExecutionTime') {
+        dtaTestConfiguration.batchingType = models.BatchingType.TestExecutionTimeBased;
+        // flow if the batch type = based on agents/custom batching
+        const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
+        if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
+            const batchExecutionTime = parseInt(tl.getInput('customRunTimePerBatchValue'));
+            if (isNaN(batchExecutionTime) || batchExecutionTime < 0) {
+                throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTime));
+            }
+
+            dtaTestConfiguration.runningTimePerBatch = 60;
+            if (batchExecutionTime >= 60) {
+                dtaTestConfiguration.runningTimePerBatch = batchExecutionTime;
+                console.log(tl.loc('RunTimePerBatch', dtaTestConfiguration.runningTimePerBatch));
+            } else {
+                tl.warning(tl.loc('minimumRunTimePerBatchWarning', 60));
+            }
+        }
     }
     return 0;
 }

@@ -54,6 +54,10 @@
   "loc.input.help.batchingBasedOnAgentsOption": "Total number of tests will be divided into multiple batches. If batch size is specified, Each batch will contain the specified number of test cases.",
   "loc.input.label.customBatchSizeValue": "Number of tests per batch",
   "loc.input.help.customBatchSizeValue": "Specify batch size",
+  "loc.input.label.batchingBasedOnExecutionTimeOption": "Batch options",
+  "loc.input.help.batchingBasedOnExecutionTimeOption": "Total number of tests will be divided into multiple batches. If batch size is specified, Each batch will contain the specified number of test cases.",
+  "loc.input.label.customRunTimePerBatchValue": "Running time (sec) per batch",
+  "loc.input.help.customRunTimePerBatchValue": "Specify the running time (sec) per batch",
   "loc.input.label.otherConsoleOptions": "Other console options",
   "loc.input.help.otherConsoleOptions": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
   "loc.input.label.testRunTitle": "Test run title",
@@ -129,6 +133,9 @@
   "loc.messages.noTestSourcesFound": "No test sources found matching the given filter '%s'",
   "loc.messages.DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
   "loc.messages.noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console.",
-  "loc.messages.numberOfTestCasesPerSlice": "Distributed test execution, number of test batch(s) : %s",
-  "loc.messages.invalidTestBatchSize": "Invalid batch size provided: %s"
+  "loc.messages.numberOfTestCasesPerSlice": "Number of test cases per batch : %s",
+  "loc.messages.invalidTestBatchSize": "Invalid batch size provided: %s",
+  "loc.messages.invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
+  "loc.messages.minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
+  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s"
 }
