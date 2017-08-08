@@ -13,20 +13,16 @@ ci.publishEvent(taskProps);
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
-    tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
-    const testType = tl.getInput('testSelector');
-    tl.debug('Value of Test Selector :' + testType);
-
-    if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multimachine')
-        || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+    const useDtaExecutionEngine = isDtaEngineRequired();
+    if (useDtaExecutionEngine) {
+        ci.publishEvent({ runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
+                 testtype: tl.getInput('testSelector') });
 
         console.log(tl.loc('distributedTestWorkflow'));
         console.log('======================================================');
         const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
         console.log('======================================================');
-        ci.publishEvent({ runmode: 'distributedtest', parallelism: parallelExecution, testtype: testType });
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();
@@ -40,4 +36,26 @@ try {
 } finally {
     taskProps.state = 'completed';
     ci.publishEvent(taskProps);
+}
+
+function isDtaEngineRequired() : boolean {
+    const batchoption = tl.getInput('batchingBasedOnAgentsOption');
+    if (batchoption && batchoption === 'customBatchSize') {
+        return true;
+    }
+
+    const testType = tl.getInput('testSelector');
+    tl.debug('Value of Test Selector :' + testType);
+    if (testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+        return true;
+    }
+
+    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    tl.debug('Value of ParallelExecutionType :' + parallelExecution);
+
+    if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine') {
+        return true;
+    }
+
+    return false;
 }

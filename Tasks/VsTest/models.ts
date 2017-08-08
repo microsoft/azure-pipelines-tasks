@@ -44,6 +44,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     dtaEnvironment: DtaEnvironment;
     numberOfAgentsInPhase: number;
     useVsTestConsole: string;
+    numberOfTestCasesPerSlice: number;
 }
 
 export interface DtaEnvironment {
