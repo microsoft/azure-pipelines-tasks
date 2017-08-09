@@ -62,9 +62,9 @@ Expression examples to meet goals - 1,2
 - **(goal 1):**
 
 ```
-      VALIDATION_EXPRESSION_HERE = validateInput(string condition: boolean, string message)
+      VALIDATION_EXPRESSION_HERE = "expression_using_any_functions"
       -------------------------------------------------------------------------------------
-      VALIDATION_EXPRESSION_HERE = validateInput("or(isUPN(value), isIDN(value), isEmpty(value)", "Invalid username"))
+      VALIDATION_EXPRESSION_HERE = "or(isUPN(value), isIDN(value))"
 ```      
 
 - **(goal 2):**
@@ -106,7 +106,7 @@ Expression examples to meet goals - 1,2
 ```
         WHEN_EXPRESSION_HERE = eq(inputs.input1, 'foo') // has access to other input values
         -------------------------------------------------------------------------------------
-        VALIDATION_EXPRESSION_HERE = validateInput("or(isEmpty(value)", "Invalid value"))
+        VALIDATION_EXPRESSION_HERE = "isEmpty(value)"
 
 
 -------
