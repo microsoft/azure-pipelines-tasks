@@ -64,7 +64,7 @@ Expression examples to meet goals - 1,2
 ```
       VALIDATION_EXPRESSION_HERE = "expression_using_any_functions"
       -------------------------------------------------------------------------------------
-      VALIDATION_EXPRESSION_HERE = "or(isUPN(value), isIDN(value))"
+      VALIDATION_EXPRESSION_HERE = "and(isWinUsername(value), isLowerCase(value))"
 ```      
 
 - **(goal 2):**
