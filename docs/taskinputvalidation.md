@@ -85,7 +85,7 @@ Expression examples to meet goals - 1,2
                         {
                             "when": "WHEN_EXPRESSION_HERE",
                             "editable": "false", // overrides EditableOptions from properties
-                            "options": {
+                            "options": { // implicit validation, value should be one of these
                                 "foo1": "foo display value 1",
                                 "foo2": "foo display value 2",
                             }
