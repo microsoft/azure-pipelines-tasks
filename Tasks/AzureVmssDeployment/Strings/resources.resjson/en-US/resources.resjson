@@ -43,5 +43,12 @@
   "loc.messages.VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
   "loc.messages.NewVMSSImageUrl": "Url for new VMSS image: %s.",
   "loc.messages.VMSSUpdateImage": "Updating VMSS %s to use new image...",
-  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null."
+  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null.",
+  "loc.messages.ArchivingCustomScripts": "Creating compressed archive of custom scripts directory %s.",
+  "loc.messages.CustomScriptsArchiveFile": "Custom scripts archive created at %s.",
+  "loc.messages.CopiedInvokerScript": "Script to extract and execute custom srcipt srchive has been copied to %s.",
+  "loc.messages.CustomScriptsArchivingFailed": "Cound not compress custom scripts. Will use individual files.",
+  "loc.messages.UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
+  "loc.messages.DestinationBlobContainer": "Files will be uploaded to container url: %s.",
+  "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s."
 }

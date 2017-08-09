@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -34,7 +34,7 @@
       "name": "StartupConfiguration",
       "displayName": "ms-resource:loc.group.displayName.StartupConfiguration",
       "isExpanded": true,
-      "visibleRule": "action = Configure application start-up || action = Update image || action = UpdateImage"
+      "visibleRule": "action = Configure application startup || action = Update image || action = UpdateImage"
     }
   ],
   "inputs": [
@@ -57,7 +57,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "Update image": "Update image",
-        "Configure application start-up": "Configure application start-up"
+        "Configure application startup": "Configure application startup"
       }
     },
     {
@@ -85,7 +85,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.customScriptsPath",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "groupName": "StartupConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.customScriptsPath"
     },
@@ -94,7 +94,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.customScriptCommand",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "groupName": "StartupConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
     },
@@ -103,7 +103,8 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.customScriptsStorageAccount",
       "defaultValue": "",
-      "required": true,
+      "required": false,
+      "groupName": "StartupConfiguration",
       "helpMarkDown": "ms-resource:loc.input.help.customScriptsStorageAccount",
       "properties": {
         "EditableOptions": "True"
@@ -151,6 +152,13 @@
     "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate",
     "NewVMSSImageUrl": "ms-resource:loc.messages.NewVMSSImageUrl",
     "VMSSUpdateImage": "ms-resource:loc.messages.VMSSUpdateImage",
-    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull"
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
+    "ArchivingCustomScripts": "ms-resource:loc.messages.ArchivingCustomScripts",
+    "CustomScriptsArchiveFile": "ms-resource:loc.messages.CustomScriptsArchiveFile",
+    "CopiedInvokerScript": "ms-resource:loc.messages.CopiedInvokerScript",
+    "CustomScriptsArchivingFailed": "ms-resource:loc.messages.CustomScriptsArchivingFailed",
+    "UploadingCustomScriptsBlobs": "ms-resource:loc.messages.UploadingCustomScriptsBlobs",
+    "DestinationBlobContainer": "ms-resource:loc.messages.DestinationBlobContainer",
+    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist"
   }
 }

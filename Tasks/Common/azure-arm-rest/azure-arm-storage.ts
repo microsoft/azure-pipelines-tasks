@@ -83,11 +83,11 @@ export class StorageAccounts {
 
     public async listKeys(resourceGroupName: string, accountName: string, options): Promise<string[]> {
         if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-          throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+          throw new Error(tl.loc("ResourceGroupCannotBeNull"));
         }
 
         if (accountName === null || accountName === undefined || typeof accountName.valueOf() !== 'string') {
-          throw new Error('accountName cannot be null or undefined and it must be of type string.');
+          throw new Error(tl.loc("StorageAccountCannotBeNull"));
         }
 
         var httpRequest = new webClient.WebRequest();

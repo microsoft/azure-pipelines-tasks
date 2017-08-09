@@ -3,14 +3,11 @@ import * as path from 'path';
 import * as util from 'util'
 import * as tl from 'vsts-task-lib/task';
 
-import * as definitions from "./definitions";
-import * as azCopyProvider from "./azCopyProvider";
-
 export default class BlobService {
     private _storageAccountName: string;
     private _storageAccessKey: string;
 
-    constructor(storageAccountName: string, storageAccessKey: string) {
+    public constructor(storageAccountName: string, storageAccessKey: string) {
         this._storageAccountName = storageAccountName;
         this._storageAccessKey = storageAccessKey;
     }

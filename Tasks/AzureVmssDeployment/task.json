@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -34,7 +34,7 @@
             "name": "StartupConfiguration",
             "displayName": "Configure start-up",
             "isExpanded": true,
-            "visibleRule": "action = Configure application start-up || action = Update image || action = UpdateImage"
+            "visibleRule": "action = Configure application startup || action = Update image || action = UpdateImage"
         }
     ],
     "inputs": [
@@ -57,7 +57,7 @@
             "helpMarkDown": "Action to be performed on the scale set.",
             "options": {
                 "Update image": "Update image",
-                "Configure application start-up": "Configure application start-up"
+                "Configure application startup": "Configure application startup"
             }
         },
         {
@@ -85,7 +85,7 @@
              "type": "filePath",
              "label": "Custom script directory",
              "defaultValue": "",
-             "required": true,
+             "required": false,
              "groupName": "StartupConfiguration",
              "helpMarkDown": "path to directory containing custom script and related scripts. These scripts can be used to set start-up environment for application(if any) being deployed through custom image. In other words, application configuration management can be achieved using this script.<br/>E.g. the script can set a machine level environment variable and the application can then consume envionment variable. This enables usage of same VHD image across multiple deployments."
          },
@@ -94,7 +94,7 @@
              "type": "string",
              "label": "Command",
              "defaultValue": "",
-             "required": true,
+             "required": false,
              "groupName": "StartupConfiguration",
              "helpMarkDown": "Command to be run to execute custom script. Arguments can also be provided in command. Release variables can be used which makes it easy to use pass secrets.<br/>For powershell script, use something like \"powershell .\\&lt;script-name&gt;.ps1 &lt;arguments&gt;\". For shell script use something like \"bash ./&lt;script-name&gt;.sh &lt;arguments&gt;\",  Example usages:<br/>1. \".\\SetEnv.cmd\" will set some environment variabels which will be used by application when starting.<br/>2. \"powershell .\\Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd)\" will update connection string in web.config of web application.<br/>3. \"bash ./install-secrets.sh --key-vault-type prod -key serviceprincipalkey\" will create an encrypted file containing service principal key."
         },
@@ -103,7 +103,8 @@
             "type": "pickList",
             "label": "Azure storage account where custom scripts will be uploaded.",
             "defaultValue": "",
-            "required": true,
+            "required": false,
+            "groupName": "StartupConfiguration",
             "helpMarkDown": "Specify a pre-existing ARM storage account. It is used as an intermediary storage of custom scripts.",
             "properties": {
                 "EditableOptions": "True"
@@ -151,6 +152,15 @@
         "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
         "NewVMSSImageUrl": "Url for new VMSS image: %s.",
         "VMSSUpdateImage": "Updating VMSS %s to use new image...",
-        "ResourceNameCannotBeNull": "Resource name cannot be null."
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "ArchivingCustomScripts": "Creating compressed archive of custom scripts directory %s.",
+        "CustomScriptsArchiveFile": "Custom scripts archive created at %s.",
+        "CopiedInvokerScript": "Script to extract and execute custom srcipt srchive has been copied to %s.",
+        "CustomScriptsArchivingFailed": "Cound not compress custom scripts. Will use individual files.",
+        "UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
+        "DestinationBlobContainer": "Files will be uploaded to container url: %s.",
+        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+        "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
+        "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string."
     }
 }

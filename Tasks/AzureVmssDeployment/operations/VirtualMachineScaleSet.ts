@@ -6,7 +6,7 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import armStorage = require('azure-arm-rest/azure-arm-storage');
 import azureModel = require('azure-arm-rest/azureModels');
-import azureStorage = require('azure-storage-transfer');
+import BlobService from '../blobService';
 import compress = require('utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")
@@ -20,23 +20,6 @@ export default class VirtualMachineScaleSet {
     }
 
     public async execute(): Promise<void> {
-        /*var blobService = azureStorage.createBlobService("cdscd", "vervre");
-        blobService.uploadBlobs("cdcsd", "ede", "csdcd");
-        return;*/
-
-        // get RG for SG
-        /*
-                let storageAccounts: Model.StorageAccount[] = await this.list(options);
-        let index = storageAccounts.findIndex(account => account.name.toLowerCase() === accountName.toLowerCase());
-        if(index < 0) {
-            throw new Error('Could nor find storage account with name ' + accountName);
-        }
-
-        let resourceGroupName = getResourceGroupNameFromUri(storageAccounts[index].id);
-
-        */
-
-
         var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         var result = await this._getResourceGroupForVmss(client);
         var resourceGroupName: string = result.resourceGroupName;
@@ -51,7 +34,7 @@ export default class VirtualMachineScaleSet {
                 await this._configureAppUsingCustomScriptExtension(client, resourceGroupName, osType);
                 await this._updateImageInternal(client, resourceGroupName);
                 break;
-            case "Configure application start-up":
+            case "Configure application startup":
                 await this._configureAppUsingCustomScriptExtension(client, resourceGroupName, osType);
                 break;
             default:
@@ -60,8 +43,9 @@ export default class VirtualMachineScaleSet {
     }
 
     private async _uploadCustomScriptsToBlobService(customScriptInfo: CustomScriptsInfo) {
+        console.log(tl.loc("UploadingCustomScriptsBlobs", customScriptInfo.localDirPath))
         let storageDetails = customScriptInfo.storageAccount;
-        let blobService = azureStorage.createBlobService(storageDetails.name, storageDetails.primaryAccessKey);
+        let blobService = new BlobService(storageDetails.name, storageDetails.primaryAccessKey);
         let containerUrl = util.format("%s%s", storageDetails.primaryBlobUrl, "vststasks");
 
         // find all files under dir
@@ -75,19 +59,23 @@ export default class VirtualMachineScaleSet {
             fileUris.push(fileUri);
         });
 
+        console.log(tl.loc("DestinationBlobContainer", containerUrl))
         await blobService.uploadBlobs(customScriptInfo.localDirPath, "vststasks");
         return fileUris;
     }
 
     private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
+        tl.debug("Getting storage account details for " + this.taskParameters.customScriptsStorageAccount);
         var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         let storageAccounts: azureModel.StorageAccount[] = await storageArmClient.storageAccounts.list(null);
         let index = storageAccounts.findIndex(account => account.name.toLowerCase() === this.taskParameters.customScriptsStorageAccount.toLowerCase());
         if(index < 0) {
-            throw new Error('Could nor find storage account with name ' + this.taskParameters.customScriptsStorageAccount);
+            throw new Error(tl.loc("StorageAccountDoesNotExist", this.taskParameters.customScriptsStorageAccount));
         }
 
         let storageAccountResourceGroupName = utils.getResourceGroupNameFromUri(storageAccounts[index].id);
+
+        tl.debug("Listing storage access keys...");
         let accessKeys = await storageArmClient.storageAccounts.listKeys(storageAccountResourceGroupName, this.taskParameters.customScriptsStorageAccount, null);
 
         return <StorageAccountInfo>{
@@ -100,6 +88,7 @@ export default class VirtualMachineScaleSet {
 
     private async _configureAppUsingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, osType: string): Promise<void> {
         if(!!this.taskParameters.customScriptsPath) {
+            tl.debug("Preparing custom scripts...");
             let customScriptInfo: CustomScriptsInfo = await this._prepareCustomScripts(osType);
             //return;
             var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
@@ -145,6 +134,7 @@ export default class VirtualMachineScaleSet {
 
     private _archiveCustomScripts(osType: string): CustomScriptsInfo {
         try {
+            console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsPath));
             let archive: ArchiveInfo = this._computeArchiveDetails(osType);
 
             if(!tl.exist(archive.directory)) {
@@ -168,14 +158,16 @@ export default class VirtualMachineScaleSet {
             // copy invoker script to same dir as archive
             tl.cp(invokerScriptPath, archive.directory, "-f", false);
 
-            console.log("Invoker command: " + invokerCommand);
+            console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
+            console.log(tl.loc("CopiedInvokerScript", archive.directory));
+            tl.debug("Invoker command: " + invokerCommand);
             return <CustomScriptsInfo>{
                 localDirPath: archive.directory,
                 command: invokerCommand
             };
 
         } catch (error) {
-            tl.warning("Cound not compress custom scripts. Will use individual files.");
+            tl.warning("CustomScriptsArchivingFailed");
             return <CustomScriptsInfo>{
                 localDirPath: this.taskParameters.customScriptsPath,
                 command: this.taskParameters.customScriptCommand
