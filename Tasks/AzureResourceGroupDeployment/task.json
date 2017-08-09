@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -397,7 +397,7 @@
         "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
         "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
         "ExtensionNotFound": "Extension not found on the vm: %s",
-        "AddedOutputVariable": "Updated output variable 'DeploymentGroups'. Follow this link: https://go.microsoft.com/fwlink/?linkid=853539 to learn how to use it in your defintion",
+        "AddedOutputVariable": "Updated output variable 'DeploymentOutputs', which contains the outputs section of the current deployment object in string format. Follow this link: https://go.microsoft.com/fwlink/?linkid=853539 to learn how to use it in your defintion",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
