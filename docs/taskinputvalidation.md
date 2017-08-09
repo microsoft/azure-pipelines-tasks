@@ -122,5 +122,5 @@ Limitations/Challenges
         - We can expand variables available for us at queue time and validate
     - Run time
         - Agent would have perform final validation when it actual has the value with all macros expanded
-- WHEN_EXPRESSION allows to reference other inputs, is there a need for VALIDATION_EXPRESSION to access other input values too? Both should be driven by similar expression support regardless, but could there be scenarios where validation needs to access other input values? Is that something Goal **3** would eventuall solve?
+- WHEN_EXPRESSION allows to reference other inputs, is there a need for VALIDATION_EXPRESSION to access other input values too? Both should be driven by similar expression support regardless, but could there be scenarios where validation needs to access other input values? Is that something Goal **3** would eventually solve?
 
