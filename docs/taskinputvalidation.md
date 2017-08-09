@@ -38,9 +38,10 @@ Well known functions
         - When we use `ECMAScript`, we can only specify `IgnoreCase` and/or `Multiline` options to C# regex
         - With such limitations, javascript equivalent flags we support would be `g` (for global match, this gets translated to getting a [single match](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.match(v=vs.110).aspx) or [all matches](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.matches.aspx) in C#), `i` (for C# `IgnoreCase`), `m` (for C# `Multiline`)
         - Default C# behavior would be to use single match
-        - So, we would be supporting these options as Enum flags:
-            - IgnoreCase
-            - Multiline
+        - So, we would be supporting these options:
+            - IgnoreCase (i)
+            - Multiline (m)
+        - Valid options - "im", "m", "mi", "i"
         - We can add `Global` option later if needed
 
 
