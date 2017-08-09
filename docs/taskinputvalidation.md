@@ -40,8 +40,8 @@ Well known functions
         - Default C# behavior would be to use single match
         - So, we would be supporting these options as Enum flags:
             - IgnoreCase
-            - Global
-        - We can add `multiline` option later if needed
+            - Multiline
+        - We can add `Global` option later if needed
 
 
 ```
