@@ -4,7 +4,7 @@ Task input validation
 Goals
 -------
 
-1. Task authors should be able to do wellknown validations with ease and also custom validations.
+1. Task authors should be able to do wellknown and custom validations with ease.
     - Eg: A valid - URL, IP Address, e-email address, Date, Port number, Cert thumbprint, user name (IDN or UPN format), input based (length of input, valid `path` characters, case checkings)
     - Let task authors provide any custom regex validations
     - Note: To prevent [reDoS](https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS) we should give a [timeout](https://msdn.microsoft.com/en-us/library/hh160196%28v=vs.110%29.aspx) to regex validation.
@@ -124,4 +124,3 @@ Limitations/Challenges
     - Run time (**Not implemented yet**)
         - Agent would have perform final validation when it actual has the value with all macros expanded
 - WHEN_EXPRESSION allows to reference other inputs, is there a need for VALIDATION_EXPRESSION to access other input values too? Both should be driven by similar expression support regardless, but could there be scenarios where validation needs to access other input values? Is that something Goal **3** would eventually solve?
-
