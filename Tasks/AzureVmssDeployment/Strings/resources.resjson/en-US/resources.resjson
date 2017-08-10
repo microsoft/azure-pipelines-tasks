@@ -49,6 +49,9 @@
   "loc.messages.CopiedInvokerScript": "Script to extract and execute custom srcipt srchive has been copied to %s.",
   "loc.messages.CustomScriptsArchivingFailed": "Cound not compress custom scripts. Will use individual files.",
   "loc.messages.UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
+  "loc.messages.UploadingToStorageBlobsFailed": "Failed to upload custom scripts to azure blob storage. Error: %s.",
   "loc.messages.DestinationBlobContainer": "Files will be uploaded to container url: %s.",
-  "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s."
+  "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+  "loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
+  "loc.messages.StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string."
 }

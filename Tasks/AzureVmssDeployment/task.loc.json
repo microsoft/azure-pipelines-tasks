@@ -158,7 +158,10 @@
     "CopiedInvokerScript": "ms-resource:loc.messages.CopiedInvokerScript",
     "CustomScriptsArchivingFailed": "ms-resource:loc.messages.CustomScriptsArchivingFailed",
     "UploadingCustomScriptsBlobs": "ms-resource:loc.messages.UploadingCustomScriptsBlobs",
+    "UploadingToStorageBlobsFailed": "ms-resource:loc.messages.UploadingToStorageBlobsFailed",
     "DestinationBlobContainer": "ms-resource:loc.messages.DestinationBlobContainer",
-    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist"
+    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
+    "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
+    "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull"
   }
 }

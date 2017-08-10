@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as util from 'util'
 import * as tl from 'vsts-task-lib/task';
 
-export default class BlobService {
+export class BlobService {
     private _storageAccountName: string;
     private _storageAccessKey: string;
 

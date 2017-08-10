@@ -158,6 +158,7 @@
         "CopiedInvokerScript": "Script to extract and execute custom srcipt srchive has been copied to %s.",
         "CustomScriptsArchivingFailed": "Cound not compress custom scripts. Will use individual files.",
         "UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
+        "UploadingToStorageBlobsFailed" : "Failed to upload custom scripts to azure blob storage. Error: %s.",
         "DestinationBlobContainer": "Files will be uploaded to container url: %s.",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",

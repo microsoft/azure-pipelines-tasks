@@ -6,7 +6,7 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import armStorage = require('azure-arm-rest/azure-arm-storage');
 import azureModel = require('azure-arm-rest/azureModels');
-import BlobService from '../blobService';
+import * as BlobService from '../blobservice';
 import compress = require('utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")
@@ -45,7 +45,7 @@ export default class VirtualMachineScaleSet {
     private async _uploadCustomScriptsToBlobService(customScriptInfo: CustomScriptsInfo) {
         console.log(tl.loc("UploadingCustomScriptsBlobs", customScriptInfo.localDirPath))
         let storageDetails = customScriptInfo.storageAccount;
-        let blobService = new BlobService(storageDetails.name, storageDetails.primaryAccessKey);
+        let blobService = new BlobService.BlobService(storageDetails.name, storageDetails.primaryAccessKey);
         let containerUrl = util.format("%s%s", storageDetails.primaryBlobUrl, "vststasks");
 
         // find all files under dir
@@ -126,8 +126,12 @@ export default class VirtualMachineScaleSet {
         let customScriptInfo: CustomScriptsInfo = this._archiveCustomScripts(osType);
 
         // upload custom script directory to blob storage
-        customScriptInfo.storageAccount = await this._getStorageAccountDetails();
-        customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
+        try {
+            customScriptInfo.storageAccount = await this._getStorageAccountDetails();
+            customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
+        } catch(error) {
+            throw tl.loc("UploadingToStorageBlobsFailed", error);
+        }
 
         return customScriptInfo;
     }
@@ -157,9 +161,9 @@ export default class VirtualMachineScaleSet {
 
             // copy invoker script to same dir as archive
             tl.cp(invokerScriptPath, archive.directory, "-f", false);
+            console.log(tl.loc("CopiedInvokerScript", archive.directory));
 
             console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
-            console.log(tl.loc("CopiedInvokerScript", archive.directory));
             tl.debug("Invoker command: " + invokerCommand);
             return <CustomScriptsInfo>{
                 localDirPath: archive.directory,
@@ -167,7 +171,7 @@ export default class VirtualMachineScaleSet {
             };
 
         } catch (error) {
-            tl.warning("CustomScriptsArchivingFailed");
+            tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
             return <CustomScriptsInfo>{
                 localDirPath: this.taskParameters.customScriptsPath,
                 command: this.taskParameters.customScriptCommand
