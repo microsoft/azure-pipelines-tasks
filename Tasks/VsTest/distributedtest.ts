@@ -229,8 +229,8 @@ export class DistributedTest {
         console.log("isTimeBasedBatching : "+ isTimeBasedBatching);
         utils.Helper.setEnvironmentVariableToString(envVars, 'istimebasedslicing',  isTimeBasedBatching.toString());
         if (isTimeBasedBatching) {
-            console.log("Run Time per batch" + this.dtaTestConfig.runningTimePerBatch);
-            utils.Helper.setEnvironmentVariableToString(envVars, 'slicetime',  this.dtaTestConfig.runningTimePerBatch.toString());
+            console.log("[RunStatistics] Run Time per batch" + this.dtaTestConfig.runningTimePerBatchInMs);
+            utils.Helper.setEnvironmentVariableToString(envVars, 'slicetime',  this.dtaTestConfig.runningTimePerBatchInMs.toString());
         } else {
             utils.Helper.setEnvironmentVariableToString(envVars, 'numberoftestcasesperslice', 
                         this.dtaTestConfig.numberOfTestCasesPerSlice.toString());

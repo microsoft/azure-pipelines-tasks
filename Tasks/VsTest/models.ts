@@ -45,7 +45,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     useVsTestConsole: string;
     numberOfTestCasesPerSlice: number;
     batchingType: BatchingType;
-    runningTimePerBatch: number;
+    runningTimePerBatchInMs: number;
 }
 
 export interface DtaEnvironment {

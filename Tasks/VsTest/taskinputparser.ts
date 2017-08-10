@@ -318,20 +318,20 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
         // flow if the batch type = based on agents/custom batching
         const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
         if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
-            const batchExecutionTime = parseInt(tl.getInput('customRunTimePerBatchValue'));
-            if (isNaN(batchExecutionTime) || batchExecutionTime < 0) {
-                throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTime));
+            const batchExecutionTimeInSec = parseInt(tl.getInput('customRunTimePerBatchValue'));
+            if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec < 0) {
+                throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
             }
 
-            dtaTestConfiguration.runningTimePerBatch = 60;
-            if (batchExecutionTime >= 60) {
-                dtaTestConfiguration.runningTimePerBatch = batchExecutionTime;
-                console.log(tl.loc('RunTimePerBatch', dtaTestConfiguration.runningTimePerBatch));
+            dtaTestConfiguration.runningTimePerBatchInMs = 60 * 1000;
+            if (batchExecutionTimeInSec >= 60) {
+                dtaTestConfiguration.runningTimePerBatchInMs = batchExecutionTimeInSec * 1000;
+                console.log(tl.loc('RunTimePerBatch', dtaTestConfiguration.runningTimePerBatchInMs));
             } else {
                 tl.warning(tl.loc('minimumRunTimePerBatchWarning', 60));
             }
         } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
-            dtaTestConfiguration.runningTimePerBatch = 0;
+            dtaTestConfiguration.runningTimePerBatchInMs = 0;
         }
     }
     return 0;
