@@ -18,12 +18,11 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
-    "groups": [
-        {
+    "groups": [{
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
             "isExpanded": true,
@@ -60,8 +59,7 @@
             "visibleRule": "command = pack"
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -70,10 +68,8 @@
             "helpMarkDown": "The dotnet command to run. Select 'Custom' to add arguments or use a command not listed here.",
             "options": {
                 "build": "build",
-                "push": "nuget push",
                 "pack": "pack",
                 "publish": "publish",
-                "restore": "restore",
                 "run": "run",
                 "test": "test",
                 "custom": "custom"
@@ -386,8 +382,7 @@
             }
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "feedRestore",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
