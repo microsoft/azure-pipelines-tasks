@@ -46,6 +46,10 @@ Supported boolean functions
         - Valid options - "im", "m", "mi", "i"
         - We can add `Global` option later if needed
 
+-------
+Usage
+-------
+
 
 ```
     inputs: [
