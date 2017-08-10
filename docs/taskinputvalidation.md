@@ -17,10 +17,10 @@ Goals
 
 -------
 
-Well known functions
+Supported boolean functions
 -------
 
-- isUrl(value) - true if value is of valid URL
+- isUrl(value) - true if value is of valid URL, allows ftp urls as well
 - isIpV4Address(value) - true if value is a valid IPV4 address
 - isEmail(value) - true if value is of email format
 - isEmpty(value) - true if value is empty
@@ -31,9 +31,9 @@ Well known functions
 - isUpperCase(value) - true if value is all upper case
 - isMinlength(value, number) - true if length is greater than or equal to number
 - isMaxlength(value, number) - true if length is less than or equal to number
-- isPath(value) - true if value has valid path characters
+- isPath(value) - true if value has valid windows NTFS path characters
 - isMatch(value, regEx, regExOptions) - true if value matches the regex
-    - Since validation has to be performed on C# and javascript, this is how we can achieve that:
+    - Since validation could be performed on C# and javascript, this is how we can achieve that:
         - We would be using `ECMAScript` for C# [regex options](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions(v=vs.110).aspx)
         - When we use `ECMAScript`, we can only specify `IgnoreCase` and/or `Multiline` options to C# regex
         - With such limitations, javascript equivalent flags we support would be `g` (for global match, this gets translated to getting a [single match](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.match(v=vs.110).aspx) or [all matches](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.matches.aspx) in C#), `i` (for C# `IgnoreCase`), `m` (for C# `Multiline`)
@@ -57,6 +57,9 @@ Well known functions
                 }
         ]
 ```
+Validation expressions follow the familiar expression syntax used for [task conditions](https://www.visualstudio.com/en-us/docs/build/concepts/process/conditions) and could use any of the above mentioned supported functions besides the general functions supported by task conditions.
+
+>Note: `Variables` alias in task conditions is not available for input expressions. Only `value` is valid, which references to the task input value.
 
 Expression examples to meet goals - 1,2
 
