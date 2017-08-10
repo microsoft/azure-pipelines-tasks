@@ -77,7 +77,7 @@ Expression examples to meet goals - 1,2
       VALIDATION_EXPRESSION_HERE = "and(isWinUsername(value), isLowerCase(value))"
 ```      
 
-- **(goal 2):**
+- **(goal 2):** (**Not implemented yet**)
 
 ```
     inputs: [
