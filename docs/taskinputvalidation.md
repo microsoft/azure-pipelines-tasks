@@ -52,7 +52,7 @@ Supported boolean functions
                 {
                     "name": "input1",
                     ...
-                    "validation": {
+                    "validation": { // NEW
                         "expression": "VALIDATION_EXPRESSION_HERE",
                         "explanation": "SOME_KEY_FROM_TASKJSON"
                     }
