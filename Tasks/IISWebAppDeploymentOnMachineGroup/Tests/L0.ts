@@ -122,8 +122,6 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        console.log(tr);
-        console.log(tr.stdout);
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         let expectedErr = "loc_mock_XDTTransformationsappliedsuccessfully";
         assert(tr.stdout.search(expectedErr) >= 0);
@@ -137,8 +135,6 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        console.log(tr);
-        console.log(tr.stdout);
         var expectedErr = 'Error: loc_mock_XdtTransformationErrorWhileTransforming C:\\tempFolder\\web.config C:\\tempFolder\\web.Release.config';
         assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
