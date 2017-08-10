@@ -1,0 +1,110 @@
+{
+    "id": "f08193a6-74a6-4ea1-82d7-a9966b50666d",
+    "name": "AzureStorage",
+    "friendlyName": "Azure Storage",
+    "description": "Download packages from Azure Storage Account",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "releaseNotes": "Works with Xplat agents (Windows)",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "required": true,
+            "helpMarkDown": "Select the Azure subscription for the storage account"
+        },
+        {
+            "name": "StorageAccountName",
+            "type": "pickList",
+            "label": "Storage Account Name",
+            "required": true,
+            "helpMarkDown": "Provide the name of the Azure storage account.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ContainerName",
+            "type": "string",
+            "label": "Container name",
+            "required": true,
+            "helpMarkDown": "Provide the container name to download from.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "CommonVirtualPath",
+            "type": "string",
+            "label": "Common Virtual Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "(Optional) Provide the sub-folder path inside the container.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "DestinationDirectory",
+            "type": "string",
+            "label": "Destination directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "required": true,
+            "helpMarkDown": "Provide the destination directory where artifacts will be downloaded.",
+            "options": {
+                "EditableOptions": "True"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "StorageAccountName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRM"
+        }
+    ],
+    "instanceNameFormat": "Azure Storage Task",
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
+        "DomainCannotBeEmpty": "domain must be a non empty string.",
+        "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm Url must be a non empty string.",
+        "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "CredentialsCannotBeNull": "'credentials' cannot be null.",
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+        "TimeoutWhileWaiting": "Timed out while waiting",
+        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
+        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "SubscriptionIdLabel": "SubscriptionId: %s.",
+        "DownloadingSecretsUsing": "Downloading secrets using: %s.",
+        "GetSecretsFailed": "Get secrets failed. Error: %s.",
+        "NoSecretsFound": "No secrets found in: %s",
+        "NumberOfSecretsFound": "Number of secrets found in %s: %s",
+        "NumberOfEnabledSecretsFound": "Number of enabled and unexpired secrets found in %s: %s",
+        "DownloadingSecretValue": "Downloading secret value for: %s.",
+        "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s."
+    }
+}
