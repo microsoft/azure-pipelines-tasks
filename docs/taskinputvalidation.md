@@ -77,7 +77,7 @@ Expression examples to meet goals - 1,2
       VALIDATION_EXPRESSION_HERE = "and(isWinUsername(value), isLowerCase(value))"
 ```      
 
-- **(goal 2):** (**Not implemented yet**)
+to- **(goal 2):** (**Not implemented yet**)
 
 ```
     inputs: [
@@ -131,5 +131,5 @@ Limitations/Challenges
     - Queue time
         - We can expand variables available for us at queue time and validate
     - Run time (**Not implemented yet**)
-        - Agent would have perform final validation when it actual has the value with all macros expanded
+        - Agent would have to perform final validation when it actually has the value with all of the macros expanded
 - WHEN_EXPRESSION allows to reference other inputs, is there a need for VALIDATION_EXPRESSION to access other input values too? Both should be driven by similar expression support regardless, but could there be scenarios where validation needs to access other input values? Is that something Goal **3** would eventually solve?
