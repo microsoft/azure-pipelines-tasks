@@ -123,7 +123,7 @@ export async function run(): Promise<void> {
 
         try {
             for (const projectFile of projectFiles) {
-                await dotNetRestoreAsync(dotnetPath, projectFile, configFile, noCache, verbosity);
+                await dotNetRestoreAsync(dotnetPath, projectFile, packagesDirectory, configFile, noCache, verbosity);
             }
         } finally {
             credCleanup();
@@ -143,12 +143,17 @@ export async function run(): Promise<void> {
     }
 }
 
-function dotNetRestoreAsync(dotnetPath: string, projectFile: string, configFile: string, noCache: boolean, verbosity: string): Q.Promise<number> {
+function dotNetRestoreAsync(dotnetPath: string, projectFile: string, packagesDirectory: string, configFile: string, noCache: boolean, verbosity: string): Q.Promise<number> {
     let dotnet = tl.tool(dotnetPath);
     dotnet.arg("restore");
 
     if (projectFile) {
         dotnet.arg(projectFile);
+    }
+
+    if (packagesDirectory) {
+        dotnet.arg("--packages");
+        dotnet.arg(packagesDirectory);
     }
 
     dotnet.arg("--configfile");
