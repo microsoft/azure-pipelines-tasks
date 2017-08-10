@@ -20,19 +20,21 @@ Goals
 Supported boolean functions
 -------
 
-- isUrl(value) - true if value is of valid URL, allows ftp urls as well
-- isIpV4Address(value) - true if value is a valid IPV4 address
-- isEmail(value) - true if value is of email format
-- isEmpty(value) - true if value is empty
-- isInRange(value, min, max) - true if value is <= max and >= min
-- isSha1(value) - true if value is a valid sha1 hash
-- isWinUsername(value) - true if value is of samAccountName or userPrincipalName format
-- isLowerCase(value) - true if value is all lower case
-- isUpperCase(value) - true if value is all upper case
-- isMinlength(value, number) - true if length is greater than or equal to number
-- isMaxlength(value, number) - true if length is less than or equal to number
-- isPath(value) - true if value has valid windows NTFS path characters
-- isMatch(value, regEx, regExOptions) - true if value matches the regex
+> `value` is alias to task input value
+
+- `isUrl(value: string)` - true if value is of valid URL, allows ftp urls as well
+- `isIpV4Address(value: string)` - true if value is a valid IPV4 address
+- `isEmail(value: string)` - true if value is of email format
+- `isEmpty(value: string)` - true if value is empty
+- `isInRange(value: string, min: number, max: number)` - true if value is <= max and >= min
+- `isSha1(value: string)` - true if value is a valid sha1 hash
+- `isWinUsername(value: string)` - true if value is of samAccountName or userPrincipalName format
+- `isLowerCase(value: string)` - true if value is all lower case
+- `isUpperCase(value: string)` - true if value is all upper case
+- `isMinlength(value: string, min: number)` - true if length is greater than or equal to number
+- `isMaxlength(value: string, max: number)` - true if length is less than or equal to number
+- `isPath(value: string)`- true if value has valid windows NTFS path characters
+- `isMatch(value: string, regEx: string, regExOptions: string)` - true if value matches the regex
     - Since validation could be performed on C# and javascript, this is how we can achieve that:
         - We would be using `ECMAScript` for C# [regex options](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions(v=vs.110).aspx)
         - When we use `ECMAScript`, we can only specify `IgnoreCase` and/or `Multiline` options to C# regex
