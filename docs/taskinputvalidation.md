@@ -56,7 +56,7 @@ Usage
                 {
                     "name": "input1",
                     ...
-                    "validation": { // NEW
+                    "validation": { //new
                         "expression": "VALIDATION_EXPRESSION_HERE",
                         "explanation": "SOME_KEY_FROM_TASKJSON"
                     }
