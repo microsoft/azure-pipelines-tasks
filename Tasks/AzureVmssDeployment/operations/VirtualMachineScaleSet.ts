@@ -130,7 +130,7 @@ export default class VirtualMachineScaleSet {
             customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch(error) {
-            throw tl.loc("UploadingToStorageBlobsFailed", error);
+            throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);
         }
 
         return customScriptInfo;

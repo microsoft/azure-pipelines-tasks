@@ -5,7 +5,6 @@ import * as tl from "vsts-task-lib/task";
 import * as trm from 'vsts-task-lib/toolrunner';
 
 var rootFolder: string;
-var files: string[] = [];
 
 // archivers
 var xpTarLocation: string;
@@ -14,10 +13,10 @@ var xpZipLocation: string;
 var xpSevenZipLocation: string;
 var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
+// Creates compressed archive of all files(recusively) inside sourceFolder directory (excluding the sourceFolder directly itself)
 export function createArchive(sourceFolder: string, archiveType: string, archiveFile: string) {
 
-    rootFolder = path.dirname(archiveFile);
-    files = tl.findMatch(sourceFolder, "**/*.*");
+    rootFolder = sourceFolder;
 
     if (tl.osType().match(/^Win/)) { // windows only
         var sourcePath = sourceFolder + "/*";
@@ -36,18 +35,17 @@ export function createArchive(sourceFolder: string, archiveType: string, archive
         }
     } else { // not windows
         if (archiveType == "zip") {
-            zipArchive(archiveFile, files);
+            zipArchive(archiveFile, []);
         } else if (archiveType == "targz") {
 
-            tarArchive(archiveFile, "gz", files);
+            tarArchive(archiveFile, "gz", []);
         }
     }
 }
 
 function getOptions() {
-        //tl.debug("cwd (exclude root folder)= " + rootFolder);
-        //return <trm.IExecOptions>{ cwd: rootFolder };
-        return <trm.IExecOptions>{};
+    tl.debug("cwd = " + rootFolder);
+    return <trm.IExecOptions>{ cwd: rootFolder };
 }
 
 function getSevenZipLocation(): string {
@@ -79,13 +77,18 @@ function zipArchive(archive: string, files: string[]) {
     if (typeof xpZipLocation == "undefined") {
         xpZipLocation = tl.which('zip', true);
     }
+
     var zip = tl.tool(xpZipLocation);
     zip.arg('-r');
     zip.arg(archive);
-    for (var i = 0; i < files.length; i++) {
-        zip.arg(files[i]);
-        console.log(tl.loc('Filename', files[i]));
+    if(files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            zip.arg(files[i]);
+        }
+    } else {
+        zip.arg(".");        
     }
+
     return handleExecResult(zip.execSync(getOptions()), archive);
 }
 
@@ -106,9 +109,14 @@ function tarArchive(archive: string, compression: string, files: string[]) {
     }
     tar.arg('-f');
     tar.arg(archive);
-    for (var i = 0; i < files.length; i++) {
-        tar.arg(files[i]);
+    if(files.length > 0) {    
+        for (var i = 0; i < files.length; i++) {
+            tar.arg(files[i]);
+        }
+    } else {
+        tar.arg(".");
     }
+
     return handleExecResult(tar.execSync(getOptions()), archive);
 }
 
