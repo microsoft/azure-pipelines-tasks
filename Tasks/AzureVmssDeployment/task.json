@@ -10,6 +10,10 @@
         "Build",
         "Release"
     ],
+    "keywords": [
+        "vmss",
+        "image"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
@@ -87,7 +91,7 @@
              "defaultValue": "",
              "required": false,
              "groupName": "StartupConfiguration",
-             "helpMarkDown": "path to directory containing custom script and related scripts. These scripts can be used to set start-up environment for application(if any) being deployed through custom image. In other words, application configuration management can be achieved using this script.<br/>E.g. the script can set a machine level environment variable and the application can then consume envionment variable. This enables usage of same VHD image across multiple deployments."
+             "helpMarkDown": "Path to directory containing custom script and related scripts. These scripts can be used to set start-up environment for application(if any) being deployed through custom image. In other words, application configuration management can be achieved using this script.<br/>E.g. the script can set a machine level environment variable and the application can then consume envionment variable. This enables usage of same VHD image across multiple deployments."
          },
          {
              "name": "customScriptCommand",
@@ -96,7 +100,7 @@
              "defaultValue": "",
              "required": false,
              "groupName": "StartupConfiguration",
-             "helpMarkDown": "Command to be run to execute custom script. Arguments can also be provided in command. Release variables can be used which makes it easy to use pass secrets.<br/>For powershell script, use something like \"powershell .\\&lt;script-name&gt;.ps1 &lt;arguments&gt;\". For shell script use something like \"bash ./&lt;script-name&gt;.sh &lt;arguments&gt;\",  Example usages:<br/>1. \".\\SetEnv.cmd\" will set some environment variabels which will be used by application when starting.<br/>2. \"powershell .\\Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd)\" will update connection string in web.config of web application.<br/>3. \"bash ./install-secrets.sh --key-vault-type prod -key serviceprincipalkey\" will create an encrypted file containing service principal key."
+             "helpMarkDown": "Command to be run to execute custom script. Arguments can also be provided in command. Release variables can be used which makes it easy to use secrets.<br/>For powershell script, use something like \"powershell .\\&lt;script-name&gt;.ps1 &lt;arguments&gt;\". For shell script use something like \"bash ./&lt;script-name&gt;.sh &lt;arguments&gt;\",  Example usages:<br/>1. \".\\SetEnv.cmd\" will set some environment variabels which will be used by application when starting.<br/>2. \"powershell .\\Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd)\" will update connection string in web.config of web application.<br/>3. \"bash ./install-secrets.sh --key-vault-type prod -key serviceprincipalkey\" will create an encrypted file containing service principal key."
         },
         {
             "name": "customScriptsStorageAccount",
