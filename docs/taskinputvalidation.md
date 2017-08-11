@@ -25,15 +25,14 @@ Supported boolean functions
 - `isUrl(value: string)` - true if value is of valid URL, allows ftp urls as well
 - `isIpV4Address(value: string)` - true if value is a valid IPV4 address
 - `isEmail(value: string)` - true if value is of email format
-- `isEmpty(value: string)` - true if value is empty
 - `isInRange(value: string, min: number, max: number)` - true if value is <= max and >= min
-- `isSha1(value: string)` - true if value is a valid sha1 hash
-- `isWinUsername(value: string)` - true if value is of samAccountName or userPrincipalName format
+- `isSha1(value: string)` - true if value is a valid sha1 hash, git short-hand sha1 is not considered valid
+- `isWindowsUsername(value: string)` - true if value is of samAccountName or userPrincipalName format
 - `isLowerCase(value: string)` - true if value is all lower case
 - `isUpperCase(value: string)` - true if value is all upper case
 - `isMinlength(value: string, min: number)` - true if length is greater than or equal to number
 - `isMaxlength(value: string, max: number)` - true if length is less than or equal to number
-- `isPath(value: string)`- true if value has valid windows NTFS path characters
+- `isWindowsPath(value: string)`- true if value has valid Windows NTFS path characters
 - `isMatch(value: string, regEx: string, regExOptions: string)` - true if value matches the regex
     - Since validation could be performed on C# and javascript, this is how we can achieve that:
         - We would be using `ECMAScript` for C# [regex options](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions(v=vs.110).aspx)
@@ -41,10 +40,10 @@ Supported boolean functions
         - With such limitations, javascript equivalent flags we support would be `g` (for global match, this gets translated to getting a [single match](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.match(v=vs.110).aspx) or [all matches](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.matches.aspx) in C#), `i` (for C# `IgnoreCase`), `m` (for C# `Multiline`)
         - Default C# behavior would be to use single match
         - So, we would be supporting these options:
-            - IgnoreCase (i)
-            - Multiline (m)
-        - Valid options - "im", "m", "mi", "i"
-        - We can add `Global` option later if needed
+            - IgnoreCase
+            - Multiline
+        - Multiple options can be delimited by comma
+        - Valid options - "IgnoreCase, Multiline", "Multiline", "Multiline, IgnoreCase", "IgnoreCase"
 
 -------
 Usage
@@ -58,7 +57,7 @@ Usage
                     ...
                     "validation": { //new
                         "expression": "VALIDATION_EXPRESSION_HERE",
-                        "explanation": "SOME_KEY_FROM_TASKJSON"
+                        "reason": "SOME_KEY_FROM_TASKJSON"
                     }
                 }
         ]
@@ -109,7 +108,7 @@ to- **(goal 2):** (**Not implemented yet**)
                             },
                             "validation": {
                                 "expression": "VALIDATION_EXPRESSION_HERE",
-                                "explanation": "SOME_KEY_FROM_TASKJSON"
+                                "reason": "SOME_KEY_FROM_TASKJSON"
                               }
                         }
             ]
