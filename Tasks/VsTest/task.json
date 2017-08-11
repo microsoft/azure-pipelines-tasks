@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "vstest"
@@ -281,12 +281,14 @@
             "name": "distributionBatchType",
             "type": "pickList",
             "label": "Batch tests",
-            "defaultValue": "basedOnBatchSize",
+            "defaultValue": "basedOnTestCases",
             "required": false,
             "helpMarkDown": "Use this option to control how tests are batched.",
             "groupName": "executionOptions",
              "options": {
-                 "basedOnBatchSize": "Based on number of tests and agents"
+                 "basedOnTestCases": "Based on number of tests and agents",
+                 "basedOnExecutionTime": "Based on past running time of tests"
+
             }
         },
         {
@@ -301,7 +303,7 @@
                 "autoBatchSize": "Automatically determine the batch size",
                 "customBatchSize": "Specify a batch size"
             },
-            "visibleRule": "distributionBatchType = basedOnBatchSize"
+            "visibleRule": "distributionBatchType = basedOnTestCases"
         },
         {
             "name": "customBatchSizeValue",
@@ -312,6 +314,30 @@
             "helpMarkDown": "Specify batch size",
             "groupName": "executionOptions",
             "visibleRule": "batchingBasedOnAgentsOption = customBatchSize"
+        },
+        {
+            "name": "batchingBasedOnExecutionTimeOption",
+            "type": "radio",
+            "label": "Batch options",
+            "required": false,
+            "groupName": "executionOptions",
+            "defaultValue": "autoBatchSize",
+            "helpMarkDown": "Total number of tests will be divided into multiple batches. If batch size is specified, Each batch will contain the specified number of test cases.",
+            "options": {
+                "autoBatchSize": "Automatically determine the batch size",
+                "customTimeBatchSize": "Specify running time per batch"
+            },
+            "visibleRule": "distributionBatchType = basedOnExecutionTime"
+        },
+        {
+            "name": "customRunTimePerBatchValue",
+            "type": "string",
+            "label": "Running time (sec) per batch",
+            "defaultValue": "60",
+            "required": true,
+            "helpMarkDown": "Specify the running time (sec) per batch",
+            "groupName": "executionOptions",
+            "visibleRule": "batchingBasedOnExecutionTimeOption = customTimeBatchSize"
         },
         {
             "name": "otherConsoleOptions",
@@ -453,7 +479,10 @@
         "noTestSourcesFound": "No test sources found matching the given filter '%s'",
         "DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
         "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console.",
-        "numberOfTestCasesPerSlice": "Distributed test execution, number of test batch(s) : %s",
-        "invalidTestBatchSize": "Invalid batch size provided: %s"
+        "numberOfTestCasesPerSlice": "Number of test cases per batch : %s",
+        "invalidTestBatchSize": "Invalid batch size provided: %s",
+        "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
+        "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
+        "RunTimePerBatch": "Run time per batch(sec) : %s"
     }
 }

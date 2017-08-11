@@ -39,8 +39,13 @@ try {
 }
 
 function isDtaEngineRequired() : boolean {
-    const batchoption = tl.getInput('batchingBasedOnAgentsOption');
-    if (batchoption && batchoption === 'customBatchSize') {
+    const batchType = tl.getInput('distributionBatchType');
+    if (batchType && batchType === 'basedOnTestCases') {
+        const batchSize = tl.getInput('batchingBasedOnAgentsOption')
+        if (batchSize && batchSize === 'customBatchSize') {
+            return true;
+        }
+    } else if (batchType && batchType === 'basedOnExecutionTime') {
         return true;
     }
 

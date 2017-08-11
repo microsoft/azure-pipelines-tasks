@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "vstest"
@@ -281,12 +281,13 @@
       "name": "distributionBatchType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.distributionBatchType",
-      "defaultValue": "basedOnBatchSize",
+      "defaultValue": "basedOnTestCases",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.distributionBatchType",
       "groupName": "executionOptions",
       "options": {
-        "basedOnBatchSize": "Based on number of tests and agents"
+        "basedOnTestCases": "Based on number of tests and agents",
+        "basedOnExecutionTime": "Based on past running time of tests"
       }
     },
     {
@@ -301,7 +302,7 @@
         "autoBatchSize": "Automatically determine the batch size",
         "customBatchSize": "Specify a batch size"
       },
-      "visibleRule": "distributionBatchType = basedOnBatchSize"
+      "visibleRule": "distributionBatchType = basedOnTestCases"
     },
     {
       "name": "customBatchSizeValue",
@@ -312,6 +313,30 @@
       "helpMarkDown": "ms-resource:loc.input.help.customBatchSizeValue",
       "groupName": "executionOptions",
       "visibleRule": "batchingBasedOnAgentsOption = customBatchSize"
+    },
+    {
+      "name": "batchingBasedOnExecutionTimeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.batchingBasedOnExecutionTimeOption",
+      "required": false,
+      "groupName": "executionOptions",
+      "defaultValue": "autoBatchSize",
+      "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnExecutionTimeOption",
+      "options": {
+        "autoBatchSize": "Automatically determine the batch size",
+        "customTimeBatchSize": "Specify running time per batch"
+      },
+      "visibleRule": "distributionBatchType = basedOnExecutionTime"
+    },
+    {
+      "name": "customRunTimePerBatchValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customRunTimePerBatchValue",
+      "defaultValue": "60",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customRunTimePerBatchValue",
+      "groupName": "executionOptions",
+      "visibleRule": "batchingBasedOnExecutionTimeOption = customTimeBatchSize"
     },
     {
       "name": "otherConsoleOptions",
@@ -454,6 +479,9 @@
     "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning",
     "noVstestConsole": "ms-resource:loc.messages.noVstestConsole",
     "numberOfTestCasesPerSlice": "ms-resource:loc.messages.numberOfTestCasesPerSlice",
-    "invalidTestBatchSize": "ms-resource:loc.messages.invalidTestBatchSize"
+    "invalidTestBatchSize": "ms-resource:loc.messages.invalidTestBatchSize",
+    "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
+    "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
+    "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch"
   }
 }
