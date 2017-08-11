@@ -25,17 +25,17 @@ Supported functions
 - `isUrl(value: string)` - true if value is of valid URL, allows ftp urls as well
 - `isIpV4Address(value: string)` - true if value is a valid IPV4 address
 - `isEmail(value: string)` - true if value is of email format
-- `isInRange(value: string, min: number, max: number)` - true if value is <= max and >= min
+- `isInRange(value: number, min: number, max: number)` - true if value is <= max and >= min
 - `isSha1(value: string)` - true if value is a valid sha1 hash, git short-hand sha1 is not considered valid
 - ~~`isWindowsUsername(value: string)`~~ - true if value is of samAccountName or userPrincipalName format
 - ~~`isLowerCase(value: string)`~~ - true if value is all lower case
 - ~~`isUpperCase(value: string)`~~ - true if value is all upper case
-- `length(value: object)` - returns the length of the object, supported objects are arrays, strings, collections, dictionaries
+- `length(value: any)` - returns the length of the object, supported objects are arrays, strings, collections, dictionaries
 - ~~`isWindowsPath(value: string)`~~- true if value has valid Windows NTFS path characters
 - `isMatch(value: string, regEx: string, regExOptions: string)` - true if value matches the regex
     - Since validation could be performed on C# and javascript, this is how we can achieve that:
         - We would be using `ECMAScript` for C# [regex options](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions(v=vs.110).aspx)
-        - We also by send `CultureInvariant` by default
+        - We also by set `CultureInvariant` by default
         - When we use `ECMAScript`, we can only specify `IgnoreCase` and/or `Multiline` options to C# regex
         - With such limitations, javascript equivalent flags we support would be `g` (for global match, this gets translated to getting a [single match](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.match(v=vs.110).aspx) or [all matches](https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.matches.aspx) in C#), `i` (for C# `IgnoreCase`), `m` (for C# `Multiline`)
         - Default C# behavior would be to use single match
