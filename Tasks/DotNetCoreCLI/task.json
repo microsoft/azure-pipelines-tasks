@@ -18,12 +18,11 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
-    "groups": [
-        {
+    "groups": [{
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
             "isExpanded": true,
@@ -60,8 +59,7 @@
             "visibleRule": "command = pack"
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -209,7 +207,7 @@
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "",
-            "helpMarkDown": "Specifies the folder in which packages are installed. If no folder is specified, packages are restored into a packages/ folder alongside the selected solution, packages.config, or project.json.",
+            "helpMarkDown": "Specifies the folder in which packages are installed. If no folder is specified, packages are restored into the default NuGet package cache.",
             "required": "false",
             "groupName": "restoreAdvanced"
         },
@@ -386,8 +384,7 @@
             }
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "feedRestore",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
