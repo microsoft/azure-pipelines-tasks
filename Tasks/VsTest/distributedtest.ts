@@ -224,12 +224,12 @@ export class DistributedTest {
         // In the phases world we will distribute based on number of agents
         utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
         utils.Helper.setEnvironmentVariableToString(envVars, 'maxagentphaseslicing', this.dtaTestConfig.numberOfAgentsInPhase.toString());
-        console.log("Type of batching" + this.dtaTestConfig.batchingType);
+        tl.debug("Type of batching" + this.dtaTestConfig.batchingType);
         const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);
-        console.log("isTimeBasedBatching : "+ isTimeBasedBatching);
+        tl.debug("isTimeBasedBatching : "+ isTimeBasedBatching);
         utils.Helper.setEnvironmentVariableToString(envVars, 'istimebasedslicing',  isTimeBasedBatching.toString());
         if (isTimeBasedBatching) {
-            console.log("[RunStatistics] Run Time per batch" + this.dtaTestConfig.runningTimePerBatchInMs);
+            tl.debug("[RunStatistics] Run Time per batch" + this.dtaTestConfig.runningTimePerBatchInMs);
             utils.Helper.setEnvironmentVariableToString(envVars, 'slicetime',  this.dtaTestConfig.runningTimePerBatchInMs.toString());
         } else {
             utils.Helper.setEnvironmentVariableToString(envVars, 'numberoftestcasesperslice', 

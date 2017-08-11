@@ -319,7 +319,7 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
         const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
         if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
             const batchExecutionTimeInSec = parseInt(tl.getInput('customRunTimePerBatchValue'));
-            if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec < 0) {
+            if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec <= 0) {
                 throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
             }
 
