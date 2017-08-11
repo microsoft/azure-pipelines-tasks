@@ -1,26 +1,26 @@
 {
-  "name": "vsts-tasks-dotnetcoreexe",
-  "version": "2.0.2",
-  "description": "Dotnet core exe",
-  "main": "dotnetcore.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
-  },
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Microsoft/vsts-tasks/issues"
-  },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "vsts-task-lib": "2.0.5",
-    "q": "^1.4.1",
-    "archiver": "1.0.1",
-    "xmlreader": "^0.2.3",
-    "vso-node-api": "6.0.1-preview"
-  }
+    "name": "vsts-tasks-dotnetcoreexe",
+    "version": "2.0.5",
+    "description": "Dotnet core exe",
+    "main": "dotnetcore.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+    "dependencies": {
+        "vsts-task-lib": "2.0.5",
+        "q": "^1.4.1",
+        "archiver": "1.0.1",
+        "xmlreader": "^0.2.3",
+        "vso-node-api": "6.0.1-preview"
+    }
 }
