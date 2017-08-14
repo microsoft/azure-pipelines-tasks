@@ -3,6 +3,6 @@
   "main":"main.js",
   "dependencies": {
     "vsts-task-lib" : "^2.0.0",
-    "azure-storage": "2.2.1"
+    "artifact-mover": "1.0.11"
   }
 }
