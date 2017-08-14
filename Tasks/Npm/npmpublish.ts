@@ -1,7 +1,7 @@
 import * as tl from 'vsts-task-lib/task';
 
 import { NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from './npmregistry';
+import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
 import * as util from './util';
 

@@ -1,0 +1,101 @@
+{
+  "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
+  "name": "npmAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "npm"
+  ],
+  "minimumAgentVersion": "1.91.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "workingDir",
+      "label": "ms-resource:loc.input.label.workingDir",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDir",
+      "type": "filePath"
+    },
+    {
+      "name": "customEndpoint",
+      "label": "ms-resource:loc.input.label.customEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
+      "type": "connectedService:externalnpmregistry",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "customFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
+    },
+    {
+      "target": "publishFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "npmauth.js"
+    }
+  },
+  "messages": {
+    "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
+    "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
+    "UnknownCommand": "ms-resource:loc.messages.UnknownCommand",
+    "MultipleProjectConfigs": "ms-resource:loc.messages.MultipleProjectConfigs",
+    "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
+    "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
+    "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
+    "SavingFile": "ms-resource:loc.messages.SavingFile",
+    "RestoringFile": "ms-resource:loc.messages.RestoringFile",
+    "PublishFeed": "ms-resource:loc.messages.PublishFeed",
+    "PublishExternal": "ms-resource:loc.messages.PublishExternal",
+    "UseFeed": "ms-resource:loc.messages.UseFeed",
+    "UseNpmrc": "ms-resource:loc.messages.UseNpmrc",
+    "PublishRegistry": "ms-resource:loc.messages.PublishRegistry",
+    "UsingRegistry": "ms-resource:loc.messages.UsingRegistry",
+    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
+    "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
+    "AddingLocalCredentials": "ms-resource:loc.messages.AddingLocalCredentials",
+    "AddingEndpointCredentials": "ms-resource:loc.messages.AddingEndpointCredentials",
+    "AuthenticatingThisNpmrc": "ms-resource:loc.messages.AuthenticatingThisNpmrc",
+    "IgnoringRegistry": "ms-resource:loc.messages.IgnoringRegistry",
+    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",
+    "DebugLogNotFound": "ms-resource:loc.messages.DebugLogNotFound",
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
+    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
+    "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
+    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
+    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
+    "CheckedInCredentialsOverriden": "ms-resource:loc.messages.CheckedInCredentialsOverriden",
+    "NoIndex.jsonFile": "ms-resource:loc.messages.NoIndex.jsonFile",
+    "UndidChangesToNpmrc": "ms-resource:loc.messages.UndidChangesToNpmrc"
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    }
+  }
+}
