@@ -29,10 +29,6 @@ interface INodeVersion {
     files: string[]
 }
 
-enum HttpStatusCode {
-    NotFound = 404
-}
-
 //
 // Basic pattern:
 //      if !checkLatest
@@ -143,15 +139,10 @@ async function acquireNode(version: string): Promise<string> {
     } 
     catch (err)
     {
-        for (let errorKey of Object.keys(err))
+        if (err['httpStatusCode'] && 
+            err['httpStatusCode'] == '404')
         {
-            if (errorKey == 'httpStatusCode')
-            {
-                switch(err[errorKey]){
-                    case HttpStatusCode.NotFound:
-                        return await acquireNodeFromFallbackLocation(version);
-                }
-            }
+            return await acquireNodeFromFallbackLocation(version);
         }
 
         throw err;
@@ -192,25 +183,18 @@ async function acquireNode(version: string): Promise<string> {
 // Note also that the files are normally zipped but in this case they are just an exe
 // and lib file in a folder, not zipped.
 async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
-    console.log(`Attempting fallback location download for Node version: ${version}`);
-
     let exeUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
     let libUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
 
-    let exeDownloadPath: string = await toolLib.downloadTool(exeUrl, "node.exe");
-    let libDownloadPath: string = await toolLib.downloadTool(libUrl, "node.lib");
+    // Create temporary folder to download in to
+    let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
+    let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
+    taskLib.mkdirP(tempDir);
 
-    // Create a folder where we can copy both files to. The caching mechanism uses a directory and 
-    // caches that. We can't cache straight from the temp folder because there could be other files 
-    // there that we don't want to cache.
-    let tempDownloadDirectory: string = path.join(taskLib.getVariable('Agent.TempDirectory'), 'z');
-    taskLib.mkdirP(tempDownloadDirectory);
+    let exeDownloadPath: string = await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
+    let libDownloadPath: string = await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
 
-    // copy the downloaded files to temporary 'z' directory
-    taskLib.cp(exeDownloadPath, tempDownloadDirectory);
-    taskLib.cp(libDownloadPath, tempDownloadDirectory);
-
-    return await toolLib.cacheDir(tempDownloadDirectory, 'node', version);
+    return await toolLib.cacheDir(tempDir, 'node', version);
 }
 
 run();
