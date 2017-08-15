@@ -44,7 +44,10 @@ function Get-SingleFile
 
 $taskType = Get-VstsInput -Name "TaskType" -Require
 $dacpacFile = Get-VstsInput -Name "dacpacFile"
-$sqlFile = Get-VstsInput -Name "sqlFile" 
+$sqlFiles = Get-VstsInput -Name "sqlFile" 
+$executeInTransaction = Get-VstsInput -Name "ExecuteInTransaction" -AsBool
+$exclusiveLock = Get-VstsInput -Name "ExclusiveLock" -AsBool
+$appLockName = Get-VstsInput -Name "AppLockName" 
 $inlineSql = Get-VstsInput -Name "inlineSql"
 $targetMethod = Get-VstsInput -Name "targetMethod"
 $serverName = Get-VstsInput -Name "serverName" -Require
@@ -57,7 +60,9 @@ $publishProfile = Get-VstsInput -Name "publishProfile"
 $additionalArguments = Get-VstsInput -Name "additionalArguments"
 $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
+
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
+. "$PSScriptRoot\Utility.ps1"
 
 Try
 {
@@ -83,8 +88,40 @@ Try
     {
         if ($taskType -eq "sqlQuery")
         {
-            $sqlFile = Get-SingleFile -pattern $sqlFile
-            Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            if ($executeInTransaction)
+            {
+                if ($exclusiveLock -and ($appLockName.Length -eq 0))
+                {
+                    Write-Error "Invalid Applock name. exclusiveLock: $exclusiveLock, appLockName: $appLockName"
+                }
+
+                $sqlScriptsWithExpandedPath = ""
+                $sqlScriptFiles = $sqlFiles -split ";"
+                foreach ($sqlScript in $sqlScriptFiles) 
+                {
+                    $sqlScript = $sqlScript.Trim()
+                    if (-not [string]::IsNullOrEmpty($sqlScript)) 
+                    {
+                        $sqlScript = Get-SingleFile -pattern $sqlScript
+                        $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $sqlScript + "; "
+                    }
+                }
+                Write-Verbose "Executing sql scripts $sqlScriptsWithExpandedPath under transaction using app lock $appLockName"
+                Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+            } 
+            else 
+            {
+                $sqlScriptFiles = $sqlFiles -split ";"
+                foreach ($sqlScript in $sqlScriptFiles) 
+                {
+                    $sqlScript = $sqlScript.Trim()
+                    if (-not [string]::IsNullOrEmpty($sqlScript)) 
+                    {
+                        $sqlScript = Get-SingleFile -pattern $sqlScript
+                        Invoke-SqlQueryDeployment -taskType $taskType -sqlFile $sqlScript -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                    }
+                }
+            }
         }
         else 
         {
