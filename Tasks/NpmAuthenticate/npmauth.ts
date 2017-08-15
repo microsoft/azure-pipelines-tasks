@@ -9,7 +9,7 @@ import * as util from 'npm-common/util';
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath;
-    let npmrc = tl.getInput(constants_1.NpmTaskInput.WorkingDir);
+    let npmrc = tl.getInput(constants_1.NpmAuthenticateTaskInput.WorkingDir);
     let workingDir = path.dirname(npmrc);
     if (!(npmrc.endsWith('.npmrc') && tl.exist(npmrc))) {
         throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
@@ -57,7 +57,7 @@ async function main(): Promise<void> {
     }
 
     let endpointRegistries;
-    let endpointIds = tl.getDelimitedInput(constants_1.NpmTaskInput.CustomEndpoint, ',');
+    let endpointIds = tl.getDelimitedInput(constants_1.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
         endpointRegistries = endpointIds.map(e => npmregistry_1.NpmRegistry.FromServiceEndpoint(e, true));
     }
