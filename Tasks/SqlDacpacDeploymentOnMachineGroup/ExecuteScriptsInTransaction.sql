@@ -16,8 +16,15 @@ BEGIN
    PRINT 'Temporary table exists already. Dropping table #_tmpSqlFilesTable'
    DROP TABLE #_tmpSqlFilesTable
 END
+CREATE TABLE #_tmpSqlFilesTable (ScriptIndex INT NOT NULL IDENTITY, SqlScriptContent NVARCHAR(MAX) NULL)
 
-CREATE TABLE #_tmpSqlFilesTable (SqlScriptContent NVARCHAR(MAX) NULL)
+IF OBJECT_ID (N'#_vw_tmpSqlFilesTable', N'V') IS NOT NULL 
+BEGIN
+   PRINT 'View on temporary table exists already. Dropping view #_vw_tmpSqlFilesTable'
+   DROP VIEW #_vw_tmpSqlFilesTable
+END
+CREATE VIEW #_vw_tmpSqlFilesTable AS SELECT t.SqlScriptContent from #_tmpSqlFilesTable t
+
 DECLARE @_fileList NVARCHAR(MAX)
 DECLARE @_fileName NVARCHAR(MAX)
 DECLARE @_pos INT
@@ -34,8 +41,7 @@ BEGIN
 		SET @_fileName = RTRIM(@_fileName)
 		IF (LEN(@_fileName) > 0)
 		BEGIN
-			SET @_insertFileCommand = 'BULK INSERT #_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
-			SET @_insertFileCommand = @_insertFileCommand + ' SELECT * from #_tmpSqlFilesTable'
+			SET @_insertFileCommand = 'BULK INSERT #_vw_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
 			EXEC sp_executesql @_insertFileCommand
 		END
 		SET @_fileList = ''
@@ -47,7 +53,7 @@ BEGIN
 		SET @_fileName = RTRIM(@_fileName)
 		IF (LEN(@_fileName) > 0)
 		BEGIN
-			SET @_insertFileCommand = 'BULK INSERT  #_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
+			SET @_insertFileCommand = 'BULK INSERT  #_vw_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
 			EXEC sp_executesql @_insertFileCommand
 		END
 		SET @_fileList = SUBSTRING(@_fileList, @_pos + 1, LEN(@_fileList) - @_pos)
@@ -191,8 +197,9 @@ BEGIN
     IF @_result < 0
     BEGIN
         ROLLBACK
+		DROP VIEW #_vw_tmpSqlFilesTable
 		DROP TABLE #_tmpSqlFilesTable
-		PRINT 'Failed to acquire exclusive lock. Dropping temporary table and rolling back.'
+		PRINT 'Failed to acquire exclusive lock. Dropping temporary table, view and rolling back.'
         RAISERROR('%%error="800070";%%:Failed to acquire an exclusive servicing lock', 16, -1)
         RETURN
     END
@@ -207,6 +214,7 @@ PRINT 'Begin executing scripts'
 DECLARE batchCursor CURSOR LOCAL FAST_FORWARD FOR
     SELECT  SqlScriptContent
     FROM    #_tmpSqlFilesTable
+	ORDER BY ScriptIndex ASC
 
 OPEN batchCursor
 
@@ -232,7 +240,8 @@ BEGIN
 		    PRINT 'Script execution failed. Rolling back'
             ROLLBACK 
         END
-		PRINT 'Dropping temporary table'
+		PRINT 'Dropping temporary table and view'
+		DROP VIEW #_vw_tmpSqlFilesTable
 		DROP TABLE #_tmpSqlFilesTable
         RETURN
     END
@@ -245,8 +254,9 @@ RAISERROR (@_batchMessage, 0, 231)
 
 CLOSE batchCursor
 DEALLOCATE batchCursor
+DROP VIEW #_vw_tmpSqlFilesTable
 DROP TABLE #_tmpSqlFilesTable
-PRINT 'Complete scripts execution. Temporary table dropped'
+PRINT 'Complete scripts execution. Temporary table and view dropped'
 
 IF @_acquireLock <> ''
 
