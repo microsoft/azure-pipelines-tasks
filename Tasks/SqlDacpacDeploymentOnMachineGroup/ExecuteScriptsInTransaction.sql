@@ -9,21 +9,23 @@ DECLARE @_longRunningThresholdMilliSeconds INT
 DECLARE @_lastAttemptsToKillSessions INT
 DECLARE @_isHosted INT
 
-PRINT 'Adding SQL files into temporary table #_tmpSqlFilesTable'
+PRINT 'Adding SQL files into temporary table _tmpSqlFilesTable'
 
-IF OBJECT_ID (N'#_tmpSqlFilesTable', N'U') IS NOT NULL 
+IF OBJECT_ID (N'_tmpSqlFilesTable', N'U') IS NOT NULL 
 BEGIN
-   PRINT 'Temporary table exists already. Dropping table #_tmpSqlFilesTable'
-   DROP TABLE #_tmpSqlFilesTable
+   PRINT 'Temporary table exists already. Dropping table _tmpSqlFilesTable'
+   DROP TABLE _tmpSqlFilesTable
 END
-CREATE TABLE #_tmpSqlFilesTable (ScriptIndex INT NOT NULL IDENTITY, SqlScriptContent NVARCHAR(MAX) NULL)
+CREATE TABLE _tmpSqlFilesTable (ScriptIndex INT NOT NULL IDENTITY, SqlScriptContent NVARCHAR(MAX) NULL)
 
-IF OBJECT_ID (N'#_vw_tmpSqlFilesTable', N'V') IS NOT NULL 
+IF OBJECT_ID (N'_vw_tmpSqlFilesTable', N'V') IS NOT NULL 
 BEGIN
-   PRINT 'View on temporary table exists already. Dropping view #_vw_tmpSqlFilesTable'
-   DROP VIEW #_vw_tmpSqlFilesTable
+   PRINT 'View on temporary table exists already. Dropping view _vw_tmpSqlFilesTable'
+   DROP VIEW _vw_tmpSqlFilesTable
 END
-CREATE VIEW #_vw_tmpSqlFilesTable AS SELECT t.SqlScriptContent from #_tmpSqlFilesTable t
+DECLARE @_viewCommand NVARCHAR(MAX)
+SET @_viewCommand = 'CREATE VIEW _vw_tmpSqlFilesTable AS SELECT t.SqlScriptContent from _tmpSqlFilesTable t'
+EXEC sp_executesql @_viewCommand
 
 DECLARE @_fileList NVARCHAR(MAX)
 DECLARE @_fileName NVARCHAR(MAX)
@@ -41,7 +43,7 @@ BEGIN
 		SET @_fileName = RTRIM(@_fileName)
 		IF (LEN(@_fileName) > 0)
 		BEGIN
-			SET @_insertFileCommand = 'BULK INSERT #_vw_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
+			SET @_insertFileCommand = 'BULK INSERT _vw_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
 			EXEC sp_executesql @_insertFileCommand
 		END
 		SET @_fileList = ''
@@ -53,7 +55,7 @@ BEGIN
 		SET @_fileName = RTRIM(@_fileName)
 		IF (LEN(@_fileName) > 0)
 		BEGIN
-			SET @_insertFileCommand = 'BULK INSERT  #_vw_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
+			SET @_insertFileCommand = 'BULK INSERT  _vw_tmpSqlFilesTable from ''' + @_fileName + ''' with (ROWTERMINATOR = ''\0'')'
 			EXEC sp_executesql @_insertFileCommand
 		END
 		SET @_fileList = SUBSTRING(@_fileList, @_pos + 1, LEN(@_fileList) - @_pos)
@@ -197,8 +199,8 @@ BEGIN
     IF @_result < 0
     BEGIN
         ROLLBACK
-		DROP VIEW #_vw_tmpSqlFilesTable
-		DROP TABLE #_tmpSqlFilesTable
+		DROP VIEW _vw_tmpSqlFilesTable
+		DROP TABLE _tmpSqlFilesTable
 		PRINT 'Failed to acquire exclusive lock. Dropping temporary table, view and rolling back.'
         RAISERROR('%%error="800070";%%:Failed to acquire an exclusive servicing lock', 16, -1)
         RETURN
@@ -213,7 +215,7 @@ PRINT 'Begin executing scripts'
 
 DECLARE batchCursor CURSOR LOCAL FAST_FORWARD FOR
     SELECT  SqlScriptContent
-    FROM    #_tmpSqlFilesTable
+    FROM    _tmpSqlFilesTable
 	ORDER BY ScriptIndex ASC
 
 OPEN batchCursor
@@ -224,7 +226,7 @@ INTO    @_batch
 WHILE @@FETCH_STATUS = 0
 BEGIN
     SET @_batchStartTime = GETUTCDATE()
-    SET @_batchMessage = '@b=' + '@bt=' + CONVERT(VARCHAR(25), @_batchStartTime, 21)
+    SET @_batchMessage = 'Executing Script: ' + CONVERT(VARCHAR(25), @_batchStartTime, 21)
     RAISERROR (@_batchMessage, 0, 231)
 
     IF SERVERPROPERTY('Edition') <> 'SQL Azure'
@@ -241,22 +243,22 @@ BEGIN
             ROLLBACK 
         END
 		PRINT 'Dropping temporary table and view'
-		DROP VIEW #_vw_tmpSqlFilesTable
-		DROP TABLE #_tmpSqlFilesTable
+		DROP VIEW _vw_tmpSqlFilesTable
+		DROP TABLE _tmpSqlFilesTable
         RETURN
     END
 
     FETCH   NEXT FROM batchCursor
     INTO    @_batch
 END
-SET @_batchMessage = '@b=' + '@bt=' + CONVERT(VARCHAR(25), GETUTCDATE(), 21)
+SET @_batchMessage = 'Completing Script execution: ' + CONVERT(VARCHAR(25), GETUTCDATE(), 21)
 RAISERROR (@_batchMessage, 0, 231)
 
 CLOSE batchCursor
 DEALLOCATE batchCursor
-DROP VIEW #_vw_tmpSqlFilesTable
-DROP TABLE #_tmpSqlFilesTable
-PRINT 'Complete scripts execution. Temporary table and view dropped'
+DROP VIEW _vw_tmpSqlFilesTable
+DROP TABLE _tmpSqlFilesTable
+PRINT 'Temporary table and view dropped'
 
 IF @_acquireLock <> ''
 
@@ -275,6 +277,6 @@ END
 
 IF @@TRANCOUNT > 0
 BEGIN
-	PRINT 'TRANSACTION EXECUTION FAILED'
+	PRINT 'Transaction execution failed. Rolling back'
     ROLLBACK
 END
