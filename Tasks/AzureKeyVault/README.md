@@ -4,9 +4,7 @@
 
 ### Overview
 
-This task is used for downloading secrets(such as authentication keys, storage account keys, data encryption keys, .PFX files, and passwords)  from a given [Azure key vault](https://docs.microsoft.com/en-us/rest/api/keyvault/about-keys--secrets-and-certificates?redirectedfrom=MSDN#key-vault-secrets-1) instance.
-This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks.
-Task is node based and works with Xplat agents  (Windows, Linux or OSX).
+This task is used for downloading secrets (such as authentication keys, storage account keys, data encryption keys, .PFX files, and passwords) from a given [Azure key vault](https://docs.microsoft.com/en-us/rest/api/keyvault/about-keys--secrets-and-certificates?redirectedfrom=MSDN#key-vault-secrets-1) instance. This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. Task is node based and works with Xplat agents  (Windows, Linux or OSX).
 
 ## Contact Information
 
@@ -33,7 +31,8 @@ This task supports fetching latest values of the secrets which are already added
 
 To add secrets to the keyvault, use PowerShell cmdlet [Set-AzureKeyVaultSecret](https://docs.microsoft.com/en-us/powershell/module/azurerm.keyvault/set-azurekeyvaultsecret?view=azurermps-4.0.0): If the secret does not exist, this cmdlet creates it. If the secret already exists, this cmdlet creates a new version of that secret. 
 Or use Azure CLI : To add a secret, which is a password named SQLPassword and that has the value of Pa$$w0rd to Azure Key Vault, type the following:
-az keyvault secret set --vault-name 'ContosoKeyVault' --name 'SQLPassword' --value 'Pa$$w0rd'
+
+    az keyvault secret set --vault-name 'ContosoKeyVault' --name 'SQLPassword' --value 'Pa$$w0rd'
 
 ### Parameters of the task:
 
@@ -41,26 +40,29 @@ The parameters of the task are described below. The parameters listed with a \* 
 
  * **Azure Subscription**\*: Select the service endpoint for the Azure Subscription where the Azure Key vault instance is created. To configure new service endpoint, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
-Ensure the Azure endpoint has at least Get and List permissions on the vault. You can set these permissions in the Azure portal:
-Open the Settings blade for the vault, choose Access policies, then Add new.In the Add access policy blade, choose Select principal and select the service principal for your client account.In the Add access policy blade, choose Secret permissions and ensure that Get and List are checked (ticked). Choose OK to save the changes.
+Ensure the Azure endpoint has at least Get and List permissions for Secrets and Certificate Management on the vault. You can set these permissions in the Azure portal: Open the Settings blade for the vault, choose Access policies, then Add new. In the Add access policy blade, choose Select principal and select the service principal for your client account. In the Add access policy blade, choose `Secret permissions` and `Certificate permissions` and ensure that Get and List are checked (ticked) for both. Choose OK to save the changes.
  
  * **Key Vault**\*: Select the name of the Key vault from which the secrets need to be downloaded.
  
- * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value * to download all secrets from the selected key vault.  This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. 
+ * **Secrets filter**\*: Provide a comma separated list of secret names or use the default value `*` to download all secrets from the selected key vault. This can be used to fetch the latest values of all/subset of secrets from the vault and set them as task variables which can be consumed in the following tasks. 
 
-For example, if there is a secret name: connectionString, a task variable "connectionString" is created with the latest fetched value of the respective secret from Azure key vault. And this secret variable would be available to be consumed in subsequent tasks.
+For example, if there is a secret name: connectionString, a task variable `$(connectionString)` is created with the latest fetched value of the respective secret from Azure key vault. And this secret variable would be available to be consumed in subsequent tasks.
 
-If it is a certificate ( example: a PFX file) that is fetched from the vault, then the task variable would contain the content of the PFX in string format. To retrieve the PFX file from the task variable, following sample powerShell code can be used:
-$kvSecretBytes = [System.Convert]::FromBase64String($(PfxSecret))
-$certCollection = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2Collection
-$certCollection.Import($kvSecretBytes,$null,[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
+If it is a certificate (example: a PFX file) that is fetched from the vault, then the task variable would contain the content of the PFX in string format. To retrieve the PFX file from the task variable, following sample PowerShell code can be used (after passing the certificate variable as a parameter to the script):
+
+    # Task parameters: $(PfxSecret)
+    param ($pfxSecretStringValue)
+    $kvSecretBytes = [System.Convert]::FromBase64String($pfxSecretStringValue)
+    $certCollection = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+    $certCollection.Import($kvSecretBytes, $null, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
 
 If the certificate file needs to be stored on the hard disk then it is good practice to encrypt it with a password:
-#Get the file created
-$password = <password>
-$protectedCertificateBytes = $certCollection.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12, $password)
-$pfxPath = [Environment]::GetFolderPath("Desktop") + "\MyCert.pfx"
-[System.IO.File]::WriteAllBytes($pfxPath, $protectedCertificateBytes)
+
+    # Get the file created
+    $password = <password>
+    $protectedCertificateBytes = $certCollection.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12, $password)
+    $pfxPath = [Environment]::GetFolderPath("Desktop") + "\MyCert.pfx"
+    [System.IO.File]::WriteAllBytes($pfxPath, $protectedCertificateBytes)
 
 More help can be found [here](https://blogs.technet.microsoft.com/kv/2016/09/26/get-started-with-azure-key-vault-certificates).
 
