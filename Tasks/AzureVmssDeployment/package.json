@@ -2,7 +2,6 @@
   "name": "AzureVmssDeployment",
   "main":"main.js",
   "dependencies": {
-    "vsts-task-lib" : "^2.0.0",
-    "azure-storage": "2.2.1"
+    "vsts-task-lib" : "^2.0.0"
   }
 }

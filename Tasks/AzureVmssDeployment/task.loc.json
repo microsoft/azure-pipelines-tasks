@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -33,12 +33,6 @@
       "displayName": "ms-resource:loc.group.displayName.Image",
       "isExpanded": true,
       "visibleRule": "action = Update image || action = UpdateImage"
-    },
-    {
-      "name": "StartupConfiguration",
-      "displayName": "ms-resource:loc.group.displayName.StartupConfiguration",
-      "isExpanded": true,
-      "visibleRule": "action = Configure application startup || action = Update image || action = UpdateImage"
     }
   ],
   "inputs": [
@@ -60,8 +54,7 @@
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Update image": "Update image",
-        "Configure application startup": "Configure application startup"
+        "Update image": "Update image"
       }
     },
     {
@@ -83,36 +76,6 @@
       "required": true,
       "groupName": "Image",
       "helpMarkDown": "ms-resource:loc.input.help.imageUrl"
-    },
-    {
-      "name": "customScriptsPath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.customScriptsPath",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "ms-resource:loc.input.help.customScriptsPath"
-    },
-    {
-      "name": "customScriptCommand",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.customScriptCommand",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "ms-resource:loc.input.help.customScriptCommand"
-    },
-    {
-      "name": "customScriptsStorageAccount",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.customScriptsStorageAccount",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "ms-resource:loc.input.help.customScriptsStorageAccount",
-      "properties": {
-        "EditableOptions": "True"
-      }
     }
   ],
   "dataSourceBindings": [
