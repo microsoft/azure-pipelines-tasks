@@ -68,34 +68,8 @@ async function run() {
         var taskResult = true;
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
-        var azureStackEnvironment = "AzureStack";
 
-        var endPoint = new Array();
-        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
-        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
-        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
-        endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-        endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
-        endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
-        endPoint["environment"] = tl.getEndpointDataParameter(connectedServiceName, 'environment', true);
-        endPoint["activeDirectoryResourceId"] = tl.getEndpointDataParameter(connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true);
-
-        if(endPoint["environment"] != null && endPoint["environment"].toLowerCase() == azureStackEnvironment.toLowerCase()) {
-            if(!endPoint["envAuthUrl"] || !endPoint["activeDirectoryResourceId"]) {
-                endPoint =  await azureStackUtility.initializeAzureStackData({"url":endPoint["url"]});
-                
-                if(endPoint["envAuthUrl"] == null) {
-                    throw tl.loc("UnableToFetchAuthorityURL");
-                }
-
-                if(endPoint["activeDirectoryResourceId"] == null) {
-                    throw tl.loc("UnableToFetchActiveDirectory");
-                }
-            } 
-        } else {
-            endPoint["envAuthUrl"] = (endPoint["envAuthUrl"] != null) ? endPoint["envAuthUrl"] : "https://login.windows.net/";
-            endPoint["activeDirectoryResourceId"] = endPoint["url"];
-        }
+        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
