@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Delay",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.description": "Pause and wait for specified number of minutes.",
+  "loc.instanceNameFormat": "Delay for $(delayForMinutes) minute(s)",
+  "loc.input.label.delayForMinutes": "Delay for minutes",
+  "loc.input.help.delayForMinutes": "Delay for minutes",
+}
