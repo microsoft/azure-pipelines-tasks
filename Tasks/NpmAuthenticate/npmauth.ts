@@ -12,7 +12,6 @@ async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let saveNpmrcPath: string;
     let npmrc = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
-    console.log(npmrc)
     let workingDirectory = path.dirname(npmrc);
     if (!(npmrc.endsWith('.npmrc'))) {
         throw new Error(tl.loc('NpmrcNotNpmrc', npmrc));
