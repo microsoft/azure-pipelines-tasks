@@ -7,8 +7,6 @@ import * as auth from "./Authentication";
 import { IPackageSource } from "./Authentication";
 import * as url from "url";
 
-
-
 export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInfo[]
 {
     let externalAuthArray: auth.ExternalAuthInfo[] = [];
@@ -27,13 +25,13 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
 
         switch(scheme) {
             case "token":
-                let token = externalAuth.parameters["apitoken"]; 
+                let token = externalAuth.parameters["apitoken"];
                 tl.debug("adding token auth entry for feed " + feedUri);
                 externalAuthArray.push(new auth.TokenExternalAuthInfo(<IPackageSource>
                     {
                         feedName: feedName,
                         feedUri: feedUri
-                    }, 
+                    },
                     token));
                 break;
             case "usernamepassword":
@@ -44,8 +42,8 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
                     {
                         feedName: feedName,
                         feedUri: feedUri
-                    }, 
-                    username, 
+                    },
+                    username,
                     password));
                 break;
             case "none":
@@ -55,7 +53,7 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
                     {
                         feedName: feedName,
                         feedUri: feedUri
-                    }, 
+                    },
                     apiKey));
                 break;
             default:
@@ -128,4 +126,8 @@ export function isOnPremisesTfs(): boolean {
     const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
     const parsedCollectionUri = url.parse(collectionUri);
     return !(/\.visualstudio\.com$/i.test(parsedCollectionUri.hostname));
+}
+
+export function isWindowsAgent(): boolean {
+    return tl.osType() === 'Windows_NT';
 }

@@ -74,7 +74,8 @@ export async function run(): Promise<void> {
             nuGetConfigPath,
             authInfo,
             { credProviderFolder: null, extensionsDisabled: true },
-            null);
+            null /* tempConfigPath */,
+            false /* useNugetToModifyConfigFile */);
 
         let credCleanup = () => { return; };
 
