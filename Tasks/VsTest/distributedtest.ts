@@ -228,11 +228,12 @@ export class DistributedTest {
         const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);
         tl.debug("isTimeBasedBatching : "+ isTimeBasedBatching);
         utils.Helper.setEnvironmentVariableToString(envVars, 'istimebasedslicing',  isTimeBasedBatching.toString());
-        if (isTimeBasedBatching) {
+        if (isTimeBasedBatching && this.dtaTestConfig.runningTimePerBatchInMs) {
             tl.debug("[RunStatistics] Run Time per batch" + this.dtaTestConfig.runningTimePerBatchInMs);
             utils.Helper.setEnvironmentVariableToString(envVars, 'slicetime',  this.dtaTestConfig.runningTimePerBatchInMs.toString());
-        } else {
-            utils.Helper.setEnvironmentVariableToString(envVars, 'numberoftestcasesperslice', 
+        }
+        if (this.dtaTestConfig.numberOfTestCasesPerSlice) {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'numberoftestcasesperslice',
                         this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
         }
 
