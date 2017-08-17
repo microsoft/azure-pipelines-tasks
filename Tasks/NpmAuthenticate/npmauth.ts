@@ -47,10 +47,10 @@ async function main(): Promise<void> {
     }
     else { //If the file doesn't exist, create it. 
         npmrcTable = new Object();
-        npmrcTable['index']=0;
+        npmrcTable['index'] = 0;
     }
 
-    if (npmrcTable[npmrc]=== undefined) {
+    if (npmrcTable[npmrc] === undefined) {
         npmrcTable[npmrc] = npmrcTable['index'];
         npmrcTable['index']++;
         fs.writeFileSync(indexFile, JSON.stringify(npmrcTable));
@@ -71,8 +71,9 @@ async function main(): Promise<void> {
         let registry: npmregistry.NpmRegistry;
         if (endpointRegistries && endpointRegistries.length > 0) {
             for (let serviceEndpoint of endpointRegistries) {
-                let serviceURL = URL.parse(serviceEndpoint.url);
-                if (serviceURL.host == registryURL.host) {
+                
+                if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
+                    let serviceURL = URL.parse(serviceEndpoint.url);              
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL);
@@ -82,8 +83,8 @@ async function main(): Promise<void> {
         }
         if (!registry) {
             for (let localRegistry of LocalNpmRegistries) {
-                let localURL = URL.parse(localRegistry.url);
-                if (localURL.host == registryURL.host) {
+                if (util.toNerfDart(localRegistry.url) == util.toNerfDart(RegistryURLString)) {
+                    let localURL = URL.parse(localRegistry.url);
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL);
@@ -93,7 +94,7 @@ async function main(): Promise<void> {
         }
         if (registry) {
             tl.debug(tl.loc('AddingAuthRegistry', registry.url));
-            util.appendToNpmrc(npmrc, os.EOL+ registry.auth + os.EOL);
+            util.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
             npmrcFile.push(os.EOL + registry.auth + os.EOL);
         }
         else {
