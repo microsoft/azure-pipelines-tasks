@@ -41,7 +41,7 @@ try {
 function isDtaEngineRequired() : boolean {
     const batchType = tl.getInput('distributionBatchType');
     if (batchType && batchType === 'basedOnTestCases') {
-        const batchSize = tl.getInput('batchingBasedOnAgentsOption')
+        const batchSize = tl.getInput('batchingBasedOnAgentsOption');
         if (batchSize && batchSize === 'customBatchSize') {
             return true;
         }
