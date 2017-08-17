@@ -1,5 +1,5 @@
 export class NpmAuthenticateTaskInput  {
-    public static WorkingDir = 'workingDir';
+    public static WorkingFile: string = 'workingFile';
     public static CustomRegistry: string = 'customRegistry';
     public static CustomEndpoint: string = 'customEndpoint';
 }

@@ -7,7 +7,7 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 0,
     "Minor": 0,
     "Patch": 0
   },
@@ -15,16 +15,13 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "demands": [
-    "npm"
-  ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "workingDir",
-      "label": "ms-resource:loc.input.label.workingDir",
-      "helpMarkDown": "ms-resource:loc.input.help.workingDir",
+      "name": "workingFile",
+      "label": "ms-resource:loc.input.label.workingFile",
+      "helpMarkDown": "ms-resource:loc.input.help.workingFile",
       "type": "filePath"
     },
     {
@@ -37,22 +34,6 @@
       }
     }
   ],
-  "dataSourceBindings": [
-    {
-      "target": "customFeed",
-      "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
-    },
-    {
-      "target": "publishFeed",
-      "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
-    }
-  ],
   "execution": {
     "Node": {
       "target": "npmauth.js"
@@ -61,19 +42,11 @@
   "messages": {
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
-    "UnknownCommand": "ms-resource:loc.messages.UnknownCommand",
-    "MultipleProjectConfigs": "ms-resource:loc.messages.MultipleProjectConfigs",
     "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",
     "RestoringFile": "ms-resource:loc.messages.RestoringFile",
-    "PublishFeed": "ms-resource:loc.messages.PublishFeed",
-    "PublishExternal": "ms-resource:loc.messages.PublishExternal",
-    "UseFeed": "ms-resource:loc.messages.UseFeed",
-    "UseNpmrc": "ms-resource:loc.messages.UseNpmrc",
-    "PublishRegistry": "ms-resource:loc.messages.PublishRegistry",
-    "UsingRegistry": "ms-resource:loc.messages.UsingRegistry",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
     "AddingLocalCredentials": "ms-resource:loc.messages.AddingLocalCredentials",
@@ -81,16 +54,10 @@
     "AuthenticatingThisNpmrc": "ms-resource:loc.messages.AuthenticatingThisNpmrc",
     "IgnoringRegistry": "ms-resource:loc.messages.IgnoringRegistry",
     "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",
-    "DebugLogNotFound": "ms-resource:loc.messages.DebugLogNotFound",
-    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
-    "FoundNpmDebugLog": "ms-resource:loc.messages.FoundNpmDebugLog",
-    "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
-    "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
-    "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
-    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
     "CheckedInCredentialsOverriden": "ms-resource:loc.messages.CheckedInCredentialsOverriden",
     "NoIndex.jsonFile": "ms-resource:loc.messages.NoIndex.jsonFile",
-    "UndidChangesToNpmrc": "ms-resource:loc.messages.UndidChangesToNpmrc"
+    "UndidChangesToNpmrc": "ms-resource:loc.messages.UndidChangesToNpmrc",
+    "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist"
   },
   "postjobexecution": {
     "Node": {

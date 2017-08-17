@@ -2,12 +2,12 @@
     "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
     "name": "npmAuthenticate",
     "friendlyName": "npm Authenticate",
-    "description": "Authenticate a npmrc for tasks which use npm.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
+    "description": "Authenticate a .npmrc file for tasks which use npm.",
+    "helpMarkDown": "",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 0,
         "Minor": 0,
         "Patch": 0
     },
@@ -15,14 +15,11 @@
         "Agent",
         "DeploymentGroup"
     ],
-    "demands": [
-        "npm"
-    ],
-    "minimumAgentVersion": "1.91.0",    
+    "minimumAgentVersion": "2.115.0",    
     "instanceNameFormat": "npm Authenticate",
     "inputs": [
         {
-            "name": "workingDir",
+            "name": "workingFile",
             "label": ".npmrc file to authenticate",
             "helpMarkDown": "Path to the target .npmrc file. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
             "type": "filePath"
@@ -37,22 +34,6 @@
             }
         }
     ],
-    "dataSourceBindings": [
-        {
-            "target": "customFeed",
-            "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-            "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
-        },
-        {
-            "target": "publishFeed",
-            "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-            "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\": \"{{{id}}}\", \"DisplayValue\": \"{{{name}}}\"}"
-        }
-    ],
     "execution": {
         "Node": {
             "target": "npmauth.js"
@@ -61,19 +42,11 @@
     "messages": {
         "FoundBuildCredentials": "Found build credentials",
         "NoBuildCredentials": "Could not find build credentials",
-        "UnknownCommand": "Unknown command: %s",
-        "MultipleProjectConfigs": "More than one project .npmrc found in $s",
         "ServiceEndpointNotDefined": "Couldn't find Service Endpoint, make sure the selected endpoint still exists.",
         "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
         "ServiceEndpointUrlNotDefined": "Couldn't find Url for Service Endpoint, make sure Service Endpoint is correctly configured.",
         "SavingFile": "Saving file %s",
         "RestoringFile": "Restoring file %s",
-        "PublishFeed": "Publishing to internal feed",
-        "PublishExternal": "Publishing to external registry",
-        "UseFeed": "Using internal feed",
-        "UseNpmrc": "Using registries in .npmrc",
-        "PublishRegistry": "Publishing to registry: %s",
-        "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
         "FoundLocalRegistries": "Found %d registries in this account/collection",
         "AddingLocalCredentials": "Adding credentials for a local registry",
@@ -81,22 +54,15 @@
         "AuthenticatingThisNpmrc": "Adding authentication to the .npmrc file at %s",
         "IgnoringRegistry": "No service endpoints that matched %s were found",
         "ForcePackagingUrl": "Packaging collection url forced to: %s",
-        "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
-        "NpmFailed": "Npm failed with return code: %s",
-        "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
-        "TestDebugLog": "Trying debug log location: %s",
-        "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
-        "RestoringProjectNpmrc": "Restoring project .npmrc",
-        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
         "CheckedInCredentialsOverriden": "We found credentials for the %s registry in the selected .npmrc file and have overriden them",
         "NoIndex.jsonFile": "No index.json file was found and no files were restored",
-        "UndidChangesToNpmrc" : "undid changes made to %s since the first time npm Authenticate acted upon the file."
+        "UndidChangesToNpmrc" : "Undid changes made to %s since the first time npm Authenticate acted upon the file.",
+        "NpmrcDoesNotExist" : "The .npmrc file you selected at %s does not currently exist."
     },
     "postjobexecution": {
         "Node": {
             "target": "npmauthcleanup.js",
             "argumentFormat": ""
         }
-
     }
 }
