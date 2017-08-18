@@ -26,7 +26,7 @@ export class NuGetConfigHelper2 {
         private authInfo: auth.NuGetExtendedAuthInfo,
         private environmentSettings: ngToolRunner.NuGetEnvironmentSettings,
         private tempConfigPath: string /*optional*/,
-        private useNuGetToModifyConfigFile: boolean /* optional */)
+        private useNuGetToModifyConfigFile?: boolean /* optional */)
     {
         this.tempNugetConfigPath = tempConfigPath || this.getTempNuGetConfigPath();
         this.useNuGetToModifyConfigFile = useNuGetToModifyConfigFile || true;
