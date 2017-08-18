@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 14
+    "Patch": 15
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -252,6 +252,8 @@
     "ExtensionListFailedError": "ms-resource:loc.messages.ExtensionListFailedError",
     "ExtensionListFailedResponseError": "ms-resource:loc.messages.ExtensionListFailedResponseError",
     "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
-    "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState"
+    "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
   }
 }

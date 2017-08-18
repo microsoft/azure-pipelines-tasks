@@ -462,6 +462,8 @@
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
-    "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType"
+    "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
   }
 }

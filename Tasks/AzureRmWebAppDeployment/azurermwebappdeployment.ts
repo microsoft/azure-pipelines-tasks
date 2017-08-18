@@ -12,6 +12,7 @@ var fileTransformationsUtility = require('webdeployment-common/fileTransformatio
 var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
 
 async function run() {
     try {
@@ -45,13 +46,7 @@ async function run() {
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
-        var endPoint = new Array();
-        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
-        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
-        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
-        endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-        endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
-        endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
         if(deployToSlotFlag) {
             if (slotName.toLowerCase() === "production") {

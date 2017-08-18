@@ -4,6 +4,7 @@ import path = require('path');
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
 var extensionManage = require('./extensionmanage.js');
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
@@ -68,13 +69,7 @@ async function run() {
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
 
-        var endPoint = new Array();
-        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', false);
-        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', false);
-        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', false);
-        endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-        endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
-        endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
