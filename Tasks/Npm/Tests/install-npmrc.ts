@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import { TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
+
 
 import { NpmCommand, NpmTaskInput, RegistryLocation } from '../constants';
 import { NpmMockHelper } from './NpmMockHelper';
