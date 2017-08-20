@@ -181,8 +181,9 @@ DECLARE batchCursor CURSOR LOCAL FAST_FORWARD FOR
 
 OPEN batchCursor
 
-FETCH   NEXT FROM batchCursor
-INTO    @_batch
+FETCH NEXT 
+FROM batchCursor
+INTO @_batch
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
