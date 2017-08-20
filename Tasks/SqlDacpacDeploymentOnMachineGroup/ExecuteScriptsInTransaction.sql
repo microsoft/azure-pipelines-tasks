@@ -97,7 +97,7 @@ SET @_acquireLock = $(_acquireLockParam)
 SET @_acquireLockMilliseconds = $(_acquireLockMillisecondsParam)
 SET @_acquireLockMaxAttempts = $(_acquireLockMaxAttemptsParam)
 SET @_longRunningThresholdMilliSeconds = $(_longRunningThresholdMilliSecondsParam)
-SET @_acquireLockLastNAttempts = $(__acquireLockLastNAttemptsParam)
+SET @_acquireLockLastNAttempts = $(_acquireLockLastNAttemptsParam)
 
 DECLARE @_batch NVARCHAR(MAX) = ''
 DECLARE @_batchIndex INT
