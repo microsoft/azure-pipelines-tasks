@@ -18,8 +18,7 @@
     $_acquireLockMillisecondsParam = 10
     $_acquireLockMaxAttemptsParam = 3
     $_longRunningThresholdMilliSecondsParam = 10
-    $_lastAttemptsToKillSessionsParam = 3
-    $_isHostedParam = 0
+    $_acquireLockLastNAttemptsParam = 3
     $_fileList = $sqlscriptFiles
 
     #Get the wrapper sql script
@@ -44,7 +43,7 @@
         }
     }
 
-    $scriptVariables = "_acquireLockParam = '${_acquireLockParam}'", "_acquireLockMillisecondsParam = ${_acquireLockMillisecondsParam}", "_acquireLockMaxAttemptsParam = ${_acquireLockMaxAttemptsParam}", "_longRunningThresholdMilliSecondsParam = ${_longRunningThresholdMilliSecondsParam}", "_lastAttemptsToKillSessionsParam = ${_lastAttemptsToKillSessionsParam}", "_isHostedParam = ${_isHostedParam}", "_fileList = ${_fileList}"
+    $scriptVariables = "_acquireLockParam = '${_acquireLockParam}'", "_acquireLockMillisecondsParam = ${_acquireLockMillisecondsParam}", "_acquireLockMaxAttemptsParam = ${_acquireLockMaxAttemptsParam}", "_longRunningThresholdMilliSecondsParam = ${_longRunningThresholdMilliSecondsParam}", "_acquireLockLastNAttemptsParam = ${_acquireLockLastNAttemptsParam}", "_fileList = ${_fileList}"
     $spaltArguments.Add("Variable", $scriptVariables)
     $spaltArguments.Add("OutputSqlErrors", $true)
 
