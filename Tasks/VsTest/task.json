@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "vstest"
@@ -169,7 +169,7 @@
             "label": "Test mix contains UI tests",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "To run UI tests, ensure that the agent is set to run in interactive mode. [More information](https://aka.ms/uitestmoreinfo).",
+            "helpMarkDown": "To run UI tests, ensure that the agent is set to run in interactive mode. Setting up an agent to run interactively must be done before queueing the build / release. Checking this box does not configure the agent in interactive mode automatically. This option in the task is to only serve as a reminder to configure agent appropriately to avoid failures. <br><br>Hosted agents cannot be used to run UI tests.<br> [More information](https://aka.ms/uitestmoreinfo).",
             "groupName": "testSelection"
         },
         {
