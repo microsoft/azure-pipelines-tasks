@@ -2,7 +2,7 @@
     "id": "28782B92-5E8E-4458-9751-A71CD1492BAE",
     "name": "Delay",
     "friendlyName": "Delay",
-    "description": "Pause and wait for specified number of minutes.",
+    "description": "Pause the workflow for a fixed time.",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
     "category": "Utility",
     "visibility": [
@@ -22,10 +22,10 @@
         {
             "name": "delayForMinutes",
             "type": "string",
-            "label": "Delay for minutes",
+            "label": "Delay in minutes",
             "defaultValue": "0",
             "required": true,
-            "helpMarkDown": "Delay for minutes."
+            "helpMarkDown": "Delay in minutes."
         }
     ],
     "instanceNameFormat": "Delay for $(delayForMinutes) minute(s)",
