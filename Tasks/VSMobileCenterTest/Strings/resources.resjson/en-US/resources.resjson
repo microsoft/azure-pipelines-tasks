@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Mobile Center Test",
-  "loc.helpMarkDown": "Test mobile app packages with Visual Studio Mobile Center.",
+  "loc.helpMarkDown": "[Support Information](https://app.intercom.io/a/apps/r33tq287/conversations)",
   "loc.description": "Test mobile app packages with Visual Studio Mobile Center.",
   "loc.instanceNameFormat": "Test $(app) with Visual Studio Mobile Center",
   "loc.group.displayName.prepare": "Prepare Tests",

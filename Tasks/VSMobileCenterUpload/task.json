@@ -3,8 +3,9 @@
     "name": "VSMobileCenterUpload",
     "friendlyName": "Mobile Center Upload",
     "description": "Upload mobile app packages to Visual Studio Mobile Center",
-    "helpMarkDown": "Upload mobile app packages to Visual Studio Mobile Center",
+    "helpMarkDown": "[Support Information](https://app.intercom.io/a/apps/r33tq287/conversations)",
     "category": "Deploy",
+    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -12,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 119,
-        "Patch": 1
+        "Minor": 123,
+        "Patch": 0
     },
     "groups": [
         {
