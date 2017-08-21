@@ -183,12 +183,16 @@ function Import-AzureRmSubmodulesFromSdkPath {
     [CmdletBinding()]
     param([string] $path,
           [string] $programFiles)
-    
-    # Azure.Storage submodule needs to be imported first
-    $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")
-    Write-Host "##[command]Import-Module -Name $azureStorageModulePath -Global"
-    $azureStorageModule = Import-Module -Name $azureStorageModulePath -Global -PassThru
-    Write-Verbose "Imported module version: $($azureStorageModule.Version)"
+    try {
+        # Azure.Storage submodule needs to be imported first
+        $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")
+        Write-Host "##[command]Import-Module -Name $azureStorageModulePath -Global"
+        $azureStorageModule = Import-Module -Name $azureStorageModulePath -Global -PassThru
+        Write-Verbose "Imported module version: $($azureStorageModule.Version)"
+    }
+    catch {
+        Write-Verbose $("The import of the Azure Storage module: \'$azureStorageModulePath\' failed with the error: $($_.Exception.Message)")
+    }
 
     # Try to import all the AzureRM submodules
     $azureRmNestedModulesDirectory = Split-Path  -Parent (Split-Path -Parent $path)
