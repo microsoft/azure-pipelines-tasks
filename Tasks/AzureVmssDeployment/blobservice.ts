@@ -1,3 +1,5 @@
+import * as artifactProviders from 'artifact-mover/Providers';
+import * as artifactProcessor from 'artifact-mover/Engine';
 import * as path from 'path';
 import * as util from 'util'
 import * as tl from 'vsts-task-lib/task';
@@ -11,27 +13,10 @@ export class BlobService {
         this._storageAccessKey = storageAccessKey;
     }
 
-    /**
-     * uploads a local folder content to blob container
-     */
-    public async uploadBlobs(source: string, destUrlOrContainer: string): Promise<void> {
-        throw "Not implemented!!";
-    }
-
-    private _isUrl(str: string): boolean {
-        if(!!str && (str.startsWith("https://") || str.startsWith("http://"))) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public normalizeRelativePath(inputPath: string) {
-        if(tl.osType().match(/^Win/)) {
-            var splitPath = inputPath.split(path.sep);
-            return path.posix.join.apply(null, splitPath);
-        }
-
-        return inputPath;
+    public async uploadBlobs(source: string, container: string): Promise<void> {
+        var fileProvider = new artifactProviders.LocalFilesystemProvider(source);
+        var azureProvider = new artifactProviders.AzureBlobProvider(this._storageAccountName, container,this._storageAccessKey);
+        var processor = new artifactProcessor.ArtifactEngine();
+        await processor.processItems(fileProvider, azureProvider);
     }
 }

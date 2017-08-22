@@ -10,15 +10,11 @@
         "Build",
         "Release"
     ],
-    "keywords": [
-        "vmss",
-        "image"
-    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -33,6 +29,17 @@
             "displayName": "Image Details",
             "isExpanded": true,
             "visibleRule": "action = Update image || action = UpdateImage"
+        },
+        {
+            "name": "StartupConfiguration",
+            "displayName": "Configure start-up",
+            "isExpanded": true,
+            "visibleRule": "action = Configure application startup || action = Update image || action = UpdateImage"
+        },
+        {
+            "name": "Advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -54,7 +61,8 @@
             "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the scale set.",
             "options": {
-                "Update image": "Update image"
+                "Update image": "Update image",
+                "Configure application startup": "Configure application startup"
             }
         },
         {
@@ -76,6 +84,53 @@
             "required": true,
             "groupName": "Image",
             "helpMarkDown": "Specify the URL of image VHD. If it is an Azure storage blob url, the storage account location should be same as scale set location."
+        },
+        {
+             "name": "customScriptsDirectory",
+             "type": "filePath",
+             "label": "Custom script directory",
+             "defaultValue": "",
+             "required": false,
+             "groupName": "StartupConfiguration",
+             "helpMarkDown": "Path to directory containing custom script and related scripts. These scripts can be used to set start-up environment for application(if any) being deployed through custom image. In other words, application configuration management can be achieved using this script.<br/>E.g. the script can set a machine level environment variable and the application can then consume envionment variable. This enables usage of same VHD image across multiple deployments."
+         },
+         {
+             "name": "customScript",
+             "type": "string",
+             "label": "Command",
+             "defaultValue": "",
+             "required": false,
+             "groupName": "StartupConfiguration",
+             "helpMarkDown": "Script to be executed. This scripts can invoke other scripts in current directory. On Azure VM this script will be invoked with arguments passed in next input. Example usages:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) will update connection string in web.config of web application.<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey will create an encrypted file containing service principal key."
+        },
+        {
+            "name": "customScriptArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "Arguments for custom script. Release variables can be used which makes it easy to use secrets."
+        },
+        {
+            "name": "customScriptsStorageAccount",
+            "type": "pickList",
+            "label": "Azure storage account where custom scripts will be uploaded.",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "Specify a pre-existing ARM storage account. It is used as an storage of custom scripts. Whenever vm extension is run(for example during VMSS scale-up), custom scripts will be downloaded from this storage.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "skipArchivingCustomScripts",
+            "type": "boolean",
+            "label": "Skip Archiving custom scripts",
+            "defaultValue": false,
+            "groupName": "Advanced",
+            "helpMarkDown": "By default, this task creates a compressed archive of directory containing custom scripts. This improves performance and reliability while uploading to azure storage. If unset, archiving will not be done and all files will be inidividually uploaded."
         }
     ],
     "dataSourceBindings": [
@@ -121,6 +176,7 @@
         "VMSSUpdateImage": "Updating VMSS %s to use new image...",
         "ResourceNameCannotBeNull": "Resource name cannot be null.",
         "ArchivingCustomScripts": "Creating compressed archive of custom scripts directory %s.",
+        "SkippedArchivingCustomScripts": "Skipped archiving custom scripts directory",
         "CustomScriptsArchiveFile": "Custom scripts archive created at %s.",
         "CopiedInvokerScript": "Script to extract and execute custom srcipt srchive has been copied to %s.",
         "CustomScriptsArchivingFailed": "Cound not compress custom scripts. Will use individual files.",

@@ -10,9 +10,11 @@ tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : (process.env["_vmssOsType_"] === "Linux" ? "testvmss2" : "testvmss1"));
 tr.setInput("imageUrl", process.env["imageUrlAlreadyUptoDate"] === "true" ? "http://old-url" : "https://someurl");
 if(!(process.env["customScriptNotSpecified"] === "true")) {
-    tr.setInput("customScriptsPath", "C:\\some\\dir");
-    tr.setInput("customScriptCommand", process.env["_vmssOsType_"] === "Linux" ? "./file.sh args" : "powershell .\\file.ps1 args");
+    tr.setInput("customScriptsDirectory", "C:\\some\\dir with'quote");
+    tr.setInput("customScript", process.env["_vmssOsType_"] === "Linux" ? "set V'a`r$.sh" : "de$p`l o'y.ps1");
+    tr.setInput("customScriptArguments", "\"first 'arg'\" seco`nd$arg");
     tr.setInput("customScriptsStorageAccount", "teststorage1");
+    tr.setInput("skipArchivingCustomScripts", process.env["_doNotArchive_"] === "true" ? "true" : "false");
 }
 
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";

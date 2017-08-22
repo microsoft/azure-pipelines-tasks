@@ -38,7 +38,7 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("virtualMachineScaleSets.list is called") > -1, "virtualMachineScaleSets.list function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("Creating archive C:\\users\\temp\\vstsvmss12345\\cs-100-5.zip of compression type zip from C:\\some\\dir") > -1, "archive should be correctly created");
-                assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip' -command 'powershell .\\file.ps1 args'") > -1, "invoker command should be correct");
+                assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip' -script 'de$p`l o''y.ps1' -scriptArgs '\"\"\"first ''arg''\"\"\" seco`nd$arg'") > -1, "invoker command should be correct");
                 assert(tr.stdout.indexOf("storageAccounts.listKeys is called") > -1, "storage accounts should be listed");
                 assert(tr.stdout.indexOf("blobService.uploadBlobs is called with source C:\\users\\temp\\vstsvmss12345 and dest vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to correct account and container");
@@ -66,7 +66,7 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("virtualMachineScaleSets.list is called") > -1, "virtualMachineScaleSets.list function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("Creating archive C:\\users\\temp\\vstsvmss12345\\cs-100-5.tar.gz of compression type targz from C:\\some\\dir") > -1, "archive should be correctly created");
-                assert(tr.stdout.indexOf("Invoker command: ./customScriptInvoker.sh 'cs-100-5.tar.gz' './file.sh args'") > -1, "invoker command should be correct");
+                assert(tr.stdout.indexOf("Invoker command: ./customScriptInvoker.sh 'cs-100-5.tar.gz' 'set V'\"'\"'a`r$.sh' '\"first '\"'\"'arg'\"'\"'\" seco`nd$arg'") > -1, "invoker command should be correct");
                 assert(tr.stdout.indexOf("blobService.uploadBlobs is called with source C:\\users\\temp\\vstsvmss12345 and dest vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > -1, "virtualMachineExtensions.list function should have been called from azure-sdk");
@@ -257,6 +257,24 @@ describe('Azure VMSS Deployment', function () {
             }, tr, done);
         });
 
+        it("should use unarchived custom scripts if skipArchivingCustomScripts input is true", (done) => {
+            process.env["_doNotArchive_"] = "true";
+            let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            delete process.env["_doNotArchive_"];
+
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                assert(tr.stdout.indexOf("Creating archive C:\\users\\temp\\vstsvmss12345\\cs-100-5.zip of compression type zip from C:\\some\\dir with'quote") == -1, "archive should not be created");
+                assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip'") == -1, "invoker command should not be used");
+                assert(tr.stdout.indexOf("Cound not compress custom scripts. Will use individual files. Error: Create archive failed with error - some error") >= -1, "warning should be logged");
+                assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to coorect account and container");
+                assert(tr.stdout.indexOf("loc_mock_CustomScriptExtensionInstalled") > -1, "new extension should be installed");
+                assert(tr.stdout.indexOf("loc_mock_UpdatedVMSSImage") > -1, "VMSS image should be updated");
+            }, tr, done);
+        });
+
         it("should fail task if uploading custom scripts fails", (done) => {
             process.env["_listAccessKeysFailed_"] = "true";
             let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
@@ -299,7 +317,7 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("virtualMachineScaleSets.list is called") > -1, "virtualMachineScaleSets.list function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("Creating archive /users/temp/vstsvmss12345/cs-100-5.zip of compression type zip from /some/dir") > -1, "archive should be correctly created");
-                assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip' -command 'powershell .\\file.ps1 args'") > -1, "invoker command should be correct");
+                assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip' -script 'de$p`l o''y.ps1' -scriptArgs '\"\"\"first ''arg''\"\"\" seco`nd$arg'") > -1, "invoker command should be correct");
                 assert(tr.stdout.indexOf("storageAccounts.listKeys is called") > -1, "storage accounts should be listed");
                 assert(tr.stdout.indexOf("blobService.uploadBlobs is called with source /users/temp/vstsvmss12345 and dest vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to correct account and container");
@@ -327,7 +345,7 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("virtualMachineScaleSets.list is called") > -1, "virtualMachineScaleSets.list function should have been called from azure-sdk");
                 assert(tr.stdout.indexOf("Creating archive /users/temp/vstsvmss12345/cs-100-5.tar.gz of compression type targz from /some/dir") > -1, "archive should be correctly created");
-                assert(tr.stdout.indexOf("Invoker command: ./customScriptInvoker.sh 'cs-100-5.tar.gz' './file.sh args'") > -1, "invoker command should be correct");
+                assert(tr.stdout.indexOf("Invoker command: ./customScriptInvoker.sh 'cs-100-5.tar.gz' 'set V'\"'\"'a`r$.sh' '\"first '\"'\"'arg'\"'\"'\" seco`nd$arg'") > -1, "invoker command should be correct");
                 assert(tr.stdout.indexOf("blobService.uploadBlobs is called with source /users/temp/vstsvmss12345 and dest vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to correct account and container");
                 assert(tr.stdout.indexOf("virtualMachineExtensions.list is called") > -1, "virtualMachineExtensions.list function should have been called from azure-sdk");
@@ -511,6 +529,24 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Creating archive /users/temp/vstsvmss12345/cs-100-5.zip of compression type zip from /some/dir") > -1, "archive should be correctly created");
                 assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip' -command 'powershell .ile.ps1 args'") == -1, "invoker command should be correct");
+                assert(tr.stdout.indexOf("Cound not compress custom scripts. Will use individual files. Error: Create archive failed with error - some error") >= -1, "warning should be logged");
+                assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to coorect account and container");
+                assert(tr.stdout.indexOf("loc_mock_CustomScriptExtensionInstalled") > -1, "new extension should be installed");
+                assert(tr.stdout.indexOf("loc_mock_UpdatedVMSSImage") > -1, "VMSS image should be updated");
+            }, tr, done);
+        });
+
+        it("should use unarchived custom scripts if skipArchivingCustomScripts input is true", (done) => {
+            process.env["_doNotArchive_"] = "true";
+            let tp = path.join(__dirname, "updateImageOnLinuxAgent.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            delete process.env["_doNotArchive_"];
+
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                assert(tr.stdout.indexOf("Creating archive C:\\users\\temp\\vstsvmss12345\\cs-100-5.zip of compression type zip from C:\\some\\dir with'quote") == -1, "archive should not be created");
+                assert(tr.stdout.indexOf("Invoker command: powershell ./customScriptInvoker.ps1 -zipName 'cs-100-5.zip'") == -1, "invoker command should not be used");
                 assert(tr.stdout.indexOf("Cound not compress custom scripts. Will use individual files. Error: Create archive failed with error - some error") >= -1, "warning should be logged");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to coorect account and container");
                 assert(tr.stdout.indexOf("loc_mock_CustomScriptExtensionInstalled") > -1, "new extension should be installed");

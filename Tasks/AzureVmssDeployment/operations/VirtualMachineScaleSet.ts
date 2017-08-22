@@ -87,7 +87,7 @@ export default class VirtualMachineScaleSet {
     }
 
     private async _configureAppUsingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, osType: string): Promise<void> {
-        if(!!this.taskParameters.customScriptsPath) {
+        if(!!this.taskParameters.customScriptsDirectory) {
             tl.debug("Preparing custom scripts...");
             let customScriptInfo: CustomScriptsInfo = await this._prepareCustomScripts(osType);
             //return;
@@ -137,46 +137,56 @@ export default class VirtualMachineScaleSet {
     }
 
     private _archiveCustomScripts(osType: string): CustomScriptsInfo {
-        try {
-            console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsPath));
-            let archive: ArchiveInfo = this._computeArchiveDetails(osType);
+        if(!this.taskParameters.skipArchivingCustomScripts) {
+            try {
+                console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsDirectory));
+                let archive: ArchiveInfo = this._computeArchiveDetails(osType);
 
-            if(!tl.exist(archive.directory)) {
-                tl.mkdirP(archive.directory);
+                if(!tl.exist(archive.directory)) {
+                    tl.mkdirP(archive.directory);
+                }
+
+                // create archive file
+                compress.createArchive(this.taskParameters.customScriptsDirectory, archive.compression, archive.filePath);
+
+                let invokerScriptPath: string;
+                let invokerCommand: string;
+
+                if(osType === "Windows") {
+
+                    let escapedScript = this.taskParameters.customScript.replace(/'/g, "''");
+                    let escapedArgs = this.taskParameters.customScriptArguments.replace(/'/g, "''").replace(/"/g, '"""');
+                    invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
+                    invokerCommand = `powershell ./customScriptInvoker.ps1 -zipName '${archive.fileName}' -script '${escapedScript}' -scriptArgs '${escapedArgs}'`;
+                } else {
+                    let escapedScript = this.taskParameters.customScript.replace(/'/g, "'\"'\"'");
+                    let escapedArgs = this.taskParameters.customScriptArguments.replace(/'/g, "'\"'\"'");
+                    invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
+                    invokerCommand = `./customScriptInvoker.sh '${archive.fileName}' '${escapedScript}' '${escapedArgs}'`;
+                }
+
+                // copy invoker script to same dir as archive
+                tl.cp(invokerScriptPath, archive.directory, "-f", false);
+                console.log(tl.loc("CopiedInvokerScript", archive.directory));
+
+                console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
+                tl.debug("Invoker command: " + invokerCommand);
+                return <CustomScriptsInfo>{
+                    localDirPath: archive.directory,
+                    command: invokerCommand
+                };
+
+            } catch (error) {
+                tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
             }
-
-            // create archive file
-            compress.createArchive(this.taskParameters.customScriptsPath, archive.compression, archive.filePath);
-
-            let invokerScriptPath: string;
-            let invokerCommand: string;
-            let escapedUserCommand = this.taskParameters.customScriptCommand.replace(/'/g, "''");
-            if(osType === "Windows") {
-                invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-                invokerCommand = `powershell ./customScriptInvoker.ps1 -zipName '${archive.fileName}' -command '${escapedUserCommand}'`;
-            } else {
-                invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
-                invokerCommand = `./customScriptInvoker.sh '${archive.fileName}' '${escapedUserCommand}'`;
-            }
-
-            // copy invoker script to same dir as archive
-            tl.cp(invokerScriptPath, archive.directory, "-f", false);
-            console.log(tl.loc("CopiedInvokerScript", archive.directory));
-
-            console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
-            tl.debug("Invoker command: " + invokerCommand);
-            return <CustomScriptsInfo>{
-                localDirPath: archive.directory,
-                command: invokerCommand
-            };
-
-        } catch (error) {
-            tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
-            return <CustomScriptsInfo>{
-                localDirPath: this.taskParameters.customScriptsPath,
-                command: this.taskParameters.customScriptCommand
-            };
+        } else {
+            console.log(tl.loc("SkippedArchivingCustomScripts"));
         }
+
+        return <CustomScriptsInfo>{
+            localDirPath: this.taskParameters.customScriptsDirectory,
+            command: this.taskParameters.customScript
+        };
     }
 
     private _getResourceGroupForVmss(client: armCompute.ComputeManagementClient): Promise<any> {
