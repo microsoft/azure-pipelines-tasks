@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "npm Authenticate",
+  "loc.friendlyName": "npm Authenticate (for task runners)",
   "loc.helpMarkDown": "",
-  "loc.description": "Authenticate a .npmrc file for tasks which use npm.",
-  "loc.instanceNameFormat": "npm Authenticate",
+  "loc.description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like Gulp and Grunt to authenticate with private registries.",
+  "loc.instanceNameFormat": "npm Authenticate $(workingFile)",
   "loc.input.label.workingFile": ".npmrc file to authenticate",
-  "loc.input.help.workingFile": "Path to the target .npmrc file. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
+  "loc.input.help.workingFile": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
   "loc.input.label.customEndpoint": "Credentials for registries outside this account/collection",
   "loc.input.help.customEndpoint": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
   "loc.messages.FoundBuildCredentials": "Found build credentials",
@@ -21,7 +21,7 @@
   "loc.messages.AuthenticatingThisNpmrc": "Adding authentication to the .npmrc file at %s",
   "loc.messages.IgnoringRegistry": "No service endpoints that matched %s were found",
   "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
-  "loc.messages.CheckedInCredentialsOverriden": "We found credentials for the %s registry in the selected .npmrc file and have overriden them",
+  "loc.messages.CheckedInCredentialsOverriden": "Found and overrode credentials for the %s registry in the selected .npmrc file. Remove credentials from the file and store them in an npm Service Endpoint instead (recommended), or remove the npm Authenticate step from your build to use credentials checked into an .npmrc.",
   "loc.messages.NoIndex.jsonFile": "No index.json file was found and no files were restored",
   "loc.messages.UndidChangesToNpmrc": "Undid changes made to %s since the first time npm Authenticate acted upon the file.",
   "loc.messages.NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist."
