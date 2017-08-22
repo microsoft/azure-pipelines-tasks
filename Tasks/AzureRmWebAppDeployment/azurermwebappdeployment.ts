@@ -19,29 +19,86 @@ async function run() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('WebAppName', true);
+        var webAppKindDS = tl.getInput('WebAppKindDS', false);
+        var webAppKind = tl.getInput('WebAppKind', false);
         var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag', false);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var slotName: string = tl.getInput('SlotName', false);
-        var webDeployPkg: string = tl.getPathInput('Package', true);
+        var linuxImageSource = tl.getInput('LinuxImageSource', false);
+        var dockerNamespace = tl.getInput('DockerNamespace', false);
         var virtualApplication: string = tl.getInput('VirtualApplication', false);
+        var webDeployPkg: string = tl.getPathInput('Package', true);
+        var webDeployPkgLinux: string = tl.getPathInput('PackageLinux', true);
+        var webAppUri:string = tl.getInput('WebAppUri', false);
+        var scriptType: string = tl.getInput('ScriptType', false);
+        var inlineScript: string = tl.getInput('InlineScript', false);
+        var scriptPath: string = tl.getPathInput('ScriptPath', false);
+        var scriptTypeLinux: string = tl.getInput('ScriptTypeLinux', false);
+        var inlineScriptLinux: string = tl.getInput('InlineScriptLinux', false);
+        var scriptPathLinux: string = tl.getPathInput('ScriptPathLinux', false);
+        var generateWebConfig_WMA = tl.getBoolInput('GenerateWebConfigWMA', false);
+        var webConfigParametersStr_WMA = tl.getInput('WebConfigParameters_WMA', false);
+        var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var useWebDeploy: boolean = tl.getBoolInput('UseWebDeploy', false);
         var setParametersFile: string = tl.getPathInput('SetParametersFile', false);
         var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
         var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
-        var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
-        var renameFilesFlag: boolean = tl.getBoolInput('RenameFilesFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
-        var webAppUri:string = tl.getInput('WebAppUri', false);
-        var xmlTransformation: boolean = tl.getBoolInput('XmlTransformation', false);
+        var renameFilesFlag: boolean = tl.getBoolInput('RenameFilesFlag', false);
+        var takeAppOfflineFlagLinux: boolean = tl.getBoolInput('TakeAppOfflineFlagLinux', false);
+        var useWebDeployLinux: boolean = tl.getBoolInput('UseWebDeployLinux', false);
+        var setParametersFileLinux: string = tl.getPathInput('SetParametersFileLinux', false);
+        var removeAdditionalFilesFlagLinux: boolean = tl.getBoolInput('RemoveAdditionalFilesFlagLinux', false);
+        var excludeFilesFromAppDataFlagLinux: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlagLinux', false);
+        var additionalArgumentsLinux: string = tl.getInput('AdditionalArgumentsLinux', false);
+        var renameFilesFlagLinux: boolean = tl.getBoolInput('RenameFilesFlagLinux', false);
+        var useWebDeploy_functions: boolean = tl.getBoolInput('UseWebDeployFunctions', false);
+        var setParametersFile_functions: string = tl.getPathInput('SetParametersFile_Functions', false);
+        var removeAdditionalFilesFlag_functions: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag_Functions', false);
+        var additionalArguments_functions: string = tl.getInput('AdditionalArguments_Functions', false);
+        var renameFilesFlag_functions: boolean = tl.getBoolInput('RenameFilesFlag_Functions', false);
+        var xmlTransformation_WMA: boolean = tl.getBoolInput('XmlTransformationWMA', false);
+        var xmlVariableSubstitution_WMA: boolean = tl.getBoolInput('XmlVariableSubstitutionWMA', false);
+        var JSONFiles_WMA = tl.getDelimitedInput('JSONFilesWMA', '\n', false);
         var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
-        var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
-        var scriptType: string = tl.getInput('ScriptType', false);
-        var inlineScript: string = tl.getInput('InlineScript', false);
-        var scriptPath: string = tl.getPathInput('ScriptPath', false);
-        var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
-        var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
-        var webAppKind = tl.getInput('WebAppKind', false);
-        var dockerNamespace = tl.getInput('DockerNamespace', false);
+
+        // var xmlTransformation: boolean = tl.getBoolInput('XmlTransformation', false);
+        // var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
+        // var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
+        // var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
+        webAppKind = webAppKindDS !== "invalid" ? webAppKindDS : webAppKind;
+        var isWMA = webAppKind === "app" || webAppKind === "mobileapp" || webAppKind === "api";
+
+        webDeployPkg = webAppKind === "applinux" ? webDeployPkgLinux : webDeployPkg;
+
+        scriptType = webAppKind === "applinux" ? scriptTypeLinux : scriptType;
+        scriptPath = webAppKind === "applinux" ? scriptPathLinux : scriptPath;
+        inlineScript = webAppKind === "applinux" ? inlineScriptLinux : inlineScript;
+
+        var generateWebConfig = isWMA ? generateWebConfig_WMA : false;
+        var webConfigParametersStr = isWMA ? webConfigParametersStr_WMA : "";
+        var xmlTransformation: boolean = isWMA ? xmlTransformation_WMA : false;
+        var xmlVariableSubstitution: boolean = isWMA ? xmlVariableSubstitution_WMA : false;
+        JSONFiles = isWMA ? JSONFiles_WMA : JSONFiles;
+
+        if(webAppKind === "applinux") {
+            takeAppOfflineFlag = takeAppOfflineFlagLinux;
+            useWebDeploy = useWebDeployLinux;
+            setParametersFile = setParametersFileLinux;
+            removeAdditionalFilesFlag = removeAdditionalFilesFlagLinux;
+            excludeFilesFromAppDataFlag = excludeFilesFromAppDataFlagLinux;
+            additionalArguments = additionalArgumentsLinux;
+            renameFilesFlag = renameFilesFlagLinux;
+        }
+
+        if(webAppKind === "functionapp") {
+            useWebDeploy = useWebDeploy_functions;
+            setParametersFile = setParametersFile_functions;
+            removeAdditionalFilesFlag = removeAdditionalFilesFlag_functions;
+            additionalArguments = additionalArguments_functions;
+            renameFilesFlag = renameFilesFlag_functions;
+        }
+
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
