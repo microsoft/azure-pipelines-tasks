@@ -69,12 +69,21 @@ try {
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
         [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\bin\**\*.pdb"
-        # $pdbFiles = @(Find-VstsFiles -LiteralDirectory $SymbolsFolder -LegacyPattern $SearchPattern)
-        $pdbFiles = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
+        if ($SearchPattern.Contains("`n")) {
+            [string[]]$SearchPattern = $SearchPattern -split "`n"
+        }
+        $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
+        $pdbFiles = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
+
         Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
         
-        if (-not $pdbFiles -and $SearchPattern.Contains(';')) {
-            throw "No files found. Use newlines instead of ';' to separate search patterns."
+        if (-not $pdbFiles) {
+            if ($SearchPattern.Contains(';') ) {
+                throw "No files found. Use newlines instead of ';' to separate search patterns."
+            }
+            elseif ($matches) {
+                Write-Host "No files present in matchList, the match had $($matches.Count) directories"
+            }
         }
     }
 
@@ -84,6 +93,14 @@ try {
     } else {
         Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
         Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+    }
+
+    [bool]$NeedsPublishSymbols = Get-VstsInput -Name 'PublishSymbols' -Require -AsBool
+    if (-not $NeedsPublishSymbols) {
+        if ($SkipIndexing) {
+            throw "Either IndexSources or PublishSymbols should be checked"
+        }
+        return
     }
 
     # Publish the symbols.
@@ -132,10 +149,11 @@ try {
         }
 
         [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
-        [string] $requestUrl = "$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
+        # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
+        [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
         Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
+        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName
