@@ -75,6 +75,9 @@ describe('ServiceFabricUpdateAppVersions Suite', function () {
         it('(Update-PackageVersion) package version prefix changed', (done) => {
             psr.run(path.join(__dirname, 'Update-PackageVersion.VersionPrefixChanged.ps1'), done);
         })
+        it('(Test-NonExistentPackagePath) code package folder does not exist', (done) => {
+            psr.run(path.join(__dirname, 'Test-NonExistentPackagePath.ps1'), done);
+        })
         it('(Find-FileChanges) no changes', (done) => {
             psr.run(path.join(__dirname, 'Find-FileChanges.NoChanges.ps1'), done);
         })

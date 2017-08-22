@@ -6,7 +6,7 @@
   "loc.input.label.applicationPackagePath": "Application Package",
   "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.versionSuffix": "Version Value",
-  "loc.input.help.versionSuffix": "The value used to specify the version in the manifest files. Default is .$(Build.BuildNumber).",
+  "loc.input.help.versionSuffix": "The value used to the specify the version in the manifest files. Default is .$(Build.BuildNumber).",
   "loc.input.label.versionBehavior": "Version Behavior",
   "loc.input.help.versionBehavior": "Specify whether to append the version value to existing values in the manifest files or replace them.",
   "loc.input.label.updateOnlyChanged": "Update only if changed",

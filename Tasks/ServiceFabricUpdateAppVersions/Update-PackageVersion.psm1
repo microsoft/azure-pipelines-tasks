@@ -77,7 +77,7 @@
                     # Search the package files for differences (Unless the user doesn't want to log all changes and we already know the package xml changed)
                     $newPackagePath = Join-Path $NewPackageRoot $packageName
                     $oldPackagePath = Join-Path $OldPackageRoot $packageName
-                    if (Find-FileChanges $newPackagePath $oldPackagePath $LogIndent -LogAllChanges:$LogAllChanges)
+                    if ((Test-Path $newPackagePath) -and (Find-FileChanges $newPackagePath $oldPackagePath $LogIndent -LogAllChanges:$LogAllChanges))
                     {
                         # The package has changed because one or more files has changed
                         $updatePackageVersion = $true
