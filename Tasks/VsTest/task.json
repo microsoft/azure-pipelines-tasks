@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "vstest"
@@ -34,6 +34,11 @@
             "name": "executionOptions",
             "displayName": "Execution options",
             "isExpanded": true
+        },
+        {
+            "name": "advancedExecutionOptions",
+            "displayName": "Advanced execution options",
+            "isExpanded": false
         },
         {
             "name": "reportingOptions",
@@ -269,12 +274,12 @@
             "groupName": "executionOptions"
         },
         {
-            "name": "dontDistribute",
-            "type": "boolean",
-            "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
-            "defaultValue": "False",
+            "name": "otherConsoleOptions",
+            "type": "string",
+            "label": "Other console options",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
             "groupName": "executionOptions"
         },
         {
@@ -283,8 +288,8 @@
             "label": "Batch tests",
             "defaultValue": "basedOnTestCases",
             "required": false,
-            "helpMarkDown": "Use this option to control how tests are batched.",
-            "groupName": "executionOptions",
+            "helpMarkDown": "A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.",
+            "groupName": "advancedExecutionOptions",
             "options": {
                 "basedOnTestCases": "Based on number of tests and agents",
                 "basedOnExecutionTime": "Based on past running time of tests"
@@ -295,9 +300,9 @@
             "type": "radio",
             "label": "Batch options",
             "required": false,
-            "groupName": "executionOptions",
+            "groupName": "advancedExecutionOptions",
             "defaultValue": "autoBatchSize",
-            "helpMarkDown": "Total number of tests will be divided into multiple batches. If batch size is specified, Each batch will contain the specified number of test cases.",
+            "helpMarkDown": "Simple batching based on the number of tests and agents participating in the test run. When the batch size is automatically determined, each batch contains `(total number of tests / number of agents)` tests. If a batch size is specified, each batch will contain the specified number of tests.",
             "options": {
                 "autoBatchSize": "Automatically determine the batch size",
                 "customBatchSize": "Specify a batch size"
@@ -311,7 +316,7 @@
             "defaultValue": "10",
             "required": true,
             "helpMarkDown": "Specify batch size",
-            "groupName": "executionOptions",
+            "groupName": "advancedExecutionOptions",
             "visibleRule": "distributionBatchType = basedOnTestCases && batchingBasedOnAgentsOption = customBatchSize"
         },
         {
@@ -319,11 +324,11 @@
             "type": "radio",
             "label": "Batch options",
             "required": false,
-            "groupName": "executionOptions",
+            "groupName": "advancedExecutionOptions",
             "defaultValue": "autoBatchSize",
-            "helpMarkDown": "Total number of tests will be divided into multiple batches. If batch size is specified, Each batch will contain the specified number of test cases.",
+            "helpMarkDown": "This batching considers past running time to create batches of tests such that each batch has approximately equal running time. Quick running tests will be batched together, while longer running tests may belong to a separate batch. When this option is used with the multi-agent phase setting, total test time is reduced to a minimum.",
             "options": {
-                "autoBatchSize": "Automatically determine the batch size",
+                "autoBatchSize": "Automatically determine the batch time",
                 "customTimeBatchSize": "Specify running time per batch"
             },
             "visibleRule": "distributionBatchType = basedOnExecutionTime"
@@ -335,17 +340,17 @@
             "defaultValue": "60",
             "required": true,
             "helpMarkDown": "Specify the running time (sec) per batch",
-            "groupName": "executionOptions",
+            "groupName": "advancedExecutionOptions",
             "visibleRule": "distributionBatchType = basedOnExecutionTime && batchingBasedOnExecutionTimeOption = customTimeBatchSize"
         },
         {
-            "name": "otherConsoleOptions",
-            "type": "string",
-            "label": "Other console options",
-            "defaultValue": "",
+            "name": "dontDistribute",
+            "type": "boolean",
+            "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
+            "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
-            "groupName": "executionOptions"
+            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
+            "groupName": "advancedExecutionOptions"
         },
         {
             "name": "testRunTitle",
