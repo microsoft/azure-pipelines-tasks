@@ -3,7 +3,7 @@
     "name": "VSMobileCenterTest",
     "friendlyName": "Mobile Center Test",
     "description": "Test mobile app packages with Visual Studio Mobile Center.",
-    "helpMarkDown": "[Support Information](https://app.intercom.io/a/apps/r33tq287/conversations)",
+    "helpMarkDown": "[Support Information](https://intercom.help/mobile-center/)",
     "category": "Test",
     "preview": true,
     "visibility": [
