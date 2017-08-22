@@ -11,6 +11,7 @@ Register-Mock Invoke-PublishSymbols
 Register-Mock Get-VstsTaskVariable
 Register-Mock Get-VstsInput { 'FileShare' } -ParametersEvaluator { $Name -eq 'SymbolServerType' }
 Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'IndexSources' }
+Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'PublishSymbols' }
 Register-Mock Get-VstsInput { '-1' } -- -Name 'SymbolsMaximumWaitTime' -Default '0' -AsInt
 Register-Mock Get-VstsInput { 'Some input symbols path' } -- -Name 'SymbolsPath'
 Register-Mock Get-VstsInput { 'Some input search pattern' } -ParametersEvaluator { $Name -eq 'SearchPattern' }
