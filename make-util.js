@@ -125,11 +125,15 @@ var pathExists = function (checkPath) {
 }
 exports.pathExists = pathExists;
 
-var buildNodeTask = function (taskPath, outDir) {
+var buildNodeTask = function (taskPath, outDir, phase) {
+    if (phase && phase != 'restore' && phase != 'compile') {
+        throw new Error(`Unexpected phase '${phase}'`);
+    }
+
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
-    if (test('-f', packageJsonPath)) {
+    if ((phase || 'restore') == 'restore' && test('-f', packageJsonPath)) {
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
@@ -138,13 +142,16 @@ var buildNodeTask = function (taskPath, outDir) {
         run('npm install');
     }
 
-    if (test('-f', rp(path.join('Tests', 'package.json')))) {
+    if ((phase || 'restore') == 'restore' && test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
         run('npm install');
         cd(taskPath);
     }
 
-    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
+    if ((phase || 'compile') == 'compile') {
+        run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
+    }
+
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;

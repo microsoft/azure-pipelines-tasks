@@ -148,6 +148,11 @@ target.build = function() {
             getExternals(taskMake.externals, outDir);
         }
 
+        // npm install - this must be done before npm installing the common modules
+        if (shouldBuildNode) {
+            buildNodeTask(taskPath, outDir, 'restore');
+        }
+
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
@@ -215,9 +220,9 @@ target.build = function() {
             });
         }
 
-        // build Node task
+        // compile
         if (shouldBuildNode) {
-            buildNodeTask(taskPath, outDir);
+            buildNodeTask(taskPath, outDir, 'compile');
         }
 
         // copy default resources and any additional resources defined in the task's make.json
