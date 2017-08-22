@@ -16,9 +16,15 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     const wmicTool = tl.tool('wmic');
     const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
     wmicTool.arg(wmicArgs);
-    const output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout.trim();
-    tl.debug('VSTest Version information: ' + output)
+    let output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
 
+
+    if (utils.Helper.isNullOrWhitespace(output)) {
+        tl.error(tl.loc('ErrorReadingVstestVersion'));
+        throw new Error(tl.loc('ErrorReadingVstestVersion'));
+    }
+    output = output.trim();
+    tl.debug('VSTest Version information: ' + output);
     const verSplitArray = output.split('=');
     if (verSplitArray.length !== 2) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
