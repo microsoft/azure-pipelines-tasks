@@ -17,8 +17,7 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
     wmicTool.arg(wmicArgs);
     const output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout.trim();
-    tl.debug('VSTest Version information: ' + output);
-    //utils.Helper.printMultiLineLog(output.stdout, (logLine) => { console.log('##vso[task.debug]' + logLine); });
+    tl.debug('VSTest Version information: ' + output)
 
     const verSplitArray = output.split('=');
     if (verSplitArray.length !== 2) {
