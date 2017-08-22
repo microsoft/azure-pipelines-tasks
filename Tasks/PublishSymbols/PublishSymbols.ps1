@@ -68,12 +68,12 @@ try {
 
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
-        [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\*.pdb"
+        [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\bin\**\*.pdb"
         if ($SearchPattern.Contains("`n")) {
             [string[]]$SearchPattern = $SearchPattern -split "`n"
         }
         $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
-        $pdbFiles = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }
+        $pdbFiles = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
 
         Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
         
