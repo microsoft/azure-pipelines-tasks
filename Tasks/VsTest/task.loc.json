@@ -328,7 +328,7 @@
       "defaultValue": "autoBatchSize",
       "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnExecutionTimeOption",
       "options": {
-        "autoBatchSize": "Automatically determine the batch size",
+        "autoBatchSize": "Automatically determine the batch time",
         "customTimeBatchSize": "Specify running time per batch"
       },
       "visibleRule": "distributionBatchType = basedOnExecutionTime"
