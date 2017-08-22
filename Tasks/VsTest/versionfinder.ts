@@ -18,7 +18,6 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     wmicTool.arg(wmicArgs);
     let output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
 
-
     if (utils.Helper.isNullOrWhitespace(output)) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
         throw new Error(tl.loc('ErrorReadingVstestVersion'));
