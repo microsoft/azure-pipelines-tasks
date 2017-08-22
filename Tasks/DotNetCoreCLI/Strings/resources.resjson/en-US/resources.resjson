@@ -76,6 +76,7 @@
   "loc.messages.Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
   "loc.messages.Error_PackageFailure": "An error ocurred while trying to pack the files.",
   "loc.messages.Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
+  "loc.messages.Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
   "loc.messages.Info_AttemptingToPackFile": "Attempting to pack file: ",
   "loc.messages.Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
   "loc.messages.Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
