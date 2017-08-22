@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 100
+        "Patch": 101
     },
     "demands": [
         "azureps"
@@ -41,7 +41,7 @@
             "label": "Azure Connection Type",
             "required": false,
             "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceName",
+            "defaultValue": "ConnectedServiceNameARM",
             "options": {
                 "ConnectedServiceName": "Azure Classic",
                 "ConnectedServiceNameARM": "Azure Resource Manager"
