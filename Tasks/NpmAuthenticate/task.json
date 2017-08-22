@@ -1,8 +1,8 @@
 {
     "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
     "name": "npmAuthenticate",
-    "friendlyName": "npm Authenticate",
-    "description": "Authenticate a .npmrc file for tasks which use npm.",
+    "friendlyName": "npm Authenticate (for task runners)",
+    "description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like Gulp and Grunt to authenticate with private registries.",
     "helpMarkDown": "",
     "category": "Package",
     "author": "Microsoft Corporation",
@@ -16,12 +16,12 @@
         "DeploymentGroup"
     ],
     "minimumAgentVersion": "2.115.0",    
-    "instanceNameFormat": "npm Authenticate",
+    "instanceNameFormat": "npm Authenticate $(workingFile)",
     "inputs": [
         {
             "name": "workingFile",
             "label": ".npmrc file to authenticate",
-            "helpMarkDown": "Path to the target .npmrc file. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
+            "helpMarkDown": "PaPath to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
             "type": "filePath"
         },
         {
@@ -54,7 +54,7 @@
         "AuthenticatingThisNpmrc": "Adding authentication to the .npmrc file at %s",
         "IgnoringRegistry": "No service endpoints that matched %s were found",
         "ForcePackagingUrl": "Packaging collection url forced to: %s",
-        "CheckedInCredentialsOverriden": "We found credentials for the %s registry in the selected .npmrc file and have overriden them",
+        "CheckedInCredentialsOverriden": "Found and overrode credentials for the %s registry in the selected .npmrc file. Remove credentials from the file and store them in an npm Service Endpoint instead (recommended), or remove the npm Authenticate step from your build to use credentials checked into an .npmrc.",
         "NoIndex.jsonFile": "No index.json file was found and no files were restored",
         "UndidChangesToNpmrc" : "Undid changes made to %s since the first time npm Authenticate acted upon the file.",
         "NpmrcDoesNotExist" : "The .npmrc file you selected at %s does not currently exist."
