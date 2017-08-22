@@ -69,6 +69,9 @@ try {
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
         [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\*.pdb"
+        if ($SearchPattern.Contains("`n")) {
+            [string[]]$SearchPattern = $SearchPattern -split "`n"
+        }
         $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
         $pdbFiles = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }
 
