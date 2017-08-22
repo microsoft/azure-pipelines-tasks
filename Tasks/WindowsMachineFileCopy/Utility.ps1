@@ -61,7 +61,7 @@ function Validate-Null(
     $value = $value.Trim()
     if(-not $value)
     {
-        ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList $variableName)
+        ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList $variableName)
     }
 }
 
@@ -73,7 +73,7 @@ function Validate-SourcePath(
 
     if(-not (Test-Path -LiteralPath $value))
     {
-        ThrowError -errorMessage (Get-LocalizedString -Key "Source path '{0}' does not exist." -ArgumentList $value)
+        ThrowError -errorMessage (Get-VstsLocString -Key "WFC_SourcePathDoesNotExist" -ArgumentList $value)
     }
 }
 
@@ -86,7 +86,7 @@ function Validate-DestinationPath(
 
     if($environmentName -and $value.StartsWith("`$env:"))
     {
-        ThrowError -errorMessage (Get-LocalizedString -Key "Remote destination path '{0}' cannot contain environment variables." -ArgumentList $value)
+        ThrowError -errorMessage (Get-VstsLocString -Key "WFC_RemoteDestinationPathCannotContainEnvironmentVariables" -ArgumentList $value)
     }
 }
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments

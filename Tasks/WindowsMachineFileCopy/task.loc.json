@@ -11,9 +11,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 41
+    "Patch": 0
   },
   "minimumAgentVersion": "1.104.0",
   "groups": [
@@ -115,10 +115,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "WindowsMachineFileCopy.ps1"
     }
+  },
+  "messages": {
+    "WFC_ParameterCannotBeNullorEmpty": "ms-resource:loc.messages.WFC_ParameterCannotBeNullorEmpty",
+    "WFC_FailedToConnectToPathWithUser": "ms-resource:loc.messages.WFC_FailedToConnectToPathWithUser",
+    "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "ms-resource:loc.messages.WFC_CopyingFailedConsultRobocopyLogsForMoreDetails",
+    "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "ms-resource:loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed",
+    "WFC_SourcePathDoesNotExist": "ms-resource:loc.messages.WFC_SourcePathDoesNotExist",
+    "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "ms-resource:loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables",
+    "WFC_CopyStartedFor0": "ms-resource:loc.messages.WFC_CopyStartedFor0",
+    "WFC_NoMachineExistsUnderEnvironment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment",
+    "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment"
   }
 }

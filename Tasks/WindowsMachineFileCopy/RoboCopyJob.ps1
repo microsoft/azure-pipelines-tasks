@@ -37,8 +37,6 @@ param (
         }
     }
     
-    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-    
     function ThrowError
     {
         param(
@@ -58,7 +56,7 @@ param (
         $value = $value.Trim()    
         if(-not $value)
         {
-            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList $variableName)
+            ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList $variableName)
         }
     }
     
@@ -72,7 +70,7 @@ param (
         }
         else
         {
-            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList "credential")
+            ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList "credential")
         }   
     }
 
@@ -195,7 +193,7 @@ param (
         $dtl_mapOut = iex $command
         if ($LASTEXITCODE -ne 0) 
         {
-            $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
+            $errorMessage = (Get-VstsLocString -Key "WFC_FailedToConnectToPathWithUser" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
             ThrowError -errorMessage $errorMessage -fqdn $fqdn
         }
     }
@@ -220,12 +218,12 @@ param (
         
         if ($LASTEXITCODE -ge 8)
         {
-            $errorMessage = Get-LocalizedString -Key "Copying failed. Consult the robocopy logs for more details."            
+            $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
             ThrowError -errorMessage $errorMessage -fqdn $fqdn            
         }
         else
         {            
-            $message = (Get-LocalizedString -Key "Copying recursively from {0} to {1} on machine {2} succeeded" -ArgumentList $sourcePath, $targetPath, $fqdn)
+            $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
             Write-Output $message            
         }        
     }

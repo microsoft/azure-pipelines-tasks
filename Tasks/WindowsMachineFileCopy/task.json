@@ -11,9 +11,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 41
+        "Patch": 0
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -115,10 +115,19 @@
     ],
     "instanceNameFormat": "Copy files from $(SourcePath)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "PowerShell3": {
+            "target": "WindowsMachineFileCopy.ps1"
         }
+    },
+    "messages": {
+        "WFC_ParameterCannotBeNullorEmpty": "Parameter '{0}' cannot be null or empty.",
+        "WFC_FailedToConnectToPathWithUser": "Failed to connect to the path {0} with the user {1} for copying.",
+        "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "Copying failed. Consult the robocopy logs for more details.",
+        "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Copying recursively from {0} to {1} on machine {2} succeeded.",
+        "WFC_SourcePathDoesNotExist": "Source path '{0}' does not exist.",
+        "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Remote destination path '{0}' cannot contain environment variables.",
+        "WFC_CopyStartedFor0": "Copy started for - '{0}'",
+        "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
+        "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment"
     }
 }
