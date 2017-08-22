@@ -36,6 +36,11 @@
       "isExpanded": true
     },
     {
+      "name": "advancedExecutionOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedExecutionOptions",
+      "isExpanded": false
+    },
+    {
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": true
@@ -269,12 +274,12 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "dontDistribute",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.dontDistribute",
-      "defaultValue": "False",
+      "name": "otherConsoleOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.otherConsoleOptions",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.dontDistribute",
+      "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
       "groupName": "executionOptions"
     },
     {
@@ -284,7 +289,7 @@
       "defaultValue": "basedOnTestCases",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.distributionBatchType",
-      "groupName": "executionOptions",
+      "groupName": "advancedExecutionOptions",
       "options": {
         "basedOnTestCases": "Based on number of tests and agents",
         "basedOnExecutionTime": "Based on past running time of tests"
@@ -295,7 +300,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.batchingBasedOnAgentsOption",
       "required": false,
-      "groupName": "executionOptions",
+      "groupName": "advancedExecutionOptions",
       "defaultValue": "autoBatchSize",
       "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnAgentsOption",
       "options": {
@@ -311,7 +316,7 @@
       "defaultValue": "10",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.customBatchSizeValue",
-      "groupName": "executionOptions",
+      "groupName": "advancedExecutionOptions",
       "visibleRule": "distributionBatchType = basedOnTestCases && batchingBasedOnAgentsOption = customBatchSize"
     },
     {
@@ -319,7 +324,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.batchingBasedOnExecutionTimeOption",
       "required": false,
-      "groupName": "executionOptions",
+      "groupName": "advancedExecutionOptions",
       "defaultValue": "autoBatchSize",
       "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnExecutionTimeOption",
       "options": {
@@ -335,17 +340,17 @@
       "defaultValue": "60",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.customRunTimePerBatchValue",
-      "groupName": "executionOptions",
+      "groupName": "advancedExecutionOptions",
       "visibleRule": "distributionBatchType = basedOnExecutionTime && batchingBasedOnExecutionTimeOption = customTimeBatchSize"
     },
     {
-      "name": "otherConsoleOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.otherConsoleOptions",
-      "defaultValue": "",
+      "name": "dontDistribute",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dontDistribute",
+      "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
-      "groupName": "executionOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.dontDistribute",
+      "groupName": "advancedExecutionOptions"
     },
     {
       "name": "testRunTitle",
