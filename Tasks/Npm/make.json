@@ -1,2 +1,9 @@
 {
+    "common": [
+        {
+            "module": "../Common/npm-common",
+            "type": "node",
+            "compile": true
+        }
+    ]
 }
