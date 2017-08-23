@@ -5,9 +5,9 @@ import * as path from "path";
 import * as xml2js from "xml2js";
 import * as str from "string";
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "./containerconnection";
-import * as sourceUtils from "./sourceutils";
-import * as imageUtils from "./containerimageutils";
+import ContainerConnection from "docker-common/containerconnection";
+import * as sourceUtils from "docker-common/sourceutils";
+import * as imageUtils from "docker-common/containerimageutils";
 import * as Q from 'q';
 
 let stripbom = require('strip-bom');
