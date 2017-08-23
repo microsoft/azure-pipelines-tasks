@@ -2,8 +2,8 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "./containerconnection";
-import * as imageUtils from "./containerimageutils";
+import ContainerConnection from "docker-common/containerconnection";
+import * as imageUtils from "docker-common/containerimageutils";
 
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
