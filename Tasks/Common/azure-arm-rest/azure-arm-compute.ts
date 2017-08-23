@@ -75,11 +75,6 @@ export class VirtualMachines {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
-
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -140,10 +135,6 @@ export class VirtualMachines {
         httpRequest.headers = this.client.setCustomHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
@@ -186,19 +177,12 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 202) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                    }
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -238,10 +222,6 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
@@ -249,9 +229,6 @@ export class VirtualMachines {
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                    }
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -290,10 +267,6 @@ export class VirtualMachines {
             }
         );
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 202) {
@@ -340,19 +313,12 @@ export class VirtualMachines {
         );
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var statusCode = response.statusCode;
             if (statusCode != 202) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                    }
                     if (operationResponse.body.status == "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
@@ -394,19 +360,12 @@ export class VirtualMachines {
         httpRequest.body = null;
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var statusCode = response.statusCode;
             if (statusCode != 202 && statusCode != 204) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                    }
                     if (operationResponse.body.status === "Succeeded") {
                         // Generate Response
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
@@ -460,10 +419,6 @@ export class VirtualMachineExtensions {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -527,10 +482,6 @@ export class VirtualMachineExtensions {
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             if (response.statusCode == 200) {
                 var result = response.body;
                 deferred.resolve(new azureServiceClient.ApiResult(null, result));
@@ -588,18 +539,11 @@ export class VirtualMachineExtensions {
         // Send request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             if (response.statusCode != 200 && response.statusCode != 201) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                    }
                     if (operationResponse.body.status === "Succeeded") {
                         var result = { properties: { "provisioningState": operationResponse.body.status } };
                         deferred.resolve(new azureServiceClient.ApiResult(null, result));
@@ -646,18 +590,11 @@ export class VirtualMachineExtensions {
         // Send request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             if (response.statusCode !== 202 && response.statusCode !== 204) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                    }
                     if (operationResponse.statusCode === 200) {
                         deferred.resolve(new azureServiceClient.ApiResult(null));
                     } else {
@@ -695,10 +632,6 @@ export class VirtualMachineScaleSets {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -761,10 +694,6 @@ export class VirtualMachineScaleSets {
         httpRequest.headers = this.client.setCustomHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                tl.debug("Request: " + JSON.stringify(httpRequest));
-                tl.debug("Response: " + JSON.stringify(response));
-            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
@@ -853,18 +782,11 @@ export class VirtualMachineScaleSets {
             console.log(tl.loc("NewVMSSImageUrl", imageUrl));
             console.log(tl.loc("VMSSUpdateImage", vmssName));
             this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-                if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                    tl.debug("Request: " + JSON.stringify(httpRequest));
-                    tl.debug("Response: " + JSON.stringify(response));
-                }
                 var deferred = Q.defer<azureServiceClient.ApiResult>();
                 var statusCode = response.statusCode;
                 if (response.statusCode == 200) {
                     // wait for image update to complete
                     this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                        if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
-                            tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
-                        }
                         if (operationResponse.body.status === "Succeeded") {
                             deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                         }
