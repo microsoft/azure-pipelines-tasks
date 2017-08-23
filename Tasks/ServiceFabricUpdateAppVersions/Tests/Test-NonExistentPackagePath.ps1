@@ -1,5 +1,8 @@
 [CmdletBinding()]
 param(
+    [string]
+    $ExpectedSuffix = $null,
+
     [switch]
     $CurrentCodePackageExists,
 
@@ -28,4 +31,4 @@ $oldXmlList = @( $xml )
 $result = Update-PackageVersion -VersionValue ".NewSuffix" -ServiceName "Service1Pkg" -NewPackageXml $xml -NewPackageRoot "$PSScriptRoot\data\CurrentPkg" -OldPackageXmlList $oldXmlList -OldPackageRoot "$PSScriptRoot\data\PreviousPkg"
 
 # Assert
-Assert-AreEqual "1.0.0" $result "Package version did not match."
+Assert-AreEqual "1.0.0$ExpectedSuffix" $result "Package version did not match."

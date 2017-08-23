@@ -1,4 +1,4 @@
 [CmdletBinding()]
 param()
 
-. "$PSScriptRoot\Test-NonExistentPackagePath.ps1" -CurrentCodePackageExists
+. "$PSScriptRoot\Test-NonExistentPackagePath.ps1" -ExpectedSuffix ".NewSuffix" -CurrentCodePackageExists
