@@ -11,9 +11,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 47
+    "Patch": 0
   },
   "minimumAgentVersion": "1.104.0",
   "groups": [
@@ -147,10 +147,17 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PowerShellOnTargetMachines.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "PowerShellOnTargetMachines.ps1"
     }
+  },
+  "messages": {
+    "PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment",
+    "PS_TM_DeploymentStartedForMachine0": "ms-resource:loc.messages.PS_TM_DeploymentStartedForMachine0",
+    "PS_TM_DeploymentStatusForMachine01": "ms-resource:loc.messages.PS_TM_DeploymentStatusForMachine01",
+    "PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "ms-resource:loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1",
+    "PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "ms-resource:loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured",
+    "PS_TM_0PortWasNotProvidedForResource1": "ms-resource:loc.messages.PS_TM_0PortWasNotProvidedForResource1",
+    "PS_TM_DeploymentOnOneOrMoreMachinesFailed": "ms-resource:loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed"
   }
 }
