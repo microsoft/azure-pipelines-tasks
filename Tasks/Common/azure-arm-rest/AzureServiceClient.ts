@@ -170,7 +170,7 @@ export class ServiceClient {
             nextRequest.method = 'GET';
             nextRequest.uri = nextLinkUrl;
             var response = await this.beginRequest(nextRequest);
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Next request: " + JSON.stringify(nextRequest));
                 tl.debug("Extended Response: " + JSON.stringify(response));
             }

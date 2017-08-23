@@ -54,7 +54,7 @@ export class ResourceGroups {
 
         // Send Request and process response.
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Request: " + JSON.stringify(httpRequest));
                 tl.debug("Response: " + JSON.stringify(response));
             }
@@ -93,7 +93,7 @@ export class ResourceGroups {
         );
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Request: " + JSON.stringify(httpRequest));
                 tl.debug("Response: " + JSON.stringify(response));
             }
@@ -105,7 +105,7 @@ export class ResourceGroups {
             else {
                 // Create Result
                 this.client.getLongRunningOperationResult(response).then((response: webClient.WebResponse) => {
-                    if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                    if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                         tl.debug("Long running operation Response: " + JSON.stringify(response));
                     }
                     if (response.statusCode == 200) {
@@ -154,7 +154,7 @@ export class ResourceGroups {
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Request: " + JSON.stringify(httpRequest));
                 tl.debug("Response: " + JSON.stringify(response));
             }
@@ -215,7 +215,7 @@ export class Deployments {
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Request: " + JSON.stringify(httpRequest));
                 tl.debug("Response: " + JSON.stringify(response));
             }
@@ -226,7 +226,7 @@ export class Deployments {
                 }
                 else {
                     this.client.getLongRunningOperationResult(response).then((operationResponse) => {
-                        if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                        if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                             tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
                         }
                         this.get(resourceGroupName, deploymentName, (error, response) => {
@@ -261,7 +261,7 @@ export class Deployments {
 
         // Send Request and process response.
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Request: " + JSON.stringify(httpRequest));
                 tl.debug("Response: " + JSON.stringify(response));
             }
@@ -314,7 +314,7 @@ export class Deployments {
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+            if (tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true') {
                 tl.debug("Request: " + JSON.stringify(httpRequest));
                 tl.debug("Response: " + JSON.stringify(response));
             }
