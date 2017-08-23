@@ -88,6 +88,10 @@ export class loadBalancers {
         //send request
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -146,6 +150,10 @@ export class loadBalancers {
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             if (response.statusCode == 200) {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
@@ -197,6 +205,10 @@ export class loadBalancers {
         }
 
         this.client.beginRequest(httpRequest).then((response) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
@@ -204,6 +216,9 @@ export class loadBalancers {
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
+                    if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
+                    }
                     if (operationResponse.body.status === "Succeeded") {
                         // Generate Response
                         deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
@@ -255,6 +270,10 @@ export class publicIPAddresses {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -264,7 +283,7 @@ export class publicIPAddresses {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -313,6 +332,10 @@ export class networkSecurityGroups {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -322,7 +345,7 @@ export class networkSecurityGroups {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -368,6 +391,10 @@ export class NetworkInterfaces {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -377,7 +404,7 @@ export class NetworkInterfaces {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -426,12 +453,19 @@ export class NetworkInterfaces {
         }
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
                 deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+                    if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
+                    }
                     if (operationResponse.body.status === "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body.value));
                     }
@@ -488,6 +522,10 @@ export class securityRules {
         httpRequest.body = null;
         // Send Request
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
@@ -538,6 +576,10 @@ export class securityRules {
         }
 
         this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
+            if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                tl.debug("Request: " + JSON.stringify(httpRequest));
+                tl.debug("Response: " + JSON.stringify(response));
+            }
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
@@ -545,6 +587,9 @@ export class securityRules {
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+                    if(tl.getVariable('system.debug.extended') && tl.getVariable('system.debug.extended').toLowerCase() == 'true'){
+                        tl.debug("Long running operation Response: " + JSON.stringify(operationResponse));
+                    }
                     if (operationResponse.body.status === "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
