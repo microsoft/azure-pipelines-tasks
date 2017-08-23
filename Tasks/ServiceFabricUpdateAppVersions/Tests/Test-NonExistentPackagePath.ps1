@@ -1,3 +1,12 @@
+[CmdletBinding()]
+param(
+    [switch]
+    $CurrentCodePackageExists,
+
+    [switch]
+    $PreviousCodePackageExists
+)
+
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $taskPath = "$PSScriptRoot\.."
@@ -6,7 +15,9 @@ Microsoft.PowerShell.Core\Import-Module "$taskPath\Test-XmlEqual.psm1"
 
 # Arrange.
 Register-Mock Test-Path { $true } -- "$PSScriptRoot\data\CurrentPkg"
-Register-Mock Test-Path { $false } -- "$PSScriptRoot\data\CurrentPkg\Code"
+Register-Mock Test-Path { $true } -- "$PSScriptRoot\data\PreviousPkg"
+Register-Mock Test-Path { $CurrentCodePackageExists } -- "$PSScriptRoot\data\CurrentPkg\Code"
+Register-Mock Test-Path { $PreviousCodePackageExists } -- "$PSScriptRoot\data\PreviousPkg\Code"
 Register-Mock Find-FileChanges { $false } -- "$PSScriptRoot\data\CurrentPkg\Config" "$PSScriptRoot\data\PreviousPkg\Config" "  " -LogAllChanges:$false
 Register-Mock Find-FileChanges { $false } -- "$PSScriptRoot\data\CurrentPkg\Data" "$PSScriptRoot\data\PreviousPkg\Data" "  " -LogAllChanges:$false
 
