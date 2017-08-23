@@ -11,7 +11,8 @@
     "Release"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "version": {
     "Major": 1,
