@@ -123,17 +123,17 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
                 tl.debug("Processing substitution for xml node : " + xmlNode.name);
                 try {
                     if(xmlNode.name == "configSections") {
-                        isSubstitutionApplied = isSubstitutionApplied || updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues);
+                        isSubstitutionApplied = updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                     }
                     else if(xmlNode.name == "connectionStrings") {
                         if(parameterFilePath) {
                             var parameterSubValue = getReplacableTokenFromTags(xmlNode, variableMap);
                             substituteValueinParameterFile(parameterFilePath, parameterSubValue);
                         }
-                        isSubstitutionApplied = isSubstitutionApplied || updateXmlConnectionStringsNodeAttribute(xmlNode, variableMap, replacableTokenValues);
+                        isSubstitutionApplied = updateXmlConnectionStringsNodeAttribute(xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                     }
                     else {
-                        isSubstitutionApplied = isSubstitutionApplied || updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues);
+                        isSubstitutionApplied = updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                     }
                 } catch (error){
                     tl.debug("Error occurred while processing xml node : " + xmlNode.name);
@@ -167,7 +167,7 @@ function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replaca
                 var customSectionNodes = ltxdomutility.getElementsByTagName(sectionName);
                 if( customSectionNodes.length != 0) {
                     var customNode = customSectionNodes[0];
-                    isSubstitutionApplied = isSubstitutionApplied || updateXmlNodeAttribute(customNode, variableMap, replacableTokenValues);
+                    isSubstitutionApplied = updateXmlNodeAttribute(customNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
                 }
             }
         }
@@ -198,7 +198,7 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
     var children = xmlDomNode.children;
     for(var childNode of children) {
         if(varUtility.isObject(childNode)) {
-            isSubstitutionApplied = isSubstitutionApplied || updateXmlNodeAttribute(childNode, variableMap, replacableTokenValues);
+            isSubstitutionApplied = updateXmlNodeAttribute(childNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
         }
     }
     return isSubstitutionApplied;
@@ -234,7 +234,7 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
     var children = xmlDomNode.children;
     for(var childNode of children) {
         if(varUtility.isObject(childNode)) {
-            isSubstitutionApplied = isSubstitutionApplied || updateXmlConnectionStringsNodeAttribute(childNode, variableMap, replacableTokenValues);
+            isSubstitutionApplied =  updateXmlConnectionStringsNodeAttribute(childNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
         }
     }
 
