@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Consente di distribuire e configurare l'agente di test per eseguire test su un set di computer",
   "loc.instanceNameFormat": "Distribuisci agente di test in $(testMachineGroup)",
+  "loc.releaseNotes": "<ul><li>Supporto per Visual Studio Test Agent 2017: è ora possibile distribuire ed eseguire test usando più versioni di Visual Studio Test Agent. Sono supportate le versioni 2015 e 2017.</li><li>I gruppi di computer creati dall'hub di test non sono più supportati. È possibile continuare a usare un elenco di computer o di gruppi di risorse di Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Computer di test",
   "loc.group.displayName.agentConfiguration": "Configurazione agente",
   "loc.group.displayName.advanced": "Avanzate",
@@ -27,7 +28,9 @@
   "loc.input.label.testPlatform": "Versione dell'agente di test",
   "loc.input.help.testPlatform": "Versione dell'agente di test di Visual Studio da usare. Selezionare una versione appropriata corrispondente alla versione di Visual Studio con cui sono stati compilati i file binari del test.",
   "loc.input.label.agentLocation": "Percorso dell'agente di test",
-  "loc.input.help.agentLocation": "Consente facoltativamente di specificare il percorso il percorso del file vstf_testagent.exe dal percorso di rete o locale. Se non si specifica alcun percorso, il file verrà scaricato automaticamente dall'Area download. Il programma di installazione di Test Agent 2015 Update 3 è disponibile all'indirizzo `https://go.microsoft.com/fwlink/?LinkId=827840`. Il programma di installazione di Test Agent 2017 è disponibile all'indirizzo `https://aka.ms/vs/15/release/vs_TestAgent.exe`",
+  "loc.input.help.agentLocation": "Consente facoltativamente di specificare il percorso del file vstf_testagent.exe dal percorso di rete o locale. Se non si specifica alcun percorso, il file verrà scaricato automaticamente dall'Area download. Il programma di installazione di Test Agent 2015 Update 3 è disponibile all'indirizzo `https://go.microsoft.com/fwlink/?LinkId=827840`. Il programma di installazione di Test Agent 2017 è disponibile all'indirizzo `https://aka.ms/vs/15/release/vs_TestAgent.exe`. Per informazioni dettagliate sull'utilizzo di programmi di installazione offline, vedere `https://aka.ms/testagentlocation`.",
   "loc.input.label.updateTestAgent": "Aggiorna agente di test",
-  "loc.input.help.updateTestAgent": "Se l'agente di test è già distribuito in un computer, questa opzione verifica se è disponibile un aggiornamento per la versione dell'agente."
+  "loc.input.help.updateTestAgent": "Se l'agente di test è già distribuito in un computer, questa opzione verifica se è disponibile un aggiornamento per la versione dell'agente.",
+  "loc.messages.InvalidAccessToken": "Non è possibile generare il token di accesso personale per l'utente. Contattare l'amministratore della raccolta del progetto",
+  "loc.messages.NotSupportedWithParallel": "L'attività Distribuzione agente di test di Visual Studio non è supportata nel tipo di esecuzione parallela MultiMachine/MultiConfiguration. Per altri dettagli, vedere questo blog https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/"
 }

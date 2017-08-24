@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Дополнительная информация](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Запустить сценарий оболочки или пакетный сценарий с командами Azure CLI для подписки Azure",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.releaseNotes": "Новые возможности в версии 1.0\n- Поддержка нового Azure CLI 2.0 на основе Python\n- Поддержка агентов Xplat (Windows, Linux или OSX) \n- Для работы с Azure CLI 1.0 (на основе Node) вернитесь к версии задачи 0.0\n- Ограничения \n - Классические подписки не поддерживаются. Azure CLI 2.0 поддерживает только подписки Azure Resource Manager (ARM).",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.connectedServiceNameARM": "Подписка Azure",
   "loc.input.help.connectedServiceNameARM": "Выберите подписку Azure Resource Manager для развертывания.",

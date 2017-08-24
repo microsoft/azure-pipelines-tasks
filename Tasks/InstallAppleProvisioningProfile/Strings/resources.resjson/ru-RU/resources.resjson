@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "Установить профиль подготовки Apple",
   "loc.helpMarkDown": "",
   "loc.description": "Установите профиль подготовки Apple, необходимый для выполнения сборки в агенте macOS.",
   "loc.instanceNameFormat": "Установка профиля подготовки Apple",

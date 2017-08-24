@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "Apple Developer 入口網站中要用於此匯出的 10 位數小組識別碼。",
   "loc.input.label.exportOptionsPlist": "匯出選項 Plist",
   "loc.input.help.exportOptionsPlist": "plist 檔案的路徑，該檔案用以設定封存匯出。",
-  "loc.input.label.xcode8AutomaticSigning": "Xcode 8 自動簽署",
-  "loc.input.help.xcode8AutomaticSigning": "如果您有要自動簽署的 Xcode 8 專案安裝程式，請選取此選項。",
+  "loc.input.label.xcode8AutomaticSigning": "自動簽署",
+  "loc.input.help.xcode8AutomaticSigning": "若已為自動簽署設定了 Xcode 8 或 Xcode 9 專案，請選取此選項。",
   "loc.input.label.teamId": "小組識別碼",
   "loc.input.help.teamId": "指定 10 位數開發人員小組識別碼。如果您是多個開發小組的成員，則必須這麼做。",
   "loc.input.label.signMethod": "使用下列項目覆寫",
@@ -57,7 +57,7 @@
   "loc.input.label.args": "引數",
   "loc.input.help.args": "應用於建置的其他命令列引數。在使用 -target 或 -project 而非指定工作區及配置時十分有用。",
   "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "組建執行的工作目錄。預設值為儲存機制的根目錄。",
+  "loc.input.help.cwd": "組建執行的工作目錄。預設值為存放庫的根目錄。",
   "loc.input.label.outputPattern": "輸出目錄",
   "loc.input.help.outputPattern": "將放置建立輸出 (二進位檔) 的相對路徑。",
   "loc.input.label.xcodeDeveloperDir": "Xcode 開發人員路徑",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "無法識別要從封存檔案自動使用的匯出方法。這可能會在建置期間造成錯誤，或產生無效的套件。請將 [匯出選項] 設定為 [指定] 或 [Plist]。",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "匯出選項 Plist 檔案不存在於 %s。請提供有效 Plist 檔案的路徑。",
   "loc.messages.SchemeRequiredForArchive": "必須指定配置，才能產生包含 xcodebuild 封存檔與匯出的套件。",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "必須指定工作區或專案路徑，才能產生包含 xcodebuild 封存檔與匯出的套件。"
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "必須指定工作區或專案路徑，才能產生包含 xcodebuild 封存檔與匯出的套件。",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "無法自動產生匯出選項 Plist 以匯出 IPA。請在 [套件選項] 中指定一個匯出選項 Plist。"
 }

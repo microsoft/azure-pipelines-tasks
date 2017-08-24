@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install Apple Provisioning Profile",
+  "loc.friendlyName": "Apple-Bereitstellungsprofil installieren",
   "loc.helpMarkDown": "",
   "loc.description": "Die Installation eines Apple-Bereitstellungsprofils ist für die Erstellung auf einem macOS-Agent erforderlich.",
   "loc.instanceNameFormat": "Installieren Sie ein Apple-Bereitstellungsprofil.",

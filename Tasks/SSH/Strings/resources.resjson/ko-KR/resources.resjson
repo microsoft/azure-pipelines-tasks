@@ -12,6 +12,8 @@
   "loc.input.help.commands": "원격 컴퓨터에서 실행할 셸 명령을 지정합니다. 새 줄에 각 명령을 해당 인수와 함께 입력합니다. 여러 명령을 함께 실행하려면 같은 줄에 세미콜론으로 구분하여 여러 명령을 입력합니다(예: cd /home/user/myFolder;build).",
   "loc.input.label.scriptPath": "셸 스크립트 경로",
   "loc.input.help.scriptPath": "원격 컴퓨터에서 실행할 셸 스크립트 파일의 경로입니다.",
+  "loc.input.label.inline": "인라인 스크립트",
+  "loc.input.help.inline": "원격 컴퓨터에서 실행할 셸 스크립트를 작성합니다.",
   "loc.input.label.args": "인수",
   "loc.input.help.args": "셸 스크립트에 전달할 인수입니다.",
   "loc.input.label.failOnStdErr": "STDERR이 발생할 경우 실패",

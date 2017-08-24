@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "Der Typ des zu erstellenden Artefakts.",
   "loc.input.label.TargetPath": "Pfad",
   "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen",
+  "loc.input.label.Parallel": "Paralleles Kopieren",
+  "loc.input.help.Parallel": "TRUE zum Aktivieren des parallelen Kopierens.",
+  "loc.input.label.ParallelCount": "Parallele Anzahl",
+  "loc.input.help.ParallelCount": "Parallelismus zum Durchführen des Kopiervorgangs. Muss mindestens 1 betragen und darf nicht größer sein als 128.",
   "loc.messages.ErrorFileShareLinux": "Artefakte können nicht von einem OSX- oder Linux-Agent aus in einer Dateifreigabe veröffentlicht werden. Sie können den Artefakttyp in Server ändern oder einen Windows-Agent verwenden.",
-  "loc.messages.ErrorHostTypeNotSupported": "Diese Aufgabe wird nur innerhalb eines Build-Auftrags unterstützt.",
-  "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "Diese Aufgabe wird nur zum Veröffentlichen in der Serverablage innerhalb eines Build-Auftrags unterstützt.",
+  "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s",
+  "loc.messages.UnexpectedParallelCount": "Unerwartete parallele Anzahl \"%s\". Geben Sie eine Zahl zwischen 1 und 128 ein."
 }

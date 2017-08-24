@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "Identificador de equipo de 10 dígitos del portal Apple Developer que se usa para esta exportación.",
   "loc.input.label.exportOptionsPlist": "Plist de opciones de exportación",
   "loc.input.help.exportOptionsPlist": "Ruta de acceso a un archivo plist que configura la exportación de archivos.",
-  "loc.input.label.xcode8AutomaticSigning": "Firma automática de Xcode 8",
-  "loc.input.help.xcode8AutomaticSigning": "Seleccione esta opción si tiene un proyecto de Xcode 8 configurado para la firma automática.",
+  "loc.input.label.xcode8AutomaticSigning": "Firma automática",
+  "loc.input.help.xcode8AutomaticSigning": "Seleccione esta opción si tiene un proyecto de Xcode 8 o Xcode 9 configurado para firma automática.",
   "loc.input.label.teamId": "Id. de equipo",
   "loc.input.help.teamId": "Especifique el identificador de equipo de desarrollador de 10 dígitos. Este valor es necesario si pertenece a varios equipos de desarrollo.",
   "loc.input.label.signMethod": "Reemplazar usando",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "No se pudo identificar el método de exportación para usar automáticamente desde el archivo de almacenamiento. Esto puede causar errores durante la compilación o generar un paquete no válido. Establezca \"Opciones de exportación\" en \"Especificar\" o \"Plist\".",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "No existe ningún archivo Plist de opciones de exportación en %s. Proporcione la ruta de acceso a un archivo Plist válido.",
   "loc.messages.SchemeRequiredForArchive": "Debe especificarse el esquema para generar el paquete con el archivo xcodebuild y exportarlo.",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Debe especificarse la ruta de acceso del área de trabajo o del proyecto para generar el paquete con el archivo xcodebuild y exportarlo."
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Debe especificarse la ruta de acceso del área de trabajo o del proyecto para generar el paquete con el archivo xcodebuild y exportarlo.",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "No se pudo generar automáticamente un archivo .plist de opciones de exportación para exportar un IPA. Especifique el archivo .plist de opciones de exportación en las opciones del paquete."
 }

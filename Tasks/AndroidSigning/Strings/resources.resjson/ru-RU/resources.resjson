@@ -22,5 +22,10 @@
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "Укажите, следует ли использовать для пакета zipalign. Это позволяет снизить объем оперативной памяти, используемой приложением.",
   "loc.input.label.zipalignLocation": "Расположение Zipalign",
-  "loc.input.help.zipalignLocation": "При необходимости укажите путь к исполняемому файлу zipalign, используемому при подписывании. По умолчанию применяется zipalign, найденный в папке той версии Android SDK, с которой собрано ваше приложение."
+  "loc.input.help.zipalignLocation": "При необходимости укажите путь к исполняемому файлу zipalign, используемому при подписывании. По умолчанию применяется zipalign, найденный в папке той версии Android SDK, с которой собрано ваше приложение.",
+  "loc.messages.AndroidHomeNotSet": "Переменная среды ANDROID_HOME не задана для текущего пользователя.",
+  "loc.messages.CouldNotFindZipalign": "Не удалось найти средство zipalign.",
+  "loc.messages.CouldNotFindZipalignInAndroidHome": "Не удалось найти средство zipalign в ANDROID_HOME: %s",
+  "loc.messages.JavaHomeNotSet": "Переменная среды JAVA_HOME не задана для текущего пользователя.",
+  "loc.messages.NoMatchingFiles": "Не найдены файлы, соответствующие шаблону поиска: %s"
 }

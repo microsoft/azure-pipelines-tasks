@@ -12,6 +12,8 @@
   "loc.input.help.commands": "Spécifiez les commandes d'interpréteur de commandes à exécuter sur la machine distante. Entrez chaque commande avec ses arguments sur une nouvelle ligne. Pour exécuter plusieurs commandes à la fois, entrez-les sur la même ligne en les séparant par des points-virgules (exemple : cd /home/user/myFolder;build).",
   "loc.input.label.scriptPath": "Chemin du script d'interpréteur de commandes",
   "loc.input.help.scriptPath": "Chemin du fichier de script d'interpréteur de commandes à exécuter sur la machine distante.",
+  "loc.input.label.inline": "Script inline",
+  "loc.input.help.inline": "Écrivez le script d'interpréteur de commandes à exécuter sur la machine distante.",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments à passer au script d'interpréteur de commandes.",
   "loc.input.label.failOnStdErr": "Échec sur STDERR",

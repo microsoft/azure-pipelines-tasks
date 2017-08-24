@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "Type d'artefact à créer.",
   "loc.input.label.TargetPath": "Chemin d'accès",
   "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers",
+  "loc.input.label.Parallel": "Copie parallèle",
+  "loc.input.help.Parallel": "True pour activer la copie parallèle.",
+  "loc.input.label.ParallelCount": "Nombre parallèle",
+  "loc.input.help.ParallelCount": "Parallélisme pour effectuer la copie. Doit être au moins égal à 1 et inférieur à 128.",
   "loc.messages.ErrorFileShareLinux": "Impossible de publier les artefacts d'un agent OSX ou Linux sur un partage de fichiers. Vous pouvez changer de type d'artefact en optant pour le stockage sur un serveur, ou utiliser un agent Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "Cette tâche est prise en charge uniquement dans une tâche de build.",
-  "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s"
+  "loc.messages.ErrorHostTypeNotSupported": "Vous pouvez utiliser cette tâche pour publier sur le dépôt serveur uniquement dans une tâche de build.",
+  "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s",
+  "loc.messages.UnexpectedParallelCount": "Nombre parallèle '%s' inattendu. Entrez un nombre compris entre 1 et 128."
 }

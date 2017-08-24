@@ -16,7 +16,7 @@
   "loc.input.help.jenkinsBuildNumber": "Descarga los artefactos producidos por esta compilación.",
   "loc.messages.GetArtifactsFromLastSuccessfulBuild": "Descargar los artefactos de la última compilación correcta de %s",
   "loc.messages.GetArtifactsFromBuildNumber": "Descargar los artefactos del número de compilación %d de %s",
-  "loc.messages.CouldNotFindArtifacts": "No se encuentran artefactos para el trabajo %s en el número de compilación %d",
+  "loc.messages.CouldNotFindArtifacts": "No se encontraron artefactos para el trabajo %s en el número de compilación %d",
   "loc.messages.CouldNotGetLastSuccessfuilBuildNumber": "No se puede obtener el número de la última compilación correcta",
   "loc.messages.ServerCallFailed": "No se pudo ejecutar la llamada HTTP al servidor de Jenkins.",
   "loc.messages.ServerCallErrorCode": "Código de respuesta HTTP: %d",

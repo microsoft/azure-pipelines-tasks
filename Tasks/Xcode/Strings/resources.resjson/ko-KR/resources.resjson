@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "이 내보내기에 사용할 Apple Developer 포털의 10자리 팀 ID입니다.",
   "loc.input.label.exportOptionsPlist": "내보내기 옵션 Plist",
   "loc.input.help.exportOptionsPlist": "보관 파일 내보내기를 구성하는 plist 파일의 경로입니다.",
-  "loc.input.label.xcode8AutomaticSigning": "Xcode 8 자동 서명",
-  "loc.input.help.xcode8AutomaticSigning": "자동 서명을 위해 Xcode 8 프로젝트를 설정한 경우 선택합니다.",
+  "loc.input.label.xcode8AutomaticSigning": "자동 서명",
+  "loc.input.help.xcode8AutomaticSigning": "자동 서명에 대해 Xcode 8 또는 Xcode 9 프로젝트가 구성되어 있는 경우 이 옵션을 선택합니다.",
   "loc.input.label.teamId": "팀 ID",
   "loc.input.help.teamId": "10자리 개발자 팀 ID를 지정하세요. 여러 개발자 팀의 멤버인 경우 필요합니다.",
   "loc.input.label.signMethod": "다음을 사용한 재정의",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "보관 파일에서 자동으로 사용할 내보내기 방법을 식별하지 못했습니다. 이로 인해 빌드 중 오류가 발생하거나 잘못된 패키지를 생성할 수 있습니다. `내보내기 옵션`을 `지정` 또는 `Plist`로 설정하세요.",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "내보내기 옵션 Plist 파일이 %s에 없습니다. 올바른 Plist 파일의 경로를 제공하세요.",
   "loc.messages.SchemeRequiredForArchive": "xcodebuild 보관 및 내보내기를 사용하여 패키지를 생성하도록 구성표를 지정해야 합니다.",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "xcodebuild 보관 및 내보내기를 사용하여 패키지를 생성하도록 작업 영역 또는 프로젝트 경로를 지정해야 합니다."
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "xcodebuild 보관 및 내보내기를 사용하여 패키지를 생성하도록 작업 영역 또는 프로젝트 경로를 지정해야 합니다.",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "IPA를 내보내기 위한 내보내기 옵션 Plist를 자동으로 생성하지 못했습니다. 패키지 옵션에서 내보내기 옵션 Plist를 지정하세요."
 }

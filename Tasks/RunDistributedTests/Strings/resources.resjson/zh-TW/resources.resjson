@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "測試篩選準則",
   "loc.input.help.testFilterCriteria": "選擇性地指定測試案例篩選準則。例如 'Owner=james&Priority=1'",
   "loc.input.label.runSettingsFile": "回合設定檔案",
-  "loc.input.help.runSettingsFile": "要搭配測試使用之 runsettings 或 testsettings 檔案的路徑。請使用 `$(agent.BuildDirectory)\\$(system.teamProject)` 存取專案資料夾。",
+  "loc.input.help.runSettingsFile": "要在測試中使用之 runsettings 或 testsettings 檔案的路徑。",
   "loc.input.label.overrideRunParams": "覆寫測試回合參數",
   "loc.input.help.overrideRunParams": "覆寫在 runsettings 檔案 TestRunParameters 區段中定義的參數。例如: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "已啟用程式碼涵蓋範圍",
@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "組態",
   "loc.input.help.configuration": "測試應該針對此組態而進行回報。若您已為建置工作定義組態變數，請將其使用於此。",
   "loc.input.label.testConfigurations": "測試組態",
-  "loc.input.help.testConfigurations": "選擇性地建立測試案例篩選器與 testconfiguration ID 間的關聯。語法: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;。例如: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "選擇性地建立測試案例篩選與測試組態識別碼間的關聯。語法: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;。例如: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "位於測試電腦下的應用程式",
   "loc.input.help.autMachineGroup": "以逗號分隔的清單，包含伺服器處理序 (如 W3WP.exe) 執行所在的電腦、輸出變數或電腦群組名稱"
 }

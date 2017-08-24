@@ -6,12 +6,17 @@
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.files": "Файлы",
   "loc.input.help.files": "Файлы, которые нужно отправить. Можно использовать подстановочные знаки. Пример: \"**\\*.zip\" для всех ZIP-файлов во всех вложенных папках.",
+  "loc.input.label.authType": "Способ проверки подлинности",
+  "loc.input.label.serviceEndpoint": "Конечная точка службы",
+  "loc.input.help.serviceEndpoint": "Конечная точка службы с учетными данными для проверки подлинности сервера.",
   "loc.input.label.username": "Имя пользователя",
   "loc.input.help.username": "Укажите имя пользователя для проверки подлинности сервера.",
   "loc.input.label.password": "Пароль",
   "loc.input.help.password": "Укажите пароль, используемый для проверки подлинности сервера. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
   "loc.input.label.url": "URL-адрес",
   "loc.input.help.url": "Укажите URL-адрес, по которому будут отправлены файлы. Каталог должен завершаться косой чертой. Возможные протоколы: \"DICT://\", \"FILE://\", \"FTP://\", \"FTPS://\", \"GOPHER://\", \"HTTP://\", \"HTTPS://\", \"IMAP://\", \"IMAPS://\", \"LDAP://\", \"LDAPS://\", \"POP3://\", \"POP3S://\", \"RTMP://\", \"RTSP://\", \"SCP://\", \"SFTP://\", \"SMTP://\", \"SMTPS://\", \"TELNET://\" и \"TFTP://\".",
+  "loc.input.label.remotePath": "Удаленный каталог",
+  "loc.input.help.remotePath": "Если задано, это вложенная папка на удаленном сервере для URL-адреса, указанного в учетных данных.",
   "loc.input.label.options": "Дополнительные аргументы",
   "loc.input.help.options": "Дополнительные аргументы, которые будут переданы в cURL.",
   "loc.input.label.redirectStderr": "Перенаправление стандартной ошибки на стандартный выход",
@@ -20,5 +25,7 @@
   "loc.messages.CurlFailed": "Сбой curl с ошибкой %s",
   "loc.messages.NoMatchingFilesFound": "Не найдены файлы, соответствующие шаблону поиска: %s.",
   "loc.messages.UploadingFiles": "Отправка файлов: %s",
-  "loc.messages.CurlNotFound": "curl не найдена в переменной среды PATH."
+  "loc.messages.CurlNotFound": "curl не найдена в переменной среды PATH.",
+  "loc.messages.NotAllFilesUploaded": "Отправлены не все файлы. Отправлено: %d; всего: %d",
+  "loc.messages.IncompleteEndpoint": "Конечная точка службы содержит не все обязательные поля."
 }

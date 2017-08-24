@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "ID d'équipe à 10 chiffres du portail des développeurs Apple à utiliser pour cette exportation.",
   "loc.input.label.exportOptionsPlist": "Fichier Plist d'options d'exportation",
   "loc.input.help.exportOptionsPlist": "Chemin d'un fichier plist permettant de configurer l'exportation de l'archive.",
-  "loc.input.label.xcode8AutomaticSigning": "Signature automatique Xcode 8",
-  "loc.input.help.xcode8AutomaticSigning": "Sélectionnez cette option si vous avez un projet Xcode 8 configuré pour la signature automatique.",
+  "loc.input.label.xcode8AutomaticSigning": "Signature automatique",
+  "loc.input.help.xcode8AutomaticSigning": "Sélectionnez cette option si vous avez un projet Xcode 8 ou Xcode 9 configuré pour la signature automatique.",
   "loc.input.label.teamId": "ID d'équipe",
   "loc.input.help.teamId": "Spécifiez l'ID d'équipe de développeurs à 10 chiffres. Cela est obligatoire, si vous êtes membre de plusieurs équipes de développement.",
   "loc.input.label.signMethod": "Remplacer avec",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "Échec de l'identification de la méthode d'exportation à utiliser automatiquement à partir du fichier d'archive. Cela peut entraîner des erreurs de build ou produire un package non valide. Affectez à 'Options d'exportation' la valeur 'Spécifier' ou 'Plist'.",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "Le fichier Plist d'options d'exportation n'existe pas sur %s. Indiquez le chemin d'un fichier Plist valide.",
   "loc.messages.SchemeRequiredForArchive": "Vous devez spécifier un modèle pour pouvoir générer le package à l'aide des commandes d'archivage et d'exportation xcodebuild.",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Vous devez spécifier un chemin d'espace de travail ou de projet pour pouvoir générer le package à l'aide des commandes d'archivage et d'exportation xcodebuild."
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Vous devez spécifier un chemin d'espace de travail ou de projet pour pouvoir générer le package à l'aide des commandes d'archivage et d'exportation xcodebuild.",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "Échec de la génération automatique d'un fichier Plist d'options d'exportation pour l'exportation d'un fichier IPA. Spécifiez un fichier Plist d'options d'exportation dans les options de package."
 }

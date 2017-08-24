@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "ID team a 10 cifre del portale Apple Developer da usare per questa esportazione.",
   "loc.input.label.exportOptionsPlist": "Plist opzioni esportazione",
   "loc.input.help.exportOptionsPlist": "Percorso di un file plist per configurare l'esportazione dell'archivio.",
-  "loc.input.label.xcode8AutomaticSigning": "Firma automatica Xcode 8",
-  "loc.input.help.xcode8AutomaticSigning": "Selezionare questa opzione se è presente un progetto Xcode 8 configurato per la firma automatica.",
+  "loc.input.label.xcode8AutomaticSigning": "Firma automatica",
+  "loc.input.help.xcode8AutomaticSigning": "Selezionare questa opzione se è presente un progetto Xcode 8 o Xcode 9 configurato per la firma automatica.",
   "loc.input.label.teamId": "ID team",
   "loc.input.help.teamId": "Consente di specificare l'ID team di sviluppo a 10 cifre. È obbligatorio se si è membri di più team di sviluppo.",
   "loc.input.label.signMethod": "Esegui override con",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "Non è stato possibile identificare il metodo di esportazione da usare automaticamente dal file di archivio. Potrebbero verificarsi errori durante la compilazione oppure il pacchetto prodotto potrebbe non essere valido. Impostare `Opzioni esportazione` su `Specifica` o `Plist`.",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "Il file plist delle opzioni di esportazione non esiste in %s. Specificare il percorso di un file plist valido.",
   "loc.messages.SchemeRequiredForArchive": "Per generare il pacchetto con xcodebuild archive ed export, è necessario specificare lo schema.",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Per generare il pacchetto con xcodebuild archive ed export, è necessario specificare il percorso dell'area di lavoro o del progetto."
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Per generare il pacchetto con xcodebuild archive ed export, è necessario specificare il percorso dell'area di lavoro o del progetto.",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "Non è stato possibile generare automaticamente un file plist delle opzioni di esportazione per esportare un IPA. Specificare un file plist delle opzioni di esportazione nelle opzioni del pacchetto."
 }

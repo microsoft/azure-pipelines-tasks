@@ -3,12 +3,14 @@
   "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "已检测到 NuGet 扩展加载程序路径(NUGET_EXTENSIONS_PATH 环境变量): %s",
   "loc.messages.NGCommon_UnableToFindTool": "无法找到工具 %s",
   "loc.messages.Info_AvailableVersions": "可用版本为: %s",
+  "loc.messages.Info_MatchingUrlWasFoundSettingAuth": "对以下 URI 使用身份验证信息:",
   "loc.messages.Info_ResolvedToolFromCache": "已从工具缓存 %s 中解析",
+  "loc.messages.Info_SavingTempConfig": "正在将 NuGet.config 保存到临时配置文件。",
   "loc.messages.Info_UsingVersion": "使用的版本: %s",
   "loc.messages.Info_UsingToolPath": "使用的工具路径: %s",
   "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "你将对版本字符串使用查询匹配。NuGet 更新到新版本时，可能发生行为的更改或重大更改。",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "找不到与输入 %s 匹配的版本",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "找不到 %s 的下载 URL",
   "loc.messages.Error_NuGetToolInstallerFailer": "工具安装失败: %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+  "loc.messages.Warning_UpdatingNuGetVersion": "正在将 NuGet.exe 版本更新到 %s (从 %s)。NuGet 更新到新版本时可能出现行为更改或重大更改。如果不希望发生这种情况，请在任务中取消选中“检查最新版本”选项。"
 }

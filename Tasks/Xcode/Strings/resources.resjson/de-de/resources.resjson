@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "Die 10-stellige Team-ID aus dem Apple Developer-Portal, die für diesen Export verwendet werden soll.",
   "loc.input.label.exportOptionsPlist": "Plist mit Exportoptionen",
   "loc.input.help.exportOptionsPlist": "Pfad zu einer plist-Datei zum Konfigurieren des Archivexports.",
-  "loc.input.label.xcode8AutomaticSigning": "Automatische Signatur in Xcode 8",
-  "loc.input.help.xcode8AutomaticSigning": "Wählen Sie diese Option, wenn Sie eine Xcode 8-Projekteinrichtung zum automatischen Signieren verwenden.",
+  "loc.input.label.xcode8AutomaticSigning": "Automatische Signatur",
+  "loc.input.help.xcode8AutomaticSigning": "Wählen Sie diese Option aus, wenn Sie eine Xcode 8- oder Xcode 9-Projekteinrichtung zum automatischen Signieren verwenden.",
   "loc.input.label.teamId": "Team-ID",
   "loc.input.help.teamId": "Geben Sie die 10-stellige Team-ID für Entwickler an. Diese ist erforderlich, wenn Sie Mitglied in mehreren Entwicklungsteams sind.",
   "loc.input.label.signMethod": "Außerkraftsetzung mithilfe von",
@@ -85,6 +85,7 @@
   "loc.messages.ProvProfileDeleteFailed": "Fehler beim Löschen des Bereitstellungsprofils %s.",
   "loc.messages.ExportMethodNotIdentified": "Fehler beim Identifizieren der Exportmethode, die automatisch beim Export aus der Archivdatei verwendet wird. Dies führt möglicherweise zu Buildfehlern oder zur Erstellung eines ungültigen Pakets. Legen Sie \"Exportoptionen\" auf \"Angeben\" oder auf \"Plist\" fest.",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "Die Plist-Datei mit den Exportoptionen ist unter \"%s\" nicht vorhanden. Geben Sie den Pfad zu einer gültigen Plist-Datei an.",
-  "loc.messages.SchemeRequiredForArchive": "Scheme needs to be specified to generate the package with xcodebuild archive and export.",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Der Arbeitsbereichs- oder Projektpfad muss angegeben werden, damit das Paket mit dem xcodebuild-Archiv und -Export erstellt werden kann."
+  "loc.messages.SchemeRequiredForArchive": "Das Schema muss angegeben werden, damit das Paket mit dem xcodebuild-Archiv und -Export erstellt werden kann.",
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Der Arbeitsbereichs- oder Projektpfad muss angegeben werden, damit das Paket mit dem xcodebuild-Archiv und -Export erstellt werden kann.",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "Fehler beim automatischen Erstellen einer Plist mit Exportoptionen zum Exportieren einer IPA. Geben Sie in den Paketoptionen eine Plist mit Exportoptionen an."
 }

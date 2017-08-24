@@ -58,7 +58,7 @@
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Установленная версия MSDeploy (%s) не поддерживается. Должна быть установлена версия 3 или более поздняя.",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Не удалось определить расположение MS Deploy при помощи реестра на компьютере (ошибка: %s).",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Пакет с указанным шаблоном не найден.",
-  "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Обнаружено несколько пакетов, соответствующих заданному шаблону. Сузьте шаблон поиска.",
+  "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "Указанному шаблону соответствует несколько пакетов. Уточните шаблон сопоставления.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Попробуйте снова развернуть веб-приложение, используя параметр app_offline.",
   "loc.messages.Configfiledoesntexists": "Файл конфигурации %s не существует.",
   "loc.messages.Failedtowritetoconfigfilewitherror": "Сбой записи в файл конфигурации %s. Ошибка: %s.",
@@ -68,5 +68,10 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "Ошибка XML-преобразования при преобразовании %s с помощью %s.",
   "loc.messages.EncodeNotSupported": "Обнаруженная кодировка файла %s — %s. Подстановка переменных не поддерживается для кодировки %s. Поддерживаемые кодировки: UTF-8 и UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "Не удается определить кодировку файла %s (typeCode: %s). Поддерживаемые кодировки: UTF-8 и UTF-16 LE.",
-  "loc.messages.ShortFileBufferError": "Слишком короткий файловый буфер для обнаружения типа кодировки: %s."
+  "loc.messages.ShortFileBufferError": "Слишком короткий файловый буфер для обнаружения типа кодировки: %s.",
+  "loc.messages.FailedToApplyTransformation": "Не удается применить преобразование для указанного пакета. Проверьте следующее.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Применено ли преобразование к созданному пакету MSBuild во время сборки. Если это так, удалите тег <DependentUpon> для каждой конфигурации в CSPROJ-файле и повторите сборку. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Убедитесь, что файлы конфигурации и преобразования находятся в одной и той же папке в пакете.",
+  "loc.messages.AutoParameterizationMessage": "Атрибуты ConnectionString в Web.config параметризованы по умолчанию. Обратите внимание, что преобразование не влияет на атрибуты connectionString, так как значение переопределяется во время развертывания файлом \"Parameters.xml\" или \"SetParameters.xml\". Вы можете отключить автоматическую параметризацию, задав /p:AutoParameterizationWebConfigConnectionStrings=False во время создания пакета MSBuild.",
+  "loc.messages.PackageDeploymentFailed": "Не удалось развернуть веб-пакет на веб-сайте IIS."
 }

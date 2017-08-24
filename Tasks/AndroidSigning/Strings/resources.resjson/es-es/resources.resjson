@@ -22,5 +22,10 @@
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "Seleccione si desea optimizar el paquete con zipalign. Esta acción disminuye la cantidad de RAM que consume una aplicación.",
   "loc.input.label.zipalignLocation": "Ubicación de Zipalign",
-  "loc.input.help.zipalignLocation": "Especifique opcionalmente la ubicación del ejecutable zipalign usado durante la firma. Se establece como valor predeterminado el ejecutable zipalign que se encuentra en la carpeta de la versión de Android SDK en que se compila la aplicación."
+  "loc.input.help.zipalignLocation": "Especifique opcionalmente la ubicación del ejecutable zipalign usado durante la firma. Se establece como valor predeterminado el ejecutable zipalign que se encuentra en la carpeta de la versión de Android SDK en que se compila la aplicación.",
+  "loc.messages.AndroidHomeNotSet": "La variable de entorno ANDROID_HOME no está definida para el usuario actual.",
+  "loc.messages.CouldNotFindZipalign": "No se encuentra la herramiena zipalign.",
+  "loc.messages.CouldNotFindZipalignInAndroidHome": "No se encuentra la herramienta zipalign en ANDROID_HOME: %s",
+  "loc.messages.JavaHomeNotSet": "La variable de entorno JAVA_HOME no está definida para el usuario actual.",
+  "loc.messages.NoMatchingFiles": "No se encontraron archivos coincidentes con el patrón de búsqueda: %s"
 }

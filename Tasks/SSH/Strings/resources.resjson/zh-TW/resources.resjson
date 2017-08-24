@@ -12,6 +12,8 @@
   "loc.input.help.commands": "指定要在遠端電腦上執行的殼層命令。請以新行輸入每個命令及其引數。若要同時執行多個命令，請在同一行中輸入命令並以分號分隔 (例如 cd /home/user/myFolder;build)。",
   "loc.input.label.scriptPath": "殼層指令碼路徑",
   "loc.input.help.scriptPath": "要在遠端電腦上執行之殼層指令碼檔的路徑。",
+  "loc.input.label.inline": "內嵌指令碼",
+  "loc.input.help.inline": "撰寫要在遠端電腦上執行的 Shell 指令碼。",
   "loc.input.label.args": "引數",
   "loc.input.help.args": "要傳遞至殼層指令碼的引數。",
   "loc.input.label.failOnStdErr": "在 STDERR 上失敗",

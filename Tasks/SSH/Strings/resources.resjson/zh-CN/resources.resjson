@@ -12,6 +12,8 @@
   "loc.input.help.commands": "指定要在远程计算机上运行的 shell 命令。在新行上输入每个命令及其参数。若要同时运行多个命令，请在同一行上输入它们，以分号隔开(例如 cd /home/user/myFolder;build)。",
   "loc.input.label.scriptPath": "Shell 脚本路径",
   "loc.input.help.scriptPath": "要在远程计算机上运行的 shell 脚本文件的路径。",
+  "loc.input.label.inline": "内联脚本",
+  "loc.input.help.inline": "编写要在远程计算机上运行的 shell 脚本。",
   "loc.input.label.args": "参数",
   "loc.input.help.args": "要传递给 shell 脚本的参数。",
   "loc.input.label.failOnStdErr": "STDERR 故障",

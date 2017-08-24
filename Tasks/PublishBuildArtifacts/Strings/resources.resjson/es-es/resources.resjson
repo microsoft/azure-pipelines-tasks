@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "Tipo de artefacto que se va a crear.",
   "loc.input.label.TargetPath": "Ruta de acceso",
   "loc.input.help.TargetPath": "Recurso compartido de archivos en el que copiar los archivos",
+  "loc.input.label.Parallel": "Copia en paralelo",
+  "loc.input.help.Parallel": "True para habilitar la copia en paralelo.",
+  "loc.input.label.ParallelCount": "Recuento de elementos en paralelo",
+  "loc.input.help.ParallelCount": "Paralelismo para llevar a cabo la copia. Debe ser un valor entre 1 y 128.",
   "loc.messages.ErrorFileShareLinux": "No se pueden publicar artefactos de un agente OSX o Linux en un recurso compartido de archivos. Puede cambiar el tipo de artefacto a servidor o usar un agente de Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "Esta tarea se admite solo en un trabajo de compilación.",
-  "loc.messages.PublishBuildArtifactsFailed": "Error al publicar artefactos de compilación: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "Esta tarea solo se puede usar para publicar en el destino de servidor en un trabajo de compilación.",
+  "loc.messages.PublishBuildArtifactsFailed": "Error al publicar artefactos de compilación: %s",
+  "loc.messages.UnexpectedParallelCount": "Recuento de elementos en paralelo no esperado: \"%s\". Especifique un número entre 1 y 128."
 }

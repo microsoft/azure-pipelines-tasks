@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[更多資訊](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "建置、推送或執行 Docker 映像，或執行 Docker 命令",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "組建、推送或執行 Docker 映像，或執行 Docker 命令。工作可用於 Docker 或 Azure Container 登錄。",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "進階選項",
   "loc.input.label.containerregistrytype": "容器登錄類型",

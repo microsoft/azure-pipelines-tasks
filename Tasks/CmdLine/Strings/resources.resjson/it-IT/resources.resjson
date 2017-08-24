@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "Riga di comando",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Consente di eseguire una riga di comando con argomenti",
-  "loc.instanceNameFormat": "Esegui $(filename)",
+  "loc.description": "È un'anteprima anticipata. Consente di eseguire uno script da riga di comando con cmd.exe in Windows e usare bash in macOS e Linux.",
+  "loc.instanceNameFormat": "Script da riga di comando",
+  "loc.releaseNotes": "È un'anteprima anticipata. Coerenza di attività script. È stato aggiunto il supporto di più righe.",
   "loc.group.displayName.advanced": "Avanzate",
-  "loc.input.label.filename": "Strumento",
-  "loc.input.help.filename": "Nome dello strumento da eseguire. Lo strumento deve essere disponibile nel percorso. Facoltativamente, è possibile specificare un percorso completo, basato tuttavia su quello presente nell'agente.<br/> Nota: se si vuole che il percorso sia relativo al repository, è possibile usare **$(Build.SourcesDirectory)**\\\\.",
-  "loc.input.label.arguments": "Argomenti",
-  "loc.input.help.arguments": "Argomenti passati allo strumento. Usare le virgolette doppie come caratteri di escape per gli spazi.",
-  "loc.input.label.workingFolder": "Cartella di lavoro",
-  "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
-  "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError.",
-  "loc.messages.CmdLineReturnCode": "%s terminato. Codice restituito: %d",
-  "loc.messages.CmdLineFailed": "%s non riuscito. Errore: %s"
+  "loc.input.label.script": "Script",
+  "loc.input.label.workingDirectory": "Directory di lavoro",
+  "loc.input.label.failOnStderr": "Interrompi in caso di errore standard",
+  "loc.input.help.failOnStderr": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError.",
+  "loc.messages.GeneratingScript": "Generazione dello script.",
+  "loc.messages.JS_ExitCode": "Bash terminato con codice '%s'.",
+  "loc.messages.JS_Stderr": "Bash ha scritto una o più righe nel flusso di errore standard.",
+  "loc.messages.PS_ExitCode": "Cmd.exe terminato con codice '{0}'.",
+  "loc.messages.PS_UnableToDetermineExitCode": "Eccezione imprevista. Non è possibile determinare il codice di uscita da cmd.exe."
 }

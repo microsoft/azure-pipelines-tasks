@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[詳細](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "複数コンテナーの Docker アプリケーションをビルド、プッシュ、実行します",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "複数コンテナーの Docker アプリケーションをビルド、プッシュ、実行します。タスクは、Docker または Azure Container Registry で使用できます。",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.containerregistrytype": "コンテナー レジストリの種類",

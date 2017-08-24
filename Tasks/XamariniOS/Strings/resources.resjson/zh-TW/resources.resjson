@@ -20,7 +20,7 @@
   "loc.input.label.args": "引數",
   "loc.input.help.args": "應該用於建置的其他命令列引數。",
   "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "組建會在其中執行的工作目錄。若為空白，會使用儲存機制的根目錄。",
+  "loc.input.help.cwd": "組建會在其中執行的工作目錄。若為空白，會使用存放庫的根目錄。",
   "loc.input.label.buildTool": "建置工具",
   "loc.input.label.mdtoolLocation": "建置工具路徑",
   "loc.input.help.mdtoolLocation": "(選擇性) 提供 xbuild (Xamarin Studio Mono 建置工具) 或 MSBuild (Visual Studio for Mac 建置工具) 的路徑。若保留空白，將會使用預設的 xbuild 或 MSBuild 路徑。",

@@ -1,9 +1,10 @@
 {
-  "loc.friendlyName": "IIS WebApp 管理(预览)",
+  "loc.friendlyName": "IIS Web 应用管理(预览)",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "创建或更新网站、Web 应用、虚拟目录和应用程序池",
   "loc.instanceNameFormat": "管理 $(IISDeploymentType)",
   "loc.group.displayName.Website": "IIS 网站",
+  "loc.group.displayName.IISBindings": "IIS 绑定",
   "loc.group.displayName.ApplicationPoolForWebsite": "IIS 应用程序池",
   "loc.group.displayName.IISWebsiteAuthentication": "IIS 身份验证",
   "loc.group.displayName.ApplicationPool": "IIS 应用程序池",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "输入网站的主机名(或域名)。<br>如果指定了主机名，则客户端必需使用主机名而不能使用 IP 地址访问该网站。<br>",
   "loc.input.label.SSLCertThumbPrint": "SSL 证书指纹",
   "loc.input.help.SSLCertThumbPrint": "提供安全套接字层证书的指纹，它是 40 个字符的十六进制字符串，网站可将其用于 HTTPS 通信。在此之前 SSL 证书应该已经安装到计算机的本地计算机的个人存储中。",
+  "loc.input.label.Bindings": "添加绑定",
+  "loc.input.help.Bindings": "单击扩展 [...] 按钮为网站添加绑定。",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "创建或更细应用池",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "若要创建或更新应用程序池，请选择此选项。选中此选项后，将在指定的应用程序池中创建网站。",
   "loc.input.label.ConfigureAuthenticationForWebsite": "配置身份验证",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "提供 IIS 应用程序池的名称。",
   "loc.input.label.AppCmdCommands": "其他 appcmd.exe 命令",
   "loc.input.help.AppCmdCommands": "输入其他 AppCmd.exe 命令。如果命令不止一个，请使用行分隔符，例如 <br/>list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.messages.InvalidSslThumbprint": "指纹无效。指纹的长度非 40 个字符或包含无效字符。",
   "loc.messages.InvalidVirtualPath": "虚拟路径应该以 / 开头",
   "loc.messages.InvalidIISDeploymentType": "无效的 IIS 部署类型: {0}",
   "loc.messages.InvalidActionIISWebsite": "选择的操作“{0}”对 IIS 网站无效。",
   "loc.messages.InvalidActionIISAppPool": "选择的操作“{0}”对 IIS 应用程序池无效。",
   "loc.messages.PackageDeploymentFailed": "未能将 Web 程序包部署到 IIS 网站。",
-  "loc.messages.SSLCertWarningInvalidCharacters": "SSL 证书指纹包含非十六进制字符。去除所有的非十六进制字符。"
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "Https 绑定中缺少 SSL 证书指纹: ( {0}/{1}:{2} )",
+  "loc.messages.InvalidSslThumbprintInBinding": "绑定( {0}/{1}:{2} )中的指纹无效。长度不是 40 个字符或包含无效字符。",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "SSL 证书指纹在绑定中包含非十六进制字符: ( {0}/{1}:{2} )。正在剪裁所有非十六进制字符。"
 }

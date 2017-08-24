@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",
   "loc.input.label.ConnectedServiceName": "Azure クラシック サブスクリプション",
   "loc.input.help.ConnectedServiceName": "PowerShell を実行する前に構成する Azure クラシック サブスクリプション",
-  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceNameARM": "PowerShell を実行する前に構成する Azure Resource Manager サブスクリプション",
   "loc.input.label.ScriptType": "スクリプトの種類",
   "loc.input.help.ScriptType": "スクリプトの種類: ファイル パスまたはインライン スクリプト",
@@ -16,6 +16,11 @@
   "loc.input.help.Inline": "実行するスクリプトを入力します。",
   "loc.input.label.ScriptArguments": "スクリプトの引数",
   "loc.input.help.ScriptArguments": "PowerShell に渡す追加のパラメーター。順序によるパラメーターまたは名前指定されたパラメーターのいずれかです。",
+  "loc.input.label.TargetAzurePs": "Azure PowerShell バージョン",
+  "loc.input.help.TargetAzurePs": "ホストされているエージェントの場合、サポートされる Azure PowerShell バージョンは、2.1.0 (Hosted VS2017 キュー)、3.6.0 (Hosted キュー) です。\nエージェントで利用可能な最新のバージョンを選ぶには、\"インストールされている最新バージョン\" を選択します。\n\nプライベート エージェントの場合は、優先される Azure PowerShell のバージョンを、\"バージョンを指定する\" を使用して指定できます",
+  "loc.input.label.CustomTargetAzurePs": "優先される Azure PowerShell バージョン",
+  "loc.input.help.CustomTargetAzurePs": "優先される Azure PowerShell バージョンは、適切なセマンティック バージョン (例: 1.2.3) である必要があります。2.\\*、2.3.\\* などの正規表現はサポートされません",
   "loc.messages.InvalidScriptArguments0": "スクリプトの引数 '{0}' が無効です。改行は使用できません。",
-  "loc.messages.InvalidScriptPath0": "スクリプト パス '{0}' が無効です。無効なパス文字が指定されました。"
+  "loc.messages.InvalidScriptPath0": "スクリプト パス '{0}' が無効です。無効なパス文字が指定されました。",
+  "loc.messages.InvalidAzurePsVersion": "指定した Azure PowerShell バージョン '{0}' は、形式が正しくありません。形式をご確認ください。正しい形式の例は、1.0.1 です"
 }

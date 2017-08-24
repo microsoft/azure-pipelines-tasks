@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Altre informazioni](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Consente di compilare, effettuare il push o eseguire immagini Docker oppure di eseguire un comando di Docker",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Consente di compilare, effettuare il push o eseguire immagini Docker oppure di eseguire un comando di Docker. È possibile usare l'attività con il registro contenitori di Azure o Docker.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Opzioni avanzate",
   "loc.input.label.containerregistrytype": "Tipo di registro contenitori",

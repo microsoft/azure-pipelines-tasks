@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "10-значный идентификатор Team ID, полученный на портале для разработчиков Apple Developer Portal и используемый в рамках этого экспорта.",
   "loc.input.label.exportOptionsPlist": "PLIST-файл параметров экспорта",
   "loc.input.help.exportOptionsPlist": "Путь к PLIST-файлу с настройками экспорта архивов.",
-  "loc.input.label.xcode8AutomaticSigning": "Автоматическое подписывание Xcode 8",
-  "loc.input.help.xcode8AutomaticSigning": "Выберите этот параметр, если проекты Xcode 8 настроены на автоматическое подписывание.",
+  "loc.input.label.xcode8AutomaticSigning": "Автоматическое подписывание",
+  "loc.input.help.xcode8AutomaticSigning": "Выберите этот параметр, если для проектов Xcode 8 или Xcode 9 настроено автоматическое подписывание.",
   "loc.input.label.teamId": "Идентификатор Team ID",
   "loc.input.help.teamId": "Укажите 10-значный идентификатор Team ID команды разработчиков. Он обязателен, если вы состоите в нескольких командах.",
   "loc.input.label.signMethod": "Переопределение с использованием",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "Не удалось определить способ экспорта для автоматического использования из файла архива. Это может привести к ошибкам во время сборки или созданию недопустимого пакета. Задайте для параметров экспорта значение \"Указать\" или \"Plist\".",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "PLIST-файл параметров экспорта не найден в %s. Укажите путь к допустимому PLIST-файлу.",
   "loc.messages.SchemeRequiredForArchive": "Для создания пакета с архивом xcodebuild и экспортом необходимо указать схему.",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Для создания пакета с архивом xcodebuild и экспортом необходимо указать путь к рабочей области или проекту."
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "Для создания пакета с архивом xcodebuild и экспортом необходимо указать путь к рабочей области или проекту.",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "Не удалось автоматически создать PLIST-файл параметров экспорта для экспорта IPA. Укажите PLIST-файл параметров экспорта в параметрах пакета."
 }

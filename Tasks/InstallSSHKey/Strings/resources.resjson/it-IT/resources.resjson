@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Installa chiave SSH",
+  "loc.helpMarkDown": "",
+  "loc.description": "Installa una chiave SSH prima di una compilazione o una versione",
+  "loc.instanceNameFormat": "Installa una chiave SSH",
+  "loc.input.label.hostName": "Voce known_hosts",
+  "loc.input.help.hostName": "Voce di questa chiave SSH per il file known_hosts.",
+  "loc.input.label.sshPublicKey": "Chiave SSH pubblica",
+  "loc.input.help.sshPublicKey": "Contenuto della chiave SSH pubblica.",
+  "loc.input.label.sshPassphrase": "Passphrase SSH",
+  "loc.input.help.sshPassphrase": "Passphrase per la chiave SSH, se presente.",
+  "loc.input.label.sshKeySecureFile": "Chiave SSH",
+  "loc.input.help.sshKeySecureFile": "Consente di selezionare la chiave SSH caricata in `File protetti` da installare nell'agente.",
+  "loc.messages.SSHKeyAlreadyInstalled": "La chiave SSH è già installata.",
+  "loc.messages.SSHPublicKeyMalformed": "Non è stato possibile ottenere la parte base64 della chiave SSH pubblica.",
+  "loc.messages.SSHKeyInstallFailed": "Non è stato possibile installare la chiave SSH.",
+  "loc.messages.CannotResetKnownHosts": "Non è possibile ripristinare i valori originali del file known_hosts."
+}

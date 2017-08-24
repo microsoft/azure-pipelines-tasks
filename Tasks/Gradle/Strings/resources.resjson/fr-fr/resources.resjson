@@ -25,8 +25,8 @@
   "loc.input.help.classFilesDirectories": "Liste de répertoires séparés par une virgule, contenant les fichiers de classe et d'archive (JAR, WAR, etc.). La couverture du code est signalée pour les fichiers de classe dans ces répertoires. La recherche inclut normalement les classes sous 'build/classes/main', qui représente le répertoire de classes par défaut des builds Gradle",
   "loc.input.label.classFilter": "Filtres d'inclusion/exclusion de classes",
   "loc.input.help.classFilter": "Liste de filtres séparés par une virgule, permettant d'inclure ou d'exclure des classes dans la collecte de la couverture du code. Exemple : +:com.*,+:org.*,-:my.app*.*.",
-  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
-  "loc.input.help.failIfCoverageEmpty": "Fail the build if code coverage did not produce any results to publish.",
+  "loc.input.label.failIfCoverageEmpty": "Échec quand les résultats de la couverture du code sont manquants",
+  "loc.input.help.failIfCoverageEmpty": "Échec de la build si la couverture du code ne produit aucun résultat à publier.",
   "loc.input.label.javaHomeSelection": "Définir JAVA_HOME par",
   "loc.input.help.javaHomeSelection": "Définit JAVA_HOME en sélectionnant une version de JDK qui sera découverte au moment des builds ou en tapant le chemin de JDK.",
   "loc.input.label.jdkVersion": "Version de JDK",
@@ -47,6 +47,8 @@
   "loc.input.help.sqProjectKey": "Clé unique du projet SonarQube, à savoir sonar.projectKey.",
   "loc.input.label.sqProjectVersion": "Version du projet SonarQube",
   "loc.input.help.sqProjectVersion": "Version du projet SonarQube, à savoir sonar.projectVersion.",
+  "loc.input.label.sqGradlePluginVersion": "Version du plug-in SonarQube Gradle",
+  "loc.input.help.sqGradlePluginVersion": "Version du plug-in SonarQube Gradle à utiliser. Vous pouvez accéder à l'ensemble des versions disponibles sur https://plugins.gradle.org/plugin/org.sonarqube.",
   "loc.input.label.sqDbDetailsRequired": "La version du serveur SonarQube est antérieure à la version 5.2",
   "loc.input.help.sqDbDetailsRequired": "Si vous utilisez un serveur SonarQube 5.1 ou antérieur, vous devez spécifier les détails de connexion de base de données.",
   "loc.input.label.sqDbUrl": "Chaîne de connexion à la base de données",
@@ -86,7 +88,7 @@
   "loc.messages.sqAnalysis_NoUnitsFound": "La liste des unités de mesure SonarQube n'a pas pu être récupérée sur le serveur.",
   "loc.messages.sqAnalysis_NoReportTask": "report-task.txt introuvable. Cause possible : L'analyse SonarQube ne s'est pas effectuée correctement.",
   "loc.messages.sqAnalysis_MultipleReportTasks": "Plusieurs fichiers report-task.txt trouvés. Le premier fichier est choisi. Le résumé de la génération et l'interrupteur de génération ne sont peut-être pas exacts. Cause possible : plusieurs analyses SonarQube pendant la même génération, ce qui n'est pas pris en charge.",
-  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s a trouvé %d violations dans %d fichier.",
+  "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s a trouvé %d violations dans %d fichiers.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s a trouvé %d violations dans 1 fichier.",
   "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s a trouvé 1 violation dans 1 fichier.",
   "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s n'a trouvé aucune violation.",
@@ -95,5 +97,5 @@
   "loc.messages.codeAnalysisDisabled": "L'analyse du code est désactivée en dehors de l'environnement de build. Valeur introuvable pour %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Localiser JAVA_HOME pour Java %s %s",
   "loc.messages.FailedToLocateSpecifiedJVM": "Échec de la localisation de la version spécifiée du JDK. Vérifiez que la variable d'environnement '%s' existe et que sa valeur correspond à l'emplacement du JDK approprié.",
-  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
+  "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier."
 }

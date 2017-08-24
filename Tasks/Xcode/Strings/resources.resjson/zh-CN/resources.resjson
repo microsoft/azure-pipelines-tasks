@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "Apple 开发人员门户中用于此导出的 10 位团队 ID。",
   "loc.input.label.exportOptionsPlist": "导出选项 Plist",
   "loc.input.help.exportOptionsPlist": "配置存档导出的 plist 文件的路径。",
-  "loc.input.label.xcode8AutomaticSigning": "Xcode 8 自动签名",
-  "loc.input.help.xcode8AutomaticSigning": "如果 Xcode 8 项目设置为自动签名，请选择此选项。",
+  "loc.input.label.xcode8AutomaticSigning": "自动签名",
+  "loc.input.help.xcode8AutomaticSigning": "如果 Xcode 8 或 Xcode 9 项目配置为自动签名，请选择此选项。",
   "loc.input.label.teamId": "团队 ID",
   "loc.input.help.teamId": "指定 10 位开发人员团队 ID。如果你是多个开发团队的成员，这是必需的。",
   "loc.input.label.signMethod": "替代，使用",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "未能识别从存档文件自动使用的导出方法。这可能会在生成或产生无效包的过程中产生错误。将“导出选项”设置为“指定”或 \"Plist\"。",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "导出选项 Plist 文件不存在于 %s。请提供有效 Plist 文件的路径。",
   "loc.messages.SchemeRequiredForArchive": "需要指定方案，以使用 xcodebuild 存档和导出生成包。",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "需要指定工作区或项目路径，以使用 xcodebuild 存档和导出生成包。"
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "需要指定工作区或项目路径，以使用 xcodebuild 存档和导出生成包。",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "未能自动生成导出选项 Plist 以导出 IPA。请在包选项中指定导出选项 Plist。"
 }

@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "Criterios de filtro de la prueba",
   "loc.input.help.testFilterCriteria": "Especifique opcionalmente los criterios de filtro de caso de prueba. Por ejemplo, `Owner=james&Priority=1`.",
   "loc.input.label.runSettingsFile": "Archivo de configuración de ejecución",
-  "loc.input.help.runSettingsFile": "Ruta de acceso al archivo runsettings que se va a usar en las pruebas. Use '$(agent.BuildDirectory)\\$(system.teamProject)' para tener acceso a la carpeta del proyecto.",
+  "loc.input.help.runSettingsFile": "Ruta de acceso al archivo runsettings o testsettings que se va a usar en las pruebas.",
   "loc.input.label.overrideRunParams": "Reemplazar parámetros de ejecución de prueba",
   "loc.input.help.overrideRunParams": "Reemplace los parámetros definidos en la sección TestRunParameters del archivo runsettings. Por ejemplo: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Configuración",
   "loc.input.help.configuration": "Configuración con la que se debe informar de las pruebas. Si tiene una variable de configuración definida en la tarea de compilación, úsela aquí.",
   "loc.input.label.testConfigurations": "Configuraciones de prueba",
-  "loc.input.help.testConfigurations": "Asocie opcionalmente un filtro de caso de prueba a un id. de configuración de prueba. Sintaxis: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. Por ejemplo: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Si lo desea, puede asociar un filtro de casos de prueba a un id. de configuración de prueba. Sintaxis: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. Por ejemplo: \"FullyQualifiedName~Chrome:12\"",
   "loc.input.label.autMachineGroup": "Aplicación en las máquinas de prueba",
   "loc.input.help.autMachineGroup": "Lista de máquinas o variable de salida o nombre de grupo de equipo en los procesos del servidor de separados por comas, como W3WP.exe, en ejecución"
 }
