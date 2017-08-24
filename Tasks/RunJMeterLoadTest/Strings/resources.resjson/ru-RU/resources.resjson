@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Облачный нагрузочный тест Apache JMeter",
-  "loc.helpMarkDown": "Эту задачу можно использовать для активации нагрузочного теста Apache JMeter в облаке с помощью Visual Studio Team Services. [Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=784929).",
+  "loc.helpMarkDown": "Эту задачу можно использовать для активации нагрузочного теста Apache JMeter в облаке с помощью Visual Studio Team Services. [Подробнее](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "Запускает нагрузочный тест Apache JMeter в облаке",
   "loc.instanceNameFormat": "Тест Apache JMeter $(LoadTest)",
   "loc.input.label.connectedServiceName": "Подключение к Visual Studio Team Services",

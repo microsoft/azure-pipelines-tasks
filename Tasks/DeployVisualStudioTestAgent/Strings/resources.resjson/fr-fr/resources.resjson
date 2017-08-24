@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Déployer et configurer l'agent de test pour exécuter des tests sur un ensemble de machines",
   "loc.instanceNameFormat": "Déployer TestAgent sur $(testMachineGroup)",
+  "loc.releaseNotes": "<ul><li>Prise en charge de Visual Studio Test Agent 2017 : vous pouvez désormais déployer et exécuter des tests à l'aide de plusieurs versions de Visual Studio Test Agent. Les versions 2015 et 2017 sont prises en charge.</li><li>Les groupes de machines créés à partir du hub de test ne sont plus pris en charge. Vous pouvez continuer à utiliser une liste de machines ou de groupes de ressources Azure.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Machines de test",
   "loc.group.displayName.agentConfiguration": "Configuration de l'agent",
   "loc.group.displayName.advanced": "Avancé",
@@ -23,11 +24,13 @@
   "loc.input.label.runAsProcess": "Exécuter les tests de l'interface utilisateur",
   "loc.input.help.runAsProcess": "Indique si l'agent de test doit s'exécuter en tant que processus interactif, nécessaire pour les tests codés de l'interface utilisateur.",
   "loc.input.label.isDataCollectionOnly": "Activer la collecte de données uniquement",
-  "loc.input.help.isDataCollectionOnly": "Indiquez éventuellement si l'agent de test doit être utilisé uniquement pour la collecte de données et non pour l'exécution des tests. Généralement effectué sur l'application du groupe d'ordinateurs test(AUT).",
+  "loc.input.help.isDataCollectionOnly": "Indiquez éventuellement si l'agent de test doit être utilisé uniquement pour la collecte de données et non pour l'exécution des tests. Généralement effectué sur l'application du groupe de machines de test(AUT).",
   "loc.input.label.testPlatform": "Version de l'agent de test",
   "loc.input.help.testPlatform": "Version de Visual Studio Test Agent à utiliser. Choisissez la version appropriée, qui correspond à la version de VS ayant servi à la génération des binaires de test.",
   "loc.input.label.agentLocation": "Emplacement de l'agent de test",
-  "loc.input.help.agentLocation": "Indiquez éventuellement le chemin de vstf_testagent.exe sur un réseau ou un emplacement local. Si aucun chemin n'est indiqué, le fichier est téléchargé automatiquement à partir du Centre de téléchargement. Programme d'installation de Test Agent 2015 Update 3 via 'https://go.microsoft.com/fwlink/?LinkId=827840'. Programme d'installation de Test Agent 2017 via 'https://aka.ms/vs/15/release/vs_TestAgent.exe'",
+  "loc.input.help.agentLocation": "Indiquez éventuellement le chemin de vstf_testagent.exe à partir d'un emplacement réseau ou local. Si aucun chemin n'est indiqué, le fichier est téléchargé automatiquement à partir du Centre de téléchargement. Programme d'installation de Test Agent 2015 Update 3 via 'https://go.microsoft.com/fwlink/?LinkId=827840'. Programme d'installation de Test Agent 2017 à partir de 'https://aka.ms/vs/15/release/vs_TestAgent.exe'. Consultez 'https://aka.ms/testagentlocation' pour plus d'informations sur l'utilisation des programmes d'installation hors connexion.",
   "loc.input.label.updateTestAgent": "Mettre à jour l'agent de test",
-  "loc.input.help.updateTestAgent": "Si Test Agent est déjà déployé sur une machine, cette option permet de vérifier si une mise à jour est disponible pour la version spécifique à Test Agent."
+  "loc.input.help.updateTestAgent": "Si Test Agent est déjà déployé sur une machine, cette option permet de vérifier si une mise à jour est disponible pour la version spécifique à Test Agent.",
+  "loc.messages.InvalidAccessToken": "Impossible de générer le jeton d'accès personnel pour l'utilisateur. Contactez l'administrateur de collection de projets",
+  "loc.messages.NotSupportedWithParallel": "Le déploiement de Visual Studio Test Agent n'est pas pris en charge par l'exécution parallèle de type multi-machine/multi-configuration. Pour plus d'informations, consultez le blog https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/"
 }

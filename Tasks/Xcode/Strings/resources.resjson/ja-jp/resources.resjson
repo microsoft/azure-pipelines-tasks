@@ -32,8 +32,8 @@
   "loc.input.help.exportTeamId": "このエクスポートに使用する、Apple Developer ポータルからの 10 桁のチーム ID。",
   "loc.input.label.exportOptionsPlist": "エクスポート オプションの Plist",
   "loc.input.help.exportOptionsPlist": "アーカイブのエクスポートを構成する plist ファイルへのパス。",
-  "loc.input.label.xcode8AutomaticSigning": "Xcode 8 自動署名",
-  "loc.input.help.xcode8AutomaticSigning": "自動署名に関する Xcode 8 プロジェクトのセットアップがある場合に選択します。",
+  "loc.input.label.xcode8AutomaticSigning": "自動署名",
+  "loc.input.help.xcode8AutomaticSigning": "自動署名用に構成した Xcode 8 または Xcode 9 プロジェクトがある場合に選択します。",
   "loc.input.label.teamId": "チーム ID",
   "loc.input.help.teamId": "10 桁の開発者チーム ID を指定します。複数の開発チームのメンバーである場合、この ID は必須です。",
   "loc.input.label.signMethod": "次のものを使用して上書き",
@@ -86,5 +86,6 @@
   "loc.messages.ExportMethodNotIdentified": "自動的に使用されるアーカイブ ファイルからのエクスポート方法を特定できませんでした。無効なパッケージをビルドまたは作成しようとしてエラーが発生した可能性があります。[エクスポート オプション] を [指定] または [Plist] に設定してください。",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "エクスポート オプションの Plist ファイルが %s に存在しません。有効な Plist ファイルへのパスを指定してください。",
   "loc.messages.SchemeRequiredForArchive": "xcodebuild アーカイブおよびエクスポートを使用してパッケージを生成するには、スキームを指定する必要があります。",
-  "loc.messages.WorkspaceOrProjectRequiredForArchive": "xcodebuild アーカイブおよびエクスポートを使用してパッケージを生成するには、ワークスペースまたはプロジェクト パスを指定する必要があります。"
+  "loc.messages.WorkspaceOrProjectRequiredForArchive": "xcodebuild アーカイブおよびエクスポートを使用してパッケージを生成するには、ワークスペースまたはプロジェクト パスを指定する必要があります。",
+  "loc.messages.FailedToGenerateExportOptionsPlist": "IPA をエクスポートするためのエクスポート オプションの Plist を自動的に生成できませんでした。[パッケージのオプション] でエクスポート オプションの Plist を指定してください。"
 }

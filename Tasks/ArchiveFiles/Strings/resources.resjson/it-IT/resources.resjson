@@ -18,7 +18,7 @@
   "loc.input.help.replaceExistingArchive": "Se è presente un archivio esistente, specifica se sovrascriverlo. In caso contrario, i file verranno aggiunti all'archivio.",
   "loc.messages.Filename": "file=%s",
   "loc.messages.TarExists": "Il file TAR intermedio %s esiste già. Verrà effettuato il tentativo di aggiungervi file.",
-  "loc.messages.RemoveBeforeCreation": "rimozione del file di archivio esistente prima della creazione: %s",
+  "loc.messages.RemoveBeforeCreation": "Rimozione del file di archivio esistente prima della creazione: %s",
   "loc.messages.AlreadyExists": "Il file di archivio %s esiste già. Verrà effettuato il tentativo di aggiungervi file.",
   "loc.messages.ArchiveCreationFailedWithError": "La creazione dell'archivio non è riuscita per il file di archivio: %s \nCodice: %d \nStdout: %s \nStderr: %s \nErrore: %s;",
   "loc.messages.ArchiveFileExistsButNotAFile": "Il file di archivio specificato %s esiste già e non è un file.",

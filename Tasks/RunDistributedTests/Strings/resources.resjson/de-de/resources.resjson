@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "Testfilterkriterien",
   "loc.input.help.testFilterCriteria": "Geben Sie optional die Testfall-Filterkriterien an, z. B. \"Owner=james&Priority=1\".",
   "loc.input.label.runSettingsFile": "Testlaufeinstellungsdatei",
-  "loc.input.help.runSettingsFile": "Der Pfad zur Datei mit den Ausführungs- oder Testeinstellungen, die mit den Tests verwendet werden soll. Verwenden Sie \"$(agent.BuildDirectory)\\$(system.teamProject)\", um auf den Projektordner zuzugreifen.",
+  "loc.input.help.runSettingsFile": "Pfad zur Ausführungs- oder Testeinstellungsdatei, die bei den Tests verwendet werden soll.",
   "loc.input.label.overrideRunParams": "Testlaufparameter überschreiben",
   "loc.input.help.overrideRunParams": "Überschreiben Sie Parameter, die im Abschnitt \"TestRunParameters\" der Datei mit den Ausführungseinstellungen definiert sind, z. B. \"AppURL=$(DeployURL);Port=8080\".",
   "loc.input.label.codeCoverageEnabled": "Code Coverage aktiviert",
@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Konfiguration",
   "loc.input.help.configuration": "Konfiguration, für die Testberichte erstellt werden sollen. Wenn Sie eine Variable für die Konfiguration in Ihrer Buildaufgabe erstellt haben, verwenden Sie diese hier.",
   "loc.input.label.testConfigurations": "Testkonfigurationen",
-  "loc.input.help.testConfigurations": "Ordnen Sie optional einen Testfallfilter für eine Testkonfigurations-ID zu. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;., z. B. \"FullyQualifiedName~Chrome:12\".",
+  "loc.input.help.testConfigurations": "Ordnen Sie optional einen Testfallfilter für eine Testkonfigurations-ID zu. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. Beispiel: \"FullyQualifiedName~Chrome:12\"",
   "loc.input.label.autMachineGroup": "Computer (zu testende Anwendung)",
   "loc.input.help.autMachineGroup": "Eine durch Kommas getrennte Liste mit Computern, auf denen Serverprozesse wie W3WP.exe ausgeführt werden, oder eine Ausgabevariable bzw. ein Computergruppenname."
 }

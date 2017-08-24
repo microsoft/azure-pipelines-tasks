@@ -1,9 +1,10 @@
 {
-  "loc.friendlyName": "Gestione WebApp IIS (anteprima)",
+  "loc.friendlyName": "Gestione app Web IIS (anteprima)",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "Consente di creare o aggiornare un sito Web, un'app Web, directory virtuali e il pool di applicazioni",
   "loc.instanceNameFormat": "Gestisci $(IISDeploymentType)",
   "loc.group.displayName.Website": "Sito Web IIS",
+  "loc.group.displayName.IISBindings": "Binding IIS",
   "loc.group.displayName.ApplicationPoolForWebsite": "Pool di applicazioni IIS",
   "loc.group.displayName.IISWebsiteAuthentication": "Autenticazione IIS",
   "loc.group.displayName.ApplicationPool": "Pool di applicazioni IIS",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "Immettere un nome host o un nome di dominio per il sito Web. <br>Se si specifica un nome host, per accedere al sito Web, i client devono usare il nome host invece dell'indirizzo IP.<br>",
   "loc.input.label.SSLCertThumbPrint": "Identificazione digitale del certificato SSL",
   "loc.input.help.SSLCertThumbPrint": "Consente di specificare la stringa di 40 caratteri esadecimali dell'identificazione personale del certificato SSL (Secure Socket Layer) che verrà usato dal sito Web per le comunicazioni HTTPS. Il certificato SSL deve essere già installato nel computer e presente nell'archivio personale del computer locale.",
+  "loc.input.label.Bindings": "Aggiungi binding",
+  "loc.input.help.Bindings": "Fare clic sul pulsante [...] dell'estensione per aggiungere i binding per il sito Web.",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "Crea o aggiorna pool di applicazioni",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Consente di selezionare l'opzione per creare o aggiornare un pool di applicazioni. Se questa opzione è selezionata, il sito Web verrà creato nel pool di applicazioni specificato.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Configura autenticazione",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "Consente di specificare il nome del pool di applicazioni IIS.",
   "loc.input.label.AppCmdCommands": "Comandi aggiuntivi di appcmd.exe",
   "loc.input.help.AppCmdCommands": "Consente di immettere comandi aggiuntivi di AppCmd.exe. Per immettere più comandi, usare un separatore di riga, ad esempio <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:NomePoolApplicazioniEsempio",
-  "loc.messages.InvalidSslThumbprint": "Identificazione personale non valida. Contiene caratteri non validi o è composta da 40 caratteri.",
   "loc.messages.InvalidVirtualPath": "Il percorso virtuale deve iniziare con una barra (/)",
   "loc.messages.InvalidIISDeploymentType": "Tipo di distribuzione IIS non valida: {0}",
   "loc.messages.InvalidActionIISWebsite": "L'azione '{0}' selezionata per il sito Web IIS non è valida.",
   "loc.messages.InvalidActionIISAppPool": "L'azione '{0}' selezionata per il pool di applicazioni IIS non è valida.",
   "loc.messages.PackageDeploymentFailed": "Non è stato possibile distribuire il pacchetto Web nel sito Web IIS.",
-  "loc.messages.SSLCertWarningInvalidCharacters": "L'identificazione personale del certificato SSL contiene caratteri non esadecimali. Tutti i caratteri non esadecimali verranno tagliati."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "Identificazione personale del certificato SSL mancante nel binding HTTPS ({0}/{1}:{2})",
+  "loc.messages.InvalidSslThumbprintInBinding": "Identificazione personale non valida nel binding ({0}/{1}:{2}). Contiene caratteri non validi oppure non è composta da 40 caratteri.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "L'identificazione personale del certificato SSL contiene caratteri non esadecimali nel binding ({0}/{1}:{2}). Tutti i caratteri non esadecimali verranno tagliati."
 }

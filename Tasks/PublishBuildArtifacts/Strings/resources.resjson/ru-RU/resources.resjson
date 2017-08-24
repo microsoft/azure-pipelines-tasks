@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
   "loc.input.label.TargetPath": "Путь",
   "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
+  "loc.input.label.Parallel": "Параллельное копирование",
+  "loc.input.help.Parallel": "Чтобы включить параллельное копирование, задайте значение True.",
+  "loc.input.label.ParallelCount": "Счетчик параллелизма",
+  "loc.input.help.ParallelCount": "Степень параллелизма для выполнения копирования. Значение должно находиться в диапазоне от 1 до 128.",
   "loc.messages.ErrorFileShareLinux": "Не удается опубликовать артефакты из агента OS X или Linux на файловом ресурсе. Вы можете изменить тип артефакта на серверный или воспользоваться агентом Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "Эта задача поддерживается только в задании сборки.",
-  "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "Эту задачу можно использовать для публикации в папку сброса на сервере только в рамках задания сборки.",
+  "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s",
+  "loc.messages.UnexpectedParallelCount": "Непредвиденное значение счетчика параллелизма \"%s\". Введите число от 1 до 128."
 }

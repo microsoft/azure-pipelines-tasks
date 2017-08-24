@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "手动干预",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=825235)",
-  "loc.description": "暂停部署并等待干预",
-  "loc.instanceNameFormat": "手动干预",
-  "loc.input.label.instructions": "说明",
-  "loc.input.help.instructions": "将向用户显示这些说明，以便恢复或拒绝手动干预。用户根据这些说明，对此手动干预作出知情的决策。",
-  "loc.input.label.emailRecipients": "通知用户",
-  "loc.input.help.emailRecipients": "将手动干预挂起电子邮件发送到特定用户(或组)。仅具有管理部署权限的用户才可执行手动干预。",
-  "loc.input.label.onTimeout": "超时",
-  "loc.input.help.onTimeout": "手动干预的挂起状态超过指定超时或 60 天后，系统将自动拒绝或继续此手动干预，以首先达到的条件为准。"
+  "loc.friendlyName": "Publish To Azure Service Bus",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
+  "loc.instanceNameFormat": "Publish to Azure Service Bus",
+  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
+  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
+  "loc.input.label.messageBody": "Message body",
+  "loc.input.help.messageBody": "Enter the json messageBody.",
+  "loc.input.label.waitForCompletion": "Wait for Task Completion",
+  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
 }

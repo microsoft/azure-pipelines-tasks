@@ -4,7 +4,7 @@
   "loc.description": "建立/断开 Azure 虚拟机的网络接口与负载均衡器的后端地址池的连接",
   "loc.instanceNameFormat": "Azure 网络负载均衡器: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
-  "loc.input.help.ConnectedServiceName": "为部署选择 Azure Resource Manager 订阅。",
+  "loc.input.help.ConnectedServiceName": "为部署选择 Azure 资源管理器订阅。",
   "loc.input.label.ResourceGroupName": "资源组",
   "loc.input.help.ResourceGroupName": "选择资源组名称。",
   "loc.input.label.LoadBalancer": "负载均衡器名称",

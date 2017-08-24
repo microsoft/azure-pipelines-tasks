@@ -2,9 +2,11 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Модуль \"AzureRM.Profile\" не найден. Возможно, модуль \"AzureRM\" установлен не полностью. Выполнение следующих команд PowerShell из сеанса с повышенными правами может разрешить эту проблему: Import-Module AzureRM; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "Проверка подлинности на основе сертификатов не поддерживается. Модуль Azure PowerShell не найден.",
   "loc.messages.AZ_CredentialsError": "Произошла ошибка с учетными данными Azure, используемыми для развертывания.",
-  "loc.messages.AZ_ModuleNotFound": "Не найдены модули Azure и AzureRM. Если модуль недавно установлен, повторите попытку после перезапуска агента задач VSTS.",
+  "loc.messages.AZ_ModuleNotFound": "Не найдены модули Azure (\"{0}\") и AzureRM (\"{0}\"). Если модуль недавно установлен, повторите попытку после перезапуска агента задач VSTS.",
   "loc.messages.AZ_RequiresMinVersion0": "Минимальная требуемая версия ({0}) модуля Azure PowerShell не установлена.",
   "loc.messages.AZ_ServicePrincipalError": "Произошла ошибка с субъектом-службой, используемой для развертывания.",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Проверка подлинности на основе субъекта-службы не поддерживается в версии \"{0}\" модуля Azure.",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Схема аутентификации \"{0}\" не поддерживается для конечной точки Azure."
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Схема аутентификации \"{0}\" не поддерживается для конечной точки Azure.",
+  "loc.messages.AZ_AvailableModules": "Список доступных модулей {0}:",
+  "loc.messages.AZ_InvalidARMEndpoint": "Указана недопустимая конечная точка AzureRM."
 }

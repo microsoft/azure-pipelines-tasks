@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "将测试结果发布到 VSTS/TFS",
   "loc.instanceNameFormat": "发布测试结果 $(testResultsFiles)",
+  "loc.releaseNotes": "<ul><li>NUnit3 支持</li><li>Minimatch 文件模式支持</li></ul>",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.testRunner": "测试结果格式",
   "loc.input.help.testRunner": "所选测试运行程序(例如 JUnit、VSTest、XUnit V2 和 NUnit)生成的测试结果文件的格式。",

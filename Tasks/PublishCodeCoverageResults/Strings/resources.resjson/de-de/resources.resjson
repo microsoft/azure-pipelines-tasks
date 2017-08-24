@@ -11,9 +11,9 @@
   "loc.input.help.reportDirectory": "Der Pfad des Code Coverage-HTML-Berichtsverzeichnisses. Das Berichtsverzeichnis wird als Artefakt des Builds zum späteren Anzeigen veröffentlicht. Der Wert enthält unter Umständen Minimatch-Muster. Beispiel: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura",
   "loc.input.label.additionalCodeCoverageFiles": "Weitere Dateien",
   "loc.input.help.additionalCodeCoverageFiles": "Dateipfadmuster, das zusätzliche Code Coverage-Dateien angibt, die als Artefakte des Builds veröffentlicht werden sollen. Der Wert enthält unter Umständen Minimatch-Muster. Beispiel: \"$(System.DefaultWorkingDirectory)/**/*.exec\"",
-  "loc.input.label.failIfCoverageEmpty": "Fail When Code Coverage Results Are Missing",
-  "loc.input.help.failIfCoverageEmpty": "Fail the task if code coverage did not produce any results to publish.",
+  "loc.input.label.failIfCoverageEmpty": "Fehlschlagen, wenn Code Coverage-Ergebnisse fehlen",
+  "loc.input.help.failIfCoverageEmpty": "Fehlschlagen der Aufgabe festlegen, wenn die Code Coverage keine Ergebnisse zum Veröffentlichen ergeben hat.",
   "loc.messages.FoundNMatchesForPattern": "%s Ergebnis(se) gefunden, die dem Muster: %s entsprechen",
   "loc.messages.MultipleSummaryFilesFound": "Mehrere Datei- oder Verzeichnisübereinstimmungen gefunden. Die erste Übereinstimmung wird verwendet: %s.",
-  "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
+  "loc.messages.NoCodeCoverage": "Keine Code Coverage-Ergebnisse zum Veröffentlichen gefunden."
 }

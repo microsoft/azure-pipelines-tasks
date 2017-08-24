@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Gestione servizio app di Azure (ANTEPRIMA)",
+  "loc.friendlyName": "Gestione servizio app di Azure",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Esegue avvio, arresto, riavvio e scambio di slot per un servizio app di Azure",
+  "loc.description": "Esegue avvio, arresto, riavvio, scambio di slot o installazione delle estensioni del sito per un servizio app di Azure",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
   "loc.input.help.ConnectedServiceName": "Consente di selezionare la sottoscrizione di Azure Resource Manager",
   "loc.input.label.Action": "Azione",
-  "loc.input.help.Action": "Azione da eseguire sul servizio app. È possibile avviare/arrestare/riavviare un servizio app oppure gestire uno scambio di slot.",
+  "loc.input.help.Action": "Azione da eseguire sul servizio app. È possibile eseguire avvio, arresto, riavvio, scambio di slot o installazione delle estensioni del sito per un servizio app di Azure",
   "loc.input.label.WebAppName": "Nome del servizio app",
   "loc.input.help.WebAppName": "Consente di immettere o selezionare il nome di un servizio app di Azure esistente",
   "loc.input.label.SpecifySlot": "Specifica slot",
@@ -23,6 +23,8 @@
   "loc.input.label.Slot": "Slot",
   "loc.input.label.ExtensionsList": "Installa estensioni",
   "loc.input.help.ExtensionsList": "Le estensioni del sito vengono eseguite nel servizio app di Microsoft Azure. È possibile installare set di strumenti come estensione del sito per gestire meglio il servizio app di Azure. Il servizio app verrà riavviato per rendere effettive le ultime modifiche.",
+  "loc.input.label.OutputVariable": "Variabile di output",
+  "loc.input.help.OutputVariable": "Consente di specificare il nome della variabile. per il percorso di installazione locale dell'estensione selezionata.<br />Nota: se sono state selezionate più estensioni per l'installazione, specificare un elenco di variabili delimitate da virgole per il salvataggio del percorso locale di ognuna delle estensioni selezionate nell'ordine in cui sono indicate nel campo Installa estensione.<br />Esempio: variabileOutput1, variabileOutput2",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Errore: il metodo di distribuzione MSDeploy non esiste per l'app Web di Azure: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "La cronologia dello scambio di slot all'indirizzo %s per l'app Web di Azure %s è stata aggiornata",
   "loc.messages.Failedtoupdateslotswaphistory": "Non è stato possibile aggiornare la cronologia dello scambio di slot per l'app Web di Azure: %s",
@@ -58,5 +60,7 @@
   "loc.messages.ExtensionListFailedError": "Non è stato possibile recuperare l'elenco delle estensioni installate nel servizio app di Azure. Errore: %s.",
   "loc.messages.ExtensionListFailedResponseError": "Non è stato possibile recuperare l'elenco delle estensioni installate nel servizio app di Azure. Codice di stato: %s (%s)",
   "loc.messages.InstallingSiteExtension": "Installazione dell'estensione del sito '%s' nel servizio app di Azure.",
-  "loc.messages.FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s"
+  "loc.messages.FailedToFetchAppServiceState": "Non è stato possibile recuperare lo stato del servizio app %s. Codice errore: %s. Messaggio di errore: %s",
+  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
+  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
 }

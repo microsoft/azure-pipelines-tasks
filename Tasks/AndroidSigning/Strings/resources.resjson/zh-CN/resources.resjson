@@ -22,5 +22,10 @@
   "loc.input.label.zipalign": "Zipalign",
   "loc.input.help.zipalign": "若要对包进行 zipalign，请选择此项。这会减少应用使用的 RAM 量。",
   "loc.input.label.zipalignLocation": "Zipalign 位置",
-  "loc.input.help.zipalignLocation": "也可以选择指定签名过程中使用的 zipalign 可执行文件的位置。默认情况下，使用应用程序基于其创建的 Android SDK 版本文件夹中的 zipalign。"
+  "loc.input.help.zipalignLocation": "也可以选择指定签名过程中使用的 zipalign 可执行文件的位置。默认情况下，使用应用程序基于其创建的 Android SDK 版本文件夹中的 zipalign。",
+  "loc.messages.AndroidHomeNotSet": "未为正在运行的用户设置 ANDROID_HOME 环境变量。",
+  "loc.messages.CouldNotFindZipalign": "找不到 zipalign 工具。",
+  "loc.messages.CouldNotFindZipalignInAndroidHome": "无法在 ANDROID_HOME 内找到 zipalign 工具: %s",
+  "loc.messages.JavaHomeNotSet": "未为正在运行的用户设置 JAVA_HOME 环境变量。",
+  "loc.messages.NoMatchingFiles": "使用搜索模式 %s 未找到匹配的文件"
 }

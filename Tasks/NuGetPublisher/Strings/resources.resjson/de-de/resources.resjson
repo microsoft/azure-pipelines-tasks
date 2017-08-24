@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet-Herausgeber",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=627417)",
-  "loc.description": "Lädt NUPKG-Dateien auf einen NuGet-Server hoch.",
+  "loc.description": "Veraltet: Verwenden Sie stattdessen die \"NuGet\"-Aufgabe. Sie funktioniert mit dem neuen Toolinstallerframework, sodass Sie neue NuGet-Versionen verwenden können, ohne auf eine Aufgabenaktualisierung warten zu müssen. Außerdem bietet sie bessere Unterstützung für authentifizierte Feeds außerhalb des Kontos/der Sammlung und verwendet standardmäßig NuGet 4.",
   "loc.instanceNameFormat": "NuGet-Herausgeber $(solution)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.searchPattern": "Pfad/Muster für NUPKG",

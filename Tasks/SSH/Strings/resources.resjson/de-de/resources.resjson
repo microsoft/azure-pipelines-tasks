@@ -12,6 +12,8 @@
   "loc.input.help.commands": "Gibt die Shellbefehle an, die auf dem Remotecomputer ausgeführt werden sollen. Geben Sie jeden Befehl zusammen mit seinen Argumenten in eine neue Zeile ein. Wenn Sie mehrere Befehle gleichzeitig ausführen möchten, geben Sie sie in der gleichen Zeile getrennt durch Semikolons ein (z. B. \"cd /home/user/myFolder;build\").",
   "loc.input.label.scriptPath": "Shellskriptpfad",
   "loc.input.help.scriptPath": "Der Pfad zur Shellskriptdatei, die auf dem Remotecomputer ausgeführt werden soll.",
+  "loc.input.label.inline": "Inlineskript",
+  "loc.input.help.inline": "Schreiben Sie das Shellskript zur Ausführung auf dem Remotecomputer.",
   "loc.input.label.args": "Argumente",
   "loc.input.help.args": "An das Shellskript zu übergebende Argumente.",
   "loc.input.label.failOnStdErr": "Fehler für STDERR",

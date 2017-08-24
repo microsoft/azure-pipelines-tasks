@@ -6,7 +6,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
   "loc.input.label.ConnectedServiceName": "Suscripción de Azure clásico",
   "loc.input.help.ConnectedServiceName": "Suscripción de Azure clásico para configurar antes de ejecutar PowerShell",
-  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceNameARM": "Suscripción de Azure Resource Manager para configurar antes de ejecutar PowerShell",
   "loc.input.label.ScriptType": "Tipo de script",
   "loc.input.help.ScriptType": "Tipo del script: ruta de acceso del archivo o script en línea",
@@ -16,6 +16,11 @@
   "loc.input.help.Inline": "Escriba el script que se va a ejecutar.",
   "loc.input.label.ScriptArguments": "Argumentos de script",
   "loc.input.help.ScriptArguments": "Parámetros adicionales que pasar a PowerShell. Pueden ser parámetros ordinales o con nombre.",
+  "loc.input.label.TargetAzurePs": "Versión de Azure PowerShell",
+  "loc.input.help.TargetAzurePs": "En el caso de agentes hospedados, las versiones de Azure PowerShell admitidas son: 2.1.0(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nPara elegir la última versión disponible en el agente, seleccione \"Latest installed version\" (Última versión instalada).\n\nPara agentes privados, puede especificar la versión de Azure PowerShell que prefiera con la opción \"Specify version\" (Especificar versión).",
+  "loc.input.label.CustomTargetAzurePs": "Versión de Azure PowerShell preferida",
+  "loc.input.help.CustomTargetAzurePs": "La versión de Azure PowerShell preferida debe tener una semántica correcta; por ejemplo: 1.2.3. No se admiten expresiones regulares, como 2.\\*,2.3.\\*.",
   "loc.messages.InvalidScriptArguments0": "Argumentos de script '{0}' no válidos. No se permiten los saltos de línea.",
-  "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos."
+  "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos.",
+  "loc.messages.InvalidAzurePsVersion": "La versión de Azure PowerShell \"{0}\" especificada no tiene el formato correcto. Compruebe el formato. Ejemplo de formato correcto: 1.0.1"
 }

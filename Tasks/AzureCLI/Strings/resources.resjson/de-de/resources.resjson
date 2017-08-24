@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Führt eine Shell oder ein Batchskript mit Azure CLI-Befehlen für ein Azure-Abonnement aus.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.releaseNotes": "Neues in Version 1.0:\n- Unterstützt die neue Python-basierte Azure-CLI 2.0\n- Funktioniert mit Xplat-Agents (Windows, Linux oder OSX)\n- Für die Verwendung mit der Azure-CLI 1.0 (node-basiert), Wechseln zur Aufgabenversion 0.0\n- Einschränkungen:\n - Keine Unterstützung für klassische Abonnements. Die Azure-CLI 2.0 unterstützt nur Azure Resource Manager (ARM)-Abonnements.",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.connectedServiceNameARM": "Azure-Abonnement",
   "loc.input.help.connectedServiceNameARM": "Wählen Sie ein Azure Resource Manager-Abonnement für die Bereitstellung aus.",
@@ -22,5 +23,5 @@
   "loc.messages.ScriptFailed": "Skriptfehler: %s",
   "loc.messages.UnsupportedEndpointScheme": "Nicht unterstütztes Endpunkt-Autorisierungsschema: Dienstprinzipal für AzureRM",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x ist nicht auf diesem Computer installiert.",
-  "loc.messages.FailedToLogout": "Fehler beim Abmelden: %s"
+  "loc.messages.FailedToLogout": "Beim Abmelden ist der folgende Fehler aufgetreten: %s"
 }

@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "作成する成果物の種類。",
   "loc.input.label.TargetPath": "パス",
   "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有",
+  "loc.input.label.Parallel": "並列コピー",
+  "loc.input.help.Parallel": "true の場合は、並列でのコピーが有効になります。",
+  "loc.input.label.ParallelCount": "並列数",
+  "loc.input.help.ParallelCount": "コピーを実行するときの並列数。少なくとも 1 以上で、128 以下であることが必要です。",
   "loc.messages.ErrorFileShareLinux": "成果物を OSX または Linux エージェントからファイル共有に発行することはできません。成果物の種類をサーバーに変更するか、Windows エージェントを使用することができます。",
-  "loc.messages.ErrorHostTypeNotSupported": "ビルド ジョブ内でのみ、このタスクはサポートされます。",
-  "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行でエラーが発生しました: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "ビルド ジョブ内でのみ、このタスクを使用してサーバー ドロップに発行できます。",
+  "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行でエラーが発生しました: %s",
+  "loc.messages.UnexpectedParallelCount": "予期されない並列数です: '%s'。1 以上 128 以下の数を入力してください。"
 }

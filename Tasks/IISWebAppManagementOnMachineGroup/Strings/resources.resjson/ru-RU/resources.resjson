@@ -4,6 +4,7 @@
   "loc.description": "Создать или обновить веб-сайт, веб-приложение, виртуальные каталоги и пул приложений",
   "loc.instanceNameFormat": "Управление $(IISDeploymentType)",
   "loc.group.displayName.Website": "Веб-сайт IIS",
+  "loc.group.displayName.IISBindings": "Привязки IIS",
   "loc.group.displayName.ApplicationPoolForWebsite": "Пул приложений IIS",
   "loc.group.displayName.IISWebsiteAuthentication": "Проверка подлинности IIS",
   "loc.group.displayName.ApplicationPool": "Пул приложений IIS",
@@ -47,6 +48,8 @@
   "loc.input.help.HostNameWithSNI": "Укажите имя узла (или доменное имя) для веб-сайта. <br>Если указано имя узла, клиенты должны использовать его вместо IP-адреса для доступа к веб-сайту.<br>",
   "loc.input.label.SSLCertThumbPrint": "Отпечаток SSL-сертификата",
   "loc.input.help.SSLCertThumbPrint": "Укажите отпечаток SSL-сертификата, который будет использоваться веб-сайтом для взаимодействия по протоколу HTTPS, в виде 40-значной шестнадцатеричной строки. Сертификат должен быть уже установлен на компьютере и присутствовать в личном хранилище сертификатов на локальном компьютере.",
+  "loc.input.label.Bindings": "Добавить привязки",
+  "loc.input.help.Bindings": "Нажмите кнопку [...] расширения, чтобы добавить привязки для веб-сайта.",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "Создать или обновить пул приложений",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "Выберите этот параметр, чтобы создать или обновить пул приложений. Если этот флажок установлен, веб-сайт будет создан в указанном пуле приложений.",
   "loc.input.label.ConfigureAuthenticationForWebsite": "Настроить проверку подлинности",
@@ -123,11 +126,12 @@
   "loc.input.help.StartStopRecycleAppPoolName": "Укажите имя пула приложений IIS.",
   "loc.input.label.AppCmdCommands": "Дополнительные команды appcmd.exe",
   "loc.input.help.AppCmdCommands": "Введите дополнительные команды AppCmd.exe. Если требуется ввести несколько команд, используйте разделитель строки (например, <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName)",
-  "loc.messages.InvalidSslThumbprint": "Недопустимый отпечаток. Длина отпечатка больше или меньше 40 символов, либо в нем имеются недопустимые символы.",
   "loc.messages.InvalidVirtualPath": "Виртуальный путь должен начинаться с символа \"/\"",
   "loc.messages.InvalidIISDeploymentType": "Недопустимый тип развертывания IIS: {0}",
   "loc.messages.InvalidActionIISWebsite": "Для веб-сайта IIS выбрано недопустимое действие \"{0}\".",
   "loc.messages.InvalidActionIISAppPool": "Для пула приложений IIS выбрано недопустимое действие \"{0}\".",
   "loc.messages.PackageDeploymentFailed": "Не удалось развернуть веб-пакет на веб-сайте IIS.",
-  "loc.messages.SSLCertWarningInvalidCharacters": "Отпечаток SSL-сертификата содержит нешестнадцатеричные символы. Все символы, не являющиеся шестнадцатеричными, будут обрезаны."
+  "loc.messages.SSLCertificateThumbprintMissingInHttpsBinding": "Отпечаток SSL-сертификата отсутствует в привязке HTTPS: ({0}/{1}:{2}).",
+  "loc.messages.InvalidSslThumbprintInBinding": "Недопустимый отпечаток в привязке ({0}/{1}:{2}). Его длина не равна 40 символам, или он содержит недопустимые символы.",
+  "loc.messages.SSLCertWarningInvalidCharactersInBinding": "В привязке у отпечатка SSL-сертификата есть символы, отличные от шестнадцатеричных: ({0}/{1}:{2}). Усекаются все символы, отличные от шестнадцатеричных."
 }

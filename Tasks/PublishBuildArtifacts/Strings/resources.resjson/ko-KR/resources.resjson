@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "만들 아티팩트의 형식입니다.",
   "loc.input.label.TargetPath": "경로",
   "loc.input.help.TargetPath": "파일을 복사할 파일 공유",
+  "loc.input.label.Parallel": "병렬 복사본",
+  "loc.input.help.Parallel": "True이면 병렬 복사본이 사용됩니다.",
+  "loc.input.label.ParallelCount": "병렬 개수",
+  "loc.input.help.ParallelCount": "복사를 수행할 병렬 처리입니다. 1 이상, 128 이하여야 합니다.",
   "loc.messages.ErrorFileShareLinux": "OSX 또는 Linux 에이전트의 아티팩트를 파일 공유에 게시할 수 없습니다. 서버에 대한 아티팩트 형식을 변경하거나 Windows 에이전트를 사용할 수 있습니다.",
-  "loc.messages.ErrorHostTypeNotSupported": "이 작업은 빌드 작업에서만 지원됩니다.",
-  "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패"
+  "loc.messages.ErrorHostTypeNotSupported": "이 작업은 빌드 작업 내에서만 서버 저장에 게시하는 데 사용될 수 있습니다.",
+  "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패",
+  "loc.messages.UnexpectedParallelCount": "예기치 않은 병렬 개수 '%s'입니다. 1에서 128 사이의 숫자를 입력하세요."
 }

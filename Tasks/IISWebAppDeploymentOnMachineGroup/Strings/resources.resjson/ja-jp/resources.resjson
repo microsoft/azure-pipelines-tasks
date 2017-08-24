@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS WebApp 配置 (プレビュー)",
+  "loc.friendlyName": "IIS Web アプリの配置 (プレビュー)",
   "loc.helpMarkDown": "[詳細] (https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "WebDeploy を使って、Web サイトまたは Web アプリケーションを配置します",
   "loc.instanceNameFormat": "IIS Web サイト/アプリを配置します: $(WebDeployPackage)",
@@ -41,7 +41,7 @@
   "loc.messages.WebappsuccessfullypublishedatUrl0": "Web アプリが URL %s に正常に配置されました",
   "loc.messages.Failedtodeploywebsite": "Web サイトを配置できませんでした。",
   "loc.messages.Runningcommand": "コマンドを実行しています: %s",
-  "loc.messages.ConstructedmsDeploycommandlinearguments": "msDeploy コマンド ライン引数を構成しました",
+  "loc.messages.ConstructedmsDeploycommandlinearguments": "msDeploy コマンド ライン引数を構築しました",
   "loc.messages.CannotfindMSDeployexe": "MSDeploy.exe が見つかりません",
   "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "msdeploy コマンドを実行してパッケージにパラメーター ファイルが含まれているかどうかを確認しています: %s",
   "loc.messages.Paramscontentofwebpackage0": "Web パッケージのパラメーターの内容: %s",
@@ -55,7 +55,7 @@
   "loc.messages.Compressedfolderintozip": "フォルダー %s を zip に圧縮しました: %s",
   "loc.messages.Webappfolderisbeingarchivedtobytescompressed": "Web アプリ フォルダー %s が %s にアーカイブされています。%s バイトが圧縮されました。",
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy 生成のパッケージは Windows プラットフォームでのみサポートされます。",
-  "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "MSDeploy にサポートされていないバージョン: %s がインストールされています。バージョンは 3 以降である必要があります。",
+  "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "MSDeploy のサポートされていないバージョン: %s がインストールされています。バージョンは 3 以降である必要があります",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "コンピューター上のレジストリから、MS Deploy の場所を特定できません (エラー: %s)",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "指定したパターンのパッケージが見つかりませんでした",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "指定したパターンと一致するパッケージが複数あります。検索パターンを絞り込んでください。",
@@ -68,5 +68,10 @@
   "loc.messages.XdtTransformationErrorWhileTransforming": "%s の %s による変換中に XML 変換エラーが発生しました。",
   "loc.messages.EncodeNotSupported": "ファイル %s のファイル エンコードが %s として検出されました。ファイル エンコード %s では変数置換はサポートされていません。サポートされているエンコードは UTF-8 と UTF-16 LE です。",
   "loc.messages.UnknownFileEncodeError": "ファイル %s (typeCode: %s) のエンコードを検出できません。サポートされているエンコードは UTF-8 および UTF-16 LE です。",
-  "loc.messages.ShortFileBufferError": "ファイル バッファーが短すぎてエンコードの種類を検出できません: %s"
+  "loc.messages.ShortFileBufferError": "ファイル バッファーが短すぎてエンコードの種類を検出できません: %s",
+  "loc.messages.FailedToApplyTransformation": "指定されたパッケージに変換を適用することはできません。次の点をご確認ください。",
+  "loc.messages.FailedToApplyTransformationReason1": "1. ビルド中、MSBuild によって生成されたパッケージに対して変換が既に適用されたかどうか。適用された場合は、csproj ファイル内の各構成の <DependentUpon> タグを削除してから、リビルドします。",
+  "loc.messages.FailedToApplyTransformationReason2": "2. 構成ファイルと変換ファイルがパッケージ内の同じフォルダーに存在すること。",
+  "loc.messages.AutoParameterizationMessage": "Web.config の ConnectionString 属性は既定でパラメーター化されています。'Parameters.xml' ファイルまたは 'SetParameters.xml' ファイルによって値が配置中に上書きされるため、変換が connectionString 属性に影響を与えることはありません。自動パラメーター化は、MSBuild パッケージの生成中に /p:AutoParameterizationWebConfigConnectionStrings=False のように設定することによって無効にできます。",
+  "loc.messages.PackageDeploymentFailed": "IIS Web サイトに Web パッケージを配置できませんでした。"
 }

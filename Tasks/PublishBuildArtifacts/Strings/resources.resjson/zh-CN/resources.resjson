@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "要创建的项目的类型。",
   "loc.input.label.TargetPath": "路径",
   "loc.input.help.TargetPath": "要将文件复制到的文件共享",
+  "loc.input.label.Parallel": "并行复制",
+  "loc.input.help.Parallel": "若为 true，则启用并行复制。",
+  "loc.input.label.ParallelCount": "并行计数",
+  "loc.input.help.ParallelCount": "执行复制的并行度。必须至少为 1 且不能超过 128。",
   "loc.messages.ErrorFileShareLinux": "无法将来自 OSX 或 Linux 代理的项目发布到文件共享。可将项目类型更改为服务器或使用 Windows 代理。",
-  "loc.messages.ErrorHostTypeNotSupported": "仅在生成作业中支持此任务。",
-  "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "仅可在生成作业中使用此任务发布到服务器放置。",
+  "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s",
+  "loc.messages.UnexpectedParallelCount": "意外的并行计数“%s”。请输入介于 1 到 128 之间的数字。"
 }

@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "Criteri di filtro test",
   "loc.input.help.testFilterCriteria": "Consente, facoltativamente, di specificare i criteri di filtro per i test case, ad esempio `Owner=james&Priority=1`",
   "loc.input.label.runSettingsFile": "File di impostazioni esecuzione test",
-  "loc.input.help.runSettingsFile": "Percorso del file runsettings o testsettings da usare con i test. Usare `$(agent.BuildDirectory)\\$(system.teamProject)` per accedere alla cartella del progetto.",
+  "loc.input.help.runSettingsFile": "Percorso del file runsettings o testsettings da usare con i test.",
   "loc.input.label.overrideRunParams": "Esegui override parametri di esecuzione dei test",
   "loc.input.help.overrideRunParams": "Consente di eseguire l'override dei parametri definiti nella sezione TestRunParameters del file runsettings, ad esempio `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Code coverage abilitato",

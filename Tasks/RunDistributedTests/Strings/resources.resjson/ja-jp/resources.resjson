@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "コンピューター",
   "loc.input.help.testMachineGroup": "マシンの IP アドレスまたは FQDN のコンマ区切りの一覧を指定します。例: `dbserver.fabrikam.com や 192.168.12.34`。または他のタスクの出力変数を指定します。例: `$(variableName)`。またはマシン グループ名を指定します",
   "loc.input.label.dropLocation": "テスト格納場所",
-  "loc.input.help.dropLocation": "'Windows コンピュータ ファイル コピー' または 'Azure ファイル コピー' タスクの一部として、エージェント コンピューター内でテスト バイナリが格納された場所。`%systemdrive%\\Tests`、`%temp%\\DropLocation` などのように、システム環境変数を使用して場所の文字列を指定することもできます。",
+  "loc.input.help.dropLocation": "'Windows コンピューターのファイル コピー' または 'Azure ファイル コピー' タスクの一部として、エージェント コンピューター内でテスト バイナリが格納された場所。`%systemdrive%\\Tests`、`%temp%\\DropLocation` などのように、システム環境変数を使用して場所の文字列を指定することもできます。",
   "loc.input.label.testSelection": "テストの選択",
   "loc.input.help.testSelection": "テストの実行方法について、テスト アセンブリを使うかテスト計画を使うかのいずれかを選びます。",
   "loc.input.label.testPlan": "テスト計画",
@@ -23,7 +23,7 @@
   "loc.input.label.testFilterCriteria": "テストのフィルター条件",
   "loc.input.help.testFilterCriteria": "オプションで、テスト ケース フィルターの条件を指定します。例: `Owner=james&Priority=1`",
   "loc.input.label.runSettingsFile": "実行設定ファイル",
-  "loc.input.help.runSettingsFile": "テストで使用する runsettings または testsettings ファイルへのパス。プロジェクト フォルダーにアクセスするには '$(agent.BuildDirectory)\\$(system.teamProject)' を使います。",
+  "loc.input.help.runSettingsFile": "テストで使用する runsettings または testsettings ファイルへのパス。",
   "loc.input.label.overrideRunParams": "テスト実行パラメーターのオーバーライド",
   "loc.input.help.overrideRunParams": "runsettings ファイルの TestRunParameters セクションで定義されたパラメーターを無視します。例: 'AppURL=$(DeployURL);Port=8080'",
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",
@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "構成",
   "loc.input.help.configuration": "テストを報告する対象となる構成。ビルド タスク内に構成の変数を定義した場合、ここでそれを使用します。",
   "loc.input.label.testConfigurations": "テスト構成",
-  "loc.input.help.testConfigurations": "オプションで、テストケース フィルターをテスト構成 ID に関連付けます。構文: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;。例: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "オプションで、テスト ケース フィルターをテスト構成 ID に関連付けます。構文: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;。例: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "テスト対象のアプリケーションがあるコンピューター",
   "loc.input.help.autMachineGroup": "W3WP.exe などのサーバー プロセスが実行されている、マシンまたは出力変数のコンマ区切りの一覧、またはマシン グループ名"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cloudbasierter Apache JMeter-Auslastungstest",
-  "loc.helpMarkDown": "Dieser Task kann zum Auslösen eines Apache JMeter-Auslastungstests in der Cloud mithilfe von Visual Studio Team Services verwendet werden. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=784929).",
+  "loc.helpMarkDown": "Diese Aufgabe kann zum Auslösen eines Apache JMeter-Auslastungstests in der Cloud mithilfe von Visual Studio Team Services verwendet werden. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=784929).",
   "loc.description": "Führt den Apache JMeter-Auslastungstest in der Cloud aus.",
   "loc.instanceNameFormat": "Apache JMeter-Test $(LoadTest)",
   "loc.input.label.connectedServiceName": "VS Team Services-Verbindung",

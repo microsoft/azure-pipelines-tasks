@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "基于云的 Apache JMeter 负载测试",
-  "loc.helpMarkDown": "此任务可用于使用 Visual Studio Team Services 在云中触发 Apache JMeter 负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?LinkId=784929)。",
+  "loc.helpMarkDown": "此任务可用于使用 Visual Studio Team Services 在云中触发 Apache JMeter 负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "在云中运行 Apache JMeter 负载测试",
   "loc.instanceNameFormat": "Apache JMeter 测试 $(LoadTest)",
   "loc.input.label.connectedServiceName": "VS Team Services 连接",

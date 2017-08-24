@@ -11,7 +11,12 @@
   "loc.input.help.ArtifactType": "Tipo di artefatto da creare.",
   "loc.input.label.TargetPath": "Percorso",
   "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
+  "loc.input.label.Parallel": "Copia parallela",
+  "loc.input.help.Parallel": "True per abilitare la copia parallela.",
+  "loc.input.label.ParallelCount": "Conteggio parallelo",
+  "loc.input.help.ParallelCount": "Parallelismo per eseguire la copia. Deve essere almeno 1 e non maggiore di 128.",
   "loc.messages.ErrorFileShareLinux": "Non è possibile pubblicare artefatti da un agente OS X o Linux a una condivisione file. È possibile cambiare il tipo di artefatto in server o usare un agente Windows.",
-  "loc.messages.ErrorHostTypeNotSupported": "Questa attività è supportata solo in un processo di compilazione.",
-  "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s"
+  "loc.messages.ErrorHostTypeNotSupported": "È possibile usare questa attività per pubblicare nella destinazione server solo in un processo di compilazione.",
+  "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s",
+  "loc.messages.UnexpectedParallelCount": "Conteggio parallelo '%s' imprevisto. Immettere un numero compreso tra 1 e 128."
 }

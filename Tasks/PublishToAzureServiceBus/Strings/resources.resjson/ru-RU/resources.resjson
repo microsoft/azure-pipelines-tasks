@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Вмешательство вручную",
-  "loc.helpMarkDown": "[Дополнительная информация](http://go.microsoft.com/fwlink/?LinkID=825235)",
-  "loc.description": "Приостановка развертывания и ожидание вмешательства",
-  "loc.instanceNameFormat": "Вмешательство вручную",
-  "loc.input.label.instructions": "Инструкции",
-  "loc.input.help.instructions": "Эти инструкции будут показаны пользователю для возобновления или отклонения вмешательства вручную. На их основе пользователь должен принять взвешенное решение об этом вмешательстве вручную.",
-  "loc.input.label.emailRecipients": "Уведомить пользователей",
-  "loc.input.help.emailRecipients": "Отправьте отдельным пользователям или группам письмо о приближающемся ручном вмешательстве. Принять меры для ручного вмешательства могут только пользователи с разрешением на управление развертыванием.",
-  "loc.input.label.onTimeout": "По истечении времени ожидания",
-  "loc.input.help.onTimeout": "Автоматическое отклонение или возобновление этого вмешательства вручную по прошествии заданного времени ожидания или через 60 дней (в зависимости от того, что наступит раньше)."
+  "loc.friendlyName": "Publish To Azure Service Bus",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
+  "loc.instanceNameFormat": "Publish to Azure Service Bus",
+  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
+  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
+  "loc.input.label.messageBody": "Message body",
+  "loc.input.help.messageBody": "Enter the json messageBody.",
+  "loc.input.label.waitForCompletion": "Wait for Task Completion",
+  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
 }

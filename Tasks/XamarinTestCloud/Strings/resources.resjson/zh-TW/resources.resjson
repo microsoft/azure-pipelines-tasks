@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "在 Xamarin Test Cloud 中使用 Xamarin.UITest 測試 $(app) ",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.app": "應用程式檔案",
-  "loc.input.help.app": "要測試之應用程式儲存機制根路徑的相對路徑。可使用萬用字元。例如，`**/*.apk` 即適用於所有子資料夾中的所有 APK 檔 。",
+  "loc.input.help.app": "要測試之應用程式存放庫根路徑的相對路徑。可使用萬用字元。例如，`**/*.apk` 即適用於所有子資料夾中的所有 APK 檔 。",
   "loc.input.label.dsym": "dSYM 檔案 (僅限 iOS)",
   "loc.input.help.dsym": "若要使當機記錄檔更容易閱讀，您可以上傳與該應用程式相關聯的 dSYM 檔案。此欄僅適用於 iOS 應用程式。請提供與 .ipa 檔案相對的路徑。例如: *.dSYM",
   "loc.input.label.teamApiKey": "Team API 金鑰",

@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Testergebnisse in VSTS/TFS veröffentlichen",
   "loc.instanceNameFormat": "Testergebnisse $(testResultsFiles) veröffentlichen",
+  "loc.releaseNotes": "<ul><li>NUnit3-Unterstützung</li><li>Unterstützung für Minimatch-Dateimuster</li></ul>",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.testRunner": "Testergebnisformat",
   "loc.input.help.testRunner": "Das Format der Testergebnisdateien, die vom ausgewählten Test Runner generiert werden, z. B. \"JUnit\", \"VSTest\", \"XUnit V2\" und \"NUnit\".",

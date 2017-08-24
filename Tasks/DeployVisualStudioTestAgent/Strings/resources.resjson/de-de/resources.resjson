@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Stellen Sie den Test-Agent für die Ausführung von Tests auf einer Computergruppe bereit, und konfigurieren Sie ihn.",
   "loc.instanceNameFormat": "TestAgent auf $(testMachineGroup) bereitstellen",
+  "loc.releaseNotes": "<ul><li>Unterstützung für Visual Studio Test Agent 2017: Das Bereitstellen und Ausführen von Tests ist jetzt mit mehreren Versionen von Visual Studio Test Agent möglich. Die Versionen 2015 und 2017 werden unterstützt.</li><li>Vom Testhub erstellte Computergruppen werden nicht mehr unterstützt. Sie können weiterhin eine Liste von Computern oder Azure-Ressourcengruppen verwenden.</li></ul>",
   "loc.group.displayName.testMachineGroups": "Testcomputer",
   "loc.group.displayName.agentConfiguration": "Agent-Konfiguration",
   "loc.group.displayName.advanced": "Erweitert",
@@ -27,7 +28,9 @@
   "loc.input.label.testPlatform": "Test-Agent-Version",
   "loc.input.help.testPlatform": "Die zu verwendende Version von Visual Studio Test Agent. Wählen Sie eine entsprechende Version aus, damit diese der VS-Version entspricht, mithilfe derer die Testbinärdateien erstellt wurden.",
   "loc.input.label.agentLocation": "Test-Agent-Speicherort",
-  "loc.input.help.agentLocation": "Geben Sie optional den Pfad zu \"vstf_testagent.exe\" aus dem Netzwerk oder dem lokalen Speicherort an. Ohne Angabe eines Pfads wird die Datei automatisch vom Download Center heruntergeladen. Der Installer für Test Agent 2015 Update 3 wird von \"https://go.microsoft.com/fwlink/?LinkId=827840\" heruntergeladen. Der Installer für Test Agent 2017 wird von \"https://aka.ms/vs/15/release/vs_TestAgent.exe\" heruntergeladen.",
+  "loc.input.help.agentLocation": "Geben Sie optional den Pfad zu \"vstf_testagent.exe\" im Netzwerk oder am lokalen Speicherort an. Ohne Angabe eines Pfads wird die Datei automatisch vom Download Center heruntergeladen. Der Installer für Test Agent 2015 Update 3 wird von https://go.microsoft.com/fwlink/?LinkId=827840 heruntergeladen. Der Installer für Test Agent 2017 wird von https://aka.ms/vs/15/release/vs_TestAgent.exe heruntergeladen. Informationen zur Verwendung von Offlineinstallern finden Sie unter https://aka.ms/testagentlocation.",
   "loc.input.label.updateTestAgent": "Test-Agent aktualisieren",
-  "loc.input.help.updateTestAgent": "Wenn Test Agent bereits auf einem Computer bereitgestellt wurde, prüft diese Option, ob für diese Test Agent-Version ein Update verfügbar ist."
+  "loc.input.help.updateTestAgent": "Wenn Test Agent bereits auf einem Computer bereitgestellt wurde, prüft diese Option, ob für diese Test Agent-Version ein Update verfügbar ist.",
+  "loc.messages.InvalidAccessToken": "Das persönliche Zugriffstoken für den Benutzer kann nicht generiert werden. Wenden Sie sich an den Projektsammlungsadministrator.",
+  "loc.messages.NotSupportedWithParallel": "Die Visual Studio Test Agent-Bereitstellung wird beim parallelen Ausführungstyp mit mehreren Computern/Konfigurationen nicht unterstützt. Weitere Informationen finden Sie in diesem Blog: https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/"
 }

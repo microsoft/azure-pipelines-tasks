@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Intervention manuelle",
-  "loc.helpMarkDown": "[Plus d'informations](http://go.microsoft.com/fwlink/?LinkID=825235)",
-  "loc.description": "Suspendre le déploiement et attendre une intervention",
-  "loc.instanceNameFormat": "Intervention manuelle",
-  "loc.input.label.instructions": "Instructions",
-  "loc.input.help.instructions": "Ces instructions sont montrées à l'utilisateur pour lui permettre de reprendre ou de rejeter l'intervention manuelle. En fonction de ces instructions, l'utilisateur prend une décision en connaissance de cause sur l'intervention manuelle.",
-  "loc.input.label.emailRecipients": "Notifier les utilisateurs",
-  "loc.input.help.emailRecipients": "Envoyez un e-mail relatif à une intervention manuelle en attente à des utilisateurs (ou groupes) spécifiques. Seuls les utilisateurs dotés d'une autorisation de déploiement peuvent agir sur une intervention manuelle.",
-  "loc.input.label.onTimeout": "Au délai d'expiration",
-  "loc.input.help.onTimeout": "Rejetez ou reprenez cette intervention manuelle automatiquement après la fin du délai d'expiration spécifié ou après 60 jours, selon la valeur la plus proche."
+  "loc.friendlyName": "Publish To Azure Service Bus",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
+  "loc.instanceNameFormat": "Publish to Azure Service Bus",
+  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
+  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
+  "loc.input.label.messageBody": "Message body",
+  "loc.input.help.messageBody": "Enter the json messageBody.",
+  "loc.input.label.waitForCompletion": "Wait for Task Completion",
+  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
 }
