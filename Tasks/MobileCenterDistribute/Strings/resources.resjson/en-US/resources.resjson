@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Mobile Center Upload",
+  "loc.friendlyName": "Mobile Center Distribute",
   "loc.helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
-  "loc.description": "Upload mobile app packages to Visual Studio Mobile Center",
+  "loc.description": "Distribute mobile app builds to testers and users via Mobile Center",
   "loc.instanceNameFormat": "Deploy $(app) to Visual Studio Mobile Center",
   "loc.group.displayName.symbols": "Symbols",
   "loc.input.label.serverEndpoint": "Mobile Center Connection",

@@ -7,32 +7,29 @@ var Readable = require('stream').Readable
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'vsmobilecenterupload.js');
+let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/one.ipa');
+tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'Apple');
-tmr.setInput('dsymPath', '/test/path/to/symbols.dSYM');
+
+//prepare upload
+nock('https://example.test')
+    .post('/v0.1/apps/testuser/testapp/package_uploads')
+    .reply(403);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "findMatch": {
-        "/test/path/to/one.ipa": [
-            "/test/path/to/one.ipa"
-        ],
-        "/test/path/to/symbols.dSYM": [
-            "/test/path/to/symbols.dSYM"
-        ]
-    },
     "checkPath" : {
-        "/test/path/to/one.ipa": true
+        "/test/path/to/my.ipa": true
     },
-    "exist": {
-        "/test/path/to/symbols.dSYM": false
+    "findMatch" : {
+        "/test/path/to/my.ipa": [
+            "/test/path/to/my.ipa"
+        ]
     }
 };
 tmr.setAnswers(a);

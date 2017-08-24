@@ -1,6 +1,6 @@
 {
   "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
-  "name": "VSMobileCenterUpload",
+  "name": "MobileCenterDistribute",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 123,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -143,7 +143,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "vsmobilecenterupload.js",
+      "target": "mobilecenterdistribute.js",
       "argumentFormat": ""
     }
   },
