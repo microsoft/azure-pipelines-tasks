@@ -3,7 +3,7 @@
     "name": "VSMobileCenterUpload",
     "friendlyName": "Mobile Center Upload",
     "description": "Upload mobile app packages to Visual Studio Mobile Center",
-    "helpMarkDown": "[Support Information](https://intercom.help/mobile-center/)",
+    "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
     "category": "Deploy",
     "preview": true,
     "visibility": [
