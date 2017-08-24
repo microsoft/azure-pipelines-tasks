@@ -8,18 +8,16 @@ var Stats = require('fs').Stats
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'vsmobilecenterupload.js');
+let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
-
-process.env['VSMOBILECENTERUPLOAD_CONTINUEIFSYMBOLSNOTFOUND']='true';
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/one.ipa');
+tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'Apple');
-tmr.setInput('dsymPath', '/test/path/to/symbols.dSYM');
+tmr.setInput('symbolsType', 'AndroidJava');
+tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
 
 //prepare upload
 nock('https://example.test')
@@ -54,26 +52,49 @@ nock('https://example.test')
     })
     .reply(200);
 
+//begin symbol upload
+nock('https://example.test')
+    .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
+        symbol_type: "AndroidJava"
+    })
+    .reply(201, {
+        symbol_upload_id: 100,
+        upload_url: 'https://example.upload.test/symbol_upload',
+        expiration_date: 1234567
+    });
+
+//upload symbols
+nock('https://example.upload.test')
+    .put('/symbol_upload')
+    .reply(201, {
+        status: 'success'
+    });
+
+//finishing symbol upload, commit the symbol 
+nock('https://example.test')
+    .patch("/v0.1/apps/testuser/testapp/symbol_uploads/100", {
+        status: 'committed'
+    })
+    .reply(200);
+
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "findMatch": {
-        "/test/path/to/one.ipa": [
-            "/test/path/to/one.ipa"
-        ],
-        "/test/path/to/symbols.dSYM": [
-            "/test/path/to/symbols.dSYM"
-        ]
-    },
     "checkPath" : {
-        "/test/path/to/one.ipa": true
+        "/test/path/to/my.ipa": true,
+        "/test/path/to/mappings.txt": true
     },
-    "exist": {
-        "/test/path/to/symbols.dSYM": false
+    "findMatch" : {
+        "/test/path/to/mappings.txt": [
+            "/test/path/to/mappings.txt"
+        ],
+        "/test/path/to/my.ipa": [
+            "/test/path/to/my.ipa"
+        ]
     }
 };
 tmr.setAnswers(a);
 
-fs.createReadStream = (s) => {
+fs.createReadStream = (s: string) => {
     let stream = new Readable;
     stream.push(s);
     stream.push(null);
@@ -81,11 +102,16 @@ fs.createReadStream = (s) => {
     return stream;
 };
 
-fs.statSync = (s) => {
+fs.statSync = (s: string) => {
     let stat = new Stats;
+    
     stat.isFile = () => {
-        return true;
+        return !s.toLowerCase().endsWith(".dsym");
     }
+    stat.isDirectory = () => {
+        return s.toLowerCase().endsWith(".dsym");
+    }
+    stat.size = 100;
 
     return stat;
 }
