@@ -111,6 +111,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
         return;
     }
     var replacableTokenValues = {};
+    var isSubstitutionApplied: boolean = false;
     for(var tag of tags) {
         var nodes = ltxdomutility.getElementsByTagName(tag); 
         if(nodes.length == 0) {
@@ -122,17 +123,17 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
                 tl.debug("Processing substitution for xml node : " + xmlNode.name);
                 try {
                     if(xmlNode.name == "configSections") {
-                        updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues);
+                        isSubstitutionApplied = isSubstitutionApplied || updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues);
                     }
                     else if(xmlNode.name == "connectionStrings") {
                         if(parameterFilePath) {
                             var parameterSubValue = getReplacableTokenFromTags(xmlNode, variableMap);
                             substituteValueinParameterFile(parameterFilePath, parameterSubValue);
                         }
-                        updateXmlConnectionStringsNodeAttribute(xmlNode, variableMap, replacableTokenValues);
+                        isSubstitutionApplied = isSubstitutionApplied || updateXmlConnectionStringsNodeAttribute(xmlNode, variableMap, replacableTokenValues);
                     }
                     else {
-                        updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues);
+                        isSubstitutionApplied = isSubstitutionApplied || updateXmlNodeAttribute(xmlNode, variableMap, replacableTokenValues);
                     }
                 } catch (error){
                     tl.debug("Error occurred while processing xml node : " + xmlNode.name);
@@ -141,16 +142,23 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
             }  
         }
     }
-    var domContent = ( fileEncodeType[1]? '\uFEFF' : '' ) + ltxdomutility.getContentWithHeader(xmlDocument);
-    for(var replacableTokenValue in replacableTokenValues) {
-        tl.debug('Substituting original value in place of temp_name: ' + replacableTokenValue);
-        domContent = domContent.split(replacableTokenValue).join(replacableTokenValues[replacableTokenValue]);
+
+    if(isSubstitutionApplied) {
+        var domContent = ( fileEncodeType[1]? '\uFEFF' : '' ) + ltxdomutility.getContentWithHeader(xmlDocument);
+        for(var replacableTokenValue in replacableTokenValues) {
+            tl.debug('Substituting original value in place of temp_name: ' + replacableTokenValue);
+            domContent = domContent.split(replacableTokenValue).join(replacableTokenValues[replacableTokenValue]);
+        }
+        tl.writeFile(configFile, domContent, fileEncodeType[0]);
+        tl.debug("Config file " + configFile + " updated.");
     }
-    tl.writeFile(configFile, domContent, fileEncodeType[0]);
-    tl.debug("Config file " + configFile + " updated.");
+    else {
+        tl.debug('Skipped Updating file: ' + configFile);
+    }
 }
 
-function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues) {
+function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues): boolean {
+    var isSubstitutionApplied: boolean = false;
     var sections = ltxdomutility.getChildElementsByTagName(xmlNode, "section");
     for(var section of sections) {
         if(varUtility.isObject(section)) {
@@ -159,18 +167,20 @@ function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replaca
                 var customSectionNodes = ltxdomutility.getElementsByTagName(sectionName);
                 if( customSectionNodes.length != 0) {
                     var customNode = customSectionNodes[0];
-                    updateXmlNodeAttribute(customNode, variableMap, replacableTokenValues);
+                    isSubstitutionApplied = isSubstitutionApplied || updateXmlNodeAttribute(customNode, variableMap, replacableTokenValues);
                 }
             }
         }
     }
+    return isSubstitutionApplied;
 }
 
-function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues) {
+function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues): boolean {
 
+    var isSubstitutionApplied: boolean = false;
     if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
         tl.debug("Provided node is empty or a comment.");
-        return;
+        return isSubstitutionApplied;
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;
     const ConfigFileAppSettingsToken = 'CONFIG_FILE_SETTINGS_TOKEN';
@@ -182,22 +192,25 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues) 
             tl.debug('Updating value for key=' + attributeNameValue + 'with token_value: ' + ConfigFileAppSettingsTokenName);
             xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
             replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
+            isSubstitutionApplied = true;
         }
     }
     var children = xmlDomNode.children;
     for(var childNode of children) {
         if(varUtility.isObject(childNode)) {
-            updateXmlNodeAttribute(childNode, variableMap, replacableTokenValues);
+            isSubstitutionApplied = isSubstitutionApplied || updateXmlNodeAttribute(childNode, variableMap, replacableTokenValues);
         }
     }
+    return isSubstitutionApplied;
 }
 
-function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replacableTokenValues) {
+function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replacableTokenValues): boolean {
 
+    var isSubstitutionApplied: boolean = false;
     const ConfigFileConnStringToken = 'CONFIG_FILE_CONN_STRING_TOKEN';
     if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
         tl.debug("Provided node is empty or a comment.");
-        return;
+        return isSubstitutionApplied;
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;
 
@@ -207,19 +220,23 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
             tl.debug('Substituting connectionString value for name=' + xmlDomNodeAttributes.name + ' with token_value: ' + ConfigFileConnStringTokenName);
             xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);
             replacableTokenValues[ConfigFileConnStringTokenName] = variableMap[xmlDomNodeAttributes.name].replace(/"/g, "'");
+            isSubstitutionApplied = true;
         }
         else if(variableMap["connectionString"]) {
             var ConfigFileConnStringTokenName = ConfigFileConnStringToken + '(connectionString)';
             tl.debug('Substituting connectionString value for connectionString=' + xmlDomNodeAttributes.name + ' with token_value: ' + ConfigFileConnStringTokenName);
             xmlDomNode.attr("connectionString", ConfigFileConnStringTokenName);
             replacableTokenValues[ConfigFileConnStringTokenName] = variableMap["connectionString"].replace(/"/g, "'");
+            isSubstitutionApplied = true
         }
     }
 
     var children = xmlDomNode.children;
     for(var childNode of children) {
         if(varUtility.isObject(childNode)) {
-            updateXmlConnectionStringsNodeAttribute(childNode, variableMap, replacableTokenValues);
+            isSubstitutionApplied = isSubstitutionApplied || updateXmlConnectionStringsNodeAttribute(childNode, variableMap, replacableTokenValues);
         }
     }
+
+    return isSubstitutionApplied;
 }
