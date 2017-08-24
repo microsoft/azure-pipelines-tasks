@@ -31,7 +31,7 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = functionapp || WebAppKind = applinux || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+      "visibleRule": "WebAppKind = functionapp || WebAppKind = applinux || WebAppKind = applinuxbuiltin || WebAppKindDS = functionapp || WebAppKindDS = applinux"
     },
     {
       "name": "AdditionalDeploymentOptions",
@@ -54,14 +54,14 @@
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true,
-      "visibleRule": "WebAppKindDS != \"\""
+      "isExpanded": false,
+      "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
     },
     {
       "name": "ApplicationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
-      "isExpanded": true,
-      "visibleRule": "WebAppKindDS != \"\""
+      "isExpanded": false,
+      "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
     }
   ],
   "inputs": [
@@ -72,6 +72,18 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "WebAppNamesSelector",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WebAppNamesSelector",
+      "defaultValue": "*",
+      "required": false,
+      "visibleRule": "ConnectedServiceName = invalidconnectedservicename",
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      }
     },
     {
       "name": "WebAppName",
@@ -103,9 +115,10 @@
       "defaultValue": "invalid",
       "required": false,
       "options": {
-        "invalid": "Select something",
+        "invalid": "Select app type",
         "app": "Web app",
-        "applinux": "Linux web app",
+        "applinux": "Linux web app (container based)",
+        "applinuxbuiltin": "Linux web app (built-in image)",
         "functionapp": "Function app",
         "mobileapp": "Mobile app",
         "api": "Api app"
@@ -123,7 +136,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKindDS != \"\""
+      "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
     },
     {
       "name": "ResourceGroupName",
@@ -213,7 +226,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp",
+      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp || WebAppKind = applinuxbuiltin",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -562,7 +575,10 @@
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNames"
+      "parameters": {
+        "WebAppNamesSelector": "$(WebAppNamesSelector)"
+      },
+      "dataSourceName": "AzureRMWebAppNamesFiltered"
     },
     {
       "target": "ResourceGroupName",

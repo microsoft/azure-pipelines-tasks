@@ -2,7 +2,7 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB5",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy 2",
-    "description": "Update Azure Web App Services On Windows, ASP.NET app, .NET Core app, PHP app, Web App On Linux , Function Apps, Mobile Apps using Web Deploy / Kudu REST APIs",
+    "description": "Update Azure WebApp Services On Windows, ASP.NET app, .NET Core app, PHP app, Web App On Linux , Function Apps, Mobile Apps, Web Jobs using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -31,7 +31,7 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = functionapp || WebAppKind = applinux || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+            "visibleRule": "WebAppKind = functionapp || WebAppKind = applinux || WebAppKind = applinuxbuiltin || WebAppKindDS = functionapp || WebAppKindDS = applinux"
         },
         {
             "name": "AdditionalDeploymentOptions",
@@ -54,14 +54,14 @@
         {
             "name": "output",
             "displayName": "Output",
-            "isExpanded": true,
-            "visibleRule": "WebAppKindDS != \"\""
+            "isExpanded": false,
+            "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
         },
         {
             "name": "ApplicationSettings",
             "displayName": "Application Settings",
-            "isExpanded": true,
-            "visibleRule": "WebAppKindDS != \"\""
+            "isExpanded": false,
+            "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
         }
     ],
     "inputs": [
@@ -72,6 +72,18 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "WebAppNamesSelector",
+            "type": "string",
+            "label": "Web App Name Selector",
+            "defaultValue": "*",
+            "required": false,
+            "visibleRule": "ConnectedServiceName = invalidconnectedservicename",
+            "properties": {
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
+            }
         },
         {
             "name": "WebAppName",
@@ -103,9 +115,10 @@
             "defaultValue": "invalid",
             "required": false,
             "options": {
-                "invalid": "Select something",
+                "invalid": "Select app type",
                 "app": "Web app",
-                "applinux": "Linux web app",
+                "applinux": "Linux web app (container based)",
+                "applinuxbuiltin": "Linux web app (built-in image)",
                 "functionapp": "Function app",
                 "mobileapp": "Mobile app",
                 "api": "Api app"
@@ -123,7 +136,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKindDS != \"\""
+            "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
         },
         {
             "name": "ResourceGroupName",
@@ -213,7 +226,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp",
+            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp || WebAppKind = applinuxbuiltin",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -562,7 +575,10 @@
         {
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppNames"
+            "parameters": {
+                "WebAppNamesSelector": "$(WebAppNamesSelector)"
+            },
+            "dataSourceName": "AzureRMWebAppNamesFiltered"
         },
         {
             "target": "ResourceGroupName",
@@ -603,7 +619,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "App Service Deploy: $(WebAppKindDS): $(WebAppName)",
+    "instanceNameFormat": "App Service Deploy: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"
