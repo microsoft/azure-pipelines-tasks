@@ -15,12 +15,11 @@ $additionalArguments = Get-VstsInput -Name AdditionalArguments
 $cleanTargetBeforeCopy = Get-VstsInput -Name CleanTargetBeforeCopy
 $copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel
 
+# Import the loc strings.
+Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
+
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
-
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
 try 
 {
@@ -29,9 +28,6 @@ try
     $machineFilter = $machineNames
     $sourcePath = $sourcePath.Trim('"')
     $targetPath = $targetPath.Trim('"')
-
-    # Default + constants #
-    $resourceFQDNKeyName = Get-ResourceFQDNTagKey
 
     $envOperationStatus = 'Passed'
 
@@ -50,50 +46,38 @@ try
     else
     {
 
-        Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter"
-         $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -ResourceFilter $machineFilter
-        Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName"
+        $machines = $environmentName.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
 
-        $fetchedEnvironmentName = $environment.Name
+        $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
+        $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
 
-        Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName"
-        $resources = Get-EnvironmentResources -Environment $environment
-        Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName"
-
-        if ($resources.Count -eq 0)
+        if ($machines.Count -eq 0)
         {
             throw (Get-VstsLocString -Key "WFC_NoMachineExistsUnderEnvironment0ForDeployment" -ArgumentList $environmentName)
         }
 
-        $resourcesPropertyBag = Get-ResourcesProperties -envName $fetchedEnvironmentName -resources $resources
-
-        if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ))
+        if($copyFilesInParallel -eq "false" -or  ( $machines.Count -eq 1 ))
         {
-            foreach($resource in $resources)
+            foreach($machine in $machines)
             {
-                $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-                $machine = $resourceProperties.fqdn        
 
                 Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-                Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+                Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments
             } 
         }
         else
         {
             [hashtable]$Jobs = @{} 
 
-            foreach($resource in $resources)
+            foreach($machine in $machines)
             {
-                $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-
-                $machine = $resourceProperties.fqdn        
 
                 Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-                $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+                $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments
 
-                $Jobs.Add($job.Id, $resourceProperties)
+                $Jobs.Add($job.Id, $machine)
             }        
 
             While ($Jobs.Count -gt 0)

@@ -17,6 +17,9 @@ $initializationScriptPath = Get-VstsInput -Name InitializationScriptPath
 $runPowershellInParallel = Get-VstsInput -Name RunPowershellInParallel
 $sessionVariables = Get-VstsInput -Name SessionVariables
 
+# Import the loc strings.
+Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
+
 . $PSScriptRoot/PowerShellJob.ps1
 . $PSScriptRoot/Utility.ps1
 
