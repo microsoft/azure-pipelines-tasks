@@ -33,11 +33,6 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
-        },
-        {
-            "name": "xctool",
-            "displayName": "xctool (deprecated)",
-            "isExpanded": false
         }
     ],
     "inputs": [
@@ -95,7 +90,6 @@
             "required": true,
             "helpMarkDown": "Choose the tool to use for generating the IPA.",
             "options": {
-                "xcrun": "xcrun (deprecated by Apple)",
                 "xcodebuild": "xcodebuild archive and export"
             },
             "groupName": "package"
@@ -322,22 +316,6 @@
             "defaultValue": false,
             "groupName": "advanced",
             "helpMarkDown": "Select this option to publish JUnit Test results produced above using xctool to VSTS/TFS."
-        },
-        {
-            "name": "useXctool",
-            "type": "boolean",
-            "label": "Use xctool",
-            "required": false,
-            "helpMarkDown": "Use xctool instead of xcodebuild. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details. Note: xctool has been deprecated and does not work with Xcode 8.",
-            "groupName": "xctool"
-        },
-        {
-            "name": "xctoolReporter",
-            "type": "string",
-            "label": "xctool Test Reporter Format",
-            "required": false,
-            "helpMarkDown": "Test reporter format to use when \"test\" action is specified and \"Use xctool\" is checked. Specify \"junit:output-file-path-here.xml\" to generate a file format compatible with the Publish Test Results task. When specified, \"plain\" is automatically added as well. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details. Note: xctool has been deprecated and does not work with Xcode 8.",
-            "groupName": "xctool"
         }
     ],
     "execution": {

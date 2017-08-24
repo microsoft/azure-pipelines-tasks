@@ -17,8 +17,7 @@ async function run() {
             tl.setVariable('DEVELOPER_DIR', devDir);
         }
 
-        var useXctool: boolean = tl.getBoolInput('useXctool', false);
-        var tool: string = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
+        var tool: string = tl.which('xcodebuild', true);
         tl.debug('Tool selected: ' + tool);
 
         //--------------------------------------------------------
@@ -58,7 +57,6 @@ async function run() {
         var configuration: string = tl.getInput('configuration', false);
         var scheme: string = tl.getInput('scheme', false);
         var useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
-        var xctoolReporter: string = tl.getInput('xctoolReporter', false);
         var actions: string[] = tl.getDelimitedInput('actions', ' ', true);
         var packageApp: boolean = tl.getBoolInput('packageApp', true);
         var args: string = tl.getInput('args', false);
@@ -96,7 +94,6 @@ async function run() {
             xcb.arg(ws);
         }
         xcb.argIf(scheme, ['-scheme', scheme]);
-        xcb.argIf(useXctool && xctoolReporter, ['-reporter', 'plain', '-reporter', xctoolReporter]);
         xcb.arg(actions);
         if (actions.toString().indexOf('archive') < 0) {
             // redirect build output if archive action is not passed
@@ -187,10 +184,7 @@ async function run() {
         xcb.argIf(xcode_devTeam, xcode_devTeam);
 
         //--- Enable Xcpretty formatting if using xcodebuild ---
-        if (useXctool && useXcpretty) {
-            tl.warning(tl.loc('XcodebuildRequiredForXcpretty'));
-        }
-        if (!useXctool && useXcpretty) {
+        if (useXcpretty) {
             var xcPrettyPath: string = tl.which('xcpretty', true);
             var xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
@@ -208,21 +202,10 @@ async function run() {
         var publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
 
         if (publishResults) {
-            if (useXctool) {
-                if (xctoolReporter && 0 !== xctoolReporter.length) {
-                    var xctoolReporterString = xctoolReporter.split(":");
-                    if (xctoolReporterString && xctoolReporterString.length === 2) {
-                        testResultsFiles = tl.resolve(workingDir, xctoolReporterString[1].trim());
-                    }
-                } else {
-                    tl.warning(tl.loc('UseXcToolForTestPublishing'))
-                }
-            } else if (!useXctool) {
-                if (!useXcpretty) {
-                    tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-                } else {
-                    testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
-                }
+            if (!useXcpretty) {
+                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
+            } else {
+                testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
             }
 
             if (testResultsFiles && 0 !== testResultsFiles.length) {

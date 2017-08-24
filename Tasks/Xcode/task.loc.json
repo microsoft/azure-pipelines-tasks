@@ -33,11 +33,6 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
-    },
-    {
-      "name": "xctool",
-      "displayName": "ms-resource:loc.group.displayName.xctool",
-      "isExpanded": false
     }
   ],
   "inputs": [
@@ -95,7 +90,6 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageTool",
       "options": {
-        "xcrun": "xcrun (deprecated by Apple)",
         "xcodebuild": "xcodebuild archive and export"
       },
       "groupName": "package"
@@ -322,22 +316,6 @@
       "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
-    },
-    {
-      "name": "useXctool",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useXctool",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.useXctool",
-      "groupName": "xctool"
-    },
-    {
-      "name": "xctoolReporter",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.xctoolReporter",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xctoolReporter",
-      "groupName": "xctool"
     }
   ],
   "execution": {
