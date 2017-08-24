@@ -1,9 +1,9 @@
 # Run Tests using Visual Studio task
 
-###Overview
+## Overview
 VSTest task can be used to run tests on Build agent machines. Using the appropriate test adapters to Visual Studio, you can run tests written using test frameworks like MSTest, NUnit, xUnit, Mocha and Jasmine. The task uses vstest.console.exe to execute tests which is documented at https://msdn.microsoft.com/en-us/library/jj155796.aspx 
 
-###The different parameters of the task are explained below:
+## The different parameters of the task are explained below:
 
 - **Test Assembly:** Required Field. This field specifies the test assemblies(s) from which the tests should be picked. 
 	*	Wildcards can be used
@@ -32,5 +32,3 @@ For more information, please see https://blogs.msdn.com/b/visualstudioalm/archiv
 - **Path to Custom Test Adaptors:**	Path to the testadapter for the framework in which the tests are written. Provided directory and all subdirectories are checked for testadapters. If there is a packages folder in the sources directory, it is automatically searched for testadapters. Hence, any testadapter downloaded as a Nuget package will be used without any input. For example, ‘$(Build.SourcesDirectory)\Fabrikam\packages’
 
 - **Other console options:**	Other options that can be provided to vstest.console.exe. For example, if you are using vsix extensions, you can provide “/UseVsixExtensions:true”
-
-
