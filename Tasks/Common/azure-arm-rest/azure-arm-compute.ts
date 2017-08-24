@@ -440,7 +440,7 @@ export class VirtualMachineExtensions {
             (error) => callback(error));
     }
 
-    public get(resourceGroupName: string, resourceName: string, resourceType: Model.ComputeResourceType, vmExtensionName: string, options, callback: azureServiceClient.ApiCallback) {
+    public get(resourceGroupName: string, resourceName:string, resourceType: Model.ComputeResourceType, vmExtensionName: string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -653,7 +653,7 @@ export class VirtualMachineScaleSets {
             (error) => callback(error));
     }
 
-    public get(resourceGroupName: string, vmssName: string, options, callback: azureServiceClient.ApiCallback) {
+    public get(resourceGroupName:string, vmssName:string, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -718,7 +718,7 @@ export class VirtualMachineScaleSets {
         }
 
         if (imageUrl === null || imageUrl === undefined || typeof imageUrl.valueOf() !== 'string') {
-            throw new Error(tl.loc("VMSSImageUrlCannotBeNull"));
+                throw new Error(tl.loc("VMSSImageUrlCannotBeNull"));
         }
 
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
@@ -735,72 +735,72 @@ export class VirtualMachineScaleSets {
 
         // get VMSS
         this.get(resourceGroupName, vmssName, null, (error, result, request, response) => {
-            if (error) {
-                tl.warning(tl.loc("GetVMSSFailed", resourceGroupName, vmssName, error));
-                return callback(error, null);
-            }
-
-            var vmss: Model.VMSS = result;
-            var osDisk = vmss.properties.virtualMachineProfile.storageProfile.osDisk;
-            if (!(osDisk && osDisk.image && osDisk.image.uri)) {
-                return callback(tl.loc("VMSSDoesNotHaveCustomImage", vmssName));
-            }
-
-            if (imageUrl === osDisk.image.uri) {
-                console.log(tl.loc("VMSSImageAlreadyUptoDate", vmssName));
-                return callback(null, null);
-            }
-
-            // update image uri
-            osDisk.image.uri = imageUrl;
-            var storageProfile: Model.StorageProfile = { "osDisk": osDisk };
-
-            // update VM extension
-            var oldExtensionProfile: Model.ExtensionProfile = vmss.properties.virtualMachineProfile.extensionProfile;
-            var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile };
-            var properties: Model.VMSSProperties = { "virtualMachineProfile": virtualMachineProfile };
-            var patchBody: Model.VMSS = {
-                "id": vmss["id"],
-                "name": vmss["name"],
-                "properties": properties
-            };
-
-            var httpRequest = new webClient.WebRequest();
-            httpRequest.method = 'PATCH';
-            httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmssName}',
-                {
-                    '{resourceGroupName}': resourceGroupName,
-                    '{vmssName}': vmssName
+                if (error) {
+                    tl.warning(tl.loc("GetVMSSFailed", resourceGroupName, vmssName, error));
+                    return callback(error, null);
                 }
-            );
 
-            // Set Headers
-            httpRequest.headers = this.client.setCustomHeaders(options);
-            httpRequest.body = JSON.stringify(patchBody);
+                var vmss: Model.VMSS = result;
+                var osDisk = vmss.properties.virtualMachineProfile.storageProfile.osDisk;
+                if(!(osDisk && osDisk.image && osDisk.image.uri)) {
+                    return callback(tl.loc("VMSSDoesNotHaveCustomImage", vmssName));
+                }
 
-            // patch VMSS image
-            console.log(tl.loc("NewVMSSImageUrl", imageUrl));
-            console.log(tl.loc("VMSSUpdateImage", vmssName));
-            this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-                var deferred = Q.defer<azureServiceClient.ApiResult>();
-                var statusCode = response.statusCode;
-                if (response.statusCode == 200) {
-                    // wait for image update to complete
-                    this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                        if (operationResponse.body.status === "Succeeded") {
-                            deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
-                        }
-                        else {
-                            deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
-                        }
-                    }, (error) => deferred.reject(error));
+                if(imageUrl === osDisk.image.uri) {
+                    console.log(tl.loc("VMSSImageAlreadyUptoDate", vmssName));
+                    return callback(null, null);
                 }
-                else {
-                    deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-                }
-                return deferred.promise;
-            }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-                (error) => callback(error));
+
+                // update image uri
+                osDisk.image.uri = imageUrl;
+                var storageProfile: Model.StorageProfile = { "osDisk": osDisk };
+
+                // update VM extension
+                var oldExtensionProfile: Model.ExtensionProfile = vmss.properties.virtualMachineProfile.extensionProfile;
+                var virtualMachineProfile: Model.VirtualMachineProfile = { "storageProfile": storageProfile };
+                var properties: Model.VMSSProperties = { "virtualMachineProfile": virtualMachineProfile };
+                var patchBody: Model.VMSS = {
+                    "id": vmss["id"],
+                    "name": vmss["name"],
+                    "properties":  properties
+                };
+
+                var httpRequest = new webClient.WebRequest();
+                httpRequest.method = 'PATCH';
+                httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmssName}',
+                    {
+                        '{resourceGroupName}': resourceGroupName,
+                        '{vmssName}': vmssName
+                    }
+                );
+
+                // Set Headers
+                httpRequest.headers = this.client.setCustomHeaders(options);
+                httpRequest.body = JSON.stringify(patchBody);
+
+                // patch VMSS image
+                console.log(tl.loc("NewVMSSImageUrl", imageUrl));
+                console.log(tl.loc("VMSSUpdateImage", vmssName));
+                this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
+                    var deferred = Q.defer<azureServiceClient.ApiResult>();
+                    var statusCode = response.statusCode;
+                    if (response.statusCode == 200) {
+                        // wait for image update to complete
+                        this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
+                            if (operationResponse.body.status === "Succeeded") {
+                                deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                            }
+                            else {
+                                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                            }
+                        }, (error) => deferred.reject(error));
+                    }
+                    else {
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                    }
+                    return deferred.promise;
+                }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+                    (error) => callback(error));
         });
     }
 }
