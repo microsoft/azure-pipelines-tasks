@@ -58,7 +58,7 @@ describe('MobileCenterDistribute L0 Suite', function () {
         done();
     });
 
-    it('Postiive path: can continue upload without symbols if variable MobileCenterDistribute.ContinueIfSymbolsNotFound is true', (done: MochaDone) => {
+    it('Postiive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', (done: MochaDone) => {
         this.timeout(2000);
 
         let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');

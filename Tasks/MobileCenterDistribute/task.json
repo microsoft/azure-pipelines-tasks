@@ -2,7 +2,7 @@
     "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
     "name": "MobileCenterDistribute",
     "friendlyName": "Mobile Center Distribute",
-    "description": "Distribute mobile app packages to Visual Studio Mobile Center",
+    "description": "Distribute mobile app builds to testers and users via Mobile Center",
     "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
     "category": "Deploy",
     "preview": true,

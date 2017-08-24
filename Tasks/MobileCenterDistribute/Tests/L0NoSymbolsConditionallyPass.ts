@@ -11,7 +11,7 @@ var nock = require('nock');
 let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-process.env['MOBILECENTERDISTRIBUTE_CONTINUEIFSYMBOLSNOTFOUND']='true';
+process.env['VSMOBILECENTERUPLOAD_CONTINUEIFSYMBOLSNOTFOUND']='true';
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');

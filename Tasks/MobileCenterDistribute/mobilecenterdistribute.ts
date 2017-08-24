@@ -352,7 +352,7 @@ async function run() {
         if (!userAgent) {
             userAgent = 'VSTS';
         }
-        userAgent = userAgent + ' (Task:MobileCenterDistribute)';
+        userAgent = userAgent + ' (Task:VSMobileCenterUpload)';
 
         var effectiveApiServer = process.env['SONOMA_API_SERVER'] || apiServer;
         var effectiveApiVersion = process.env['SONOMA_API_VERSION'] || apiVersion;
@@ -406,7 +406,7 @@ async function run() {
         let app = utils.resolveSinglePath(appFilePattern);
         tl.checkPath(app, "Binary file");
 
-        let continueIfSymbolsNotFoundVariable = tl.getVariable('MobileCenterDistribute.ContinueIfSymbolsNotFound');
+        let continueIfSymbolsNotFoundVariable = tl.getVariable('VSMobileCenterUpload.ContinueIfSymbolsNotFound');
         let continueIfSymbolsNotFound = false;
         if (continueIfSymbolsNotFoundVariable && continueIfSymbolsNotFoundVariable.toLowerCase() === 'true') {
             continueIfSymbolsNotFound = true;
