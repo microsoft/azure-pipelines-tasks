@@ -65,7 +65,13 @@ function ValidatePatToken($token)
 . $PSScriptRoot/VssConnectionHelper.ps1
 . $PSScriptRoot/CltThresholdValidationHelper
 
-$userAgent = "QuickPerfTestBuildTask"
+#Set the userAgent appropriately based on whether the task is running as part of a ci or cd
+if($Env:SYSTEM_HOSTTYPE -eq "release") {
+    $userAgent = "QuickPerfTestReleaseTask"
+}
+else {
+    $userAgent = "QuickPerfTestBuildTask"
+}
 $global:RestTimeout = 60
 
 ############################################## PS Script execution starts here ##########################################
