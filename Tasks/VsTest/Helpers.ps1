@@ -35,7 +35,7 @@ function Get-VSTestConsole15Path {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path)
-        
+
     $shellFolder15 = $Path.TrimEnd('\'[0]) + '\'
     $installDir15 = ([System.IO.Path]::Combine($shellFolder15, 'Common7', 'IDE')) + '\'
     $testWindowDir15 = [System.IO.Path]::Combine($installDir15, 'CommonExtensions', 'Microsoft', 'TestWindow') + '\'
@@ -363,7 +363,7 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
 
         return $instances |
 
-            Where-Object { $_.Version.Major -eq 15 -and $_.Version.Minor -eq 0 } |
+            Where-Object { $_.Version.Major -eq 15 } |
 
             Sort-Object -Descending -Property Version |
 
@@ -383,8 +383,8 @@ function CmdletHasMember {
 	param(
 		[string]$memberName
 	)
-	
-	$publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName) 
+
+	$publishParameters = (gcm Publish-TestResults).Parameters.Keys.Contains($memberName)
 	return $publishParameters
 }
 
@@ -394,17 +394,17 @@ function InvokeVsTestCmdletHasMember {
 	param(
 		[string]$memberName
 	)
-	
-	$invokeVstestParams = (gcm Invoke-VSTest).Parameters.Keys.Contains($memberName) 
+
+	$invokeVstestParams = (gcm Invoke-VSTest).Parameters.Keys.Contains($memberName)
 	return $invokeVstestParams
 }
 
-function SetRegistryKeyForParallel {    
+function SetRegistryKeyForParallel {
 	[cmdletbinding()]
 	param(
 		[string]$vsTestVersion
 	)
-	
+
 	$regkey = "HKCU\SOFTWARE\Microsoft\VisualStudio\" + $vsTestVersion + "_Config\FeatureFlags\TestingTools\UnitTesting\Taef"
 	reg add $regkey /v Value /t REG_DWORD /d 1 /f /reg:32 > $null
 }
@@ -421,7 +421,7 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	{
 		$vsTestVersion = Get-VSVersion $vsTestLocation
 	}
-	
+
 	$version = [int]($vsTestVersion)
 	# with dev15 we are back to vstest and away from taef
 	if($version -ge 15)
@@ -443,11 +443,11 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 				# ensure the registry is set otherwise you need to launch VSIDE
 				SetRegistryKeyForParallel $vsTestVersion
 			}
-			
+
 			return $true
 		}
 	}
-	
+
 	return $false
 }
 
@@ -461,7 +461,7 @@ function SetupRunSettingsFileForParallel {
 	)
 
 	if($runInParallelFlag -eq "True")
-	{        
+	{
 		if([string]::Compare([io.path]::GetExtension($runSettingsFilePath), ".testsettings", $True) -eq 0)
 		{
 			Write-Warning "Run in Parallel is not supported with testsettings file."
@@ -480,8 +480,8 @@ function SetupRunSettingsFileForParallel {
 				</RunSettings>
 				'
 			}
-			else 
-			{ 
+			else
+			{
 				Write-Verbose "Adding maxcpucount element to runsettings file provided"
 				$runSettingsForParallel = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
 				$runConfigurationElement = $runSettingsForParallel.SelectNodes("//RunSettings/RunConfiguration")
@@ -494,7 +494,7 @@ function SetupRunSettingsFileForParallel {
 				if($maxCpuCountElement.Count -eq 0)
 				{
 					$newMaxCpuCountElement = $runConfigurationElement.AppendChild($runSettingsForParallel.CreateElement("MaxCpuCount"))
-				}    
+				}
 			}
 
 			$runSettingsForParallel.RunSettings.RunConfiguration.MaxCpuCount = $defaultCpuCount
@@ -504,7 +504,7 @@ function SetupRunSettingsFileForParallel {
 			return $tempFile
 		}
 	}
-	
+
 	return $runSettingsFilePath
 }
 
@@ -534,7 +534,7 @@ function Get-VSVersion($vsTestLocation)
 	{
 		return $null
 	}
-	
+
 	$keys = Get-Item $regPath | %{$_.GetSubKeyNames()} -ErrorAction SilentlyContinue
 	$version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
 
@@ -548,12 +548,12 @@ function Get-VSVersion($vsTestLocation)
 function Get-ResultsLocation {
 	[cmdletbinding()]
 	[OutputType([System.String])]
-	param(		
-		[string]$runSettingsFilePath		
+	param(
+		[string]$runSettingsFilePath
 	)
 
     # If this is a runsettings file then try to get the custom results location from it
-    
+
     if(!(CheckIfDirectory $runSettingsFilePath) -And (CheckIfRunsettings $runSettingsFilePath))
     {
         $runSettingsForTestResults = [System.Xml.XmlDocument](Get-Content $runSettingsFilePath)
@@ -561,7 +561,7 @@ function Get-ResultsLocation {
 
         if($resultsDirElement -And $resultsDirElement.Count -ne 0)
         {
-            $customLocation = $runSettingsForTestResults.RunSettings.RunConfiguration.ResultsDirectory       
+            $customLocation = $runSettingsForTestResults.RunSettings.RunConfiguration.ResultsDirectory
             if([io.path]::IsPathRooted($customLocation))
             {
                 return $customLocation
@@ -574,7 +574,7 @@ function Get-ResultsLocation {
 					return [io.path]::GetFullPath([io.path]::Combine([io.path]::GetDirectoryName($runSettingsFilePath), $customLocation))
 				}
             }
-        }        
+        }
     }
 
     return $null
