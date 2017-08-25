@@ -35,6 +35,7 @@ var action = tl.getInput("action", true);
 /* tslint:disable:no-var-requires */
 require({
     "Build an image": "./containerbuild",
+    "Tag an image": "./containertag",
     "Push an image": "./containerpush",
     "Run an image": "./containerrun",
     "Run a Docker command": "./containercommand"

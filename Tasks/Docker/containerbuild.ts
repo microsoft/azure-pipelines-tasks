@@ -5,6 +5,7 @@ import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
+import * as utils from "./utils";
 
 function findDockerFile(dockerfilepath : string) : string {
 
@@ -44,8 +45,8 @@ export function run(connection: ContainerConnection): any {
         command.arg(["--build-arg", buildArgument]);
     });
 
-    var imageName = tl.getInput("imageName", true);
-    imageName = imageUtils.changeDefaultImageNameToLowerCase(imageName);
+    let imageNames = utils.getImageNames(/* multipleImageNamesAllowed */ false);
+    let imageName = imageUtils.changeDefaultImageNameToLowerCase(imageNames[0]);
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);

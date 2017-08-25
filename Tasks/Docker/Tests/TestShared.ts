@@ -1,0 +1,47 @@
+import tl = require('vsts-task-lib');
+
+export let TestEnvVars = {
+    operatingSystem: "__operating_system__",
+    action: "__command__",
+    containerType: "__container_type__",
+    qualifyImageName: "__qualifyImageName__",
+    includeLatestTag: "__includeLatestTag__",
+    imageNameInputMode: "__image_name_input_mode__"
+};
+
+export let OperatingSystems = {
+    Windows: "Windows",
+    Other: "Other"
+};
+
+export let ActionTypes = {
+    build: "Build an image",
+    tag: "Tag an image",
+    push: "Push an image",
+    run: "Run an image",
+    dockerCommand: "Run a Docker command"
+};
+
+export let ContainerTypes = {
+    AzureContainerRegistry: "Azure Container Registry",
+    ContainerRegistry: "Container Registry"
+}
+
+export let ImageNameInputModes = {
+    SingleImageName: "SingleImageName",
+    MultipleImageNamesByFile: "MultipleImageNamesByFile"
+}
+
+export let ImageNamesFileImageName = "test_image";
+
+/**
+ * Formats the given path to be appropriate for the operating system.
+ * @param canonicalPath A non-rooted path using a forward slash (/) as a directory separator.
+ */
+export function formatPath(canonicalPath: string) {
+    if (process.env[TestEnvVars.operatingSystem] === OperatingSystems.Windows) {
+        return "F:\\" + canonicalPath.replace('/', '\\');
+    } else {
+        return "/" + canonicalPath;
+    }
+};

@@ -5,11 +5,12 @@ import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
+import * as utils from "./utils";
 
-function dockerPush(connection: ContainerConnection, imageName: string, imageDigestFile?: string): any {
+function dockerPush(connection: ContainerConnection, image: string, imageDigestFile?: string, useMultiImageMode?: boolean): any {
     var command = connection.createCommand();
     command.arg("push");
-    command.arg(imageName);
+    command.arg(image);
 
     if (!imageDigestFile) {
         return connection.execCommand(command);
@@ -24,51 +25,41 @@ function dockerPush(connection: ContainerConnection, imageName: string, imageDig
         // Parse the output to find the repository digest
         var imageDigest = output.match(/^[^:]*: digest: ([^ ]*) size: \d*$/m)[1];
         if (imageDigest) {
-            var baseImageName = imageUtils.imageNameWithoutTag(imageName);
-            fs.writeFileSync(imageDigestFile, baseImageName + "@" + imageDigest);
+            let baseImageName = imageUtils.imageNameWithoutTag(image);
+            let formattedDigestValue = baseImageName + "@" + imageDigest;
+            if (useMultiImageMode) {
+                // If we're pushing multiple images, we need to append all the digest values. Each one is contained on its own line.
+                fs.appendFileSync(imageDigestFile, formattedDigestValue + "\r\n");
+            } else {
+                fs.writeFileSync(imageDigestFile, formattedDigestValue);
+            }
         }
     });
 }
 
 export function run(connection: ContainerConnection): any {
-    var images = [];
-    var imageName = tl.getInput("imageName", true);
-    var qualifyImageName = tl.getBoolInput("qualifyImageName");
-    if (qualifyImageName) {
-        imageName = connection.qualifyImageName(imageName);
-    }
-    var baseImageName = imageUtils.imageNameWithoutTag(imageName);
+    let imageNames = utils.getImageNames();
+    let imageMappings = utils.getImageMappings(connection, imageNames);
 
-    if (baseImageName === imageName) {
-        images.push(imageName + ":latest");
-    } else {
-        images.push(imageName);
-    }
-
-    tl.getDelimitedInput("additionalImageTags", "\n").forEach(tag => {
-        images.push(baseImageName + ":" + tag);
-    });
-
-    var includeSourceTags = tl.getBoolInput("includeSourceTags");
-    if (includeSourceTags) {
-        sourceUtils.getSourceTags().forEach(tag => {
-            images.push(baseImageName + ":" + tag);
-        });
-    }
-
-    var includeLatestTag = tl.getBoolInput("includeLatestTag");
-    if (baseImageName !== imageName && includeLatestTag) {
-        images.push(baseImageName + ":latest");
-    }
-
-    var imageDigestFile: string;
+    let imageDigestFile: string = null;
     if (tl.filePathSupplied("imageDigestFile")) {
         imageDigestFile = tl.getPathInput("imageDigestFile");
     }
 
-    var promise = dockerPush(connection, images.shift(), imageDigestFile);
-    images.forEach(imageName => {
-        promise = promise.then(() => dockerPush(connection, imageName));
+    let imageNameInputMode = tl.getInput("imageNameInputMode", /* required */ true);
+    let useMultiImageMode = imageNameInputMode === "MultipleImageNamesByFile";
+
+    let firstImageMapping = imageMappings.shift();
+    let pushedSourceImages = [firstImageMapping.sourceImageName];
+    let promise = dockerPush(connection, firstImageMapping.targetImageName, imageDigestFile, useMultiImageMode);
+    imageMappings.forEach(imageMapping => {
+        // If we've already pushed a tagged version of this source image, then we don't want to write the digest info to the file since it will be duplicate.
+        if (pushedSourceImages.indexOf(imageMapping.sourceImageName) >= 0) {
+            promise = promise.then(() => dockerPush(connection, imageMapping.targetImageName));
+        } else {
+            pushedSourceImages.push(imageMapping.sourceImageName);
+            promise = promise.then(() => dockerPush(connection, imageMapping.targetImageName, imageDigestFile, useMultiImageMode));
+        }
     });
 
     return promise;

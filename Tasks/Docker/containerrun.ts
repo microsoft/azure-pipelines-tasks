@@ -3,6 +3,7 @@
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
+import * as utils from "./utils";
 
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
@@ -64,7 +65,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-w", workDir]);
     }
 
-    var imageName = tl.getInput("imageName", true);
+    let imageName = utils.getImageNames(/* multipleImageNamesAllowed */ false)[0];
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);
