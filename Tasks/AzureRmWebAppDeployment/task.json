@@ -308,7 +308,7 @@
             "required": false,
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_LOCKED_FILES=1 in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
             "name": "XmlTransformation",
