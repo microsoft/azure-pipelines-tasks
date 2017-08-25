@@ -67,6 +67,7 @@
       "required": true,
       "options": {
         "Build an image": "Build an image",
+        "Tag an image": "Tag an image",
         "Push an image": "Push an image",
         "Run an image": "Run an image",
         "Run a Docker command": "Run a Docker command"
@@ -109,20 +110,41 @@
       "helpMarkDown": "ms-resource:loc.input.help.context"
     },
     {
+      "name": "imageNameInputMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.imageNameInputMode",
+      "defaultValue": "SingleImageName",
+      "required": true,
+      "visibleRule": "action != Run a Docker command",
+      "options": {
+        "SingleImageName": "Single image name",
+        "MultipleImageNamesByFile": "One or more image names by file"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.imageNameInputMode"
+    },
+    {
       "name": "imageName",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
       "required": true,
-      "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
+      "visibleRule": "imageNameInputMode = SingleImageName && action != Run a Docker command",
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "imageNamesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageNamesPath",
+      "required": true,
+      "visibleRule": "imageNameInputMode = MultipleImageNamesByFile && action != Run a Docker command",
+      "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
     },
     {
       "name": "qualifyImageName",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.qualifyImageName",
       "defaultValue": "true",
-      "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
+      "visibleRule": "action = Build an image || action = Tag an image || action = Push an image || action = Run an image",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
     },
     {
@@ -133,7 +155,7 @@
         "rows": "2"
       },
       "label": "ms-resource:loc.input.label.additionalImageTags",
-      "visibleRule": "action = Build an image || action = Push an image",
+      "visibleRule": "action = Build an image || action = Tag an image || action = Push an image",
       "helpMarkDown": "ms-resource:loc.input.help.additionalImageTags"
     },
     {
@@ -141,7 +163,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeSourceTags",
       "defaultValue": "false",
-      "visibleRule": "action = Build an image || action = Push an image",
+      "visibleRule": "action = Build an image || action = Tag an image || action = Push an image",
       "helpMarkDown": "ms-resource:loc.input.help.includeSourceTags"
     },
     {
@@ -291,6 +313,8 @@
   "messages": {
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
-    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound"
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "MultipleImagesInImageNamesFile": "ms-resource:loc.messages.MultipleImagesInImageNamesFile"
   }
 }
