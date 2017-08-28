@@ -15,7 +15,7 @@ export class BlobService {
 
     public async uploadBlobs(source: string, container: string): Promise<void> {
         var fileProvider = new artifactProviders.LocalFilesystemProvider(source);
-        var azureProvider = new artifactProviders.AzureBlobProvider(this._storageAccountName, container,this._storageAccessKey);
+        var azureProvider = new artifactProviders.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey);
         var processor = new artifactProcessor.ArtifactEngine();
         await processor.processItems(fileProvider, azureProvider);
     }
