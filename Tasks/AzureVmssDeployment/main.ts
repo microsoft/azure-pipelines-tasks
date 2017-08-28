@@ -15,7 +15,7 @@ tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
-   tl.setResult(tl.TaskResult.Succeeded, "")
+    tl.setResult(tl.TaskResult.Succeeded, "")
 ).catch((error) =>
     tl.setResult(tl.TaskResult.Failed, error)
-);
+    );

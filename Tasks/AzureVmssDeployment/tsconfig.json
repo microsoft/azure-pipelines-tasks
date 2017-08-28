@@ -2,7 +2,6 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "commonjs",
-        "sourceMap": true,
-        "sourceRoot": "/home/tfs/github/vsts-tasks/Tasks/AzureVmssDeployment"
+        "sourceMap": true
     }
 }

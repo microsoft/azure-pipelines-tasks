@@ -6,9 +6,11 @@ export default class AzureVmssTaskParameters {
     public action: string;
     public vmssName: string;
     public imageUrl: string;
-    public customScriptsPath: string;
-    public customScriptCommand: string;
+    public customScriptsDirectory: string;
+    public customScript: string;
+    public customScriptArguments: string;
     public customScriptsStorageAccount: string;
+    public skipArchivingCustomScripts: boolean;
     public subscriptionId: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
 
@@ -19,9 +21,11 @@ export default class AzureVmssTaskParameters {
             this.vmssName = tl.getInput("vmssName", true);
             this.imageUrl = tl.getInput("imageUrl", true);
             this.action = tl.getInput("action");
-            this.customScriptsPath = tl.getInput("customScriptsPath");
-            this.customScriptCommand = tl.getInput("customScriptCommand");
+            this.customScriptsDirectory = tl.getInput("customScriptsDirectory");
+            this.customScript = tl.getInput("customScript");
+            this.customScriptArguments = tl.getInput("customScriptArguments");
             this.customScriptsStorageAccount = tl.getInput("customScriptsStorageAccount");
+            this.skipArchivingCustomScripts = tl.getBoolInput("skipArchivingCustomScripts");
             this.credentials = this.getARMCredentials(connectedService);
         }
         catch (error) {
