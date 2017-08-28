@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 121,
+    "Minor": 123,
     "Patch": 0
   },
   "demands": [
@@ -337,9 +337,7 @@
     "ProvProfileUUIDNotFound": "ms-resource:loc.messages.ProvProfileUUIDNotFound",
     "MultipleWorkspacesFound": "ms-resource:loc.messages.MultipleWorkspacesFound",
     "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
-    "UseXcToolForTestPublishing": "ms-resource:loc.messages.UseXcToolForTestPublishing",
     "UseXcprettyForTestPublishing": "ms-resource:loc.messages.UseXcprettyForTestPublishing",
-    "XcodebuildRequiredForXcpretty": "ms-resource:loc.messages.XcodebuildRequiredForXcpretty",
     "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
     "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
     "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
