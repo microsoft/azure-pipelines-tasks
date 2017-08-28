@@ -46,8 +46,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
         tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'false');
-        tr.setInput('xctoolReporter', '');
         tr.setInput('publishJUnitResults', 'false');
 
         tr.run()
@@ -75,61 +73,6 @@ describe('Xcode Suite', function() {
         })
     })
 
-    it('run Xcode with xctool as build tool', (done) => {
-        setResponseFile('responseXctool.json');
-
-        var tr = new trm.TaskRunner('Xcode', true, true);
-        tr.setInput('actions', 'build');
-        tr.setInput('configuration', '$(Configuration)');
-        tr.setInput('sdk', '$(SDK)');
-        tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
-        tr.setInput('packageApp', 'true');
-        tr.setInput('signMethod', 'file');
-        tr.setInput('p12', '/user/build');
-        tr.setInput('p12pwd', '');
-        tr.setInput('provProfile', '/user/build');
-        tr.setInput('removeProfile', 'false');
-        tr.setInput('unlockDefaultKeychain', 'false');
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('iosSigningIdentity', '');
-        tr.setInput('provProfileUuid', '');
-        tr.setInput('args', '');
-        tr.setInput('cwd', '/user/build');
-        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-        tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'true');
-        tr.setInput('xctoolReporter', '');
-        tr.setInput('publishJUnitResults', 'false');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('/home/bin/xctool -version'), 'xctool for version should have been run.');
-
-                assert(tr.ran('/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace build ' +
-                        'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-                        'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-                        'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-                        'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
-                    'xctool for building the ios project/workspace should have been run.');
-
-                assert(tr.ran('/home/bin/xcrun -sdk $(SDK) PackageApplication ' +
-                        '-v /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app ' +
-                        '-o /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.ipa'),
-                    "xcrun to package the app and generate an .ipa should have been run.");
-
-                assert(tr.invokedToolCount == 3, 'should have xctool for version, xctool for build and xcrun for packaging');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            })
-    })
-
     it('run Xcode with project and no workspace', (done) => {
         setResponseFile('responseProject.json');
 
@@ -153,8 +96,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
         tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'false');
-        tr.setInput('xctoolReporter', '');
         tr.setInput('publishJUnitResults', 'false');
 
         tr.run()
@@ -172,167 +113,6 @@ describe('Xcode Suite', function() {
                         '-o /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.ipa'),
                     "xcrun to package the app and generate an .ipa should have been run.");
                 assert(tr.invokedToolCount == 3, 'should have xcodebuild for version, xcodebuild for build and xcrun for packaging');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            })
-    })
-
-    it('run Xcode build with test action, publish test results', (done) => {
-        setResponseFile('responseXctool.json');
-
-        var tr = new trm.TaskRunner('Xcode', true, true);
-        tr.setInput('actions', 'test');
-        tr.setInput('configuration', '$(Configuration)');
-        tr.setInput('sdk', '$(SDK)');
-        tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
-        tr.setInput('packageApp', 'false');
-        tr.setInput('signMethod', 'file');
-        tr.setInput('p12', '/user/build');
-        tr.setInput('p12pwd', '');
-        tr.setInput('provProfile', '/user/build');
-        tr.setInput('removeProfile', 'false');
-        tr.setInput('unlockDefaultKeychain', 'false');
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('iosSigningIdentity', '');
-        tr.setInput('provProfileUuid', '');
-        tr.setInput('args', '');
-        tr.setInput('cwd', '/user/build');
-        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-        tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'true');
-        tr.setInput('xctoolReporter', 'junit:test-results.xml');
-        tr.setInput('publishJUnitResults', 'true');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('/home/bin/xctool -version'), 'xctool for version should have been run.');
-
-                assert(tr.ran('/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace ' +
-                        '-reporter plain -reporter junit:test-results.xml test ' +
-                        'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-                        'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-                        'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
-                    'xctool for building the ios project/workspace should have been run.');
-
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/test-results.xml;\]/) > 0,
-                    'publish test results should have been called');
-
-                assert(tr.invokedToolCount == 2, 'should have xctool for version, xctool for build and xcrun for packaging');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            })
-    })
-
-    it('run Xcode build with test action, publish test results by searching for result files with a pattern', (done) => {
-        setResponseFile('responseXctool.json');
-
-        var tr = new trm.TaskRunner('Xcode', true, true);
-        tr.setInput('actions', 'test');
-        tr.setInput('configuration', '$(Configuration)');
-        tr.setInput('sdk', '$(SDK)');
-        tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
-        tr.setInput('packageApp', 'false');
-        tr.setInput('signMethod', 'file');
-        tr.setInput('p12', '/user/build');
-        tr.setInput('p12pwd', '');
-        tr.setInput('provProfile', '/user/build');
-        tr.setInput('removeProfile', 'false');
-        tr.setInput('unlockDefaultKeychain', 'false');
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('iosSigningIdentity', '');
-        tr.setInput('provProfileUuid', '');
-        tr.setInput('args', '');
-        tr.setInput('cwd', '/user/build');
-        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-        tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'true');
-        tr.setInput('xctoolReporter', 'junit:**/*test*.xml');
-        tr.setInput('publishJUnitResults', 'true');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('/home/bin/xctool -version'), 'xctool for version should have been run.');
-
-                assert(tr.ran('/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace ' +
-                        '-reporter plain -reporter junit:**/*test*.xml test ' +
-                        'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-                        'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-                        'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
-                    'xctool for building the ios project/workspace should have been run.');
-
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/test1\/test-results.xml,\/user\/build\/test2\/testresults.xml;\]/) > 0,
-                    'publish test results should have been called');
-
-                assert(tr.invokedToolCount == 2, 'should have xctool for version, xctool for build and xcrun for packaging');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            })
-    })
-
-    it('run Xcode build with test action, without specifying xctool test report format', (done) => {
-        setResponseFile('responseXctool.json');
-
-        var tr = new trm.TaskRunner('Xcode', true, true);
-        tr.setInput('actions', 'test');
-        tr.setInput('configuration', '$(Configuration)');
-        tr.setInput('sdk', '$(SDK)');
-        tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
-        tr.setInput('packageApp', 'false');
-        tr.setInput('signMethod', 'file');
-        tr.setInput('p12', '/user/build');
-        tr.setInput('p12pwd', '');
-        tr.setInput('provProfile', '/user/build');
-        tr.setInput('removeProfile', 'false');
-        tr.setInput('unlockDefaultKeychain', 'false');
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('iosSigningIdentity', '');
-        tr.setInput('provProfileUuid', '');
-        tr.setInput('args', '');
-        tr.setInput('cwd', '/user/build');
-        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-        tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'true');
-        tr.setInput('publishJUnitResults', 'true');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('/home/bin/xctool -version'), 'xctool for version should have been run.');
-
-                assert(tr.ran('/home/bin/xctool -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace test ' +
-                        'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-                        'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-                        'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-                        'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
-                    'xctool for running tests on the ios project/workspace should have been run.');
-
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/test-results.xml;\]/) < 0,
-                    'publish test results should not have been called');
-
-                assert(tr.stdout.search(/[When using xctool, specify the xctool reporter format to publish test results. No results will be published.]/) >=0,
-                    'warning should have been provided that test results cannot be published with xctool without the test reporter format');
-
-                assert(tr.invokedToolCount == 2, 'should have xctool for version, xctool for test');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
@@ -366,7 +146,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('xcodeDeveloperDir', '');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-        tr.setInput('useXctool', 'false');
         tr.setInput('useXcpretty', 'true');
         tr.setInput('publishJUnitResults', 'true');
 
@@ -420,7 +199,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('xcodeDeveloperDir', '');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-        tr.setInput('useXctool', 'false');
         tr.setInput('useXcpretty', 'false');
         tr.setInput('publishJUnitResults', 'true');
 
@@ -481,8 +259,6 @@ describe('Xcode Suite', function() {
             tr.setInput('cwd', '/user/build');
             tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
             tr.setInput('xcodeDeveloperDir', '');
-            tr.setInput('useXctool', 'false');
-            tr.setInput('xctoolReporter', '');
             tr.setInput('publishJUnitResults', 'false');
 
             tr.run()
@@ -529,8 +305,6 @@ describe('Xcode Suite', function() {
             tr.setInput('cwd', '/user/build');
             tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
             tr.setInput('xcodeDeveloperDir', '');
-            tr.setInput('useXctool', 'false');
-            tr.setInput('xctoolReporter', '');
             tr.setInput('publishJUnitResults', 'false');
 
             tr.run()
@@ -572,8 +346,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
         tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'false');
-        tr.setInput('xctoolReporter', '');
         tr.setInput('publishJUnitResults', 'false');
 
         tr.run()
@@ -615,8 +387,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
         tr.setInput('xcodeDeveloperDir', '');
-        tr.setInput('useXctool', 'false');
-        tr.setInput('xctoolReporter', '');
         tr.setInput('publishJUnitResults', 'false');
 
         tr.run()
@@ -657,8 +427,6 @@ describe('Xcode Suite', function() {
      tr.setInput('cwd', '/user/build');
      tr.setInput('outputPattern', '');
      tr.setInput('xcodeDeveloperDir', '');
-     tr.setInput('useXctool', 'false');
-     tr.setInput('xctoolReporter', '');
      tr.setInput('publishJUnitResults', 'false');
 
      tr.run()
@@ -710,8 +478,6 @@ describe('Xcode Suite', function() {
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/iphone/release');
         tr.setInput('xcodeDeveloperDir', '/Applications/Xcode5');
-        tr.setInput('useXctool', 'false');
-        tr.setInput('xctoolReporter', '');
         tr.setInput('publishJUnitResults', 'false');
 
         tr.run()

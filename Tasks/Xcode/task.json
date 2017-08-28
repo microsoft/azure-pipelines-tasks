@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 121,
+        "Minor": 123,
         "Patch": 0
     },
     "demands": [
@@ -315,7 +315,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Select this option to publish JUnit Test results produced above using xctool to VSTS/TFS."
+            "helpMarkDown": "Select this option to publish JUnit Test results to VSTS/TFS."
         }
     ],
     "execution": {
@@ -337,9 +337,7 @@
         "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
         "MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
         "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory: %s",
-        "UseXcToolForTestPublishing": "When using xctool, specify the xctool reporter format to publish test results. No results will be published.",
         "UseXcprettyForTestPublishing": "When using xcodebuild, check 'Use xcpretty' to publish test results. No results will be published.",
-        "XcodebuildRequiredForXcpretty": "To use xcpretty, the build tool has to be xcodebuild. Uncheck the 'Use xctool' checkbox to use xcpretty.",
         "NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
         "XcodeSuccess": "Xcode task execution completed with no errors.",
         "TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
