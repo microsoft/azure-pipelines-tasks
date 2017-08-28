@@ -1,8 +1,8 @@
 {
   "name": "AzureVmssDeployment",
-  "main":"main.js",
+  "main": "main.js",
   "dependencies": {
-    "vsts-task-lib" : "^2.0.0",
-    "artifact-mover": "1.0.11"
+    "vsts-task-lib": "^2.0.0",
+    "item-level-downloader": "1.0.6"
   }
 }

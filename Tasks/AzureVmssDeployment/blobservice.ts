@@ -1,5 +1,5 @@
-import * as artifactProviders from 'artifact-mover/Providers';
-import * as artifactProcessor from 'artifact-mover/Engine';
+import * as artifactProviders from 'item-level-downloader/Providers';
+import * as artifactProcessor from 'item-level-downloader/Engine';
 import * as path from 'path';
 import * as util from 'util'
 import * as tl from 'vsts-task-lib/task';
@@ -14,7 +14,7 @@ export class BlobService {
     }
 
     public async uploadBlobs(source: string, container: string): Promise<void> {
-        var fileProvider = new artifactProviders.LocalFilesystemProvider(source);
+        var fileProvider = new artifactProviders.FilesystemProvider(source);
         var azureProvider = new artifactProviders.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey);
         var processor = new artifactProcessor.ArtifactEngine();
         await processor.processItems(fileProvider, azureProvider);
