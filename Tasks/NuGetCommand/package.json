@@ -1,6 +1,6 @@
 {
   "name": "nugetcommand",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
   "main": "nugetcommandmain.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "2.0.5",
+    "vsts-task-lib": "2.0.6",
     "xmlreader": "^0.2.3",
     "vso-node-api": "6.0.1-preview"
   }
