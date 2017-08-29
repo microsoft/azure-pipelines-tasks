@@ -73,11 +73,11 @@ try {
             [string[]]$SearchPattern = $SearchPattern -split "`n"
         }
         $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
-        $pdbFiles = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
+        $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
 
-        Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
+        Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $fileList.Count)
         
-        if (-not $pdbFiles) {
+        if (-not $fileList) {
             if ($SearchPattern.Contains(';') ) {
                 throw "No files found. Use newlines instead of ';' to separate search patterns."
             }
@@ -92,6 +92,7 @@ try {
         Write-Host (Get-VstsLocString -Key SkippingIndexing)
     } else {
         Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
+        $pdbFiles = $fileList | Where-Object { $_.EndsWith(".pdb", [StringComparison]::OrdinalIgnoreCase) }
         Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
     }
 
@@ -112,7 +113,7 @@ try {
 
             # Publish the symbols.
             Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
-            Invoke-PublishSymbols -PdbFiles $pdbFiles -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
+            Invoke-PublishSymbols -PdbFiles $fileList -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
         } else {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
@@ -143,7 +144,7 @@ try {
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
         
         [IO.File]::WriteAllLines($tmpFileName, [string[]]@("# FileList under $SymbolsFolder with pattern $SearchPattern", "")) # Also Truncates any existing files
-        foreach ($filename in $pdbFiles) {
+        foreach ($filename in $fileList) {
             [string]$fullFilePath = [IO.Path]::Combine($SourcePath, $filename)
             [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
         }
