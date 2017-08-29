@@ -173,7 +173,7 @@
                 $TaskDefinition.Settings.DisallowStartIfOnBatteries = $true
                 $TaskDefinition.Settings.StartWhenAvailable = $true
                 $TaskDefinition.Principal.UserId = "$Domain\$TestUser"
-                $taskDefinition.Principal.LogonType = 3
+                $taskDefinition.Principal.LogonType = 3  # Run in Interactive session. User must be logged in
 
                 $triggers = $TaskDefinition.Triggers
                 $trigger = $triggers.Create(7) # Start task immediatly after creating/updating
