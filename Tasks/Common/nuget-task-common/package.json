@@ -1,6 +1,6 @@
 {
   "name": "nuget-task-common",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VSTS Nuget Tasks Common",
   "main": "Utility.js",
   "scripts": {
@@ -16,8 +16,8 @@
     "ltx": "^2.6.2",
     "mockery": "^1.7.0",
     "vso-node-api": "^5.0.5",
-    "vsts-task-lib": "2.0.2-preview",
-    "vsts-task-tool-lib": "0.4.0",
+    "vsts-task-lib": "2.0.6",
+    "vsts-task-tool-lib": "0.4.1",
     "xmlreader": "^0.2.3"
   }
 }
