@@ -22,7 +22,8 @@
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
-    "groups": [{
+    "groups": [
+        {
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
             "isExpanded": true,
@@ -59,7 +60,8 @@
             "visibleRule": "command = pack"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -384,7 +386,8 @@
             }
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "feedRestore",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",

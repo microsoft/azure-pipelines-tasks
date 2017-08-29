@@ -1,13 +1,21 @@
 Param(
     [string]$zipName,
-    [string]$command
+    [string]$script,
+    [string]$scriptArgs
 )
 
 $ErrorActionPreference = 'Stop'
-try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { }
-[System.IO.Compression.ZipFile]::ExtractToDirectory($($zipName), '.')
 
-#"& '$($command.Replace("'", "''"))'"
-Write-Host $command
-#"& $command"
-Invoke-Expression $command
+if($zipName) {
+    Write-Host "Unzipping $zipName"
+    try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { }
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($($zipName), '.\a')
+    Push-Location ".\\a"
+}
+
+Write-Host "Invoking command: $script $scriptArgs"
+Invoke-Expression "$script $scriptArgs"
+
+if($zipName) {
+    Pop-Location
+}

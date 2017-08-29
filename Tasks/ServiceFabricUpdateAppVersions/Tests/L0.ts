@@ -75,6 +75,15 @@ describe('ServiceFabricUpdateAppVersions Suite', function () {
         it('(Update-PackageVersion) package version prefix changed', (done) => {
             psr.run(path.join(__dirname, 'Update-PackageVersion.VersionPrefixChanged.ps1'), done);
         })
+        it('(Update-PackageVersion) code package folders from both old and new packages do not exist', (done) => {
+            psr.run(path.join(__dirname, 'Update-PackageVersion.OldAndNewDoNotExist.ps1'), done);
+        })
+        it('(Update-PackageVersion) code package folder from old package does not exist', (done) => {
+            psr.run(path.join(__dirname, 'Update-PackageVersion.OnlyNewExists.ps1'), done);
+        })
+        it('(Update-PackageVersion) code package folder from new package does not exist', (done) => {
+            psr.run(path.join(__dirname, 'Update-PackageVersion.OnlyOldExists.ps1'), done);
+        })
         it('(Find-FileChanges) no changes', (done) => {
             psr.run(path.join(__dirname, 'Find-FileChanges.NoChanges.ps1'), done);
         })

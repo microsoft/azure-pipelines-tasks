@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 11
+        "Patch": 12
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric App Versions",
@@ -38,7 +38,7 @@
             "label": "Version Value",
             "defaultValue": ".$(Build.BuildNumber)",
             "required": true,
-            "helpMarkDown": "The value used to the specify the version in the manifest files. Default is .$(Build.BuildNumber)."
+            "helpMarkDown": "The value used to specify the version in the manifest files. Default is .$(Build.BuildNumber)."
         },
         {
             "name": "versionBehavior",

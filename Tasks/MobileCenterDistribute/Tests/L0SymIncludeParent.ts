@@ -9,7 +9,7 @@ var Stats = require('fs').Stats
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'vsmobilecenterupload.js');
+let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
@@ -17,21 +17,9 @@ tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'UWP');
-tmr.setInput('pdbPath', 'a/**/*.pdb');
-
-/*
-  dSyms folder structure:
-  a
-    f.txt
-    b
-      f.txt
-      c
-        d
-          f.txt
-        f.txt
-        x.pdb
-*/
+tmr.setInput('symbolsType', 'AndroidJava');
+tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
+tmr.setInput('packParentFolder', 'true');
 
 //prepare upload
 nock('https://example.test')
@@ -69,7 +57,7 @@ nock('https://example.test')
 //begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
-        symbol_type: 'UWP'
+        symbol_type: 'AndroidJava'
     })
     .reply(201, {
         symbol_upload_id: 100,
@@ -95,19 +83,17 @@ nock('https://example.test')
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
         '/test/path/to/my.ipa': true,
-        'a': true,
-        'a/f.txt': true,
-        'a/b': true,
-        'a/b/f.txt': true,
-        'a/b/c': true,
-        'a/b/c/f.txt': true,
-        'a/b/c/d': true,
-        'a/b/c/d/f.txt': true,
-        'a/b/c/x.pdb': true
+        '/test/path/to/mappings.txt': true,
+        '/test/path/to': true,
+        '/test/path/to/f1.txt': true,
+        '/test/path/to/f2.txt': true,
+        '/test/path/to/folder': true,
+        '/test/path/to/folder/f11.txt': true,
+        '/test/path/to/folder/f12.txt': true
     },
     'findMatch' : {
-        'a/**/*.pdb': [
-            'a/b/c/x.pdb'
+        '/test/path/to/mappings.txt': [
+            '/test/path/to/mappings.txt'
         ],
         '/test/path/to/my.ipa': [
             '/test/path/to/my.ipa'
@@ -135,26 +121,17 @@ fs.createWriteStream = (s: string) => {
 fs.readdirSync = (folder: string) => {
     let files: string[] = [];
 
-    if (folder === 'a') {
+    if (folder === '/test/path/to') {
         files = [
-            'f.txt',
-            'b'
+            'mappings.txt',
+            'f1.txt',
+            'f2.txt',
+            'folder'
         ]
-    } else if (folder === 'a/b') {
+    } else if (folder === '/test/path/to/folder') {
         files = [
-            'f.txt',
-            'c',
-            'd'
-        ]
-    } else if (folder === 'a/b/c') {
-        files = [
-            'f.txt',
-            'd',
-            'x.pdb'
-        ]
-    } else if (folder === 'a/b/c/d') {
-        files = [
-            'f.txt'
+            'f11.txt',
+            'f12.txt'
         ]
     }
 
@@ -163,20 +140,25 @@ fs.readdirSync = (folder: string) => {
 
 fs.statSync = (s: string) => {
     let stat = new Stats;
+//    s = s.replace("\\", "/");
 
     stat.isFile = () => {
-        if (s.endsWith('.txt') || s.endsWith('.pdb')) {
-            return true;
-        } else {
+        if (s === '/test/path/to') {
             return false;
+        } else if (s === '/test/path/to/folder') {
+            return false;
+        } else {
+            return true;
         }
     }
 
     stat.isDirectory = () => {
-        if (s.endsWith('.txt') || s.endsWith('.pdb')) {
-            return false;
-        } else {
+        if (s === '/test/path/to') {
             return true;
+        } else if (s === '/test/path/to/folder') {
+            return true;
+        } else {
+            return false;
         }
     }
 

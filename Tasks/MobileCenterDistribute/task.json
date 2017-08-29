@@ -1,10 +1,11 @@
 {
     "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
-    "name": "VSMobileCenterUpload",
-    "friendlyName": "Mobile Center Upload",
-    "description": "Upload mobile app packages to Visual Studio Mobile Center",
-    "helpMarkDown": "Upload mobile app packages to Visual Studio Mobile Center",
+    "name": "MobileCenterDistribute",
+    "friendlyName": "Mobile Center Distribute",
+    "description": "Distribute mobile app builds to testers and users via Mobile Center",
+    "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
     "category": "Deploy",
+    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -12,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 119,
+        "Minor": 123,
         "Patch": 1
     },
     "groups": [
@@ -142,7 +143,7 @@
     "instanceNameFormat": "Deploy $(app) to Visual Studio Mobile Center",
     "execution": {
         "Node": {
-            "target": "vsmobilecenterupload.js",
+            "target": "mobilecenterdistribute.js",
             "argumentFormat": ""
         }
     },

@@ -24,8 +24,8 @@ export default class VirtualMachineScaleSet {
         var result = await this._getResourceGroupForVmss(client);
         var resourceGroupName: string = result.resourceGroupName;
         var osType: string = result.osType;
-        if(!resourceGroupName) {
-            throw(tl.loc("FailedToGetRGForVMSS", this.taskParameters.vmssName));
+        if (!resourceGroupName) {
+            throw (tl.loc("FailedToGetRGForVMSS", this.taskParameters.vmssName));
         }
 
         switch (this.taskParameters.action) {
@@ -69,7 +69,7 @@ export default class VirtualMachineScaleSet {
         var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         let storageAccounts: azureModel.StorageAccount[] = await storageArmClient.storageAccounts.list(null);
         let index = storageAccounts.findIndex(account => account.name.toLowerCase() === this.taskParameters.customScriptsStorageAccount.toLowerCase());
-        if(index < 0) {
+        if (index < 0) {
             throw new Error(tl.loc("StorageAccountDoesNotExist", this.taskParameters.customScriptsStorageAccount));
         }
 
@@ -87,7 +87,7 @@ export default class VirtualMachineScaleSet {
     }
 
     private async _configureAppUsingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, osType: string): Promise<void> {
-        if(!!this.taskParameters.customScriptsPath) {
+        if (!!this.taskParameters.customScriptsDirectory) {
             tl.debug("Preparing custom scripts...");
             let customScriptInfo: CustomScriptsInfo = await this._prepareCustomScripts(osType);
             //return;
@@ -113,7 +113,7 @@ export default class VirtualMachineScaleSet {
             var matchingExtension = await this._getExistingCustomScriptExtension(client, resourceGroupName, customScriptExtension);
 
             // if extension already exists, remove it
-            if(!!matchingExtension) {
+            if (!!matchingExtension) {
                 await this._deleteCustomScriptExtension(client, resourceGroupName, matchingExtension);
             }
 
@@ -129,7 +129,7 @@ export default class VirtualMachineScaleSet {
         try {
             customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
-        } catch(error) {
+        } catch (error) {
             throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);
         }
 
@@ -137,46 +137,79 @@ export default class VirtualMachineScaleSet {
     }
 
     private _archiveCustomScripts(osType: string): CustomScriptsInfo {
-        try {
-            console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsPath));
-            let archive: ArchiveInfo = this._computeArchiveDetails(osType);
+        let escapedScript;
+        let escapedArgs;
+        let archiveFile = "";
 
-            if(!tl.exist(archive.directory)) {
-                tl.mkdirP(archive.directory);
-            }
+        let packageDirectory = this.taskParameters.customScriptsDirectory;
 
-            // create archive file
-            compress.createArchive(this.taskParameters.customScriptsPath, archive.compression, archive.filePath);
+        if (osType === "Windows") {
+            // escape powershell special characters. This is needed as this script will be executed in a powershell session
+            let script = this.taskParameters.customScript.replace(/`/g, '``').replace(/\$/g, '`$');
 
-            let invokerScriptPath: string;
-            let invokerCommand: string;
-            let escapedUserCommand = this.taskParameters.customScriptCommand.replace(/'/g, "''");
-            if(osType === "Windows") {
-                invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-                invokerCommand = `powershell ./customScriptInvoker.ps1 -zipName '${archive.fileName}' -command '${escapedUserCommand}'`;
-            } else {
-                invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
-                invokerCommand = `./customScriptInvoker.sh '${archive.fileName}' '${escapedUserCommand}'`;
-            }
+            // put an extra quote to handle space in script name
+            let quotedScript = `.\\\\"${script}\"`
 
-            // copy invoker script to same dir as archive
-            tl.cp(invokerScriptPath, archive.directory, "-f", false);
-            console.log(tl.loc("CopiedInvokerScript", archive.directory));
+            // and escape quotes to handle this extra quote
+            escapedScript = quotedScript.replace(/'/g, "''").replace(/"/g, '"""');
 
-            console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
-            tl.debug("Invoker command: " + invokerCommand);
-            return <CustomScriptsInfo>{
-                localDirPath: archive.directory,
-                command: invokerCommand
-            };
+            // escape powershell special characters
+            escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
+        } else {
+            // escape shell special characters. This is needed as this script will be executed in a shell
+            let script = this.taskParameters.customScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');
 
-        } catch (error) {
-            tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
-            return <CustomScriptsInfo>{
-                localDirPath: this.taskParameters.customScriptsPath,
-                command: this.taskParameters.customScriptCommand
-            };
+            // put an extra quote to handle space in script name
+            let quotedScript = `./\"${script}\"`
+
+            // and escape quotes to handle this extra quote...
+            escapedScript = quotedScript.replace(/'/g, "'\"'\"'");
+
+            // ...and escape quotes to handle this extra quote
+            escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
         }
+
+        if (!this.taskParameters.skipArchivingCustomScripts) {
+            try {
+                console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsDirectory));
+                let archive: ArchiveInfo = this._computeArchiveDetails(osType);
+
+                if (!tl.exist(archive.directory)) {
+                    tl.mkdirP(archive.directory);
+                }
+
+                // create archive file
+                compress.createArchive(this.taskParameters.customScriptsDirectory, archive.compression, archive.filePath);
+                archiveFile = archive.fileName;
+                packageDirectory = archive.directory;
+                console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
+            } catch (error) {
+                tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
+            }
+        } else {
+            console.log(tl.loc("SkippedArchivingCustomScripts"));
+        }
+
+        let invokerScriptPath: string;
+        let invokerCommand: string;
+
+        if (osType === "Windows") {
+            invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
+            invokerCommand = `powershell ./customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}'`;
+        } else {
+            invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
+            invokerCommand = `./customScriptInvoker.sh '${archiveFile}' '${escapedScript}' '${escapedArgs}'`;
+        }
+
+        // copy invoker script to same dir as archive
+        tl.cp(invokerScriptPath, packageDirectory, "-f", false);
+        console.log(tl.loc("CopiedInvokerScript", packageDirectory));
+
+        tl.debug("Invoker command: " + invokerCommand);
+        return <CustomScriptsInfo>{
+            localDirPath: packageDirectory,
+            command: invokerCommand
+        };
     }
 
     private _getResourceGroupForVmss(client: armCompute.ComputeManagementClient): Promise<any> {
@@ -195,8 +228,7 @@ export default class VirtualMachineScaleSet {
                 var resourceGroupName: string;
                 var osType: string;
                 for (var i = 0; i < vmssList.length; i++) {
-                    if(vmssList[i].name.toUpperCase() === this.taskParameters.vmssName.toUpperCase())
-                    {
+                    if (vmssList[i].name.toUpperCase() === this.taskParameters.vmssName.toUpperCase()) {
                         resourceGroupName = utils.getResourceGroupNameFromUri(vmssList[i].id);
                         osType = vmssList[i].properties.virtualMachineProfile.storageProfile.osDisk.osType;
                         break;
@@ -219,8 +251,8 @@ export default class VirtualMachineScaleSet {
                 var extensions: azureModel.VMExtension[] = result || [];
                 var matchingExtension: azureModel.VMExtension = null;
                 extensions.forEach((extension: azureModel.VMExtension) => {
-                    if(extension.properties.type === customScriptExtension.properties.type &&
-                    extension.properties.publisher === customScriptExtension.properties.publisher) {
+                    if (extension.properties.type === customScriptExtension.properties.type &&
+                        extension.properties.publisher === customScriptExtension.properties.publisher) {
                         matchingExtension = extension;
                         return;
                     }
@@ -273,17 +305,17 @@ export default class VirtualMachineScaleSet {
     }
 
     private _getCustomScriptExtensionMetadata(osType: string): azureModel.VMExtensionMetadata {
-        if(osType === "Windows") {
+        if (osType === "Windows") {
             return <azureModel.VMExtensionMetadata>{
                 type: "CustomScriptExtension",
                 publisher: "Microsoft.Compute",
                 typeHandlerVersion: "1.0"
             }
-        } else if(osType === "Linux") {
+        } else if (osType === "Linux") {
             return <azureModel.VMExtensionMetadata>{
-                type: "CustomScriptForLinux",
-                publisher: "Microsoft.OSTCExtensions",
-                typeHandlerVersion: "1.0"
+                type: "CustomScript",
+                publisher: "Microsoft.Azure.Extensions",
+                typeHandlerVersion: "2.0"
             }
         }
     }
@@ -311,21 +343,13 @@ export default class VirtualMachineScaleSet {
         let releaseId = tl.getVariable("release.releaseid");
         let releaseAttempt = tl.getVariable("release.attemptnumber");
         let filename: string = "cs-";
-        if(!!releaseId && !!releaseAttempt) {
+        if (!!releaseId && !!releaseAttempt) {
             filename = filename + releaseId + "-" + releaseAttempt;
         } else {
             filename = filename + tl.getVariable("build.buildid");
         }
 
         return filename;
-    }
-
-    private _getArchiveFileExtension(osType: string): string {
-        if(osType === "Windows") {
-            return ".zip";
-        } else {
-            return ".tar.gz";
-        }
     }
 }
 
