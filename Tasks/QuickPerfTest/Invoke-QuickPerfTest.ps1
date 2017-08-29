@@ -66,11 +66,11 @@ function ValidatePatToken($token)
 . $PSScriptRoot/CltThresholdValidationHelper
 
 #Set the userAgent appropriately based on whether the task is running as part of a ci or cd
-if($Env:SYSTEM_HOSTTYPE -ieq "release") {
-    $userAgent = "QuickPerfTestReleaseTask"
+if($Env:SYSTEM_HOSTTYPE -ieq "build") {    
+	$userAgent = "QuickPerfTestBuildTask"
 }
 else {
-    $userAgent = "QuickPerfTestBuildTask"
+    $userAgent = "QuickPerfTestReleaseTask"
 }
 $global:RestTimeout = 60
 
