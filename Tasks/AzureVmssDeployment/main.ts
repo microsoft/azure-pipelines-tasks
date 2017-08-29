@@ -7,14 +7,7 @@ import VirtualMachineScaleSet from "./operations/VirtualMachineScaleSet";
 async function run(): Promise<void> {
     var taskParameters = new AzureVmssTaskParameters();
     var vmssOperation = new VirtualMachineScaleSet(taskParameters);
-    switch (taskParameters.action) {
-        case "UpdateImage":
-        case "Update image":
-            await vmssOperation.execute();
-            break;
-        default:
-            throw tl.loc("InvalidAction", taskParameters.action);
-    }
+    await vmssOperation.execute();
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");
@@ -22,7 +15,7 @@ tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
-   tl.setResult(tl.TaskResult.Succeeded, "")
+    tl.setResult(tl.TaskResult.Succeeded, "")
 ).catch((error) =>
     tl.setResult(tl.TaskResult.Failed, error)
-);
+    );

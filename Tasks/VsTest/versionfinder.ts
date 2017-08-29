@@ -1,4 +1,5 @@
 import * as tl from 'vsts-task-lib/task';
+import tr = require('vsts-task-lib/toolrunner');
 import * as path from 'path';
 import * as Q from 'q';
 import * as models from './models';
@@ -15,10 +16,15 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     const wmicTool = tl.tool('wmic');
     const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
     wmicTool.arg(wmicArgs);
-    const output = wmicTool.execSync();
-    tl.debug('VSTest Version information: ' + output.stdout);
+    let output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
 
-    const verSplitArray = output.stdout.split('=');
+    if (utils.Helper.isNullOrWhitespace(output)) {
+        tl.error(tl.loc('ErrorReadingVstestVersion'));
+        throw new Error(tl.loc('ErrorReadingVstestVersion'));
+    }
+    output = output.trim();
+    tl.debug('VSTest Version information: ' + output);
+    const verSplitArray = output.split('=');
     if (verSplitArray.length !== 2) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
         throw new Error(tl.loc('ErrorReadingVstestVersion'));
@@ -26,8 +32,8 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
 
     const versionArray = verSplitArray[1].split('.');
     if (versionArray.length !== 4) {
-        tl.warning(tl.loc('UnexpectedVersionString', output.stdout));
-        throw new Error(tl.loc('UnexpectedVersionString', output.stdout));
+        tl.warning(tl.loc('UnexpectedVersionString', output));
+        throw new Error(tl.loc('UnexpectedVersionString', output));
     }
 
     const majorVersion = parseInt(versionArray[0]);
@@ -109,9 +115,9 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
 function getVSTestConsole15Path(): string {
     const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
     vswhereTool.line('-version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
-    let vsPath = vswhereTool.execSync().stdout;
-    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+    let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     vsPath = utils.Helper.trimString(vsPath);
+    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
     if (!utils.Helper.isNullOrWhitespace(vsPath)) {
         return path.join(vsPath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
     }

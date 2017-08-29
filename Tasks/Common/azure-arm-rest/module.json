@@ -35,6 +35,7 @@
         "NewVMSSImageUrl": "Url for new VMSS image: %s.",
         "VMSSUpdateImage": "Updating VMSS %s to use new image...",
         "ResourceNameCannotBeNull": "Resource name cannot be null.",
-        "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty."
+        "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
+        "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string."
     }
 }

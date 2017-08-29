@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 6
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -116,7 +116,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
-            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, rutime. The arguments depend on the command selected."
+            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
         },
         {
             "name": "zipAfterPublish",
@@ -209,7 +209,7 @@
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "",
-            "helpMarkDown": "Specifies the folder in which packages are installed. If no folder is specified, packages are restored into a packages/ folder alongside the selected solution, packages.config, or project.json.",
+            "helpMarkDown": "Specifies the folder in which packages are installed. If no folder is specified, packages are restored into the default NuGet package cache.",
             "required": "false",
             "groupName": "restoreAdvanced"
         },
@@ -365,7 +365,7 @@
             "label": "Additional build properties",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
+            "helpMarkDown": "Specifies a list of token = value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
             "groupName": "packAdvanced"
         },
         {
@@ -417,9 +417,11 @@
         "Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
         "Error_PackageFailure": "An error ocurred while trying to pack the files.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
+        "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
         "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
+        "Info_NoFilesMatchedTheSearchPattern": "No files matched the search pattern.",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
         "Info_UsingVersion": "Using version: %s",

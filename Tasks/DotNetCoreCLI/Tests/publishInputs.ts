@@ -98,7 +98,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "*fail*/project.json": [],
         "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
         "dummy/project.json": ["dummy/project.json"],
-        "" : [""]
+        "" : []
     }
 };
 

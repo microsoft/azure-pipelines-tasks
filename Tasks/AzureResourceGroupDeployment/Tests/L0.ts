@@ -11,12 +11,12 @@ function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Azure Resource Group Deployment', function() {
+describe('Azure Resource Group Deployment', function () {
     this.timeout(30000);
     before((done) => {
         done();
     });
-    after(function() {
+    after(function () {
     });
     it("Successfully added Team Services Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
@@ -446,6 +446,7 @@ describe('Azure Resource Group Deployment', function() {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            // assert(tr.stdout.indexOf("AddedOutputVariable") > 0, "should have set task output variable");
             done();
         }
         catch (error) {

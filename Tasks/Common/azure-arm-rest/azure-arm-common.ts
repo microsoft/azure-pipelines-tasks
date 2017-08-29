@@ -8,13 +8,13 @@ export class ApplicationTokenCredentials {
     private clientId: string;
     private domain: string;
     private secret: string;
-    public armUrl: string;
+    public baseUrl: string;
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
     public isAzureStackEnvironment: boolean;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, armUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error(tl.loc("ClientIdCannotBeEmpty"));
         }
@@ -27,7 +27,7 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("SecretCannotBeEmpty"));
         }
 
-        if (!Boolean(armUrl) || typeof armUrl.valueOf() !== 'string') {
+        if (!Boolean(baseUrl) || typeof baseUrl.valueOf() !== 'string') {
             throw new Error(tl.loc("armUrlCannotBeEmpty"));
         }
 
@@ -42,16 +42,15 @@ export class ApplicationTokenCredentials {
         if(!Boolean(isAzureStackEnvironment) || typeof isAzureStackEnvironment.valueOf() != 'boolean') {
             isAzureStackEnvironment = false;
         }
-    
+
         this.clientId = clientId;
         this.domain = domain;
         this.secret = secret;
-        this.armUrl = armUrl;
+        this.baseUrl = baseUrl;
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
     }
-
 
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
@@ -59,6 +58,14 @@ export class ApplicationTokenCredentials {
         }
 
         return this.token_deferred;
+    }
+
+    public getDomain(): string {
+        return this.domain;
+    }
+
+    public getClientId(): string {
+        return this.clientId;
     }
 
     private getAuthorizationToken(): Q.Promise<string> {

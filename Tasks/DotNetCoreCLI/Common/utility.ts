@@ -5,10 +5,9 @@ export function getProjectFiles(projectPattern: string[]): string[] {
     if (projectPattern.length == 0) {
         return [""];
     }
+    var projectFiles: string[] = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
 
-    var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
     if (!projectFiles || !projectFiles.length) {
-        tl.warning(tl.loc("noProjectFilesFound"));
         return [];
     }
 

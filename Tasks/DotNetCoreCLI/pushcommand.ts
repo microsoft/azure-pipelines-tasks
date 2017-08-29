@@ -1,18 +1,17 @@
-import * as path from "path";
-import * as Q  from "q";
-import * as tl from "vsts-task-lib/task";
-
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
-import * as nutil from "nuget-task-common/Utility";
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from 'vso-node-api/VsoClient';
+import * as Q from "q";
 import * as auth from "nuget-task-common/Authentication";
-import { IPackageSource } from "nuget-task-common/Authentication";
-import * as utility from './Common/utility';
-import {IExecOptions} from "vsts-task-lib/toolrunner";
 import * as commandHelper from "nuget-task-common/CommandHelper";
+import * as locationHelpers from "nuget-task-common/LocationHelpers";
+import * as nutil from "nuget-task-common/Utility";
+import * as path from "path";
+import * as tl from "vsts-task-lib/task";
+import * as utility from './Common/utility';
+import * as vsom from 'vso-node-api/VsoClient';
+import * as vsts from "vso-node-api/WebApi";
 
+import { IExecOptions } from "vsts-task-lib/toolrunner";
+import { IPackageSource } from "nuget-task-common/Authentication";
+import { NuGetConfigHelper2 } from "nuget-task-common/NuGetConfigHelper2";
 
 export async function run(): Promise<void> {
     let buildIdentityDisplayName: string = null;
@@ -20,7 +19,6 @@ export async function run(): Promise<void> {
     try {
         // Get list of files to publish
         const searchPattern = tl.getPathInput("searchPatternPush", true, false);
-
         let findOptions: tl.FindOptions = <tl.FindOptions>{};
         let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
         const filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
@@ -31,13 +29,12 @@ export async function run(): Promise<void> {
             }
         });
 
-        if (filesList && filesList.length < 1)
-        {
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+        if (filesList.length < 1) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
             return;
         }
 
-        // Get the info the type of feed 
+        // Get the info the type of feed
         let nugetFeedType = tl.getInput("nuGetFeedType") || "internal";
 
         // Make sure the feed type is an expected one
@@ -46,7 +43,7 @@ export async function run(): Promise<void> {
             throw new Error(tl.loc("UnknownFeedType", nugetFeedType));
         }
         nugetFeedType = normalizedNuGetFeedType;
-        
+
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
         let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
@@ -82,24 +79,29 @@ export async function run(): Promise<void> {
         const tempNuGetPath = path.join(tempNuGetConfigDirectory, "nuget.config");
         tl.mkdirP(tempNuGetConfigDirectory);
 
-        const nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, {credProviderFolder: null, extensionsDisabled: true}, tempNuGetPath);
+        const nuGetConfigHelper = new NuGetConfigHelper2(
+            nuGetPath,
+            null, /* nugetConfigPath */
+            authInfo,
+            { credProviderFolder: null, extensionsDisabled: true },
+            tempNuGetPath,
+            false /* useNugetToModifyConfigFile */);
+
         let feedUri: string = undefined;
 
-        if (isInternalFeed) 
-        {
+        if (isInternalFeed) {
             const internalFeedId = tl.getInput("feedPublish");
             feedUri = await nutil.getNuGetFeedRegistryUrl(accessToken, internalFeedId, null);
             nuGetConfigHelper.addSourcesToTempNuGetConfig([<IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => {tl.rmRF(tempNuGetConfigDirectory)};
+            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory) };
 
             apiKey = "VSTS";
         }
         else {
             let externalAuth = externalAuthArr[0];
 
-            if (!externalAuth)
-            {
+            if (!externalAuth) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPush"));
                 return;
             }
@@ -107,16 +109,16 @@ export async function run(): Promise<void> {
             nuGetConfigHelper.addSourcesToTempNuGetConfig([externalAuth.packageSource]);
             feedUri = externalAuth.packageSource.feedUri;
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () =>  {tl.rmRF(tempNuGetConfigDirectory)};
+            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory) };
 
             let authType: auth.ExternalAuthType = externalAuth.authType;
-            switch(authType) {
+            switch (authType) {
                 case (auth.ExternalAuthType.UsernamePassword):
                 case (auth.ExternalAuthType.Token):
                     apiKey = "RequiredApiKey";
                     break;
                 case (auth.ExternalAuthType.ApiKey):
-                    let apiKeyAuthInfo =  externalAuth as auth.ApiKeyExternalAuthInfo;
+                    let apiKeyAuthInfo = externalAuth as auth.ApiKeyExternalAuthInfo;
                     apiKey = apiKeyAuthInfo.apiKey;
                     break;
                 default:

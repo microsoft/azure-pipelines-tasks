@@ -1,6 +1,7 @@
 {
   "name": "nuget-task-common",
   "dependencies": {
+    "ltx": "registry:dt/ltx#2.6.0+20170217142600",
     "mockery": "registry:dt/mockery#1.4.0+20160428043022"
   },
   "globalDependencies": {

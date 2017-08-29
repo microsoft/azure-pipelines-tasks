@@ -234,7 +234,7 @@ function collectFeedRepositories(pomContents:string): Q.Promise<any> {
                 }
             };
 
-            if (pomJson.projects) {
+            if (pomJson.projects && pomJson.projects.project) {
                 for (let project of pomJson.projects.project) {
                     parseRepos(project);
                 }
@@ -252,29 +252,35 @@ function collectFeedRepositories(pomContents:string): Q.Promise<any> {
 
 export function collectFeedRepositoriesFromEffectivePom(mavenOutput:string): Q.Promise<any> {
     tl.debug('collecting account feeds from effective pom');
+    const effectivePomStartTag:string = '<!-- Effective POM';
     const projectsBeginTag:string = '<projects';
     const projectsEndTag:string = '</projects>';
     const projectBeginTag:string = '<project';
     const projectEndTag:string = '</project>';
 
     let xml:string = String(mavenOutput);
-    let xmlStart:number = xml.indexOf(projectsBeginTag);
-    let xmlEnd:number = xml.indexOf(projectsEndTag);
+    let effectivePomStart:number = xml.lastIndexOf(effectivePomStartTag);
+    if (effectivePomStart === -1) {
+        tl.warning(tl.loc('EffectivePomInvalid'));
+        return Q.resolve(true);
+    }
 
+    let xmlStart:number = xml.indexOf(projectsBeginTag, effectivePomStart);
+    let xmlEnd:number = xml.indexOf(projectsEndTag, effectivePomStart);
     if (xmlStart !== -1 && xmlEnd !== -1 && (xmlStart < xmlEnd)) {
         xml = xml.substring(xmlStart, xmlEnd + projectsEndTag.length);
         return collectFeedRepositories(xml);
     }
 
-    xmlStart = xml.indexOf(projectBeginTag);
-    xmlEnd = xml.indexOf(projectEndTag);
+    xmlStart = xml.indexOf(projectBeginTag, effectivePomStart);
+    xmlEnd = xml.indexOf(projectEndTag, effectivePomStart);
     if (xmlStart !== -1 && xmlEnd !== -1 && (xmlStart < xmlEnd)) {
         xml = xml.substring(xmlStart, xmlEnd + projectEndTag.length);
         return collectFeedRepositories(xml);
-    } else {
-        tl.warning(tl.loc('EffectivePomInvalid'));
-        return Q.resolve(true);
     }
+
+    tl.warning(tl.loc('EffectivePomInvalid'));
+    return Q.resolve(true);
 }
 
 export function getExecOptions(): tr.IExecOptions {
@@ -283,4 +289,20 @@ export function getExecOptions(): tr.IExecOptions {
     return <tr.IExecOptions> {
         env: env,
     };
+}
+
+export function publishMavenInfo(mavenInfo:string) {
+    let stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
+    let infoFilePath: string = path.join(stagingDir, 'MavenInfo.md');
+    if (!tl.exist(stagingDir)) {
+        tl.mkdirP(stagingDir);
+    }
+    tl.writeFile(infoFilePath, mavenInfo);
+    tl.debug('[Maven] Uploading build maven info from ' + infoFilePath);
+    tl.command('task.addattachment',
+                {
+                    'type': 'Distributedtask.Core.Summary',
+                    'name': 'Maven'
+                },
+                infoFilePath);
 }

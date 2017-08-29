@@ -19,7 +19,7 @@ Microsoft.PowerShell.Core\Import-Module "$taskPath\Update-PackageVersion.psm1"
 Microsoft.PowerShell.Core\Import-Module "$taskPath\Test-XmlEqual.psm1"
 
 # Arrange.
-
+Register-Mock Test-Path { $true }
 Register-Mock Find-FileChanges { $FilesChanged }
 
 $xml = ([xml]'<CodePackage Name="Code" Version="1.0.0"></CodePackage>').CodePackage

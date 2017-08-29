@@ -135,7 +135,7 @@ export class Helper {
     public static printMultiLineLog(multiLineString: string, logFunction: Function) {
         const lines = multiLineString.toString().split('\n');
         lines.forEach(function (line: string) {
-            if (line.length === 0) {
+            if (line.trim().length === 0) {
                 return;
             }
             logFunction(line);
