@@ -250,7 +250,7 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Creating archive C:\\users\\temp\\vstsvmss12345\\cs.zip of compression type zip from C:\\some\\dir") > -1, "archive should be correctly created");
                 assert(tr.stdout.indexOf("Invoker command: powershell ./100/200/5/customScriptInvoker.ps1 -zipName '' -script '.\\\\\"\"\"de`$p``l o''y.ps1\"\"\"' -scriptArgs '\"\"\"first ''arg''\"\"\" seco``nd`$arg' -prefixPath '100/200/5'") > -1, "invoker command should be correct");
-                assert(tr.stdout.indexOf("Cound not compress custom scripts. Will use individual files. Error: Create archive failed with error - some error") >= -1, "warning should be logged");
+                assert(tr.stdout.indexOf("Cound not compress custom scripts. Will use individual files. Error: Create archive failed with error - some error") > -1, "warning should be logged");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to coorect account and container");
                 assert(tr.stdout.indexOf("loc_mock_CustomScriptExtensionInstalled") > -1, "new extension should be installed");
                 assert(tr.stdout.indexOf("loc_mock_UpdatedVMSSImage") > -1, "VMSS image should be updated");
@@ -526,7 +526,7 @@ describe('Azure VMSS Deployment', function () {
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 assert(tr.stdout.indexOf("Creating archive /users/temp/vstsvmss12345/cs.zip of compression type zip from /some/dir") > -1, "archive should be correctly created");
-                assert(tr.stdout.indexOf("Invoker command: ./customScriptInvoker.sh '' -script '.\\\\\"\"\"de`$p``l o''y.ps1\"\"\"' -scriptArgs '\"\"\"first ''arg''\"\"\" seco``nd`$arg'") > -1, "invoker command should be correct");
+                assert(tr.stdout.indexOf("Invoker command: powershell ./100/200/5/customScriptInvoker.ps1 -zipName '' -script '.\\\\\"\"\"de`$p``l o''y.ps1\"\"\"' -scriptArgs '\"\"\"first ''arg''\"\"\" seco``nd`$arg' -prefixPath '100/200/5'") > -1, "invoker command should be correct");
                 assert(tr.stdout.indexOf("Cound not compress custom scripts. Will use individual files. Error: Create archive failed with error - some error") >= -1, "warning should be logged");
                 assert(tr.stdout.indexOf("loc_mock_DestinationBlobContainer teststorage1.blob.core.windows.net/vststasks") > -1, "scripts should be uploaded to coorect account and container");
                 assert(tr.stdout.indexOf("loc_mock_CustomScriptExtensionInstalled") > -1, "new extension should be installed");
