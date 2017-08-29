@@ -163,12 +163,15 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     <code>field</code>=field type authParameter|dataParameter|url (Required) <br>
                 </p>
                 <p align="left">
-                    <code>key</code>=key (Required) <br>
+                    <code>key</code>=key (Required. Except for field=url) <br>
+                </p>
+                  <p align="left">
+                    <code>value</code>=value for key or url(Required) <br>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    Sets a endpoint variable in the endpoints of task. The first task can set a endpoint variable, and following tasks are able to use the endpoint variable. When field is <code>authParameter</code>, the value of the key will be saved as secret and masked out from log.<br>
+                    Set an endpoint field with given value. Value updated will be retained in the endpoint for the subsequent tasks that execute within the same job.<br>
                     <b>Examples:</b> <br>
                     <code>##vso[task.setendpoint id=000-0000-0000;field=authParameter;key=AccessToken]testvalue</code><br>
                     <code>##vso[task.setendpoint id=000-0000-0000;field=dataParameter;key=userVariable]testvalue</code><br>
