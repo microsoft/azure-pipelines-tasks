@@ -24,7 +24,7 @@ $machineType
 
 #Set the userAgent appropriately based on whether the task is running as part of a ci or cd
 if($Env:SYSTEM_HOSTTYPE -ieq "build") {
-	$userAgent = "ApacheJmeterTestBuildTask"
+    $userAgent = "ApacheJmeterTestBuildTask"
 }
 else {
     $userAgent = "ApacheJmeterTestReleaseTask"
