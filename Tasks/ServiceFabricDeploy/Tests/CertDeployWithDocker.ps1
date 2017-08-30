@@ -4,12 +4,15 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $publishProfilePath = "$PSScriptRoot\data\CertPublishProfile.xml"
-$applicationPackagePath = "random package path"
+$applicationPackagePath = "$PSScriptRoot\pkg"
 $serviceConnectionName = "random connection name"
 $serverCertThumbprint = "random thumbprint"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
 $overwriteBehavior = "SameAppTypeAndVersion"
+$azureSubscriptionEndpoint = "random azure subscription"
+$servicePrincipalId = "random spn id"
+$servicePrincipalKey = "random spn key"
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -20,7 +23,10 @@ Register-Mock Get-VstsInput { $overwriteBehavior } -- -Name overwriteBehavior
 Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion
 Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
-Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
+Register-Mock Get-VstsInput { "true" } -- -Name configureDockerSettings
+Register-Mock Get-VstsInput { "Azure Container Registry" } -- -Name containerregistrytype -Require
+Register-Mock Get-VstsInput { $azureSubscriptionEndpoint } -- -Name azureSubscriptionEndpoint -Require
+
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -43,13 +49,27 @@ $vstsEndpoint = @{
 }
 Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName -Require
 
+$registryEndpoint = @{
+    "Auth" = @{
+        "Scheme" = "ServicePrincipal"
+        "Parameters" = @{
+            "ServicePrincipalId" = $servicePrincipalId
+            "ServicePrincipalKey" = $servicePrincipalKey
+        }
+    }
+}
+Register-Mock Get-VstsEndpoint { $registryEndpoint } -- -Name $azureSubscriptionEndpoint -Require
+
 $certFindType = [System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint
 $certFindValue = "DC25F5F1A327D3B2F260FDCA710A52075FAA5236"
 $storeName = [System.Security.Cryptography.X509Certificates.StoreName]::My
 $storeLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser
 
+$encryptedPassword = "encrypted_password_text"
+
 # Setup mock for connection to cluster
 Register-Mock Connect-ServiceFabricCluster { $null } -- -X509Credential -FindType $certFindType.ToString() -FindValue $certFindValue -StoreName $storeName.ToString()  -StoreLocation $storeLocation.ToString() -ServerCertThumbprint:$serverCertThumbprint
+Register-Mock Invoke-ServiceFabricEncryptText { $encryptedPassword } -- -Text $servicePrincipalKey -CertStore -CertThumbprint $certFindValue -StoreName $storeName.ToString() -StoreLocation $storeLocation.ToString()
 
 # Setup mock registry settings
 $regKeyObj = @{
@@ -64,11 +84,29 @@ Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appNam
 $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml",  "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Update-DockerSettings.psm1"
+
+Copy-Item "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
+
 try
 {
     # Act
     . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+    . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Get-ServiceFabricEncryptedText.ps1
     @( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
+
+    # Assert
+    Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
+
+    $appManifestXml = [xml](Get-Content "$applicationPackagePath\ApplicationManifest.xml")
+    Assert-AreEqual 2 $appManifestXml.ApplicationManifest.ServiceManifestImport.Length
+    foreach ($serviceManifestImport in $appManifestXml.ApplicationManifest.ServiceManifestImport)
+    {
+        $credentialsElement = $serviceManifestImport.Policies.ContainerHostPolicies.RepositoryCredentials
+        Assert-AreEqual $servicePrincipalId $credentialsElement.AccountName
+        Assert-AreEqual $encryptedPassword $credentialsElement.Password
+        Assert-AreEqual "true" $credentialsElement.PasswordEncrypted
+    }
 }
 finally
 {
@@ -88,7 +126,6 @@ finally
         $store.Close()
         $store.Dispose()
     }
-}
 
-# Assert
-Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
+    Remove-Item -Recurse -Force $applicationPackagePath
+}

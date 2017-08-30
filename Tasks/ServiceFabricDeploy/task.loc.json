@@ -15,8 +15,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 3,
-    "Patch": 10
+    "Minor": 4,
+    "Patch": 0
   },
   "demands": [
     "Cmd"
@@ -31,6 +31,11 @@
     {
       "name": "upgrade",
       "displayName": "ms-resource:loc.group.displayName.upgrade",
+      "isExpanded": false
+    },
+    {
+      "name": "docker",
+      "displayName": "ms-resource:loc.group.displayName.docker",
       "isExpanded": false
     }
   ],
@@ -297,6 +302,55 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "configureDockerSettings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.configureDockerSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.configureDockerSettings",
+      "groupname": "docker"
+    },
+    {
+      "name": "containerregistrytype",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerregistrytype",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype",
+      "visibleRule": "configureDockerSettings = true",
+      "groupname": "docker"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "configureDockerSettings = true && containerregistrytype = Container Registry",
+      "required": true,
+      "groupname": "docker"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+      "required": true,
+      "groupname": "docker"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+      "defaultValue": "",
+      "required": true,
+      "groupname": "docker"
     }
   ],
   "execution": {
@@ -304,6 +358,14 @@
       "target": "deploy.ps1"
     }
   },
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
   "messages": {
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
@@ -316,6 +378,7 @@
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
+    "UnsupportedDockerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedDockerRegistryAuthScheme",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

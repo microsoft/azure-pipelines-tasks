@@ -15,8 +15,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 3,
-        "Patch": 10
+        "Minor": 4,
+        "Patch": 0
     },
     "demands": [
         "Cmd"
@@ -31,6 +31,11 @@
         {
             "name": "upgrade",
             "displayName": "Upgrade Settings",
+            "isExpanded": false
+        },
+        {
+            "name": "docker",
+            "displayName": "Docker Settings",
             "isExpanded": false
         }
     ],
@@ -297,6 +302,55 @@
             "required": false,
             "groupname": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "configureDockerSettings",
+            "type": "boolean",
+            "label": "Configure Docker settings",
+            "helpMarkDown": "Configures the application with the specified Docker settings.",
+            "groupname": "docker"
+        },
+        {
+            "name": "containerregistrytype",
+            "type": "pickList",
+            "label": "Container Registry Type",
+            "defaultValue": "Azure Container Registry",
+            "required": true,
+            "options": {
+                "Azure Container Registry": "Azure Container Registry",
+                "Container Registry": "Container Registry"
+            },
+            "helpMarkDown": "Select a Container Registry Type.",
+            "visibleRule": "configureDockerSettings = true",
+            "groupname": "docker"
+        },
+        {
+            "name": "dockerRegistryEndpoint",
+            "type": "connectedService:dockerregistry",
+            "label": "Docker Registry Connection",
+            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "visibleRule": "configureDockerSettings = true && containerregistrytype = Container Registry",
+            "required": true,
+            "groupname": "docker"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription",
+            "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+            "required": true,
+            "groupname": "docker"
+        },
+        {
+            "name": "azureContainerRegistry",
+            "label": "Azure Container Registry",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Container Registry",
+            "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+            "defaultValue": "",
+            "required": true,
+            "groupname": "docker"
         }
     ],
     "execution": {
@@ -304,6 +358,14 @@
             "target": "deploy.ps1"
         }
     },
+    "dataSourceBindings": [
+        {
+            "target": "azureContainerRegistry",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "dataSourceName": "AzureRMContainerRegistries",
+            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+        }
+    ],
     "messages": {
         "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
@@ -316,6 +378,7 @@
         "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
+        "UnsupportedDockerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",

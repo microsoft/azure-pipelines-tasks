@@ -82,21 +82,11 @@ try {
 
     if ($registryCredentials -ne "None")
     {
-        if ((-not $isEncrypted) -and $connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
+        if (-not $isEncrypted)
         {
-            $thumbprint = $connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint
-
-            $cert = Get-Item -Path "Cert:\CurrentUser\My\$thumbprint" -ErrorAction SilentlyContinue
-            if($cert -ne $null)
-            {
-                Write-Host (Get-VstsLocString -Key EncryptingPassword)
-                $password = Invoke-ServiceFabricEncryptText -Text $password -CertStore -CertThumbprint $thumbprint -StoreName "My" -StoreLocation CurrentUser
-                $isEncrypted = $true
-            }
-            else
-            {
-                Write-Host (Get-VstsLocString -Key CertificateNotFound)
-            }
+            Write-Host (Get-VstsLocString -Key EncryptingPassword)
+            $password = Get-EncryptedContainerRegistryPassword -Password $password -ClusterConnectionParameters $clusterConnectionParameters
+            $isEncrypted = $true
         }
 
         if ($usePreviewApi)

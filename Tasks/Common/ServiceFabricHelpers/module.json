@@ -9,6 +9,7 @@
         "ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
         "ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
         "ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
-        "UseWindowsSecurity": "Windows security is specified. -WindowsCredential switch will be used while connecting."
+        "UseWindowsSecurity": "Windows security is specified. -WindowsCredential switch will be used while connecting.",
+        "NonCertBasedAuthForTextEncryptionError": "In order to encrypt the data for this task, the cluster being used must have certificate-based authentication."
     }
 }
