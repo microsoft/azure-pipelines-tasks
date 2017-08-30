@@ -1,5 +1,5 @@
 {
-  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB5",
+  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
   "name": "AzureRmWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -16,14 +16,14 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 28
+    "Patch": 16
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
-      "name": "FileTransformsAndVariableSubstitution_WMA",
-      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution_WMA",
+      "name": "FileTransformsAndVariableSubstitutionForWebApp",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitutionForWebApp",
       "isExpanded": false,
       "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
     },
@@ -40,14 +40,20 @@
       "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
     },
     {
-      "name": "AdditionalDeploymentOptions_Linux",
-      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions_Linux",
+      "name": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForBuiltInLinux",
       "isExpanded": false,
       "visibleRule": "WebAppKindDS = applinux && LinuxImageSource != DOCKER"
     },
     {
-      "name": "AdditionalDeploymentOptions_Functions",
-      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions_Functions",
+      "name": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "isExpanded": false,
+      "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin"
+    },
+    {
+      "name": "AdditionalDeploymentOptionsForFunctionApp",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForFunctionApp",
       "isExpanded": false,
       "visibleRule": "WebAppKind = functionapp || WebAppKindDS = functionapp"
     },
@@ -123,7 +129,7 @@
         "mobileapp": "Mobile app",
         "api": "Api app"
       },
-      "visibleRule": "WebAppKindDS = invalid",
+      "visibleRule": "WebAppKindDS != \"\" && WebAppKindDS != app && WebAppKindDS != functionapp && WebAppKindDS != applinux && WebAppKindDS != api && WebAppKindDS != mobileapp",
       "properties": {
         "EditableOptions": "false",
         "PopulateDefaultValue": "true"
@@ -171,7 +177,7 @@
       "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
       "properties": {
-        "EditableOptions": "true",
+        "EditableOptions": "false",
         "PopulateDefaultValue": "true"
       }
     },
@@ -208,7 +214,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "LinuxImageSource = NODE",
+      "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKind = applinuxbuiltin || WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -226,17 +232,26 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp || WebAppKind = applinuxbuiltin",
+      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
-      "name": "PackageLinux",
+      "name": "PackageForBuiltInLinux",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.PackageLinux",
+      "label": "ms-resource:loc.input.label.PackageForBuiltInLinux",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
       "visibleRule": "LinuxImageSource != DOCKER && WebAppKindDS = applinux",
-      "helpMarkDown": "ms-resource:loc.input.help.PackageLinux"
+      "helpMarkDown": "ms-resource:loc.input.help.PackageForBuiltInLinux"
+    },
+    {
+      "name": "PackageForBuiltInLinuxUserInput",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PackageForBuiltInLinuxUserInput",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+      "required": true,
+      "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin",
+      "helpMarkDown": "ms-resource:loc.input.help.PackageForBuiltInLinuxUserInput"
     },
     {
       "name": "WebAppUri",
@@ -282,25 +297,25 @@
       "visibleRule": "ScriptType == File Path"
     },
     {
-      "name": "ScriptTypeLinux",
+      "name": "ScriptTypeForBuiltInLinux",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.ScriptTypeLinux",
+      "label": "ms-resource:loc.input.label.ScriptTypeForBuiltInLinux",
       "defaultValue": "",
       "options": {
         "": "Select deployment script type (inline or file)",
         "Inline Script": "Inline Script",
         "File Path": "Script File Path"
       },
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptTypeLinux"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptTypeForBuiltInLinux"
     },
     {
-      "name": "InlineScriptLinux",
+      "name": "InlineScriptForBuiltInLinux",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.InlineScriptLinux",
+      "label": "ms-resource:loc.input.label.InlineScriptForBuiltInLinux",
       "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "visibleRule": "ScriptTypeLinux == Inline Script",
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "visibleRule": "ScriptTypeForBuiltInLinux == Inline Script",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -308,31 +323,65 @@
       }
     },
     {
-      "name": "ScriptPathLinux",
+      "name": "ScriptPathForBuiltInLinux",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.ScriptPathLinux",
+      "label": "ms-resource:loc.input.label.ScriptPathForBuiltInLinux",
       "required": true,
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "visibleRule": "ScriptTypeLinux == File Path"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "visibleRule": "ScriptTypeForBuiltInLinux == File Path"
     },
     {
-      "name": "GenerateWebConfigWMA",
+      "name": "ScriptTypeForBuiltInLinuxUserInput",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptTypeForBuiltInLinuxUserInput",
+      "defaultValue": "",
+      "options": {
+        "": "Select deployment script type (inline or file)",
+        "Inline Script": "Inline Script",
+        "File Path": "Script File Path"
+      },
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptTypeForBuiltInLinuxUserInput"
+    },
+    {
+      "name": "InlineScriptForBuiltInLinuxUserInput",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScriptForBuiltInLinuxUserInput",
+      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "visibleRule": "ScriptTypeForBuiltInLinuxUserInput == Inline Script",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptPathForBuiltInLinuxUserInput",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPathForBuiltInLinuxUserInput",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "visibleRule": "ScriptTypeForBuiltInLinuxUserInput == File Path"
+    },
+    {
+      "name": "GenerateWebConfigForWebApp",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.GenerateWebConfigWMA",
+      "label": "ms-resource:loc.input.label.GenerateWebConfigForWebApp",
       "defaultValue": "false",
       "required": false,
-      "groupName": "FileTransformsAndVariableSubstitution_WMA",
-      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfigWMA"
+      "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
+      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfigForWebApp"
     },
     {
-      "name": "WebConfigParameters_WMA",
+      "name": "WebConfigParametersForWebApp",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.WebConfigParameters_WMA",
+      "label": "ms-resource:loc.input.label.WebConfigParametersForWebApp",
       "required": true,
       "defaultValue": "",
-      "visibleRule": "GenerateWebConfigWMA == true",
-      "groupName": "FileTransformsAndVariableSubstitution_WMA",
-      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters_WMA",
+      "visibleRule": "GenerateWebConfigForWebApp == true",
+      "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
+      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParametersForWebApp",
       "properties": {
         "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
       }
@@ -418,148 +467,198 @@
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
     {
-      "name": "TakeAppOfflineFlagLinux",
+      "name": "UseWebDeployForBuiltInLinux",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlagLinux",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlagLinux"
-    },
-    {
-      "name": "UseWebDeployLinux",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.UseWebDeployLinux",
+      "label": "ms-resource:loc.input.label.UseWebDeployForBuiltInLinux",
       "required": false,
       "defaultValue": "false",
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeployLinux"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeployForBuiltInLinux"
     },
     {
-      "name": "SetParametersFileLinux",
+      "name": "SetParametersFileForBuiltInLinux",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.SetParametersFileLinux",
+      "label": "ms-resource:loc.input.label.SetParametersFileForBuiltInLinux",
       "defaultValue": "",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "visibleRule": "UseWebDeployLinux == true",
-      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFileLinux"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "visibleRule": "UseWebDeployForBuiltInLinux == true",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFileForBuiltInLinux"
     },
     {
-      "name": "RemoveAdditionalFilesFlagLinux",
+      "name": "RemoveAdditionalFilesFlagForBuiltInLinux",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlagLinux",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlagForBuiltInLinux",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "visibleRule": "UseWebDeployLinux == true",
-      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlagLinux"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "visibleRule": "UseWebDeployForBuiltInLinux == true",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlagForBuiltInLinux"
     },
     {
-      "name": "ExcludeFilesFromAppDataFlagLinux",
+      "name": "ExcludeFilesFromAppDataFlagForBuiltInLinux",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlagLinux",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlagForBuiltInLinux",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "visibleRule": "UseWebDeployLinux == true",
-      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlagLinux"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "visibleRule": "UseWebDeployForBuiltInLinux == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlagForBuiltInLinux"
     },
     {
-      "name": "AdditionalArgumentsLinux",
+      "name": "AdditionalArgumentsForBuiltInLinux",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AdditionalArgumentsLinux",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForBuiltInLinux",
       "required": false,
       "defaultValue": "",
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "visibleRule": "UseWebDeployLinux == true",
-      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsLinux"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "visibleRule": "UseWebDeployForBuiltInLinux == true",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForBuiltInLinux"
     },
     {
-      "name": "RenameFilesFlagLinux",
+      "name": "RenameFilesFlagForBuiltInLinux",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.RenameFilesFlagLinux",
+      "label": "ms-resource:loc.input.label.RenameFilesFlagForBuiltInLinux",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "UseWebDeployLinux == true",
-      "groupName": "AdditionalDeploymentOptions_Linux",
-      "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlagLinux"
+      "visibleRule": "UseWebDeployForBuiltInLinux == true",
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlagForBuiltInLinux"
     },
     {
-      "name": "UseWebDeployFunctions",
+      "name": "UseWebDeployForBuiltInLinuxUserInput",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.UseWebDeployFunctions",
+      "label": "ms-resource:loc.input.label.UseWebDeployForBuiltInLinuxUserInput",
       "required": false,
       "defaultValue": "false",
-      "groupName": "AdditionalDeploymentOptions_Functions",
-      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeployFunctions"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeployForBuiltInLinuxUserInput"
     },
     {
-      "name": "SetParametersFile_Functions",
+      "name": "SetParametersFileForBuiltInLinuxUserInput",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.SetParametersFile_Functions",
+      "label": "ms-resource:loc.input.label.SetParametersFileForBuiltInLinuxUserInput",
       "defaultValue": "",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions_Functions",
-      "visibleRule": "UseWebDeployFunctions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile_Functions"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFileForBuiltInLinuxUserInput"
     },
     {
-      "name": "RemoveAdditionalFilesFlag_Functions",
+      "name": "RemoveAdditionalFilesFlagForBuiltInLinuxUserInput",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag_Functions",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlagForBuiltInLinuxUserInput",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions_Functions",
-      "visibleRule": "UseWebDeployFunctions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag_Functions"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlagForBuiltInLinuxUserInput"
     },
     {
-      "name": "AdditionalArguments_Functions",
+      "name": "ExcludeFilesFromAppDataFlagForBuiltInLinuxUserInput",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlagForBuiltInLinuxUserInput",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlagForBuiltInLinuxUserInput"
+    },
+    {
+      "name": "AdditionalArgumentsForBuiltInLinuxUserInput",
       "type": "string",
-      "label": "ms-resource:loc.input.label.AdditionalArguments_Functions",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForBuiltInLinuxUserInput",
       "required": false,
       "defaultValue": "",
-      "groupName": "AdditionalDeploymentOptions_Functions",
-      "visibleRule": "UseWebDeployFunctions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments_Functions"
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForBuiltInLinuxUserInput"
     },
     {
-      "name": "RenameFilesFlag_Functions",
+      "name": "RenameFilesFlagForBuiltInLinuxUserInput",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.RenameFilesFlag_Functions",
+      "label": "ms-resource:loc.input.label.RenameFilesFlagForBuiltInLinuxUserInput",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "UseWebDeployFunctions == true",
-      "groupName": "AdditionalDeploymentOptions_Functions",
-      "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag_Functions"
+      "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+      "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+      "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlagForBuiltInLinuxUserInput"
     },
     {
-      "name": "XmlTransformationWMA",
+      "name": "UseWebDeployForFunctionApp",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlTransformationWMA",
+      "label": "ms-resource:loc.input.label.UseWebDeployForFunctionApp",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeployForFunctionApp"
+    },
+    {
+      "name": "SetParametersFileForFunctionApp",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFileForFunctionApp",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+      "visibleRule": "UseWebDeployForFunctionApp == true",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFileForFunctionApp"
+    },
+    {
+      "name": "RemoveAdditionalFilesFlagForFunctionApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlagForFunctionApp",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+      "visibleRule": "UseWebDeployForFunctionApp == true",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlagForFunctionApp"
+    },
+    {
+      "name": "AdditionalArgumentsForFunctionApp",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForFunctionApp",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+      "visibleRule": "UseWebDeployForFunctionApp == true",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForFunctionApp"
+    },
+    {
+      "name": "RenameFilesFlagForFunctionApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RenameFilesFlagForFunctionApp",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "UseWebDeployForFunctionApp == true",
+      "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+      "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlagForFunctionApp"
+    },
+    {
+      "name": "XmlTransformationForWebApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformationForWebApp",
       "required": false,
       "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution_WMA",
-      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformationWMA"
+      "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformationForWebApp"
     },
     {
-      "name": "XmlVariableSubstitutionWMA",
+      "name": "XmlVariableSubstitutionForWebApp",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlVariableSubstitutionWMA",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitutionForWebApp",
       "required": false,
       "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution_WMA",
-      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitutionWMA"
+      "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitutionForWebApp"
     },
     {
-      "name": "JSONFilesWMA",
+      "name": "JSONFilesForWebApp",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.JSONFilesWMA",
+      "label": "ms-resource:loc.input.label.JSONFilesForWebApp",
       "required": false,
       "defaultValue": "",
-      "groupName": "FileTransformsAndVariableSubstitution_WMA",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONFilesWMA"
+      "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFilesForWebApp"
     },
     {
       "name": "JSONFiles",

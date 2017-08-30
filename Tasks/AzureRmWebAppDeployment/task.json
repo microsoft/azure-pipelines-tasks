@@ -1,8 +1,8 @@
 {
-    "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB5",
+    "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
-    "friendlyName": "Azure App Service Deploy 2",
-    "description": "Update Azure WebApp Services On Windows, ASP.NET app, .NET Core app, PHP app, Web App On Linux , Function Apps, Mobile Apps, Web Jobs using Web Deploy / Kudu REST APIs",
+    "friendlyName": "Azure App Service Deploy",
+    "description": "Update Azure WebApp Services On Windows, ASP.NET app, .NET Core app, PHP app, Web App On Linux with built-in images or docker containers, Function Apps, Mobile Apps, Web Jobs using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -16,13 +16,13 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 28
+        "Patch": 16
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
-            "name": "FileTransformsAndVariableSubstitution_WMA",
+            "name": "FileTransformsAndVariableSubstitutionForWebApp",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
             "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
@@ -40,13 +40,19 @@
             "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
         },
         {
-            "name": "AdditionalDeploymentOptions_Linux",
+            "name": "AdditionalDeploymentOptionsForBuiltInLinux",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
             "visibleRule": "WebAppKindDS = applinux && LinuxImageSource != DOCKER"
         },
         {
-            "name": "AdditionalDeploymentOptions_Functions",
+            "name": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "displayName": "Additional Deployment Options",
+            "isExpanded": false,
+            "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin"
+        },
+        {
+            "name": "AdditionalDeploymentOptionsForFunctionApp",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
             "visibleRule": "WebAppKind = functionapp || WebAppKindDS = functionapp"
@@ -123,7 +129,7 @@
                 "mobileapp": "Mobile app",
                 "api": "Api app"
             },
-            "visibleRule": "WebAppKindDS = invalid",
+            "visibleRule": "WebAppKindDS != \"\" && WebAppKindDS != app && WebAppKindDS != functionapp && WebAppKindDS != applinux && WebAppKindDS != api && WebAppKindDS != mobileapp",
             "properties": {
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
@@ -171,7 +177,7 @@
             "required": false,
             "visibleRule": "WebAppName = invalidwebappname",
             "properties": {
-                "EditableOptions": "true",
+                "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
             }
         },
@@ -208,7 +214,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "LinuxImageSource = NODE",
+            "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKind = applinuxbuiltin || WebAppKind = applinux",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -226,16 +232,25 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp || WebAppKind = applinuxbuiltin",
+            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
-            "name": "PackageLinux",
+            "name": "PackageForBuiltInLinux",
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
             "visibleRule": "LinuxImageSource != DOCKER && WebAppKindDS = applinux",
+            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+        },
+        {
+            "name": "PackageForBuiltInLinuxUserInput",
+            "type": "filePath",
+            "label": "Package or folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+            "required": true,
+            "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -282,7 +297,7 @@
             "visibleRule": "ScriptType == File Path"
         },
         {
-            "name": "ScriptTypeLinux",
+            "name": "ScriptTypeForBuiltInLinux",
             "type": "pickList",
             "label": "Deployment script type",
             "defaultValue": "",
@@ -291,16 +306,16 @@
                 "Inline Script": "Inline Script",
                 "File Path": "Script File Path"
             },
-            "groupName": "AdditionalDeploymentOptions_Linux",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
             "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
         },
         {
-            "name": "InlineScriptLinux",
+            "name": "InlineScriptForBuiltInLinux",
             "type": "multiLine",
             "label": "Inline Script",
             "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "visibleRule": "ScriptTypeLinux == Inline Script",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+            "visibleRule": "ScriptTypeForBuiltInLinux == Inline Script",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
@@ -308,30 +323,64 @@
             }
         },
         {
-            "name": "ScriptPathLinux",
+            "name": "ScriptPathForBuiltInLinux",
             "type": "filePath",
             "label": "Deployment script path",
             "required": true,
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "visibleRule": "ScriptTypeLinux == File Path"
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+            "visibleRule": "ScriptTypeForBuiltInLinux == File Path"
         },
         {
-            "name": "GenerateWebConfigWMA",
+            "name": "ScriptTypeForBuiltInLinuxUserInput",
+            "type": "pickList",
+            "label": "Deployment script type",
+            "defaultValue": "",
+            "options": {
+                "": "Select deployment script type (inline or file)",
+                "Inline Script": "Inline Script",
+                "File Path": "Script File Path"
+            },
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
+        },
+        {
+            "name": "InlineScriptForBuiltInLinuxUserInput",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "visibleRule": "ScriptTypeForBuiltInLinuxUserInput == Inline Script",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "500"
+            }
+        },
+        {
+            "name": "ScriptPathForBuiltInLinuxUserInput",
+            "type": "filePath",
+            "label": "Deployment script path",
+            "required": true,
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "visibleRule": "ScriptTypeForBuiltInLinuxUserInput == File Path"
+        },
+        {
+            "name": "GenerateWebConfigForWebApp",
             "type": "boolean",
             "label": "Generate Web.config",
             "defaultValue": "false",
             "required": false,
-            "groupName": "FileTransformsAndVariableSubstitution_WMA",
+            "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
             "helpMarkDown": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469)."
         },
         {
-            "name": "WebConfigParameters_WMA",
+            "name": "WebConfigParametersForWebApp",
             "type": "multiLine",
             "label": "Web.config parameters",
             "required": true,
             "defaultValue": "",
-            "visibleRule": "GenerateWebConfigWMA == true",
-            "groupName": "FileTransformsAndVariableSubstitution_WMA",
+            "visibleRule": "GenerateWebConfigForWebApp == true",
+            "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
             "helpMarkDown": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
@@ -418,147 +467,197 @@
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
-            "name": "TakeAppOfflineFlagLinux",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
-            "name": "UseWebDeployLinux",
+            "name": "UseWebDeployForBuiltInLinux",
             "type": "boolean",
             "label": "Publish using Web Deploy",
             "required": false,
             "defaultValue": "false",
-            "groupName": "AdditionalDeploymentOptions_Linux",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
             "helpMarkDown": "Publish using Web Deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
         },
         {
-            "name": "SetParametersFileLinux",
+            "name": "SetParametersFileForBuiltInLinux",
             "type": "filePath",
             "label": "SetParameters file",
             "defaultValue": "",
             "required": false,
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "visibleRule": "UseWebDeployLinux == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+            "visibleRule": "UseWebDeployForBuiltInLinux == true",
             "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
         },
         {
-            "name": "RemoveAdditionalFilesFlagLinux",
+            "name": "RemoveAdditionalFilesFlagForBuiltInLinux",
             "type": "boolean",
             "label": "Remove additional files at destination",
             "defaultValue": "false",
             "required": false,
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "visibleRule": "UseWebDeployLinux == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+            "visibleRule": "UseWebDeployForBuiltInLinux == true",
             "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder."
         },
         {
-            "name": "ExcludeFilesFromAppDataFlagLinux",
+            "name": "ExcludeFilesFromAppDataFlagForBuiltInLinux",
             "type": "boolean",
             "label": "Exclude files from the App_Data folder",
             "defaultValue": "false",
             "required": false,
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "visibleRule": "UseWebDeployLinux == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+            "visibleRule": "UseWebDeployForBuiltInLinux == true",
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
         },
         {
-            "name": "AdditionalArgumentsLinux",
+            "name": "AdditionalArgumentsForBuiltInLinux",
             "type": "string",
             "label": "Additional arguments",
             "required": false,
             "defaultValue": "",
-            "groupName": "AdditionalDeploymentOptions_Linux",
-            "visibleRule": "UseWebDeployLinux == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
+            "visibleRule": "UseWebDeployForBuiltInLinux == true",
             "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."
         },
         {
-            "name": "RenameFilesFlagLinux",
+            "name": "RenameFilesFlagForBuiltInLinux",
             "type": "boolean",
             "label": "Rename locked files",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "UseWebDeployLinux == true",
-            "groupName": "AdditionalDeploymentOptions_Linux",
+            "visibleRule": "UseWebDeployForBuiltInLinux == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinux",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
-            "name": "UseWebDeployFunctions",
+            "name": "UseWebDeployForBuiltInLinuxUserInput",
             "type": "boolean",
             "label": "Publish using Web Deploy",
             "required": false,
             "defaultValue": "false",
-            "groupName": "AdditionalDeploymentOptions_Functions",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
             "helpMarkDown": "Publish using Web Deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
         },
         {
-            "name": "SetParametersFile_Functions",
+            "name": "SetParametersFileForBuiltInLinuxUserInput",
             "type": "filePath",
             "label": "SetParameters file",
             "defaultValue": "",
             "required": false,
-            "groupName": "AdditionalDeploymentOptions_Functions",
-            "visibleRule": "UseWebDeployFunctions == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
             "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
         },
         {
-            "name": "RemoveAdditionalFilesFlag_Functions",
+            "name": "RemoveAdditionalFilesFlagForBuiltInLinuxUserInput",
             "type": "boolean",
             "label": "Remove additional files at destination",
             "defaultValue": "false",
             "required": false,
-            "groupName": "AdditionalDeploymentOptions_Functions",
-            "visibleRule": "UseWebDeployFunctions == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
             "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder."
         },
         {
-            "name": "AdditionalArguments_Functions",
+            "name": "ExcludeFilesFromAppDataFlagForBuiltInLinuxUserInput",
+            "type": "boolean",
+            "label": "Exclude files from the App_Data folder",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
+        },
+        {
+            "name": "AdditionalArgumentsForBuiltInLinuxUserInput",
             "type": "string",
             "label": "Additional arguments",
             "required": false,
             "defaultValue": "",
-            "groupName": "AdditionalDeploymentOptions_Functions",
-            "visibleRule": "UseWebDeployFunctions == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
+            "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
             "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."
         },
         {
-            "name": "RenameFilesFlag_Functions",
+            "name": "RenameFilesFlagForBuiltInLinuxUserInput",
             "type": "boolean",
             "label": "Rename locked files",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "UseWebDeployFunctions == true",
-            "groupName": "AdditionalDeploymentOptions_Functions",
+            "visibleRule": "UseWebDeployForBuiltInLinuxUserInput == true",
+            "groupName": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
-            "name": "XmlTransformationWMA",
+            "name": "UseWebDeployForFunctionApp",
+            "type": "boolean",
+            "label": "Publish using Web Deploy",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+            "helpMarkDown": "Publish using Web Deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
+        },
+        {
+            "name": "SetParametersFileForFunctionApp",
+            "type": "filePath",
+            "label": "SetParameters file",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+            "visibleRule": "UseWebDeployForFunctionApp == true",
+            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
+        },
+        {
+            "name": "RemoveAdditionalFilesFlagForFunctionApp",
+            "type": "boolean",
+            "label": "Remove additional files at destination",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+            "visibleRule": "UseWebDeployForFunctionApp == true",
+            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder."
+        },
+        {
+            "name": "AdditionalArgumentsForFunctionApp",
+            "type": "string",
+            "label": "Additional arguments",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+            "visibleRule": "UseWebDeployForFunctionApp == true",
+            "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."
+        },
+        {
+            "name": "RenameFilesFlagForFunctionApp",
+            "type": "boolean",
+            "label": "Rename locked files",
+            "defaultValue": "false",
+            "required": false,
+            "visibleRule": "UseWebDeployForFunctionApp == true",
+            "groupName": "AdditionalDeploymentOptionsForFunctionApp",
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
+        },
+        {
+            "name": "XmlTransformationForWebApp",
             "type": "boolean",
             "label": "XML transformation",
             "required": false,
             "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution_WMA",
+            "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
             "helpMarkDown": "The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
         },
         {
-            "name": "XmlVariableSubstitutionWMA",
+            "name": "XmlVariableSubstitutionForWebApp",
             "type": "boolean",
             "label": "XML variable substitution",
             "required": false,
             "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution_WMA",
+            "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
             "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
         },
         {
-            "name": "JSONFilesWMA",
+            "name": "JSONFilesForWebApp",
             "type": "multiLine",
             "label": "JSON variable substitution",
             "required": false,
             "defaultValue": "",
-            "groupName": "FileTransformsAndVariableSubstitution_WMA",
+            "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
             "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
         },
         {
