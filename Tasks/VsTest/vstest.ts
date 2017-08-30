@@ -10,6 +10,7 @@ import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
+import * as constants from './constants';
 
 let os = require('os');
 let regedit = require('regedit');
@@ -28,6 +29,7 @@ const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirec
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
 let resultsDirectory = null;
+const taskProps = { errorCode: '', errorMessage: ''};
 
 export function startTest() {
     try {
@@ -65,17 +67,20 @@ export function startTest() {
                     tl.setResult(code, tl.loc('VstestReturnCode', code));
                     deleteVstestDiagFile();
                 } catch (error) {
+                    publishErrorToCi(constants.errorCodes.publishResults, error.message); // Another duplicate ci event will get fired with the same error in the .fail
                     deleteVstestDiagFile();
                     console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
-                    throw error;
+                    throw error; // This throw should be removed
                 }
             })
             .fail(function (err) {
+                publishErrorToCi(constants.errorCodes.invokeVsTest, err.message);
                 deleteVstestDiagFile();
                 console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
-                throw err;
+                throw err;  // What is the point of this throw? Where is it getting caught?
             });
     } catch (error) {
+        publishErrorToCi(constants.errorCodes.runTestsLocally, error.message);
         deleteVstestDiagFile();
         tl.setResult(tl.TaskResult.Failed, error);
     }
@@ -122,6 +127,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             if (!tl.exist(settingsFile)) {
                 // because this is filepath input build puts default path in the input. To avoid that we are checking this.
                 tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
+                publishErrorToCi(constants.errorCodes.invalidSettingsFile, "Invalid settings file");
                 throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
         }
@@ -386,6 +392,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
                 tl.warning(err);
                 defer.resolve(tl.TaskResult.Succeeded);
             } else {
+                publishErrorToCi(constants.errorCodes.executeVstest, err.message);
                 tl.error(err);
                 defer.resolve(tl.TaskResult.Failed);
             }
@@ -455,6 +462,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         })
         .fail(function (err) {
             tl.debug('Listing tests from VsTest failed.');
+            publishErrorToCi(constants.errorCodes.getVstestTestsListInternal, err.message);
             tl.error(err);
             defer.resolve(err);
         });
@@ -599,6 +607,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             });
                                                     })
                                                     .fail(function (err) {
+                                                        publishErrorToCi(constants.errorCodes.updateResponseFile, err.message);
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
@@ -630,18 +639,21 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             });
                                                     })
                                                     .fail(function (err) {
+                                                        publishErrorToCi(constants.errorCodes.updateResponseFileFail, err.message);
                                                         tl.error(err)
                                                         defer.resolve(tl.TaskResult.Failed);
                                                     });
                                             }
                                         })
                                         .fail(function (err) {
+                                            publishErrorToCi(constants.errorCodes.responseContainsNoTests, err.message);
                                             tl.error(err)
                                             defer.resolve(tl.TaskResult.Failed);
                                         });
                                 }
                             })
                             .fail(function (err) {
+                                publishErrorToCi(constants.errorCodes.generateResponseFile, err.message);
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
@@ -670,11 +682,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     });
                             })
                             .fail(function (err) {
+                                publishErrorToCi(constants.errorCodes.generateResponseFileFail, err.message);
                                 tl.error(err)
                                 defer.resolve(tl.TaskResult.Failed);
                             });
                     })
                     .fail(function (err) {
+                        publishErrorToCi(constants.errorCodes.getVstestTestsList, err.message);
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
                         defer.resolve(tl.TaskResult.Failed);
@@ -719,6 +733,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             tiaConfig.tiaEnabled = false;
         }
     } catch (e) {
+        publishErrorToCi(constants.errorCodes.tiaConfig, e.message);
         tl.error(e.message);
         defer.resolve(tl.TaskResult.Failed);
         return defer.promise;
@@ -879,4 +894,10 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
             return false;
         }
     });
+}
+
+function publishErrorToCi(errorCode, errorMessage) {
+    taskProps.errorCode = errorCode;
+    taskProps.errorMessage = errorMessage;
+    ci.publishEvent(taskProps);
 }
