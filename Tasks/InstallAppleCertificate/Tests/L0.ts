@@ -11,23 +11,23 @@ describe('InstallAppleCertificate Suite', function () {
     after(() => {
     });
 
-    it('Defaults: install cert in temporary keychain', (done: MochaDone) => {
-        this.timeout(1000);
+    // it('Defaults: install cert in temporary keychain', (done: MochaDone) => {
+    //     this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0InstallTempKeychain.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    //     let tp: string = path.join(__dirname, 'L0InstallTempKeychain.js');
+    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+    //     tr.run();
 
-        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
-            'certificate should have been installed in the keychain');
-        assert(tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain'),
-            'temp keychain should have been created.');
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+    //     assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
+    //         'certificate should have been installed in the keychain');
+    //     assert(tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain'),
+    //         'temp keychain should have been created.');
+    //     assert(tr.stderr.length === 0, 'should not have written to stderr');
+    //     assert(tr.succeeded, 'task should have succeeded');
 
-        done();
-    });
+    //     done();
+    // });
 
     it('Defaults: delete temporary keychain after build', (done: MochaDone) => {
         this.timeout(1000);
@@ -45,22 +45,22 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: install certificate in default keychain before build', (done: MochaDone) => {
-        this.timeout(1000);
+    // it('Defaults: install certificate in default keychain before build', (done: MochaDone) => {
+    //     this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0InstallDefaultKeychain.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    //     let tp: string = path.join(__dirname, 'L0InstallDefaultKeychain.js');
+    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+    //     tr.run();
 
-        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain'),
-            'certificate should have been installed in the default keychain');
-        assert(!tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /usr/lib/login.keychain'), 'login keychain should not be created')
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+    //     assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain'),
+    //         'certificate should have been installed in the default keychain');
+    //     assert(!tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /usr/lib/login.keychain'), 'login keychain should not be created')
+    //     assert(tr.stderr.length === 0, 'should not have written to stderr');
+    //     assert(tr.succeeded, 'task should have succeeded');
 
-        done();
-    });
+    //     done();
+    // });
 
     it('Defaults: delete certificate from default keychain after build', (done: MochaDone) => {
         this.timeout(1000);
@@ -80,21 +80,21 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
-    it('Defaults: with user input CN do not parse for it', (done: MochaDone) => {
-        // there is no way to verify the variable value as it is a 'side effect'
-        // this test just verifies that with user set CN, the task still works
-        this.timeout(1000);
+    // it('Defaults: with user input CN do not parse for it', (done: MochaDone) => {
+    //     // there is no way to verify the variable value as it is a 'side effect'
+    //     // this test just verifies that with user set CN, the task still works
+    //     this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0UserSupplyCN.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    //     let tp: string = path.join(__dirname, 'L0UserSupplyCN.js');
+    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+    //     tr.run();
 
-        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain'),
-            'certificate should have been installed in the default keychain');
-        assert(!tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /usr/lib/login.keychain'), 'login keychain should not be created')
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        done();
-    });
+    //     assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain'),
+    //         'certificate should have been installed in the default keychain');
+    //     assert(!tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /usr/lib/login.keychain'), 'login keychain should not be created')
+    //     assert(tr.stderr.length === 0, 'should not have written to stderr');
+    //     assert(tr.succeeded, 'task should have succeeded');
+    //     done();
+    // });
 });
