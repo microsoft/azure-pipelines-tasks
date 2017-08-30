@@ -29,7 +29,7 @@ const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirec
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
 let resultsDirectory = null;
-const taskProps = { errorCode: '', errorMessage: ''};
+const taskProps = { areaCode: '', message: '', tracePoint: '0', isUserError: 'false'};
 
 export function startTest() {
     try {
@@ -67,7 +67,7 @@ export function startTest() {
                     tl.setResult(code, tl.loc('VstestReturnCode', code));
                     deleteVstestDiagFile();
                 } catch (error) {
-                    publishEventToCi(areaCodes.publishResults, error.message); // Another duplicate ci event will get fired with the same error in the .fail
+                    publishEventToCi(areaCodes.publishResults, error.message);
                     deleteVstestDiagFile();
                     console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error; // This throw should be removed
@@ -126,7 +126,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         } else {
             if (!tl.exist(settingsFile)) {
                 // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                publishEventToCi(areaCodes.invalidSettingsFile, "Invalid settings file");
+                publishEventToCi(areaCodes.invalidSettingsFile, 'Invalid settings file');
                 tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
                 throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
