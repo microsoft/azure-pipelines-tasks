@@ -62,7 +62,6 @@
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
-        "PublishSymbols",
         "PublishTestResults",
         "PublishToAzureServiceBus",
         "QuickPerfTest",
