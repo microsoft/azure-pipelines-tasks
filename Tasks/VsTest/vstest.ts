@@ -920,7 +920,7 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
 }
 
 function publishEventToCi(areaCode : string, message: string) {
-    taskProps.errorCode = areaCode;
-    taskProps.errorMessage = message;
+    taskProps.areaCode = areaCode;
+    taskProps.message = message;
     ci.publishEvent(taskProps);
 }
