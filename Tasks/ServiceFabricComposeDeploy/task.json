@@ -166,7 +166,6 @@
         "RemovingApplication": "Removing the existing application '{0}'.",
         "ApplicationRemoved": "Application removed.",
         "EncryptingPassword": "Encrypting the password with the Server Certificate.",
-        "CertificateNotFound": "The Server Certificate was not found, the password will not be encrypted.",
         "CreatingApplication": "Creating application",
         "WaitingForDeploy": "Waiting for deploy...",
         "CurrentStatus": "Current Status: {0}",
