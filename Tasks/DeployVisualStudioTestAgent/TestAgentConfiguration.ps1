@@ -124,6 +124,7 @@
         # ​¯\_(ツ)_/¯
         [System.AppDomain]::CurrentDomain.remove_AssemblyResolve($onAssemblyResolve)
 
+        # Running tests under different user account under service mode is not possible. one should always enable "Run UI tests" scenario
         if ($AsServiceOrProcess -eq "Service") {
             $DtaProcess = New-Object System.Diagnostics.Process
             $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
