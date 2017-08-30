@@ -2,7 +2,7 @@
   "loc.friendlyName": "Update Service Fabric Manifests",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
   "loc.description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
-  "loc.instanceNameFormat": "Update Service Fabric Manifests ($updateType)",
+  "loc.instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
   "loc.input.label.updateType": "Update Type",
   "loc.input.help.updateType": "Specify the type of update that should be made to the manifest files.",
   "loc.input.label.applicationPackagePath": "Application Package",
