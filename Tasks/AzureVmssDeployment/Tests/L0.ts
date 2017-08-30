@@ -239,6 +239,7 @@ describe('Azure VMSS Deployment', function () {
             }, tr, done);
         });
 
+        /*
         it("should use unarchived custom scripts if archiving fails", (done) => {
             process.env["_archivingFails_"] = "true";
             let tp = path.join(__dirname, "updateImageOnWindowsAgent.js");
@@ -256,6 +257,7 @@ describe('Azure VMSS Deployment', function () {
                 assert(tr.stdout.indexOf("loc_mock_UpdatedVMSSImage") > -1, "VMSS image should be updated");
             }, tr, done);
         });
+        */
 
         it("should use unarchived custom scripts if skipArchivingCustomScripts input is true", (done) => {
             process.env["_doNotArchive_"] = "true";
