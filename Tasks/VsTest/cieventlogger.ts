@@ -19,3 +19,4 @@ export function publishEvent(properties: { [key: string]: any }): void {
         //ignore
     }
 }
+
