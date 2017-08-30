@@ -1,0 +1,44 @@
+{
+  "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
+  "name": "PyPIPublisher",
+  "friendlyName": "PyPI Publisher",
+  "description": "Publish Python packages to the Python Package Index",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "Publish Python packages to the Python Package Index",
+  "category": "Utility",
+  "visibility": [
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "PyPIPublisher $(message)",
+  "inputs": [
+    {
+      "name": "wd",
+      "type": "filePath",
+      "label": "Root Directory",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Python root directory where setup.py is present."
+    },
+    {
+      "name": "serviceEndpoint",
+      "type": "connectedService:generic",
+      "label": "Generic Service Endpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Generic endpoint where PyPI server details are present"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "publisher.js",
+      "argumentFormat": ""
+    }
+  }
+}
