@@ -8,7 +8,7 @@ var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
 var psr = null;
 
-describe('ServiceFabricUpdateAppVersions Suite', function () {
+describe('ServiceFabricUpdateManifests Suite', function () {
     this.timeout(20000);
 
     before((done) => {
