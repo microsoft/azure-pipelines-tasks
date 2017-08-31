@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Publish symbols",
   "loc.input.help.PublishSymbols": "Indicates whether to publish the symbol files.",
   "loc.input.label.SymbolServerType": "Symbol Server Type",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. The \"Team Services\" option is under private preview. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to participate in the private preview.",
+  "loc.input.help.SymbolServerType": "Choose where to publish symbols. The \"Team Services\" option is under private preview. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to participate in the private preview.",
   "loc.input.label.SymbolsPath": "Path to publish symbols",
   "loc.input.help.SymbolsPath": "Path to publish symbols.",
   "loc.input.label.DetailedLog": "Verbose logging",
