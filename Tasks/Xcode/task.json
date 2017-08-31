@@ -83,26 +83,13 @@
             "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section."
         },
         {
-            "name": "packageTool",
-            "type": "pickList",
-            "label": "Create Package (IPA) using",
-            "defaultValue": "xcodebuild",
-            "required": true,
-            "helpMarkDown": "Choose the tool to use for generating the IPA.",
-            "options": {
-                "xcodebuild": "xcodebuild archive and export"
-            },
-            "groupName": "package"
-        },
-        {
             "name": "archivePath",
             "type": "filePath",
             "label": "Archive Path",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify a directory where created archives should be placed.",
-            "groupName": "package",
-            "visibleRule": "packageTool == xcodebuild"
+            "groupName": "package"
         },
         {
             "name": "exportPath",
@@ -111,8 +98,7 @@
             "defaultValue": "output/$(SDK)/$(Configuration)",
             "required": false,
             "helpMarkDown": "Optionally specify the destination for the product exported from the archive.",
-            "groupName": "package",
-            "visibleRule": "packageTool == xcodebuild"
+            "groupName": "package"
         },
         {
             "name": "exportOptions",
@@ -126,8 +112,7 @@
                 "plist": "Plist",
                 "specify": "Specify"
             },
-            "helpMarkDown": "Pick a way to pass in Export Options when exporting the archive.",
-            "visibleRule": "packageTool == xcodebuild"
+            "helpMarkDown": "Pick a way to pass in Export Options when exporting the archive."
         },
         {
             "name": "exportMethod",

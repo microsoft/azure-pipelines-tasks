@@ -83,26 +83,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.packageApp"
     },
     {
-      "name": "packageTool",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.packageTool",
-      "defaultValue": "xcodebuild",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageTool",
-      "options": {
-        "xcodebuild": "xcodebuild archive and export"
-      },
-      "groupName": "package"
-    },
-    {
       "name": "archivePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.archivePath",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.archivePath",
-      "groupName": "package",
-      "visibleRule": "packageTool == xcodebuild"
+      "groupName": "package"
     },
     {
       "name": "exportPath",
@@ -111,8 +98,7 @@
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportPath",
-      "groupName": "package",
-      "visibleRule": "packageTool == xcodebuild"
+      "groupName": "package"
     },
     {
       "name": "exportOptions",
@@ -126,8 +112,7 @@
         "plist": "Plist",
         "specify": "Specify"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
-      "visibleRule": "packageTool == xcodebuild"
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions"
     },
     {
       "name": "exportMethod",
