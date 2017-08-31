@@ -1,6 +1,6 @@
 {
   "name": "vsts-npm-task",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "VSTS NPM Task",
   "main": "npmtask.js",
   "scripts": {
@@ -20,6 +20,6 @@
     "ini": "^1.3.4",
     "mockery": "^1.7.0",
     "vso-node-api": "^6.2.2-preview",
-    "vsts-task-lib": "^2.0.5"
+    "vsts-task-lib": "2.0.6"
   }
 }
