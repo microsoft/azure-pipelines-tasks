@@ -21,7 +21,8 @@ export class FtpOptions {
     remotePath: string;
 
     // advanced options
-    clean: boolean; 
+    clean: boolean;
+    cleanContents: boolean;
     overwrite: boolean; 
     preservePaths: boolean; 
     trustSSL: boolean; 
@@ -50,7 +51,8 @@ function getFtpOptions(): FtpOptions {
     options.remotePath = tl.getInput('remotePath', true).trim();
 
     // advanced options
-    options.clean= tl.getBoolInput('clean', true);
+    options.clean = tl.getBoolInput('clean', true);
+    options.cleanContents = tl.getBoolInput('cleanContents', false);
     options.overwrite = tl.getBoolInput('overwrite', true);
     options.preservePaths = tl.getBoolInput('preservePaths', true);
     options.trustSSL = tl.getBoolInput('trustSSL', true);
@@ -89,6 +91,9 @@ function doWork() {
             if (ftpOptions.clean) {
                 console.log(tl.loc('CleanRemoteDir', ftpOptions.remotePath));
                 await ftpHelper.cleanRemote(ftpOptions.remotePath);
+            } else if (ftpOptions.cleanContents) {
+                console.log(tl.loc('CleanRemoteDirContents', ftpOptions.remotePath));
+                await ftpHelper.cleanRemoteContents(ftpOptions.remotePath);
             }
 
             console.log(tl.loc('UploadRemoteDir', ftpOptions.remotePath));

@@ -82,7 +82,23 @@ export class FtpHelper {
 
         this.ftpClient.rmdir(remotePath, true, function (err) {
             if (err) {
-                defer.reject('Unable to clean remote folder: ' + remotePath + ' error: ' + err);
+                defer.reject('Unable to remove remote folder: ' + remotePath + ' error: ' + err);
+            } else {
+                defer.resolve(null);
+            }
+        });
+
+        return defer.promise;
+    }
+
+    remoteDelete(remotePath: string): Q.Promise<void> {
+        var defer: Q.Deferred<void> = Q.defer<void>();
+
+        tl.debug('removing remote content: ' + remotePath);
+
+        this.ftpClient.delete(remotePath, function (err) {
+            if (err) {
+                defer.reject('Unable to remove remote content: ' + remotePath + ' error: ' + err);
             } else {
                 defer.resolve(null);
             }
@@ -97,6 +113,31 @@ export class FtpHelper {
         if (await this.remoteExists(remotePath)) {
             await this.rmdir(remotePath);
         }
+    }
+
+    async cleanRemoteContents(remotePath: string) {
+        tl.debug('cleaning remote directory contents: ' + remotePath);
+       
+        var that: any = this;
+        var defer: Q.Deferred<void> = Q.defer<void>();
+        this.ftpClient.list(path.normalize(remotePath), async function (err, list) {
+            try {
+                if (!err) {
+                    for (var remote of list) {
+                        var item = path.join(remotePath, remote.name);
+                        if (remote.type === 'd') { // directories
+                            await that.rmdir(item);
+                        } else {
+                            await that.remoteDelete(item);
+                        }
+                    }
+                }
+                defer.resolve(null);
+            } catch(err) {
+                defer.reject('Error cleaning remote path: ' + err);
+            }
+        });
+        return defer.promise;
     }
 
     uploadFiles(files: string[]): Q.Promise<void> {
