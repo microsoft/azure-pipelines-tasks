@@ -33,12 +33,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
     },
     {
-      "name": "EnvironmentName",
+      "name": "MachineNames",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.EnvironmentName",
+      "label": "ms-resource:loc.input.label.MachineNames",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     },
     {
       "name": "AdminUserName",
@@ -90,27 +90,6 @@
       "groupName": "advanced",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
-    },
-    {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "groupName": "advanced",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      }
-    },
-    {
-      "name": "MachineNames",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.MachineNames",
-      "defaultValue": "",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -128,6 +107,7 @@
     "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "ms-resource:loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables",
     "WFC_CopyStartedFor0": "ms-resource:loc.messages.WFC_CopyStartedFor0",
     "WFC_NoMachineExistsUnderEnvironment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment",
-    "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment"
+    "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment",
+    "WFC_CopyingFailedForResource": "ms-resource:loc.messages.WFC_CopyingFailedForResource"
   }
 }

@@ -5,54 +5,6 @@ function ThrowError
         throw "$errorMessage"
 }
 
-function Get-ResourceConnectionDetails
-{
-    param(
-        [string]$envName,
-        [object]$resource
-        )
-
-    $resourceProperties = @{}
-
-    $resourceName = $resource.Name
-    $resourceId = $resource.Id
-
-    Write-Verbose "`t`t Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName"
-    $fqdn = Get-EnvironmentProperty -Environment $environment -Key $resourceFQDNKeyName -ResourceId $resourceId -ErrorAction Stop
-    Write-Verbose "`t`t Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceFQDNKeyName"
-
-    Write-Verbose "`t`t Resource fqdn - $fqdn"	
-
-    $resourceProperties.fqdn = $fqdn
-    $resourceProperties.credential = Get-ResourceCredentials -resource $resource    
-
-    return $resourceProperties
-}
-
-function Get-ResourcesProperties
-{
-    param(
-        [string]$envName,
-        [object]$resources
-        )    
-
-    [hashtable]$resourcesPropertyBag = @{}
-
-    foreach ($resource in $resources)
-    {
-        $resourceName = $resource.Name
-        $resourceId = $resource.Id
-        Write-Verbose "Get Resource properties for $resourceName (ResourceId = $resourceId)"		
-
-        # Get other connection details for resource like - fqdn wirmport, http protocol, skipCACheckOption, resource credentials
-
-        $resourceProperties = Get-ResourceConnectionDetails -envName $envName -resource $resource        
-        
-        $resourcesPropertyBag.Add($resourceId, $resourceProperties)
-    }
-    return $resourcesPropertyBag
-}
-
 function Validate-Null(
     [string]$value,
     [string]$variableName

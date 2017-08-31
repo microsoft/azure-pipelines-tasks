@@ -21,21 +21,6 @@ param (
         $sourceDirectory = Split-Path $sourcePath
         $filesToCopy = Split-Path $sourcePath -Leaf
     }
-
-    if(Test-Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
-    {
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-        [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
-        }
-    }
-    else
-    {
-        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
-        {
-            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
-        }
-    }
     
     function ThrowError
     {
@@ -44,7 +29,7 @@ param (
             [string]$fqdn
         )
         
-        $failMessage = "Copying failed for resource : $fqdn"
+        $failMessage = (Get-VstsLocString -Key "WFC_CopyingFailedForResource" -ArgumentList $fqdn)
         throw "$failMessage`n$errorMessage"
     }
     

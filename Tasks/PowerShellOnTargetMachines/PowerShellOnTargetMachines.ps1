@@ -9,7 +9,6 @@ $adminUserName = Get-VstsInput -Name AdminUserName
 $adminPassword = Get-VstsInput -Name AdminPassword
 $protocol = Get-VstsInput -Name Protocol
 $testCertificate = Get-VstsInput -Name testCertificate
-$resourceFilteringMethod = Get-VstsInput -Name ResourceFilteringMethod
 $machineNames = Get-VstsInput -Name MachineNames
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptArguments = Get-VstsInput -Name ScriptArguments
@@ -26,6 +25,9 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+
+# Telemetry
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
 try
 {
@@ -56,9 +58,6 @@ try
     {
         $enableDetailedLoggingString = "false"
     }
-
-    # Telemetry
-    Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
     try
     {

@@ -4,11 +4,9 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
-$environmentName = Get-VstsInput -Name EnvironmentName
+$machineNames = Get-VstsInput -Name MachineNames
 $adminUserName = Get-VstsInput -Name AdminUserName
 $adminPassword = Get-VstsInput -Name AdminPassword
-$resourceFilteringMethod = Get-VstsInput -Name ResourceFilteringMethod
-$machineNames = Get-VstsInput -Name MachineNames
 $sourcePath = Get-VstsInput -Name SourcePath
 $targetPath = Get-VstsInput -Name TargetPath
 $additionalArguments = Get-VstsInput -Name AdditionalArguments
@@ -23,22 +21,20 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 try 
 {
-
     # keep machineNames parameter name unchanged due to back compatibility
-    $machineFilter = $machineNames
     $sourcePath = $sourcePath.Trim('"')
     $targetPath = $targetPath.Trim('"')
 
     $envOperationStatus = 'Passed'
 
     Validate-SourcePath $sourcePath
-    Validate-DestinationPath $targetPath $environmentName
+    Validate-DestinationPath $targetPath $machineNames
 
-    if([string]::IsNullOrWhiteSpace($environmentName))
+    if([string]::IsNullOrWhiteSpace($machineNames))
     {
         Write-Verbose "No environment found. Copying to destination."
 
-        Write-Output (Get-VstsLocString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
+        Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $targetPath)
         Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
                             -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments
         Write-Verbose "Files copied to destination successfully."
@@ -46,17 +42,17 @@ try
     else
     {
 
-        $machines = $environmentName.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
+        $machines = $machineNames.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
 
         $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
         $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
 
         if ($machines.Count -eq 0)
         {
-            throw (Get-VstsLocString -Key "WFC_NoMachineExistsUnderEnvironment0ForDeployment" -ArgumentList $environmentName)
+            throw (Get-VstsLocString -Key "WFC_NoMachineExistsUnderEnvironment0ForDeployment" -ArgumentList $machineNames)
         }
 
-        if($copyFilesInParallel -eq "false" -or  ( $machines.Count -eq 1 ))
+        if($copyFilesInParallel -eq $false -or  ( $machines.Count -eq 1 ))
         {
             foreach($machine in $machines)
             {
