@@ -1,16 +1,21 @@
-export module areaCodes {
-    export const publishResults = 'publishresults';
-    export const invokeVsTest = 'invokevstest';
-    export const runTestsLocally = 'runtestslocally';
-    export const invalidSettingsFile = 'invalidsettingsfile';
-    export const executeVstest = 'executevstest';
-    export const getVstestTestsListInternal = 'getvstesttestslistinternal';
-    export const updateResponseFile = 'updateresponsefile';
-    export const updateResponseFileFail = 'updateresponsefilefail';
-    export const responseContainsNoTests = 'responsecontainsnotests';
-    export const generateResponseFile = 'generateresponsefile';
-    export const getVstestTestsList = 'getvstesttestslist';
-    export const tiaConfig = 'tiaconfig';
-    export const testRunUpdationFailed = 'testrunupdationfailed';
-    export const uploadTestResults = 'uploadtestresults';
+export module AreaCodes {
+    export const PUBLISHRESULTS = 'publishresults';
+    export const INVOKEVSTEST = 'invokevstest';
+    export const RUNTESTSLOCALLY = 'runtestslocally';
+    export const INVALIDSETTINGSFILE = 'invalidsettingsfile';
+    export const EXECUTEVSTEST = 'executevstest';
+    export const GETVSTESTTESTSLISTINTERNAL = 'getvstesttestslistinternal';
+    export const UPDATERESPONSEFILE = 'updateresponsefile';
+    export const RESPONSECONTAINSNOTESTS = 'responsecontainsnotests';
+    export const GENERATERESPONSEFILE = 'generateresponsefile';
+    export const GETVSTESTTESTSLIST = 'getvstesttestslist';
+    export const TIACONFIG = 'tiaconfig';
+    export const TESTRUNUPDATIONFAILED = 'testrunupdationfailed';
+    export const UPLOADTESTRESULTS = 'uploadtestresults';
+}
+
+export module ResultMessages {
+    export const UPLOADTESTRESULTSRETURNED = 'uploadtestresultsreturned ';
+    export const EXECUTEVSTESTRETURNED = 'executecstestreturned ';
+    export const TESTRUNUPDATIONFAILED = 'testrunupdationfailed';
 }
