@@ -36,7 +36,7 @@
     "q": "1.4.1",
     "semver": "4.3.3",
     "shelljs": "^0.3.0",
-    "sync-request": "3.0.1",
+    "sync-request": "4.1.0",
     "typescript": "1.8.7",
     "validator": "3.33.0",
     "node-uuid": "1.4.6"
