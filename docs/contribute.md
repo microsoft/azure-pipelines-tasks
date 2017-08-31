@@ -114,12 +114,3 @@ For a specific task
 ```bash
 node make.js testLegacy --task XCode
 ```
-
-## Package
-This must be done on a windows machine with nuget.exe in the path
-From the root of the repo (replace version with appropriate version)
-```bash
-gulp package --version 1.0.29
-```
-
-Tasks will be create a nuget package in the _package directory.  This is only used for TFS internal engineering.
