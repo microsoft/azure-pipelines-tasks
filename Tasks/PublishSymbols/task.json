@@ -61,10 +61,11 @@
             "type": "pickList",
             "label": "Symbol Server Type",
             "required": true,
-            "defaultValue": "TeamServices",
+            "defaultValue": "",
             "helpMarkDown": "Choose where to publish symbols. The \"Team Services\" option is under private preview. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to participate in the private preview.",
             "options":
             {
+                "": "Select one",
                 "TeamServices": "Team Services",
                 "FileShare": "File share"
             },
