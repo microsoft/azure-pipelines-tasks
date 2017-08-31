@@ -1,21 +1,22 @@
 export module AreaCodes {
-    export const PUBLISHRESULTS = 'publishresults';
-    export const INVOKEVSTEST = 'invokevstest';
-    export const RUNTESTSLOCALLY = 'runtestslocally';
-    export const INVALIDSETTINGSFILE = 'invalidsettingsfile';
-    export const EXECUTEVSTEST = 'executevstest';
-    export const GETVSTESTTESTSLISTINTERNAL = 'getvstesttestslistinternal';
-    export const UPDATERESPONSEFILE = 'updateresponsefile';
-    export const RESPONSECONTAINSNOTESTS = 'responsecontainsnotests';
-    export const GENERATERESPONSEFILE = 'generateresponsefile';
-    export const GETVSTESTTESTSLIST = 'getvstesttestslist';
-    export const TIACONFIG = 'tiaconfig';
-    export const TESTRUNUPDATIONFAILED = 'testrunupdationfailed';
-    export const UPLOADTESTRESULTS = 'uploadtestresults';
+    export const PUBLISHRESULTS = 'PublishResults';
+    export const INVOKEVSTEST = 'InvokeVsTest';
+    export const RUNTESTSLOCALLY = 'RunTestsLocally';
+    export const INVALIDSETTINGSFILE = 'InvalidSettingsFile';
+    export const EXECUTEVSTEST = 'ExecuteVsTest';
+    export const GETVSTESTTESTSLISTINTERNAL = 'GetVsTestTestsListInternal';
+    export const UPDATERESPONSEFILE = 'UpdateResponseFile';
+    export const RESPONSECONTAINSNOTESTS = 'ResponseContainsNoTests';
+    export const GENERATERESPONSEFILE = 'GenerateResponseFile';
+    export const GETVSTESTTESTSLIST = 'GetVsTestTestsList';
+    export const TIACONFIG = 'TiaConfig';
+    export const TESTRUNUPDATIONFAILED = 'TestRunUpdationFailed';
+    export const UPLOADTESTRESULTS = 'UploadTestResults';
+    export const RUNVSTEST = 'RunVsTest';
 }
 
 export module ResultMessages {
-    export const UPLOADTESTRESULTSRETURNED = 'uploadtestresultsreturned ';
-    export const EXECUTEVSTESTRETURNED = 'executecstestreturned ';
-    export const TESTRUNUPDATIONFAILED = 'testrunupdationfailed';
+    export const UPLOADTESTRESULTSRETURNED = 'uploadTestResults returned ';
+    export const EXECUTEVSTESTRETURNED = 'executeVstest returned ';
+    export const TESTRUNUPDATIONFAILED = 'testRunupdation failed';
 }
