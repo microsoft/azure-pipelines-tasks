@@ -922,5 +922,7 @@ function publishEventToCi(areaCode : string, message: string, tracepoint: string
     const taskProps = { areacode: '', result: '', tracepoint: '0', isusererror: 'false'};
     taskProps.areacode = areaCode;
     taskProps.result = message;
+    taskProps.tracepoint = tracepoint;
+    taskProps.isusererror = isusererror;
     ci.publishEvent(taskProps);
 }
