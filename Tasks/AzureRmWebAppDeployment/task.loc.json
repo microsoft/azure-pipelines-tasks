@@ -25,49 +25,49 @@
       "name": "FileTransformsAndVariableSubstitutionForWebApp",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitutionForWebApp",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
+      "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp"
     },
     {
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = functionapp || WebAppKind = applinux || WebAppKind = applinuxbuiltin || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+      "visibleRule": "WebAppKindUserInput = functionapp || WebAppKindUserInput = applinux || WebAppKindUserInput = applinuxbuiltin || WebAppKind = functionapp || WebAppKind = applinux"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
+      "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp"
     },
     {
       "name": "AdditionalDeploymentOptionsForBuiltInLinux",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForBuiltInLinux",
       "isExpanded": false,
-      "visibleRule": "WebAppKindDS = applinux && LinuxImageSource != DOCKER"
+      "visibleRule": "WebAppKind = applinux && LinuxImageSource != DOCKER"
     },
     {
       "name": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
       "isExpanded": false,
-      "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin"
+      "visibleRule": "WebAppKind = invalid && WebAppKindUserInput = applinuxbuiltin"
     },
     {
       "name": "AdditionalDeploymentOptionsForFunctionApp",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForFunctionApp",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = functionapp || WebAppKindDS = functionapp"
+      "visibleRule": "WebAppKindUserInput = functionapp || WebAppKind = functionapp"
     },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+      "visibleRule": "WebAppKindUserInput != invalid || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKind = functionapp || WebAppKind = applinux"
     },
     {
       "name": "ApplicationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+      "visibleRule": "WebAppKindUserInput != invalid || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKind = functionapp || WebAppKind = applinux"
     }
   ],
   "inputs": [
@@ -103,9 +103,9 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "WebAppKindDS",
+      "name": "WebAppKind",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppKindDS",
+      "label": "ms-resource:loc.input.label.WebAppKind",
       "defaultValue": "invalid",
       "required": false,
       "visibleRule": "WebAppName = invalidwebappname",
@@ -115,9 +115,9 @@
       }
     },
     {
-      "name": "WebAppKind",
+      "name": "WebAppKindUserInput",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppKind",
+      "label": "ms-resource:loc.input.label.WebAppKindUserInput",
       "defaultValue": "invalid",
       "required": false,
       "options": {
@@ -129,7 +129,7 @@
         "mobileapp": "Mobile app",
         "api": "Api app"
       },
-      "visibleRule": "WebAppKindDS != \"\" && WebAppKindDS != app && WebAppKindDS != functionapp && WebAppKindDS != applinux && WebAppKindDS != api && WebAppKindDS != mobileapp",
+      "visibleRule": "WebAppKind != \"\" && WebAppKind != app && WebAppKind != functionapp && WebAppKind != applinux && WebAppKind != api && WebAppKind != mobileapp",
       "properties": {
         "EditableOptions": "false",
         "PopulateDefaultValue": "true"
@@ -142,7 +142,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+      "visibleRule": "WebAppKindUserInput != invalid || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKind = functionapp || WebAppKind = applinux"
     },
     {
       "name": "ResourceGroupName",
@@ -187,7 +187,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux || LinuxImageSource = DOCKER",
+      "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -196,7 +196,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux || LinuxImageSource = DOCKER",
+      "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -205,7 +205,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = applinux || LinuxImageSource = DOCKER",
+      "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -214,7 +214,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKind = applinuxbuiltin || WebAppKind = applinux",
+      "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -223,7 +223,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp",
+      "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -232,7 +232,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp",
+      "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindUserInput = functionapp || WebAppKind = functionapp",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -241,7 +241,7 @@
       "label": "ms-resource:loc.input.label.PackageForBuiltInLinux",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "LinuxImageSource != DOCKER && WebAppKindDS = applinux",
+      "visibleRule": "LinuxImageSource != DOCKER && WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.PackageForBuiltInLinux"
     },
     {
@@ -250,7 +250,7 @@
       "label": "ms-resource:loc.input.label.PackageForBuiltInLinuxUserInput",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin",
+      "visibleRule": "WebAppKind = invalid && WebAppKindUserInput = applinuxbuiltin",
       "helpMarkDown": "ms-resource:loc.input.help.PackageForBuiltInLinuxUserInput"
     },
     {
@@ -365,23 +365,23 @@
       "visibleRule": "ScriptTypeForBuiltInLinuxUserInput == File Path"
     },
     {
-      "name": "GenerateWebConfigForWebApp",
+      "name": "GenerateWebConfig",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.GenerateWebConfigForWebApp",
+      "label": "ms-resource:loc.input.label.GenerateWebConfig",
       "defaultValue": "false",
       "required": false,
       "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
-      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfigForWebApp"
+      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfig"
     },
     {
-      "name": "WebConfigParametersForWebApp",
+      "name": "WebConfigParameters",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.WebConfigParametersForWebApp",
+      "label": "ms-resource:loc.input.label.WebConfigParameters",
       "required": true,
       "defaultValue": "",
-      "visibleRule": "GenerateWebConfigForWebApp == true",
+      "visibleRule": "GenerateWebConfig == true",
       "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
-      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParametersForWebApp",
+      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
       "properties": {
         "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
       }
@@ -634,22 +634,22 @@
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlagForFunctionApp"
     },
     {
-      "name": "XmlTransformationForWebApp",
+      "name": "XmlTransformation",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlTransformationForWebApp",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
       "required": false,
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
-      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformationForWebApp"
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
     },
     {
-      "name": "XmlVariableSubstitutionForWebApp",
+      "name": "XmlVariableSubstitution",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlVariableSubstitutionForWebApp",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
       "required": false,
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
-      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitutionForWebApp"
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
     },
     {
       "name": "JSONFilesForWebApp",
@@ -689,7 +689,7 @@
       "resultTemplate": "{\"Value\":\"{{{ resourceGroup }}}\",\"DisplayValue\":\"{{{ resourceGroup }}}\"}"
     },
     {
-      "target": "WebAppKindDS",
+      "target": "WebAppKind",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureAppKind",
       "parameters": {

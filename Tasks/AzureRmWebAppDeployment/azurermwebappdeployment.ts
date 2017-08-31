@@ -19,8 +19,8 @@ async function run() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('WebAppName', true);
-        var webAppKindDS = tl.getInput('WebAppKindDS', false);
         var webAppKind = tl.getInput('WebAppKind', false);
+        var webAppKindUserInput = tl.getInput('WebAppKindUserInput', false);
         var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag', false);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var slotName: string = tl.getInput('SlotName', false);
@@ -40,8 +40,8 @@ async function run() {
         var scriptTypeLinuxUserInput: string = tl.getInput('ScriptTypeForBuiltInLinuxUserInput', false);
         var inlineScriptLinuxUserInput: string = tl.getInput('InlineScriptForBuiltInLinuxUserInput', false);
         var scriptPathLinuxUserInput: string = tl.getPathInput('ScriptPathForBuiltInLinuxUserInput', false);
-        var generateWebConfigForWebApp = tl.getBoolInput('GenerateWebConfigForWebApp', false);
-        var webConfigParametersStrForWebApp = tl.getInput('WebConfigParametersForWebApp', false);
+        var generateWebConfigForWebApp = tl.getBoolInput('GenerateWebConfig', false);
+        var webConfigParametersStrForWebApp = tl.getInput('WebConfigParameters', false);
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var useWebDeploy: boolean = tl.getBoolInput('UseWebDeploy', false);
         var setParametersFile: string = tl.getPathInput('SetParametersFile', false);
@@ -66,16 +66,16 @@ async function run() {
         var removeAdditionalFilesFlagForFunctionApp: boolean = tl.getBoolInput('RemoveAdditionalFilesFlagForFunctionApp', false);
         var additionalArgumentsForFunctionApp: string = tl.getInput('AdditionalArgumentsForFunctionApp', false);
         var renameFilesFlagForFunctionApp: boolean = tl.getBoolInput('RenameFilesFlagForFunctionApp', false);
-        var xmlTransformationForWebApp: boolean = tl.getBoolInput('XmlTransformationForWebApp', false);
-        var xmlVariableSubstitutionForWebApp: boolean = tl.getBoolInput('XmlVariableSubstitutionForWebApp', false);
+        var xmlTransformationForWebApp: boolean = tl.getBoolInput('XmlTransformation', false);
+        var xmlVariableSubstitutionForWebApp: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
         var JSONFilesForWebApp = tl.getDelimitedInput('JSONFilesForWebApp', '\n', false);
         var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
 
-        var isAppKindUserInput = webAppKindDS != "" && webAppKindDS != "app" && webAppKindDS != "functionapp" && webAppKindDS != "applinux" && webAppKindDS != "api" && webAppKindDS != "mobileapp";
+        var isAppKindUserInput = webAppKind != "" && webAppKind != "app" && webAppKind != "functionapp" && webAppKind != "applinux" && webAppKind != "api" && webAppKind != "mobileapp";
 
-        webAppKind = isAppKindUserInput ? webAppKind : webAppKindDS;
+        webAppKind = isAppKindUserInput ? webAppKindUserInput : webAppKind;
         // Using applinuxbuiltin as the app type for linux apps with built-in images
-        webAppKind = webAppKindDS === "applinux" && linuxImageSource != "DOCKER" ? "applinuxbuiltin" : webAppKind;
+        webAppKind = webAppKind === "applinux" && linuxImageSource != "DOCKER" ? "applinuxbuiltin" : webAppKind;
 
         var isLikeWebApp = webAppKind === "app" || webAppKind === "api" || webAppKind === "mobileapp";
 

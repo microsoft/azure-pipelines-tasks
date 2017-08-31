@@ -25,49 +25,49 @@
             "name": "FileTransformsAndVariableSubstitutionForWebApp",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
+            "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp"
         },
         {
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = functionapp || WebAppKind = applinux || WebAppKind = applinuxbuiltin || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+            "visibleRule": "WebAppKindUserInput = functionapp || WebAppKindUserInput = applinux || WebAppKindUserInput = applinuxbuiltin || WebAppKind = functionapp || WebAppKind = applinux"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp"
+            "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp"
         },
         {
             "name": "AdditionalDeploymentOptionsForBuiltInLinux",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKindDS = applinux && LinuxImageSource != DOCKER"
+            "visibleRule": "WebAppKind = applinux && LinuxImageSource != DOCKER"
         },
         {
             "name": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin"
+            "visibleRule": "WebAppKind = invalid && WebAppKindUserInput = applinuxbuiltin"
         },
         {
             "name": "AdditionalDeploymentOptionsForFunctionApp",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = functionapp || WebAppKindDS = functionapp"
+            "visibleRule": "WebAppKindUserInput = functionapp || WebAppKind = functionapp"
         },
         {
             "name": "output",
             "displayName": "Output",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+            "visibleRule": "WebAppKindUserInput != invalid || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKind = functionapp || WebAppKind = applinux"
         },
         {
             "name": "ApplicationSettings",
             "displayName": "Application Settings",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+            "visibleRule": "WebAppKindUserInput != invalid || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKind = functionapp || WebAppKind = applinux"
         }
     ],
     "inputs": [
@@ -103,7 +103,7 @@
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
         },
         {
-            "name": "WebAppKindDS",
+            "name": "WebAppKind",
             "type": "pickList",
             "label": "Web app kind",
             "defaultValue": "invalid",
@@ -115,7 +115,7 @@
             }
         },
         {
-            "name": "WebAppKind",
+            "name": "WebAppKindUserInput",
             "type": "pickList",
             "label": "Web app kind",
             "defaultValue": "invalid",
@@ -129,7 +129,7 @@
                 "mobileapp": "Mobile app",
                 "api": "Api app"
             },
-            "visibleRule": "WebAppKindDS != \"\" && WebAppKindDS != app && WebAppKindDS != functionapp && WebAppKindDS != applinux && WebAppKindDS != api && WebAppKindDS != mobileapp",
+            "visibleRule": "WebAppKind != \"\" && WebAppKind != app && WebAppKind != functionapp && WebAppKind != applinux && WebAppKind != api && WebAppKind != mobileapp",
             "properties": {
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
@@ -142,7 +142,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind != invalid || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKindDS = functionapp || WebAppKindDS = applinux"
+            "visibleRule": "WebAppKindUserInput != invalid || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKind = functionapp || WebAppKind = applinux"
         },
         {
             "name": "ResourceGroupName",
@@ -187,7 +187,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux || LinuxImageSource = DOCKER",
+            "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -196,7 +196,7 @@
             "label": "Repository",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux || LinuxImageSource = DOCKER",
+            "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -205,7 +205,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux || LinuxImageSource = DOCKER",
+            "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
@@ -214,7 +214,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKind = applinuxbuiltin || WebAppKind = applinux",
+            "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -223,7 +223,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp",
+            "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -232,7 +232,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindDS = app || WebAppKindDS = api || WebAppKindDS = mobileapp || WebAppKind = functionapp || WebAppKindDS = functionapp",
+            "visibleRule": "WebAppKindUserInput = app || WebAppKindUserInput = api || WebAppKindUserInput = mobileapp || WebAppKind = app || WebAppKind = api || WebAppKind = mobileapp || WebAppKindUserInput = functionapp || WebAppKind = functionapp",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -241,7 +241,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "LinuxImageSource != DOCKER && WebAppKindDS = applinux",
+            "visibleRule": "LinuxImageSource != DOCKER && WebAppKind = applinux",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -250,7 +250,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKindDS = invalid && WebAppKind = applinuxbuiltin",
+            "visibleRule": "WebAppKind = invalid && WebAppKindUserInput = applinuxbuiltin",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -365,7 +365,7 @@
             "visibleRule": "ScriptTypeForBuiltInLinuxUserInput == File Path"
         },
         {
-            "name": "GenerateWebConfigForWebApp",
+            "name": "GenerateWebConfig",
             "type": "boolean",
             "label": "Generate Web.config",
             "defaultValue": "false",
@@ -374,12 +374,12 @@
             "helpMarkDown": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469)."
         },
         {
-            "name": "WebConfigParametersForWebApp",
+            "name": "WebConfigParameters",
             "type": "multiLine",
             "label": "Web.config parameters",
             "required": true,
             "defaultValue": "",
-            "visibleRule": "GenerateWebConfigForWebApp == true",
+            "visibleRule": "GenerateWebConfig == true",
             "groupName": "FileTransformsAndVariableSubstitutionForWebApp",
             "helpMarkDown": "Edit values like startup file in the generated web.config file. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
             "properties": {
@@ -634,7 +634,7 @@
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
-            "name": "XmlTransformationForWebApp",
+            "name": "XmlTransformation",
             "type": "boolean",
             "label": "XML transformation",
             "required": false,
@@ -643,7 +643,7 @@
             "helpMarkDown": "The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
         },
         {
-            "name": "XmlVariableSubstitutionForWebApp",
+            "name": "XmlVariableSubstitution",
             "type": "boolean",
             "label": "XML variable substitution",
             "required": false,
@@ -689,7 +689,7 @@
             "resultTemplate": "{\"Value\":\"{{{ resourceGroup }}}\",\"DisplayValue\":\"{{{ resourceGroup }}}\"}"
         },
         {
-            "target": "WebAppKindDS",
+            "target": "WebAppKind",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureAppKind",
             "parameters": {
