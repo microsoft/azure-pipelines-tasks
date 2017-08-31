@@ -66,20 +66,20 @@ export function startTest() {
                     tl.setResult(code, tl.loc('VstestReturnCode', code));
                     deleteVstestDiagFile();
                 } catch (error) {
-                    publishEventToCi(AreaCodes.PUBLISHRESULTS, JSON.stringify(error), '0');
+                    publishEventToCi(AreaCodes.PUBLISHRESULTS, error.message, '0');
                     deleteVstestDiagFile();
                     console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error; // This throw should be removed
                 }
             })
             .fail(function (err) {
-                publishEventToCi(AreaCodes.INVOKEVSTEST, JSON.stringify(err), '1');
+                publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, '1');
                 deleteVstestDiagFile();
                 console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
                 throw err;  // What is the point of this throw? Where is it getting caught?
             });
     } catch (error) {
-        publishEventToCi(AreaCodes.RUNTESTSLOCALLY, JSON.stringify(error), '2');
+        publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, '2');
         deleteVstestDiagFile();
         tl.setResult(tl.TaskResult.Failed, error);
     }
@@ -391,7 +391,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
                 tl.warning(err);
                 defer.resolve(tl.TaskResult.Succeeded);
             } else {
-                publishEventToCi(AreaCodes.EXECUTEVSTEST, JSON.stringify(err), '4');
+                publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, '4');
                 tl.error(err);
                 defer.resolve(tl.TaskResult.Failed);
             }
@@ -461,7 +461,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         })
         .fail(function (err) {
             tl.debug('Listing tests from VsTest failed.');
-            publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, JSON.stringify(err), '5');
+            publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, err.message, '5');
             tl.error(err);
             defer.resolve(err);
         });
@@ -620,7 +620,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             });
                                                     })
                                                     .fail(function (err) {
-                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, JSON.stringify(err), '16');
+                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, '16');
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
@@ -658,21 +658,21 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             });
                                                     })
                                                     .fail(function (err) {
-                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, JSON.stringify(err), '21');
+                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, '21');
                                                         tl.error(err);
                                                         defer.resolve(tl.TaskResult.Failed);
                                                     });
                                             }
                                         })
                                         .fail(function (err) {
-                                            publishEventToCi(AreaCodes.RESPONSECONTAINSNOTESTS, JSON.stringify(err), '22');
+                                            publishEventToCi(AreaCodes.RESPONSECONTAINSNOTESTS, err.message, '22');
                                             tl.error(err);
                                             defer.resolve(tl.TaskResult.Failed);
                                         });
                                 }
                             })
                             .fail(function (err) {
-                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, JSON.stringify(err), '23');
+                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, '23');
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
@@ -704,13 +704,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     });
                             })
                             .fail(function (err) {
-                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, JSON.stringify(err), '25');
+                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, '25');
                                 tl.error(err);
                                 defer.resolve(tl.TaskResult.Failed);
                             });
                     })
                     .fail(function (err) {
-                        publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, JSON.stringify(err), '26');
+                        publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, err.message, '26');
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
                         defer.resolve(tl.TaskResult.Failed);
@@ -765,7 +765,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             tiaConfig.tiaEnabled = false;
         }
     } catch (e) {
-        publishEventToCi(AreaCodes.TIACONFIG, JSON.stringify(e), '31');
+        publishEventToCi(AreaCodes.TIACONFIG, e.message, '31');
         tl.error(e.message);
         defer.resolve(tl.TaskResult.Failed);
         return defer.promise;
