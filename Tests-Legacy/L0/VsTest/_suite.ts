@@ -948,6 +948,37 @@ describe('VsTest Suite', function () {
             done(error);
         }
     });
+    it('Updating testsettings with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'ValidWithProperties.testsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            let webAppUrlValue = '';
+            let webAppPasswordValue = '';
+
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            const parametersArray = settings.TestSettings.Properties[0].Property;
+                            parametersArray.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl') {
+                                    webAppUrlValue = parameter.$.Value;
+                                } else if (parameter.$.name === 'webAppInvalid') {
+                                    assert.fail(parameter.$.Name, undefined, 'test param should not exist');
+                                } else if (parameter.$.name === 'webAppPassword') {
+                                    webAppPasswordValue = parameter.$.value;
+                                }
+                            });
+                            assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
+                            assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
 
     it('modiyArgument test', (done) => {
         let modifiedString = utils.Helper.modifyVsTestConsoleArgsForResponseFile("somestring");
