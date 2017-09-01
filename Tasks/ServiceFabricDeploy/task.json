@@ -311,25 +311,26 @@
             "groupname": "docker"
         },
         {
-            "name": "containerregistrytype",
+            "name": "registryCredentials",
             "type": "pickList",
-            "label": "Container Registry Type",
-            "defaultValue": "Azure Container Registry",
+            "label": "Registry Credentials Source",
+            "defaultValue": "AzureResourceManagerEndpoint",
             "required": true,
             "options": {
-                "Azure Container Registry": "Azure Container Registry",
-                "Container Registry": "Container Registry"
+                "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+                "ContainerRegistryEndpoint": "Container Registry Endpoint",
+                "UsernamePassword": "Username and Password"
             },
-            "helpMarkDown": "Select a Container Registry Type.",
             "visibleRule": "configureDockerSettings = true",
-            "groupname": "docker"
+            "groupName": "docker",
+            "helpMarkDown": "Choose how credentials for the Docker registry will be provided."
         },
         {
             "name": "dockerRegistryEndpoint",
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
-            "visibleRule": "configureDockerSettings = true && containerregistrytype = Container Registry",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
             "required": true,
             "groupname": "docker"
         },
@@ -338,19 +339,39 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
-            "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
             "required": true,
             "groupname": "docker"
         },
         {
-            "name": "azureContainerRegistry",
-            "label": "Azure Container Registry",
-            "type": "pickList",
-            "helpMarkDown": "Select an Azure Container Registry",
-            "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+            "name": "registryUserName",
+            "type": "string",
+            "label": "Registry User Name",
             "defaultValue": "",
-            "required": true,
-            "groupname": "docker"
+            "required": false,
+            "helpMarkDown": "Username for the Docker registry",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "registryPassword",
+            "type": "string",
+            "label": "Registry Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "passwordEncrypted",
+            "type": "boolean",
+            "label": "Password Encrypted",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
         }
     ],
     "execution": {
@@ -358,14 +379,6 @@
             "target": "deploy.ps1"
         }
     },
-    "dataSourceBindings": [
-        {
-            "target": "azureContainerRegistry",
-            "endpointId": "$(azureSubscriptionEndpoint)",
-            "dataSourceName": "AzureRMContainerRegistries",
-            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
-        }
-    ],
     "messages": {
         "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",

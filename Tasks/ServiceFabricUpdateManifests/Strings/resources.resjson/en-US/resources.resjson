@@ -57,5 +57,5 @@
   "loc.messages.FileChanged": "The file '{0}' has changed.",
   "loc.messages.NoChanges": "Found no changes.",
   "loc.messages.PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
-  "loc.messages.InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'."
+  "loc.messages.InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'registry/image_name@digest_value'."
 }

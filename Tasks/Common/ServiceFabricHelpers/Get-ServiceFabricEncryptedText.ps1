@@ -10,14 +10,16 @@ function Get-ServiceFabricEncryptedText
         $ClusterConnectionParameters
     )
 
-    # For now, only support clusters using certificate-based auth since that provides the easiest way of getting a cert.
-    if ($ClusterConnectionParameters["X509Credential"] -ne $true)
+    $defaultCertStoreName = "My"
+    $defaultCertStoreLocation = "CurrentUser"
+    $serverCertThumbprint = $ClusterConnectionParameters["ServerCertThumbprint"]
+
+    $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
+    if (-not $cert)
     {
-        throw (Get-VstsLocString -Key NonCertBasedAuthForTextEncryptionError)
+        throw (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertThumbprint)
     }
 
     # Encrypt the text using the cluster connection's certificate.
-    $result = Invoke-ServiceFabricEncryptText -Text $Text -CertStore -CertThumbprint $ClusterConnectionParameters["FindValue"] -StoreName $ClusterConnectionParameters["StoreName"] -StoreLocation $ClusterConnectionParameters["StoreLocation"]
-    Write-Host "Result: " $result
-    return $result
+    return Invoke-ServiceFabricEncryptText -Text $Text -CertStore -CertThumbprint $serverCertThumbprint -StoreName $defaultCertStoreName -StoreLocation $defaultCertStoreLocation
 }

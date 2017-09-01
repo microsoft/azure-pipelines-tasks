@@ -13,31 +13,45 @@ function Update-DockerSettings
     try
     {
         # Get the credentials of the selected registry endpoint
-        $containerRegistryType = Get-VstsInput -Name containerregistrytype -Require
-        if ($containerRegistryType -eq "Azure Container Registry")
-        {
-            $azureSubscriptionEndpoint = Get-VstsInput -Name azureSubscriptionEndpoint -Require
-            $connectedServiceEndpoint = Get-VstsEndpoint -Name $azureSubscriptionEndpoint -Require
-            if ($connectedServiceEndpoint.Auth.Scheme -ne "ServicePrincipal")
+        $registryCredentials = Get-VstsInput -Name registryCredentials -Require
+        switch ($registryCredentials) {
+            "AzureResourceManagerEndpoint"
             {
-                throw (Get-VstsLocString -Key UnsupportedDockerRegistryAuthScheme -ArgumentList $connectedServiceEndpoint.Auth.Scheme)
+                $azureSubscriptionEndpoint = Get-VstsInput -Name azureSubscriptionEndpoint -Require
+                $connectedServiceEndpoint = Get-VstsEndpoint -Name $azureSubscriptionEndpoint -Require
+                if ($connectedServiceEndpoint.Auth.Scheme -ne "ServicePrincipal")
+                {
+                    throw (Get-VstsLocString -Key UnsupportedDockerRegistryAuthScheme -ArgumentList $connectedServiceEndpoint.Auth.Scheme)
+                }
+
+                $userName = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalId
+                $password = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalKey
+                $isPasswordEncrypted = $false
             }
-    
-            $userName = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalId
-            $password = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalKey
-        } 
-        else
-        {
-            $dockerRegistryEndpoint = Get-VstsInput -Name dockerRegistryEndpoint -Require
-            $userName = $dockerRegistryEndpoint.Auth.Parameters.UserName
-            $password = $dockerRegistryEndpoint.Auth.Parameters.Password
+            "ContainerRegistryEndpoint"
+            {
+                $dockerRegistryEndpoint = Get-VstsInput -Name dockerRegistryEndpoint -Require
+                $userName = $dockerRegistryEndpoint.Auth.Parameters.UserName
+                $password = $dockerRegistryEndpoint.Auth.Parameters.Password
+                $isPasswordEncrypted = $false
+            }
+            "UsernamePassword"
+            {
+                $username = Get-VstsInput -Name registryUserName -Require
+                $password = Get-VstsInput -Name registryPassword -Require
+                $isPasswordEncrypted = (Get-VstsInput -Name passwordEncrypted -Require) -eq "true"
+            }
         }
-    
-        $encryptedPassword = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $ClusterConnectionParameters
-        
+
+        if (-not $isPasswordEncrypted)
+        {
+            $password = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $ClusterConnectionParameters
+            $isPasswordEncrypted = $true
+        }
+
         $appManifestPath = Join-Path $ApplicationPackagePath "ApplicationManifest.xml"
         $appManifestXml = [xml](Get-Content $appManifestPath)
-        
+
         $serviceManifestImports = @($appManifestXml.ApplicationManifest.ServiceManifestImport)
         foreach ($serviceManifestImport in $serviceManifestImports)
         {
@@ -81,20 +95,20 @@ function Update-DockerSettings
                         $containerHostPolicy.SetAttribute("CodePackageRef", $codePackage.Name)
                         [void]($policies.AppendChild($containerHostPolicy))
                     }
-            
+
                     # If there isn't already a RepositoryCredentials element, create one with the credentials of the selected registry
                     if (-not $containerHostPolicy.RepositoryCredentials)
                     {
                         $repositoryCredentials = $appManifestXml.CreateElement("RepositoryCredentials", $appManifestXml.ApplicationManifest.NamespaceURI)
                         $repositoryCredentials.SetAttribute("AccountName", $userName)
-                        $repositoryCredentials.SetAttribute("Password", $encryptedPassword)
-                        $repositoryCredentials.SetAttribute("PasswordEncrypted", "true")
+                        $repositoryCredentials.SetAttribute("Password", $password)
+                        $repositoryCredentials.SetAttribute("PasswordEncrypted", $isPasswordEncrypted.ToString().ToLower())
                         [void]($containerHostPolicy.AppendChild($repositoryCredentials))
                     }
                 }
             }
         }
-    
+
         $appManifestXml.Save($appManifestPath)
     }
     finally

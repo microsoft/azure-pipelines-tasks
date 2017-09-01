@@ -39,11 +39,14 @@ function Update-DockerImageSettings
             $codePackages = @($serviceManifestXml.ServiceManifest.CodePackage)
             foreach ($codePackage in $codePackages)
             {
-                if ($codePackage.EntryPoint -and $codePackage.EntryPoint.ContainerHost -and $codePackage.EntryPoint.ContainerHost.ImageName -and `
-                    $imageNameToDigestMapping.Contains($codePackage.EntryPoint.ContainerHost.ImageName))
+                if ($codePackage.EntryPoint -and $codePackage.EntryPoint.ContainerHost -and $codePackage.EntryPoint.ContainerHost.ImageName)
                 {
-                    $codePackage.EntryPoint.ContainerHost.ImageName = $imageNameToDigestMapping[$codePackage.EntryPoint.ContainerHost.ImageName]
-                    $hasUpdates = $true
+                    $digest = $imageNameToDigestMapping[$codePackage.EntryPoint.ContainerHost.ImageName]
+                    if ($digest)
+                    {
+                        $codePackage.EntryPoint.ContainerHost.ImageName = $digest
+                        $hasUpdates = $true
+                    }
                 }
             }
 
