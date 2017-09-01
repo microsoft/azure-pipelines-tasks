@@ -61,9 +61,10 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.SymbolServerType",
       "required": true,
-      "defaultValue": "TeamServices",
+      "defaultValue": " ",
       "helpMarkDown": "ms-resource:loc.input.help.SymbolServerType",
       "options": {
+        " ": "Select one",
         "TeamServices": "Team Services",
         "FileShare": "File share"
       },
