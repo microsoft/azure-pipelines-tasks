@@ -57,7 +57,7 @@ function findLiteral(input, currentPosition) {
             currentPosition = findClosingBracketIndex(input, currentPosition + 1, "}");
             specialCharacterFlag = true;
         }
-        else if (input[currentPosition] == "\"") {
+        else if (input[currentPosition] == "\"" && input[currentPosition - 1] != "\\") {
             //keep going till this one closes
             currentPosition = findClosingQuoteIndex(input, currentPosition + 1, "\"");
             specialCharacterFlag = true;
@@ -92,7 +92,7 @@ function findClosingBracketIndex(input, currentPosition, closingBracket): number
         else if (input[currentPosition] == "{") {
             currentPosition = findClosingBracketIndex(input, currentPosition + 1, "}");
         }
-        else if (input[currentPosition] == "\"") {
+        else if (input[currentPosition] == "\"" && input[currentPosition - 1] != "\\") {
             currentPosition = findClosingQuoteIndex(input, currentPosition + 1, "\"");
         }
         else if (input[currentPosition] == "'") {
@@ -110,7 +110,7 @@ function findClosingBracketIndex(input, currentPosition, closingBracket): number
 
 function findClosingQuoteIndex(input, currentPosition, closingQuote) {
     for (; currentPosition < input.length; currentPosition++) {
-        if (input[currentPosition] == closingQuote) {
+        if (input[currentPosition] == closingQuote && input[currentPosition - 1] != "\\") {
             break;
         }
         else if (input[currentPosition] == "`") {
