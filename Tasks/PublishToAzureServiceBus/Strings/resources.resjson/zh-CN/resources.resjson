@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Publish To Azure Service Bus",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "loc.instanceNameFormat": "Publish to Azure Service Bus",
-  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
-  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
-  "loc.input.label.messageBody": "Message body",
-  "loc.input.help.messageBody": "Enter the json messageBody.",
-  "loc.input.label.waitForCompletion": "Wait for Task Completion",
-  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+  "loc.friendlyName": "发布到 Azure 服务总线",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "使用服务连接向 Azure 服务总线发送消息(不需要代理)。",
+  "loc.instanceNameFormat": "发布到 Azure 服务总线",
+  "loc.input.label.connectedServiceName": "Azure 服务总线连接",
+  "loc.input.help.connectedServiceName": "选择 Azure 服务总线连接。",
+  "loc.input.label.messageBody": "消息正文",
+  "loc.input.help.messageBody": "输入 JSON 消息正文。",
+  "loc.input.label.waitForCompletion": "等待任务完成",
+  "loc.input.help.waitForCompletion": "如果为 true，此任务将等待 TaskCompleted 事件出现指定任务超时。"
 }

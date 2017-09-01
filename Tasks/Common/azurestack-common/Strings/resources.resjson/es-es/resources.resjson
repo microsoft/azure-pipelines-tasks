@@ -1,4 +1,4 @@
 {
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, errror message : {0}"
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "La dirección URL del punto de conexión de AzureRM especificada ({0}) no es válida.",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "No se pudieron recuperar los datos de dependencia de Azure Stack. Mensaje de error: {0}"
 }

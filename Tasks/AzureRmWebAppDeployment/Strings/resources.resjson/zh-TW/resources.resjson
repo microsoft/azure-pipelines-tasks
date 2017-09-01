@@ -147,6 +147,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. 確認組態檔與轉換檔皆位於套件內的同一個資料夾中。",
   "loc.messages.AutoParameterizationMessage": "根據預設，Web.config 中的 ConnectionString 屬性已經過參數化。請注意，轉換對 connectionString 屬性無效，因為 'Parameters.xml' 或 'SetParameters.xml' 檔案已於部署期間覆寫該值。您可在產生 MSBuild 套件期間設定 /p:AutoParameterizationWebConfigConnectionStrings=False，停用自動參數化。",
   "loc.messages.UnsupportedAppType": "產生 Web.config 時不支援應用程式類型 '%s'。'-appType' 的有效值為: 'python_Bottle'、'python_Django'、'python_Flask' 與 'node'",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "無法擷取授權單位 URL。",
+  "loc.messages.UnableToFetchActiveDirectory": "無法擷取 Active Directory 資源識別碼。"
 }

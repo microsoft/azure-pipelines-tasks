@@ -61,6 +61,6 @@
   "loc.messages.ExtensionListFailedResponseError": "Azure App Service にインストールされている拡張機能の一覧を取得できませんでした。状態コード: %s (%s)",
   "loc.messages.InstallingSiteExtension": "サイト拡張機能 '%s' を Azure App Service にインストールしています。",
   "loc.messages.FailedToFetchAppServiceState": "App Service の状態をフェッチできませんでした。App Service: %s、エラー コード: %s、エラー メッセージ: %s",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "機関の URL をフェッチできません。",
+  "loc.messages.UnableToFetchActiveDirectory": "Active Directory リソース ID をフェッチできません。"
 }

@@ -147,6 +147,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. 구성 파일 및 변환 파일이 패키지 내의 동일한 폴더에 있는지 확인합니다.",
   "loc.messages.AutoParameterizationMessage": "Web.config의 ConnectionString 특성은 기본적으로 매개 변수가 있습니다. 'Parameters.xml' 또는 'SetParameters.xml' 파일로 배포 중 값이 재정의되므로 변환은 connectionString 특성에 아무런 영향을 미치지 않습니다. MSBuild 패키지 생성 중 p:AutoParameterizationWebConfigConnectionStrings=False를 설정하여 자동 매개 변수화를 사용하지 않도록 설정할 수 있습니다.",
   "loc.messages.UnsupportedAppType": "Web.config 생성에서 '%s' 앱 형식이 지원되지 않습니다. '-appType'에 대해 유효한 값은 'python_Bottle', 'python_Django', 'python_Flask' 및 'node'입니다.",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "기관 URL을 가져올 수 없습니다.",
+  "loc.messages.UnableToFetchActiveDirectory": "Active Directory 리소스 ID를 가져올 수 없습니다."
 }

@@ -61,6 +61,6 @@
   "loc.messages.ExtensionListFailedResponseError": "Не удалось получить список расширений, установленных в службе приложений Azure. Код состояния: %s (%s)",
   "loc.messages.InstallingSiteExtension": "Установка расширения сайта \"%s\" в службе приложений Azure.",
   "loc.messages.FailedToFetchAppServiceState": "Не удалось получить состояние службы приложений: %s, код ошибки: %s, сообщение об ошибке: %s",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "Не удается получить URL-адрес центра.",
+  "loc.messages.UnableToFetchActiveDirectory": "Не удается получить идентификатор ресурса Active Directory."
 }

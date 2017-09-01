@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Publish To Azure Service Bus",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "loc.instanceNameFormat": "Publish to Azure Service Bus",
-  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
-  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
-  "loc.input.label.messageBody": "Message body",
-  "loc.input.help.messageBody": "Enter the json messageBody.",
-  "loc.input.label.waitForCompletion": "Wait for Task Completion",
-  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+  "loc.friendlyName": "Опубликовать в служебной шине Azure",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Отправляет сообщение в служебную шину Azure с помощью подключения к службе (агент не требуется).",
+  "loc.instanceNameFormat": "Опубликовать в служебной шине Azure",
+  "loc.input.label.connectedServiceName": "Подключение служебной шины Azure",
+  "loc.input.help.connectedServiceName": "Выберите подключение к служебной шине Azure.",
+  "loc.input.label.messageBody": "Текст сообщения",
+  "loc.input.help.messageBody": "Введите текст сообщения (messageBody) JSON.",
+  "loc.input.label.waitForCompletion": "Ожидать выполнения задачи",
+  "loc.input.help.waitForCompletion": "Если этот параметр имеет значение true, задача будет ожидать событие TaskCompleted в течение указанного времени ожидания задачи."
 }

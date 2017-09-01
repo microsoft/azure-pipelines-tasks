@@ -1,4 +1,4 @@
 {
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, errror message : {0}"
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "지정한 AzureRm 끝점 URL: '{0}'이(가) 잘못되었습니다.",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Azure Stack 종속성 데이터를 가져오지 못했습니다. 오류 메시지: {0}"
 }

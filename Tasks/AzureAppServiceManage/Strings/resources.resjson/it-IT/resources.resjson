@@ -61,6 +61,6 @@
   "loc.messages.ExtensionListFailedResponseError": "Non è stato possibile recuperare l'elenco delle estensioni installate nel servizio app di Azure. Codice di stato: %s (%s)",
   "loc.messages.InstallingSiteExtension": "Installazione dell'estensione del sito '%s' nel servizio app di Azure.",
   "loc.messages.FailedToFetchAppServiceState": "Non è stato possibile recuperare lo stato del servizio app %s. Codice errore: %s. Messaggio di errore: %s",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "Non è possibile recuperare l'URL dell'autorità.",
+  "loc.messages.UnableToFetchActiveDirectory": "Non è possibile recuperare l'ID risorsa di Active Directory."
 }

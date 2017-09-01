@@ -61,6 +61,6 @@
   "loc.messages.ExtensionListFailedResponseError": "Fehler beim Abrufen der in Azure App Service installierten Erweiterungen. Statuscode: %s (%s)",
   "loc.messages.InstallingSiteExtension": "Websiteerweiterung \"%s\" wird in Azure App Service installiert.",
   "loc.messages.FailedToFetchAppServiceState": "Fehler beim Abrufen des App Service-Status für den App Service: %s, Fehlercode: %s, Fehlermeldung: %s",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "Abrufen der Autoritäts-URL nicht möglich.",
+  "loc.messages.UnableToFetchActiveDirectory": "Abrufen der Active Directory-Ressourcen-ID nicht möglich."
 }

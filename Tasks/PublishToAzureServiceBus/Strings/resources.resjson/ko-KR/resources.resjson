@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Publish To Azure Service Bus",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "loc.instanceNameFormat": "Publish to Azure Service Bus",
-  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
-  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
-  "loc.input.label.messageBody": "Message body",
-  "loc.input.help.messageBody": "Enter the json messageBody.",
-  "loc.input.label.waitForCompletion": "Wait for Task Completion",
-  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+  "loc.friendlyName": "Azure Service Bus에 게시",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "서비스 연결을 사용하여 Azure Service Bus로 메시지를 보냅니다(에이전트는 필요하지 않음).",
+  "loc.instanceNameFormat": "Azure Service Bus에 게시",
+  "loc.input.label.connectedServiceName": "Azure Service Bus 연결",
+  "loc.input.help.connectedServiceName": "Azure Service Bus 연결을 선택합니다.",
+  "loc.input.label.messageBody": "메시지 본문",
+  "loc.input.help.messageBody": "json messageBody를 입력합니다.",
+  "loc.input.label.waitForCompletion": "작업 완료 대기",
+  "loc.input.help.waitForCompletion": "True인 경우 이 작업은 지정된 작업 시간 제한 동안 TaskCompleted 이벤트를 대기합니다."
 }

@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke REST API: $(method)",
-  "loc.input.label.connectedServiceName": "Generic Endpoint",
-  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
-  "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
-  "loc.input.label.headers": "Headers",
-  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.friendlyName": "Вызвать REST API",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Вызвать REST API в ходе процесса.",
+  "loc.instanceNameFormat": "Вызвать REST API: $(method)",
+  "loc.input.label.connectedServiceName": "Универсальная конечная точка",
+  "loc.input.help.connectedServiceName": "Выберите универсальную конечную точку, которую следует использовать для выбора URL-адреса и создания заголовка авторизации для HTTP-запроса.",
+  "loc.input.label.method": "Метод",
+  "loc.input.help.method": "Выберите метод HTTP, с помощью которого следует вызывать API.",
+  "loc.input.label.headers": "Заголовки",
+  "loc.input.help.headers": "Определите заголовок в формате JSON. Заголовок следует присоединить к отправляемому запросу.",
+  "loc.input.label.body": "Текст",
+  "loc.input.label.waitForCompletion": "Ожидать выполнения",
+  "loc.input.help.waitForCompletion": "Задача ожидает, пока будет создано событие TaskCompleted в результате вызова REST API. Время ожидания будет равно времени ожидания задачи, указанному в разделе \"Управление\" ниже."
 }
