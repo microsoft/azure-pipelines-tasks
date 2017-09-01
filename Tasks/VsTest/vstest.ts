@@ -391,7 +391,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
                 tl.warning(err);
                 defer.resolve(tl.TaskResult.Succeeded);
             } else {
-                publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, '4');
+                publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, '4', 'true');
                 tl.error(err);
                 defer.resolve(tl.TaskResult.Failed);
             }
@@ -592,7 +592,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                             publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, '12');
                                                                             defer.resolve(+code);
                                                                         } else if (vscode !== 0) {
-                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), '13');
+                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), '13', 'true');
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -797,7 +797,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
                     .then(function (code) {
                         if (code !== 0) {
-                            publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, '33');
+                            publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, '33', 'true');
                         }
                         defer.resolve(code);
                     })
