@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "runsOn": [
         "Agent",
@@ -412,7 +412,7 @@
         "UnknownRestoreMode": "Unknown restore mode '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
         "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
-        
+
         "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
         "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
         "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",

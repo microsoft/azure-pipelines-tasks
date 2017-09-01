@@ -17,7 +17,7 @@
     },
     "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
     "dependencies": {
-        "vsts-task-lib": "2.0.5",
+        "vsts-task-lib": "2.0.6",
         "q": "^1.4.1",
         "archiver": "1.0.1",
         "xmlreader": "^0.2.3",
