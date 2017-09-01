@@ -233,7 +233,7 @@ export class ResourceGroup {
             try {
                 overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
             } catch (error) {
-                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+                console.log(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
             parameters[key] = overrideParameters[key];
         }
