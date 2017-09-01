@@ -42,11 +42,11 @@ export default class VirtualMachineScaleSet {
         }
     }
 
-    private async _uploadCustomScriptsToBlobService(customScriptInfo: CustomScriptsInfo) {
+    private async _uploadCustomScriptsToBlobService(customScriptInfo: CustomScriptsInfo): Promise<string[]> {
         console.log(tl.loc("UploadingCustomScriptsBlobs", customScriptInfo.localDirPath))
         let storageDetails = customScriptInfo.storageAccount;
         let blobService = new BlobService.BlobService(storageDetails.name, storageDetails.primaryAccessKey);
-        let containerUrl = util.format("%s%s", storageDetails.primaryBlobUrl, "vststasks");
+        let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
 
         // find all files under dir
         let fileList: string[] = tl.findMatch(customScriptInfo.localDirPath, "**/*.*");
@@ -55,12 +55,13 @@ export default class VirtualMachineScaleSet {
         fileList.forEach((filePath) => {
             let relativePath = path.relative(customScriptInfo.localDirPath, filePath);
             let normalizedRelativePath = utils.normalizeRelativePath(relativePath);
-            let fileUri = util.format("%s/%s", containerUrl, normalizedRelativePath);
+            let fileUri = util.format("%s/%s", blobsBaseUrl, normalizedRelativePath);
             fileUris.push(fileUri);
         });
 
-        console.log(tl.loc("DestinationBlobContainer", containerUrl))
-        await blobService.uploadBlobs(customScriptInfo.localDirPath, "vststasks");
+        console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
+        await blobService.uploadBlobs(customScriptInfo.localDirPath, "vststasks", customScriptInfo.blobsPrefixPath);
+
         return fileUris;
     }
 
@@ -123,7 +124,8 @@ export default class VirtualMachineScaleSet {
 
     private async _prepareCustomScripts(osType: string): Promise<CustomScriptsInfo> {
         // try to archive custom scripts so that it is more robust to transfer
-        let customScriptInfo: CustomScriptsInfo = this._archiveCustomScripts(osType);
+        let archiveInfo: ArchiveInfo = this._archiveCustomScripts(osType);
+        let customScriptInfo: CustomScriptsInfo = this._createCustomScriptInvoker(osType, archiveInfo);
 
         // upload custom script directory to blob storage
         try {
@@ -136,12 +138,19 @@ export default class VirtualMachineScaleSet {
         return customScriptInfo;
     }
 
-    private _archiveCustomScripts(osType: string): CustomScriptsInfo {
-        let escapedScript;
-        let escapedArgs;
-        let archiveFile = "";
+    private _createCustomScriptInvoker(osType: string, archiveInfo: ArchiveInfo): CustomScriptsInfo {
+        let invokerScriptPath: string;
+        let invokerCommand: string;
 
+        let archiveFile = "";
         let packageDirectory = this.taskParameters.customScriptsDirectory;
+
+        if (!!archiveInfo) {
+            packageDirectory = archiveInfo.directory;
+            archiveFile = archiveInfo.fileName
+        }
+
+        let blobsPefixPath = this._getBlobsPrefixPath();
 
         if (osType === "Windows") {
             // escape powershell special characters. This is needed as this script will be executed in a powershell session
@@ -151,10 +160,13 @@ export default class VirtualMachineScaleSet {
             let quotedScript = `.\\\\"${script}\"`
 
             // and escape quotes to handle this extra quote
-            escapedScript = quotedScript.replace(/'/g, "''").replace(/"/g, '"""');
+            let escapedScript = quotedScript.replace(/'/g, "''").replace(/"/g, '"""');
 
             // escape powershell special characters
-            escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
+            let escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
+
+            invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
+            invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'`;
         } else {
             // escape shell special characters. This is needed as this script will be executed in a shell
             let script = this.taskParameters.customScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');
@@ -163,40 +175,11 @@ export default class VirtualMachineScaleSet {
             let quotedScript = `./\"${script}\"`
 
             // and escape quotes to handle this extra quote...
-            escapedScript = quotedScript.replace(/'/g, "'\"'\"'");
+            let escapedScript = quotedScript.replace(/'/g, "'\"'\"'");
 
             // ...and escape quotes to handle this extra quote
-            escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
-        }
+            let escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
 
-        if (!this.taskParameters.skipArchivingCustomScripts) {
-            try {
-                console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsDirectory));
-                let archive: ArchiveInfo = this._computeArchiveDetails(osType);
-
-                if (!tl.exist(archive.directory)) {
-                    tl.mkdirP(archive.directory);
-                }
-
-                // create archive file
-                compress.createArchive(this.taskParameters.customScriptsDirectory, archive.compression, archive.filePath);
-                archiveFile = archive.fileName;
-                packageDirectory = archive.directory;
-                console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
-            } catch (error) {
-                tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
-            }
-        } else {
-            console.log(tl.loc("SkippedArchivingCustomScripts"));
-        }
-
-        let invokerScriptPath: string;
-        let invokerCommand: string;
-
-        if (osType === "Windows") {
-            invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-            invokerCommand = `powershell ./customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}'`;
-        } else {
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
             invokerCommand = `./customScriptInvoker.sh '${archiveFile}' '${escapedScript}' '${escapedArgs}'`;
         }
@@ -208,8 +191,33 @@ export default class VirtualMachineScaleSet {
         tl.debug("Invoker command: " + invokerCommand);
         return <CustomScriptsInfo>{
             localDirPath: packageDirectory,
-            command: invokerCommand
+            command: invokerCommand,
+            blobsPrefixPath: blobsPefixPath
         };
+    }
+
+    private _archiveCustomScripts(osType: string): ArchiveInfo {
+        if (!this.taskParameters.skipArchivingCustomScripts) {
+            try {
+                console.log(tl.loc("ArchivingCustomScripts", this.taskParameters.customScriptsDirectory));
+                let archive: ArchiveInfo = this._computeArchiveDetails(osType);
+
+                if (!tl.exist(archive.directory)) {
+                    tl.mkdirP(archive.directory);
+                }
+
+                // create archive file
+                compress.createArchive(this.taskParameters.customScriptsDirectory, archive.compression, archive.filePath);
+                console.log(tl.loc("CustomScriptsArchiveFile", archive.filePath));
+                return archive;
+            } catch (error) {
+                tl.warning(tl.loc("CustomScriptsArchivingFailed") + " Error: " + error);
+            }
+        } else {
+            console.log(tl.loc("SkippedArchivingCustomScripts"));
+        }
+
+        return null;
     }
 
     private _getResourceGroupForVmss(client: armCompute.ComputeManagementClient): Promise<any> {
@@ -327,7 +335,7 @@ export default class VirtualMachineScaleSet {
         archive.directory = path.join(os.tmpdir(), "vstsvmss" + Date.now().toString());
 
         // create archive name based on release/build info
-        let archiveFileName = this._getArchiveFilename();
+        let archiveFileName = "cs";
         let archiveExt = osType === "Windows" ? ".zip" : ".tar.gz";
         archive.fileName = archiveFileName + archiveExt;
         archive.filePath = path.join(archive.directory, archive.fileName);
@@ -339,17 +347,19 @@ export default class VirtualMachineScaleSet {
         return archive;
     }
 
-    private _getArchiveFilename(): string {
+    private _getBlobsPrefixPath(): string {
         let releaseId = tl.getVariable("release.releaseid");
+        let environmentId = tl.getVariable("release.environmentid");
         let releaseAttempt = tl.getVariable("release.attemptnumber");
-        let filename: string = "cs-";
-        if (!!releaseId && !!releaseAttempt) {
-            filename = filename + releaseId + "-" + releaseAttempt;
+        let prefixFolderPath: string = null;
+
+        if (!!releaseId && !!environmentId && !!releaseAttempt) {
+            prefixFolderPath = util.format("%s/%s/%s", releaseId, environmentId, releaseAttempt);
         } else {
-            filename = filename + tl.getVariable("build.buildid");
+            prefixFolderPath = tl.getVariable("build.buildid");
         }
 
-        return filename;
+        return prefixFolderPath;
     }
 }
 
@@ -365,6 +375,7 @@ class CustomScriptsInfo {
     public command: string;
     public storageAccount: StorageAccountInfo;
     public blobUris: string[];
+    public blobsPrefixPath: string;
 }
 
 class ArchiveInfo {

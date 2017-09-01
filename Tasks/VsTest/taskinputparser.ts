@@ -250,6 +250,8 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
                 throw new Error(tl.loc('testRunIdInvalid', testConfiguration.onDemandTestRunId));
             }
             console.log(tl.loc('testRunIdInput', testConfiguration.onDemandTestRunId));
+            testConfiguration.sourceFilter = ['**\\*', '!**\\obj\\*'];
+            tl.debug('Setting the test source filter for the TestRun : ' + testConfiguration.sourceFilter);
             break;
     }
 }

@@ -9,7 +9,7 @@ tr.setInput("action", "Update image");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : (process.env["_vmssOsType_"] === "Linux" ? "testvmss2" : "testvmss1"));
 tr.setInput("imageUrl", process.env["imageUrlAlreadyUptoDate"] === "true" ? "http://old-url" : "https://someurl");
-if(!(process.env["customScriptNotSpecified"] === "true")) {
+if (!(process.env["customScriptNotSpecified"] === "true")) {
     tr.setInput("customScriptsDirectory", "/some/dir with'quote");
     tr.setInput("customScript", process.env["_vmssOsType_"] === "Linux" ? "set V'a`r$.sh" : "de$p`l o'y.ps1");
     tr.setInput("customScriptArguments", "\"first 'arg'\" seco`nd$arg");
@@ -28,6 +28,7 @@ process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
 process.env["RELEASE_RELEASEID"] = "100";
+process.env["RELEASE_ENVIRONMENTID"] = "200";
 process.env["RELEASE_ATTEMPTNUMBER"] = "5";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -50,7 +51,7 @@ os.tmpdir = function tmpdir() {
     return "/users/temp";
 }
 
-Date.now = function(): number {
+Date.now = function (): number {
     return 12345;
 }
 

@@ -53,7 +53,7 @@ function Start-OfflineProcess([string]$language, [string]$sharedFolder) {
     }
     else {
         Write-Host "Downloading the Test execution engine"
-        Download-TestExecutionEngine -Uri "https://testexecution.blob.core.windows.net/testexecution/4071087/TestExecution.zip"
+        Download-TestExecutionEngine -Uri "https://testexecution.blob.core.windows.net/testexecution/3840309/TestExecution.zip"
         Write-Host "Completed downloading the Test execution engine"
     }
 

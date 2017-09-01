@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 14
+    "Patch": 15
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -25,19 +25,19 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "ApplicationSettings",
@@ -85,7 +85,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = applinux"
+      "visibleRule": "WebAppKind != \"\""
     },
     {
       "name": "ResourceGroupName",
@@ -153,7 +153,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -162,7 +162,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {

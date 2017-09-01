@@ -1,15 +1,14 @@
-/// <reference path="../../definitions/mocha.d.ts"/>
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts"/>
+/// <reference path="../../../definitions/mocha.d.ts"/>
+/// <reference path="../../../definitions/node.d.ts"/>
+/// <reference path="../../../definitions/Q.d.ts"/>
 
 import Q = require('q');
 import assert = require('assert');
-import trm = require('../../lib/taskRunner');
-import psm = require('../../lib/psRunner');
 import path = require('path');
-let psr = null;
+var psm = require('../../../Tests/lib/psRunner');
+var psr = null;
 
-describe('Deploy Test Agent Suite', function () {
+describe('DeployVisualStudioTestAgent Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -28,8 +27,8 @@ describe('Deploy Test Agent Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('(VerifyTestExecutionEnginePackage) verifies if make.json testexecution engine version', (done) => {
+        it('verifies if make.json testexecution engine version', (done) => {
             psr.run(path.join(__dirname, 'VerifyTestExecutionEnginePackage.ps1'), done);
-        });
+        })
     }
 });

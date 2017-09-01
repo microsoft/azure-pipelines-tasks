@@ -149,6 +149,37 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
             </td>
         </tr>
+         <tr>
+            <td>
+                <p align="left">
+                    <code>##vso[task.setendpoint]value</code>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    <code>id</code>=endpoint id (Required) <br>
+                </p>
+                <p align="left">
+                    <code>field</code>=field type authParameter|dataParameter|url (Required) <br>
+                </p>
+                <p align="left">
+                    <code>key</code>=key (Required. Except for field=url) <br>
+                </p>
+                  <p align="left">
+                    <code>value</code>=value for key or url(Required) <br>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Set an endpoint field with given value. Value updated will be retained in the endpoint for the subsequent tasks that execute within the same job.<br>
+                    <b>Examples:</b> <br>
+                    <code>##vso[task.setendpoint id=000-0000-0000;field=authParameter;key=AccessToken]testvalue</code><br>
+                    <code>##vso[task.setendpoint id=000-0000-0000;field=dataParameter;key=userVariable]testvalue</code><br>
+                </p>
+            </td>
+            <td>
+            </td>
+        </tr>
         <tr>
             <td>
                 <p align="left">

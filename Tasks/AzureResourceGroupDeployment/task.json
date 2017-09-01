@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 6
+        "Patch": 7
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -148,7 +148,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "To  view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
+            "helpMarkDown": "To view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
             }
@@ -386,7 +386,7 @@
         "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
         "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
         "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
-        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'.",
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', make sure it follows JavaScript Object Notation (JSON)",
         "TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
         "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
         "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
