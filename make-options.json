@@ -88,20 +88,20 @@
     "Xcode",
     "XcodePackageiOS"
   ],
-    "taskResources": [
-        "*.ps1",
-        "*.psd1",
-        "*.psm1",
-        "*.sh",
-        "*.txt",
-        "icon.png",
-        "icon.svg",
-        "module.json",
-        "node_modules",
-        "package.json",
-        "Strings",
-        "task.json",
-        "task.loc.json",
-        "Tests"
-    ]
+  "taskResources": [
+    "*.ps1",
+    "*.psd1",
+    "*.psm1",
+    "*.sh",
+    "*.txt",
+    "icon.png",
+    "icon.svg",
+    "module.json",
+    "node_modules",
+    "package.json",
+    "Strings",
+    "task.json",
+    "task.loc.json",
+    "Tests"
+  ]
 }
