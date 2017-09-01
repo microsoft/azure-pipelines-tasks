@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "Sign the APK",
   "loc.input.help.jarsign": "Select this option to sign the APK with a provided keystore file. Unsigned APKs can only run in an emulator. APKs must be signed to run on a device.",
   "loc.input.label.keystoreFile": "Keystore File",
-  "loc.input.help.keystoreFile": "Enter the file path to the keystore file that should be used to sign the APK. It can either be checked into source control or placed on the build machine directly by an administrator. It is recommended to encrypt the keystore file in source control and use the 'Decrypt File' task to decrypt the file during the build.",
+  "loc.input.help.keystoreFile": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK.",
   "loc.input.label.keystorePass": "Keystore Password",
   "loc.input.help.keystorePass": "Enter the password for the provided keystore file. Use a new variable with its lock enabled on the Variables tab to encrypt this value.",
   "loc.input.label.keystoreAlias": "Alias",

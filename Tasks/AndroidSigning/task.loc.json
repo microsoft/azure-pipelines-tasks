@@ -10,15 +10,15 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 122,
+    "Major": 2,
+    "Minor": 123,
     "Patch": 0
   },
   "demands": [
     "JDK",
     "AndroidSDK"
   ],
-  "minimumAgentVersion": "1.98.1",
+  "minimumAgentVersion": "2.116.0",
   "groups": [
     {
       "name": "jarsignerOptions",
@@ -51,7 +51,7 @@
     },
     {
       "name": "keystoreFile",
-      "type": "filePath",
+      "type": "secureFile",
       "label": "ms-resource:loc.input.label.keystoreFile",
       "defaultValue": "",
       "required": true,
@@ -120,6 +120,12 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node": {
+      "target": "preandroidsigning.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node": {
       "target": "androidsigning.js",
