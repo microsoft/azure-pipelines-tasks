@@ -940,11 +940,11 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     });
 }
 
-function publishEventToCi(areaCode : string, message: string, tracepoint: number, isusererror: string = 'false') {
+function publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: string = 'false') {
     const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: ''};
     taskProps.areacode = areaCode;
     taskProps.result = message;
-    taskProps.tracepoint = tracepoint;
-    taskProps.isusererror = isusererror;
+    taskProps.tracepoint = tracePoint;
+    taskProps.isusererror = isUserError;
     ci.publishEvent(taskProps);
 }
