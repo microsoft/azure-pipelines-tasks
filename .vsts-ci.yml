@@ -8,7 +8,6 @@ phases:
   displayName: Build all tasks (Windows)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   queue:
-    demands: agent.os -equals Windows_NT
     parallel: $[ variables.build_windows_parallel ]
   steps:
 
@@ -69,8 +68,6 @@ phases:
 ################################################################################
   displayName: Publish
   dependsOn: buildAll_windows # TODO: also depend on  buildAll_mac buildAll_linux
-  queue:
-    demands: agent.os -equals Windows_NT
   steps:
 
   # Clean
