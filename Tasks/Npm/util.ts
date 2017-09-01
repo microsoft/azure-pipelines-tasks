@@ -6,8 +6,8 @@ import * as url from 'url';
 import * as tl from 'vsts-task-lib/task';
 import * as vsts from 'vso-node-api/WebApi';
 
-import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
-import * as NpmrcParser from 'npm-common/npmrcparser';
+import { INpmRegistry, NpmRegistry } from './npmregistry';
+import * as NpmrcParser from './npmrcparser';
 
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
