@@ -88,3 +88,11 @@ contents += '      <tags>VSSInternal</tags>' + os.EOL;
 contents += '   </metadata>' + os.EOL;
 contents += '</package>' + os.EOL;
 fs.writeFileSync(util.aggregateNuspecPath, contents);
+
+// pack
+fs.mkdirSync(util.publishLayoutPath);
+process.chdir(util.publishLayoutPath);
+util.run(`nuget pack "${util.aggregateNuspecPath}" -BasePath "${util.aggregatePackSourcePath}" -NoDefaultExcludes`, /*inheritStreams:*/true);
+
+// create push.cmd
+fs.writeFileSync(util.publishPushCmdPath, `nuget.exe push Mseng.MS.TF.Build.Tasks.${process.env.AGGREGATE_VERSION}.nupkg -source "${process.env.AGGREGATE_TASKS_FEED_URL}" -apikey Skyrise`);
