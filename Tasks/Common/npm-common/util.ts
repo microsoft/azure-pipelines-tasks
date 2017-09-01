@@ -6,8 +6,8 @@ import * as url from 'url';
 import * as tl from 'vsts-task-lib/task';
 import * as vsts from 'vso-node-api/WebApi';
 
-import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
-import * as NpmrcParser from 'npm-common/npmrcparser';
+import { INpmRegistry, NpmRegistry } from './npmregistry';
+import * as NpmrcParser from './npmrcparser';
 
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
@@ -46,9 +46,12 @@ export async function getLocalNpmRegistries(workingDir: string): Promise<INpmReg
     let npmrcPath = path.join(workingDir, '.npmrc');
 
     if (tl.exist(npmrcPath)) {
+        let npmRegistries: INpmRegistry[] = [];
         for (let registry of await getLocalRegistries(npmrcPath)) {
-            localNpmRegistries.push(await NpmRegistry.FromFeedId(getFeedIdFromRegistry(registry), true));
+            npmRegistries.push(await NpmRegistry.FromFeedId(getFeedIdFromRegistry(registry), true));
         }
+
+        localNpmRegistries = localNpmRegistries.concat(npmRegistries);
     }
 
     return localNpmRegistries;
@@ -111,12 +114,31 @@ export function saveFile(file: string): void {
     }
 }
 
+export function saveFileWithName(file: string, name: string, filePath: string): void {
+    if (file && tl.exist(file)) {
+        let destination = path.join(filePath, name + '.npmrc');
+        tl.debug(tl.loc('SavingFile', file));
+        copyFile(file, destination);
+    }
+}
+
 export function restoreFile(file: string): void {
     if (file) {
         let tempPath = getTempPath();
         let baseName = path.basename(file);
         let source = path.join(tempPath, baseName);
 
+        if (tl.exist(source)) {
+            tl.debug(tl.loc('RestoringFile', file));
+            copyFile(source, file);
+            tl.rmRF(source);
+        }
+    }
+}
+
+export function restoreFileWithName(file: string, name: string, filePath: string): void {
+    if (file) {
+        let source = path.join(filePath, name + '.npmrc');
         if (tl.exist(source)) {
             tl.debug(tl.loc('RestoringFile', file));
             copyFile(source, file);
