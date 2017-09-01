@@ -61,6 +61,6 @@
   "loc.messages.ExtensionListFailedResponseError": "Azure App Service에 설치된 확장 목록을 검색하지 못했습니다. 상태 코드: %s(%s)",
   "loc.messages.InstallingSiteExtension": "Azure App Service에서 사이트 확장 '%s'을(를) 설치 중입니다.",
   "loc.messages.FailedToFetchAppServiceState": "App Service %s에 대한 App Service 상태를 페치하지 못했습니다. 오류 코드: %s, 오류 메시지: %s",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "기관 URL을 가져올 수 없습니다.",
+  "loc.messages.UnableToFetchActiveDirectory": "Active Directory 리소스 ID를 가져올 수 없습니다."
 }

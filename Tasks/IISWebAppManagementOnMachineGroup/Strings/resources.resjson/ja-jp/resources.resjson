@@ -49,7 +49,7 @@
   "loc.input.label.SSLCertThumbPrint": "SSL 証明書拇印",
   "loc.input.help.SSLCertThumbPrint": "Web サイトで HTTPS 通信のために使用される Secure Socket Layer 証明書の拇印を、長さ 40 文字の 16 進数文字列として指定します。SSL 証明書は、コンピューター上のローカル コンピューターの個人用ストアにあらかじめインストールしておく必要があります。",
   "loc.input.label.Bindings": "バインドの追加",
-  "loc.input.help.Bindings": "Click on the extension [...] button to add bindings for the website.",
+  "loc.input.help.Bindings": "拡張機能 [...] ボタンをクリックして、Web サイトにバインドを追加します。",
   "loc.input.label.CreateOrUpdateAppPoolForWebsite": "アプリ プールの作成または更新",
   "loc.input.help.CreateOrUpdateAppPoolForWebsite": "アプリケーション プールを作成または更新するオプションを選択します。このオプションをオンにすると、指定したアプリケーション プール内に Web サイトが作成されます。",
   "loc.input.label.ConfigureAuthenticationForWebsite": "認証の構成",

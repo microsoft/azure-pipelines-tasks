@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke REST API: $(method)",
-  "loc.input.label.connectedServiceName": "Generic Endpoint",
-  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
-  "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
-  "loc.input.label.headers": "Headers",
-  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.friendlyName": "REST API の呼び出し",
+  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "プロセスの一部として REST API を呼び出します。",
+  "loc.instanceNameFormat": "REST API $(method) の呼び出し",
+  "loc.input.label.connectedServiceName": "汎用エンドポイント",
+  "loc.input.help.connectedServiceName": "URL を取得して HTTP 要求用の Authorization ヘッダーを作成するために使う汎用エンドポイントを選択します。",
+  "loc.input.label.method": "メソッド",
+  "loc.input.help.method": "API を呼び出すときに使う HTTP メソッドを選択します。",
+  "loc.input.label.headers": "ヘッダー",
+  "loc.input.help.headers": "ヘッダーを JSON 形式で定義します。このヘッダーは、送信する要求にアタッチされます。",
+  "loc.input.label.body": "本文",
+  "loc.input.label.waitForCompletion": "完了を待機",
+  "loc.input.help.waitForCompletion": "タスクは、呼び出された REST API によってトリガーされる TaskCompleted イベントを待機します。待機期間は、下記のコントロール セクションで取り上げられているタスク タイムアウトと等価です。"
 }

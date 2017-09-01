@@ -1,4 +1,4 @@
 {
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, errror message : {0}"
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定した AzureRm エンドポイント URL '{0}' は無効です。",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Azure のスタック依存関係データをフェッチできませんでした。エラー メッセージ: {0}"
 }

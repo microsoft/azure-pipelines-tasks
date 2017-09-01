@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke REST API: $(method)",
-  "loc.input.label.connectedServiceName": "Generic Endpoint",
-  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
-  "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
-  "loc.input.label.headers": "Headers",
-  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.friendlyName": "REST-API aufrufen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Rufen Sie die REST-API als Teil des Prozesses auf.",
+  "loc.instanceNameFormat": "REST-API aufrufen: $(method)",
+  "loc.input.label.connectedServiceName": "Generischer Endpunkt",
+  "loc.input.help.connectedServiceName": "Wählen Sie einen generischen Endpunkt aus, der zum Auswählen der URL und Erstellen des Autorisierungsheaders für die HTTP-Anforderung verwendet werden soll.",
+  "loc.input.label.method": "Methode",
+  "loc.input.help.method": "Wählen Sie die HTTP-Methode aus, mit der die API aufgerufen werden soll.",
+  "loc.input.label.headers": "Header",
+  "loc.input.help.headers": "Definieren Sie den Header im JSON-Format. Der Header muss mit der zu sendenden Anforderung angefügt werden.",
+  "loc.input.label.body": "Textkörper",
+  "loc.input.label.waitForCompletion": "Auf Abschluss warten",
+  "loc.input.help.waitForCompletion": "Die Aufgabe wartet, bis das TaskCompleted-Ereignis von der aufgerufenen REST-API ausgelöst wird. Die Wartezeit entspricht dem im unten stehenden Steuerungsabschnitt genannten Aufgabenzeitlimit."
 }

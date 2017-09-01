@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Publish To Azure Service Bus",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "loc.instanceNameFormat": "Publish to Azure Service Bus",
-  "loc.input.label.connectedServiceName": "Azure Service Bus Connection",
-  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
-  "loc.input.label.messageBody": "Message body",
-  "loc.input.help.messageBody": "Enter the json messageBody.",
-  "loc.input.label.waitForCompletion": "Wait for Task Completion",
-  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+  "loc.friendlyName": "Pubblica nel bus di servizio di Azure",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Invia un messaggio al bus di servizio di Azure usando una connessione di servizio (non è richiesto alcun agente).",
+  "loc.instanceNameFormat": "Pubblica nel bus di servizio di Azure",
+  "loc.input.label.connectedServiceName": "Connessione al bus di servizio di Azure",
+  "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al bus di servizio di Azure.",
+  "loc.input.label.messageBody": "Corpo del messaggio",
+  "loc.input.help.messageBody": "Consente di immettere il corpo del messaggio JSON.",
+  "loc.input.label.waitForCompletion": "In attesa del completamento dell'attività",
+  "loc.input.help.waitForCompletion": "Se è impostata su true, questa attività attenderà l'evento TaskCompleted per il timeout attività specificato."
 }

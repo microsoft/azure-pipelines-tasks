@@ -1,4 +1,4 @@
 {
-  "loc.messages.ActionTimedOut": "Exceeded max retries. Timing out.",
-  "loc.messages.RetryAfterMessage": "Retrying after {0} second(s)..."
+  "loc.messages.ActionTimedOut": "Die maximale Anzahl von Wiederholungsversuchen wurde überschritten. Timeout.",
+  "loc.messages.RetryAfterMessage": "Wiederholung nach {0} Sekunde(n)..."
 }

@@ -147,6 +147,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Убедитесь, что файлы конфигурации и преобразования находятся в одной и той же папке в пакете.",
   "loc.messages.AutoParameterizationMessage": "Атрибуты ConnectionString в Web.config параметризованы по умолчанию. Обратите внимание, что преобразование не влияет на атрибуты connectionString, так как значение переопределяется во время развертывания файлом \"Parameters.xml\" или \"SetParameters.xml\". Вы можете отключить автоматическую параметризацию, задав /p:AutoParameterizationWebConfigConnectionStrings=False во время создания пакета MSBuild.",
   "loc.messages.UnsupportedAppType": "Тип приложения \"%s\" не поддерживается при создании Web.config. Допустимые значения для \"-appType\": \"python_Bottle\", \"python_Django\", \"python_Flask\" и \"node\".",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "Не удается получить URL-адрес центра.",
+  "loc.messages.UnableToFetchActiveDirectory": "Не удается получить идентификатор ресурса Active Directory."
 }

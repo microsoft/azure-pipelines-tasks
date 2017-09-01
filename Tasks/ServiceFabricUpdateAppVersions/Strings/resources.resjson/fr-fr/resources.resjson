@@ -33,7 +33,7 @@
   "loc.messages.PreviousBuildNumberLabel": "Numéro de la build précédente : '{0}'",
   "loc.messages.PreviousBuildLocationLabel": "Emplacement de la build précédente : '{0}'",
   "loc.messages.NoPreviousSuccessfulBuild": "La build précédente à utiliser pour la comparaison est introuvable.",
-  "loc.messages.NoManifestInPreviousBuild": "Le build précédent ne contient aucun manifeste de l'application. Forcez la mise à jour de l'ensemble des versions du manifeste.",
+  "loc.messages.NoManifestInPreviousBuild": "La build précédente ne contient aucun manifeste de l'application. Forcez la mise à jour de l'ensemble des versions du manifeste.",
   "loc.messages.UpdatedApplicationTypeVersion": "Mise à jour de l'application de type '{0}' vers la version '{1}'.",
   "loc.messages.UpdatedServiceVerison": "Mise à jour du service '{0}' vers la version '{1}'.",
   "loc.messages.UpdatedPackageVerison": "Mise à jour du package '{0}\\{1}' vers la version '{2}'.",

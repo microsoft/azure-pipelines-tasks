@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke REST API: $(method)",
-  "loc.input.label.connectedServiceName": "Generic Endpoint",
-  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
-  "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
-  "loc.input.label.headers": "Headers",
-  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.friendlyName": "调用 REST API",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "在进程中调用 REST API。",
+  "loc.instanceNameFormat": "调用 REST API: $(method)",
+  "loc.input.label.connectedServiceName": "通用终结点",
+  "loc.input.help.connectedServiceName": "选择应用于提取 URL 和构造 HTTP 请求的身份验证标头的通用终结点。",
+  "loc.input.label.method": "方法",
+  "loc.input.help.method": "选择要与 API 一起调用的 HTTP 方法。",
+  "loc.input.label.headers": "标头",
+  "loc.input.help.headers": "以 JSON 格式定义标头。标头应附带要发送的请求。",
+  "loc.input.label.body": "正文",
+  "loc.input.label.waitForCompletion": "等待完成",
+  "loc.input.help.waitForCompletion": "此任务将等待调用的 REST API 触发 TaskCompleted 事件。等待时间相当于下面的控制部分中提及的任务超时。"
 }

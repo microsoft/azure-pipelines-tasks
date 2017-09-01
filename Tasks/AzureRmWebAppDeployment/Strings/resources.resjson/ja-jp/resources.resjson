@@ -147,6 +147,6 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. 構成ファイルと変換ファイルがパッケージ内の同じフォルダーに存在すること。",
   "loc.messages.AutoParameterizationMessage": "Web.config の ConnectionString 属性は既定でパラメーター化されています。'Parameters.xml' ファイルまたは 'SetParameters.xml' ファイルによって値が配置中に上書きされるため、変換が connectionString 属性に影響を与えることはありません。自動パラメーター化は、MSBuild パッケージの生成中に /p:AutoParameterizationWebConfigConnectionStrings=False のように設定することによって無効にできます。",
   "loc.messages.UnsupportedAppType": "アプリの種類 '%s' が Web.config 生成でサポートされていません。'-appType' に対して有効な値は、'python_Bottle'、'python_Django'、'python_Flask'、'node' です。",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "機関の URL をフェッチできません。",
+  "loc.messages.UnableToFetchActiveDirectory": "Active Directory リソース ID をフェッチできません。"
 }

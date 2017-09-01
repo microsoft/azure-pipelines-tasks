@@ -61,6 +61,6 @@
   "loc.messages.ExtensionListFailedResponseError": "無法擷取 Azure App Service 中安裝之延伸模組的清單。狀態碼: %s (%s)",
   "loc.messages.InstallingSiteExtension": "正在將網站延伸模組 '%s' 安裝在 Azure App Service 中。",
   "loc.messages.FailedToFetchAppServiceState": "無法擷取 App Service 的 App Service 狀態: %s，錯誤碼: %s，錯誤訊息: %s",
-  "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchAuthorityURL": "無法擷取授權單位 URL。",
+  "loc.messages.UnableToFetchActiveDirectory": "無法擷取 Active Directory 資源識別碼。"
 }

@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke REST API: $(method)",
-  "loc.input.label.connectedServiceName": "Generic Endpoint",
-  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
-  "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
-  "loc.input.label.headers": "Headers",
-  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.friendlyName": "REST API 호출",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "REST API를 프로세스의 일부로 호출합니다.",
+  "loc.instanceNameFormat": "REST API 호출: $(method)",
+  "loc.input.label.connectedServiceName": "일반 끝점",
+  "loc.input.help.connectedServiceName": "URL을 선택하고 HTTP 요청에 대한 인증 헤더를 구성하는 데 사용해야 하는 일반 끝점을 선택하세요.",
+  "loc.input.label.method": "메서드",
+  "loc.input.help.method": "API를 호출하는 데 사용해야 하는 HTTP 메서드를 선택하세요.",
+  "loc.input.label.headers": "헤더",
+  "loc.input.help.headers": "JSON 형식으로 헤더를 정의하세요. 헤더가 전송될 요청에 첨부됩니다.",
+  "loc.input.label.body": "본문",
+  "loc.input.label.waitForCompletion": "완료 대기",
+  "loc.input.help.waitForCompletion": "TaskCompleted 이벤트가 REST API 호출에 의해 시작될 때까지 작업이 대기됩니다. 대기 기간은 아래 컨트롤 섹션에 명시된 작업 제한 시간과 같습니다."
 }

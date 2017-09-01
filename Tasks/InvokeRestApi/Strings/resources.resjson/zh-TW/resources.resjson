@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-  "loc.description": "Invoke REST API as a part of your process.",
-  "loc.instanceNameFormat": "Invoke REST API: $(method)",
-  "loc.input.label.connectedServiceName": "Generic Endpoint",
-  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
-  "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
-  "loc.input.label.headers": "Headers",
-  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.friendlyName": "叫用 REST API",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "在程序中叫用 REST API。",
+  "loc.instanceNameFormat": "叫用 REST API: $(method)",
+  "loc.input.label.connectedServiceName": "泛型端點",
+  "loc.input.help.connectedServiceName": "選取應該用來為 HTTP 要求挑選 URL 和建構授權標頭的泛型端點。",
+  "loc.input.label.method": "方法",
+  "loc.input.help.method": "選取叫用 API 時要使用的 HTTP 方法。",
+  "loc.input.label.headers": "標頭",
+  "loc.input.help.headers": "使用 JSON 格式定義標頭。標頭應附加在要傳送的要求上。",
+  "loc.input.label.body": "本文",
+  "loc.input.label.waitForCompletion": "等候完成",
+  "loc.input.help.waitForCompletion": "工作會等候叫用的 REST API 引發 TaskCompleted 事件。等候期間等同於下方控制區段中提到的工作逾時。"
 }

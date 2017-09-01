@@ -19,7 +19,7 @@
   "loc.input.label.customFeed": "Utiliser les packages de ce registre VSTS/TFS",
   "loc.input.help.customFeed": "Incluez le flux sélectionné dans le fichier .npmrc généré.",
   "loc.input.label.customEndpoint": "Informations d'identification des registres situés en dehors de ce compte/cette collection",
-  "loc.input.help.customEndpoint": "Informations d'identification à utiliser pour les registres externes situés dans le fichier .npmrc du projet. Pour les registres présents dans ce compte/cette collection, n'indiquez aucune valeur. Les informations d'identification du build sont utilisées automatiquement.",
+  "loc.input.help.customEndpoint": "Informations d'identification à utiliser pour les registres externes situés dans le fichier .npmrc du projet. Pour les registres présents dans ce compte/cette collection, n'indiquez aucune valeur. Les informations d'identification de la build sont utilisées automatiquement.",
   "loc.input.label.publishRegistry": "Emplacement du registre",
   "loc.input.help.publishRegistry": "Registre ciblé par la commande.",
   "loc.input.label.publishFeed": "Registre cible",
