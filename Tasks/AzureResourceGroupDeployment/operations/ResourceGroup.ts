@@ -8,7 +8,7 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
-var parameterParser = require("./ParameterParser").parse;
+import { PowerShellParameters } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 
@@ -207,17 +207,16 @@ export class ResourceGroup {
     }
 
     private castToType(value: string, type: string) {
-        switch (type) {
+        switch (type.toLowerCase()) {
             case "int":
-                return parseInt(value);
             case "object":
-                return JSON.parse(value);
             case "secureObject":
-                return JSON.parse(value);
             case "array":
-                return JSON.parse(value);
             case "bool":
-                return value === "true";
+                return JSON.parse(value);
+            case "string":
+            case "securestring":
+                return JSON.parse(`"` + value + `"`); // Adding trailing quotes for JSON parser to detect string
             default:
                 // Sending as string
                 break;
@@ -228,16 +227,15 @@ export class ResourceGroup {
     private updateOverrideParameters(template: Object, parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
-        var overrideParameters = parameterParser(this.taskParameters.overrideParameters);
+        var overrideParameters = PowerShellParameters.parse(this.taskParameters.overrideParameters, true, "\\");
         for (var key in overrideParameters) {
             tl.debug("Overriding key: " + key);
             try {
                 overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
             } catch (error) {
-                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+                console.log(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
             parameters[key] = overrideParameters[key];
-
         }
         return parameters;
     }
