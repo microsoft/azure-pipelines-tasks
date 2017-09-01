@@ -87,8 +87,13 @@ function getTestAssemblies(): string[] {
         tl.debug('Search directory empty, defaulting to ' + vstestConfig.testDropLocation);
     }
 
-    tl.debug('Searching for test assemblies in: ' + vstestConfig.testDropLocation);
-    return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
+    if (pathExistsAsDirectory(vstestConfig.testDropLocation)) {
+        tl.debug('Searching for test assemblies in: ' + vstestConfig.testDropLocation);
+        return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
+    }
+    else {
+        tl.warning(tl.loc('SearchLocationNotDirectory', vstestConfig.testDropLocation));
+    }                
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
@@ -485,6 +490,7 @@ function cleanFiles(responseFile: string, listFile: string, testCaseFilterFile: 
 
 function deleteVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && pathExistsAsFile(vstestConfig.vstestDiagFile)) {
+        console.log('##vso[task.uploadfile]'+ vstestConfig.vstestDiagFile);   
         tl.debug('Deleting vstest diag file ' + vstestConfig.vstestDiagFile);
         tl.rmRF(vstestConfig.vstestDiagFile);
     }

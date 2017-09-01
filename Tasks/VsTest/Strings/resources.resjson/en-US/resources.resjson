@@ -138,5 +138,6 @@
   "loc.messages.invalidTestBatchSize": "Invalid batch size provided: %s",
   "loc.messages.invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
   "loc.messages.minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
-  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s"
+  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s",
+  "loc.messages.SearchLocationNotDirectory": "Search folder: '%s' is not a directory"
 }
