@@ -194,6 +194,8 @@ phases:
       node -e "console.log('##vso[task.setVariable variable=SYSTEM_ACCESSTOKEN_NPM; isSecret=true]' + Buffer.from('u:' + process.env.SYSTEM_ACCESSTOKEN).toString('base64'))"
     displayName: Configure npm
 
+  - script: SET
+
   # npm install
   - script: npm install
     displayName: npm install
