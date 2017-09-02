@@ -9,6 +9,8 @@ phases:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   queue:
     parallel: $[ variables.build_windows_parallel ]
+  variables:
+    NPM_CONFIG_USERCONFIG: $(system.defaultWorkingDirectory)\.npmrc
   steps:
 
   # Clean
@@ -20,6 +22,10 @@ phases:
     displayName: Use node 6.10.3
     inputs:
       versionSpec: "6.10.3"
+
+  - script: |
+      node -e "console.log('##vso[task.setVariable variable=SYSTEM_ACCESSTOKEN_NPM; isSecret=true]' + Buffer.from('u:' + process.env.SYSTEM_ACCESSTOKEN).toString('base64'))"
+    displayName: Configure npm
 
   # npm install
   - script: npm install
@@ -170,6 +176,8 @@ phases:
 ################################################################################
   displayName: Build single task
   condition: and(succeeded(), variables.task)
+  variables:
+    NPM_CONFIG_USERCONFIG: $(system.defaultWorkingDirectory)/.npmrc
   steps:
 
   # Clean
@@ -181,6 +189,10 @@ phases:
     displayName: Use node 6.10.3
     inputs:
       versionSpec: "6.10.3"
+
+  - script: |
+      node -e "console.log('##vso[task.setVariable variable=SYSTEM_ACCESSTOKEN_NPM; isSecret=true]' + Buffer.from('u:' + process.env.SYSTEM_ACCESSTOKEN).toString('base64'))"
+    displayName: Configure npm
 
   # npm install
   - script: npm install
