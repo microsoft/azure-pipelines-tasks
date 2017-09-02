@@ -1,3 +1,5 @@
+var path = require('path');
+
 // .npmrc
 console.log(`##vso[task.setvariable variable=NPM_CONFIG_USERCONFIG]${path.join(__dirname, '.npmrc')}`);
 
