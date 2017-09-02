@@ -23,9 +23,9 @@ phases:
     inputs:
       versionSpec: "6.10.3"
 
-  - script: |
-      node -e "console.log('##vso[task.setVariable variable=SYSTEM_ACCESSTOKEN_NPM; isSecret=true]' + Buffer.from('u:' + process.env.SYSTEM_ACCESSTOKEN).toString('base64'))"
-    displayName: Configure npm
+  # Set variables
+  - script: node ./ci/set-variables.js
+    displayName: Set variables
 
   # npm install
   - script: npm install
@@ -86,13 +86,15 @@ phases:
     inputs:
       versionSpec: "6.10.3"
 
+  # Set variables
+  - script: node ./ci/set-variables.js
+    displayName: Set variables
+  - powershell: .\ci\set-publish-variables.ps1
+    displayName: Set publish variables
+
   # npm install
   - script: npm install
     displayName: npm install
-
-  # Set variables
-  - powershell: .\ci\set-publish-variables.ps1
-    displayName: Set publish variables
 
   # Download slices
   - powershell: .\ci\download-slices.ps1
@@ -255,6 +257,10 @@ phases:
     displayName: Use node 6.10.3
     inputs:
       versionSpec: "6.10.3"
+
+  # Set variables
+  - script: node ./ci/set-variables.js
+    displayName: Set variables
 
   # npm install
   - script: npm install
