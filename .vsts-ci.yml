@@ -205,6 +205,8 @@ phases:
   # Build
   - script: node make.js build --task "$(task)"
     displayName: Build
+    env:
+      SYSTEM_ACCESSTOKEN_NPM: $(system_accessToken_npm)
 
   # Stage hotfix
   - script: node ./ci/stage-hotfix.js
