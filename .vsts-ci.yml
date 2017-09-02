@@ -177,7 +177,7 @@ phases:
   displayName: Build single task
   condition: and(succeeded(), variables.task)
   variables:
-    NPM_CONFIG_USERCONFIG: $(system.defaultWorkingDirectory)/.npmrc
+    NPM_CONFIG_USERCONFIG: $(system.defaultWorkingDirectory)\.npmrc
   steps:
 
   # Clean
@@ -191,7 +191,7 @@ phases:
       versionSpec: "6.10.3"
 
   - script: |
-      node -e "console.log('##vso[task.setVariable variable=SYSTEM_ACCESSTOKEN_NPM; isSecret=true]' + Buffer.from('u:' + process.env.SYSTEM_ACCESSTOKEN).toString('base64'))"
+      node -e "console.log('##vso[task.setVariable variable=SYSTEM_ACCESSTOKEN_NPM;issecret=true]' + Buffer.from('u:' + process.env.SYSTEM_ACCESSTOKEN).toString('base64'))"
     displayName: Configure npm
 
   - script: SET
