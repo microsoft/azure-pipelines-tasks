@@ -9,8 +9,6 @@ phases:
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   queue:
     parallel: $[ variables.build_windows_parallel ]
-  variables:
-    NPM_CONFIG_USERCONFIG: $(system.defaultWorkingDirectory)\.npmrc
   steps:
 
   # Clean
