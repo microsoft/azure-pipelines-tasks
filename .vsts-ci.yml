@@ -83,6 +83,12 @@ phases:
     inputs:
       versionSpec: "6.10.3"
 
+  # Use NuGet 4
+  - task: NuGetToolInstaller@0
+    displayName: Use NuGet 4
+    inputs:
+      versionSpec: 4.0.0
+
   # npm install
   - script: npm install
     displayName: npm install
@@ -98,19 +104,6 @@ phases:
   # Stage milestone
   - script: node .\ci\stage-milestone.js
     displayName: Stage milestone
-
-  # Use NuGet 4
-  - task: NuGetToolInstaller@0
-    displayName: Use NuGet 4
-    condition: and(succeeded(), or(variables.publish_milestone, variables.publish_aggregate))
-    inputs:
-      versionSpec: 4.0.0
-
-  # Pack milestone
-  - script: nuget pack vsts-tasks-milestone.nuspec -BasePath milestone-pack-source -NoDefaultExcludes
-    displayName: Pack milestone
-    condition: and(succeeded(), variables.publish_milestone)
-    workingDirectory: _package
 
   # Publish milestone package
   - task: NuGetCommand@2
@@ -141,26 +134,10 @@ phases:
   - script: node .\ci\stage-aggregate.js
     displayName: Stage aggregate
 
-  # Pack aggregate
-  - script: nuget pack Mseng.MS.TF.Build.Tasks.nuspec -BasePath aggregate-pack-source -NoDefaultExcludes
-    displayName: Pack aggregate
-    condition: and(succeeded(), variables.publish_aggregate)
-    workingDirectory: _package
-
-  # Publish aggregate package
-  - task: NuGetCommand@2
-    displayName: Publish aggregate package
-    condition: and(succeeded(), variables.publish_aggregate)
-    inputs:
-      command: push
-      searchPatternPush: _package\Mseng.MS.TF.Build.Tasks.$(aggregate_version).nupkg
-      nuGetFeedType: internal
-      feedPublish: $(aggregate_tasks_feed_name)
-
   # Publish aggregate artifact
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: _package/aggregate-pack-source/contents
+      pathToPublish: _package/publish-layout
       artifactName: TaskPackage
       artifactType: container
 
