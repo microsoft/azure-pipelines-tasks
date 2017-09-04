@@ -25,6 +25,8 @@ async function run() {
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var slotName: string = tl.getInput('SlotName', false);
         var linuxImageSource = tl.getInput('LinuxImageSource', false);
+        var startupCommandForBuiltInLinux = tl.getInput('StartupCommandForBuiltInLinux', false);
+        var startupCommandForBuiltInLinuxUserInput = tl.getInput('StartupCommandForBuiltInLinuxUserInput', false);
         var dockerNamespace = tl.getInput('DockerNamespace', false);
         var virtualApplication: string = tl.getInput('VirtualApplication', false);
         var webDeployPkg: string = tl.getPathInput('Package', true);
@@ -78,6 +80,8 @@ async function run() {
         webAppKind = webAppKind === "applinux" && linuxImageSource != "DOCKER" ? "applinuxbuiltin" : webAppKind;
 
         var isLikeWebApp = webAppKind === "app" || webAppKind === "api" || webAppKind === "mobileapp";
+
+        var startupCommand = isAppKindUserInput ? startupCommandForBuiltInLinuxUserInput : startupCommandForBuiltInLinux;
 
         /**
          * Handling if the app kind is applinuxbuiltin

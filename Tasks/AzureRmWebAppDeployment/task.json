@@ -214,7 +214,25 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
+            "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
+            "helpMarkDown": "Enter the start up command."
+        },
+        {
+            "name": "StartupCommandForBuiltInLinux",
+            "type": "string",
+            "label": "Startup command ",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "LinuxImageSource != \"\" && LinuxImageSource != PHP && LinuxImageSource != DOCKER && WebAppKind = applinux",
+            "helpMarkDown": "Enter the start up command."
+        },
+        {
+            "name": "StartupCommandForBuiltInLinuxUserInput",
+            "type": "string",
+            "label": "Startup command ",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKindUserInput = applinuxbuiltin",
             "helpMarkDown": "Enter the start up command."
         },
         {

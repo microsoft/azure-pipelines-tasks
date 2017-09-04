@@ -214,8 +214,26 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
+      "visibleRule": "WebAppKindUserInput = applinux || LinuxImageSource = DOCKER",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
+    },
+    {
+      "name": "StartupCommandForBuiltInLinux",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartupCommandForBuiltInLinux",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "LinuxImageSource != \"\" && LinuxImageSource != PHP && LinuxImageSource != DOCKER && WebAppKind = applinux",
+      "helpMarkDown": "ms-resource:loc.input.help.StartupCommandForBuiltInLinux"
+    },
+    {
+      "name": "StartupCommandForBuiltInLinuxUserInput",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartupCommandForBuiltInLinuxUserInput",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKindUserInput = applinuxbuiltin",
+      "helpMarkDown": "ms-resource:loc.input.help.StartupCommandForBuiltInLinuxUserInput"
     },
     {
       "name": "VirtualApplication",
