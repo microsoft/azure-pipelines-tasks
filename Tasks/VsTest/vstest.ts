@@ -62,8 +62,8 @@ export function startTest() {
                     if (!isTiaAllowed()) {
                         publishTestResults(resultsDirectory);
                     }
-                    tl.setResult(code, tl.loc('VstestReturnCode', code));
                     deleteVstestDiagFile();
+                    tl.setResult(code, tl.loc('VstestReturnCode', code));                    
                 } catch (error) {
                     deleteVstestDiagFile();
                     console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
