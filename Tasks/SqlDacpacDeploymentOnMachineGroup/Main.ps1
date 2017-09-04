@@ -42,6 +42,39 @@ function Get-SingleFile
     }
 }
 
+function Add-BatchFilesPathToSqlFilesPath
+{
+    param (
+        [string]$sqlBatchFiles,
+        [string]$sqlScriptsWithExpandedPath
+    )
+
+    $sqlBatchFilesPath = $sqlBatchFiles -split ";"
+    foreach ($sqlBatchFile in $sqlBatchFilesPath)
+    {
+        if ((Test-Path -Path $sqlBatchFile) -eq $true)
+        {
+            $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $sqlBatchFile + "; "
+        }
+    }
+
+    return $sqlScriptsWithExpandedPath
+}
+
+function New-SqlBatchFilesDestDirectory
+{
+    param (
+        [string]$directoryName
+    )
+
+    if ((Test-Path -Path $directoryName) -eq $true) 
+    {
+        Remove-Item -Path $directoryName -Force | Out-Null
+    }
+
+    New-Item -Path $directoryName -ItemType Directory | Out-Null
+}
+
 $taskType = Get-VstsInput -Name "TaskType" -Require
 $dacpacFile = Get-VstsInput -Name "dacpacFile"
 $sqlFiles = Get-VstsInput -Name "sqlFile" 
@@ -63,6 +96,8 @@ $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 . "$PSScriptRoot\Utility.ps1"
+. "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
+
 
 Try
 {
@@ -94,6 +129,10 @@ Try
                 {
                     Write-Error "Invalid Applock name. exclusiveLock: $exclusiveLock, appLockName: $appLockName"
                 }
+                
+                $batch = 1
+                $destPath = [System.IO.Path]::Combine($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "batchdir")
+                New-SqlBatchFilesDestDirectory -directoryName $destPath
 
                 $sqlScriptsWithExpandedPath = ""
                 $sqlScriptFiles = $sqlFiles -split ";"
@@ -103,11 +142,14 @@ Try
                     if (-not [string]::IsNullOrEmpty($sqlScript)) 
                     {
                         $sqlScript = Get-SingleFile -pattern $sqlScript
-                        $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $sqlScript + "; "
+                        $batchFiles = Create-BatchFilesForSqlFile -sqlFilePath $sqlScript -destPath $destPath -batch $batch
+                        $sqlScriptsWithExpandedPath = Add-BatchFilesPathToSqlFilesPath -sqlBatchFiles $batchFiles -sqlScriptsWithExpandedPath $sqlScriptsWithExpandedPath
+                        $batch = [int]$batch + 1
                     }
                 }
                 Write-Verbose "Executing sql scripts $sqlScriptsWithExpandedPath under transaction using app lock $appLockName"
                 Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+                Remove-Item -Path $destPath -Force
             } 
             else 
             {
