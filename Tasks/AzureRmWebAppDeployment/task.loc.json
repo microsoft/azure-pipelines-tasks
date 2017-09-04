@@ -43,7 +43,7 @@
       "name": "AdditionalDeploymentOptionsForBuiltInLinux",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForBuiltInLinux",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = applinux && LinuxImageSource != DOCKER"
+      "visibleRule": "WebAppKind = invalid && LinuxImageSource != DOCKER"
     },
     {
       "name": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
@@ -214,7 +214,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
+      "visibleRule": "LinuxImageSource = node || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -810,6 +810,8 @@
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
     "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
-    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "SuccessfullyUpdatedStartupCommandInConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedStartupCommandInConfigDetails",
+    "FailedToUpdateStartupCommandInConfigDetails": "ms-resource:loc.messages.FailedToUpdateStartupCommandInConfigDetails"
   }
 }

@@ -203,5 +203,7 @@
   "loc.messages.AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
   "loc.messages.UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+  "loc.messages.SuccessfullyUpdatedStartupCommandInConfigDetails": "Successfully updated the Startup File for the web app.",
+  "loc.messages.FailedToUpdateStartupCommandInConfigDetails": "Failed to update the Startup File for the web app."
 }

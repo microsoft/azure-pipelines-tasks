@@ -43,7 +43,7 @@
             "name": "AdditionalDeploymentOptionsForBuiltInLinux",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = applinux && LinuxImageSource != DOCKER"
+            "visibleRule": "WebAppKind = invalid && LinuxImageSource != DOCKER"
         },
         {
             "name": "AdditionalDeploymentOptionsForBuiltInLinuxUserInput",
@@ -214,7 +214,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "LinuxImageSource = NODE || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
+            "visibleRule": "LinuxImageSource = node || LinuxImageSource = DOCKER || WebAppKindUserInput = applinuxbuiltin || WebAppKindUserInput = applinux",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -810,6 +810,8 @@
         "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
         "UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "SuccessfullyUpdatedStartupCommandInConfigDetails": "Successfully updated the Startup File for the web app.",
+        "FailedToUpdateStartupCommandInConfigDetails": "Failed to update the Startup File for the web app."
     }
 }
