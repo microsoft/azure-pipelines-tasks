@@ -66,20 +66,20 @@ export function startTest() {
                     tl.setResult(code, tl.loc('VstestReturnCode', code));
                     deleteVstestDiagFile();
                 } catch (error) {
-                    publishEventToCi(AreaCodes.PUBLISHRESULTS, error.message, 1001);
+                    publishEventToCi(AreaCodes.PUBLISHRESULTS, error.message, 1001, false);
                     deleteVstestDiagFile();
                     console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error; // This throw should be removed
                 }
             })
             .fail(function (err) {
-                publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002);
+                publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002, false);
                 deleteVstestDiagFile();
                 console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
                 throw err;  // What is the point of this throw? Where is it getting caught?
             });
     } catch (error) {
-        publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1003);
+        publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1003, false);
         deleteVstestDiagFile();
         tl.setResult(tl.TaskResult.Failed, error);
     }
@@ -125,7 +125,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         } else {
             if (!tl.exist(settingsFile)) {
                 // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                publishEventToCi(AreaCodes.INVALIDSETTINGSFILE, 'InvalidSettingsFile', 1004, 'true');
+                publishEventToCi(AreaCodes.INVALIDSETTINGSFILE, 'InvalidSettingsFile', 1004, true);
                 tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
                 throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
@@ -391,7 +391,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
                 tl.warning(err);
                 defer.resolve(tl.TaskResult.Succeeded);
             } else {
-                publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1005, 'true');
+                publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1005, true);
                 tl.error(err);
                 defer.resolve(tl.TaskResult.Failed);
             }
@@ -461,7 +461,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         })
         .fail(function (err) {
             tl.debug('Listing tests from VsTest failed.');
-            publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, err.message, 1006);
+            publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, err.message, 1006, false);
             tl.error(err);
             defer.resolve(err);
         });
@@ -529,10 +529,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             uploadTestResults(testResultsDirectory)
                                                 .then(function (code) {
                                                     if (!isNaN(+code) && +code !== 0) {
-                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1007);
+                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1007, false);
                                                         defer.resolve(+code);
                                                     } else if (vscode !== 0) {
-                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1008);
+                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1008, false);
                                                         defer.resolve(vscode);
                                                     }
 
@@ -540,7 +540,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                 })
                                                 .fail(function (code) {
                                                     tl.debug('Test Run Updation failed!');
-                                                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1009);
+                                                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1009, false);
                                                     defer.resolve(tl.TaskResult.Failed);
                                                 })
                                                 .finally(function () {
@@ -551,7 +551,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                         })
                                         .fail(function (code) {
                                             if (code !== 0) {
-                                                publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + String(code), 1010);
+                                                publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + String(code), 1010, false);
                                             }
                                             defer.resolve(code);
                                         })
@@ -566,14 +566,14 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                 uploadTestResults('')
                                                     .then(function (code) {
                                                         if (!isNaN(+code) && +code !== 0) {
-                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1011);
+                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1011, false);
                                                             defer.resolve(+code);
                                                         }
                                                         defer.resolve(tl.TaskResult.Succeeded);
                                                     })
                                                     .fail(function (code) {
                                                         tl.debug('Test Run Updation failed!');
-                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1012);
+                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1012, false);
                                                         defer.resolve(tl.TaskResult.Failed);
                                                     })
                                                     .finally(function () {
@@ -589,10 +589,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
                                                                         if (!isNaN(+code) && +code !== 0) {
-                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1013);
+                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1013, false);
                                                                             defer.resolve(+code);
                                                                         } else if (vscode !== 0) {
-                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1014, 'true');
+                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1014, true);
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -600,7 +600,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug('Test Run Updation failed!');
-                                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1015);
+                                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1015, false);
                                                                         defer.resolve(tl.TaskResult.Failed);
                                                                     })
                                                                     .finally(function () {
@@ -611,7 +611,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             })
                                                             .fail(function (code) {
                                                                 if (code !== 0) {
-                                                                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1016);
+                                                                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1016, false);
                                                                 }
                                                                 defer.resolve(code);
                                                             })
@@ -620,7 +620,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             });
                                                     })
                                                     .fail(function (err) {
-                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017);
+                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
@@ -628,10 +628,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
                                                                         if (!isNaN(+code) && +code !== 0) {
-                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1018);
+                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1018, false);
                                                                             defer.resolve(+code);
                                                                         } else if (vscode !== 0) {
-                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1019);
+                                                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1019, false);
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -639,7 +639,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug('Test Run Updation failed!');
-                                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1020);
+                                                                        publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1020, false);
                                                                         defer.resolve(tl.TaskResult.Failed);
                                                                     })
                                                                     .finally(function () {
@@ -650,7 +650,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             })
                                                             .fail(function (code) {
                                                                 if (code !== 0) {
-                                                                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1021);
+                                                                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1021, false);
                                                                 }
                                                                 defer.resolve(code);
                                                             }).finally(function () {
@@ -658,21 +658,21 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             });
                                                     })
                                                     .fail(function (err) {
-                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1022);
+                                                        publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1022, false);
                                                         tl.error(err);
                                                         defer.resolve(tl.TaskResult.Failed);
                                                     });
                                             }
                                         })
                                         .fail(function (err) {
-                                            publishEventToCi(AreaCodes.RESPONSECONTAINSNOTESTS, err.message, 1023);
+                                            publishEventToCi(AreaCodes.RESPONSECONTAINSNOTESTS, err.message, 1023, false);
                                             tl.error(err);
                                             defer.resolve(tl.TaskResult.Failed);
                                         });
                                 }
                             })
                             .fail(function (err) {
-                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1024);
+                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1024, false);
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
@@ -698,19 +698,19 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     })
                                     .fail(function (code) {
                                         if (code !== 0) {
-                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1025);
+                                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1025, false);
                                         }
                                         defer.resolve(code);
                                     });
                             })
                             .fail(function (err) {
-                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1026);
+                                publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1026, false);
                                 tl.error(err);
                                 defer.resolve(tl.TaskResult.Failed);
                             });
                     })
                     .fail(function (err) {
-                        publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, err.message, 1027);
+                        publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, err.message, 1027, false);
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
                         defer.resolve(tl.TaskResult.Failed);
@@ -721,13 +721,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     .then(function (code) {
                         publishTestResults(testResultsDirectory);
                         if (code !== 0) {
-                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1028);
+                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1028, false);
                         }
                         defer.resolve(code);
                     })
                     .fail(function (code) {
                         if (code !== 0) {
-                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1029);
+                            publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1029, false);
                         }
                         defer.resolve(code);
                     });
@@ -737,13 +737,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true)
             .then(function (code) {
                 if (code !== 0) {
-                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1030);
+                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1030, false);
                 }
                 defer.resolve(code);
             })
             .fail(function (code) {
                 if (code !== 0) {
-                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1031);
+                    publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1031, false);
                 }
                 defer.resolve(code);
             });
@@ -765,7 +765,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             tiaConfig.tiaEnabled = false;
         }
     } catch (e) {
-        publishEventToCi(AreaCodes.TIACONFIG, e.message, 1032);
+        publishEventToCi(AreaCodes.TIACONFIG, e.message, 1032, false);
         tl.error(e.message);
         defer.resolve(tl.TaskResult.Failed);
         return defer.promise;
@@ -784,7 +784,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     if (newSettingsFile) {
         if (!pathExistsAsFile(newSettingsFile)) {
             if (!tl.exist(newSettingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
-                publishEventToCi(AreaCodes.TIACONFIG, 'InvalidSettingsFile', 1033, 'true');
+                publishEventToCi(AreaCodes.TIACONFIG, 'InvalidSettingsFile', 1033, true);
                 throw Error((tl.loc('InvalidSettingsFile', newSettingsFile)));
             }
         }
@@ -797,13 +797,13 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
                     .then(function (code) {
                         if (code !== 0) {
-                            publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1034, 'true');
+                            publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1034, true);
                         }
                         defer.resolve(code);
                     })
                     .fail(function (code) {
                         if (code !== 0) {
-                            publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1035);
+                            publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1035, false);
                         }
                         defer.resolve(code);
                     });
@@ -815,13 +815,13 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         runVStest(testResultsDirectory, newSettingsFile, vsVersion)
             .then(function (code) {
                 if (code !== 0) {
-                    publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1036);
+                    publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1036, false);
                 }
                 defer.resolve(code);
             })
             .fail(function (code) {
                 if (code !== 0) {
-                    publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1037);
+                    publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1037, false);
                 }
                 defer.resolve(code);
             });
@@ -940,8 +940,8 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     });
 }
 
-function publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: string = 'false') {
-    const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: ''};
+function publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: boolean) {
+    const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false};
     taskProps.areacode = areaCode;
     taskProps.result = message;
     taskProps.tracepoint = tracePoint;
