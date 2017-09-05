@@ -104,7 +104,8 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": false,
         "some\\path\\to\\vstest.console.exe": true,
         "some\\illegal\\path\\to\\vstest.console.exe": false,
-        "\\path\\to\\vstest\\directory": true
+        "\\path\\to\\vstest\\directory": true,
+        "/source/dir":true
     },
     "stats": {
         "settings.runsettings": {
@@ -121,6 +122,9 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
+        },
+        "/source/dir": {
+            "isDirectory":true
         }
     }
 }

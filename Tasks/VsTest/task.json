@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [
         "vstest"
@@ -134,8 +134,8 @@
             "type": "string",
             "label": "Search folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
-            "required": false,
-            "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+            "required": true,
+            "helpMarkDown": "Folder to search for the test assemblies.",
             "groupName": "testSelection"
         },
         {
@@ -487,6 +487,7 @@
         "invalidTestBatchSize": "Invalid batch size provided: %s",
         "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
         "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
-        "RunTimePerBatch": "Run time per batch(sec) : %s"
+        "RunTimePerBatch": "Run time per batch(sec) : %s",
+        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
     }
 }
