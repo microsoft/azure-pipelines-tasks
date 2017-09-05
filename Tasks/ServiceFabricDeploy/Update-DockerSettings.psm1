@@ -85,7 +85,7 @@ function Update-DockerSettings
                         $policies = $appManifestXml.CreateElement("Policies", $appManifestXml.ApplicationManifest.NamespaceURI)
                         [void]($serviceManifestImport.AppendChild($policies))
                     }
-            
+
                     # Ensure there is a ContainerHostPolicies element
                     $containerHostPolicies = @($policies.ContainerHostPolicies)
                     $containerHostPolicy = $containerHostPolicies | where { $_.CodePackageRef -eq $codePackage.Name }

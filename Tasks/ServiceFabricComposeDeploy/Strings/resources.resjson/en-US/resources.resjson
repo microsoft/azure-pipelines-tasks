@@ -22,7 +22,7 @@
   "loc.input.label.registryPassword": "Registry Password",
   "loc.input.help.registryPassword": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
   "loc.input.label.passwordEncrypted": "Password Encrypted",
-  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
   "loc.input.label.deployTimeoutSec": "Deploy Timeout (s)",
   "loc.input.help.deployTimeoutSec": "Timeout in seconds for deploying the application.",
   "loc.input.label.removeTimeoutSec": "Remove Timeout (s)",
