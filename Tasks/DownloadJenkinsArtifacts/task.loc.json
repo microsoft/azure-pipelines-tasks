@@ -1,0 +1,136 @@
+{
+  "id": "3A2D6637-EDEC-4873-B17A-2F63308D64BC",
+  "name": "DownloadJenkinsArtifacts",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "ms-vscs-rm",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "inputs": [
+    {
+      "name": "connection",
+      "type": "connectedService:jenkins",
+      "label": "ms-resource:loc.input.label.connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connection"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.definition",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.definition"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "downloadPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.downloadPattern",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPattern"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.downloadPath",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+    },
+    {
+      "name": "downloadCommitsAndWorkItems",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.downloadCommitsAndWorkItems",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadCommitsAndWorkItems"
+    },
+    {
+      "name": "previousJenkinsJob",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.previousJenkinsJob",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems = true",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.previousJenkinsJob"
+    },
+    {
+      "name": "artifactDetailsFileNameSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactDetailsFileNameSuffix",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems = true",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(connection)",
+      "target": "definition",
+      "dataSourceName": "Jobs",
+      "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(connection)",
+      "target": "version",
+      "dataSourceName": "Builds",
+      "parameters": {
+        "definition": "$(definition)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(connection)",
+      "target": "previousJenkinsJob",
+      "dataSourceName": "Builds",
+      "parameters": {
+        "definition": "$(definition)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "download.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
+    "DownloadingCommitsAndWorkItems": "ms-resource:loc.messages.DownloadingCommitsAndWorkItems",
+    "JenkinsDownloadingChangeFromCurrentBuild": "ms-resource:loc.messages.JenkinsDownloadingChangeFromCurrentBuild",
+    "DownloadingJenkinsChangeBetween": "ms-resource:loc.messages.DownloadingJenkinsChangeBetween",
+    "JenkinsRollbackDeployment": "ms-resource:loc.messages.JenkinsRollbackDeployment",
+    "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
+    "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
+    "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed"
+  }
+}
