@@ -23,25 +23,19 @@ function Get-AzureStorageAccountResourceGroupName
     $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
     if (-not [string]::IsNullOrEmpty($storageAccountName))
     {
-        try
-        {
-            Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
-            $azureStorageAccountResourceDetails = (Get-AzureRMResource -ErrorAction Stop) | Where-Object { ($_.ResourceType -eq $ARMStorageAccountResourceType) -and ($_.ResourceName -eq $storageAccountName)}
-            Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+        Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+        $azureStorageAccountResourceDetails = (Get-AzureRMResource -ErrorAction Stop) | Where-Object { ($_.ResourceType -eq $ARMStorageAccountResourceType) -and ($_.ResourceName -eq $storageAccountName)}
+        Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
 
-            $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
-            return $azureStorageAccountResourceDetails.ResourceGroupName
-        }
-        finally
+        $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
+        if ([string]::IsNullOrEmpty($azureResourceGroupName))
         {
-            if ([string]::IsNullOrEmpty($azureResourceGroupName))
-            {
-                Write-Verbose "(ARM)Storage account: $storageAccountName not found"
-
-                Write-Telemetry "Task_InternalError" "RMStorageAccountNotFound"
-                Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
-            }
+            Write-Verbose "(ARM)Storage account: $storageAccountName not found"
+            Write-Telemetry "Task_InternalError" "RMStorageAccountNotFound"
+            Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
         }
+
+        return $azureResourceGroupName
     }
 }
 

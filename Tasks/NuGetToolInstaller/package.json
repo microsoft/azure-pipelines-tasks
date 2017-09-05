@@ -1,6 +1,6 @@
 {
   "name": "nuget-tool-installer",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "NuGet Tool Installer",
   "main": "nugetToolInstaller.js",
   "scripts": {

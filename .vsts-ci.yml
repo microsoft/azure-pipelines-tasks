@@ -25,7 +25,7 @@ phases:
   - script: npm install
     displayName: npm install
 
-  # Slice the tasks (sets TASK_ARRAY and TASK_PATTERN)
+  # Slice the tasks (sets TASK_PATTERN)
   - script: node .\ci\set-task-slice.js
     displayName: Set task slice
 
@@ -36,10 +36,12 @@ phases:
   # Stage slice
   - script: node .\ci\stage-slice.js
     displayName: Stage slice
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
 
   # Publish slice artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish slice artifact
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
     inputs:
       pathToPublish: _package/tasks.zip
       artifactName: slice-$(system.jobPositionInPhase)
@@ -67,7 +69,8 @@ phases:
 - phase: publish_windows
 ################################################################################
   displayName: Publish
-  dependsOn: buildAll_windows # TODO: also depend on  buildAll_mac buildAll_linux
+  dependsOn: buildAll_windows # TODO: also depend on buildAll_darwin buildAll_linux
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
   steps:
 
   # Clean
@@ -79,6 +82,12 @@ phases:
     displayName: Use node 6.10.3
     inputs:
       versionSpec: "6.10.3"
+
+  # Use NuGet 4
+  - task: NuGetToolInstaller@0
+    displayName: Use NuGet 4
+    inputs:
+      versionSpec: 4.0.0
 
   # npm install
   - script: npm install
@@ -95,19 +104,6 @@ phases:
   # Stage milestone
   - script: node .\ci\stage-milestone.js
     displayName: Stage milestone
-
-  # Use NuGet 4
-  - task: NuGetToolInstaller@0
-    displayName: Use NuGet 4
-    condition: and(succeeded(), or(variables.publish_milestone, variables.publish_aggregate))
-    inputs:
-      versionSpec: 4.0.0
-
-  # Pack milestone
-  - script: nuget pack vsts-tasks-milestone.nuspec -BasePath milestone-pack-source -NoDefaultExcludes
-    displayName: Pack milestone
-    condition: and(succeeded(), variables.publish_milestone)
-    workingDirectory: _package
 
   # Publish milestone package
   - task: NuGetCommand@2
@@ -138,26 +134,10 @@ phases:
   - script: node .\ci\stage-aggregate.js
     displayName: Stage aggregate
 
-  # Pack aggregate
-  - script: nuget pack Mseng.MS.TF.Build.Tasks.nuspec -BasePath aggregate-pack-source -NoDefaultExcludes
-    displayName: Pack aggregate
-    condition: and(succeeded(), variables.publish_aggregate)
-    workingDirectory: _package
-
-  # Publish aggregate package
-  - task: NuGetCommand@2
-    displayName: Publish aggregate package
-    condition: and(succeeded(), variables.publish_aggregate)
-    inputs:
-      command: push
-      searchPatternPush: _package\Mseng.MS.TF.Build.Tasks.$(aggregate_version).nupkg
-      nuGetFeedType: internal
-      feedPublish: $(aggregate_tasks_feed_name)
-
   # Publish aggregate artifact
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: _package/aggregate-pack-source/contents
+      pathToPublish: _package/publish-layout
       artifactName: TaskPackage
       artifactType: container
 
@@ -234,6 +214,56 @@ phases:
   queue:
     demands: agent.os -equals Linux
     parallel: $[ variables.build_linux_parallel ]
+  steps:
+
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Slice the tasks (sets TASK_PATTERN)
+  - script: node ./ci/set-task-slice.js
+    displayName: Set task slice
+
+  # Build
+  - script: node make.js build --task "$(task_pattern)"
+    displayName: Build
+
+  # Test
+  - script: node make.js test --runner ts
+    displayName: Test
+  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
+    displayName: Legacy tests
+
+  # Use node 5
+  - task: NodeTool@0
+    displayName: Use node 5.10.1
+    inputs:
+      versionSpec: "5.10.1"
+
+  # Test
+  - script: node make.js test
+    displayName: Test
+  - script: node make.js testLegacy --task "$(task_pattern)"
+    displayName: Legacy tests
+
+################################################################################
+- phase: buildAll_darwin
+################################################################################
+  displayName: Build all tasks (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  queue:
+    demands: agent.os -equals Darwin
+    parallel: $[ variables.build_darwin_parallel ]
   steps:
 
   # Clean
