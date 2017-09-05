@@ -4,6 +4,7 @@ import * as Q from 'q';
 import * as models from './models';
 import * as utils from './helpers';
 import * as parameterParser from './parameterparser'
+import * as version from './vstestversion';
 import * as os from 'os';
 import * as fs from 'fs';
 
@@ -54,7 +55,7 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </DataCollectionRunSettings>
     </RunSettings>`;
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Promise<string> {
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Promise<string> {
     const defer = Q.defer<string>();
     let result: any;
 
@@ -80,6 +81,12 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             settingsExt = null;
         }
     }
+
+    if(settingsExt === testSettingsExtension && result.TestSettings && 
+        result.TestSettings.Properties && result.TestSettings.Properties[0] && 
+        result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()){
+            tl.warning(tl.loc('testSettingPropertiesNotSupported'))  
+    } 
 
     if (overrideParametersString) {
         if (settingsExt === runSettingsExtension || settingsExt === testSettingsExtension) {
@@ -132,7 +139,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             }
             testImpactCollectorNode = data;
             if (tiaConfig.useNewCollector) {
-                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion);
+                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion?vsVersion.majorVersion:null);
             }
             testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
             if (getTIALevel(tiaConfig) === 'file') {

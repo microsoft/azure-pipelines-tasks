@@ -101,6 +101,7 @@
   "loc.messages.VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
   "loc.messages.runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
   "loc.messages.overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
+  "loc.messages.testSettingPropertiesNotSupported": "Properties specified in testsettings file will be available with TestContext in Visual Studio 2017 Update 4 and higher",
   "loc.messages.vstestVersionInvalid": "Given test platform version %s is not supported.",
   "loc.messages.configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
   "loc.messages.otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",

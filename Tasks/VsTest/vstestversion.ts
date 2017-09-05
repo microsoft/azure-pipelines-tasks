@@ -18,6 +18,10 @@ export class VSTestVersion {
     public isRunInParallelSupported(): boolean {
         return (this.majorVersion >= 15);
     }
+
+    public isTestSettingsPropertiesSupported(): boolean {
+        return (this.majorVersion >= 15) && (this.patchNumber>26832);
+    }
 }
 
 export class Dev14VSTestVersion extends VSTestVersion {
