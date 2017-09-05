@@ -9,6 +9,11 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'Invalid_webAppPkg');
 tr.setInput('UseWebDeploy', 'true');
+tr.setInput('PackageForBuiltInLinuxUserInput', "DummyPkg.zip");
+tr.setInput('WebAppKind', "app");
+tr.setInput('PackageForBuiltInLinux', "linuxPkg.zip");
+tr.setInput('DockerNamespace', "Registry");
+tr.setInput('DockerRepository', "DummyRepo");
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";

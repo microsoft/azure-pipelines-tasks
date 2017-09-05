@@ -15,6 +15,11 @@ tr.setInput('TakeAppOfflineFlag', 'false');
 tr.setInput('VirtualApplication', 'virtualApp');
 tr.setInput('AdditionalArguments', 'additionalArguments');
 tr.setInput('WebAppUri', 'someuri');
+tr.setInput('PackageForBuiltInLinux', "linuxPkg.zip");
+tr.setInput('DockerNamespace', "Registry");
+tr.setInput('DockerRepository', "DummyRepo");
+tr.setInput('PackageForBuiltInLinuxUserInput', "DummyPkg.zip");
+tr.setInput('WebAppKind', "app");
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";

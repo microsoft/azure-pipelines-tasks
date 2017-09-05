@@ -395,7 +395,7 @@ async function updateStartupCommandAndAppSettings(SPN, webAppName: string, resou
             });
         await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
-        updateAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+        await updateAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
 
         console.log(tl.loc("SuccessfullyUpdatedStartupCommandInConfigDetails"));
     }
