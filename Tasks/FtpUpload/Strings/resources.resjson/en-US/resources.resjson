@@ -18,7 +18,7 @@
   "loc.input.label.remotePath": "Remote directory",
   "loc.input.help.remotePath": "Upload files to this directory on the remote FTP server.",
   "loc.input.label.clean": "Delete remote directory",
-  "loc.input.help.clean": "Delete the remote directory including all contents before uploading.",
+  "loc.input.help.clean": "Delete the remote directory including its contents before uploading.",
   "loc.input.label.cleanContents": "Clear remote directory contents",
   "loc.input.help.cleanContents": "Recursively delete all contents of the remote directory before uploading.  The existing directory will not be deleted.  For better performance, consider using `Delete remote directory` instead.",
   "loc.input.label.overwrite": "Overwrite",

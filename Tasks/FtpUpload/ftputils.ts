@@ -17,7 +17,7 @@ export class FtpHelper {
     }
 
     createRemoteDirectory(remoteDirectory: string): Q.Promise<void> {
-        var defer: Q.Deferred<void> = Q.defer<void>();
+        let defer: Q.Deferred<void> = Q.defer<void>();
 
         tl.debug('creating remote directory: ' + remoteDirectory);
 
@@ -33,7 +33,7 @@ export class FtpHelper {
     }
 
     uploadFile(file: string, remoteFile: string): Q.Promise<void> {
-        var defer: Q.Deferred<void> = Q.defer<void>();
+        let defer: Q.Deferred<void> = Q.defer<void>();
 
         tl.debug('uploading file: ' + file + ' remote: ' + remoteFile);
 
@@ -49,12 +49,12 @@ export class FtpHelper {
     }
 
     remoteExists(remoteFile: string): Q.Promise<boolean> {
-        var defer: Q.Deferred<boolean> = Q.defer<boolean>();
+        let defer: Q.Deferred<boolean> = Q.defer<boolean>();
 
         tl.debug('checking if remote exists: ' + remoteFile);
 
-        var remoteDirname = path.normalize(path.dirname(remoteFile));
-        var remoteBasename = path.basename(remoteFile);
+        let remoteDirname = path.normalize(path.dirname(remoteFile));
+        let remoteBasename = path.basename(remoteFile);
 
         this.ftpClient.list(remoteDirname, function (err, list) {
             if (err) {
@@ -62,7 +62,7 @@ export class FtpHelper {
                 //but just resolve false for all errors
                 defer.resolve(false);
             } else {
-                for (var remote of list) {
+                for (let remote of list) {
                     if (remote.name == remoteBasename) {
                         defer.resolve(true);
                         return;
@@ -76,7 +76,7 @@ export class FtpHelper {
     }
 
     rmdir(remotePath: string): Q.Promise<void> {
-        var defer: Q.Deferred<void> = Q.defer<void>();
+        let defer: Q.Deferred<void> = Q.defer<void>();
 
         tl.debug('removing remote directory: ' + remotePath);
 
@@ -92,7 +92,7 @@ export class FtpHelper {
     }
 
     remoteDelete(remotePath: string): Q.Promise<void> {
-        var defer: Q.Deferred<void> = Q.defer<void>();
+        let defer: Q.Deferred<void> = Q.defer<void>();
 
         tl.debug('removing remote content: ' + remotePath);
 
@@ -118,13 +118,13 @@ export class FtpHelper {
     async cleanRemoteContents(remotePath: string) {
         tl.debug('cleaning remote directory contents: ' + remotePath);
        
-        var that: any = this;
-        var defer: Q.Deferred<void> = Q.defer<void>();
+        let that: any = this;
+        let defer: Q.Deferred<void> = Q.defer<void>();
         this.ftpClient.list(path.normalize(remotePath), async function (err, list) {
             try {
                 if (!err) {
-                    for (var remote of list) {
-                        var item = path.join(remotePath, remote.name);
+                    for (let remote of list) {
+                        let item = path.join(remotePath, remote.name);
                         if (remote.type === 'd') { // directories
                             await that.rmdir(item);
                         } else {
@@ -141,28 +141,28 @@ export class FtpHelper {
     }
 
     uploadFiles(files: string[]): Q.Promise<void> {
-        var thisHelper = this;
+        let thisHelper = this;
         thisHelper.progressTracking = new ProgressTracking(thisHelper.ftpOptions, files.length + 1); // add one extra for the root directory
         tl.debug('uploading files');
 
-        var defer: Q.Deferred<void> = Q.defer<void>();
+        let defer: Q.Deferred<void> = Q.defer<void>();
 
-        var outerPromises: Q.Promise<void>[] = []; // these run first, and their then clauses add more promises to innerPromises
-        var innerPromises: Q.Promise<void>[] = [];
+        let outerPromises: Q.Promise<void>[] = []; // these run first, and their then clauses add more promises to innerPromises
+        let innerPromises: Q.Promise<void>[] = [];
         outerPromises.push(this.createRemoteDirectory(thisHelper.ftpOptions.remotePath).then(() => {
             thisHelper.progressTracking.directoryProcessed(thisHelper.ftpOptions.remotePath);
         })); // ensure root remote location exists
 
         files.forEach((file) => {
             tl.debug('file: ' + file);
-            var remoteFile: string = thisHelper.ftpOptions.preservePaths ?
+            let remoteFile: string = thisHelper.ftpOptions.preservePaths ?
                 path.join(thisHelper.ftpOptions.remotePath, file.substring(thisHelper.ftpOptions.rootFolder.length)) :
                 path.join(thisHelper.ftpOptions.remotePath, path.basename(file));
 
             remoteFile = remoteFile.replace(/\\/gi, "/"); // use forward slashes always
             tl.debug('remoteFile: ' + remoteFile);
 
-            var stats = tl.stats(file);
+            let stats = tl.stats(file);
             if (stats.isDirectory()) { // create directories if necessary
                 outerPromises.push(thisHelper.createRemoteDirectory(remoteFile).then(() => {
                     thisHelper.progressTracking.directoryProcessed(remoteFile);
@@ -229,8 +229,8 @@ export class ProgressTracking {
     }
 
     printProgress(message: string): void {
-        var total: number = this.progressFilesUploaded + this.progressFilesSkipped + this.progressDirectoriesProcessed;
-        var remaining: number = this.fileCount - total;
+        let total: number = this.progressFilesUploaded + this.progressFilesSkipped + this.progressDirectoriesProcessed;
+        let remaining: number = this.fileCount - total;
         console.log(
             'files uploaded: ' + this.progressFilesUploaded +
             ', files skipped: ' + this.progressFilesSkipped +
@@ -248,8 +248,8 @@ export class ProgressTracking {
     }
 
     getFailureStatusMessage() {
-        var total: number = this.progressFilesUploaded + this.progressFilesSkipped + this.progressDirectoriesProcessed;
-        var remaining: number = this.fileCount - total;
+        let total: number = this.progressFilesUploaded + this.progressFilesSkipped + this.progressDirectoriesProcessed;
+        let remaining: number = this.fileCount - total;
         return this.getSuccessStatusMessage() +
             '\nunprocessed files & directories: ' + remaining;
     }
@@ -260,52 +260,52 @@ export class ProgressTracking {
 export function findFiles(ftpOptions: FtpOptions): string[] {
     tl.debug('Searching for files to upload');
 
-    var rootFolderStats = tl.stats(ftpOptions.rootFolder);
+    let rootFolderStats = tl.stats(ftpOptions.rootFolder);
     if (rootFolderStats.isFile()) {
-        var file = ftpOptions.rootFolder;
+        let file = ftpOptions.rootFolder;
         tl.debug(file + ' is a file. Ignoring all file patterns');
         return [file];
     }
 
-    var allFiles = tl.find(ftpOptions.rootFolder);
+    let allFiles = tl.find(ftpOptions.rootFolder);
 
     // filePatterns is a multiline input containing glob patterns
     tl.debug('searching for files using: ' + ftpOptions.filePatterns.length + ' filePatterns: ' + ftpOptions.filePatterns);
 
     // minimatch options
-    var matchOptions = { matchBase: true, dot: true };
-    var win = tl.osType().match(/^Win/);
+    let matchOptions = { matchBase: true, dot: true };
+    let win = tl.osType().match(/^Win/);
     tl.debug('win: ' + win);
     if (win) {
         matchOptions["nocase"] = true;
     }
 
     tl.debug('Candidates found for match: ' + allFiles.length);
-    for (var i = 0; i < allFiles.length; i++) {
+    for (let i = 0; i < allFiles.length; i++) {
         tl.debug('file: ' + allFiles[i]);
     }
 
     // use a set to avoid duplicates
     let matchingFilesSet: Set<string> = new Set();
 
-    for (var i = 0; i < ftpOptions.filePatterns.length; i++) {
-        var normalizedPattern: string = path.join(ftpOptions.rootFolder, path.normalize(ftpOptions.filePatterns[i]));
+    for (let i = 0; i < ftpOptions.filePatterns.length; i++) {
+        let normalizedPattern: string = path.join(ftpOptions.rootFolder, path.normalize(ftpOptions.filePatterns[i]));
 
         tl.debug('searching for files, pattern: ' + normalizedPattern);
 
-        var matched = tl.match(allFiles, normalizedPattern, matchOptions);
+        let matched = tl.match(allFiles, normalizedPattern, matchOptions);
         tl.debug('Found total matches: ' + matched.length);
         // ensure each result is only added once
-        for (var j = 0; j < matched.length; j++) {
-            var match = path.normalize(matched[j]);
-            var stats = tl.stats(match);
+        for (let j = 0; j < matched.length; j++) {
+            let match = path.normalize(matched[j]);
+            let stats = tl.stats(match);
             if (!ftpOptions.preservePaths && stats.isDirectory()) {
                 // if not preserving paths, skip all directories
             } else if (matchingFilesSet.add(match)) {
                 tl.debug('adding ' + (stats.isFile() ? 'file:   ' : 'folder: ') + match);
                 if (stats.isFile() && ftpOptions.preservePaths) {
                     // if preservePaths, make sure the parent directory is also included
-                    var parent = path.normalize(path.dirname(match));
+                    let parent = path.normalize(path.dirname(match));
                     if (matchingFilesSet.add(parent)) {
                         tl.debug('adding folder: ' + parent);
                     }
