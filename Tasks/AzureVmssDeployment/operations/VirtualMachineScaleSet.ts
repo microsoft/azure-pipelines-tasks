@@ -23,7 +23,7 @@ export default class VirtualMachineScaleSet {
         var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         var result = await this._getResourceGroupForVmss(client);
         var resourceGroupName: string = result.resourceGroupName;
-        var osType: string = result.osType;
+        var osType: string = this.taskParameters.vmssOsType || result.osType;
         if (!resourceGroupName) {
             throw (tl.loc("FailedToGetRGForVMSS", this.taskParameters.vmssName));
         }
@@ -88,7 +88,7 @@ export default class VirtualMachineScaleSet {
     }
 
     private async _configureAppUsingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, osType: string): Promise<void> {
-        if (!!this.taskParameters.customScriptsDirectory) {
+        if (!!this.taskParameters.customScriptsDirectory && !!this.taskParameters.customScript) {
             tl.debug("Preparing custom scripts...");
             let customScriptInfo: CustomScriptsInfo = await this._prepareCustomScripts(osType);
             //return;
@@ -163,7 +163,10 @@ export default class VirtualMachineScaleSet {
             let escapedScript = quotedScript.replace(/'/g, "''").replace(/"/g, '"""');
 
             // escape powershell special characters
-            let escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
+            let escapedArgs = "";
+            if (this.taskParameters.customScriptArguments) {
+                escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
+            }
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
             invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'`;
@@ -177,8 +180,11 @@ export default class VirtualMachineScaleSet {
             // and escape quotes to handle this extra quote...
             let escapedScript = quotedScript.replace(/'/g, "'\"'\"'");
 
-            // ...and escape quotes to handle this extra quote
-            let escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
+            // escape shell special characters
+            let escapedArgs = "";
+            if (this.taskParameters.customScriptArguments) {
+                escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
+            }
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");
             invokerCommand = `./customScriptInvoker.sh '${archiveFile}' '${escapedScript}' '${escapedArgs}'`;
@@ -348,15 +354,16 @@ export default class VirtualMachineScaleSet {
     }
 
     private _getBlobsPrefixPath(): string {
+        let uniqueValue = Date.now().toString();
         let releaseId = tl.getVariable("release.releaseid");
         let environmentId = tl.getVariable("release.environmentid");
         let releaseAttempt = tl.getVariable("release.attemptnumber");
         let prefixFolderPath: string = null;
 
         if (!!releaseId && !!environmentId && !!releaseAttempt) {
-            prefixFolderPath = util.format("%s/%s/%s", releaseId, environmentId, releaseAttempt);
+            prefixFolderPath = util.format("%s-%s/%s/%s", releaseId, uniqueValue, environmentId, releaseAttempt);
         } else {
-            prefixFolderPath = tl.getVariable("build.buildid");
+            prefixFolderPath = util.format("%s-%s", tl.getVariable("build.buildid"), uniqueValue);
         }
 
         return prefixFolderPath;

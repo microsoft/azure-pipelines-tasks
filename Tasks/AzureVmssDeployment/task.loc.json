@@ -77,6 +77,21 @@
       }
     },
     {
+      "name": "vmssOsType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vmssOsType",
+      "required": false,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.vmssOsType",
+      "options": {
+        "Windows": "Windows",
+        "Linux": "Linux"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
       "name": "imageUrl",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageUrl",
