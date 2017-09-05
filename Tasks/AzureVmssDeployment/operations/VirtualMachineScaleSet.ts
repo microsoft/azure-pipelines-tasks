@@ -6,7 +6,7 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
 import armStorage = require('azure-arm-rest/azure-arm-storage');
 import azureModel = require('azure-arm-rest/azureModels');
-import * as BlobService from '../blobservice';
+import BlobService = require('azure-blobstorage-downloader/blobservice');
 import compress = require('utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import utils = require("./Utils")

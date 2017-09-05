@@ -1,0 +1,22 @@
+{
+  "name": "azure-blobstorage-downloader",
+  "version": "1.0.0",
+  "description": "Common Library to download blobs from azure storage",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "q": "1.4.1",
+    "item-level-downloader": "1.0.10",
+    "path": "0.12.7",
+    "stream": "0.0.2",
+    "azure-storage": "2.4.0"
+  }
+}

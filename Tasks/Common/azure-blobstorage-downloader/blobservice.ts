@@ -1,8 +1,8 @@
-import * as artifactProviders from 'item-level-downloader/Providers';
-import * as artifactProcessor from 'item-level-downloader/Engine';
-import * as path from 'path';
-import * as util from 'util'
-import * as tl from 'vsts-task-lib/task';
+import artifactProviders = require('item-level-downloader/Providers');
+import azureBlobProvider = require('./azureBlobStorageProvider');
+import artifactProcessor = require('item-level-downloader/Engine');
+import path = require('path');
+import util = require('util');
 
 export class BlobService {
     private _storageAccountName: string;
@@ -18,5 +18,12 @@ export class BlobService {
         var azureProvider = new artifactProviders.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath);
         var processor = new artifactProcessor.ArtifactEngine();
         await processor.processItems(fileProvider, azureProvider);
+    }
+
+    public async downloadBlobs(destination: string, container: string): Promise<void> {
+        var fileProvider = new artifactProviders.FilesystemProvider(destination);
+        var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey);
+        var processor = new artifactProcessor.ArtifactEngine();
+        await processor.processItems(azureProvider, fileProvider);
     }
 }

@@ -7,6 +7,12 @@
             "compile" : true
         },
         {
+            "module": "../Common/azure-blobstorage-downloader",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        },
+        {
             "module": "../Common/utility-common",
             "type": "node",
             "dest": "./",
