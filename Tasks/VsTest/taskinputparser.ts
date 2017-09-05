@@ -122,7 +122,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
     console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));    
 
-    testConfiguration.settingsFile = tl.getPathInput('runSettingsFile', false, true);
+    testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
     {
         testConfiguration.settingsFile = path.resolve(testConfiguration.settingsFile);
