@@ -204,12 +204,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             
-            var expectedOut = 'Deployed using KuduDeploy';
             assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded'); 
-            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-            expectedOut = 'Updated history to kudu'; 
+            var expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
@@ -533,4 +531,21 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
+    it('Runs successfully for Builtin Images', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0NonWindowsBuiltinImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        var expectedOut = 'Successfully updated web app config details'; 
+        assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.search(expectedOut) > 1, 'should have said: ' + expectedOut + 'twice.');
+        expectedOut = 'Deployed using KuduDeploy';
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        expectedOut = 'Updated history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        done();
+    });
 });
