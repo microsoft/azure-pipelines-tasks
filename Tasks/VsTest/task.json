@@ -134,8 +134,8 @@
             "type": "string",
             "label": "Search folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
-            "required": false,
-            "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+            "required": true,
+            "helpMarkDown": "Folder to search for the test assemblies.",
             "groupName": "testSelection"
         },
         {
@@ -488,6 +488,6 @@
         "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
         "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
         "RunTimePerBatch": "Run time per batch(sec) : %s",
-        "SearchLocationNotDirectory": "Search folder: '%s' is not a directory"
+        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
     }
 }

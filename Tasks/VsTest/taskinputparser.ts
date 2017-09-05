@@ -116,9 +116,13 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     {
         testConfiguration.testDropLocation = path.resolve(testConfiguration.testDropLocation);
     }
-    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
 
-    testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
+    if (testConfiguration.testDropLocation && !utils.Helper.pathExistsAsDirectory(testConfiguration.testDropLocation)) {
+        throw new Error(tl.loc('searchLocationNotDirectory', testConfiguration.testDropLocation));
+    }
+    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));    
+
+    testConfiguration.settingsFile = tl.getPathInput('runSettingsFile', false, true);
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
     {
         testConfiguration.settingsFile = path.resolve(testConfiguration.settingsFile);

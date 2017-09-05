@@ -134,7 +134,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.searchFolder",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
       "groupName": "testSelection"
     },
@@ -488,6 +488,6 @@
     "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
     "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
-    "SearchLocationNotDirectory": "ms-resource:loc.messages.SearchLocationNotDirectory"
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
   }
 }
