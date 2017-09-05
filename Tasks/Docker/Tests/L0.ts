@@ -41,7 +41,6 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.imageNameInputMode] = shared.ImageNameInputModes.MultipleImageNamesByFile;
         
         tr.run();
-        console.log(tr.stdout);
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');

@@ -349,8 +349,30 @@
             "helpMarkDown": "Select an Azure Container Registry",
             "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
             "defaultValue": "",
-            "required": true,
-            "groupname": "docker"
+            "required": false,
+            "helpMarkDown": "Username for the Docker registry",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "registryPassword",
+            "type": "string",
+            "label": "Registry Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "passwordEncrypted",
+            "type": "boolean",
+            "label": "Password Encrypted",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
         }
     ],
     "execution": {
