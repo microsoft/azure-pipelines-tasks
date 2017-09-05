@@ -38,7 +38,7 @@
   "loc.input.label.runSettingsFile": "Settings file",
   "loc.input.help.runSettingsFile": "Path to runsettings or testsettings file to use with the tests.",
   "loc.input.label.overrideTestrunParameters": "Override test run parameters",
-  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file or Properties section of testsettings file. For example: `-key1 value1 -key2 value2`",
+  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the `TestRunParameters` section of runsettings file or `Properties` section of testsettings file. For example: `-key1 value1 -key2 value2`",
   "loc.input.label.pathtoCustomTestAdapters": "Path to custom test adapters",
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
   "loc.input.label.runInParallel": "Run tests in parallel on multi-core machines",
