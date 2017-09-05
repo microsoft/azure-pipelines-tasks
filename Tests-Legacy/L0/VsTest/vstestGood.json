@@ -7,6 +7,12 @@
         "VS120COMNTools": "/vs/path",
         "vs15Helper": "/path/to/vs15Helper.ps1"
     },
+    "checkPath": {
+        "E:\\settings.runsettings": true,
+        "random.runsettings":true,
+        "E:\\source\\dir\\..\\settings.runsettings": true,
+        "E:\\source\\dir\\.\\settings.runsettings": true
+    },
     "match": {
         "**\\packages\\**\\*TestAdapter.dll": []
     },

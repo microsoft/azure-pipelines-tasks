@@ -44,6 +44,9 @@
         "E:\\settings.runsettings": true,
         "/source/dir":true
     },
+    "checkPath": {
+        "E:\\settings.runsettings": true
+    },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
             "isFile": true
