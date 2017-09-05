@@ -14,9 +14,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 3,
-    "Patch": 16
+    "Major": 4,
+    "Minor": 0,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -133,7 +133,8 @@
       "properties": {
         "EditableOptions": "false",
         "PopulateDefaultValue": "true"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppKindUserInput"
     },
     {
       "name": "DeployToSlotFlag",
