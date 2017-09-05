@@ -27,8 +27,7 @@ export default class CustomTemplateFileProvider extends TemplateFileProviderBase
         var initialTemplateFileLocation = packerHost.getTaskParameters().customTemplateLocation;
         tl.checkPath(initialTemplateFileLocation, tl.loc("CustomTemplateNotFoundErrorMessagePathName", initialTemplateFileLocation));
 
-        // move file to a temp folder - this is a cautionary approach so that previous packer execution which still has handle on template does not cause any problem
-        this.moveTemplateFile(initialTemplateFileLocation, packerHost.getStagingDirectory());
+        this._templateFileLocation = initialTemplateFileLocation;
         return this._templateFileLocation; 
     }
 }

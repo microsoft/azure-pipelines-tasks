@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 13
+        "Patch": 23
     },
     "runsOn": [
         "Agent"
@@ -122,7 +122,7 @@
             "label": "Enable data collection only",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+            "helpMarkDown": "Optionally specify if test agent needs to be used only for data collection and not for running tests. Typically done on application under test(AUT) machine group.",
             "groupName": "agentConfiguration"
         },
         {
@@ -162,5 +162,9 @@
         "PowerShell3": {
             "target": "DeployTestAgent.ps1"
         }
+    },
+    "messages": {
+        "InvalidAccessToken": "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator",
+        "NotSupportedWithParallel": "Visual Studio Test Agent Deployment is not supported in MultiMachine/MultiConfiguration parallel execution type. Please refer this blog for more details https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/"
     }
 }

@@ -44,6 +44,7 @@ try {
             # Delete the symbol store transaction.
             [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath' -Require
             [string]$TransactionId = Get-VstsInput -Name 'TransactionId' -Require
+
             Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
             Invoke-UnpublishSymbols -Share $SymbolsPath -TransactionId $TransactionId -MaximumWaitTime $SymbolsMaximumWaitTime -SemaphoreMessage $SemaphoreMessage
             return
@@ -68,12 +69,21 @@ try {
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
         [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\bin\**\*.pdb"
-        # $pdbFiles = @(Find-VstsFiles -LiteralDirectory $SymbolsFolder -LegacyPattern $SearchPattern)
-        $pdbFiles = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
-        Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $pdbFiles.Count)
+        if ($SearchPattern.Contains("`n")) {
+            [string[]]$SearchPattern = $SearchPattern -split "`n"
+        }
+        $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
+        $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
+
+        Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $fileList.Count)
         
-        if (-not $pdbFiles -and $SearchPattern.Contains(';')) {
-            throw "No files found. Use newlines instead of ';' to separate search patterns."
+        if (-not $fileList) {
+            if ($SearchPattern.Contains(';') ) {
+                throw "No files found. Use newlines instead of ';' to separate search patterns."
+            }
+            elseif ($matches) {
+                Write-Host "No files present in matchList, the match had $($matches.Count) directories"
+            }
         }
     }
 
@@ -82,7 +92,16 @@ try {
         Write-Host (Get-VstsLocString -Key SkippingIndexing)
     } else {
         Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
+        $pdbFiles = $fileList | Where-Object { $_.EndsWith(".pdb", [StringComparison]::OrdinalIgnoreCase) }
         Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+    }
+
+    [bool]$NeedsPublishSymbols = Get-VstsInput -Name 'PublishSymbols' -Require -AsBool
+    if (-not $NeedsPublishSymbols) {
+        if ($SkipIndexing) {
+            throw "Either IndexSources or PublishSymbols should be checked"
+        }
+        return
     }
 
     # Publish the symbols.
@@ -94,7 +113,7 @@ try {
 
             # Publish the symbols.
             Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
-            Invoke-PublishSymbols -PdbFiles $pdbFiles -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
+            Invoke-PublishSymbols -PdbFiles $fileList -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
         } else {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
@@ -121,16 +140,21 @@ try {
             throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
         }
 
-        [string]$tmpFileName = Join-Path $env:TEMP ("SymbolFileList-" + [random]::new().Next(100) + ".txt")
+        [string]$tmpFileName = [IO.Path]::GetTempFileName()
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
         
         [IO.File]::WriteAllLines($tmpFileName, [string[]]@("# FileList under $SymbolsFolder with pattern $SearchPattern", "")) # Also Truncates any existing files
-        foreach ($filename in $pdbFiles) {
+        foreach ($filename in $fileList) {
             [string]$fullFilePath = [IO.Path]::Combine($SourcePath, $filename)
             [IO.File]::AppendAllLines($tmpFileName, [string[]]@($fullFilePath))
         }
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 3653
+        [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
+        # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
+        [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
+        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+
+        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName

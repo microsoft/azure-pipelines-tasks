@@ -15,6 +15,9 @@ $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 # API-Version(s)
 $apiVersion = "2014-04-01"
 
+# Constants
+$azureStack = "AzureStack"
+
 # Override the DebugPreference.
 if ($global:DebugPreference -eq 'Continue') {
     Write-Verbose '$OVERRIDING $global:DebugPreference from ''Continue'' to ''SilentlyContinue''.'
@@ -34,6 +37,30 @@ function Get-AzureUri
         return $url.Substring(0,$url.Length-1)
     }
     return $url
+}
+
+function Get-AzureActiverDirectoryResourceId
+{
+    param([object] [Parameter(Mandatory=$true)] $endpoint)
+    $activeDirectoryResourceid = $null;
+   
+    if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack))
+    {
+        if(!$endpoint.Data.ActiveDirectoryServiceEndpointResourceId) {
+            $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
+        }
+        $activeDirectoryResourceid =  $endpoint.Data.ActiveDirectoryServiceEndpointResourceId
+    }
+    else
+    {
+        $activeDirectoryResourceid =  $endpoint.url
+        if($activeDirectoryResourceid -ne $null -and $activeDirectoryResourceid[-1] -ne '/') 
+        {
+            $activeDirectoryResourceid = $activeDirectoryResourceid + "/"
+        }
+    }
+
+    return $activeDirectoryResourceid
 }
 
 function Get-ProxyUri
@@ -137,6 +164,161 @@ function Get-UsernamePasswordAccessToken {
     }
 }
 
+function Get-EnvironmentAuthUrl {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint)
+
+    if($endpoint.Data.environmentAuthorityUrl)
+    {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
+    else
+    {
+        if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack))
+        {
+            $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
+            $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+        } 
+        else 
+        {
+            $envAuthUrl = $script:defaultEnvironmentAuthUri
+        }
+    }
+
+    return $envAuthUrl
+}
+
+<#
+    Adds Azure Stack environment to use with AzureRM command-lets when targeting Azure Stack
+#>
+function Add-AzureStackDependencyData {
+    param (
+        [Parameter(mandatory=$true, HelpMessage="The Admin ARM endpoint of the Azure Stack Environment")]
+        $endpoint
+    )
+
+    $EndpointURI = $endpoint.Url.TrimEnd("/")
+
+    $Domain = ""
+    try {
+        $uriendpoint = [System.Uri] $EndpointURI
+        $i = $EndpointURI.IndexOf('.')
+        $Domain = ($EndpointURI.Remove(0,$i+1)).TrimEnd('/')
+    }
+    catch 
+    {
+        Write-Error "The specified Azure Resource Manager endpoint is invalid"
+    }
+
+    $ResourceManagerEndpoint = $EndpointURI
+    $stackdomain = $Domain
+    $AzureKeyVaultDnsSuffix="vault.$($stackdomain)".ToLowerInvariant()
+    $AzureKeyVaultServiceEndpointResourceId= $("https://vault.$stackdomain".ToLowerInvariant())
+    $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
+    
+    $azureStackEndpointUri = $EndpointURI.ToString().TrimEnd('/')+"/metadata/endpoints?api-version=2015-01-01"
+    $proxyUri = Get-ProxyUri $azureStackEndpointUri
+
+    Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
+    if ($proxyUri -eq $null)
+    {
+        Write-Verbose "No proxy settings"
+        $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
+    }
+    else
+    {
+        Write-Verbose "Using Proxy settings"
+        $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop 
+    }
+    
+    if ($endpointData) {
+        $graphEndpoint = $endpointData.graphEndpoint
+        $galleryEndpoint = $endpointData.galleryEndpoint
+        $authenticationData = $endpointData.authentication;
+        if($authenticationData)
+        {
+             $loginEndpoint = $authenticationData.loginEndpoint
+             if($loginEndpoint)
+             {
+                  $activeDirectoryEndpoint = $loginEndpoint.TrimEnd('/') + "/"
+             }
+
+             $audiences = $authenticationData.audiences
+             if($audiences.Count -gt 0)
+             {
+                  $activeDirectoryServiceEndpointResourceId = $audiences[0]
+             }
+        }
+
+        if($Endpoint.Data -ne $null)
+        {
+            if(-not (Has-ObjectProperty $Endpoint.Data "galleryUrl"))
+            {
+                $Endpoint.Data | Add-Member "galleryUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "resourceManagerUrl"))
+            {
+                $Endpoint.Data | Add-Member "resourceManagerUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "activeDirectoryAuthority"))
+            {
+                $Endpoint.Data | Add-Member "activeDirectoryAuthority" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "environmentAuthorityUrl"))
+            {
+                $Endpoint.Data | Add-Member "environmentAuthorityUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "graphUrl"))
+            {
+                $Endpoint.Data | Add-Member "graphUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "activeDirectoryServiceEndpointResourceId"))
+            {
+                $Endpoint.Data | Add-Member "activeDirectoryServiceEndpointResourceId" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "AzureKeyVaultDnsSuffix"))
+            {
+                $Endpoint.Data | Add-Member "AzureKeyVaultDnsSuffix" $null
+            }
+
+            $Endpoint.Data.galleryUrl = $galleryEndpoint
+            $Endpoint.Data.resourceManagerUrl = $ResourceManagerEndpoint
+            $Endpoint.Data.activeDirectoryAuthority = $activeDirectoryEndpoint
+            $Endpoint.Data.environmentAuthorityUrl = $activeDirectoryEndpoint
+            $Endpoint.Data.graphUrl = $graphEndpoint
+            $Endpoint.Data.activeDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
+            $Endpoint.Data.AzureKeyVaultDnsSuffix = $AzureKeyVaultDnsSuffix
+        }
+    } 
+    else 
+    {
+        throw "Unable to fetch Azure Stack Dependency Data."
+    }
+    return $Endpoint
+}
+
+function Has-ObjectProperty {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $object,
+    [Parameter(Mandatory=$true)] $propertyName) 
+
+    if(Get-Member -inputobject $object -name $propertyName -Membertype Properties)
+    {
+        return $true
+    }
+    else
+    {
+        return $false
+    }
+}
+
+
 # Get the Bearer Access Token from the Endpoint
 function Get-SpnAccessToken {
     [CmdletBinding()]
@@ -151,13 +333,14 @@ function Get-SpnAccessToken {
         $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
     }
 
-    $azureUri = Get-AzureUri $endpoint
+    $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
+    $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
 
     # Prepare contents for POST
     $method = "POST"
     $authUri = "$envAuthUrl" + "$tenantId/oauth2/token"
     $body = @{
-        resource=$azureUri+"/"
+        resource=$azureActiveDirectoryResourceId
         client_id=$principalId
         grant_type='client_credentials'
         client_secret=$principalKey
@@ -296,8 +479,17 @@ function Get-AzRmVmCustomScriptExtension
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
+        if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack))
+        {
+             $vmExtensionApiVersion = '2015-06-15'
+        }
+        else
+        {
+             $vmExtensionApiVersion = '2016-03-30'
+        }
+
         $method="GET"
-        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=' + $vmExtensionApiVersion
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))

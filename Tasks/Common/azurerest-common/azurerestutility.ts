@@ -157,7 +157,7 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
     var envAuthUrl = (endPoint.envAuthUrl) ? (endPoint.envAuthUrl) : defaultAuthUrl;
     var authorityUrl = envAuthUrl + endPoint.tenantID + "/oauth2/token/";
     var requestData = querystring.stringify({
-        resource: endPoint.url,
+        resource: endPoint.activeDirectoryResourceId,
         client_id: endPoint.servicePrincipalClientID,
         grant_type: "client_credentials",
         client_secret: endPoint.servicePrincipalKey
@@ -175,7 +175,7 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
             deferred.resolve(JSON.parse(body).access_token);
         }
         else {
-            deferred.reject(tl.loc('CouldnotfetchacccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc('CouldnotfetchaccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
         }
     });
 

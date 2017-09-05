@@ -1,76 +1,71 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 
-// node js modules
-import task = require('./jenkinsqueuejobtask');
-import TaskOptions = task.TaskOptions;
-
-import job = require('./job');
-import Job = job.Job;
-import JobState = job.JobState;
-
-import jobsearch = require('./jobsearch');
-import JobSearch = jobsearch.JobSearch;
+import { Job, JobState } from './job';
+import { JobSearch } from './jobsearch';
+import { TaskOptions } from './jenkinsqueuejobtask';
 
 import util = require('./util');
 
 export class JobQueue {
-    taskOptions: TaskOptions;
+    public TaskOptions: TaskOptions;
 
-    rootJob: Job;
-    allJobs: Job[] = [];
-    searches: JobSearch[] = [];
+    public RootJob: Job;
+    private allJobs: Job[] = [];
+    private searches: JobSearch[] = [];
 
     constructor(taskOptions: TaskOptions) {
-        this.taskOptions = taskOptions;
+        this.TaskOptions = taskOptions;
     }
 
-    intervalId: NodeJS.Timer;
-    intervalMillis: number = 100;
+    private intervalId: NodeJS.Timer;
+    private intervalMillis: number = 100;
 
-    start(): void {
+    public Start(): void {
         tl.debug('jobQueue.start()');
         this.intervalId = setInterval(() => {
             try {
-                var nextSearches = this.findNextJobSearches();
-                for (var i in nextSearches) {
-                    nextSearches[i].doWork();
+                const nextSearches: JobSearch[] = this.findNextJobSearches();
+                for (const i in nextSearches) {
+                    nextSearches[i].DoWork();
                 }
 
-                var running = this.findRunningJobs();
-                for (var i in running) {
-                    running[i].doWork();
+                const running: Job[] = this.findRunningJobs();
+                for (const i in running) {
+                    running[i].DoWork();
                 }
                 if (this.hasFailedJobs()) {
                     this.stop(false);
-                } else if (this.getActiveJobs().length == 0) {
+                } else if (this.getActiveJobs().length === 0) {
                     this.stop(true);
                 } else {
-                    this.flushJobConsolesSafely();
+                    this.FlushJobConsolesSafely();
                 }
-            } catch (e) {
-                tl.debug(e.message);
-                tl.setResult(tl.TaskResult.Failed, e.message);
+            } catch (err) {
+                tl.debug(err.message);
+                tl.setResult(tl.TaskResult.Failed, err.message);
                 this.stop(false);
             }
         }, this.intervalMillis);
     }
 
-    stop(complete: boolean): void {
+    private stop(complete: boolean): void {
         tl.debug('jobQueue.stop()');
         clearInterval(this.intervalId);
-        this.flushJobConsolesSafely();
+        this.FlushJobConsolesSafely();
         this.writeFinalMarkdown(complete);
     }
 
-    hasFailedJobs(): boolean {
-        for (var i in this.allJobs) {
-            var job = this.allJobs[i];
-            if (job.state == JobState.Done) {
-                if (job.getTaskResult() == tl.TaskResult.Failed) {
+    private hasFailedJobs(): boolean {
+        for (const i in this.allJobs) {
+            const job: Job = this.allJobs[i];
+            if (job.State === JobState.Done) {
+                if (job.GetTaskResult() === tl.TaskResult.Failed) {
                     return true;
                 }
             }
@@ -78,39 +73,39 @@ export class JobQueue {
         return false;
     }
 
-    findRunningJobs(): Job[] {
-        var running = [];
-        for (var i in this.allJobs) {
-            var job = this.allJobs[i];
-            if (job.state == JobState.Streaming || job.state == JobState.Downloading || job.state == JobState.Finishing) {
+    private findRunningJobs(): Job[] {
+        const running: Job[] = [];
+        for (const i in this.allJobs) {
+            const job: Job = this.allJobs[i];
+            if (job.State === JobState.Streaming || job.State === JobState.Downloading || job.State === JobState.Finishing) {
                 running.push(job);
             }
         }
         return running;
     }
 
-    findNextJobSearches(): JobSearch[] {
-        var nextSearches: JobSearch[] = [];
-        for (var i in this.allJobs) {
-            var job = this.allJobs[i];
+    private findNextJobSearches(): JobSearch[] {
+        const nextSearches: JobSearch[] = [];
+        for (const i in this.allJobs) {
+            const job = this.allJobs[i];
             // the parent must be finished (or null for root) in order for a job to possibly be started
-            if (job.state == JobState.Locating && (job.parent == null || job.parent.state == JobState.Done)) {
+            if (job.State === JobState.Locating && (job.Parent === null || job.Parent.State === JobState.Done)) {
                 // group these together so only search is done per job.identifier
-                if (!nextSearches[job.identifier]) {
-                    nextSearches[job.identifier] = this.searches[job.identifier];
+                if (!nextSearches[job.Identifier]) {
+                    nextSearches[job.Identifier] = this.searches[job.Identifier];
                 }
-                nextSearches[job.identifier].searchFor(job);
+                nextSearches[job.Identifier].searchFor(job);
             }
         }
         return nextSearches;
     }
 
-    getActiveJobs(): Job[] {
-        var active: Job[] = [];
+    private getActiveJobs(): Job[] {
+        const active: Job[] = [];
 
-        for (var i in this.allJobs) {
-            var job = this.allJobs[i];
-            if (job.isActive()) {
+        for (const i in this.allJobs) {
+            const job = this.allJobs[i];
+            if (job.IsActive()) {
                 active.push(job);
             }
         }
@@ -118,39 +113,39 @@ export class JobQueue {
         return active;
     }
 
-    addJob(job: Job) {
-        if (this.allJobs.length == 0) {
-            this.rootJob = job;
+    public AddJob(job: Job) {
+        if (this.allJobs.length === 0) {
+            this.RootJob = job;
         }
         this.allJobs.push(job);
-        if (this.searches[job.identifier] == null) {
-            this.searches[job.identifier] = new JobSearch(this, job.taskUrl, job.identifier);
+        if (this.searches[job.Identifier] == null) {
+            this.searches[job.Identifier] = new JobSearch(this, job.TaskUrl, job.Identifier);
         }
-        job.search = this.searches[job.identifier];
+        job.Search = this.searches[job.Identifier];
     }
 
-    flushJobConsolesSafely(): void {
-        if (this.findActiveConsoleJob() == null) { //nothing is currently writing to the console
-            var streamingJobs: Job[] = [];
-            var addedToConsole: boolean = false;
-            for (var i in this.allJobs) {
-                var job = this.allJobs[i];
-                if (job.state == JobState.Done) {
-                    if (!job.isConsoleEnabled()) {
-                        job.enableConsole(); // flush the finished ones
+    public FlushJobConsolesSafely(): void {
+        if (this.FindActiveConsoleJob() == null) { //nothing is currently writing to the console
+            const streamingJobs: Job[] = [];
+            let addedToConsole: boolean = false;
+            for (const i in this.allJobs) {
+                const job: Job = this.allJobs[i];
+                if (job.State === JobState.Done) {
+                    if (!job.IsConsoleEnabled()) {
+                        job.EnableConsole(); // flush the finished ones
                         addedToConsole = true;
                     }
-                } else if (job.state == JobState.Streaming || job.state == JobState.Finishing) {
+                } else if (job.State === JobState.Streaming || job.State === JobState.Finishing) {
                     streamingJobs.push(job); // these are the ones that could be running
                 }
             }
             // finally, if there is only one remaining, it is safe to enable its console
-            if (streamingJobs.length == 1) {
-                streamingJobs[0].enableConsole();
+            if (streamingJobs.length === 1) {
+                streamingJobs[0].EnableConsole();
             } else if (addedToConsole) {
-                for (var i in streamingJobs) {
-                    var job = streamingJobs[i];
-                    console.log('Jenkins job pending: ' + job.executableUrl);
+                for (const i in streamingJobs) {
+                    const job: Job = streamingJobs[i];
+                    console.log('Jenkins job pending: ' + job.ExecutableUrl);
                 }
             }
         }
@@ -159,75 +154,74 @@ export class JobQueue {
     /**
      * If there is a job currently writing to the console, find it.
      */
-    findActiveConsoleJob(): Job {
-        var activeJobs: Job[] = this.getActiveJobs();
-        for (var i in activeJobs) {
-            var job = activeJobs[i];
-            if (job.isConsoleEnabled()) {
+    public FindActiveConsoleJob(): Job {
+        const activeJobs: Job[] = this.getActiveJobs();
+        for (const i in activeJobs) {
+            const job: Job = activeJobs[i];
+            if (job.IsConsoleEnabled()) {
                 return job;
             }
         }
         return null;
     }
 
-    findJob(identifier: string, executableNumber: number): Job {
-        for (var i in this.allJobs) {
-            var job = this.allJobs[i];
-            if (job.identifier == identifier && job.executableNumber == executableNumber) {
+    public FindJob(identifier: string, executableNumber: number): Job {
+        for (const i in this.allJobs) {
+            const job: Job = this.allJobs[i];
+            if (job.Identifier === identifier && job.ExecutableNumber === executableNumber) {
                 return job;
             }
         }
         return null;
     }
 
-    writeFinalMarkdown(complete: boolean) {
-        let colorize = (s) => {
+    private writeFinalMarkdown(complete: boolean): void {
+        const colorize: Function = (s) => {
             // 'Success' is green, everything else is red
-            let color = 'red';
+            let color: string = 'red';
             if (s === tl.loc('succeeded')) {
                 color = 'green';
             }
 
-            return `<font color='${color}'>${s}</font>`
-        }
+            return `<font color='${color}'>${s}</font>`;
+        };
 
         function walkHierarchy(job: Job, indent: string, padding: number): string {
-            var jobContents = indent + '<ul style="padding-left:' + padding + '">\n';
+            let jobContents: string = indent + '<ul style="padding-left:' + padding + '">\n';
 
             // if this job was joined to another follow that one instead
             job = findWorkingJob(job);
 
-            if (job.executableNumber == -1) {
-                jobContents += indent + job.name + ' ' + colorize(job.getResultString()) + '<br />\n';
+            if (job.ExecutableNumber === -1) {
+                jobContents += indent + job.Name + ' ' + colorize(job.GetResultString()) + '<br />\n';
             } else {
-                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString()) + '<br />\n';
+                jobContents += indent + '[' + job.Name + ' #' + job.ExecutableNumber + '](' + job.ExecutableUrl + ') ' + colorize(job.GetResultString()) + '<br />\n';
             }
 
-            var childContents = "";
-            for (var i in job.children) {
-                var child = job.children[i];
+            let childContents: string = '';
+            for (const i in job.Children) {
+                const child: Job = job.Children[i];
                 childContents += walkHierarchy(child, indent + tab, padding + paddingTab);
             }
             return jobContents + childContents + indent + '</ul>\n';
         }
 
-        function findWorkingJob(job: Job) {
-            if (job.state != JobState.Joined) {
+        function findWorkingJob(job: Job): Job {
+            if (job.State !== JobState.Joined) {
                 return job;
             } else {
-                return findWorkingJob(job.joined);
+                return findWorkingJob(job.Joined);
             }
         }
 
         function createPipelineReport(job: Job, taskOptions: TaskOptions, report): string {
-            let authority = util.getUrlAuthority(job.executableUrl);
+            const authority: string = util.getUrlAuthority(job.ExecutableUrl);
 
-            let getStageUrl = (authority, stage) => {
-                let result = '';
+            const getStageUrl: Function = (authority, stage) => {
+                let result: string = '';
                 if (stage && stage['_links']
                           && stage['_links']['self']
-                          && stage['_links']['self']['href'])
-                {
+                          && stage['_links']['self']['href']) {
                     result = stage['_links']['self']['href'];
                     //remove the api link
                     result = result.replace('/wfapi/describe', '');
@@ -236,33 +230,31 @@ export class JobQueue {
                 return `${authority}${result}`;
             };
 
-
-            let convertStatus = (s) => {
-                let status = s.toLowerCase();
+            const convertStatus: Function = (s) => {
+                let status: string = s.toLowerCase();
                 if (status === 'success') {
                     status = tl.loc('succeeded');
                 }
-
                 return status;
-            }
+            };
 
             // Top level pipeline job status
-            let jobContent = '<ul style="padding-left: 0">';
-            let jobName = taskOptions.jobName;
+            let jobContent: string = '<ul style="padding-left: 0">';
+            let jobName: string = taskOptions.jobName;
             if (taskOptions.isMultibranchPipelineJob) {
                 jobName = `${jobName}/${taskOptions.multibranchPipelineBranch}`;
             }
-            jobContent += '[' + jobName + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + colorize(job.getResultString());
-            if (job.getResultString() !== tl.loc('succeeded')) {
-                jobContent += ` ([${tl.loc('console')}](${job.executableUrl}/console))`
+            jobContent += '[' + jobName + ' #' + job.ExecutableNumber + '](' + job.ExecutableUrl + ') ' + colorize(job.GetResultString());
+            if (job.GetResultString() !== tl.loc('succeeded')) {
+                jobContent += ` ([${tl.loc('console')}](${job.ExecutableUrl}/console))`;
             }
             jobContent += '<br />';
 
             // For each stage, write its status
-            let stageContents = '';
+            let stageContents: string = '';
             for (let stage of report['stages']) {
-                let stageUrl = getStageUrl(authority, stage);
-                stageContents += '[' + stage["name"] + '](' + stageUrl + ') ' + colorize(convertStatus(stage.status))+'<br />';
+                const stageUrl: string = getStageUrl(authority, stage);
+                stageContents += '[' + stage['name'] + '](' + stageUrl + ') ' + colorize(convertStatus(stage.status)) + '<br />';
             }
 
             if (stageContents) {
@@ -276,37 +268,37 @@ export class JobQueue {
             return jobContent;
         }
 
-        function generatePipelineReport(job: Job, taskOptions: TaskOptions, callback: (pipelineReport: string) => void) {
+        function generatePipelineReport(job: Job, taskOptions: TaskOptions, callback: (pipelineReport: string) => void): void {
             util.getPipelineReport(job, taskOptions)
                 .then((body) => {
                     if (body) {
-                        let parsedBody = JSON.parse(body);
+                        const parsedBody: any = JSON.parse(body);
                         callback(createPipelineReport(job, taskOptions, parsedBody));
                     } else {
                         callback(tl.loc('FailedToGenerateSummary'));
                     }
-                })
+                });
         }
 
-        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent: string) => void) {
+        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent: string) => void): void {
             util.isPipelineJob(job, taskOptions)
                 .then((isPipeline) => {
                     if (isPipeline) {
                         generatePipelineReport(job, taskOptions, callback);
                     } else {
-                        callback(walkHierarchy(job, "", 0));
+                        callback(walkHierarchy(job, '', 0));
                     }
-                })
+                });
         }
 
         tl.debug('writing summary markdown');
-        var thisQueue = this;
-        var tempDir = shell.tempdir();
-        var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + this.rootJob.name + '_' + this.rootJob.executableNumber + '.md');
+        const thisQueue: JobQueue = this;
+        const tempDir: string = shell.tempdir();
+        const linkMarkdownFile: string = path.join(tempDir, 'JenkinsJob_' + this.RootJob.Name + '_' + this.RootJob.ExecutableNumber + '.md');
         tl.debug('markdown location: ' + linkMarkdownFile);
-        var tab: string = "  ";
-        var paddingTab: number = 4;
-        generateMarkdownContent(this.rootJob, thisQueue.taskOptions, (markdownContents) => {
+        const tab: string = '  ';
+        const paddingTab: number = 4;
+        generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, (markdownContents) => {
             fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
                 tl.debug('writeFinalMarkdown().writeFile().callback()');
 
@@ -317,20 +309,20 @@ export class JobQueue {
                     console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
                 }
 
-                var message: string = null;
+                let message: string = null;
                 if (complete) {
-                    if (thisQueue.taskOptions.capturePipeline) {
+                    if (thisQueue.TaskOptions.capturePipeline) {
                         message = tl.loc('JenkinsPipelineComplete');
-                    } else if (thisQueue.taskOptions.captureConsole) {
+                    } else if (thisQueue.TaskOptions.captureConsole) {
                         message = tl.loc('JenkinsJobComplete');
                     } else {
                         message = tl.loc('JenkinsJobQueued');
                     }
                     tl.setResult(tl.TaskResult.Succeeded, message);
                 } else {
-                    if (thisQueue.taskOptions.capturePipeline) {
+                    if (thisQueue.TaskOptions.capturePipeline) {
                         message = tl.loc('JenkinsPipelineFailed');
-                    } else if (thisQueue.taskOptions.captureConsole) {
+                    } else if (thisQueue.TaskOptions.captureConsole) {
                         message = tl.loc('JenkinsJobFailed');
                     } else {
                         message = tl.loc('JenkinsJobFailedtoQueue');

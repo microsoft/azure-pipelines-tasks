@@ -79,4 +79,22 @@ describe('InstallAppleCertificate Suite', function () {
 
         done();
     });
+
+    it('Defaults: with user input CN do not parse for it', (done: MochaDone) => {
+        // there is no way to verify the variable value as it is a 'side effect'
+        // this test just verifies that with user set CN, the task still works
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0UserSupplyCN.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain'),
+            'certificate should have been installed in the default keychain');
+        assert(!tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /usr/lib/login.keychain'), 'login keychain should not be created')
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
 });

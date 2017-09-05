@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [],
     "preview": "true",
@@ -192,7 +192,7 @@
             "type": "string",
             "label": "Entrypoint Override",
             "visibleRule": "action = Run a specific service",
-            "helpMarkDown": "Override the default entrypoint for the specific service container."
+            "helpMarkDown": "Override the default entry point for the specific service container."
         },
         {
             "name": "containerCommand",
@@ -306,8 +306,8 @@
         }
     },
     "messages": {
-        "ContainerPatternFound": "Pattern found in dockerfilepath parameter",
-        "ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
+        "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
+        "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
         "ContainerDockerFileNotFound":"No Docker file matching  %s  was found."
     }
 }

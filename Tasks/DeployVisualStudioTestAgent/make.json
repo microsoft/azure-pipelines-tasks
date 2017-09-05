@@ -7,15 +7,15 @@
             }
         ],
         "files": [
-            {          
-                "url": "https://testexecution.blob.core.windows.net/testexecution/3840309/TestExecution.zip",
+            {
+                "url": "https://testexecution.blob.core.windows.net/testexecution/4098817/TestExecution.zip",
                 "dest": "./TestExecution.zip"
             }
         ],
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.7.1",
+                "version": "0.8.2",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
@@ -33,4 +33,4 @@
             }
         ]
     }
-} 
+}

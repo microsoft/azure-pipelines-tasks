@@ -6,7 +6,7 @@ import path = require('path');
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
@@ -35,23 +35,23 @@ export class TestSelectorInvoker {
             definitionRunId = tl.getVariable('Build.BuildId');
             definitionId = tl.getVariable('System.DefinitionId');
         }
-        
+
         if (tiaConfig.isPrFlow && tiaConfig.isPrFlow.toUpperCase() === 'TRUE') {
             prFlow = 'true';
         } else {
             prFlow = 'false';
         }
-        
+
         if (tiaConfig.tiaRebaseLimit) {
             rebaseLimit = tiaConfig.tiaRebaseLimit;
         }
-        
+
         if (typeof tiaConfig.tiaFilterPaths !== 'undefined') {
             pathFilters = tiaConfig.tiaFilterPaths.trim();
         } else {
             pathFilters = '';
         }
-        
+
         if (typeof tiaConfig.sourcesDir !== 'undefined') {
             sourcesDirectory = tiaConfig.sourcesDir.trim();
         } else {
@@ -73,16 +73,16 @@ export class TestSelectorInvoker {
                 'baselinefile': tiaConfig.baseLineBuildIdFile,
                 'context': tiaConfig.context,
                 'filter': pathFilters,
-                'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : "",
-                'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : ""
+                'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
+                'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
+				'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+				'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier
             },
             silent: null,
-            failOnStdErr: null,
-            ignoreReturnCode: null,
             outStream: null,
             errStream: null,
             windowsVerbatimArguments: null
-        })
+        });
 
         endTime = perf();
         elapsedTime = endTime - startTime;

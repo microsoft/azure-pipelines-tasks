@@ -6,8 +6,11 @@ export default class AzureVmssTaskParameters {
     public action: string;
     public vmssName: string;
     public imageUrl: string;
-    public customScriptUrl: string;
-    public customScriptCommand: string;
+    public customScriptsDirectory: string;
+    public customScript: string;
+    public customScriptArguments: string;
+    public customScriptsStorageAccount: string;
+    public skipArchivingCustomScripts: boolean;
     public subscriptionId: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
 
@@ -18,8 +21,11 @@ export default class AzureVmssTaskParameters {
             this.vmssName = tl.getInput("vmssName", true);
             this.imageUrl = tl.getInput("imageUrl", true);
             this.action = tl.getInput("action");
-            this.customScriptUrl = tl.getInput("customScriptUrl");
-            this.customScriptCommand = tl.getInput("customScriptCommand");
+            this.customScriptsDirectory = tl.getInput("customScriptsDirectory");
+            this.customScript = tl.getInput("customScript");
+            this.customScriptArguments = tl.getInput("customScriptArguments");
+            this.customScriptsStorageAccount = tl.getInput("customScriptsStorageAccount");
+            this.skipArchivingCustomScripts = tl.getBoolInput("skipArchivingCustomScripts");
             this.credentials = this.getARMCredentials(connectedService);
         }
         catch (error) {
@@ -34,7 +40,9 @@ export default class AzureVmssTaskParameters {
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl);
+        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', false);
+        activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : armUrl;
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, false);
         return credentials;
     }
 }

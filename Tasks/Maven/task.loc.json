@@ -14,14 +14,14 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 122,
+    "Patch": 2
+  },
   "demands": [
     "maven"
   ],
-  "version": {
-    "Major": 1,
-    "Minor": 121,
-    "Patch": 0
-  },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -246,6 +246,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
     },
     {
+      "name": "mavenFeedAuthenticate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenFeedAuthenticate",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenFeedAuthenticate"
+    },
+    {
       "name": "sqAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
@@ -414,6 +423,8 @@
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
     "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
-    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid"
+    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
+    "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
+    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
   }
 }

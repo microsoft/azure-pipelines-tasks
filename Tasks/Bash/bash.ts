@@ -5,6 +5,32 @@ import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
+async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
+    let bashPwd = tl.tool(bashPath)
+        .arg('--noprofile')
+        .arg('--norc')
+        .arg('-c')
+        .arg('pwd');
+    let bashPwdOptions = <tr.IExecOptions>{
+        cwd: directoryPath,
+        failOnStdErr: true,
+        errStream: process.stdout,
+        outStream: process.stdout,
+        ignoreReturnCode: false
+    };
+    let pwdOutput = '';
+    bashPwd.on('stdout', (data) => {
+        pwdOutput += data.toString();
+    });
+    await bashPwd.exec(bashPwdOptions);
+    pwdOutput = pwdOutput.trim();
+    if (!pwdOutput) {
+        throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
+    }
+
+    return `${pwdOutput}`;
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -30,9 +56,19 @@ async function run() {
 
         // Generate the script contents.
         console.log(tl.loc('GeneratingScript'));
+        let bashPath: string = tl.which('bash', true);
         let contents: string;
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            contents = `. '${input_filePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+            // Translate the target file path from Windows to the Linux file system.
+            let targetFilePath: string;
+            if (process.platform == 'win32') {
+                targetFilePath = await translateDirectoryPath(bashPath, path.dirname(input_filePath)) + '/' + path.basename(input_filePath);
+            }
+            else {
+                targetFilePath = input_filePath;
+            }
+
+            contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
         else {
@@ -50,31 +86,9 @@ async function run() {
             contents,
             { encoding: 'utf8' });
 
-        let bashPath: string = tl.which('bash', true);
+        // Translate the script file path from Windows to the Linux file system.
         if (process.platform == 'win32') {
-            // Translate the script path from Windows to the Linux file system.
-            let bashPwd = tl.tool(bashPath)
-                .arg('--noprofile')
-                .arg('--norc')
-                .arg('-c')
-                .arg('pwd');
-            let bashPwdOptions = <tr.IExecOptions>{
-                cwd: tempDirectory,
-                failOnStdErr: true,
-                errStream: process.stdout,
-                outStream: process.stdout,
-                ignoreReturnCode: false
-            };
-            let pwdOutput = '';
-            bashPwd.on('stdout', (data) => {
-                pwdOutput += data.toString().trim();
-            });
-            await bashPwd.exec(bashPwdOptions);
-            if (!pwdOutput) {
-                throw new Error(tl.loc('JS_TranslatePathFailed', tempDirectory));
-            }
-
-            filePath = `${pwdOutput}/${fileName}`;
+            filePath = await translateDirectoryPath(bashPath, tempDirectory) + '/' + fileName;
         }
 
         // Create the tool runner.

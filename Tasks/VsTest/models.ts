@@ -34,6 +34,8 @@ export interface TestConfigurations {
     runInParallel: boolean;
     runTestsInIsolation: boolean;
     otherConsoleOptions: string;
+    taskInstanceIdentifier: string;
+    runUITests: boolean;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -42,6 +44,9 @@ export interface DtaTestConfigurations extends TestConfigurations {
     dtaEnvironment: DtaEnvironment;
     numberOfAgentsInPhase: number;
     useVsTestConsole: string;
+    numberOfTestCasesPerSlice: number;
+    batchingType: BatchingType;
+    runningTimePerBatchInMs: number;
 }
 
 export interface DtaEnvironment {
@@ -72,4 +77,9 @@ export interface TiaConfiguration {
     useTestCaseFilterInResponseFile: string;
     userMapFile: string;
     disableEnablingDataCollector: boolean;
+}
+
+export enum BatchingType {
+    TestCaseBased,
+    TestExecutionTimeBased
 }

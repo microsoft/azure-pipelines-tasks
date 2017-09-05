@@ -5,13 +5,14 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
+  "preview": true,
   "visibility": [
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 119,
+    "Minor": 123,
     "Patch": 0
   },
   "groups": [

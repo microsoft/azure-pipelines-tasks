@@ -8,7 +8,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 
 const xml2js = require('./node_modules/xml2js');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
@@ -244,7 +244,7 @@ function isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName: s
     return found;
 }
 
-function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {    
+function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {
     if (!result.TestSettings) {
         tl.debug('Updating testsettings file from TestSettings node');
         result.TestSettings = { Execution: { AgentRule: { DataCollectors:  dataCollectorNodeToAdd  } } };

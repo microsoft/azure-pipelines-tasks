@@ -163,3 +163,36 @@ export enum ComputeResourceType {
     VirtualMachine,
     VirtualMachineScaleSet
 }
+
+export interface StorageAccountSku {
+    name: string;
+    tier?: string;
+}
+
+export interface StorageAccountEndpoints {
+    blob?: string;
+    table?: string;
+    file?: string;
+    queue?: string;
+}
+
+export interface StorageAccountProperties {
+    creationTime?: string;
+    primaryLocation?: string;
+    primaryEndpoints?: StorageAccountEndpoints;
+    provisioningState?: string;
+    secondaryLocation?: string;
+    secondaryndpoints?: StorageAccountEndpoints;
+    statusOfPrimary?: string;
+    statusOfSecondary?: string;
+    supportsHttpsTrafficOnly?: boolean;
+}
+
+export interface StorageAccount extends AzureBaseObject {
+    type: string;
+    location?: string;
+    sku?: StorageAccountSku;
+    kind?: string;
+    tags?: Map<string, string>;
+    properties?: StorageAccountProperties;
+}

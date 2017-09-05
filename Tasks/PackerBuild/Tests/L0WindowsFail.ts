@@ -30,6 +30,9 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
+process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
+process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 
@@ -65,7 +68,7 @@ let a: any = <any>{
     "exist": {
         "F:\\somedir\\tempdir\\100\\": true,
         "F:\\somedir\\tempdir\\100": true,
-        "packer": process.env["__packer_exists__"] === "false" ? false : true      
+        "packer": process.env["__packer_exists__"] === "false" ? false : true
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': process.env["__cleanup_fails__"] === "true" ? false : true }
@@ -98,8 +101,8 @@ tr.registerMock('./utilities', {
             if(root === DefaultWorkingDirectory) {
                 return ["C:\\dir1\\somedir\\dir2"];
             } else {
-                return ["C:\\dir1\\somedir\\dir2\\dir3\\somedir\\deploy.ps1"];            
-            }      
+                return ["C:\\dir1\\somedir\\dir2\\dir3\\somedir\\deploy.ps1"];
+            }
         }
     },
     getCurrentTime: function() {
@@ -111,7 +114,7 @@ tr.registerMock('./utilities', {
     getCurrentDirectory: function() {
         return "basedir\\currdir";
     }
-}); 
+});
 
 tr.setAnswers(a);
 tr.run();

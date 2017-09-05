@@ -1,6 +1,7 @@
-import * as path from 'path';
 import * as assert from 'assert';
+import * as path from 'path';
 import * as ttm from 'vsts-task-lib/mock-test';
+
 import os = require('os');
 import fs = require('fs');
 
@@ -19,6 +20,29 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues.length > 0, "error reason should have been recorded");
+        done();
+    });
+
+    it('restore fails when zero match found', (done: MochaDone) => {
+        process.env["__projects__"] = "*fail*/project.json";
+        process.env["__command__"] = "restore";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
+        assert(tr.failed, 'task should have failed');
+        done();
+    });
+
+    it('restore passes when zero match found with empty string', (done: MochaDone) => {
+        process.env["__projects__"] = "";
+        process.env["__command__"] = "restore";
+        let tp = path.join(__dirname, './RestoreTests/emptyProjectField.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 
@@ -103,6 +127,21 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('restore with packages directory', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/packagesDirectory.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --packages path\\to\\packages --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('restore with vsts feed', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -152,9 +191,64 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('build fails when zero match found', (done: MochaDone) => {
+        process.env["__projects__"] = "*fail*/project.json";
+        process.env["__command__"] = "build";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
+        assert(tr.failed, 'task should have failed');
+        done();
+    });
+
+    it('build passes when zero match found with empty string', (done: MochaDone) => {
+        process.env["__projects__"] = "";
+        process.env["__command__"] = "build";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('test throws warning when zero match found', (done: MochaDone) => {
+        process.env["__projects__"] = "*fail*/project.json";
+        process.env["__command__"] = "test";
+        let tp = path.join(__dirname, 'validInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        done();
+    });
+
+    it('publish works with explicit project files setting modifyoutput to false', (done: MochaDone) => {
+
+        process.env["__projects__"] = '*customoutput/project.json';
+        process.env["__arguments__"] = "--configuration release --output /usr/out";
+        process.env["modifyOutput"] = "false";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool');
+        assert(tr.stdOutContained("published web3 without adding project name to path"), "shouldn't have appended the project name");
+        assert(tr.stdOutContained("published lib2 without adding project name to path"), "shouldn't have appended the project name");
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
     it('publish works with explicit project files', (done: MochaDone) => {
 
         process.env["__projects__"] = '**/project.json';
+        process.env["modifyOutput"] = "true";
+        process.env["__arguments__"] = " ";
         let tp = path.join(__dirname, 'publishInputs.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -162,90 +256,91 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.invokedToolCount == 4, 'should have invoked tool');
         assert(tr.succeeded, 'task should have succeeded');
         done();
-    }),
+    });
 
-        it('publish works with no project file is specified', (done: MochaDone) => {
+    it('publish works with no project file is specified', (done: MochaDone) => {
 
-            process.env["__projects__"] = "";
-            let tp = path.join(__dirname, 'publishInputs.js')
-            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
+        process.env["__projects__"] = "";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
 
-            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        }),
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have suceeded');
 
-        it('publish fails with when the dotnet publish fails', (done: MochaDone) => {
+        done();
+    });
 
-            process.env["__projects__"] = "dummy/project.json";
-            let tp = path.join(__dirname, 'publishInputs.js')
-            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
+    it('publish fails with when the dotnet publish fails', (done: MochaDone) => {
 
-            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
-            assert(tr.failed, 'task should have failed');
-            done();
-        }),
+        process.env["__projects__"] = "dummy/project.json";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
 
-        it('publish is successful with warning when the project file pattern return zero match', (done: MochaDone) => {
-            process.env["__projects__"] = "*fail*/project.json"
-            process.env["__publishWebProjects__"] = "false";
-            let tp = path.join(__dirname, 'publishInputs.js')
-            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
+        assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        assert(tr.failed, 'task should have failed');
+        done();
+    });
 
-            assert(tr.invokedToolCount == 0, 'should not have invoked tool');
-            assert(tr.succeeded, 'task should have failed');
-            assert(tr.warningIssues && tr.warningIssues.length, "No warning was reported for this issue.")
-            done();
-        }),
+    it('publish fails with error when the project file pattern return zero match', (done: MochaDone) => {
+        process.env["__projects__"] = "*fail*/project.json"
+        process.env["__publishWebProjects__"] = "false";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues && tr.errorIssues.length, "No error was reported for this issue.");
+        done();
+    });
 
 
-        it('publish works with publishWebProjects option', (done: MochaDone) => {
+    it('publish works with publishWebProjects option', (done: MochaDone) => {
 
-            process.env["__projects__"] = "";
-            process.env["__publishWebProjects__"] = "true";
-            let tp = path.join(__dirname, 'publishInputs.js')
-            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
+        process.env["__projects__"] = "";
+        process.env["__publishWebProjects__"] = "true";
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
 
-            assert(tr.invokedToolCount == 1, 'should have invoked been invoked once');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        }),
+        assert(tr.invokedToolCount == 1, 'should have invoked been invoked once');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
 
-        it('publish updates the output with the project name appended', (done: MochaDone) => {
-            process.env["__projects__"] = "*customoutput/project.json";
-            process.env["__publishWebProjects__"] = "false";
-            process.env["__arguments__"] = "--configuration release --output /usr/out"
-            let tp = path.join(__dirname, 'publishInputs.js')
-            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
+    it('publish updates the output with the project name appended', (done: MochaDone) => {
+        process.env["__projects__"] = "*customoutput/project.json";
+        process.env["__publishWebProjects__"] = "false";
+        process.env["__arguments__"] = "--configuration release --output /usr/out"
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
 
-            assert(tr.invokedToolCount == 2, 'should have invoked tool two times');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        }),
+        assert(tr.invokedToolCount == 2, 'should have invoked tool two times');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
 
-        it('publish works with zipAfterPublish option', (done: MochaDone) => {
-            // TODO
-            done();
-        }),
+    it('publish works with zipAfterPublish option', (done: MochaDone) => {
+        // TODO
+        done();
+    });
 
-        it('publish works with zipAfterPublish and publishWebProjects option with no project file specified', (done: MochaDone) => {
-            process.env["__projects__"] = "";
-            process.env["__publishWebProjects__"] = "false";
-            process.env["__arguments__"] = "--configuration release --output /usr/out"
-            let tp = path.join(__dirname, 'publishInputs.js')
-            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
+    it('publish fails with zipAfterPublish and publishWebProjects option with no project file specified', (done: MochaDone) => {
+        process.env["__projects__"] = "";
+        process.env["__publishWebProjects__"] = "false";
+        process.env["__arguments__"] = "--configuration release --output /usr/out"
+        let tp = path.join(__dirname, 'publishInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
 
-            // TODO: Add Zip
-            assert(tr.invokedToolCount == 1, 'should have invoked tool two times');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        });
+        // TODO: Add Zip
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
 
     it('packs with prerelease', (done: MochaDone) => {
         this.timeout(1000);
@@ -253,7 +348,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './PackTests/packPrerelease.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
@@ -268,7 +363,7 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './PackTests/packEnvVar.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
@@ -283,12 +378,25 @@ describe('DotNetCoreExe Suite', function () {
         let tp = path.join(__dirname, './PackTests/packBuildNumber.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run()
+        tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\single.csproj --output C:\\out\\dir /p:PackageVersion=1.2.3'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('pack fails no files are found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PackTests/noProjectsFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 0, 'should not have run dotnet');
+        assert(tr.failed, 'should have fai;ed');
+        assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
         done();
     });
 
@@ -323,4 +431,16 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('push fails when projects are not found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PushTests/noProjectsFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 0, 'should not have run dotnet');
+        assert(tr.failed, 'should have failed');
+        assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
+        done();
+    });
 });

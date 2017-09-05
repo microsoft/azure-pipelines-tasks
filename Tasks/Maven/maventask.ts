@@ -30,6 +30,7 @@ var mavenOptions: string = tl.getInput('options', false); // Options can have sp
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
+var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 var codeCoverageFailed: boolean = false;
@@ -147,45 +148,58 @@ async function execBuild() {
         })
         .then(function (code) {
             // Setup tool runner to execute Maven goals
-            var mvnRun = tl.tool(mvnExec);
-            mvnRun.arg('-f');
-            mvnRun.arg(mavenPOMFile);
-            mvnRun.arg('help:effective-pom');
-            if(mavenOptions) {
-                mvnRun.line(mavenOptions);   
-            }
-            return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
-            .then(function (repositories) {
-                if (!repositories || !repositories.length) {
-                    tl.debug('no repositories found in pom');
-                    return Q.resolve(true);
+            if (authenticateFeed) {
+                var mvnRun = tl.tool(mvnExec);
+                mvnRun.arg('-f');
+                mvnRun.arg(mavenPOMFile);
+                mvnRun.arg('help:effective-pom');
+                if(mavenOptions) {
+                    mvnRun.line(mavenOptions);
                 }
-                tl.debug('Repositories: ' + JSON.stringify(repositories));
-                settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
-
-                tl.debug('checking to see if there are settings.xml in use');
-                let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g) : undefined;
-                if (options) {
-                    mavenOptions = '';
-                    for (let i = 0; i < options.length; ++i) {
-                        if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
-                            i++; // increment to the file name
-                            let suppliedSettingsXml: string = options[i];
-                            tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
-                            tl.debug('using settings file: ' + settingsXmlFile);
-                        } else {
-                            if (mavenOptions) {
-                                mavenOptions = mavenOptions.concat(' ');
-                            }
-                            mavenOptions = mavenOptions.concat(options[i]);
+                return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
+                .then(function (repositories) {
+                    if (!repositories || !repositories.length) {
+                        tl.debug('No built-in repositories were found in pom.xml');
+                        util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
+                        return Q.resolve(true);
+                    }
+                    tl.debug('Repositories: ' + JSON.stringify(repositories));
+                    let mavenFeedInfo:string = '';
+                    for (let i = 0; i < repositories.length; ++i) {
+                        if (repositories[i].id) {
+                            mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
                         }
                     }
-                }
-                return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
-            })
-            .fail(function (err) {
-                return Q.reject(err);
-            });
+                    util.publishMavenInfo(mavenFeedInfo);
+
+                    settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+                    tl.debug('checking to see if there are settings.xml in use');
+                    let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
+                    if (options) {
+                        mavenOptions = '';
+                        for (let i = 0; i < options.length; ++i) {
+                            if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                                i++; // increment to the file name
+                                let suppliedSettingsXml: string = options[i];
+                                tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                                tl.debug('using settings file: ' + settingsXmlFile);
+                            } else {
+                                if (mavenOptions) {
+                                    mavenOptions = mavenOptions.concat(' ');
+                                }
+                                mavenOptions = mavenOptions.concat(options[i]);
+                            }
+                        }
+                    }
+                    return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+                })
+                .fail(function (err) {
+                    return Q.reject(err);
+                });
+            } else {
+                tl.debug('Built-in Maven feed authentication is disabled');
+                return Q.resolve(true);
+            }
         })
         .fail(function (err) {
             tl.error(err.message);

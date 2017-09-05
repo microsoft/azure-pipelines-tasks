@@ -1,3 +1,4 @@
+import path = require('path');
 import tl = require("vsts-task-lib/task");
 class Utils {
     public static isNonEmpty(str: string): boolean {
@@ -18,6 +19,15 @@ class Utils {
         }
 
         return "";
+    }
+
+    public static normalizeRelativePath(inputPath: string) {
+        if(tl.osType().match(/^Win/)) {
+            var splitPath = inputPath.split(path.sep);
+            return path.posix.join.apply(null, splitPath);
+        }
+
+        return inputPath;
     }
 }
 

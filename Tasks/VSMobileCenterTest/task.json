@@ -3,15 +3,16 @@
     "name": "VSMobileCenterTest",
     "friendlyName": "Mobile Center Test",
     "description": "Test mobile app packages with Visual Studio Mobile Center.",
-    "helpMarkDown": "Test mobile app packages with Visual Studio Mobile Center.",
+    "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
     "category": "Test",
+    "preview": true,
     "visibility": [
         "Build"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 119,
+        "Minor": 123,
         "Patch": 0
     },
     "groups": [
@@ -193,7 +194,7 @@
             "label":"Test Tools Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
-            "helpMarkDown":"Path to directory with Xamarin UI Tets tools that contains test-cloud.exe.",
+            "helpMarkDown":"Path to directory with Xamarin UI test tools that contains test-cloud.exe.",
             "required": false,
             "groupName": "prepare"
         },

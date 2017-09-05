@@ -31,6 +31,7 @@ process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
 process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
 process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";
+process.env['SYSTEM_DEBUG'] = false;
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

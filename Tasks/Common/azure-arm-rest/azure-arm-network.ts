@@ -15,7 +15,7 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials, subscriptionId);
 
-        this.apiVersion = '2016-09-01';
+        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2015-06-15' : '2016-09-01' ;
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
 
@@ -264,7 +264,7 @@ export class publicIPAddresses {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -322,7 +322,7 @@ export class networkSecurityGroups {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -377,7 +377,7 @@ export class NetworkInterfaces {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }

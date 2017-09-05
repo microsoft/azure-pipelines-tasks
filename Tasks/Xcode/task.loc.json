@@ -10,8 +10,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
-    "Minor": 121,
+    "Major": 3,
+    "Minor": 123,
     "Patch": 0
   },
   "demands": [
@@ -32,11 +32,6 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
-    },
-    {
-      "name": "xctool",
-      "displayName": "ms-resource:loc.group.displayName.xctool",
       "isExpanded": false
     }
   ],
@@ -88,27 +83,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.packageApp"
     },
     {
-      "name": "packageTool",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.packageTool",
-      "defaultValue": "xcodebuild",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageTool",
-      "options": {
-        "xcrun": "xcrun (deprecated by Apple)",
-        "xcodebuild": "xcodebuild archive and export"
-      },
-      "groupName": "package"
-    },
-    {
       "name": "archivePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.archivePath",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.archivePath",
-      "groupName": "package",
-      "visibleRule": "packageTool == xcodebuild"
+      "groupName": "package"
     },
     {
       "name": "exportPath",
@@ -117,8 +98,7 @@
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportPath",
-      "groupName": "package",
-      "visibleRule": "packageTool == xcodebuild"
+      "groupName": "package"
     },
     {
       "name": "exportOptions",
@@ -132,8 +112,7 @@
         "plist": "Plist",
         "specify": "Specify"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
-      "visibleRule": "packageTool == xcodebuild"
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions"
     },
     {
       "name": "exportMethod",
@@ -322,22 +301,6 @@
       "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
-    },
-    {
-      "name": "useXctool",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useXctool",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.useXctool",
-      "groupName": "xctool"
-    },
-    {
-      "name": "xctoolReporter",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.xctoolReporter",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xctoolReporter",
-      "groupName": "xctool"
     }
   ],
   "execution": {
@@ -359,9 +322,7 @@
     "ProvProfileUUIDNotFound": "ms-resource:loc.messages.ProvProfileUUIDNotFound",
     "MultipleWorkspacesFound": "ms-resource:loc.messages.MultipleWorkspacesFound",
     "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
-    "UseXcToolForTestPublishing": "ms-resource:loc.messages.UseXcToolForTestPublishing",
     "UseXcprettyForTestPublishing": "ms-resource:loc.messages.UseXcprettyForTestPublishing",
-    "XcodebuildRequiredForXcpretty": "ms-resource:loc.messages.XcodebuildRequiredForXcpretty",
     "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
     "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
     "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",

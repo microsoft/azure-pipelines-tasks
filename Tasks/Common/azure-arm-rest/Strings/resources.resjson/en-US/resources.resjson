@@ -33,5 +33,7 @@
   "loc.messages.VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
   "loc.messages.NewVMSSImageUrl": "Url for new VMSS image: %s.",
   "loc.messages.VMSSUpdateImage": "Updating VMSS %s to use new image...",
-  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null."
+  "loc.messages.ResourceNameCannotBeNull": "Resource name cannot be null.",
+  "loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
+  "loc.messages.StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string."
 }

@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'dotnetcore.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('command', "restore");
+tmr.setInput('command', process.env["__command__"]);
 tmr.setInput('projects', process.env["__projects__"]);
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -41,7 +41,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stdout": "not restored",
             "stderr": ""
-        }
+        },
+        "dotnet build": {
+            "code": 0,
+            "stdout": "built",
+            "stderr": ""
+        },
     },
     "findMatch": {
         "**/project.json": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
@@ -50,7 +55,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "*fail*/project.json": [],
         "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
         "dummy/project.json" : ["dummy/project.json"],
-        "" : [""]
+        "" : []
     }
 };
 tmr.setAnswers(a);

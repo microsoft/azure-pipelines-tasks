@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 7
   },
   "runsOn": [
     "Agent",
@@ -162,7 +162,6 @@
       "required": "false",
       "groupName": "restoreAdvanced",
       "options": {
-        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
@@ -224,7 +223,6 @@
       "required": "false",
       "groupName": "pushAdvanced",
       "options": {
-        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
@@ -361,7 +359,6 @@
       "required": "false",
       "groupName": "packAdvanced",
       "options": {
-        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"

@@ -1,0 +1,307 @@
+phases:
+
+# TODO: Leverage step re-use to eliminate redundancy
+
+################################################################################
+- phase: buildAll_windows
+################################################################################
+  displayName: Build all tasks (Windows)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
+  queue:
+    parallel: $[ variables.build_windows_parallel ]
+  steps:
+
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Slice the tasks (sets TASK_PATTERN)
+  - script: node .\ci\set-task-slice.js
+    displayName: Set task slice
+
+  # Build
+  - script: node make.js build --task "$(task_pattern)"
+    displayName: Build
+
+  # Stage slice
+  - script: node .\ci\stage-slice.js
+    displayName: Stage slice
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+
+  # Publish slice artifact
+  - task: PublishBuildArtifacts@1
+    displayName: Publish slice artifact
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+    inputs:
+      pathToPublish: _package/tasks.zip
+      artifactName: slice-$(system.jobPositionInPhase)
+      artifactType: container
+
+  # Test
+  - script: node make.js test
+    displayName: Test
+
+  - script: node make.js testLegacy --task "$(task_pattern)"
+    displayName: Legacy tests
+
+  # Use node 5
+  - powershell: .\ci\use-node-5.ps1 # switch to NodeTool task when bug fix is deployed
+    displayName: Use node 5.10.1
+
+  # Test
+  - script: node make.js test --runner ts
+    displayName: Test
+
+  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
+    displayName: Legacy tests
+
+################################################################################
+- phase: publish_windows
+################################################################################
+  displayName: Publish
+  dependsOn: buildAll_windows # TODO: also depend on buildAll_darwin buildAll_linux
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+  steps:
+
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
+  # Use NuGet 4
+  - task: NuGetToolInstaller@0
+    displayName: Use NuGet 4
+    inputs:
+      versionSpec: 4.0.0
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Set variables
+  - powershell: .\ci\set-publish-variables.ps1
+    displayName: Set publish variables
+
+  # Download slices
+  - powershell: .\ci\download-slices.ps1
+    displayName: Download slices
+
+  # Stage milestone
+  - script: node .\ci\stage-milestone.js
+    displayName: Stage milestone
+
+  # Publish milestone package
+  - task: NuGetCommand@2
+    displayName: Publish milestone package
+    condition: and(succeeded(), variables.publish_milestone)
+    inputs:
+      command: push
+      searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
+      nuGetFeedType: internal
+      feedPublish: $(task_milestone_feed_name)
+
+  # Create packages.config for restoring previous milestones
+  - script: node .\ci\create-restore-config.js
+    displayName: Create packages.config for restoring previous milestones
+
+  # Restore previous milestones
+  - task: NuGetCommand@2
+    displayName: Restore previous milestones
+    inputs:
+      command: restore
+      solution: _package\packages.config
+      selectOrConfig: select
+      feedRestore: $(task_milestone_feed_name)
+      includeNuGetOrg: false
+      packagesDirectory: $(system.defaultWorkingDirectory)\_package\restore
+
+  # Stage aggregate
+  - script: node .\ci\stage-aggregate.js
+    displayName: Stage aggregate
+
+  # Publish aggregate artifact
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: _package/publish-layout
+      artifactName: TaskPackage
+      artifactType: container
+
+  # Update build number
+  - script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"
+    displayName: Update build number
+
+################################################################################
+- phase: buildSingle
+################################################################################
+  displayName: Build single task
+  condition: and(succeeded(), variables.task)
+  steps:
+
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Build
+  - script: node make.js build --task "$(task)"
+    displayName: Build
+
+  # Stage hotfix
+  - script: node ./ci/stage-hotfix.js
+    condition: and(succeeded(), eq(variables['agent.os'], 'Windows_NT'))
+    displayName: Stage hotfix
+
+  # Publish hotfix artifact
+  - task: PublishBuildArtifacts@1
+    displayName: Publish hotfix artifact
+    condition: and(succeeded(), eq(variables['agent.os'], 'Windows_NT'))
+    inputs:
+      pathToPublish: _package/hotfix-layout
+      artifactName: hotfix
+      artifactType: container
+
+  # Test
+  - script: node make.js test
+    displayName: Test
+  - script: node make.js testLegacy --task "$(task)"
+    displayName: Legacy tests
+
+  # Use node 5
+  - powershell: .\ci\use-node-5.ps1 # switch to NodeTool task when bug fix is deployed
+    displayName: Use node 5.10.1
+    condition: and(succeeded(), eq(variables['agent.os'], 'Windows_NT'))
+  - task: NodeTool@0
+    displayName: Use node 5.10.1
+    condition: and(succeeded(), ne(variables['agent.os'], 'Windows_NT'))
+    inputs:
+      versionSpec: "5.10.1"
+
+  # Test
+  - script: node make.js test --runner ts
+    displayName: Test
+  - script: node make.js testLegacy --runner ts --task "$(task)"
+    displayName: Legacy tests
+
+################################################################################
+- phase: buildAll_linux
+################################################################################
+  displayName: Build all tasks (Linux)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
+  queue:
+    demands: agent.os -equals Linux
+    parallel: $[ variables.build_linux_parallel ]
+  steps:
+
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Slice the tasks (sets TASK_PATTERN)
+  - script: node ./ci/set-task-slice.js
+    displayName: Set task slice
+
+  # Build
+  - script: node make.js build --task "$(task_pattern)"
+    displayName: Build
+
+  # Test
+  - script: node make.js test --runner ts
+    displayName: Test
+  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
+    displayName: Legacy tests
+
+  # Use node 5
+  - task: NodeTool@0
+    displayName: Use node 5.10.1
+    inputs:
+      versionSpec: "5.10.1"
+
+  # Test
+  - script: node make.js test
+    displayName: Test
+  - script: node make.js testLegacy --task "$(task_pattern)"
+    displayName: Legacy tests
+
+################################################################################
+- phase: buildAll_darwin
+################################################################################
+  displayName: Build all tasks (macOS)
+  condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
+  queue:
+    demands: agent.os -equals Darwin
+    parallel: $[ variables.build_darwin_parallel ]
+  steps:
+
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Slice the tasks (sets TASK_PATTERN)
+  - script: node ./ci/set-task-slice.js
+    displayName: Set task slice
+
+  # Build
+  - script: node make.js build --task "$(task_pattern)"
+    displayName: Build
+
+  # Test
+  - script: node make.js test --runner ts
+    displayName: Test
+  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
+    displayName: Legacy tests
+
+  # Use node 5
+  - task: NodeTool@0
+    displayName: Use node 5.10.1
+    inputs:
+      versionSpec: "5.10.1"
+
+  # Test
+  - script: node make.js test
+    displayName: Test
+  - script: node make.js testLegacy --task "$(task_pattern)"
+    displayName: Legacy tests

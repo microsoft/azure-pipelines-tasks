@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -61,9 +61,10 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.SymbolServerType",
       "required": true,
-      "defaultValue": "TeamServices",
+      "defaultValue": " ",
       "helpMarkDown": "ms-resource:loc.input.help.SymbolServerType",
       "options": {
+        " ": "Select one",
         "TeamServices": "Team Services",
         "FileShare": "File share"
       },

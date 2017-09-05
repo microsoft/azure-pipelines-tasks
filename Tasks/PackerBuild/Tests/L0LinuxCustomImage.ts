@@ -30,6 +30,9 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
+process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
+process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 
@@ -113,7 +116,7 @@ tr.registerMock('./utilities', {
         if(root === DefaultWorkingDirectory) {
             return ["/tmp/dir1/somedir/dir2"];
         } else {
-            return ["/tmp/dir1/somedir/dir2/dir3/somedir/deploy.sh"];            
+            return ["/tmp/dir1/somedir/dir2/dir3/somedir/deploy.sh"];
         }
     },
     getCurrentTime: function() {

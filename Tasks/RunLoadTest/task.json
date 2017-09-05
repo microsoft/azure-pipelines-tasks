@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 23
     },
     "demands": [
         "msbuild",
@@ -50,7 +50,7 @@
             "label": "Test settings file",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The testsettings file name to be used from the load test folder specifed above or a full path. <ul><li><b>Build Example:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)\\load.testsettings </li><li><b>Release Example:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release\\load.testsettings <br />where SourceCI is the source alias and drop is artifact name</li></ul>"
+            "helpMarkDown": "The testsettings file name to be used from the load test folder specified above or a full path. <ul><li><b>Build Example:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)\\load.testsettings </li><li><b>Release Example:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release\\load.testsettings <br />where SourceCI is the source alias and drop is artifact name</li></ul>"
         },
         {
             "name": "ThresholdLimit",
