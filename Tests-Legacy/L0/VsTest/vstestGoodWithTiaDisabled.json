@@ -41,7 +41,8 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
         "settings.runsettings": true,
         "settings.testsettings": true,
-        "E:\\settings.runsettings": true
+        "E:\\settings.runsettings": true,
+        "/source/dir":true
     },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
@@ -55,6 +56,9 @@
         },
         "E:\\settings.runsettings": {
             "isFile": true
+        },
+        "/source/dir": {
+            "isDirectory":true
         }
     }
 }

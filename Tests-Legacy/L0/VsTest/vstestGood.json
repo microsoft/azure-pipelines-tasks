@@ -130,7 +130,10 @@
         "\\path\\to\\vstest\\directory": true,
         "E:\\source\\settings.runsettings": true,
         "E:\\source\\dir\\settings.runsettings":true,
-        "E:\\path\\customadapters":true
+        "E:\\path\\customadapters":true,
+        "/source/dir":true,
+        "E:\\source":true,
+        "E:\\source\\dir":true
     },
     "stats": {
         "settings.runsettings": {
@@ -162,6 +165,15 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
-        }       
+        },
+        "/source/dir": {
+            "isDirectory":true
+        },
+        "E:\\source": {
+            "isDirectory":true
+        },
+        "E:\\source\\dir": {
+            "isDirectory":true
+        }     
     }
 }

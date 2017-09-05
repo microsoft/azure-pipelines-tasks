@@ -50,7 +50,7 @@ export function startTest() {
         testAssemblyFiles = getTestAssemblies();
 
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
-            deleteVstestDiagFile();
+            uploadVstestDiagFile();
             console.log('##vso[task.logissue type=warning;code=002004;]');
             tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
             return;
@@ -62,21 +62,21 @@ export function startTest() {
                     if (!isTiaAllowed()) {
                         publishTestResults(resultsDirectory);
                     }
-                    deleteVstestDiagFile();
+                    uploadVstestDiagFile();
                     tl.setResult(code, tl.loc('VstestReturnCode', code));                    
                 } catch (error) {
-                    deleteVstestDiagFile();
+                    uploadVstestDiagFile();
                     console.log('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error;
                 }
             })
             .fail(function (err) {
-                deleteVstestDiagFile();
+                uploadVstestDiagFile();
                 console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
                 throw err;
             });
     } catch (error) {
-        deleteVstestDiagFile();
+        uploadVstestDiagFile();
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
@@ -488,11 +488,9 @@ function cleanFiles(responseFile: string, listFile: string, testCaseFilterFile: 
     tl.rmRF(testCaseFilterOutput);
 }
 
-function deleteVstestDiagFile(): void {
+function uploadVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && pathExistsAsFile(vstestConfig.vstestDiagFile)) {
-        console.log('##vso[task.uploadfile]'+ vstestConfig.vstestDiagFile);   
-        tl.debug('Deleting vstest diag file ' + vstestConfig.vstestDiagFile);
-        tl.rmRF(vstestConfig.vstestDiagFile);
+        console.log('##vso[task.uploadfile]'+ vstestConfig.vstestDiagFile);
     }
 }
 
