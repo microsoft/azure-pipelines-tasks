@@ -491,7 +491,8 @@ function cleanFiles(responseFile: string, listFile: string, testCaseFilterFile: 
 
 function uploadVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && utils.Helper.pathExistsAsFile(vstestConfig.vstestDiagFile)) {
-        //tl.debug("Diag file exists. Size: " + )
+        let stats = fs.statSync(vstestConfig.vstestDiagFile);        
+        tl.debug('Diag file exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]'+ vstestConfig.vstestDiagFile);
     }
 }
