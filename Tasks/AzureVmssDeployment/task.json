@@ -80,7 +80,7 @@
             "name": "vmssOsType",
             "type": "pickList",
             "label": "OS type",
-            "required": false,
+            "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Select OS type for Virtual machine scale set",
             "options": {

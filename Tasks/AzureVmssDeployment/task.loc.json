@@ -80,7 +80,7 @@
       "name": "vmssOsType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vmssOsType",
-      "required": false,
+      "required": true,
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.vmssOsType",
       "options": {
