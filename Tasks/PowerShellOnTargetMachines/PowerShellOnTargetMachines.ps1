@@ -83,7 +83,7 @@ try
         throw
     }
 
-    if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
+    if($runPowershellInParallel -eq $false -or  ( $resources.Count -eq 1 ) )
     {
         foreach($resource in $resources)
         {

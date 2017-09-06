@@ -7,6 +7,15 @@ param()
 
 $remotePowershellRunnerPath = "$PSScriptRoot\..\PowerShellOnTargetMachines.ps1"
 
+Unregister-Mock Get-VstsInput
+Register-Mock Get-VstsInput { return $validEnvironmentNameWithDuplicateResourceName } -ParametersEvaluator{ $Name -eq  "EnvironmentName" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "MachineNames" }
+Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
+Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "RunPowershellInParallel" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+
+Register-Mock Get-ParsedSessionVariables { }
+
 Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $validEnvironmentNameWithDuplicateResourceName } -ParametersEvaluator {$EnvironmentName -eq $validEnvironmentNameWithDuplicateResourceName}
 Register-Mock Get-EnvironmentResources { return $validResourcesWithDuplicateResourceName } -ParametersEvaluator {$Environment.Name -eq $validEnvironmentNameWithDuplicateResourceName}
 Register-Mock Get-EnvironmentProperty{ return $environmentWinRMHttpPortForDuplicateResource } -ParametersEvaluator{$Key -eq $resourceWinRMHttpPortKeyName -and $ResourceId -eq $validMachineId1Duplicate}
@@ -21,14 +30,16 @@ Register-Mock Get-Job { return $testJobs }
 #Start-Sleep Mocks
 Register-Mock Start-Sleep { }
 
-#Receive-Job Mocks
-Register-Mock Receive-Job { return $JobPassResponse}
+Register-Mock Receive-Job {return @{"Status"="Passed"}}
+Register-Mock Invoke-Command {return @{"Status"="Passed"}}
 
 #Remove-Job Mocks
 Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
 
-& "$remotePowershellRunnerPath" -environmentName $validEnvironmentNameWithDuplicateResourceName -machineNames "" -scriptPath $validScriptPath -runPowershellInParallel $true
+Register-Mock Invoke-PsOnRemote {}
 
-Assert-WasCalled Start-Job -Times 2
+& "$remotePowershellRunnerPath"
+
+#Assert-WasCalled Start-Job -Times 2
 Assert-WasCalled Get-EnvironmentProperty -Times 1 -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId1Duplicate}
 Assert-WasCalled Get-EnvironmentProperty -Times 1 -ParametersEvaluator {$Key -eq $resourceWinRMHttpPortKeyName -and $ResourceId -eq $validMachineId1Duplicate}

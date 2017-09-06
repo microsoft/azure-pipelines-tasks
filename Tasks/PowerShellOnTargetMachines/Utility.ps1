@@ -22,7 +22,7 @@ function Get-ResourceWinRmConfig
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
         {
             Write-Telemetry "Input_Validation" "WinRM HTTPS port not provided"
-            throw(Get-VstsLocString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTPS", $resourceName)
+            throw(Get-VstsLocString -Key "PS_TM_0PortWasNotProvidedForResource1" -ArgumentList "WinRM HTTPS", $resourceName)
         }
     }
     elseif($protocol -eq "HTTP")
@@ -36,7 +36,7 @@ function Get-ResourceWinRmConfig
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
         {
             Write-Telemetry "Input_Validation" "WinRM HTTP port not provided"
-            throw(Get-VstsLocString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTP", $resourceName)
+            throw(Get-VstsLocString -Key "PS_TM_0PortWasNotProvidedForResource1" -ArgumentList "WinRM HTTP", $resourceName)
         }
     }
 
@@ -59,7 +59,7 @@ function Get-ResourceWinRmConfig
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
                    Write-Telemetry "Input_Validation" "WinRM port not available"
-                   throw(Get-VstsLocString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
+                   throw(Get-VstsLocString -Key "PS_TM_ResourceDoesnotHaveWinRMServiceConfigured" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
                }
                else
                {
@@ -93,7 +93,7 @@ function Get-ResourceWinRmConfig
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
                    Write-Telemetry "Input_Validation" "WinRM port not available"
-                   throw(Get-VstsLocString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
+                   throw(Get-VstsLocString -Key "PS_TM_ResourceDoesnotHaveWinRMServiceConfigured" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
                }
                else
                {

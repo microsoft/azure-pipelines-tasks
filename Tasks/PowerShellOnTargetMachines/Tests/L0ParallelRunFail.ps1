@@ -7,6 +7,18 @@ param()
 
 $remotePowershellRunnerPath = "$PSScriptRoot\..\PowerShellOnTargetMachines.ps1"
 
+Unregister-Mock Get-VstsInput
+Register-Mock Get-VstsInput { return $EnvironmentNameForFailedJob } -ParametersEvaluator{ $Name -eq  "EnvironmentName" }
+Register-Mock Get-VstsInput { return $validMachineNames } -ParametersEvaluator{ $Name -eq  "MachineNames" }
+Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
+Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "RunPowershellInParallel" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+
+Register-Mock Get-ParsedSessionVariables { }
+Register-Mock Receive-Job {return @{"Status"="Passed"}}
+
+Register-Mock Invoke-PsOnRemote {}
+Register-Mock Invoke-Command {return @{"Status"="Passed"}}
 
 Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $EnvironmentNameForFailedJob } -ParametersEvaluator {$EnvironmentName -eq $EnvironmentNameForFailedJob}
 Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $EnvironmentNameForFailedJob}
@@ -25,13 +37,15 @@ Register-Mock Get-Job { return $testJobs }
 Register-Mock Start-Sleep { }
 
 #Receive-Job Mocks
+Unregister-Mock Receive-Job
 Register-Mock Receive-Job { return $JobFailResponseForDeploy }  -ParametersEvaluator { $Id -eq 2 }
 
 #Remove-Job Mocks
+Unregister-Mock Remove-Job
 Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
 
 Assert-Throws {
-    & "$remotePowershellRunnerPath" -environmentName $EnvironmentNameForFailedJob -machineNames $validMachineNames -scriptPath $validScriptPath -runPowershellInParallel $true
-} -MessagePattern "Deployment on one or more machines failed."
+    & "$remotePowershellRunnerPath"
+} -MessagePattern "PS_TM_DeploymentOnOneOrMoreMachinesFailed"
 
 Assert-WasCalled Start-Job -Times 2
