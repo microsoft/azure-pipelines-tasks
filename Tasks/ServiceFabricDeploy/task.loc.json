@@ -69,6 +69,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
     },
     {
+      "name": "overriddenApplicationParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.overriddenApplicationParameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.overriddenApplicationParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
       "name": "compressPackage",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.compressPackage",
@@ -316,6 +327,7 @@
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
+    "OverriddenApplicationParametersNotInCorrectFormat": "ms-resource:loc.messages.OverriddenApplicationParametersNotInCorrectFormat",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

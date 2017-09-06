@@ -69,6 +69,12 @@ try {
         throw (Get-VstsLocString -Key PublishProfileRequiredAppParams)
     }
 
+    $overriddenApplicationParameters = Get-VstsInput -Name overriddenApplicationParameters
+    if ($overriddenApplicationParameters)
+    {
+        $applicationParameterFile = Merge-ApplicationParameters $applicationParameterFile $overriddenApplicationParameters
+    }
+
     if ((Get-VstsInput -Name overridePublishProfileSettings) -eq "true")
     {
         Write-Host (Get-VstsLocString -Key OverrideUpgradeSettings)

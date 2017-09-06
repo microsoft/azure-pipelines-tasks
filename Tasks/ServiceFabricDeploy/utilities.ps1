@@ -165,3 +165,86 @@ function Get-VstsUpgradeParameters
 
     return $parameters
 }
+
+function Merge-ApplicationParameters
+{
+    Param(
+        [String]
+        $ApplicationParametersFilePath,
+
+        [String]
+        $OverriddenApplicationParametersString
+    )
+
+    $applicationParametersXml = [Xml] (Get-Content -LiteralPath $ApplicationParametersFilePath)
+    $applicationParametersElement = $applicationParametersXml.Application.Parameters
+
+    $overriddenApplicationParameters = Get-OverridenApplicationParameters $OverriddenApplicationParametersString
+
+    foreach ($parameterName in $overriddenApplicationParameters.Keys)
+    {
+        $existingParameter = $applicationParametersElement.Parameter | where { $_.Name -eq $parameterName }
+
+        if ($existingParameter)
+        {
+            $existingParameter.SetAttribute("Value", $overriddenApplicationParameters[$parameterName])
+        }
+        else
+        {
+            $newParameter = $applicationParametersXml.CreateElement("Parameter")
+            $newParameter.SetAttribute("Name", $parameterName)
+            $newParameter.SetAttribute("Value", $overriddenApplicationParameters[$parameterName])
+            $applicationParametersElement.AppendChild($newParameter)
+        }
+    }
+
+    $tempFolder = New-TemporaryFolder $env:System.DefaultWorkingDirectory
+    $mergedApplicationParametersFileName = [System.IO.Path]::GetFileNameWithoutExtension($ApplicationParametersFilePath)
+    $mergedApplicationParametersFileName = $mergedApplicationParametersFileName + [System.IO.Path]::GetExtension($ApplicationParametersFilePath)
+    $mergedApplicationParametersFilePath = Join-Path $tempFolder $mergedApplicationParametersFileName
+    $applicationParametersXml.Save($mergedApplicationParametersFilePath)
+
+    return $mergedApplicationParametersFilePath
+}
+
+function Get-OverridenApplicationParameters
+{
+    Param(
+        [String]
+        $OverriddenApplicationParametersString
+    )
+
+    $delimiters = @(' ', '`t')
+    $tokenArray = $OverriddenApplicationParametersString.Split($delimiters, [System.StringSplitOptions]::RemoveEmptyEntries)
+    $applicationParameters = @{}
+
+    for($index = 0; $index -lt $tokenArray.Count;)
+    {
+        if (-not $tokenArray[$index].StartsWith("-"))
+        {
+            throw (Get-VstsLocString -Key OverriddenApplicationParametersNotInCorrectFormat)
+        }
+
+        $paramName = $tokenArray[$index].Substring(1)
+        $paramValue = $tokenArray[$index + 1]
+        $applicationParameters[$paramName] = $paramValue
+
+        $index += 2
+    }
+
+    return $applicationParameters
+}
+
+function New-TemporaryFolder
+{
+    Param(
+        [String]
+        $ParentPath
+    )
+
+    $folderName = [System.Guid]::NewGuid()
+    $folderPath = Join-Path $ParentPath $folderName
+    New-Item -ItemType Directory -Path ($folderPath)
+
+    return $folderPath
+}
