@@ -38,16 +38,22 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
 }
 
 export function run(connection: ContainerConnection): any {
-    let imageNames = utils.getImageNames();
+    let action = tl.getInput("action", true);
+
+    let imageNames;
+    let useMultiImageMode = action === "Push images";
+    if (useMultiImageMode) {
+        imageNames = utils.getImageNames();
+    } else {
+        imageNames = [tl.getInput("imageName", /* required */ true)];
+    }
+    
     let imageMappings = utils.getImageMappings(connection, imageNames);
 
     let imageDigestFile: string = null;
     if (tl.filePathSupplied("imageDigestFile")) {
         imageDigestFile = tl.getPathInput("imageDigestFile");
     }
-
-    let imageNameInputMode = tl.getInput("imageNameInputMode", /* required */ true);
-    let useMultiImageMode = imageNameInputMode === "MultipleImageNamesByFile";
 
     let firstImageMapping = imageMappings.shift();
     let pushedSourceImages = [firstImageMapping.sourceImageName];

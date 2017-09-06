@@ -5,8 +5,7 @@ export let TestEnvVars = {
     action: "__command__",
     containerType: "__container_type__",
     qualifyImageName: "__qualifyImageName__",
-    includeLatestTag: "__includeLatestTag__",
-    imageNameInputMode: "__image_name_input_mode__"
+    includeLatestTag: "__includeLatestTag__"
 };
 
 export let OperatingSystems = {
@@ -15,21 +14,17 @@ export let OperatingSystems = {
 };
 
 export let ActionTypes = {
-    build: "Build an image",
-    tag: "Tag an image",
-    push: "Push an image",
-    run: "Run an image",
+    buildImage: "Build an image",
+    tagImages: "Tag images",
+    pushImage: "Push an image",
+    pushImages: "Push images",
+    runImage: "Run an image",
     dockerCommand: "Run a Docker command"
 };
 
 export let ContainerTypes = {
     AzureContainerRegistry: "Azure Container Registry",
     ContainerRegistry: "Container Registry"
-}
-
-export let ImageNameInputModes = {
-    SingleImageName: "SingleImageName",
-    MultipleImageNamesByFile: "MultipleImageNamesByFile"
 }
 
 export let ImageNamesFileImageName = "test_image";

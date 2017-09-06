@@ -22,12 +22,10 @@
   "loc.input.help.defaultContext": "Set the build context to the directory that contains the Docker file.",
   "loc.input.label.context": "Build Context",
   "loc.input.help.context": "Path to the build context.",
-  "loc.input.label.imageNameInputMode": "Image Name Input Mode",
-  "loc.input.help.imageNameInputMode": "Select how to input the image name(s) to be used.",
   "loc.input.label.imageName": "Image Name",
-  "loc.input.help.imageName": "Name of the Docker image to build, tag, push or run.",
+  "loc.input.help.imageName": "Name of the Docker image to build, push, or run.",
   "loc.input.label.imageNamesPath": "Image Names Path",
-  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to build, tag, push, or run. Each image name is contained on its own line.",
+  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line.",
   "loc.input.label.qualifyImageName": "Qualify Image Name",
   "loc.input.help.qualifyImageName": "Qualify the image name with the Docker registry connection's hostname if not otherwise specified.",
   "loc.input.label.additionalImageTags": "Additional Image Tags",
@@ -67,6 +65,5 @@
   "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
-  "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
-  "loc.messages.MultipleImagesInImageNamesFile": "Only one image name is allowed in file '%s' for this operation."
+  "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'."
 }
