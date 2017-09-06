@@ -5,19 +5,11 @@ import ContainerConnection from "docker-common/containerconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
 
-export function getImageNames(multipleImageNamesAllowed = true): string[] {
-    let imageNames: string[];
-    let imageNameInputMode = tl.getInput("imageNameInputMode", /* required */ true);
-    if (imageNameInputMode === "SingleImageName") {
-        imageNames = [tl.getInput("imageName", true)];
-    } else {
-        let imageNamesFilePath = tl.getPathInput("imageNamesPath", /* required */ true, /* check exists */ true);
-        imageNames = fs.readFileSync(imageNamesFilePath, "utf-8").trim().replace("\r\n", "\n").split("\n");
-        if (!imageNames.length) {
-            throw new Error(tl.loc("NoImagesInImageNamesFile", imageNamesFilePath));
-        } else if (imageNames.length > 1 && !multipleImageNamesAllowed) {
-            throw new Error(tl.loc("MultipleImagesInImageNamesFile", imageNamesFilePath));
-        }
+export function getImageNames(): string[] {
+    let imageNamesFilePath = tl.getPathInput("imageNamesPath", /* required */ true, /* check exists */ true);
+    let imageNames = fs.readFileSync(imageNamesFilePath, "utf-8").trim().replace("\r\n", "\n").split("\n");
+    if (!imageNames.length) {
+        throw new Error(tl.loc("NoImagesInImageNamesFile", imageNamesFilePath));
     }
 
     return imageNames;

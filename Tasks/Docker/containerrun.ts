@@ -65,7 +65,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-w", workDir]);
     }
 
-    let imageName = utils.getImageNames(/* multipleImageNamesAllowed */ false)[0];
+    let imageName = tl.getInput("imageName", true);
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);

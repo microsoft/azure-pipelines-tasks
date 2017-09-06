@@ -67,8 +67,9 @@
             "required": true,
             "options": {
                 "Build an image": "Build an image",
-                "Tag an image": "Tag an image",
+                "Tag images": "Tag images",
                 "Push an image": "Push an image",
+                "Push images": "Push images",
                 "Run an image": "Run an image",
                 "Run a Docker command": "Run a Docker command"
             },
@@ -110,41 +111,28 @@
             "helpMarkDown": "Path to the build context."
         },
         {
-            "name": "imageNameInputMode",
-            "type": "pickList",
-            "label": "Image Name Input Mode",
-            "defaultValue": "SingleImageName",
-            "required": true,
-            "visibleRule": "action != Run a Docker command",
-            "options": {
-                "SingleImageName": "Single image name",
-                "MultipleImageNamesByFile": "One or more image names by file"
-            },
-            "helpMarkDown": "Select how to input the image name(s) to be used."
-        },
-        {
             "name": "imageName",
             "type": "string",
             "label": "Image Name",
             "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
             "required": true,
-            "visibleRule": "imageNameInputMode = SingleImageName && action != Run a Docker command",
-            "helpMarkDown": "Name of the Docker image to build, tag, push or run."
+            "visibleRule": "action == Build an image || action == Push an image || action == Run an image",
+            "helpMarkDown": "Name of the Docker image to build, push, or run."
         },
         {
             "name": "imageNamesPath",
             "type": "filePath",
             "label": "Image Names Path",
             "required": true,
-            "visibleRule": "imageNameInputMode = MultipleImageNamesByFile && action != Run a Docker command",
-            "helpMarkDown": "Path to a text file that contains the names of the Docker images to build, tag, push, or run. Each image name is contained on its own line."
+            "visibleRule": "action == Tag images || action == Push images",
+            "helpMarkDown": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line."
         },
         {
             "name": "qualifyImageName",
             "type": "boolean",
             "label": "Qualify Image Name",
             "defaultValue": "true",
-            "visibleRule": "action = Build an image || action = Tag an image || action = Push an image || action = Run an image",
+            "visibleRule": "action = Build an image || action = Tag images || action = Push an image || action = Push images || action = Run an image",
             "helpMarkDown": "Qualify the image name with the Docker registry connection's hostname if not otherwise specified."
         },
         {
@@ -155,7 +143,7 @@
                 "rows": "2"
             },
             "label": "Additional Image Tags",
-            "visibleRule": "action = Build an image || action = Tag an image || action = Push an image",
+            "visibleRule": "action = Build an image || action = Tag images || action = Push an image || action = Push images",
             "helpMarkDown": "Additional tags for the Docker image being built or pushed."
         },
         {
@@ -163,7 +151,7 @@
             "type": "boolean",
             "label": "Include Source Tags",
             "defaultValue": "false",
-            "visibleRule": "action = Build an image || action = Tag an image || action = Push an image",
+            "visibleRule": "action = Build an image || action = Tag image || action = Push an image || action = Push images",
             "helpMarkDown": "Include Git tags when building or pushing the Docker image."
         },
         {
@@ -171,14 +159,14 @@
             "type": "boolean",
             "label": "Include Latest Tag",
             "defaultValue": "false",
-            "visibleRule": "action = Build an image || action = Push an image",
+            "visibleRule": "action = Build an image || action = Push an image || action = Push images",
             "helpMarkDown": "Include the 'latest' tag when building or pushing the Docker image."
         },
         {
             "name": "imageDigestFile",
             "type": "filePath",
             "label": "Image Digest File",
-            "visibleRule": "action = Push an image",
+            "visibleRule": "action = Push an image || action = Push images",
             "helpMarkDown": "Path to a file that is created and populated with the full image repository digest of the Docker image that was pushed."
         },
         {
@@ -314,7 +302,6 @@
         "ContainerPatternFound": "Pattern found in docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker filepath parameter",
         "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
-        "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
-        "MultipleImagesInImageNamesFile": "Only one image name is allowed in file '%s' for this operation."
+        "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'."
     }
 }
