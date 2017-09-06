@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "groups": [
         {
@@ -39,11 +39,14 @@
         },
         {
             "name": "jobName",
-            "type": "string",
+            "type": "pickList",
             "label": "Job name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server."
+            "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
+            "properties": {
+              "EditableOptions": "True"
+            }
         },
         {
             "name": "saveTo",
@@ -68,14 +71,43 @@
         },
         {
             "name": "jenkinsBuildNumber",
-            "type": "string",
+            "type": "pickList",
             "label": "Jenkins build number",
             "defaultValue": "1",
             "required": true,
             "groupName": "advanced",
             "visibleRule": "jenkinsBuild == BuildNumber",
-            "helpMarkDown": "Download artifacts produced by this build."
+            "helpMarkDown": "Download artifacts produced by this build.",
+            "properties": {
+              "EditableOptions": "True"
+            }
+        },
+        {
+          "name": "itemPattern",
+          "type": "string",
+          "label": "Item Pattern",
+          "defaultValue": "**",
+          "required": false,
+          "groupName": "advanced",
+          "helpMarkDown": "Minimatch pattern to filter files to be downloaded."
         }
+    ],
+    "dataSourceBindings": [
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "jobName",
+        "dataSourceName": "Jobs",
+        "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      },
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "jenkinsBuildNumber",
+        "dataSourceName": "Builds",
+        "parameters": {
+            "definition": "$(jobName)"
+        },
+        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      }
     ],
     "execution": {
         "Node": {
@@ -86,11 +118,10 @@
     "messages": {
         "GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
         "GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
-        "CouldNotFindArtifacts": "Could not find any artifacts for job %s from build number %d",
         "CouldNotGetLastSuccessfuilBuildNumber": "Could not get last successful build number",
         "ServerCallFailed": "HTTP call to Jenkins server failed.",
         "ServerCallErrorCode": "HTTP response code: %d",
-        "DownloadFileTo": "Download %s to %s",
-        "FileSuccessfullyDownloaded": "Successfully downloaded file %s"
+        "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
+        "ArtifactDownloadUrl": "Downloading artifacts from: %s"
     }
 }
