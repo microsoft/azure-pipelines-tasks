@@ -13,6 +13,8 @@
   "loc.input.label.WebAppName": "App Service name",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service.",
   "loc.input.label.WebAppKind": "Web app kind",
+  "loc.input.label.ImageSource": "Image Source",
+  "loc.input.help.ImageSource": "Select the option to deploy to choose the source of the image for your web-app.",
   "loc.input.label.DeployToSlotFlag": "Deploy to slot",
   "loc.input.help.DeployToSlotFlag": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
   "loc.input.label.ResourceGroupName": "Resource group",
@@ -148,5 +150,7 @@
   "loc.messages.AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
   "loc.messages.UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+  "loc.messages.SuccessfullyUpdatedStartupCommandInConfigDetails": "Successfully updated the Startup Command and the app-settings for the webapp.",
+  "loc.messages.FailedToUpdateStartupCommandInConfigDetails": "Failed to update the details for the webApp. Error: %s."
 }

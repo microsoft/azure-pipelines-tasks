@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 15
+    "Patch": 16
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -37,7 +37,7 @@
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != \"\""
     },
     {
       "name": "ApplicationSettings",
@@ -79,6 +79,19 @@
       }
     },
     {
+      "name": "ImageSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ImageSource",
+      "defaultValue": "Registry",
+      "required": false,
+      "options": {
+        "Registry": "Container Registry",
+        "Builtin": "Built-in Image"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
+      "visibleRule": "WebAppKind = applinux"
+    },
+    {
       "name": "DeployToSlotFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.DeployToSlotFlag",
@@ -117,7 +130,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux",
+      "visibleRule": "ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -126,7 +139,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux",
+      "visibleRule": "ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -135,7 +148,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = applinux",
+      "visibleRule": "ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -162,7 +175,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
+      "visibleRule": "ImageSource  != Registry && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -464,6 +477,8 @@
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
     "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
-    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "SuccessfullyUpdatedStartupCommandInConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedStartupCommandInConfigDetails",
+    "FailedToUpdateStartupCommandInConfigDetails": "ms-resource:loc.messages.FailedToUpdateStartupCommandInConfigDetails"
   }
 }
