@@ -14,6 +14,8 @@
   "loc.input.help.action": "Action to be performed on the scale set.",
   "loc.input.label.vmssName": "Virtual Machine scale set name",
   "loc.input.help.vmssName": "Provide the name of scale set. Note that image can be updated only for a scale set which is running a custom image. If a scale set is using platform/gallery image, then image update operation will fail.",
+  "loc.input.label.vmssOsType": "OS type",
+  "loc.input.help.vmssOsType": "Select OS type for Virtual machine scale set",
   "loc.input.label.imageUrl": "Image url",
   "loc.input.help.imageUrl": "Specify the URL of image VHD. If it is an Azure storage blob url, the storage account location should be same as scale set location.",
   "loc.input.label.customScriptsDirectory": "Custom script directory",

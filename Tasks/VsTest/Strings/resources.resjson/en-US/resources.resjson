@@ -21,7 +21,7 @@
   "loc.input.label.tcmTestRun": "Test Run",
   "loc.input.help.tcmTestRun": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
   "loc.input.label.searchFolder": "Search folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.help.searchFolder": "Folder to search for the test assemblies.",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`. [More information](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
@@ -139,5 +139,6 @@
   "loc.messages.invalidTestBatchSize": "Invalid batch size provided: %s",
   "loc.messages.invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
   "loc.messages.minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
-  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s"
+  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s",
+  "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
 }

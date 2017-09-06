@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as Q from 'q';
 import * as models from './models';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 
 const str = require('string');
 const uuid = require('uuid');
@@ -15,6 +16,7 @@ const builder = new xml2js.Builder();
 export class Constants {
     public static vsTestVersionString = 'version';
     public static vsTestLocationString = 'location';
+    public static systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 }
 
 export class Helper {
@@ -58,6 +60,15 @@ export class Helper {
 
     public static pathExistsAsDirectory(path: string) {
         return tl.exist(path) && tl.stats(path).isDirectory();
+    }
+
+    public static publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: boolean) {
+        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false};
+        taskProps.areacode = areaCode;
+        taskProps.result = message;
+        taskProps.tracepoint = tracePoint;
+        taskProps.isusererror = isUserError;
+        ci.publishEvent(taskProps);
     }
 
     public static getXmlContents(filePath: string): Q.Promise<any> {

@@ -24,6 +24,7 @@
         "CopyFilesOverSSH",
         "cURLUploader",
         "DecryptFile",
+        "Delay",
         "DeleteFiles",
         "DeployVisualStudioTestAgent",
         "Docker",

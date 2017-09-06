@@ -33,5 +33,13 @@
             "success": true,
             "message": "success"
         }
+    },
+    "exist": {        
+        "/source/dir":true
+    },
+    "stats": {        
+        "/source/dir": {
+            "isDirectory":true
+        } 
     }
 }

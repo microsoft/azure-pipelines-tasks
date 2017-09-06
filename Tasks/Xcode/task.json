@@ -10,8 +10,8 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 2,
-        "Minor": 121,
+        "Major": 3,
+        "Minor": 123,
         "Patch": 0
     },
     "demands": [
@@ -32,11 +32,6 @@
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
-        },
-        {
-            "name": "xctool",
-            "displayName": "xctool (deprecated)",
             "isExpanded": false
         }
     ],
@@ -88,27 +83,13 @@
             "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section."
         },
         {
-            "name": "packageTool",
-            "type": "pickList",
-            "label": "Create Package (IPA) using",
-            "defaultValue": "xcodebuild",
-            "required": true,
-            "helpMarkDown": "Choose the tool to use for generating the IPA.",
-            "options": {
-                "xcrun": "xcrun (deprecated by Apple)",
-                "xcodebuild": "xcodebuild archive and export"
-            },
-            "groupName": "package"
-        },
-        {
             "name": "archivePath",
             "type": "filePath",
             "label": "Archive Path",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify a directory where created archives should be placed.",
-            "groupName": "package",
-            "visibleRule": "packageTool == xcodebuild"
+            "groupName": "package"
         },
         {
             "name": "exportPath",
@@ -117,8 +98,7 @@
             "defaultValue": "output/$(SDK)/$(Configuration)",
             "required": false,
             "helpMarkDown": "Optionally specify the destination for the product exported from the archive.",
-            "groupName": "package",
-            "visibleRule": "packageTool == xcodebuild"
+            "groupName": "package"
         },
         {
             "name": "exportOptions",
@@ -132,8 +112,7 @@
                 "plist": "Plist",
                 "specify": "Specify"
             },
-            "helpMarkDown": "Pick a way to pass in Export Options when exporting the archive.",
-            "visibleRule": "packageTool == xcodebuild"
+            "helpMarkDown": "Pick a way to pass in Export Options when exporting the archive."
         },
         {
             "name": "exportMethod",
@@ -321,23 +300,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Select this option to publish JUnit Test results produced above using xctool to VSTS/TFS."
-        },
-        {
-            "name": "useXctool",
-            "type": "boolean",
-            "label": "Use xctool",
-            "required": false,
-            "helpMarkDown": "Use xctool instead of xcodebuild. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details. Note: xctool has been deprecated and does not work with Xcode 8.",
-            "groupName": "xctool"
-        },
-        {
-            "name": "xctoolReporter",
-            "type": "string",
-            "label": "xctool Test Reporter Format",
-            "required": false,
-            "helpMarkDown": "Test reporter format to use when \"test\" action is specified and \"Use xctool\" is checked. Specify \"junit:output-file-path-here.xml\" to generate a file format compatible with the Publish Test Results task. When specified, \"plain\" is automatically added as well. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details. Note: xctool has been deprecated and does not work with Xcode 8.",
-            "groupName": "xctool"
+            "helpMarkDown": "Select this option to publish JUnit Test results to VSTS/TFS."
         }
     ],
     "execution": {
@@ -359,9 +322,7 @@
         "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
         "MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
         "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory: %s",
-        "UseXcToolForTestPublishing": "When using xctool, specify the xctool reporter format to publish test results. No results will be published.",
         "UseXcprettyForTestPublishing": "When using xcodebuild, check 'Use xcpretty' to publish test results. No results will be published.",
-        "XcodebuildRequiredForXcpretty": "To use xcpretty, the build tool has to be xcodebuild. Uncheck the 'Use xctool' checkbox to use xcpretty.",
         "NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
         "XcodeSuccess": "Xcode task execution completed with no errors.",
         "TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",

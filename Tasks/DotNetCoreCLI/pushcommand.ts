@@ -70,8 +70,6 @@ export async function run(): Promise<void> {
         let apiKey: string;
         let credCleanup = () => { return };
 
-        const nuGetPath = await utility.getNuGetPath();
-
         // dotnet nuget push does not currently accept a --config-file parameter
         // so we are going to work around this by creating a temporary working directory for dotnet with
         // a nuget config file it will load by default.
@@ -80,7 +78,7 @@ export async function run(): Promise<void> {
         tl.mkdirP(tempNuGetConfigDirectory);
 
         const nuGetConfigHelper = new NuGetConfigHelper2(
-            nuGetPath,
+            null,
             null, /* nugetConfigPath */
             authInfo,
             { credProviderFolder: null, extensionsDisabled: true },
