@@ -14,7 +14,7 @@ export interface TemplateObject {
 }
 
 export interface ParametersFileObject {
-    $schema?: string;
-    contentVersion?: string;
-    parameters?: Map<string, ParameterValue>;
+    $schema: string;
+    contentVersion: string;
+    parameters: Map<string, ParameterValue>;
 }
