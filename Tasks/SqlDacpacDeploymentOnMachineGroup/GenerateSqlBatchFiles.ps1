@@ -24,11 +24,14 @@
 
     #Split if line starts with GO
     #This avoids 'select * from goair join table2' even though there is matching pattern 'go '
-    $lineSubstring = $line.Substring(0, 3)
-    if ($lineSubstring -match "GO ")
+    if ($length -ge 3)
     {
-        $lineArr = $line -split "GO ", 2
-        return $lineArr[0], $lineArr[1]
+        $lineSubstring = $line.Substring(0, 3)
+        if ($lineSubstring -match "GO ")
+        {
+            $lineArr = $line -split "GO ", 2
+            return $lineArr[0], $lineArr[1]
+        }
     }
     
     #Split line if it has a GO in between like 'select * from table GO create procedure'
@@ -55,7 +58,7 @@
         $lineSubstring = $line.Substring($lastCharsIndex, 3)
         if ($lineSubstring -match " GO")
         {
-            return $line.Substring(0, [int]$length - 3), $null
+            return $line.Substring(0, [int]$length - 3), ''
         }
     }
        
@@ -70,62 +73,16 @@ function Test-IsSplitRequired
         [string]$line
     )
 
-    $line = $line.Trim()
-    $length = $line.Length
-    $commentsIndex = $line.IndexOf("--")
 
-    #Don't split if entire line is a comment
-    if ($commentsIndex -eq 0)
+    $lineUntilGo, $lineAfterGo = Get-LinestoAppend -line $line
+
+    #LineAfterGo is present only if the line can be split.
+    if ($lineAfterGo -eq $null) 
     {
         return $false
     }
 
-
-    #Split if the line has only GO
-    if ($line -contains "GO")
-    {
-        return $true
-    }
-
-    #Split if line starts with GO
-    #This avoids 'select * from indigo join table2' even though there is matching pattern 'go '
-    if ($length -ge 3)
-    {
-        $lineSubstring = $line.Substring(0, 3)
-        if ($lineSubstring -match "GO ")
-        {
-            return $true
-        }
-    }
-    
-    #Split line if it has a GO in between like 'select * from table GO create procedure'
-    $goIndex = $line.IndexOf(" GO ", [System.StringComparison]::CurrentCultureIgnoreCase)
-    if (($commentsIndex -ne -1) -and ($goIndex -ne -1) -and ($commentsIndex -lt $goIndex))
-    {
-        return $false
-    }
-    if ($goIndex -ge 0)
-    {
-        return $true
-    }
-
-    #Split if line ends with GO
-    #This avoids 'select * from indigo' even if there is a matching pattern ending with 'go'
-    $lastCharsIndex = [int]$length - 3
-    if (($commentsIndex -ne -1) -and ($lastCharsIndex -ge 0) -and ($commentsIndex -lt $lastCharsIndex))
-    {
-        return $false
-    }
-    if ($length -ge 3)      
-    {
-        $lineSubstring = $line.Substring($lastCharsIndex, 3)
-        if ($lineSubstring -match " GO")
-        {
-            return $true
-        }
-    }
-     
-    return $false
+    return $true
 }
 
 function Write-BatchFile
@@ -175,7 +132,7 @@ function Create-BatchFilesForSqlFile
     )
     
     $batchIndex = 1
-    $sqlFileName = Split-Path $sqlFilePath -Leaf
+    $sqlFileName = (Get-Item -Path $sqlFilePath).BaseName
     $reader = new-object System.IO.StreamReader($sqlFilePath)  
     $ext = "sql"
     $batchFileName = Get-NewBatchFileName -destPath $destPath -batch $batch -batchIndex $batchIndex -sqlFileName $sqlFileName -ext $ext
