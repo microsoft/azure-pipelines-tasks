@@ -229,7 +229,7 @@
             "label": "Override test run parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the `TestRunParameters` section of runsettings file or `Properties` section of testsettings file. For example: `-key1 value1 -key2 value2`",
+            "helpMarkDown": "Override parameters defined in the `TestRunParameters` section of runsettings file or `Properties` section of testsettings file. For example: `-key1 value1 -key2 value2`. Note: Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher ",
             "properties": {
                 "rows": "3",
                 "resizable": "true",
@@ -450,7 +450,7 @@
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
-        "testSettingPropertiesNotSupported": "Properties specified in testsettings file will be available with TestContext in Visual Studio 2017 Update 4 and higher",
+        "testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
         "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",

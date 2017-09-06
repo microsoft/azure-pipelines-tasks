@@ -954,7 +954,7 @@ describe('VsTest Suite', function () {
             const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
             let webAppUrlValue = '';
             let webAppPasswordValue = '';
-
+            
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
                 .then(function (settingsXml: string) {
                     utils.Helper.getXmlContents(settingsXml)
@@ -971,6 +971,114 @@ describe('VsTest Suite', function () {
                             });
                             assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
                             assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+
+    //Case: Valid xml with multiple properties having same name within Properites section
+    //Such a case is invalide test settings file and test platform will fail, as a function updateSettingsFileAsRequired should promise to override all repeated Properties with same value
+    it('Updating valid testsettings having repeated property name with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'ValidTestSettingsWithRepeatedProperty.testsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            let webAppUrlValue = '';
+            let webAppUrlValue2 = '';
+            let webAppPasswordValue = '';
+
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            const parametersArray = settings.TestSettings.Properties[0].Property;
+                            let i = 0;
+                            parametersArray.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl') {
+                                    if(i === 0)
+                                    {
+                                        webAppUrlValue = parameter.$.Value;
+                                    }
+                                    else if(i === 1)
+                                    {
+                                        webAppUrlValue2 = parameter.$.Value
+                                    }
+                                    i++;
+                                } else if (parameter.$.name === 'webAppInvalid') {
+                                    assert.fail(parameter.$.Name, undefined, 'test param should not exist');
+                                } else if (parameter.$.name === 'webAppPassword') {
+                                    webAppPasswordValue = parameter.$.value;
+                                }
+                            });
+                            assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
+                            assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            assert.equal(webAppUrlValue2, 'testVal', 'testsettings properties must be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    //Case: Valid xml with multiple properties section is provided, updateSettingsFileAsRequired will only replace properties in first section
+    //Such a case is invalid test settings file and test platform will fail, as a function updateSettingsFileAsRequired should promise to override Properties in first section only
+    it('Updating Invalid testsettings having multiple properties sections with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'InvalidWithMultiplePropertiesSections.testsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            let webAppUrlValue = '';
+            let webAppPasswordValue = '';
+            let webAppUrlValue2 = '';
+
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            const parametersArray = settings.TestSettings.Properties[0].Property;
+                            parametersArray.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl') {
+                                    webAppUrlValue = parameter.$.Value;
+                                } else if (parameter.$.name === 'webAppInvalid') {
+                                    assert.fail(parameter.$.Name, undefined, 'test param should not exist');
+                                } else if (parameter.$.name === 'webAppPassword') {
+                                    webAppPasswordValue = parameter.$.value;
+                                }
+                            });
+                            const parametersArray2 = settings.TestSettings.Properties[1].Property
+                            parametersArray2.forEach(function (parameter) {
+                                if (parameter.$.Name === 'webAppUrl') {
+                                    webAppUrlValue2 = parameter.$.Value;
+                                } 
+                            });
+                            
+                            assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
+                            assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            assert.equal(webAppUrlValue2, 'Duplicatelocalhost', 'testsettings properties must not be overridden');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    //In case of invalid xml provided by user or xml not having required tags, updateSettingsFileAsRequired returns a default run settings
+    it('Updating invalid testsettings with overridden parameters', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'Invalid.testsettings');
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, true, { tiaEnabled: false }, undefined, false, overriddenParams)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly' + settings);
                             done();
                         });
                 });

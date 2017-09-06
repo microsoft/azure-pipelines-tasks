@@ -197,7 +197,7 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                    null, false, this.dtaTestConfig.overrideTestrunParameters, true);
+                    this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {

@@ -139,7 +139,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             }
             testImpactCollectorNode = data;
             if (tiaConfig.useNewCollector) {
-                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion?vsVersion.majorVersion:null);
+                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion.majorVersion);
             }
             testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
             if (getTIALevel(tiaConfig) === 'file') {

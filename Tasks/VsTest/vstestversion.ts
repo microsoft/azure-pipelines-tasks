@@ -20,7 +20,7 @@ export class VSTestVersion {
     }
 
     public isTestSettingsPropertiesSupported(): boolean {
-        return (this.majorVersion >= 15) && (this.patchNumber>26832);
+        return (this.majorVersion >= 15) && (this.patchNumber > 26906); 
     }
 }
 
