@@ -228,14 +228,17 @@ export class ResourceGroup {
         tl.debug("Overriding Parameters..");
 
         var overrideParameters = PowerShellParameters.parse(this.taskParameters.overrideParameters, true, "\\");
-        for (var key in overrideParameters) {
+        for (var index in overrideParameters) {
+            var key = overrideParameters[index].name;
             tl.debug("Overriding key: " + key);
             try {
-                overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
+                overrideParameters[index].value = this.castToType(overrideParameters[index].value, template["parameters"][key]["type"]);
             } catch (error) {
                 console.log(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
             }
-            parameters[key] = overrideParameters[key];
+            parameters[key] = {
+                value: overrideParameters[index].value
+            };
         }
         return parameters;
     }
