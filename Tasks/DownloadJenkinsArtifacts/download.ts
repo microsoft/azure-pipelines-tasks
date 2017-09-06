@@ -5,7 +5,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as models from "item-level-downloader/Models"
 import * as engine from "item-level-downloader/Engine"
 import * as providers from "item-level-downloader/Providers"
-import {ArtifactDetailsDownloader} from "./ArtifactDetailsDownloader"
+import {ArtifactDetailsDownloader} from "./ArtifactDetails/Downloader"
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
