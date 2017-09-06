@@ -3,7 +3,7 @@ import url = require('url');
 import Q = require('q');
 import path = require('path');
 
-var Client = require('ftp');
+let Client = require('ftp');
 
 import ftputils = require('./ftputils');
 
@@ -21,7 +21,8 @@ export class FtpOptions {
     remotePath: string;
 
     // advanced options
-    clean: boolean; 
+    clean: boolean;
+    cleanContents: boolean;
     overwrite: boolean; 
     preservePaths: boolean; 
     trustSSL: boolean; 
@@ -50,7 +51,8 @@ function getFtpOptions(): FtpOptions {
     options.remotePath = tl.getInput('remotePath', true).trim();
 
     // advanced options
-    options.clean= tl.getBoolInput('clean', true);
+    options.clean = tl.getBoolInput('clean', true);
+    options.cleanContents = tl.getBoolInput('cleanContents', false);
     options.overwrite = tl.getBoolInput('overwrite', true);
     options.preservePaths = tl.getBoolInput('preservePaths', true);
     options.trustSSL = tl.getBoolInput('trustSSL', true);
@@ -61,7 +63,7 @@ function getFtpOptions(): FtpOptions {
 function doWork() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-    var ftpOptions: FtpOptions = getFtpOptions();
+    let ftpOptions: FtpOptions = getFtpOptions();
     if (!ftpOptions.serverEndpointUrl.protocol) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('FTPNoProtocolSpecified'));
     }
@@ -69,14 +71,14 @@ function doWork() {
         tl.setResult(tl.TaskResult.Failed, tl.loc('FTPNoHostSpecified'));
     }
 
-    var ftpClient: any = new Client();
-    var ftpHelper: ftputils.FtpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
+    let ftpClient: any = new Client();
+    let ftpHelper: ftputils.FtpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
 
-    var files: string[] = ftputils.findFiles(ftpOptions);
+    let files: string[] = ftputils.findFiles(ftpOptions);
     tl.debug('number of files to upload: ' + files.length);
     tl.debug('files to upload: ' + JSON.stringify(files));
 
-    var uploadSuccessful: boolean = false;
+    let uploadSuccessful: boolean = false;
 
     ftpClient.on('greeting', (message: string) => {
         tl.debug('ftp client greeting');
@@ -89,6 +91,9 @@ function doWork() {
             if (ftpOptions.clean) {
                 console.log(tl.loc('CleanRemoteDir', ftpOptions.remotePath));
                 await ftpHelper.cleanRemote(ftpOptions.remotePath);
+            } else if (ftpOptions.cleanContents) {
+                console.log(tl.loc('CleanRemoteDirContents', ftpOptions.remotePath));
+                await ftpHelper.cleanRemoteContents(ftpOptions.remotePath);
             }
 
             console.log(tl.loc('UploadRemoteDir', ftpOptions.remotePath));
@@ -124,7 +129,7 @@ function doWork() {
     })
 
     function failTask(message: string): void {
-        var fullMessage: string = 'FTP upload failed: ' + message;
+        let fullMessage: string = 'FTP upload failed: ' + message;
         if (ftpHelper.progressTracking) {
             fullMessage += ftpHelper.progressTracking.getFailureStatusMessage();
         }
@@ -132,13 +137,13 @@ function doWork() {
         tl.setResult(tl.TaskResult.Failed, message);
     }
 
-    var secure: boolean = ftpOptions.serverEndpointUrl.protocol.toLowerCase() == 'ftps:' ? true : false;
+    let secure: boolean = ftpOptions.serverEndpointUrl.protocol.toLowerCase() == 'ftps:' ? true : false;
     tl.debug('secure ftp=' + secure);
 
-    var secureOptions: any = { 'rejectUnauthorized': !ftpOptions.trustSSL };
+    let secureOptions: any = { 'rejectUnauthorized': !ftpOptions.trustSSL };
 
-    var hostName: string = ftpOptions.serverEndpointUrl.hostname;
-    var port: string = ftpOptions.serverEndpointUrl.port;
+    let hostName: string = ftpOptions.serverEndpointUrl.hostname;
+    let port: string = ftpOptions.serverEndpointUrl.port;
     if (!port) { // port not explicitly specifed, use default
         port = '21';
         tl.debug('port not specifided, using default: ' + port);
