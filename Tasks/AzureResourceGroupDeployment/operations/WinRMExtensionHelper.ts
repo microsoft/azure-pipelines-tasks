@@ -152,7 +152,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddNetworkSecurityRuleConfigForWinRMPort(): Promise<any> {
+    private async AddNetworkSecurityRuleConfigForWinRMPort() {
         var ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var rulePriority: number = 3986;
         var winrmHttpsPort: string = "5986";
@@ -182,7 +182,7 @@ export class WinRMExtensionHelper {
     }
 
     private async AddInboundNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
-        return new Promise<any>(async (resolve, reject) => {
+        return new Promise<void>(async (resolve, reject) => {
             tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
             var securityRuleParameters = {
                 properties: {
@@ -258,7 +258,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddExtensionToVMsToConfigureWinRM(): Promise<any> {
+    private async AddExtensionToVMsToConfigureWinRM() {
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
         var promises = [];
         for (var vm of this.azureUtils.vmDetails) {
@@ -287,7 +287,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string): Promise<any> {
+    private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string) {
         var extensionName: string = "WinRMCustomScriptExtension";
         var configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
         var makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";

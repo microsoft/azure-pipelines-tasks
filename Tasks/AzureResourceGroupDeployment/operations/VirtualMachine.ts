@@ -57,7 +57,7 @@ export class VirtualMachine {
         });
     }
 
-    private getDeleteVMCallback(client, vmName, callback) {
+    private getDeleteVMCallback(client, vmName, callback): () => void {
         var deleteExtensionFromVM = () => {
             console.log(tl.loc("VM_Delete", vmName));
             client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, callback);
