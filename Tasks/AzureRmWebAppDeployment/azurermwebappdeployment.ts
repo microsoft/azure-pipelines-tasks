@@ -65,7 +65,7 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(webAppKind && webAppKind.indexOf("linux") !== -1 && imageSource.indexOf("Builtin") > 0 && dockerNamespace) {
+        if(webAppKind && webAppKind.indexOf("linux") !== -1 && imageSource && imageSource.indexOf("Builtin") > 0 && dockerNamespace) {
             tl.debug("Performing container based deployment.");
             if (webAppUri) {
                 tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
@@ -138,33 +138,35 @@ async function run() {
                 }
             }
 
-            if(deployUtility.canUseWebDeploy(useWebDeploy) && imageSource.indexOf("Builtin") > 0) {
-                if(!tl.osType().match(/^Win/)){
-                    throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
-                }
+            if(deployUtility.canUseWebDeploy(useWebDeploy)) {
+                if (!webAppKind || webAppKind.indexOf("applinux") < 0) {
+                    if(!tl.osType().match(/^Win/)){
+                        throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
+                    }
 
-                var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                if(renameFilesFlag) {
-                    if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
-                        appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
-                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                    if(renameFilesFlag) {
+                        if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
+                            appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
+                            await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                        }
                     }
-                }
-                else {
-                    if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
-                        delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
-                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    else {
+                        if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
+                            delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
+                            await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                        }
                     }
+                    console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
+                    console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+                    await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+                        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
+                        additionalArguments, isFolderBasedDeployment, useWebDeploy);
                 }
-                console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
-                console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
-                await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-                    excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
-                    additionalArguments, isFolderBasedDeployment, useWebDeploy);
             } else {
                 tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
                 publishingProfile.publishUrl = webAppName + ".scm.azurewebsites.net:443";
-                if (webAppKind.indexOf("applinux") !== -1) {
+                if (webAppKind && webAppKind.indexOf("applinux") > 0) {
                     tl.debug("Updating startup Command");
                     updateStartupCommandAndAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, startupCommand, inputAppSettings);
                 }
