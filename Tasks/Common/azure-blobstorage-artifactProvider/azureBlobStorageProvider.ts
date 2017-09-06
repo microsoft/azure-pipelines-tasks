@@ -1,35 +1,35 @@
 import path = require('path');
-import fs = require('fs');
 import azureStorage = require('azure-storage');
+import fs = require('fs');
 import models = require('item-level-downloader/Models');
-import Stream = require("stream");
+import stream = require("stream");
+import tl = require('vsts-task-lib/task');
 
 export class AzureBlobProvider implements models.IArtifactProvider {
-    constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string) {
+    constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
         this._container = container;
         this._prefixFolderPath = prefixFolderPath;
-        this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey);
-        this._maxListSize = 100;
+        this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
     }
 
-    public putArtifactItem(item: models.ArtifactItem, readStream: Stream.Readable): Promise<models.ArtifactItem> {
+    public putArtifactItem(item: models.ArtifactItem, readStream: stream.Readable): Promise<models.ArtifactItem> {
         return new Promise(async (resolve, reject) => {
             var newArtifactItem: models.ArtifactItem = models.ArtifactItem.clone(item);
             await this._ensureContainerExistence();
 
             var self = this;
-            console.log("Uploading '%s'", item.path);
+            console.log(tl.loc("UploadingItem", item.path));
             var blobPath = this._prefixFolderPath ? this._prefixFolderPath + "/" + item.path : item.path;
 
             var writeStream = this._blobSvc.createWriteStreamToBlockBlob(this._container, blobPath, null, function (error, result, response) {
                 if (error) {
-                    console.log("Failed to create blob " + blobPath + ". Error: " + error.message);
+                    console.log(tl.loc("FailedToUploadBlob", blobPath, error.message));
                     reject(error);
                 } else {
                     var blobUrl = self._blobSvc.getUrl(self._container, blobPath);
-                    console.log("Created blob for item " + item.path + ". Blob uri: " + blobUrl);
+                    console.log(tl.loc("CreatedBlobForItem", item.path, blobUrl));
                     newArtifactItem.metadata["downloadUrl"] = blobUrl;
                     resolve(newArtifactItem);
                 }
@@ -38,10 +38,12 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             readStream.pipe(writeStream);
             writeStream.on("error",
                 (error) => {
+                    console.log("ErrorInWriteStream", error);
                     reject(error);
                 });
             readStream.on("error",
                 (error) => {
+                    console.log(tl.loc("ErrorInReadStream", error));
                     reject(error);
                 });
         });
@@ -61,29 +63,31 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         });
     }
 
-    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<Stream.Readable> {
-        return new Promise(async (resolve, reject) => {
-            var readStream: Stream.Readable = this._blobSvc.createReadStream(this._container, artifactItem.path, (error, result) => {
+    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<stream.Readable> {
+        return new Promise((resolve, reject) => {
+            var readStream: stream.Readable = this._blobSvc.createReadStream(this._container, artifactItem.path, (error, result) => {
                 if (error) {
-                    console.log("Unable to fetch item: " + artifactItem.path + ". Error: " + error);
+                    console.log(tl.loc("UnableToFetchItem", artifactItem.path, error));
                     reject();
                 }
+                else {
+                    resolve(readStream);
+                }
             });
-            resolve(readStream);
         });
     }
 
     private _ensureContainerExistence(): Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             if (!this._isContainerExists) {
                 var self = this;
                 this._blobSvc.createContainerIfNotExists(this._container, function (error, result, response) {
                     if (!!error) {
-                        console.log("Failed to create container " + self._container + ". Error: " + error.message);
+                        console.log(tl.loc("FailedToCreateContainer", self._container, error.message));
                         reject(error);
                     } else {
                         self._isContainerExists = true;
-                        console.log("Created container " + self._container);
+                        console.log(tl.loc("CreatedContainer", self._container));
                         resolve();
                     }
                 });
@@ -94,18 +98,16 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     private _getItems(container: string, parentRelativePath?: string): Promise<models.ArtifactItem[]> {
-        var promise = new Promise<models.ArtifactItem[]>(async (resolve, reject) => {
+        var promise = new Promise<models.ArtifactItem[]>((resolve, reject) => {
             var items: models.ArtifactItem[] = [];
-            await this._ensureContainerExistence();
 
-            var self = this;
-            this._blobSvc.listBlobsSegmented(container, null, (error, result, response) => {
+            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, null, (error, result) => {
                 if (!!error) {
-                    console.log("Failed to list items inside container: " + self._container + ". Error: " + error.message);
+                    console.log(tl.loc("FailedToListItemInsideContainer", container, error.message));
                     reject(error);
                 } else {
-                    console.log("Successfully fetcted list of items.");
-                    items = self._convertBlobResultToArtifactItem(result.entries);
+                    console.log(tl.loc("SuccessFullyFetchedItemList"));
+                    items = this._convertBlobResultToArtifactItem(result.entries);
                     resolve(items);
                 }
             });
@@ -135,5 +137,4 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     private _prefixFolderPath: string;
     private _isContainerExists: boolean = false;
     private _blobSvc: azureStorage.BlobService;
-    private _maxListSize: number;
 }

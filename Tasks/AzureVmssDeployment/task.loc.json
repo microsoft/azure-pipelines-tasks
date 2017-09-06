@@ -185,6 +185,16 @@
     "DestinationBlobContainer": "ms-resource:loc.messages.DestinationBlobContainer",
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
     "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
-    "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull"
+    "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull",
+    "CreatedBlobForItem": "ms-resource:loc.messages.CreatedBlobForItem",
+    "CreatedContainer": "ms-resource:loc.messages.CreatedContainer",
+    "ErrorInReadStream": "ms-resource:loc.messages.ErrorInReadStream",
+    "ErrorInWriteStream": "ms-resource:loc.messages.ErrorInWriteStream",
+    "FailedToCreateBlob": "ms-resource:loc.messages.FailedToCreateBlob",
+    "FailedToCreateContainer": "ms-resource:loc.messages.FailedToCreateContainer",
+    "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem"
   }
 }

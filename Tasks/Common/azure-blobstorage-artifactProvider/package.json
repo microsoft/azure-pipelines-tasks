@@ -1,5 +1,5 @@
 {
-  "name": "azure-blobstorage-downloader",
+  "name": "azure-blobstorage-artifactProvider",
   "version": "1.0.0",
   "description": "Common Library to download blobs from azure storage",
   "repository": {
@@ -17,6 +17,7 @@
     "item-level-downloader": "1.0.10",
     "path": "0.12.7",
     "stream": "0.0.2",
-    "azure-storage": "2.4.0"
+    "azure-storage": "2.4.0",
+    "vsts-task-lib": "2.0.5"
   }
 }

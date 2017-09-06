@@ -7,7 +7,7 @@
             "compile" : true
         },
         {
-            "module": "../Common/azure-blobstorage-downloader",
+            "module": "../Common/azure-blobstorage-artifactProvider",
             "type": "node",
             "dest": "./",
             "compile" : true
