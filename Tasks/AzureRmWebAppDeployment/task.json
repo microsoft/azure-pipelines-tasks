@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 14
+        "Patch": 15
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -25,19 +25,19 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "ApplicationSettings",
@@ -85,7 +85,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = applinux"
+            "visibleRule": "WebAppKind != \"\""
         },
         {
             "name": "ResourceGroupName",
@@ -153,7 +153,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -162,7 +162,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
