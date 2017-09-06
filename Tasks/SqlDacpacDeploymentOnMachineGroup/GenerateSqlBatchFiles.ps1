@@ -89,10 +89,13 @@ function Test-IsSplitRequired
 
     #Split if line starts with GO
     #This avoids 'select * from indigo join table2' even though there is matching pattern 'go '
-    $lineSubstring = $line.Substring(0, 3)
-    if ($lineSubstring -match "GO ")
+    if ($length -ge 3)
     {
-        return $true
+        $lineSubstring = $line.Substring(0, 3)
+        if ($lineSubstring -match "GO ")
+        {
+            return $true
+        }
     }
     
     #Split line if it has a GO in between like 'select * from table GO create procedure'
@@ -130,10 +133,21 @@ function Write-BatchFile
     param
     (
         [string]$fileName,
-        [string]$line
+        [string]$line,
+        [boolean]$newBatch,
+        [string]$filesCreated
     )
     
     Add-Content -path $fileName -value $line
+
+    if ($newBatch -eq $true)
+    {
+        $filesCreated = $filesCreated + $fileName + "; "
+    }
+
+    $newBatch = $false
+
+    return $newBatch, $filesCreated
 }
 
 function Get-NewBatchFileName
@@ -167,7 +181,8 @@ function Create-BatchFilesForSqlFile
     $batchFileName = Get-NewBatchFileName -destPath $destPath -batch $batch -batchIndex $batchIndex -sqlFileName $sqlFileName -ext $ext
 
     #Split files
-    $filesCreated = $batchFileName
+    $filesCreated = ""
+    $newBatch = $true
     while(($line = $reader.ReadLine()) -ne $null)
     {
         $lineToSplit = $line
@@ -175,19 +190,19 @@ function Create-BatchFilesForSqlFile
         {
             if ((Test-IsSplitRequired -line $lineToSplit) -eq $false)
             {
-                Write-BatchFile -fileName $batchFileName -line $lineToSplit
+                $newBatch, $filesCreated = Write-BatchFile -fileName $batchFileName -line $lineToSplit -newBatch $newBatch -filesCreated $filesCreated
                 break
             }
 
             $lineUntilGo, $lineAfterGo = Get-LinestoAppend($lineToSplit)
             if ([string]::IsNullOrEmpty($lineUntilGo) -eq $false)
             {
-                Write-BatchFile -fileName $batchFileName -line $lineUntilGo
+                $newBatch, $filesCreated = Write-BatchFile -fileName $batchFileName -line $lineUntilGo -newBatch $newBatch -filesCreated $filesCreated
             }
 
             $batchIndex = [int]$batchIndex + 1
             $batchFileName = Get-NewBatchFileName -destPath $destPath -batch $batch -batchIndex $batchIndex -sqlFileName $sqlFileName -ext $ext
-            $filesCreated = $filesCreated + "; " + $batchFileName
+            $newBatch = $true
             $lineToSplit = $lineAfterGo
         }
     }

@@ -42,25 +42,6 @@ function Get-SingleFile
     }
 }
 
-function Add-BatchFilesPathToSqlFilesPath
-{
-    param (
-        [string]$sqlBatchFiles,
-        [string]$sqlScriptsWithExpandedPath
-    )
-
-    $sqlBatchFilesPath = $sqlBatchFiles -split ";"
-    foreach ($sqlBatchFile in $sqlBatchFilesPath)
-    {
-        if ((Test-Path -Path $sqlBatchFile) -eq $true)
-        {
-            $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $sqlBatchFile + "; "
-        }
-    }
-
-    return $sqlScriptsWithExpandedPath
-}
-
 function New-SqlBatchFilesDestDirectory
 {
     param (
@@ -69,6 +50,11 @@ function New-SqlBatchFilesDestDirectory
 
     if ((Test-Path -Path $directoryName) -eq $true) 
     {
+        
+        Get-ChildItem -Path $directoryName -Force -Recurse |
+            Sort-Object -Property FullName -Descending |
+            Remove-Item -Recurse -Force | Out-Null
+
         Remove-Item -Path $directoryName -Force | Out-Null
     }
 
@@ -143,13 +129,22 @@ Try
                     {
                         $sqlScript = Get-SingleFile -pattern $sqlScript
                         $batchFiles = Create-BatchFilesForSqlFile -sqlFilePath $sqlScript -destPath $destPath -batch $batch
-                        $sqlScriptsWithExpandedPath = Add-BatchFilesPathToSqlFilesPath -sqlBatchFiles $batchFiles -sqlScriptsWithExpandedPath $sqlScriptsWithExpandedPath
+                        $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $batchFiles + "; "
                         $batch = [int]$batch + 1
                     }
                 }
                 Write-Verbose "Executing sql scripts $sqlScriptsWithExpandedPath under transaction using app lock $appLockName"
                 Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
-                Remove-Item -Path $destPath -Force
+
+                if ($env:system_debug -eq $false)
+                {
+                    #Leave the batch files if in debug mode. Remove otherwise.
+                    Get-ChildItem -Path $destPath -Force -Recurse |
+                        Sort-Object -Property FullName -Descending |
+                        Remove-Item -Recurse -Force | Out-Null
+                    Remove-Item -Path $destPath -Force
+                }
+                
             } 
             else 
             {
