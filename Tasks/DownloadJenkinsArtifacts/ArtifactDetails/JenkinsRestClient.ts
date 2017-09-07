@@ -67,7 +67,6 @@ export class JenkinsRestClient {
 
         const connection = tl.getInput("connection", true);
         const endpointUrl = tl.getEndpointUrl(connection, false);
-        console.log('test3');
         const jobName = tl.getInput("definition", true);
         const username = tl.getEndpointAuthorizationParameter(connection, 'username', false);
         const password = tl.getEndpointAuthorizationParameter(connection, 'password', false);

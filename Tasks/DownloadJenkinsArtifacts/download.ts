@@ -32,13 +32,9 @@ async function main(): Promise<void> {
     var password = tl.getEndpointAuthorizationParameter(connection, 'password', false);
     var webProvider = new providers.WebProvider(itemsUrl, "jenkins.handlebars", username, password, variables);
     
-    console.log('test1');
     let downloader = new engine.FetchEngine();
-    console.log('test2');
     let downloaderOptions = new engine.FetchEngineOptions();
-    console.log('test3');
     await downloader.fetchItems(webProvider, downloadPath, downloaderOptions);
-    console.log('test4');
     tl.setResult(tl.TaskResult.Succeeded, "");
 }
 
