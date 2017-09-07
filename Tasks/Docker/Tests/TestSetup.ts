@@ -7,7 +7,7 @@ const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ImageNamesPath = shared.formatPath("dir/image_names.txt");
 const DockerFilePath = shared.formatPath('dir1/DockerFile');
 
-let taskPath = path.join(__dirname, '..\\container.js');
+let taskPath = path.join(__dirname, '..', 'container.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerType] || shared.ContainerTypes.ContainerRegistry);
