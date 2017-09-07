@@ -196,9 +196,9 @@
       "integrity": "sha1-RBprv5s8aNpiTbAeo1y6jwpMLKs="
     },
     "vsts-task-lib": {
-      "version": "2.0.5",
+      "version": "2.0.6",
       "from": "vsts-task-lib@2.0.2-preview",
-      "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.6.tgz"
     },
     "vsts-task-tool-lib": {
       "version": "0.4.0",
