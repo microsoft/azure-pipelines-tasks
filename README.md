@@ -1,4 +1,4 @@
-# M122 Visual Studio Team Services Tasks
+# tfs2018rc2 Visual Studio Team Services Tasks
 ![Tasks](/taskbanner.png "Tasks")
 
 ## Overview
