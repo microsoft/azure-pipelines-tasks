@@ -450,6 +450,7 @@
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
+    "testSettingPropertiesNotSupported": "ms-resource:loc.messages.testSettingPropertiesNotSupported",
     "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",

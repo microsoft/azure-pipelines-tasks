@@ -4,6 +4,7 @@ import * as Q from 'q';
 import * as models from './models';
 import * as utils from './helpers';
 import * as parameterParser from './parameterparser'
+import * as version from './vstestversion';
 import * as os from 'os';
 import * as fs from 'fs';
 
@@ -54,7 +55,7 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </DataCollectionRunSettings>
     </RunSettings>`;
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Promise<string> {
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Promise<string> {
     const defer = Q.defer<string>();
     let result: any;
 
@@ -81,9 +82,15 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         }
     }
 
+    if(settingsExt === testSettingsExtension && result.TestSettings && 
+        result.TestSettings.Properties && result.TestSettings.Properties[0] && 
+        result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()){
+            tl.warning(tl.loc('testSettingPropertiesNotSupported'))  
+    } 
+
     if (overrideParametersString) {
-        if (settingsExt === runSettingsExtension) {
-            result = updateRunSettingsWithParameters(result, overrideParametersString);
+        if (settingsExt === runSettingsExtension || settingsExt === testSettingsExtension) {
+            result = updateSettingsWithParameters(result, overrideParametersString);
         } else {
             tl.warning(tl.loc('overrideNotSupported'));
         }
@@ -132,7 +139,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             }
             testImpactCollectorNode = data;
             if (tiaConfig.useNewCollector) {
-                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion);
+                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion.majorVersion);
             }
             testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
             if (getTIALevel(tiaConfig) === 'file') {
@@ -187,23 +194,43 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     return defer.promise;
 }
 
-function updateRunSettingsWithParameters(result: any, overrideParametersString: string) {
+function updateSettingsWithParameters(result: any, overrideParametersString: string) {
     const overrideParameters = parameterParser.parse(overrideParametersString);
-    if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
-        result.RunSettings.TestRunParameters[0].Parameter) {
-        tl.debug('Overriding test run parameters.');
-        const parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-        parametersArray.forEach(function (parameter) {
-            const key = parameter.$.Name || parameter.$.name;
-            if (overrideParameters[key] && overrideParameters[key].value) {
-                if (parameter.$.Value) {
-                    parameter.$.Value = overrideParameters[key].value;
-                } else {
-                    parameter.$.value = overrideParameters[key].value;
-                }
-            }
-        });
+    var parametersArray;
+    if (result.RunSettings) 
+	{
+		if(result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
+        result.RunSettings.TestRunParameters[0].Parameter) 
+		{
+			tl.debug('Overriding test run parameters for run settings.');
+			parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
+		}
     }
+	else if(result.TestSettings)
+	{
+	    if(result.TestSettings.Properties && result.TestSettings.Properties[0] &&
+        result.TestSettings.Properties[0].Property) 
+		{
+			tl.debug('Overriding test run parameters for test settings.');
+		    parametersArray = result.TestSettings.Properties[0].Property;
+        }  
+    }	
+    
+    if(parametersArray)
+        {
+            parametersArray.forEach(function (parameter) {
+				const key = parameter.$.Name || parameter.$.name;
+				if (overrideParameters[key] && overrideParameters[key].value) {
+                    tl.debug('Overriding value for parameter : ' + key );
+					if (parameter.$.Value) {
+						parameter.$.Value = overrideParameters[key].value;
+					} else {
+						parameter.$.value = overrideParameters[key].value;
+					}
+				}
+			});
+        }
+    
     return result;
 }
 
