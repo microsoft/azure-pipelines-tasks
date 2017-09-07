@@ -82,13 +82,13 @@
             "name": "ImageSource",
             "type": "pickList",
             "label": "Image Source",
-            "defaultValue": "Registry",
+            "defaultValue": "Builtin",
             "required": false,
             "options": {
                 "Registry": "Container Registry",
                 "Builtin": "Built-in Image"
             },
-            "helpMarkDown": "Select the option to deploy to choose the source of the image for your web-app.",
+            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
             "visibleRule": "WebAppKind = applinux"
         },
         {
@@ -139,7 +139,7 @@
             "label": "Repository",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "ImageSource  = Registry",
+            "visibleRule": "ImageSource = Registry",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -175,7 +175,16 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "ImageSource  != Registry && WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
+            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+        },
+        {
+            "name": "BuiltinLinuxPackage",
+            "type": "filePath",
+            "label": "Package or folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+            "required": false,
+            "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -478,7 +487,9 @@
         "UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
-        "SuccessfullyUpdatedStartupCommandInConfigDetails": "Successfully updated the Startup Command and the app-settings for the webapp.",
-        "FailedToUpdateStartupCommandInConfigDetails": "Failed to update the details for the webApp. Error: %s."
+        "SuccessfullyUpdatedStartupCommand": "Successfully updated the Startup Command.",
+        "FailedToUpdateStartupCommand": "Failed to update the Startup Command. Error: %s.",
+        "SuccessfullyUpdatedWebAppSettings": "Successfully updated the App settings.",
+        "FailedToUpdateAppSettingsInConfigDetails": "Failed to update the App settings. Error: %s."
     }
 }

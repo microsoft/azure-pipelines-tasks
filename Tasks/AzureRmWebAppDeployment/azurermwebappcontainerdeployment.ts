@@ -42,9 +42,10 @@ export async function deployWebAppImage(endPoint, resourceGroupName, webAppName,
 
     await azureRESTUtility.updateAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
-    await updateAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+    // Addding Docker image setting.
     appSettings = appSettings ? appSettings.trim() : "";
     appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
+    await updateAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
 }
 
 export async function updateAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings) {

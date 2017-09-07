@@ -82,7 +82,7 @@
       "name": "ImageSource",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ImageSource",
-      "defaultValue": "Registry",
+      "defaultValue": "Builtin",
       "required": false,
       "options": {
         "Registry": "Container Registry",
@@ -139,7 +139,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "ImageSource  = Registry",
+      "visibleRule": "ImageSource = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -175,8 +175,17 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "ImageSource  != Registry && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
+    },
+    {
+      "name": "BuiltinLinuxPackage",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+      "required": false,
+      "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
+      "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
     },
     {
       "name": "WebAppUri",
@@ -478,7 +487,9 @@
     "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
-    "SuccessfullyUpdatedStartupCommandInConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedStartupCommandInConfigDetails",
-    "FailedToUpdateStartupCommandInConfigDetails": "ms-resource:loc.messages.FailedToUpdateStartupCommandInConfigDetails"
+    "SuccessfullyUpdatedStartupCommand": "ms-resource:loc.messages.SuccessfullyUpdatedStartupCommand",
+    "FailedToUpdateStartupCommand": "ms-resource:loc.messages.FailedToUpdateStartupCommand",
+    "SuccessfullyUpdatedWebAppSettings": "ms-resource:loc.messages.SuccessfullyUpdatedWebAppSettings",
+    "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails"
   }
 }

@@ -534,7 +534,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Runs successfully for Builtin Images', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'L0NonWindowsBuiltinImage.js');
+        let tp = path.join(__dirname, 'L0LinuxBuiltinImage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
         
