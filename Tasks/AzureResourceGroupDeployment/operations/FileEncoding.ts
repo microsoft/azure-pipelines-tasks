@@ -14,7 +14,7 @@ export class FileEncoding {
     }
 }
 
-function detectFileEncodingWithBOM(buffer: Buffer) {
+function detectFileEncodingWithBOM(buffer: Buffer): FileEncoding {
     tl.debug('Detecting file encoding using BOM');
     var type: string;
     if (buffer.slice(0, 3).equals(new Buffer([239, 187, 191]))) {
@@ -39,7 +39,7 @@ function detectFileEncodingWithBOM(buffer: Buffer) {
     return new FileEncoding(type, true);
 }
 
-function detectFileEncodingWithoutBOM(buffer: Buffer) {
+function detectFileEncodingWithoutBOM(buffer: Buffer): FileEncoding {
     tl.debug('Detecting file encoding without BOM');
 
     var typeCode = 0;

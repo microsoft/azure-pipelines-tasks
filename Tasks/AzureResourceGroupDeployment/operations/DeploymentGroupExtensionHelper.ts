@@ -25,7 +25,7 @@ export class DeploymentGroupExtensionHelper {
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient);
     }
 
-    public async addExtensionOnResourceGroup() {
+    public async addExtensionOnResourceGroup(): Promise<any> {
         console.log(tl.loc("AddingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var extensionAddedOnVMsPromises: Promise<any>[] = [];
@@ -38,7 +38,7 @@ export class DeploymentGroupExtensionHelper {
         }
     }
 
-    public async deleteExtensionFromResourceGroup(): Promise<void> {
+    public async deleteExtensionFromResourceGroup(): Promise<any> {
         console.log(tl.loc("DeletingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
@@ -68,7 +68,7 @@ export class DeploymentGroupExtensionHelper {
         });
     }
 
-    private async addExtensionOnSingleVM(vm: az.VM) {
+    private async addExtensionOnSingleVM(vm: az.VM): Promise<any> {
         var vmName = vm.name;
         var operation = "add";
         var vmWithInstanceView: az.VM = await this.getVmWithInstanceView(this.taskParameters.resourceGroupName, vmName, { expand: 'instanceView' });
@@ -137,7 +137,7 @@ export class DeploymentGroupExtensionHelper {
         });
     }
 
-    private async tryDeleteFailedExtension(vm: az.VM) {
+    private async tryDeleteFailedExtension(vm: az.VM): Promise<any> {
         try {
             await this.deleteExtensionFromSingleVM(vm);
         }
@@ -170,7 +170,7 @@ export class DeploymentGroupExtensionHelper {
         })
     }
 
-    private formExtensionParameters(vm: az.VM, operation) {
+    private formExtensionParameters(vm: az.VM, operation): { vmName: string, extensionName: string, parameters: Object } {
         var vmId = vm.id;
         var vmName = vm.name;
         console.log("virtual machine : " + vmName);
