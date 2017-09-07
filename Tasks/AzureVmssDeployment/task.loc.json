@@ -61,8 +61,8 @@
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Update image": "Update image",
-        "Configure application startup": "Configure application startup"
+        "Update image": "Update VM Scale set by using an image",
+        "Configure application startup": "Run Custom Script VM extension on VM scale set"
       }
     },
     {
