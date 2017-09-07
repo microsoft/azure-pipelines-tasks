@@ -1,6 +1,6 @@
 // This class manages the powershell parameters format
 
-interface NameValuePair {
+export interface NameValuePair {
     name: string;
     value: string;
 }

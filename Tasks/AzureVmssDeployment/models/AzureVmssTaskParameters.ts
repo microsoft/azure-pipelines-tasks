@@ -5,6 +5,7 @@ export default class AzureVmssTaskParameters {
 
     public action: string;
     public vmssName: string;
+    public vmssOsType: string;
     public imageUrl: string;
     public customScriptsDirectory: string;
     public customScript: string;
@@ -19,7 +20,8 @@ export default class AzureVmssTaskParameters {
             var connectedService = tl.getInput("ConnectedServiceName", true);
             this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
             this.vmssName = tl.getInput("vmssName", true);
-            this.imageUrl = tl.getInput("imageUrl", true);
+            this.vmssOsType = tl.getInput("vmssOsType", false);
+            this.imageUrl = tl.getInput("imageUrl", false);
             this.action = tl.getInput("action");
             this.customScriptsDirectory = tl.getInput("customScriptsDirectory");
             this.customScript = tl.getInput("customScript");
