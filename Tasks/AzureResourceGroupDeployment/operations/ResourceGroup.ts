@@ -232,7 +232,7 @@ export class ResourceGroup {
         for (var overrideParameter of overrideParameters) {
             tl.debug("Overriding key: " + overrideParameter.name);
             try {
-                overrideParameter.value = this.castToType(overrideParameter.value, template.parameters.get(overrideParameter.name).type);
+                overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {
                 console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
             }
