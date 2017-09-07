@@ -4,15 +4,15 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
-$environmentName = Get-VstsInput -Name EnvironmentName
-$adminUserName = Get-VstsInput -Name AdminUserName
-$adminPassword = Get-VstsInput -Name AdminPassword
+$environmentName = Get-VstsInput -Name EnvironmentName -Require
+$adminUserName = Get-VstsInput -Name AdminUserName -Require
+$adminPassword = Get-VstsInput -Name AdminPassword -Require
 $protocol = Get-VstsInput -Name Protocol
 $testCertificate = Get-VstsInput -Name testCertificate
 $machineNames = Get-VstsInput -Name MachineNames
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptArguments = Get-VstsInput -Name ScriptArguments
-$initializationScriptPath = Get-VstsInput -Name InitializationScriptPath
+$initializationScriptPath = Get-VstsInput -Name InitializationScriptPath 
 $runPowershellInParallel = Get-VstsInput -Name RunPowershellInParallel
 $sessionVariables = Get-VstsInput -Name SessionVariables
 
@@ -35,6 +35,12 @@ try
     $machineFilter = $machineNames
     $scriptPath = $scriptPath.Trim('"')
     $initializationScriptPath = $initializationScriptPath.Trim('"')
+
+    # Normalize admin username
+    if((-not $adminUserName.StartsWith(".\")) -and ($adminUserName.IndexOf("\") -eq -1) -and ($adminUserName.IndexOf("@") -eq -1))
+    {
+        $adminUserName = ".\" + $adminUserName 
+    } 
 
     # Getting resource tag key name for corresponding tag
     $resourceFQDNKeyName = Get-ResourceFQDNTagKey

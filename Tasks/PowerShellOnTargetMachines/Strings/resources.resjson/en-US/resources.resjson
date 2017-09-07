@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
+  "loc.releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
   "loc.group.displayName.deployment": "Deployment",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.EnvironmentName": "Machines",
