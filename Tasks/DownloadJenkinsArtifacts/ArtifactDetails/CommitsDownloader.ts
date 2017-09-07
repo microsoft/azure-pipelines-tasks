@@ -7,6 +7,7 @@ import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient} from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
+var helpers = require('handlebars-helpers')(['array']);
 
 const CommitTemplateBase: string = `{{#with changeSet as |changes|}}
   {{#each changes.items as |commit|}}

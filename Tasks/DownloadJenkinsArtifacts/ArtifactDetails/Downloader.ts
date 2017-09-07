@@ -45,7 +45,8 @@ export class ArtifactDetailsDownloader {
             }
             else if (startJobId == endJobId) {
                 console.log(tl.loc("JenkinsNoCommitsToFetch"));
-                return;
+                defer.resolve(null);
+                return defer.promise;
             }
 
             // #1. Since we have two builds, we need to figure the build index
