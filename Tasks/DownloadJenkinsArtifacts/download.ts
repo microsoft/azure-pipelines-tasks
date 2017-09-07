@@ -43,11 +43,10 @@ function AddIssue(message) {
 }
 
 main()
-    .then((result) => tl.setResult(tl.TaskResult.Succeeded, ""))
-    .catch((error) => tl.setResult(tl.TaskResult.Failed, error))
-    .then(() => {
-        let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
+    .then((result) => {
+        tl.setResult(tl.TaskResult.Succeeded, "");
 
+        let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
         if (downloadCommitsAndWorkItems) {
             new ArtifactDetailsDownloader()
             .DownloadCommitsAndWorkItems()
@@ -55,4 +54,5 @@ main()
                 () => console.log('Commits and WorkItems Downloaded successfully'), 
                 (error) => AddIssue(`Downloading Jenkins Commits and WorkItem failed with an error: ${error}`));
         }
-    });
+    })
+    .catch((error) => tl.setResult(tl.TaskResult.Failed, error))

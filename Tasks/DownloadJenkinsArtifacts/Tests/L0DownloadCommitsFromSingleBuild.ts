@@ -21,12 +21,14 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_connection1_acceptUntrustedCerts'] = 'true';
 
 tr.registerMock("item-level-downloader/Engine" , { 
-    FetchEngine: { 
-        fetchItems: function(A,B,C) {},
-        constructor: function() {},
-        FetchEngine: function() {}
-    } 
-}); 
+    FetchEngine: function() {
+        return { 
+            fetchItems: function(A,B,C) {},
+        }
+    } ,
+    FetchEngineOptions: function() {
+    }
+});
 
 tr.registerMock("request", {
     get: function(urlObject, callback) {
