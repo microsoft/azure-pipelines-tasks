@@ -166,7 +166,7 @@ async function run() {
                     }
                 }
                 console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
-            console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+                console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
                 await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                                 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                                 additionalArguments, isFolderBasedDeployment, useWebDeploy);
@@ -174,7 +174,7 @@ async function run() {
                 tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
 
                 if (isLinuxWebApp) {
-                    updateStartupCommandAndAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, startupCommand, inputAppSettings);
+                    await updateStartupCommandAndAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, startupCommand, inputAppSettings);
                 }
 
                 if(azureWebAppDetails == null) {
