@@ -449,7 +449,7 @@
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
-        "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
+        "overrideNotSupported": "Overriding test run parameters is supported only with valid runsettings or testsettings file. This option will be ignored.",
         "testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",

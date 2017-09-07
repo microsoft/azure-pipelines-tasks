@@ -951,9 +951,10 @@ describe('VsTest Suite', function () {
     it('Updating testsettings with overridden parameters', (done) => {
         try {
             const settingsFilePath = path.join(__dirname, 'data', 'ValidWithProperties.testsettings');
-            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass';
+            const overriddenParams = '-webAppUrl testVal -webAppInvalid testVal3 -webAppPassword testPass --webAppUserName testuser';
             let webAppUrlValue = '';
             let webAppPasswordValue = '';
+            let webAppUsername = '';
             
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
                 .then(function (settingsXml: string) {
@@ -967,10 +968,13 @@ describe('VsTest Suite', function () {
                                     assert.fail(parameter.$.Name, undefined, 'test param should not exist');
                                 } else if (parameter.$.name === 'webAppPassword') {
                                     webAppPasswordValue = parameter.$.value;
+                                } else if (parameter.$.name === '-webAppUserName') {
+                                    webAppUsername = parameter.$.Value;
                                 }
                             });
                             assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
                             assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            assert.equal(webAppUsername, 'testuser', 'testsettings properties must be overriden');
                             done();
                         });
                 });
@@ -990,6 +994,7 @@ describe('VsTest Suite', function () {
             let webAppUrlValue = '';
             let webAppUrlValue2 = '';
             let webAppPasswordValue = '';
+            let webAppUsername = '';
 
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
                 .then(function (settingsXml: string) {
@@ -1012,10 +1017,13 @@ describe('VsTest Suite', function () {
                                     assert.fail(parameter.$.Name, undefined, 'test param should not exist');
                                 } else if (parameter.$.name === 'webAppPassword') {
                                     webAppPasswordValue = parameter.$.value;
+                                } else if (parameter.$.name === '-webAppUserName') {
+                                    webAppUsername = parameter.$.Value;
                                 }
                             });
                             assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
                             assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            assert.equal(webAppUsername, 'Admin', 'testsettings properties must not be overriden');
                             assert.equal(webAppUrlValue2, 'testVal', 'testsettings properties must be overridden');
                             done();
                         });
@@ -1035,6 +1043,7 @@ describe('VsTest Suite', function () {
             let webAppUrlValue = '';
             let webAppPasswordValue = '';
             let webAppUrlValue2 = '';
+            let webAppUsername = '';
 
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
                 .then(function (settingsXml: string) {
@@ -1048,6 +1057,8 @@ describe('VsTest Suite', function () {
                                     assert.fail(parameter.$.Name, undefined, 'test param should not exist');
                                 } else if (parameter.$.name === 'webAppPassword') {
                                     webAppPasswordValue = parameter.$.value;
+                                } else if (parameter.$.name === '-webAppUserName') {
+                                    webAppUsername = parameter.$.Value;
                                 }
                             });
                             const parametersArray2 = settings.TestSettings.Properties[1].Property
@@ -1059,6 +1070,7 @@ describe('VsTest Suite', function () {
                             
                             assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
                             assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
+                            assert.equal(webAppUsername, 'Admin', 'testsettings properties must not be overriden');
                             assert.equal(webAppUrlValue2, 'Duplicatelocalhost', 'testsettings properties must not be overridden');
                             done();
                         });
@@ -1078,7 +1090,7 @@ describe('VsTest Suite', function () {
                 .then(function (settingsXml: string) {
                     utils.Helper.getXmlContents(settingsXml)
                         .then(function (settings) {
-                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Runparallel setting not set properly' + settings);
+                            assert.equal(settings.RunSettings.RunConfiguration[0].MaxCpuCount, 0, 'Default setting not set properly' + settings);
                             done();
                         });
                 });

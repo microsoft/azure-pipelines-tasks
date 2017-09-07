@@ -221,6 +221,7 @@ function updateSettingsWithParameters(result: any, overrideParametersString: str
             parametersArray.forEach(function (parameter) {
 				const key = parameter.$.Name || parameter.$.name;
 				if (overrideParameters[key] && overrideParameters[key].value) {
+                    tl.debug('Overriding value for parameter : ' + key );
 					if (parameter.$.Value) {
 						parameter.$.Value = overrideParameters[key].value;
 					} else {
