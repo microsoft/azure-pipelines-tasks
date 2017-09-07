@@ -1,0 +1,10 @@
+{
+  "name": "DownloadJenkinsArtifacts",
+  "main": "download.js",
+  "dependencies": {
+    "vsts-task-lib" : "2.0.1-preview",
+    "vso-node-api": "6.0.1-preview",
+    "item-level-downloader": "1.0.3",
+    "request": "2.74.0"
+  }
+}

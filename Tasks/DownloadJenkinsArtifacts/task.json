@@ -1,0 +1,136 @@
+{
+  "id": "3A2D6637-EDEC-4873-B17A-2F63308D64BC",
+  "name": "DownloadJenkinsArtifacts",
+  "friendlyName": "Download Artifacts - Jenkins",
+  "description": "Download artifacts from jenkins job",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "author": "ms-vscs-rm",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "inputs": [
+    {
+      "name": "connection",
+      "type": "connectedService:jenkins",
+      "label": "Jenkins Connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Jenkins connection"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "Jenkins Job",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Select the jenkins job"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "Build",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Build Id"
+    },
+    {
+      "name": "downloadPattern",
+      "type": "string",
+      "label": "Download Filter",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Minmatch pattern to filter files to be downloaded."
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "Destination directory",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "Path on the agent machine where the artifact will be downloaded"
+    },
+    {
+      "name": "downloadCommitsAndWorkItems",
+      "type": "boolean",
+      "label": "Download Commits and WorkItems",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Enables downloading the commits and workitem details associated to the Jenkins Job"
+    },
+    {
+      "name": "previousJenkinsJob",
+      "type": "pickList",
+      "label": "Download commits and workitems from",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems = true",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Mentions the previous Job Id. Commits and work items will be downloaded from all the builds between previous JobId and the current JobId"
+    },
+    {
+      "name": "artifactDetailsFileNameSuffix",
+      "type": "string",
+      "label": "Commit and WorkItem FileName",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems = true",
+      "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix} and workitem_{suffix}. If this input is not provided attachments will be create with the name commits.json and workitems.json"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(connection)",
+      "target": "definition",
+      "dataSourceName": "Jobs",
+      "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(connection)",
+      "target": "version",
+      "dataSourceName": "Builds",
+      "parameters": {
+          "definition": "$(definition)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(connection)",
+      "target": "previousJenkinsJob",
+      "dataSourceName": "Builds",
+      "parameters": {
+          "definition": "$(definition)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "Download Artifacts - Jenkins",
+  "execution": {
+    "Node": {
+      "target": "download.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "Downloading artifacts from : %s",
+    "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
+    "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find previous JobId, will be fetching commits and workitems from current build %s" ,
+    "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between job %s to %s",
+    "JenkinsRollbackDeployment": "Downloading commits and workitems for Rollback Deployment between job %s to %s",
+    "JenkinsNoCommitsToFetch": "Deploying same build. Nothing to fetch",
+    "ServerCallErrorCode": "HTTP request failed with error code: %d",
+    "ServerCallFailed": "HTTP request to Jenkins server failed"
+  }
+}
