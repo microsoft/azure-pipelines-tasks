@@ -4,7 +4,7 @@ import * as tl from 'vsts-task-lib/task';
 var handlebars = require('handlebars');
 var request = require('request');
 
-export class DownloadHelper {
+export class JenkinsRestClient {
     constructor() {
         this.RegisterCustomerHandleBars();
     }
@@ -60,35 +60,14 @@ export class DownloadHelper {
 
             return result;
         });
-        
-        // handlebars.registerHelper('pluck', function(arr, prop) {
-        //     let res = [];
-
-        //     if (!!arr && !!prop) {
-        //         for (let i = 0, len = arr.length; i < len; i++) {
-        //             let val = arr[i][prop];
-        //             if (typeof val !== 'undefined') {
-        //                 res.push(`"${val}"`);
-        //             }
-        //         }
-        //     }
-
-        //     return res;
-        // });
-
-        // handlebars.registerHelper('mylookup', function(context, item) {
-        //     for(var property in context) {
-        //         tl.debug('context: ' + property + "=" + context[property]);
-        //     }
-        //     return context[item];
-        // });
     }
 
-    public DownloadJsonContent(urlPath: string, handlebarSource: string, additionalContext: { [key: string]: any } = null): Q.Promise<any> {
+    public DownloadJsonContent(urlPath: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any } = null): Q.Promise<any> {
         let defer = Q.defer<any>();
 
         const connection = tl.getInput("connection", true);
         const endpointUrl = tl.getEndpointUrl(connection, false);
+        console.log('test3');
         const jobName = tl.getInput("definition", true);
         const username = tl.getEndpointAuthorizationParameter(connection, 'username', false);
         const password = tl.getEndpointAuthorizationParameter(connection, 'password', false);
@@ -109,10 +88,10 @@ export class DownloadHelper {
                     try {
                         tl.debug(`Applying the handlbar source ${handlebarSource} on the result`);
                         let template = handlebars.compile(handlebarSource);
-                        if (additionalContext) {
-                            for(let key in additionalContext) {
-                            tl.debug(`Adding additional context {${key} --> ${additionalContext[key]}} to the original context`)
-                                jsonResult[key] = additionalContext[key];
+                        if (additionalHandlebarContext) {
+                            for(let key in additionalHandlebarContext) {
+                            tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
+                                jsonResult[key] = additionalHandlebarContext[key];
                             };
                         }
 

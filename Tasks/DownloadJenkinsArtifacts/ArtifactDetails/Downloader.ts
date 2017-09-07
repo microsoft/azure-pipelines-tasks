@@ -1,7 +1,7 @@
 import * as Q from 'q';
 import * as  tl from 'vsts-task-lib/task';
 
-import {DownloadHelper} from "./DownloadHelper"
+import {JenkinsRestClient} from "./JenkinsRestClient"
 import {CommitsDownloader} from "./CommitsDownloader"
 import {WorkItemsDownloader} from "./WorkItemsDownloader"
 
@@ -92,7 +92,7 @@ export class ArtifactDetailsDownloader {
         });
 
         let source: string = '{{#each allBuilds}}{{#JobIndex this.number @index}}{{/JobIndex}}{{/each}}';
-        let downloadHelper: DownloadHelper = new DownloadHelper();
+        let downloadHelper: JenkinsRestClient = new JenkinsRestClient();
         downloadHelper.DownloadJsonContent(jobUrl, source).then(() => {
             console.log(`Found startIndex ${startIndex} and endIndex ${endIndex}`);
             if (startIndex === 0 || endIndex === 0) {

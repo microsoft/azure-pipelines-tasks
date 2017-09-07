@@ -2,8 +2,6 @@ import * as Q from 'q';
 import * as fs from 'fs';
 import * as  tl from 'vsts-task-lib/task';
 
-import {DownloadHelper} from "./DownloadHelper"
-
 export abstract class ArtifactDetailsDownloaderBase {
     protected UploadAttachment(content: string, filePath: string): Q.Promise<any> {
         let defer = Q.defer<void>();

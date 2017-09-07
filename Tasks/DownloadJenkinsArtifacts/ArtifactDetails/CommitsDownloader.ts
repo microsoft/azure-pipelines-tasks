@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as  tl from 'vsts-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
-import {DownloadHelper} from "./DownloadHelper"
+import {JenkinsRestClient} from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
 
@@ -41,14 +41,14 @@ const commitTemplate: string = `[
 const GetCommitMessagesTemplate: string = `{{pluck . 'Message'}}`
 
 export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
-    private downloadHelper: DownloadHelper;
+    private jenkinsClient: JenkinsRestClient;
     private commitsFilePath: string;
 
     constructor() {
         super();
 
         handlebars.registerPartial('commit', CommitTemplateBase);
-        this.downloadHelper = new DownloadHelper();
+        this.jenkinsClient = new JenkinsRestClient();
 
         let tempDir: string = os.tmpdir();
         let commitsFileName: string = this.GetCommitsFileName();
@@ -113,7 +113,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `/api/json?tree=${buildParameter}[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{${endIndex},${startIndex}}`;
 
         console.log('Downloading commits');
-        this.downloadHelper.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
+        this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
             tl.debug(`Processed commits ${commitsResult}`);
             defer.resolve(commitsResult);
         }, (error) => {
@@ -129,7 +129,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `/${jobId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
         console.log(`Downloading commits from the job ${jobId}`);
-        this.downloadHelper.DownloadJsonContent(commitsUrl, commitTemplate).then((commitsResult) => {
+        this.jenkinsClient.DownloadJsonContent(commitsUrl, commitTemplate).then((commitsResult) => {
             tl.debug(`Processed commits ${commitsResult}`);
             defer.resolve(commitsResult);
         }, (error) => {

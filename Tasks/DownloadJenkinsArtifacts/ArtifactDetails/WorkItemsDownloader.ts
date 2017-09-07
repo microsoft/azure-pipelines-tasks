@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as  tl from 'vsts-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
-import {DownloadHelper} from "./DownloadHelper"
+import {JenkinsRestClient} from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
 
@@ -40,7 +40,7 @@ const WorkItemsTemplate: string = `[
 ]`;
 
 export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
-    private downloadHelper: DownloadHelper;
+    private jenkinsClient: JenkinsRestClient;
     private commitMessages: string[];
     private workItemsFilePath: string;
 
@@ -54,7 +54,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         this.workItemsFilePath = path.join(/*"d:\\"*/tempDir, workItemsFileName);
 
         handlebars.registerPartial('workitem', WorkItemTemplateBase);
-        this.downloadHelper = new DownloadHelper();
+        this.jenkinsClient = new JenkinsRestClient();
     }
 
     public DownloadFromSingleBuildAndSave(jobId: number): Q.Promise<string> {
@@ -93,7 +93,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         const workItemsUrl: string = `/${jobId}/api/json?tree=actions[issues[*],serverURL]`;
 
         console.log(`Downloading workItems from the job ${jobId}`);
-        this.downloadHelper.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
+        this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
             tl.debug(`Processed workItems ${workItemsResult}`);
             defer.resolve(workItemsResult);
         }, (error) => {
@@ -110,7 +110,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         const workItemsUrl: string = `/api/json?tree=${buildParameter}[actions[issues[*],serverURL]]{${endIndex},${startIndex}}`;
 
         console.log('Downloading workitems');
-        this.downloadHelper.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {
+        this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {
             tl.debug(`Processed workitems ${workItemsResult}`);
             defer.resolve(workItemsResult);
         }, (error) => {
