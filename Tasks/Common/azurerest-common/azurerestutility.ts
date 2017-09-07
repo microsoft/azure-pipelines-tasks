@@ -29,6 +29,7 @@ var defaultWebAppAvailabilityTimeoutInMS = 3000;
 */
 export async function getResourceGroupName(endpoint, webAppName: string)
 {
+    console.log("inside getresourcegroupname function");
     var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
@@ -39,6 +40,7 @@ export async function getResourceGroupName(endpoint, webAppName: string)
     tl.debug('Web App details : ' + webAppID.id);
     var resourceGroupName = webAppID.id.split ('/')[4];
     tl.debug('Azure Resource Group Name : ' + resourceGroupName);
+    console.log("check");
     return resourceGroupName;
 }
 /**
@@ -51,7 +53,6 @@ export async function getResourceGroupName(endpoint, webAppName: string)
  */
 export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean, customMessage, deploymentId): Q.Promise<string>  {
     var deferred = Q.defer<string>();
-
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     tl.debug('Web App Publish Kudu URL: ' + webAppPublishKuduUrl);
     if(webAppPublishKuduUrl) {
@@ -75,20 +76,6 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
         (error) => {
             deferred.reject(error);
         });
-
-        /*restObj.replace(requestDetails['requestUrl'], null, requestDetails['requestBody'], headers, null,
-            (error, response, body) => {
-                if(error) {
-                    deferred.reject(error);
-                }
-                else if(response === 200) {
-                    deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory", body.url));
-                }
-                else {
-                    tl.warning(body);
-                    deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
-                }
-        });*/
     }
     else {
         deferred.reject(tl.loc('WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite'));
@@ -109,7 +96,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  * @returns (JSON)
  */
 export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
-
+    console.log("inside getAzureRMWebAppPublishProfile function");
     var accessToken = await getAuthorizationToken(endPoint);
     var headers = {
         authorization: 'Bearer '+ accessToken
@@ -146,6 +133,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
 }
 
 function getAccessToken(endPoint) {
+    console.log("inside getAccessToken function");
     var deferred = Q.defer<string>();
     var retryCounter = 0;
 
@@ -173,6 +161,7 @@ function getAccessToken(endPoint) {
 }
 
 function getAuthorizationToken(endPoint): Q.Promise<string> {
+    console.log("inside getAuthorizationToken function");
 
     var deferred = Q.defer<string>();
     var envAuthUrl = (endPoint.envAuthUrl) ? (endPoint.envAuthUrl) : defaultAuthUrl;
@@ -231,6 +220,7 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
 }
 
 async function getAzureRMWebAppID(endpoint, webAppName: string, url: string, headers) {
+    console.log("inside getAzureRMWebAppID function");
     var deferred = Q.defer<any>();
 
     tl.debug('Requesting Azure App Service ID: ' + url);
@@ -302,7 +292,6 @@ async function getAzureRMWebAppID(endpoint, webAppName: string, url: string, hea
  *  @param slotName            Slot for deployment
  */
 export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
-
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
@@ -313,46 +302,26 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
     var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 
+    tl.debug('Requesting Azure App Service web config Details: ' + configUrl);
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.get(configUrl, options);
     promise.then((response) => {
-        console.log("####################3");
-        console.log(JSON.stringify(response));
-        console.log("####################3");
         if(response.statusCode === 200) {
             deferred.resolve(response.result);
         } else {
-            tl.debug(response.result);
+            tl.debug(JSON.stringify(response.result));
             deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
         }
     },
     (error) => {
-        console.log(error);
         deferred.reject(error);
     });
 
-
-    tl.debug('Requesting Azure App Service web config Details: ' + configUrl);
-    //need to test this once
-    /*httpObj.get('GET', configUrl, headers, (error, response, body) => {
-        if( error ) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            deferred.resolve(obj);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
-        }
-    });*/
     return deferred.promise;
 }
 
 export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, configDetails: string) {
-
     var deferred = Q.defer<any>();
 	var accessToken = await getAuthorizationToken(endPoint);
     var headers = {
@@ -363,14 +332,12 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
     var configUrl = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
-    
+
+    tl.debug('Updating web config details at: ' + configUrl);
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
-    let promise: Promise<any> = rc.update(configUrl, options);
+    let promise: Promise<any> = rc.update(configUrl, JSON.parse(configDetails), options);
     promise.then((response) => {
-        console.log("################");
-        console.log(JSON.stringify(response));
-        console.log("################");
         if(response.statusCode === 200) {
             deferred.resolve();
         } else {
@@ -378,24 +345,8 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
         }
     },
     (error) => {
-        console.log(error);
         deferred.reject(error);
     });
-             
-
-    tl.debug('Updating web config details at: ' + configUrl);
-	
-    /*httpObj.send('PATCH', configUrl, configDetails, headers, (error, response, body) =>{
-		if(error){
-			deferred.reject(error);
-		}
-		else if(response.statusCode === 200) {
-			deferred.resolve();
-		}
-		else {
-			deferred.reject(response.statusMessage);
-		}
-	});*/
 							
     return deferred.promise;
 }
@@ -411,14 +362,12 @@ export async function getWebAppAppSettings(endpoint, webAppName: string, resourc
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
     var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/appsettings/list?' + azureApiVersion;
-    
+
+    tl.debug('Requesting for the Current List of App Settings: ' + configUrl);    
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.create(configUrl, null, options);
     promise.then((response) => {
-        console.log("################");
-        console.log(JSON.stringify(response));
-        console.log("################");
         if(response.statusCode === 200) {
             deferred.resolve(response.result);
         } else {
@@ -427,30 +376,13 @@ export async function getWebAppAppSettings(endpoint, webAppName: string, resourc
         }
     },
     (error) => {
-        console.log(error);
         deferred.reject(error);
     });
 
-	tl.debug('Requesting for the Current List of App Settings: ' + configUrl);
-
-	/*httpObj.send('POST', configUrl, null, headers, (error, response, body) =>{
-		if(error){
-			deferred.reject(error);
-		}
-		else if(response.statusCode === 200) {
-			deferred.resolve(JSON.parse(body));
-		}
-		else {
-			tl.debug(body);
-			deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
-		}
-	});*/
-	
-	return deferred.promise;
+    return deferred.promise;
 }
 
 export async function updateWebAppAppSettings(endpoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, appSettings: Object) {
-
     var deferred = Q.defer<any>();
 	var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
@@ -461,44 +393,27 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
     var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/appsettings?' + azureApiVersion;
 
+    tl.debug('Updating the Current List of App Settings: ' + configUrl);
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
     let promise: Promise<rm.IRestResponse<any>> = rc.replace(configUrl, appSettings, options);
     promise.then((response) => {
-        console.log("the desired reponse is:");
-        console.log(JSON.stringify(response));
         if(response.statusCode === 200) {
             deferred.resolve(appSettings);
         } else {
             tl.debug(JSON.stringify(response.result));
-            console.log("UNable to update webappsettings");
-            //deferred.reject(tl.loc('Unabletoupdatewebappsettings', response, error));
+            deferred.reject(tl.loc('Unabletoupdatewebappsettings', response));
         }
     },
     (error) => {
-        console.log("#ERROR ERROR SUPREME ERROR");
         deferred.reject(error);
     });
 
-    tl.debug('Updating the Current List of App Settings: ' + configUrl);
-	
-    /*restObj._sendJson('PUT', configUrl, "", appSettings, headers, null, (error, response, body) =>{
-        if(error){
-            deferred.reject(error);
-        }
-        else if(response === 200){
-            deferred.resolve(appSettings);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(tl.loc('Unabletoupdatewebappsettings', response, error));
-        }
-    });*/
-							
     return deferred.promise;
 }
 
 async function getOperationStatus(SPN, url: string) {
+    console.log("inside getOperationStatus function");
     var deferred = Q.defer();
     var accessToken = await getAccessToken(SPN);
     var headers = {
@@ -530,6 +445,7 @@ async function getOperationStatus(SPN, url: string) {
 }
 
 function monitorSlotSwap(SPN, url) {
+    console.log("inside monitorSlotSwap function");
     tl.debug("Monitoring slot swap operation status from: "+ url);
     var deferred = Q.defer();
     var attempts = 0;
@@ -562,6 +478,7 @@ function monitorSlotSwap(SPN, url) {
 }
 
 export async function swapWebAppSlot(endpoint, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
+    console.log("inside swapWebAppSlot function");
     
     var deferred = Q.defer<any>();
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
@@ -604,7 +521,6 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
 }
 
 export async function startAppService(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
-    
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
@@ -617,24 +533,26 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to start App Service: ' + url);
     console.log(tl.loc('StartingAppService', webAppNameWithSlot));
-    httpObj.send('POST', url, null, headers, (error, response, body) => {
-        if(error) {
-            console.log(body);
-            deferred.reject(error);
-        }
+    
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.create(url, null, options);
+    promise.then((response) => {
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestartedsuccessfully', webAppNameWithSlot));
-        }
-        else {
-            console.log(body);
+        } else {
+            console.log(JSON.stringify(response));
             deferred.reject(tl.loc("FailedtoStartAppService", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
+    },
+    (error) => {
+        deferred.reject(error);
     });
+
     return deferred.promise;
 }
 
 export async function stopAppService(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
-    
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
@@ -647,24 +565,26 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to stop App Service: ' + url);
     console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
-    httpObj.send('POST', url, null, headers, (error, response, body) => {
-        if(error) {
-            console.log(body);
-            deferred.reject(error);
-        }
+
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.create(url, null, options);
+    promise.then((response) => {
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServicestoppedsuccessfully', webAppNameWithSlot));
-        }
-        else {
-            console.log(body);
+        } else {
+            console.log(JSON.stringify(response));
             deferred.reject(tl.loc("FailedtoStopAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
+    },
+    (error) => {
+        deferred.reject(error);
     });
+
     return deferred.promise;
 }
 
 export async function restartAppService(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
-    
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
@@ -677,27 +597,31 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to restart App Service: ' + url);
     console.log(tl.loc('RestartingAppService', webAppNameWithSlot));
-    httpObj.send('POST', url, null, headers, (error, response, body) => {
-        if(error) {
-            console.log(body);
-            deferred.reject(error);
-        }
+
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.create(url, null, options);
+    promise.then((response) => {
         if(response.statusCode === 200 || response.statusCode === 204) {
             deferred.resolve(tl.loc('AppServiceRestartedSuccessfully', webAppNameWithSlot));
-        }
-        else if(response.statusCode === 202) {
+        } else if(response.statusCode === 202) {
             tl.warning(tl.loc('RestartAppServiceAccepted'));
             deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppNameWithSlot));
-        }
+        } 
         else {
-            console.log(body);
-            deferred.reject(tl.loc("FailedtoRestartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
+            console.log(JSON.stringify(response));
+            deferred.reject(tl.loc("FailedtoRestartAppService", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
+    },
+    (error) => {
+        deferred.reject(error);
     });
+
     return deferred.promise;
 }
 
 export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
+    console.log("inside getAzureContainerRegistryCredentials function");
     var deferred = Q.defer<any>();
 
     var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
@@ -708,7 +632,23 @@ export async function getAzureContainerRegistryCredentials(endpoint, azureContai
         'Authorization': 'Bearer '+ accessToken
     };
 
-    httpObj.get('POST', url, headers, async (error, response, body) => {
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.create(url, null, options);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve(response.result);
+        } else {
+            tl.error(response.statusMessage);
+            deferred.reject("Unable to resolve creds for the registry");
+        }
+    },
+    (error) => {
+        //console.log(JSON.stringify(response));
+        deferred.reject(error);
+    });
+
+    /*httpObj.get('POST', url, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
@@ -725,15 +665,35 @@ export async function getAzureContainerRegistryCredentials(endpoint, azureContai
             tl.error(response.statusMessage);
             deferred.reject("Unable to resolve creds for the registry");
         }
-    });
+    });*/
 
     return deferred.promise;
 }
 
 export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout) {
+    console.log("inside testAzureWebAppAvailability function");
     var deferred = Q.defer();
     var headers = {};
-    httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
+
+    let promise: Promise<any> = rc.get(webAppUrl, headers);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
+            tl.debug("Azure web app is available.");
+            var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeoutInMS; 
+            setTimeout(() => {
+                deferred.resolve("SUCCESS");
+            }, webAppAvailabilityTimeout);
+        } else {
+            tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
+            deferred.reject("FAILED");
+        }
+    },
+    (error) => {
+        //console.log(JSON.stringify(response));
+        tl.debug("Failed to check availability of azure web app, error : " + error);
+        deferred.reject(error);
+    });
+    /*httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
         if (error) {
             tl.debug("Failed to check availability of azure web app, error : " + error);
             deferred.reject(error);
@@ -748,12 +708,11 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
                 deferred.reject("FAILED");
             }
         }
-    });
+    });*/
     return deferred.promise;
 }
 
 export async function getAppServiceDetails(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
-    
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
@@ -763,21 +722,25 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
+
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl.debug('Request to get App State: ' + webAppNameWithSlot);
-    httpObj.send('GET', url, null, headers, (error, response, body) => {
-        if(error) {
-            console.log(body);
-            deferred.reject(error);
-        }
+
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.get(url, options);
+    promise.then((response) => {
         if(response.statusCode === 200) {
-            deferred.resolve(JSON.parse(body));
-        }
-        else {
-            console.log(body);
+            deferred.resolve(response.result);
+        } else {
+            console.log(JSON.stringify(response.result));
             deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
+    },
+    (error) => {
+        deferred.reject(error);
     });
+    
     return deferred.promise;
 }
 
@@ -787,6 +750,7 @@ export async function getAzureRMWebAppMetadata(
     resourceGroupName: string,
     deployToSlotFlag: boolean,
     slotName: string) {
+        console.log("inside getAzureRMWebAppMetadata function");
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endpoint);
@@ -798,8 +762,24 @@ export async function getAzureRMWebAppMetadata(
     var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
         '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/config/metadata/list?' + azureApiVersion;
 
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.create(metadataUrl, null, options);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve(response.result);
+        } else {
+            tl.debug(JSON.stringify(response.result));
+            deferred.reject(response.statusMessage);
+        }
+    },
+    (error) => {
+        //console.log(JSON.stringify(response));
+        deferred.reject(error);
+    });
+
     tl.debug('Requesting Azure App Service Metadata: ' + metadataUrl);
-    httpObj.get('POST', metadataUrl, headers, (error, response, body) => {
+    /*httpObj.get('POST', metadataUrl, headers, (error, response, body) => {
         if (error) {
             deferred.reject(error);
         }
@@ -811,7 +791,7 @@ export async function getAzureRMWebAppMetadata(
             tl.debug(body);
             deferred.reject(response.statusMessage);
         }
-    });
+    });*/
     return deferred.promise;
 }
 
@@ -822,6 +802,7 @@ export async function updateAzureRMWebAppMetadata(
     deployToSlotFlag: boolean,
     slotName: string,
     webAppMetadata: Object) {
+        console.log("inside updateAzureRMWebAppMetadata function");
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endPoint);
@@ -836,7 +817,23 @@ export async function updateAzureRMWebAppMetadata(
 
     tl.debug('Updating Azure App Service Metadata at: ' + metadataUrl);
 
-    restObj._sendJson('PUT', metadataUrl, "", webAppMetadata, headers, null, (error, response, body) => {
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.replace(metadataUrl, webAppMetadata, options);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve();
+        } else {
+            tl.debug(response.result);
+            deferred.reject(response.statusCode);
+        }
+    },
+    (error) => {
+        deferred.reject(error);
+    });
+
+
+    /*restObj._sendJson('PUT', metadataUrl, "", webAppMetadata, headers, null, (error, response, body) => {
         if (error) {
             deferred.reject(error);
         }
@@ -847,9 +844,9 @@ export async function updateAzureRMWebAppMetadata(
             tl.debug(body);
             deferred.reject(response);
         }
-    });
+    });*/
     return deferred.promise;
-}
+    }
 
 function sleep(timeInMilliSecond) {
   return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
