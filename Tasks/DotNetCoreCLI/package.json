@@ -19,8 +19,7 @@
     "dependencies": {
         "vsts-task-lib": "2.0.5",
         "q": "^1.4.1",
-        "archiver": "1.0.1",
-        "xmlreader": "^0.2.3",
+        "archiver": "1.2.0",
         "vso-node-api": "6.0.1-preview"
     }
 }
