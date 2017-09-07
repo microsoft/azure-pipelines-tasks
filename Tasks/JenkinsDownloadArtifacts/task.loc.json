@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "groups": [
     {
@@ -39,11 +39,14 @@
     },
     {
       "name": "jobName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.jobName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jobName"
+      "helpMarkDown": "ms-resource:loc.input.help.jobName",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "saveTo",
@@ -68,13 +71,42 @@
     },
     {
       "name": "jenkinsBuildNumber",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.jenkinsBuildNumber",
       "defaultValue": "1",
       "required": true,
       "groupName": "advanced",
       "visibleRule": "jenkinsBuild == BuildNumber",
-      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuildNumber"
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuildNumber",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.itemPattern",
+      "defaultValue": "**",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jobName",
+      "dataSourceName": "Jobs",
+      "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsBuildNumber",
+      "dataSourceName": "Builds",
+      "parameters": {
+        "definition": "$(jobName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
     }
   ],
   "execution": {
@@ -86,11 +118,10 @@
   "messages": {
     "GetArtifactsFromLastSuccessfulBuild": "ms-resource:loc.messages.GetArtifactsFromLastSuccessfulBuild",
     "GetArtifactsFromBuildNumber": "ms-resource:loc.messages.GetArtifactsFromBuildNumber",
-    "CouldNotFindArtifacts": "ms-resource:loc.messages.CouldNotFindArtifacts",
     "CouldNotGetLastSuccessfuilBuildNumber": "ms-resource:loc.messages.CouldNotGetLastSuccessfuilBuildNumber",
     "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed",
     "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
-    "DownloadFileTo": "ms-resource:loc.messages.DownloadFileTo",
-    "FileSuccessfullyDownloaded": "ms-resource:loc.messages.FileSuccessfullyDownloaded"
+    "ArtifactSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactSuccessfullyDownloaded",
+    "ArtifactDownloadUrl": "ms-resource:loc.messages.ArtifactDownloadUrl"
   }
 }
