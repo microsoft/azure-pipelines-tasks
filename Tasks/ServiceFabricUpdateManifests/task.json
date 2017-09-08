@@ -29,7 +29,7 @@
             "label": "Update Type",
             "defaultValue": "Manifest versions",
             "required": true,
-            "helpMarkDown": "Specify the type of update that should be made to the manifest files.",
+            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
             "options": {
                 "Manifest versions": "Manifest versions",
                 "Docker image settings": "Docker image settings"
@@ -122,7 +122,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "updateType = Docker image settings",
-            "helpMarkDown": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action."
+            "helpMarkDown": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'."
         }
     ],
     "execution": {
