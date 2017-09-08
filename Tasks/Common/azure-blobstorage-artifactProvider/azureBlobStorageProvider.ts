@@ -65,15 +65,8 @@ export class AzureBlobProvider implements models.IArtifactProvider {
 
     public getArtifactItem(artifactItem: models.ArtifactItem): Promise<stream.Readable> {
         return new Promise((resolve, reject) => {
-            var readStream: stream.Readable = this._blobSvc.createReadStream(this._container, artifactItem.path, (error, result) => {
-                if (error) {
-                    console.log(tl.loc("UnableToFetchItem", artifactItem.path, error));
-                    reject();
-                }
-                else {
-                    resolve(readStream);
-                }
-            });
+            var readStream: stream.Readable = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            resolve(readStream);
         });
     }
 
@@ -107,6 +100,9 @@ export class AzureBlobProvider implements models.IArtifactProvider {
                     reject(error);
                 } else {
                     console.log(tl.loc("SuccessFullyFetchedItemList"));
+                    if(result.continuationToken){
+                        tl.warning(tl.loc("ArtifactItemsTruncationWarning"));
+                    }
                     items = this._convertBlobResultToArtifactItem(result.entries);
                     resolve(items);
                 }
@@ -123,7 +119,6 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             artifactitem.itemType = models.ItemType.File;
             artifactitem.fileLength = parseInt(element.contentLength);
             artifactitem.lastModified = new Date(element.lastModified + 'Z');
-            artifactitem.metadata = element.metadata;
             artifactitem.path = element.name;
             artifactItems.push(artifactitem);
         });

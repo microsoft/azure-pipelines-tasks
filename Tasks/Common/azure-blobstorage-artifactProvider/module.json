@@ -1,5 +1,6 @@
 {
   "messages": {
+    "ArtifactItemsTruncationWarning":"Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
     "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
     "CreatedContainer": "Created container {0}.",
     "ErrorInReadStream": "Error in Read stream: {0}",

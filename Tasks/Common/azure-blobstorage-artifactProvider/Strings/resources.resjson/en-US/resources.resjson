@@ -1,4 +1,5 @@
 {
+  "loc.messages.ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
   "loc.messages.CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
   "loc.messages.CreatedContainer": "Created container {0}.",
   "loc.messages.ErrorInReadStream": "Error in Read stream: {0}",

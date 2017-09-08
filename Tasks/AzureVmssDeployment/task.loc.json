@@ -186,6 +186,7 @@
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
     "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
     "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull",
+    "ArtifactItemsTruncationWarning": "ms-resource:loc.messages.ArtifactItemsTruncationWarning",
     "CreatedBlobForItem": "ms-resource:loc.messages.CreatedBlobForItem",
     "CreatedContainer": "ms-resource:loc.messages.CreatedContainer",
     "ErrorInReadStream": "ms-resource:loc.messages.ErrorInReadStream",

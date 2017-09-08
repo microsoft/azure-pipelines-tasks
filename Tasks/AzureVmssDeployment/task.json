@@ -186,6 +186,7 @@
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
         "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
+        "ArtifactItemsTruncationWarning":"Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
         "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
         "CreatedContainer": "Created container {0}.",
         "ErrorInReadStream": "Error in Read stream: {0}",
