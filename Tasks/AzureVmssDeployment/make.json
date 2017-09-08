@@ -23,7 +23,8 @@
         {
             "items": [
                 "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
-                "node_modules/utility-common/node_modules/vsts-task-lib"
+                "node_modules/utility-common/node_modules/vsts-task-lib",
+                "node_modules/azure-blobstorage-artifactProvider/vsts-task-lib"
             ],
             "options": "-Rf"
         }

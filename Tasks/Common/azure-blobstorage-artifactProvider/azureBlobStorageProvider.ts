@@ -50,17 +50,11 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     public getRootItems(): Promise<models.ArtifactItem[]> {
-        return new Promise(async (resolve, reject) => {
-            var items: models.ArtifactItem[] = await this._getItems(this._container)
-            resolve(items);
-        });
+        return  this._getItems(this._container)
     }
 
     public getArtifactItems(artifactItem: models.ArtifactItem): Promise<models.ArtifactItem[]> {
-        return new Promise(async (resolve, reject) => {
-            var items: models.ArtifactItem[] = await this._getItems(this._container, artifactItem.path);
-            resolve(items);
-        });
+        return this._getItems(this._container, artifactItem.path);
     }
 
     public getArtifactItem(artifactItem: models.ArtifactItem): Promise<stream.Readable> {
