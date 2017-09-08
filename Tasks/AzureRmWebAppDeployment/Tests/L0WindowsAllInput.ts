@@ -15,7 +15,6 @@ tr.setInput('TakeAppOfflineFlag', 'false');
 tr.setInput('VirtualApplication', 'virtualApp');
 tr.setInput('AdditionalArguments', 'additionalArguments');
 tr.setInput('WebAppUri', 'someuri');
-tr.setInput('RuntimeStack', "dummy|version");
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";

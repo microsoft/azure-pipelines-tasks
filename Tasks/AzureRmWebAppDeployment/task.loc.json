@@ -115,7 +115,7 @@
       "name": "ImageSource",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ImageSource",
-      "defaultValue": "Builtin",
+      "defaultValue": "Registry",
       "required": false,
       "options": {
         "Registry": "Container Registry",
@@ -174,7 +174,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-      "required": false,
+      "required": true,
       "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
       "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
     },

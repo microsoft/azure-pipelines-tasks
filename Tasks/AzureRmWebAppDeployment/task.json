@@ -115,7 +115,7 @@
             "name": "ImageSource",
             "type": "pickList",
             "label": "Image Source",
-            "defaultValue": "Builtin",
+            "defaultValue": "Registry",
             "required": false,
             "options": {
                 "Registry": "Container Registry",
@@ -174,7 +174,7 @@
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-            "required": false,
+            "required": true,
             "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
