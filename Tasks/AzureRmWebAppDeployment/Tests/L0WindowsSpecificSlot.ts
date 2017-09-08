@@ -12,6 +12,7 @@ tr.setInput('UseWebDeploy', 'true');
 tr.setInput('DeployToSlotFlag', 'true');
 tr.setInput('ResourceGroupName', 'mytestappRg');
 tr.setInput('SlotName', 'testslot');
+tr.setInput('RuntimeStack', "dummy|version");
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";

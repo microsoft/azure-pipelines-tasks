@@ -10,6 +10,8 @@ tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
 tr.setInput('GenerateWebConfig','true');
 tr.setInput('WebConfigParameters','-appType node -Handler iisnode -NodeStartFile server.js');
+tr.setInput('RuntimeStack', "dummy|version");
+
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
