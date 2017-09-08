@@ -129,7 +129,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `/${job}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
         console.log(`Downloading commits from the job ${job}`);
-        this.jenkinsClient.DownloadJsonContent(commitsUrl, commitTemplate).then((commitsResult) => {
+        this.jenkinsClient.DownloadJsonContent(commitsUrl, commitTemplate, null).then((commitsResult) => {
             tl.debug(`Processed commits ${commitsResult}`);
             defer.resolve(commitsResult);
         }, (error) => {

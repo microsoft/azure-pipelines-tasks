@@ -86,19 +86,20 @@ export class JenkinsRestClient {
         });
     }
 
-    public DownloadJsonContent(urlPath: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any } = null): Q.Promise<any> {
+    public DownloadJsonContent(urlPath: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any }): Q.Promise<any> {
         let defer = Q.defer<any>();
 
         const endpoint = tl.getInput("serverEndpoint", true);
         const endpointUrl = tl.getEndpointUrl(endpoint, false);
         const jobName = tl.getInput("jobName", true);
-        const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', false);
-        const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', false);
+        const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', true);
+        const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
 
         let requestUrl: string = `${endpointUrl}/job/${jobName}/${urlPath}`;
         console.log('Downloading content form Jenkins server:' + requestUrl + ' with strict SSL:' + strictSSL);
 
+        additionalHandlebarContext = additionalHandlebarContext || {};
         request.get({url: requestUrl, strictSSL: strictSSL}, (err, res, body) => {
             if (res && body && res.statusCode === 200)  {
                 tl.debug(`Content received from server ${body}`);
