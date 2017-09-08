@@ -8,12 +8,12 @@ export abstract class ArtifactDetailsDownloaderBase {
 
         fs.writeFile(filePath, content, (err) => {
             if (err) {
-                console.log(`could not save the content to the file. Failed with an error ${err}`);
+                console.log(tl.loc("CouldNotWriteToFile", err));
                 defer.reject(err);
                 return;
             }
 
-            console.log(`uploading ${filePath} as attachment`);
+            console.log(tl.loc("UploadingAttachment", filePath));
             console.log(`##vso[task.uploadfile]${filePath}`);
             defer.resolve(null);
         });

@@ -56,7 +56,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
     }
 
     public static GetCommitMessagesFromCommits(commits: string): string[] {
-        tl.debug(`Extracting commit messages from commits`);
+        console.log(tl.loc("FetchCommitMessages"));
 
         // remove the extra comma at the end of the commit item
         let index: number = commits.lastIndexOf(",");
@@ -68,7 +68,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(`Fetching commits message failed with an error ${error}`);
+            console.log(tl.loc("FetchCommitMessagesFailed", error));
             throw error;
         }
 
@@ -78,7 +78,8 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
     public DownloadFromSingleBuildAndSave(job: string): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
-        console.log(`Getting commits associated with the build ${job}`);
+        
+        console.log(tl.loc("GettingCommitsFromSingleBuild", job));
         this.GetCommitsFromSingleBuild(job).then((commits: string) => {
             this.UploadCommits(commits, this.commitsFilePath).then(() => {
                 defer.resolve(commits);
@@ -112,7 +113,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const buildParameter: string = (startIndex >= 100 || endIndex >= 100) ? "allBuilds" : "builds"; // jenkins by default will return only 100 top builds. Have to use "allBuilds" if we are dealing with build which are older than 100 builds
         const commitsUrl: string = `/api/json?tree=${buildParameter}[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{${endIndex},${startIndex}}`;
 
-        console.log('Downloading commits');
+        tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
             tl.debug(`Processed commits ${commitsResult}`);
             defer.resolve(commitsResult);
@@ -128,7 +129,6 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
         const commitsUrl: string = `/${job}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
-        console.log(`Downloading commits from the job ${job}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, commitTemplate, null).then((commitsResult) => {
             tl.debug(`Processed commits ${commitsResult}`);
             defer.resolve(commitsResult);
@@ -142,9 +142,9 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
     private UploadCommits(commits: string, commitsFilePath: string): Q.Promise<void> {
         let defer: Q.Deferred<void> = Q.defer<void>();
 
-        console.log(`Writing commits to ${commitsFilePath}`);
+        console.log(tl.loc("WritingCommitsTo", commitsFilePath));
         this.UploadAttachment(commits, commitsFilePath).then(() => {
-            console.log('uploaded commits attachment');
+            console.log(tl.loc("SuccessfullyUploadedCommitsAttachment"));
             defer.resolve(null);
         }, (error) => {
             defer.reject(error);

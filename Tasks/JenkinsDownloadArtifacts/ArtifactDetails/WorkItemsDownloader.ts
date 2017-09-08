@@ -59,7 +59,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
     public DownloadFromSingleBuildAndSave(job: string): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
-        console.log(`Getting workitems associated with the build ${job}`);
+        console.log(tl.loc("DownloadingWorkItemsFromSingleBuild", job));
         this.GetWorkItemsFromSingleBuild(job, this.commitMessages).then((workItems: string) => {
             this.UploadWorkItems(workItems, this.workItemsFilePath).then(() => {
                 defer.resolve(null);
@@ -91,8 +91,6 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         let defer = Q.defer<string>();
 
         const workItemsUrl: string = `/${job}/api/json?tree=actions[issues[*],serverURL]`;
-
-        console.log(`Downloading workItems from the job ${job}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
             tl.debug(`Processed workItems ${workItemsResult}`);
             defer.resolve(workItemsResult);
@@ -109,7 +107,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         const buildParameter: string = (startIndex >= 100 || endIndex >= 100) ? "allBuilds" : "builds"; // jenkins by default will return only 100 top builds. Have to use "allBuilds" if we are dealing with build which are older than 100 builds
         const workItemsUrl: string = `/api/json?tree=${buildParameter}[actions[issues[*],serverURL]]{${endIndex},${startIndex}}`;
 
-        console.log('Downloading workitems');
+        tl.debug(`Downloading workItems from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {
             tl.debug(`Processed workitems ${workItemsResult}`);
             defer.resolve(workItemsResult);
@@ -123,9 +121,9 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
     private UploadWorkItems(workItems: string, workItemsFilePath: string): Q.Promise<void> {
         let defer: Q.Deferred<void> = Q.defer<void>();
 
-        console.log(`Writing workitems to ${workItemsFilePath}`);
+        console.log(tl.loc("WritingWorkItemsTo", workItemsFilePath));
         this.UploadAttachment(workItems, workItemsFilePath).then(() => {
-            console.log('uploaded work item attachment');
+            console.log(tl.loc("SuccessfullyUploadedWorkItemsAttachment"));
             defer.resolve(null);
         }, (error) => {
             defer.reject(error);

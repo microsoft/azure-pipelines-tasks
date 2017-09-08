@@ -163,6 +163,22 @@
         "ServerCallFailed": "HTTP call to Jenkins server failed.",
         "ServerCallErrorCode": "HTTP response code: %d",
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
-        "ArtifactDownloadUrl": "Downloading artifacts from: %s"
+        "ArtifactDownloadUrl": "Downloading artifacts from: %s",
+        "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
+        "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find previous JobId, will be fetching commits and workitems from current build %s",
+        "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between job %s to %s",
+        "GettingCommitsFromSingleBuild": "Getting commits associated with the build %s",
+        "DownloadingContentFromJenkinsServer": "Downloading content form Jenkins server:%s with strict SSL:%s",
+        "WritingCommitsTo": "Writing commits to file %s",
+        "UploadingAttachment": "uploading %s as attachment",
+        "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
+        "FetchCommitMessages": "Extracting commit messages from commits",
+        "FetchCommitMessagesFailed": "Fetching commits message failed with an error %s",
+        "CouldNotWriteToFile": "could not save the content to the file. Failed with an error %s",
+        "DownloadingWorkItemsFromSingleBuild": "Getting workitems associated with the build %s",
+        "WritingWorkItemsTo": "Writing workitems to %s",
+        "SuccessfullyUploadedWorkItemsAttachment": "Successfully uploaded workitem attachment",
+        "FindBuildIndex": "Trying to find the build's index",
+        "FoundBuildIndex": "Found startIndex %s and endIndex %s"
     }
 }

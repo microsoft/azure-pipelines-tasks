@@ -163,6 +163,22 @@
     "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed",
     "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
     "ArtifactSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactSuccessfullyDownloaded",
-    "ArtifactDownloadUrl": "ms-resource:loc.messages.ArtifactDownloadUrl"
+    "ArtifactDownloadUrl": "ms-resource:loc.messages.ArtifactDownloadUrl",
+    "DownloadingCommitsAndWorkItems": "ms-resource:loc.messages.DownloadingCommitsAndWorkItems",
+    "JenkinsDownloadingChangeFromCurrentBuild": "ms-resource:loc.messages.JenkinsDownloadingChangeFromCurrentBuild",
+    "DownloadingJenkinsChangeBetween": "ms-resource:loc.messages.DownloadingJenkinsChangeBetween",
+    "GettingCommitsFromSingleBuild": "ms-resource:loc.messages.GettingCommitsFromSingleBuild",
+    "DownloadingContentFromJenkinsServer": "ms-resource:loc.messages.DownloadingContentFromJenkinsServer",
+    "WritingCommitsTo": "ms-resource:loc.messages.WritingCommitsTo",
+    "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
+    "SuccessfullyUploadedCommitsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedCommitsAttachment",
+    "FetchCommitMessages": "ms-resource:loc.messages.FetchCommitMessages",
+    "FetchCommitMessagesFailed": "ms-resource:loc.messages.FetchCommitMessagesFailed",
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
+    "DownloadingWorkItemsFromSingleBuild": "ms-resource:loc.messages.DownloadingWorkItemsFromSingleBuild",
+    "WritingWorkItemsTo": "ms-resource:loc.messages.WritingWorkItemsTo",
+    "SuccessfullyUploadedWorkItemsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedWorkItemsAttachment",
+    "FindBuildIndex": "ms-resource:loc.messages.FindBuildIndex",
+    "FoundBuildIndex": "ms-resource:loc.messages.FoundBuildIndex"
   }
 }

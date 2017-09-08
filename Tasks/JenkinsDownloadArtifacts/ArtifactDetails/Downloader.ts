@@ -17,9 +17,16 @@ export class ArtifactDetailsDownloader {
         let commitsDownloader: CommitsDownloader = new CommitsDownloader();
 
         if (!startJobId) {
-            let endJob = tl.getInput("jenkinsBuildNumber", false)
-            if (endJob === '') {
-                endJob = tl.getInput("jenkinsBuild", true)
+            let jenkinsBuild = tl.getInput('jenkinsBuild', true);
+            let endJob: string = "";
+
+            if (jenkinsBuild === 'LastSuccessfulBuild') {
+                // If its LastSuccessfulBuild, we don't need to fetch the build number, we could just use the lastSuccessfulFull macro
+                endJob = 'lastSuccessfulBuild';
+            }
+            else {
+                // if its not LastSuccessfulBuild try to get the build number from input.
+                endJob = tl.getInput("jenkinsBuildNumber", false)
             }
 
             console.log(tl.loc("JenkinsDownloadingChangeFromCurrentBuild", endJob));
@@ -87,7 +94,7 @@ export class ArtifactDetailsDownloader {
         let startIndex: number = 0;
         let endIndex: number = 0;
 
-        console.log("Trying to find the build's index");
+        console.log(tl.loc("FindBuildIndex"));
         handlebars.registerHelper('JobIndex', function(jobId, index, options) {
             if(jobId == startJobId) {
                 startIndex = index;
@@ -101,7 +108,7 @@ export class ArtifactDetailsDownloader {
         let source: string = '{{#each allBuilds}}{{#JobIndex this.number @index}}{{/JobIndex}}{{/each}}';
         let downloadHelper: JenkinsRestClient = new JenkinsRestClient();
         downloadHelper.DownloadJsonContent(jobUrl, source, null).then(() => {
-            console.log(`Found startIndex ${startIndex} and endIndex ${endIndex}`);
+            console.log(tl.loc("FoundBuildIndex", startIndex, endIndex));
             if (startIndex === 0 || endIndex === 0) {
                 console.debug('cannot find valid startIndex or endIndex');
                 defer.reject('failed to find build index');

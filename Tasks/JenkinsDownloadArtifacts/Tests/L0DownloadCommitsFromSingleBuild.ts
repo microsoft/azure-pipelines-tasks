@@ -34,6 +34,8 @@ tr.registerMock("item-level-downloader/Engine" , {
 tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
+
+        return {auth: function(A,B,C) {}}
     }
 });
 

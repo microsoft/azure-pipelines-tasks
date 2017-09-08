@@ -97,9 +97,8 @@ export class JenkinsRestClient {
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
 
         let requestUrl: string = `${endpointUrl}/job/${jobName}/${urlPath}`;
-        console.log('Downloading content form Jenkins server:' + requestUrl + ' with strict SSL:' + strictSSL);
+        console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
-        additionalHandlebarContext = additionalHandlebarContext || {};
         request.get({url: requestUrl, strictSSL: strictSSL}, (err, res, body) => {
             if (res && body && res.statusCode === 200)  {
                 tl.debug(`Content received from server ${body}`);
