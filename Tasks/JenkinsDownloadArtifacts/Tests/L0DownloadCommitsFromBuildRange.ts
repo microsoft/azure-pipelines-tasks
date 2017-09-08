@@ -14,7 +14,7 @@ tr.setInput("jenkinsBuild", "BuildNumber");
 tr.setInput("jenkinsBuildNumber", "20");
 tr.setInput("itemPattern", "**");
 tr.setInput("downloadCommitsAndWorkItems", "true");
-tr.setInput("previousjenkinsBuildNumber", "15");
+tr.setInput("startJenkinsBuildNumber", "15");
 tr.setInput("artifactDetailsFileNameSuffix", "alias_v1.json");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';

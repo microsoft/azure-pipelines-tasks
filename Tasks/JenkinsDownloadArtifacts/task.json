@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "groups": [
         {
@@ -98,10 +98,10 @@
             "defaultValue": false,
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Enables downloading the commits and workitem details associated to the Jenkins Job"
+            "helpMarkDown": "Enables downloading the commits and workitem details associated with the Jenkins Job"
         },
         {
-            "name": "previousJenkinsBuildNumber",
+            "name": "startJenkinsBuildNumber",
             "type": "pickList",
             "label": "Download commits and workitems from",
             "defaultValue": "",
@@ -111,7 +111,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Mentions the previous Job Id. Commits and work items will be downloaded from all the builds between previous JobId and the current JobId"
+            "helpMarkDown": "Optional start build number for downloading commits and work items. If provided, all commits and work items between start build number and build number given as input to download artifacts will be downloaded."
         },
         {
             "name": "artifactDetailsFileNameSuffix",
@@ -121,7 +121,7 @@
             "required": false,
             "visibleRule": "downloadCommitsAndWorkItems == true",
             "groupName": "advanced",
-            "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix} and workitem_{suffix}. If this input is not provided attachments will be create with the name commits.json and workitems.json"
+            "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json"
         }
     ],
     "dataSourceBindings": [
@@ -142,7 +142,7 @@
       },
       {
         "endpointId": "$(serverEndpoint)",
-        "target": "previousJenkinsBuildNumber",
+        "target": "startJenkinsBuildNumber",
         "dataSourceName": "Builds",
         "parameters": {
             "definition": "$(jobName)"
@@ -165,20 +165,26 @@
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
         "ArtifactDownloadUrl": "Downloading artifacts from: %s",
         "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
-        "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find previous JobId, will be fetching commits and workitems from current build %s",
-        "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between job %s to %s",
-        "GettingCommitsFromSingleBuild": "Getting commits associated with the build %s",
+        "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, will be fetching commits and workitems from build used to download artifacts only: %s",
+        "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between build %s to %s",
+        "GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
         "DownloadingContentFromJenkinsServer": "Downloading content form Jenkins server:%s with strict SSL:%s",
         "WritingCommitsTo": "Writing commits to file %s",
         "UploadingAttachment": "uploading %s as attachment",
         "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
-        "FetchCommitMessages": "Extracting commit messages from commits",
-        "FetchCommitMessagesFailed": "Fetching commits message failed with an error %s",
-        "CouldNotWriteToFile": "could not save the content to the file. Failed with an error %s",
-        "DownloadingWorkItemsFromSingleBuild": "Getting workitems associated with the build %s",
+        "GetCommitMessages": "Getting commit messages from commits",
+        "GetCommitMessagesFailed": "Getting commits message failed with an error %s",
+        "CouldNotWriteToFile": "could not save content to file. Failed with an error %s",
+        "DownloadingWorkItemsFromSingleBuild": "Downloading workitems associated with the build %s",
         "WritingWorkItemsTo": "Writing workitems to %s",
         "SuccessfullyUploadedWorkItemsAttachment": "Successfully uploaded workitem attachment",
         "FindBuildIndex": "Trying to find the build's index",
-        "FoundBuildIndex": "Found startIndex %s and endIndex %s"
+        "FoundBuildIndex": "Found startIndex %s and endIndex %s",
+        "JenkinsArtifactDetailsParsingError": "Parsing ArtifactDetails failed with an error %s",
+        "SuccessfullyDownloadedCommitsAndWorkItems": "Commits and WorkItems Downloaded successfully",
+        "CommitsAndWorkItemsDownloadFailed": "Downloading Jenkins Commits and WorkItem failed with an error: %s",
+        "InvalidBuildIndex": "Invalid build index found",
+        "JenkinsNoCommitsToFetch": "Deploying same build. Nothing to fetch",
+        "JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)"
     }
 }

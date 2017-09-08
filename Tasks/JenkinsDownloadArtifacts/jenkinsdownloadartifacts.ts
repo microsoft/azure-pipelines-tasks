@@ -12,7 +12,7 @@ import * as handlers from "item-level-downloader/Providers/Handlers"
 import * as providers from "item-level-downloader/Providers"
 import * as engine from "item-level-downloader/Engine"
 
-import {ArtifactDetailsDownloader} from "./ArtifactDetails/Downloader"
+import {ArtifactDetailsDownloader} from "./ArtifactDetails/ArtifactDetailsDownloader"
 
 class Credential {
     mUsername: string;
@@ -134,8 +134,8 @@ async function doWork() {
             new ArtifactDetailsDownloader()
             .DownloadCommitsAndWorkItems()
             .then(
-                () => console.log('Commits and WorkItems Downloaded successfully'), 
-                (error) => AddIssue(`Downloading Jenkins Commits and WorkItem failed with an error: ${error}`));
+                () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
+                (error) => AddIssue(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
         }
         
     } catch (err) {

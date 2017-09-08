@@ -113,23 +113,23 @@ export class JenkinsRestClient {
                         let template = handlebars.compile(handlebarSource);
                         if (additionalHandlebarContext) {
                             for(let key in additionalHandlebarContext) {
-                            tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
-                                jsonResult[key] = additionalHandlebarContext[key];
-                            };
+                                tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
+                                    jsonResult[key] = additionalHandlebarContext[key];
+                                };
                         }
 
                         var result = template(jsonResult);
                         defer.resolve(result);
                     }
                     catch(err) {
-                        tl.debug(`handlebar failed with an error ${err}`);
+                        console.log(tl.loc("JenkinsArtifactDetailsParsingError", err));
                         defer.reject(err)
                     }
                 }
             }
             else {
                 if (res && res.statusCode) {
-                    tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
+                    console.log(tl.loc('ServerCallErrorCode', res.statusCode));
                 }
 
                 if (body) {

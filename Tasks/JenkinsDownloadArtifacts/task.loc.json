@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "groups": [
     {
@@ -101,9 +101,9 @@
       "helpMarkDown": "ms-resource:loc.input.help.downloadCommitsAndWorkItems"
     },
     {
-      "name": "previousJenkinsBuildNumber",
+      "name": "startJenkinsBuildNumber",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.previousJenkinsBuildNumber",
+      "label": "ms-resource:loc.input.label.startJenkinsBuildNumber",
       "defaultValue": "",
       "required": false,
       "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
@@ -111,7 +111,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.previousJenkinsBuildNumber"
+      "helpMarkDown": "ms-resource:loc.input.help.startJenkinsBuildNumber"
     },
     {
       "name": "artifactDetailsFileNameSuffix",
@@ -142,7 +142,7 @@
     },
     {
       "endpointId": "$(serverEndpoint)",
-      "target": "previousJenkinsBuildNumber",
+      "target": "startJenkinsBuildNumber",
       "dataSourceName": "Builds",
       "parameters": {
         "definition": "$(jobName)"
@@ -172,13 +172,19 @@
     "WritingCommitsTo": "ms-resource:loc.messages.WritingCommitsTo",
     "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
     "SuccessfullyUploadedCommitsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedCommitsAttachment",
-    "FetchCommitMessages": "ms-resource:loc.messages.FetchCommitMessages",
-    "FetchCommitMessagesFailed": "ms-resource:loc.messages.FetchCommitMessagesFailed",
+    "GetCommitMessages": "ms-resource:loc.messages.GetCommitMessages",
+    "GetCommitMessagesFailed": "ms-resource:loc.messages.GetCommitMessagesFailed",
     "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
     "DownloadingWorkItemsFromSingleBuild": "ms-resource:loc.messages.DownloadingWorkItemsFromSingleBuild",
     "WritingWorkItemsTo": "ms-resource:loc.messages.WritingWorkItemsTo",
     "SuccessfullyUploadedWorkItemsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedWorkItemsAttachment",
     "FindBuildIndex": "ms-resource:loc.messages.FindBuildIndex",
-    "FoundBuildIndex": "ms-resource:loc.messages.FoundBuildIndex"
+    "FoundBuildIndex": "ms-resource:loc.messages.FoundBuildIndex",
+    "JenkinsArtifactDetailsParsingError": "ms-resource:loc.messages.JenkinsArtifactDetailsParsingError",
+    "SuccessfullyDownloadedCommitsAndWorkItems": "ms-resource:loc.messages.SuccessfullyDownloadedCommitsAndWorkItems",
+    "CommitsAndWorkItemsDownloadFailed": "ms-resource:loc.messages.CommitsAndWorkItemsDownloadFailed",
+    "InvalidBuildIndex": "ms-resource:loc.messages.InvalidBuildIndex",
+    "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
+    "JenkinsRollbackDeployment": "ms-resource:loc.messages.JenkinsRollbackDeployment"
   }
 }

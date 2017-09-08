@@ -34,7 +34,7 @@ const CommitsTemplate: string = `[
   {{/each}}
 ]`;
 
-const commitTemplate: string = `[
+const CommitTemplate: string = `[
     ${CommitTemplateBase}
 ]`;
 
@@ -42,21 +42,16 @@ const GetCommitMessagesTemplate: string = `{{pluck . 'Message'}}`
 
 export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
     private jenkinsClient: JenkinsRestClient;
-    private commitsFilePath: string;
 
     constructor() {
         super();
 
         handlebars.registerPartial('commit', CommitTemplateBase);
         this.jenkinsClient = new JenkinsRestClient();
-
-        let tempDir: string = os.tmpdir();
-        let commitsFileName: string = this.GetCommitsFileName();
-        this.commitsFilePath = path.join(/*"d:\\"*/tempDir, commitsFileName);
     }
 
     public static GetCommitMessagesFromCommits(commits: string): string[] {
-        console.log(tl.loc("FetchCommitMessages"));
+        console.log(tl.loc("GetCommitMessages"));
 
         // remove the extra comma at the end of the commit item
         let index: number = commits.lastIndexOf(",");
@@ -68,25 +63,27 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(tl.loc("FetchCommitMessagesFailed", error));
+            console.log(tl.loc("GetCommitMessagesFailed", error));
             throw error;
         }
 
-        tl.debug(`Extracted commits ${result}`);
+        tl.debug(`Commit messages: ${result}`);
         return result.split(',');
     }
 
-    public DownloadFromSingleBuildAndSave(job: string): Q.Promise<string> {
+    public DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
         
-        console.log(tl.loc("GettingCommitsFromSingleBuild", job));
-        this.GetCommitsFromSingleBuild(job).then((commits: string) => {
-            this.UploadCommits(commits, this.commitsFilePath).then(() => {
+        console.log(tl.loc("GettingCommitsFromSingleBuild", buildId));
+        this.GetCommitsFromSingleBuild(buildId).then((commits: string) => {
+            this.UploadCommits(commits).then(() => {
                 defer.resolve(commits);
             }, (error) => {
                 defer.reject(error);
             });
-        })        
+        }, (error) => {
+            defer.reject(error);
+        });
 
         return defer.promise;
     }
@@ -95,11 +92,26 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         let defer: Q.Deferred<string> = Q.defer<string>();
 
         this.GetCommits(startIndex, endIndex).then((commits: string) => {
-            this.UploadCommits(commits, this.commitsFilePath).then(() => {
+            this.UploadCommits(commits).then(() => {
                 defer.resolve(commits);
             }, (error) => {
                 defer.reject(error);
             });
+        }, (error) => {
+            defer.reject(error);
+        });
+
+        return defer.promise;
+    }
+
+    private GetCommitsFromSingleBuild(buildId: string): Q.Promise<string> {
+        let defer = Q.defer<string>();
+
+        const commitsUrl: string = `/${buildId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
+
+        this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitTemplate, null).then((commitsResult) => {
+            tl.debug(`Downloaded commits: ${commitsResult}`);
+            defer.resolve(commitsResult);
         }, (error) => {
             defer.reject(error);
         });
@@ -115,7 +127,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
         tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
-            tl.debug(`Processed commits ${commitsResult}`);
+            tl.debug(`Downloaded commits: ${commitsResult}`);
             defer.resolve(commitsResult);
         }, (error) => {
             defer.reject(error);
@@ -124,26 +136,12 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    private GetCommitsFromSingleBuild(job: string): Q.Promise<string> {
-        let defer = Q.defer<string>();
-
-        const commitsUrl: string = `/${job}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
-
-        this.jenkinsClient.DownloadJsonContent(commitsUrl, commitTemplate, null).then((commitsResult) => {
-            tl.debug(`Processed commits ${commitsResult}`);
-            defer.resolve(commitsResult);
-        }, (error) => {
-            defer.reject(error);
-        });
-
-        return defer.promise;
-    }
-
-    private UploadCommits(commits: string, commitsFilePath: string): Q.Promise<void> {
+    private UploadCommits(commits: string): Q.Promise<void> {
         let defer: Q.Deferred<void> = Q.defer<void>();
+        let commitsFilePath = path.join(os.tmpdir(), this.GetCommitsFileName());
 
         console.log(tl.loc("WritingCommitsTo", commitsFilePath));
-        this.UploadAttachment(commits, commitsFilePath).then(() => {
+        this.WriteContentToFileAndUploadAsAttachment(commits, commitsFilePath).then(() => {
             console.log(tl.loc("SuccessfullyUploadedCommitsAttachment"));
             defer.resolve(null);
         }, (error) => {

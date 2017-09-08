@@ -42,26 +42,21 @@ const WorkItemsTemplate: string = `[
 export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
     private jenkinsClient: JenkinsRestClient;
     private commitMessages: string[];
-    private workItemsFilePath: string;
 
     constructor(commitMessages: string[]) {
         super();
 
         this.commitMessages = commitMessages;
 
-        let tempDir: string = os.tmpdir();
-        let workItemsFileName: string = this.GetWorkItemsFileName();
-        this.workItemsFilePath = path.join(/*"d:\\"*/tempDir, workItemsFileName);
-
         handlebars.registerPartial('workitem', WorkItemTemplateBase);
         this.jenkinsClient = new JenkinsRestClient();
     }
 
-    public DownloadFromSingleBuildAndSave(job: string): Q.Promise<string> {
+    public DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
-        console.log(tl.loc("DownloadingWorkItemsFromSingleBuild", job));
-        this.GetWorkItemsFromSingleBuild(job, this.commitMessages).then((workItems: string) => {
-            this.UploadWorkItems(workItems, this.workItemsFilePath).then(() => {
+        console.log(tl.loc("DownloadingWorkItemsFromSingleBuild", buildId));
+        this.GetWorkItemsFromSingleBuild(buildId, this.commitMessages).then((workItems: string) => {
+            this.UploadWorkItems(workItems).then(() => {
                 defer.resolve(null);
             }, (error) => {
                 defer.reject(error);
@@ -75,7 +70,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         let defer: Q.Deferred<string> = Q.defer<string>();
 
         this.GetWorkItems(startIndex, endIndex, this.commitMessages).then((workItems: string) => {
-            this.UploadWorkItems(workItems, this.workItemsFilePath).then(() => {
+            this.UploadWorkItems(workItems).then(() => {
                 defer.resolve(workItems);
             }, (error) => {
                 defer.reject(error);
@@ -87,12 +82,12 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    private GetWorkItemsFromSingleBuild(job: string, commitMessages: string[]): Q.Promise<string> {
+    private GetWorkItemsFromSingleBuild(buildId: string, commitMessages: string[]): Q.Promise<string> {
         let defer = Q.defer<string>();
 
-        const workItemsUrl: string = `/${job}/api/json?tree=actions[issues[*],serverURL]`;
+        const workItemsUrl: string = `/${buildId}/api/json?tree=actions[issues[*],serverURL]`;
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
-            tl.debug(`Processed workItems ${workItemsResult}`);
+            tl.debug(`Downloaded workItems: ${workItemsResult}`);
             defer.resolve(workItemsResult);
         }, (error) => {
             defer.reject(error);
@@ -109,7 +104,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
         tl.debug(`Downloading workItems from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {
-            tl.debug(`Processed workitems ${workItemsResult}`);
+            tl.debug(`Downloaded workItems: ${workItemsResult}`);
             defer.resolve(workItemsResult);
         }, (error) => {
             defer.reject(error);
@@ -118,11 +113,12 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    private UploadWorkItems(workItems: string, workItemsFilePath: string): Q.Promise<void> {
+    private UploadWorkItems(workItems: string): Q.Promise<void> {
         let defer: Q.Deferred<void> = Q.defer<void>();
+        let workItemsFilePath = path.join(os.tmpdir(), this.GetWorkItemsFileName());
 
         console.log(tl.loc("WritingWorkItemsTo", workItemsFilePath));
-        this.UploadAttachment(workItems, workItemsFilePath).then(() => {
+        this.WriteContentToFileAndUploadAsAttachment(workItems, workItemsFilePath).then(() => {
             console.log(tl.loc("SuccessfullyUploadedWorkItemsAttachment"));
             defer.resolve(null);
         }, (error) => {
