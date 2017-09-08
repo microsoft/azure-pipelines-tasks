@@ -66,6 +66,7 @@
         "PublishSymbols",
         "PublishTestResults",
         "PublishToAzureServiceBus",
+        "PyPIPublisher",
         "QuickPerfTest",
         "RunDistributedTests",
         "RunJMeterLoadTest",
