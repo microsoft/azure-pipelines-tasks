@@ -795,7 +795,7 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 
     Set-DisableScreenSaverReg | Out-Null
     ConfigurePowerOptions | Out-Null
-    IsWindowsErrorReportingDontShowUISet -TestUserDomain $Domain -TestUserName $TestUser
+    #IsWindowsErrorReportingDontShowUISet -TestUserDomain $Domain -TestUserName $TestUser
 
     $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserDomain $Domain -TestUserName $TestUser
     if(-not $isTestUserLogged)
