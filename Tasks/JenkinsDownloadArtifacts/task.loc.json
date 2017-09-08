@@ -90,6 +90,38 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+    },
+    {
+      "name": "downloadCommitsAndWorkItems",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.downloadCommitsAndWorkItems",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.downloadCommitsAndWorkItems"
+    },
+    {
+      "name": "previousJenkinsBuildNumber",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.previousJenkinsBuildNumber",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
+      "groupName": "advanced",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.previousJenkinsBuildNumber"
+    },
+    {
+      "name": "artifactDetailsFileNameSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactDetailsFileNameSuffix",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
     }
   ],
   "dataSourceBindings": [
@@ -102,6 +134,15 @@
     {
       "endpointId": "$(serverEndpoint)",
       "target": "jenkinsBuildNumber",
+      "dataSourceName": "Builds",
+      "parameters": {
+        "definition": "$(jobName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "previousJenkinsBuildNumber",
       "dataSourceName": "Builds",
       "parameters": {
         "definition": "$(jobName)"

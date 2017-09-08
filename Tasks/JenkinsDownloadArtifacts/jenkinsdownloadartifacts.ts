@@ -12,6 +12,8 @@ import * as handlers from "item-level-downloader/Providers/Handlers"
 import * as providers from "item-level-downloader/Providers"
 import * as engine from "item-level-downloader/Engine"
 
+import {ArtifactDetailsDownloader} from "./ArtifactDetails/Downloader"
+
 class Credential {
     mUsername: string;
     mPassword: string;
@@ -68,6 +70,10 @@ function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Cre
     return defer.promise;
 }
 
+function AddIssue(message) {
+    console.log(`##vso[task.logissue type=warning]${message}`);
+}
+
 async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -122,6 +128,16 @@ async function doWork() {
         await downloader.processItems(webProvider, localFileProvider, downloaderOptions);
 
         console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
+
+        let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
+        if (downloadCommitsAndWorkItems) {
+            new ArtifactDetailsDownloader()
+            .DownloadCommitsAndWorkItems()
+            .then(
+                () => console.log('Commits and WorkItems Downloaded successfully'), 
+                (error) => AddIssue(`Downloading Jenkins Commits and WorkItem failed with an error: ${error}`));
+        }
+        
     } catch (err) {
         tl.debug(err.message);
         tl._writeError(err);

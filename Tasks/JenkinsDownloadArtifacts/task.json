@@ -90,6 +90,38 @@
           "required": false,
           "groupName": "advanced",
           "helpMarkDown": "Minimatch pattern to filter files to be downloaded."
+        },
+        {
+            "name": "downloadCommitsAndWorkItems",
+            "type": "boolean",
+            "label": "Download Commits and WorkItems",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Enables downloading the commits and workitem details associated to the Jenkins Job"
+        },
+        {
+            "name": "previousJenkinsBuildNumber",
+            "type": "pickList",
+            "label": "Download commits and workitems from",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
+            "groupName": "advanced",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Mentions the previous Job Id. Commits and work items will be downloaded from all the builds between previous JobId and the current JobId"
+        },
+        {
+            "name": "artifactDetailsFileNameSuffix",
+            "type": "string",
+            "label": "Commit and WorkItem FileName",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "downloadCommitsAndWorkItems == true",
+            "groupName": "advanced",
+            "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix} and workitem_{suffix}. If this input is not provided attachments will be create with the name commits.json and workitems.json"
         }
     ],
     "dataSourceBindings": [
@@ -102,6 +134,15 @@
       {
         "endpointId": "$(serverEndpoint)",
         "target": "jenkinsBuildNumber",
+        "dataSourceName": "Builds",
+        "parameters": {
+            "definition": "$(jobName)"
+        },
+        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      },
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "previousJenkinsBuildNumber",
         "dataSourceName": "Builds",
         "parameters": {
             "definition": "$(jobName)"
