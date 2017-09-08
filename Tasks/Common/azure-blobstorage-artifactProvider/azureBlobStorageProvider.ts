@@ -16,7 +16,6 @@ export class AzureBlobProvider implements models.IArtifactProvider {
 
     public putArtifactItem(item: models.ArtifactItem, readStream: stream.Readable): Promise<models.ArtifactItem> {
         return new Promise(async (resolve, reject) => {
-            var newArtifactItem: models.ArtifactItem = models.ArtifactItem.clone(item);
             await this._ensureContainerExistence();
 
             var self = this;
@@ -30,8 +29,8 @@ export class AzureBlobProvider implements models.IArtifactProvider {
                 } else {
                     var blobUrl = self._blobSvc.getUrl(self._container, blobPath);
                     console.log(tl.loc("CreatedBlobForItem", item.path, blobUrl));
-                    newArtifactItem.metadata["downloadUrl"] = blobUrl;
-                    resolve(newArtifactItem);
+                    item.metadata["destinationUrl"] = blobUrl;
+                    resolve(item);
                 }
             });
 
@@ -50,7 +49,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     public getRootItems(): Promise<models.ArtifactItem[]> {
-        return  this._getItems(this._container)
+        return this._getItems(this._container)
     }
 
     public getArtifactItems(artifactItem: models.ArtifactItem): Promise<models.ArtifactItem[]> {
@@ -94,7 +93,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
                     reject(error);
                 } else {
                     console.log(tl.loc("SuccessFullyFetchedItemList"));
-                    if(result.continuationToken){
+                    if (result.continuationToken) {
                         tl.warning(tl.loc("ArtifactItemsTruncationWarning"));
                     }
                     items = this._convertBlobResultToArtifactItem(result.entries);
