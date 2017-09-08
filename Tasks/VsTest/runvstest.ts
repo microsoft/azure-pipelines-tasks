@@ -11,7 +11,7 @@ import * as utils from './helpers';
 const taskProps = { state: 'started', result: '' };
 ci.publishEvent(taskProps);
 
-try {
+try {    
     tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     const useDtaExecutionEngine = isDtaEngineRequired();

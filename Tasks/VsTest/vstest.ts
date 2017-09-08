@@ -197,6 +197,60 @@ function getTestSelectorLocation(): string {
     return path.join(__dirname, 'TestSelector/TestSelector.exe');
 }
 
+function uploadTestResultsV2(testResultsDirectory: string): Q.Promise<number> {
+    const startTime = perf();
+    let endTime;
+    let elapsedTime;
+    let definitionRunId: string;
+    let resultFile: string;
+    const defer = Q.defer<string>();
+    let resultFiles;
+    if (!utils.Helper.isNullOrWhitespace(testResultsDirectory)) {
+        resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
+    }
+
+    const selectortool = tl.tool(getTestSelectorLocation());
+    selectortool.arg('UpdateTestResults');
+
+    if (tiaConfig.context === 'CD') {
+        definitionRunId = tl.getVariable('Release.ReleaseId');
+    } else {
+        definitionRunId = tl.getVariable('Build.BuildId');
+    }
+
+    if (resultFiles && resultFiles[0]) {
+        resultFile = resultFiles[0];
+    }
+
+    return selectortool.exec({
+        cwd: null,
+        env: {
+            'collectionurl': tl.getVariable('System.TeamFoundationCollectionUri'),
+            'projectid': tl.getVariable('System.TeamProject'),
+            'definitionrunid': definitionRunId,
+            'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
+            'resultfile': resultFile,
+            'runidfile': tiaConfig.runIdFile,
+            'context': tiaConfig.context,
+            'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+            'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
+        },
+        silent: null,
+        failOnStdErr: null,
+        ignoreReturnCode: null,
+        outStream: null,
+        errStream: null,
+        windowsVerbatimArguments: null
+    }).then(function (code) {
+        endTime = perf();
+        elapsedTime = endTime - startTime;
+        console.log('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
+        tl.debug(tl.loc('UploadTestResultsPerfTime', elapsedTime));
+        return code;
+    }).catch(function (err) {
+        return err;
+    });    
+}
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     const startTime = perf();
     let endTime;
@@ -346,6 +400,54 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
     return defer.promise;
 }
 
+function executeVstestV2(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
+    const defer = Q.defer<number>();
+    const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
+    addVstestArgs(argsArray, vstest);
+
+    // Adding the other console options here
+    //   => Because it should be added as ".line" inorder to pass multiple parameters
+    //   => Parsing will be taken care by .line
+    // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
+    if (addOtherConsoleOptions && !utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        vstest.line(vstestConfig.otherConsoleOptions);
+    }
+
+    //Re-calculate the results directory based on final runsettings and clean up again if required.
+    resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
+    tl.rmRF(resultsDirectory);
+    tl.mkdirP(resultsDirectory);
+
+    tl.cd(workingDirectory);
+    const ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === 'true';
+
+    const execOptions: tr.IExecOptions = <any>{
+        ignoreReturnCode: ignoreTestFailures,
+        failOnStdErr: false,
+        // In effect this will not be called as failOnStdErr is false
+        // Keeping this code in case we want to change failOnStdErr
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+    };
+    return vstest.exec(execOptions).then(function (code) {
+        cleanUp(parallelRunSettingsFile);
+        if (ignoreTestFailures === true) {
+            return tl.TaskResult.Succeeded; // ignore failures.
+        } else {
+            return code;
+        }
+    }).catch(function (err) {
+        cleanUp(parallelRunSettingsFile);
+        tl.warning(tl.loc('VstestFailed'));
+        if (ignoreTestFailures) {
+            tl.warning(err);
+            return tl.TaskResult.Succeeded;
+        } else {
+            utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1005, true);
+            tl.error(err);
+            return tl.TaskResult.Failed;
+        }
+    });    
+}
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
@@ -396,6 +498,70 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
             }
         });
     return defer.promise;
+}
+
+function getVstestTestsListInternalV2(vsVersion: number, testCaseFilter: string, outputFile: string): Q.Promise<string> {
+    const tempFile = outputFile;
+    tl.debug('Discovered tests listed at: ' + tempFile);
+    const argsArray: string[] = [];
+
+    testAssemblyFiles.forEach(function (testAssembly) {
+        let testAssemblyPath = testAssembly;
+        if (utils.Constants.systemDefaultWorkingDirectory && !utils.Helper.pathExistsAsFile(testAssembly)) {
+            const expandedPath = path.join(utils.Constants.systemDefaultWorkingDirectory, testAssembly);
+            if (utils.Helper.pathExistsAsFile(expandedPath)) {
+                testAssemblyPath = expandedPath;
+            }
+        }
+        argsArray.push(testAssemblyPath);
+    });
+
+    tl.debug('The list of discovered tests is generated at ' + tempFile);
+
+    argsArray.push('/ListFullyQualifiedTests');
+    argsArray.push('/ListTestsTargetPath:' + tempFile);
+    if (testCaseFilter) {
+        argsArray.push('/TestCaseFilter:' + testCaseFilter);
+    }
+    if (vstestConfig.pathtoCustomTestAdapters) {
+        if (utils.Helper.pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
+            argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
+        } else {
+            argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
+        }
+    } else if (utils.Constants.systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
+        argsArray.push('/TestAdapterPath:\"' + utils.Constants.systemDefaultWorkingDirectory + '\"');
+    }
+
+    if (vstestConfig.pathtoCustomTestAdapters && vstestConfig.pathtoCustomTestAdapters.toLowerCase().indexOf('usevsixextensions:true') !== -1) {
+        argsArray.push('/UseVsixExtensions:true');
+    }
+
+    let vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
+
+    if (vsVersion === 14.0) {
+        tl.debug('Visual studio 2015 selected. Selecting vstest.console.exe in task ');
+        const vsTestPath = path.join(__dirname, 'TestSelector/14.0/vstest.console.exe') // Use private vstest as the changes to discover tests are not there in update3
+        vstest = tl.tool(vsTestPath);
+    }
+    addVstestArgs(argsArray, vstest);
+
+    // Adding the other console options here
+    //   => Because it should be added as ".line" inorder to pass multiple parameters
+    //   => Parsing will be taken care by .line
+    // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
+    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+        vstest.line(vstestConfig.otherConsoleOptions);
+    }
+
+    return vstest.exec(<tr.IExecOptions>{ failOnStdErr: true }).then(function (code) {        
+        return tempFile;
+    }).catch(function (err) {
+        tl.debug('Listing tests from VsTest failed.');
+        utils.Helper.publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, err.message, 1006, false);
+        tl.error(err);
+        return err;
+    });
 }
 
 function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, outputFile: string): Q.Promise<string> {
@@ -454,8 +620,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
     }
 
     tl.cd(workingDirectory);
-    vstest.exec(<tr.IExecOptions>{ failOnStdErr: true })
-        .then(function (code) {
+    vstest.exec(<tr.IExecOptions>{ failOnStdErr: true }).then(function (code) {
             defer.resolve(tempFile);
         })
         .fail(function (err) {
@@ -467,6 +632,13 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
     return defer.promise;
 }
 
+function getVstestTestsListV2(vsVersion: number): Q.Promise<string> {
+    const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tl.debug('Discovered tests listed at: ' + tempFile);
+    const argsArray: string[] = [];
+
+    return getVstestTestsListInternalV2(vsVersion, vstestConfig.testcaseFilter, tempFile);
+}
 function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     const defer = Q.defer<string>();
     const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
@@ -501,6 +673,101 @@ function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: s
     if (utils.Helper.pathExistsAsFile(testCaseFilterFile)) {
         let filters = utils.Helper.readFileContentsSync(testCaseFilterFile, 'utf-8');
         getVstestTestsListInternal(vsVersion, filters, testCaseFilterOutput);
+    }
+}
+
+function runVStestV2(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
+    if (isTiaAllowed()) {
+        let testCaseFilterFile = "";
+        let testCaseFilterOutput = "";
+        if (tiaConfig.userMapFile) {
+            testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+            testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
+        }
+
+        let testselector = new testselectorinvoker.TestSelectorInvoker();
+        let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
+        if (code === 0) {
+            getVstestTestsListV2(vsVersion).then(function (listFile) {
+                discoverTestFromFilteredFilter(vsVersion, testCaseFilterFile, testCaseFilterOutput);
+                generateResponseFile(listFile, testCaseFilterOutput).then(function (responseFile) {
+                    if (isEmptyResponseFile(responseFile)) {
+                        tl.debug('Empty response file detected. All tests will be executed.');
+                        return runVsTestAndUploadResults(testResultsDirectory, settingsFile, vsVersion, false);                        
+                    } else {
+                        responseContainsNoTests(responseFile).then(function (noTestsAvailable) {
+                            if (noTestsAvailable) {
+                                tl.debug('No tests impacted. Not running any tests.');
+                                return uploadTestResultsV2('').then(function (code) {
+                                    if (code !== 0) {
+                                        utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1011, false);
+                                        return tl.TaskResult.Failed;
+                                    }
+                                    return tl.TaskResult.Succeeded;
+                                }).catch(function (err) {
+                                    tl.debug('Test Run Updation failed!');
+                                    utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1012, false);
+                                    tl.error(err);
+                                    return tl.TaskResult.Failed;
+                                }).finally(function () {
+                                    cleanFiles(responseFile, listFile, testCaseFilterFile, testCaseFilterOutput);
+                                    tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
+                                    tl.rmRF(tiaConfig.runIdFile);
+                                });
+                            } else {
+                                updateResponseFile(getVstestArguments(settingsFile, true), responseFile).then(function (updatedFile) {
+                                    return runVsTestAndUploadResults(testResultsDirectory, settingsFile, vsVersion, true);                                    
+                                }).catch(function (err) {
+                                    utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
+                                    tl.error(err);
+                                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                    return runVsTestAndUploadResults(testResultsDirectory, settingsFile, vsVersion, false);                                    
+                                });
+                            }
+                        }).catch(function (err) {
+                            utils.Helper.publishEventToCi(AreaCodes.RESPONSECONTAINSNOTESTS, err.message, 1023, false);
+                            tl.error(err);
+                            return tl.TaskResult.Failed;
+                        });
+                    }
+                }).catch(function (err) {
+                    utils.Helper.publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1024, false);
+                    tl.error(err);
+                    tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                    return runVsTestAndUploadResults(testResultsDirectory, settingsFile, vsVersion, false);                    
+                });
+            }).catch(function (err) {
+                utils.Helper.publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, err.message, 1027, false);
+                tl.error(err);
+                tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
+                return tl.TaskResult.Failed;
+            });
+        } else {
+            tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
+            return executeVstestV2(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
+                publishTestResults(testResultsDirectory);
+                if (code !== 0) {
+                    utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1028, false);
+                }
+                return tl.TaskResult.Succeeded;
+            }).catch(function (err) {
+                utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1029, false);
+                tl.error(err);                
+                return tl.TaskResult.Failed;
+            });
+        }
+    } else {
+        tl.debug('Non TIA mode of test execution');
+        return executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
+            if (code !== 0) {
+                utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1030, false);
+            }
+            return tl.TaskResult.Succeeded;
+        }).catch(function (err) {
+            utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, err.message, 1031, false);
+            tl.error(err);
+            return tl.TaskResult.Failed;
+        });
     }
 }
 
@@ -751,6 +1018,109 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     return defer.promise;
 }
 
+function runVsTestAndUploadResults(testResultsDirectory: string, settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile?: string): Q.Promise<tl.TaskResult> {
+    var vstestArgs;
+
+    if (isResponseFileRun) {
+        vstestArgs = ['@' + updatedFile];
+    }
+    else {
+        vstestArgs = getVstestArguments(settingsFile, false);
+    }
+
+    return executeVstestV2(testResultsDirectory, settingsFile, vsVersion, vstestArgs, !isResponseFileRun).then(function (vscode) {                            
+        return uploadTestResultsV2(testResultsDirectory).then(function (code) {
+            if (vscode !== 0) {
+                utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + String(vscode), 1008, false);
+                return tl.TaskResult.Failed;
+            } 
+            if (code !== 0) {
+                utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + code, 1007, false);
+                return tl.TaskResult.Failed;
+            }                                                           
+            return tl.TaskResult.Succeeded;
+        }).catch(function (err) {
+            tl.debug('Test Run Updation failed!');
+            utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.TESTRUNUPDATIONFAILED, 1009, false);
+            tl.error(err);
+            return tl.TaskResult.Failed;
+        }).finally(function () {            
+            tl.debug('Deleting the run id file' + tiaConfig.runIdFile);
+            tl.rmRF(tiaConfig.runIdFile);
+        });
+    }).catch(function (err) {
+        utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1010, false);
+        tl.error(err)
+        return tl.TaskResult.Failed;
+    });
+}
+
+function invokeVSTestV2(testResultsDirectory: string): Q.Promise<tl.TaskResult> {
+    try {
+        const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
+        if (disableTIA !== undefined && disableTIA.toLowerCase() === 'true') {
+            tiaConfig.tiaEnabled = false;
+        }
+
+        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetais === null || !vstestConfig.vsTestVersionDetais.isTestImpactSupported())) {
+            tl.warning(tl.loc('VstestTIANotSupported'));
+            tiaConfig.tiaEnabled = false;
+        }
+    } catch (err) {
+        utils.Helper.publishEventToCi(AreaCodes.TIACONFIG, err.message, 1032, false);
+        tl.error(err.message);
+        // Maybe throw here
+        //return tl.TaskResult.Failed;
+    }
+
+    // We need to use private data collector dll
+    if (vstestConfig.vsTestVersionDetais !== null) {
+        tiaConfig.useNewCollector = vstestConfig.vsTestVersionDetais.isPrivateDataCollectorNeededForTIA();
+    }
+
+    setRunInParallellIfApplicable();
+    let newSettingsFile = vstestConfig.settingsFile;
+    const vsVersion = vstestConfig.vsTestVersionDetais.majorVersion;
+
+    if (newSettingsFile) {
+        if (!utils.Helper.pathExistsAsFile(newSettingsFile)) {
+            if (!tl.exist(newSettingsFile)) { // because this is filepath input build puts default path in the input. To avoid that we are checking this.
+                utils.Helper.publishEventToCi(AreaCodes.TIACONFIG, 'InvalidSettingsFile', 1033, true);
+                throw Error((tl.loc('InvalidSettingsFile', newSettingsFile)));
+            }
+        }
+    }
+
+    try {
+        return settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters, false).then(function (ret) {
+            newSettingsFile = ret;
+            return runVStestV2(testResultsDirectory, newSettingsFile, vsVersion).then(function (code) {
+                    if (code !== 0) {
+                        utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1034, true);
+                    }
+                    return code;
+                }).catch(function (err) {
+                    utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1035, false);
+                    tl.error(err);
+                    return tl.TaskResult.Failed;
+                });
+        });
+    } catch (error) {
+        tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
+        tl.debug(error);
+        //Should continue to run without the selected configurations.
+        return runVStest(testResultsDirectory, newSettingsFile, vsVersion).then(function (code) {
+                if (code !== 0) {
+                    utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1036, false);
+                }
+                return code;
+            }).catch(function (err) {
+                utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1037, false);
+                tl.error(err);
+                return tl.TaskResult.Failed;
+            });
+    }
+}
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     const defer = Q.defer<number>();
 
@@ -830,7 +1200,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     return defer.promise;
 }
 
-function publishTestResults(testResultsDirectory: string) {
+function publishTestResults(testResultsDirectory: string): void {
     if (testResultsDirectory) {
         const resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
 
@@ -844,7 +1214,7 @@ function publishTestResults(testResultsDirectory: string) {
     }
 }
 
-function cleanUp(temporarySettingsFile: string) {
+function cleanUp(temporarySettingsFile: string): void {
     //cleanup the runsettings file
     if (temporarySettingsFile && vstestConfig.settingsFile !== temporarySettingsFile) {
         try {

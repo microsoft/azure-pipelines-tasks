@@ -54,7 +54,7 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </DataCollectionRunSettings>
     </RunSettings>`;
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Promise<string> {
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Q.Promise<string> {
     const defer = Q.defer<string>();
     let result: any;
 
