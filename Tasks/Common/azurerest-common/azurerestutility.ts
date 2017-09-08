@@ -750,7 +750,6 @@ export async function getAzureRMWebAppMetadata(
     resourceGroupName: string,
     deployToSlotFlag: boolean,
     slotName: string) {
-        console.log("inside getAzureRMWebAppMetadata function");
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endpoint);
@@ -762,6 +761,7 @@ export async function getAzureRMWebAppMetadata(
     var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
         '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/config/metadata/list?' + azureApiVersion;
 
+    tl.debug('Requesting Azure App Service Metadata: ' + metadataUrl);
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.create(metadataUrl, null, options);
@@ -774,24 +774,9 @@ export async function getAzureRMWebAppMetadata(
         }
     },
     (error) => {
-        //console.log(JSON.stringify(response));
         deferred.reject(error);
     });
 
-    tl.debug('Requesting Azure App Service Metadata: ' + metadataUrl);
-    /*httpObj.get('POST', metadataUrl, headers, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
-        }
-        else if (response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            deferred.resolve(obj);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(response.statusMessage);
-        }
-    });*/
     return deferred.promise;
 }
 
@@ -802,7 +787,6 @@ export async function updateAzureRMWebAppMetadata(
     deployToSlotFlag: boolean,
     slotName: string,
     webAppMetadata: Object) {
-        console.log("inside updateAzureRMWebAppMetadata function");
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endPoint);
@@ -824,29 +808,15 @@ export async function updateAzureRMWebAppMetadata(
         if(response.statusCode === 200) {
             deferred.resolve();
         } else {
-            tl.debug(response.result);
+            tl.debug(JSON.stringify(response));
             deferred.reject(response.statusCode);
         }
     },
     (error) => {
         deferred.reject(error);
     });
-
-
-    /*restObj._sendJson('PUT', metadataUrl, "", webAppMetadata, headers, null, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
-        }
-        else if (response === 200) {
-            deferred.resolve();
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(response);
-        }
-    });*/
     return deferred.promise;
-    }
+}
 
 function sleep(timeInMilliSecond) {
   return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
