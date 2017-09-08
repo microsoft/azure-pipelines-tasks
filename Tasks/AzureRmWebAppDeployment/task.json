@@ -2,7 +2,7 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure WebApp Services On Windows, Web App On Linux with built-in images or docker containers, ASP.NET app, .NET Core app, PHP app, Function Apps, Mobile Apps, Api applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "description": "Update Azure WebApp Services On Windows, Web App On Linux with built-in images or docker containers, ASP.NET, .NET Core, PHP, Python or Node based Web applications, Function Apps, Mobile Apps, Api applications, Web Jobs using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
