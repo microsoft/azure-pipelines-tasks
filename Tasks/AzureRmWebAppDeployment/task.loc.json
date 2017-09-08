@@ -79,19 +79,6 @@
       }
     },
     {
-      "name": "ImageSource",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ImageSource",
-      "defaultValue": "Builtin",
-      "required": false,
-      "options": {
-        "Registry": "Container Registry",
-        "Builtin": "Built-in Image"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
-      "visibleRule": "WebAppKind = applinux"
-    },
-    {
       "name": "DeployToSlotFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.DeployToSlotFlag",
@@ -125,6 +112,19 @@
       "visibleRule": "DeployToSlotFlag = true"
     },
     {
+      "name": "ImageSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ImageSource",
+      "defaultValue": "Builtin",
+      "required": false,
+      "options": {
+        "Registry": "Container Registry",
+        "Builtin": "Built-in Image"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
+      "visibleRule": "WebAppKind = applinux"
+    },
+    {
       "name": "DockerNamespace",
       "type": "string",
       "label": "ms-resource:loc.input.label.DockerNamespace",
@@ -152,15 +152,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
-      "name": "StartupCommand",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.StartupCommand",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "WebAppKind = applinux",
-      "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
-    },
-    {
       "name": "VirtualApplication",
       "type": "string",
       "label": "ms-resource:loc.input.label.VirtualApplication",
@@ -186,6 +177,40 @@
       "required": false,
       "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
       "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
+    },
+    {
+      "name": "RuntimeStack",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeStack",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "node|4.4": "Node.js 4.4",
+        "node|4.5": "Node.js 4.5",
+        "node|6.2": "Node.js 6.2",
+        "node|6.6": "Node.js 6.6",
+        "node|6.9": "Node.js 6.9",
+        "node|6.10": "Node.js 6.10",
+        "node|6.11": "Node.js 6.11",
+        "node|8.0": "Node.js 8.0",
+        "node|8.1": "Node.js 8.1",
+        "php|5.6": "PHP 5.6",
+        "php|7.0": "PHP 7.0",
+        "dotnetcore|1.0": ".Net Core 1.0",
+        "dotnetcore|1.1": ".Net Core 1.1",
+        "ruby|2.3": "Ruby 2.3"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
+      "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
+    },
+    {
+      "name": "StartupCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartupCommand",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKind = applinux",
+      "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
       "name": "WebAppUri",
@@ -487,8 +512,8 @@
     "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
-    "SuccessfullyUpdatedStartupCommand": "ms-resource:loc.messages.SuccessfullyUpdatedStartupCommand",
-    "FailedToUpdateStartupCommand": "ms-resource:loc.messages.FailedToUpdateStartupCommand",
+    "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "ms-resource:loc.messages.SuccessfullyUpdatedRuntimeStackAndStartupCommand",
+    "FailedToUpdateRuntimeStackAndStartupCommand": "ms-resource:loc.messages.FailedToUpdateRuntimeStackAndStartupCommand",
     "SuccessfullyUpdatedWebAppSettings": "ms-resource:loc.messages.SuccessfullyUpdatedWebAppSettings",
     "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails"
   }

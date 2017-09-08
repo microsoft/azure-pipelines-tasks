@@ -50,6 +50,7 @@ async function run() {
         var imageSource = tl.getInput('ImageSource', false);
         var startupCommand = tl.getInput('StartupCommand', false);
         var linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', false);
+        var runtimeStack = tl.getInput('RuntimeStack', true);
 
         var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
@@ -173,15 +174,17 @@ async function run() {
             } else {
                 tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
 
-                if (isLinuxWebApp) {
-                    await updateStartupCommandAndAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, startupCommand, inputAppSettings);
-                }
-
                 if(azureWebAppDetails == null) {
                     azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 }
 
                 await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+
+                if(isLinuxWebApp) {
+                    await updateAppSetting(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, inputAppSettings);
+                    
+                    await updateStartupCommandAndRuntimeStack(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, runtimeStack, startupCommand);
+                }
             }
 
             if(!isLinuxWebApp && scriptType) {
@@ -287,6 +290,59 @@ async function updateWebAppConfigDetails(SPN, webAppName: string, resourceGroupN
     }
 }
 
+async function updateStartupCommandAndRuntimeStack(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, runtimeStack: string, startupCommand: string) {
+    try {
+        var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
+        var appCommandLine: string = configDetails.properties.appCommandLine;
+
+        var updatedConfigDetails: string = "";
+        var shouldUpdate: boolean = true;
+        
+        if(startupCommand == null){
+            startupCommand = "";
+        }
+
+        if (appCommandLine != startupCommand && runtimeStack != linuxFxVersion) {
+            shouldUpdate = true;
+            updatedConfigDetails = JSON.stringify({
+                "properties": {
+                    "linuxFxVersion": runtimeStack,
+                    "appCommandLine": startupCommand
+                }
+            });
+        }
+        else if (runtimeStack != linuxFxVersion) {
+            updatedConfigDetails = JSON.stringify({
+                "properties": {
+                    "linuxFxVersion": runtimeStack,
+                }
+            });
+        }
+        else if (appCommandLine != startupCommand) {
+            updatedConfigDetails = JSON.stringify({
+                "properties": {
+                    "appCommandLine": startupCommand
+                }
+            });
+        }
+        else {
+            shouldUpdate = false;
+        }
+
+        if (shouldUpdate) {
+            tl.debug("Updating webConfig with the details: " + updatedConfigDetails);
+
+            await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
+
+            console.log("SuccessfullyUpdatedRuntimeStackAndStartupCommand");
+        }
+    }
+    catch (error) {
+        tl.error(tl.loc("FailedToUpdateRuntimeStackAndStartupCommand", error));
+    }
+}
+
 async function updateArmMetadata(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
     var projectId = tl.getVariable("system.teamprojectId");
@@ -313,24 +369,7 @@ async function updateArmMetadata(SPN, webAppName: string, resourceGroupName: str
     await azureRESTUtility.updateAzureRMWebAppMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, metadata);
 }
 
-async function updateStartupCommandAndAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, startupCommand: string, appSettings: any) {
-    try {
-        tl.debug("Updating the startup Command");
-        var updatedConfigDetails = JSON.stringify(
-            {
-                "properties": {
-                    "appCommandLine": startupCommand
-                }
-            });
-
-        await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
-
-        console.log(tl.loc("SuccessfullyUpdatedStartupCommand"));
-    }
-    catch (error) {
-        tl.warning(tl.loc("FailedToUpdateStartupCommand", error));
-    }
-
+async function updateAppSetting(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, appSettings: any) {
     if (appSettings) {
         try {
             tl.debug("Updating app settings for builtin images");

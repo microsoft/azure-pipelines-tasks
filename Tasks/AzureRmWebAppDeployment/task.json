@@ -79,19 +79,6 @@
             }
         },
         {
-            "name": "ImageSource",
-            "type": "pickList",
-            "label": "Image Source",
-            "defaultValue": "Builtin",
-            "required": false,
-            "options": {
-                "Registry": "Container Registry",
-                "Builtin": "Built-in Image"
-            },
-            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
-            "visibleRule": "WebAppKind = applinux"
-        },
-        {
             "name": "DeployToSlotFlag",
             "type": "boolean",
             "label": "Deploy to slot",
@@ -125,6 +112,19 @@
             "visibleRule": "DeployToSlotFlag = true"
         },
         {
+            "name": "ImageSource",
+            "type": "pickList",
+            "label": "Image Source",
+            "defaultValue": "Builtin",
+            "required": false,
+            "options": {
+                "Registry": "Container Registry",
+                "Builtin": "Built-in Image"
+            },
+            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
+            "visibleRule": "WebAppKind = applinux"
+        },
+        {
             "name": "DockerNamespace",
             "type": "string",
             "label": "Registry or Namespace",
@@ -152,15 +152,6 @@
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
-            "name": "StartupCommand",
-            "type": "string",
-            "label": "Startup command ",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "WebAppKind = applinux",
-            "helpMarkDown": "Enter the start up command."
-        },
-        {
             "name": "VirtualApplication",
             "type": "string",
             "label": "Virtual application",
@@ -186,6 +177,40 @@
             "required": false,
             "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
             "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+        },
+        {
+            "name": "RuntimeStack",
+            "type": "pickList",
+            "label": "Runtime Stack",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "node|4.4": "Node.js 4.4",
+                "node|4.5": "Node.js 4.5",
+                "node|6.2": "Node.js 6.2",
+                "node|6.6": "Node.js 6.6",
+                "node|6.9": "Node.js 6.9",
+                "node|6.10": "Node.js 6.10",
+                "node|6.11": "Node.js 6.11",
+                "node|8.0": "Node.js 8.0",
+                "node|8.1": "Node.js 8.1",
+                "php|5.6": "PHP 5.6",
+                "php|7.0": "PHP 7.0",
+                "dotnetcore|1.0": ".Net Core 1.0",
+                "dotnetcore|1.1": ".Net Core 1.1",
+                "ruby|2.3": "Ruby 2.3"
+            },
+            "helpMarkDown": "Select the framework and version.",
+            "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
+        },
+        {
+            "name": "StartupCommand",
+            "type": "string",
+            "label": "Startup command ",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKind = applinux",
+            "helpMarkDown": "Enter the start up command."
         },
         {
             "name": "WebAppUri",
@@ -487,8 +512,8 @@
         "UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
-        "SuccessfullyUpdatedStartupCommand": "Successfully updated the Startup Command.",
-        "FailedToUpdateStartupCommand": "Failed to update the Startup Command. Error: %s.",
+        "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "Successfully updated the Runtime Stack and Startup Command.",
+        "FailedToUpdateRuntimeStackAndStartupCommand": "Failed to update the Runtime Stack and Startup Command. Error: %s.",
         "SuccessfullyUpdatedWebAppSettings": "Successfully updated the App settings.",
         "FailedToUpdateAppSettingsInConfigDetails": "Failed to update the App settings. Error: %s."
     }
