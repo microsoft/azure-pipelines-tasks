@@ -3,8 +3,8 @@
   "loc.helpMarkDown": "Publish Python packages to the Python Package Index",
   "loc.description": "Publish Python packages to the Python Package Index",
   "loc.instanceNameFormat": "PyPI Publisher",
-  "loc.input.label.wd": "Python package path",
-  "loc.input.help.wd": "Python package directory to be published, where setup.py is present.",
-  "loc.input.label.serviceEndpoint": "PyPI connection",
+  "loc.input.label.wd": "Root Directory",
+  "loc.input.help.wd": "Python package directory where setup.py is present.",
+  "loc.input.label.serviceEndpoint": "Generic Service Endpoint",
   "loc.input.help.serviceEndpoint": "Select the Generic endpoint where PyPI server details are present"
 }
