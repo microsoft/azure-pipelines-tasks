@@ -33,7 +33,7 @@ async function main(): Promise<void> {
             reject(reason);
         });
 
-        console.log("Linked artifacts count: " + artifacts.length);
+        console.log(tl.loc("LinkedArtifactCount", artifacts.length));
 
         var downloadPromises: Array<Promise<void>> = [];
 
@@ -58,7 +58,6 @@ async function main(): Promise<void> {
                 console.log(tl.loc("DownloadArtifacts", itemsUrl));
 
                 var variables = {};
-
                 var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
                 var webProvider = new providers.WebProvider(itemsUrl, templatePath, variables, handler);
                 var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
@@ -83,7 +82,7 @@ async function main(): Promise<void> {
                 }));
             }
             else {
-                console.log("Unsupported artifact type: " + artifact.resource.type);
+                tl.warning(tl.loc("UnsupportedArtifactType", artifact.resource.type));
             }
         });
 
