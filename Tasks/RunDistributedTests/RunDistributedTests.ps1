@@ -24,94 +24,129 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
-#To parse the Overriding Parameters string provided by user
-Function GetPropertiesMapping {
-    param ( [String] $overridingParameters )
-    
-        $inputStr = $overridingParameters
-        $parameterStrings = New-Object System.Collections.Generic.List[String]
-        $startOfSegment = 0;
-        $index = 0;
-    
-        $separator = ";" 
-        $escapeCharacter = '\'
-    
-        while ($index -ilt $inputStr.Length)
+Function Split-Parameters
+{
+    param 
+    ( 
+        [String] 
+        $OverridingParameters,
+
+        [String] 
+        $Separator,
+
+        [Char]
+        $EscapeCharacter
+    )
+   
+    $inputStr = $OverridingParameters
+    $parameterStrings = New-Object System.Collections.Generic.List[String]
+    $startOfSegment = 0
+    $index = 0
+
+    while ($index -ilt $inputStr.Length)
+    {
+        $index = $inputStr.indexOf($Separator, $index)
+        if ($index -gt 0 -and $inputStr[$index - 1] -eq $EscapeCharacter)
         {
-            $index = $inputStr.indexOf($separator, $index);
-            if ($index -gt 0 -and $inputStr[$index - 1] -eq $escapeCharacter)
-            {
-                $index += $separator.Length;
-                continue; 
-            }
-            if ($index -eq -1)
-            {
-                break;
-            }
-            $parameterStrings.Add($inputStr.Substring($startOfSegment, $index - $startOfSegment).Replace($escapeCharacter + $separator, $separator));
-            $index += $separator.Length;
-            $startOfSegment = $index;
+            $index += $Separator.Length
+            continue
         }
-        $parameterStrings.Add($inputStr.Substring($startOfSegment).Replace($escapeCharacter + $separator, $separator));
+        if ($index -eq -1)
+        {
+            break
+        }
+        $parameterStrings.Add($inputStr.Substring($startOfSegment, $index - $startOfSegment).Replace($EscapeCharacter + $Separator, $Separator))
+        $index += $Separator.Length
+        $startOfSegment = $index
+    }
+    $parameterStrings.Add($inputStr.Substring($startOfSegment).Replace($EscapeCharacter + $Separator, $Separator))
+
+    return $parameterStrings
+}
+
+Function Get-PropertiesMapping 
+{
+    param 
+    ( 
+        [String] 
+        $OverridingParameters 
+    )
         
-        $properties = New-Object 'system.collections.generic.dictionary[string,string]'
-        foreach ($s in $parameterStrings)
+    $parameterStrings = Split-Parameters -OverridingParameters $OverridingParameters -Separator ";" -EscapeCharacter '\'
+    $properties = New-Object 'system.collections.generic.dictionary[string,string]'
+    
+    foreach ($s in $parameterStrings)
+    {
+        $pair = $s.Split('=', 2)
+        if ($pair.Length -eq 2)
         {
-            $pair = $s.Split('=', 2);
-            if ($pair.Length -eq 2)
+            if (!$properties.ContainsKey($pair[0]))
             {
-               if (!$properties.ContainsKey($pair[0]))
-               {
-                    $properties.Add($pair[0], $pair[1])
-               }
+                $properties.Add($pair[0], $pair[1])
             }
         }
-        return $properties;
     }
     
-Function OverrideTestSettingProperties {
-    param (
-    [String] $overridingParameters, 
-    [System.Xml.XmlDocument] $testSettings
+    return $properties
+}
+    
+Function Override-TestSettingProperties 
+{
+    param 
+    (
+        [String]
+        $OverridingParameters, 
+       
+        [System.Xml.XmlDocument] 
+        $TestSettingsXmlDoc
     )
     
-        if([String]::IsNullOrEmpty($overridingParameters) -or $testSettings -eq $null)
-        {
-            return $false
+    $properties = Get-PropertiesMapping -OverridingParameters $OverridingParameters
+    $propertyNodes = $TestSettingsXmlDoc.TestSettings.Properties.ChildNodes
+    $hasOverridenProperties  = $false
+    
+    foreach($property in $propertyNodes)
+    {       
+        if ([string]::CompareOrdinal($property.LocalName, "Property") -ne 0 ) 
+        { 
+            continue 
+        } 
+
+        $nameAttribute = $property.name
+        $valueAttribute = $property.value
+        
+        if(-not $nameAttribute) 
+        { 
+            $nameAttribute = $property.Name 
         }
-    
-        $properties = GetPropertiesMapping -overridingParameters $overridingParameters
-        $propertyNodes = $testSettings.TestSettings.Properties.ChildNodes
-    
-        $hasOverridenProperties  = $false;
-        foreach($property in $propertyNodes)
-        {       
-            if ([string]::CompareOrdinal($property.LocalName, "Property") -ne 0 ) { continue } 
-    
-            $nameAttribute = $property.name
-            $valueAttribute = $property.value
-    
-            if(-not $nameAttribute) { $nameAttribute = $property.Name }
-    
-            if(-not $valueAttribute) { $valueAttribute = $property.Value }
+
+        if(-not $valueAttribute) 
+        { 
+            $valueAttribute = $property.Value 
+        }
             
-            if (-not ($nameAttribute -and $valueAttribute)) { continue }
+        if (-not ($nameAttribute -and $valueAttribute))
+        { 
+            continue 
+        }
              
-            if ($properties.ContainsKey($nameAttribute))
+        if ($properties.ContainsKey($nameAttribute))
+        {
+            $hasOverridenProperties = $true
+            Write-Verbose "Overriding value for parameter : $nameAttribute" 
+            if($property.value)
             {
-                $hasOverridenProperties = $true
-                if($property.value)
-                {
-                    $property.value = $properties[$nameAttribute]
-                }
-                elseif($property.Value)
-                {
-                    $property.Value = $properties[$nameAttribute]
-                }
+                $property.value = $properties[$nameAttribute]
+            }
+            elseif($property.Value)
+            {
+                $property.Value = $properties[$nameAttribute]
             }
         }
-        return $hasOverridenProperties
     }
+    
+    return $hasOverridenProperties
+}
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
@@ -149,18 +184,34 @@ $taskContextMemberExists  = CmdletHasMember "TaskContext"
 
 if($overrideRunParams -and $runSettingsFile -and (Test-Path $runSettingsFile))
 {
-    if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0)) {
-        $xml = [xml](Get-Content $runSettingsFile)
-        $hasOverridenProperties = OverrideTestSettingProperties -overridingParameters $overrideRunParams -testSettings $xml
-        if($hasOverridenProperties)
+    if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0)) 
+    {
+        $settingsXML = $null 
+        try
         {
-            $newTestSettingsFile = [io.path]::Combine($env:TEMP, ([GUID]::NewGuid()).toString() + ".testsettings" )
-            $xml.Save($newTestSettingsFile)
-            Write-Verbose "Task will be using new TestSettings file created after overriding properties : $newTestSettingsFile"
-            $runSettingsFile = $newTestSettingsFile
-            # Resetting run params as we have already overriden them in test settiings file
-            $overrideRunParams = $null
+            $settingsXML = [xml](Get-Content $runSettingsFile)
         }
+        catch 
+        {
+            Write-Verbose "Exception occurred reading provided testsettings $_.Exception.message "
+        }
+        if($settingsXML -eq $null -or (-not $settingsXML.TestSettings) )
+        {
+            Write-Warning "The specified testsettings file $runSettingsFile is invalid or does not exist. Provide a valid settings file or clear the field."
+        }
+        else
+        {
+            $hasOverridenProperties = Override-TestSettingProperties -OverridingParameters $overrideRunParams -TestSettingsXmlDoc $settingsXML
+            if($hasOverridenProperties)
+            {
+                $newTestSettingsFile = [io.path]::Combine($env:TEMP, ([GUID]::NewGuid()).toString() + ".testsettings" )
+                $settingsXML.Save($newTestSettingsFile)
+                Write-Verbose "Task will be using new TestSettings file created after overriding properties : $newTestSettingsFile"
+                $runSettingsFile = $newTestSettingsFile
+            }
+        }
+        # Resetting overrideRunParams as we have already overriden them. Also needed to avoid not supported error of cmdlet.
+        $overrideRunParams = $null
     }
 }
 
