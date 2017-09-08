@@ -1,5 +1,10 @@
 {
      "checkPath": {
         "/some/path/a.apk": true
+    },
+    "findMatch": {
+        "/some/path/a.apk": [
+            "/some/path/a.apk"
+        ]
     }
 }
