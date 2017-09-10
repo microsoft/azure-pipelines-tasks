@@ -744,9 +744,22 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$azureRMVMsDetails = @{}
     $debugLogsFlag= $env:system_debug
 
+    # Getting endpoint used for the task
+    $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
+            $environmentName = $Endpoint.Data.Environment
+            if($environmentName -eq "AzureStack")
+            {
+                $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
+            }
+            else
+            {
+                $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+            }
+        }
 
         $networkInterfaceResources = $azureRGResourcesDetails["networkInterfaceResources"]
         $publicIPAddressResources = $azureRGResourcesDetails["publicIPAddressResources"]
