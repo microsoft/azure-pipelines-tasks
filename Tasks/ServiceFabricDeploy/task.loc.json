@@ -311,25 +311,26 @@
       "groupname": "docker"
     },
     {
-      "name": "containerregistrytype",
+      "name": "registryCredentials",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.containerregistrytype",
-      "defaultValue": "Azure Container Registry",
+      "label": "ms-resource:loc.input.label.registryCredentials",
+      "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
-        "Azure Container Registry": "Azure Container Registry",
-        "Container Registry": "Container Registry"
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "UsernamePassword": "Username and Password"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype",
       "visibleRule": "configureDockerSettings = true",
-      "groupname": "docker"
+      "groupName": "docker",
+      "helpMarkDown": "ms-resource:loc.input.help.registryCredentials"
     },
     {
       "name": "dockerRegistryEndpoint",
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
-      "visibleRule": "configureDockerSettings = true && containerregistrytype = Container Registry",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
       "required": true,
       "groupname": "docker"
     },
@@ -338,19 +339,19 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
-      "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
       "required": true,
       "groupname": "docker"
     },
     {
-      "name": "azureContainerRegistry",
-      "label": "ms-resource:loc.input.label.azureContainerRegistry",
-      "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
-      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword",
+      "name": "registryUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryUserName",
       "defaultValue": "",
       "required": false,
-      "groupName": "docker"
+      "helpMarkDown": "ms-resource:loc.input.help.registryUserName",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
     },
     {
       "name": "registryPassword",
@@ -378,14 +379,6 @@
       "target": "deploy.ps1"
     }
   },
-  "dataSourceBindings": [
-    {
-      "target": "azureContainerRegistry",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
-    }
-  ],
   "messages": {
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
