@@ -20,14 +20,14 @@ export function imageNameWithoutTag(imageName: string): string {
     return endIndex < 0 ? imageName : imageName.substr(0, endIndex);
 }
 
-export function changeDefaultImageNameToLowerCase(imageName: string): string {
-    
-    if(imageName === getDefaultImage())
-    {
-        return imageName.toLowerCase();
+export function getImageName(): string {
+    var imageName = tl.getInput("imageName", true);
+    if(imageName === getDefaultImage()) {
+        imageName = imageName.toLowerCase();
+        imageName = imageName.replace(/ /g,"");
     }
-    
-    return imageName;
+
+    return imageName
 }
 
 function getDefaultImage() : string {
