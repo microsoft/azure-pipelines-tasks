@@ -42,17 +42,15 @@ export async function deployWebAppImage(endPoint, resourceGroupName, webAppName,
 
     await azureRESTUtility.updateAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
-    tl.debug("Updating the webapp application settings.");
+    // Addding Docker image setting.
     appSettings = appSettings ? appSettings.trim() : "";
     appSettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageSourceAndTag + " " + appSettings;
-
-    // Update webapp application setting
-    var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-    mergeAppSettings(appSettings, webAppSettings);
-    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
+    await updateAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
 }
 
-function mergeAppSettings(appSettings, webAppSettings) {
+export async function updateAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings) {
+    tl.debug("Updating web app App settings");
+    var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
     var parsedAppSettings =  parameterParser(appSettings);
     for (var settingName in parsedAppSettings)
     {
@@ -64,4 +62,6 @@ function mergeAppSettings(appSettings, webAppSettings) {
             webAppSettings["properties"][setting] = settingVal;
         }
     }
+    tl.debug("App settings: " + JSON.stringify(webAppSettings));
+    await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
 }
