@@ -52,7 +52,7 @@ async function run() {
         var runtimeStack = "";
         var linuxWebDeployPkg = "";
 
-        if (isLinuxWebApp) {
+        if (isLinuxWebApp && imageSource.indexOf("Builtin") >= 0) {
             linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
             runtimeStack = tl.getInput('RuntimeStack', true);
         }
@@ -325,11 +325,8 @@ async function updateStartupCommandAndRuntimeStack(SPN, webAppName: string, reso
 
         var updatedConfigDetails: string = "";
         
-        if(startupCommand == null){
-            startupCommand = "";
-        }
-
-        if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
+        if (!(!!appCommandLine == !!startupCommand && appCommandLine == startupCommand)
+            || runtimeStack != linuxFxVersion) {
             updatedConfigDetails = JSON.stringify({
                 "properties": {
                     "linuxFxVersion": runtimeStack,
