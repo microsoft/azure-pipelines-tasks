@@ -13,6 +13,7 @@ Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "Mach
 Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
 Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "RunPowershellInParallel" }
 Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
 Register-Mock Get-ParsedSessionVariables { }
 

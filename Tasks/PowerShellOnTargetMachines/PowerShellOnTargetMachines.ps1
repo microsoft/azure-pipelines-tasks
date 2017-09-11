@@ -37,7 +37,7 @@ try
     $initializationScriptPath = $initializationScriptPath.Trim('"')
 
     # Normalize admin username
-    if((-not $adminUserName.StartsWith(".\")) -and ($adminUserName.IndexOf("\") -eq -1) -and ($adminUserName.IndexOf("@") -eq -1))
+    if($adminUserName -and (-not $adminUserName.StartsWith(".\")) -and ($adminUserName.IndexOf("\") -eq -1) -and ($adminUserName.IndexOf("@") -eq -1))
     {
         $adminUserName = ".\" + $adminUserName 
     } 

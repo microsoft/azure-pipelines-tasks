@@ -22,6 +22,7 @@ Assert-Throws {
     Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
     Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "runPowershellInParallel" }
     Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+    Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
     & "$remotePowershellRunnerPath"
 } -MessagePattern "PS_TM_NoMachineExistsUnderEnvironment0ForDeployment validEnvironmentNameWithNoVm"
@@ -42,6 +43,7 @@ Assert-Throws {
     Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
     Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "runPowershellInParallel" }
     Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+    Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
     & "$remotePowershellRunnerPath"
 } -MessagePattern "No environment found"
@@ -64,6 +66,7 @@ Assert-Throws {
     Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
     Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "runPowershellInParallel" }
     Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+    Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
     & "$remotePowershellRunnerPath"
 } -MessagePattern "No resources found"
@@ -75,6 +78,7 @@ Unregister-Mock Get-EnvironmentProperty
 Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $validEnvironmentName } -ParametersEvaluator { $EnvironmentName -eq $validEnvironmentName }
 Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator { $EnvironmentName -eq $validEnvironmentName }
 Register-Mock Get-EnvironmentProperty { return $environmentWinRMHttpPort } -ParametersEvaluator { $Key -eq $resourceWinRMHttpPortKeyName }
+Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
 Unregister-Mock Receive-Job
 Register-Mock Receive-Job {return @{"Status"="Passed"}}
@@ -92,6 +96,7 @@ Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $N
 Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "runPowershellInParallel" }
 Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
 Register-Mock Get-VstsInput { return "tags" } -ParametersEvaluator{ $Name -eq  "resourceFilteringMethod" }
+Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
 #should not throw error for valid input
 & "$remotePowershellRunnerPath"

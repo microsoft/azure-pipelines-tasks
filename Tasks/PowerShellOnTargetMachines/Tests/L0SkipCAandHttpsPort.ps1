@@ -14,6 +14,7 @@ Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $N
 Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "RunPowershellInParallel" }
 Register-Mock Get-VstsInput { return "HTTPS" } -ParametersEvaluator{ $Name -eq  "protocol" }
 Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
 
 Register-Mock Get-ParsedSessionVariables { }
 Register-Mock Receive-Job {return @{"Status"="Passed"}}
