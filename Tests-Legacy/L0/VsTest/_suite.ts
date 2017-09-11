@@ -474,10 +474,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test adapter should be found automatically', (done) => {
 
-        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:/source/dir'].join(' ');
+        const vstestCmd = [sysVstestLocation, '/source/dir/someFile1', '/logger:trx', '/TestAdapterPath:E:\\source\\dir'].join(' ');
         setResponseFile('vstestGoodwithNugetAdapter.json');
 
         const tr = new trm.TaskRunner('VSTest');
+        tr.setInput('searchFolder', 'E:\\source\\dir');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
