@@ -22,12 +22,16 @@ export function imageNameWithoutTag(imageName: string): string {
 
 export function getImageName(): string {
     var imageName = tl.getInput("imageName", true);
-    if(imageName === getDefaultImage()) {
+    return changeDefaultImageNameToLowerCase(imageName);
+}
+
+export function changeDefaultImageNameToLowerCase(imageName: string): string {
+    if (imageName === getDefaultImage()) {
         imageName = imageName.toLowerCase();
         imageName = imageName.replace(/ /g,"");
     }
 
-    return imageName
+    return imageName;
 }
 
 function getDefaultImage() : string {

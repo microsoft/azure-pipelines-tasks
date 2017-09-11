@@ -45,8 +45,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["--build-arg", buildArgument]);
     });
 
-    let imageName = tl.getInput("imageName", true);
-    imageName = imageUtils.changeDefaultImageNameToLowerCase(imageName);
+    var imageName = imageUtils.getImageName(); 
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);
