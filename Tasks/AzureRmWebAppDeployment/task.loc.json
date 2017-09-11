@@ -130,7 +130,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "ImageSource  = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -139,7 +139,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "ImageSource = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -148,7 +148,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "ImageSource  = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {

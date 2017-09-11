@@ -130,7 +130,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "ImageSource  = Registry",
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -139,7 +139,7 @@
             "label": "Repository",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "ImageSource = Registry",
+            "visibleRule": "WebAppKind = applinux && ImageSource = Registry",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -148,7 +148,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "ImageSource  = Registry",
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
