@@ -8,6 +8,7 @@ $taskPath = "$PSScriptRoot\.."
 Microsoft.PowerShell.Core\Import-Module $taskPath\Assert-SingleItem.psm1
 Microsoft.PowerShell.Core\Import-Module $taskPath\Update-ServiceVersions.psm1
 Microsoft.PowerShell.Core\Import-Module $taskPath\Update-PackageVersion.psm1
+Microsoft.PowerShell.Core\Import-Module $taskPath\Update-ApplicationVersions.psm1
 
 $pkgPath = "$PSScriptRoot\pkg"
 
@@ -22,6 +23,7 @@ try
 
     Register-Mock Get-VstsInput { $pkgPath } -- -Name applicationPackagePath -Require
     Register-Mock Get-VstsInput { $suffix } -- -Name versionSuffix -Require
+    Register-Mock Get-VstsInput { "Manifest versions" } -- -Name updateType -Require
     Register-Mock Find-VstsFiles { $pkgPath } -- -LegacyPattern $pkgPath -IncludeDirectories
     Register-Mock Assert-VstsPath
 
@@ -30,7 +32,7 @@ try
     Register-Mock Test-XmlEqual
 
     # Act
-    . $taskPath\Update-ApplicationVersions.ps1
+    . $taskPath\Update-Manifests.ps1
 
     # Assert
     $appManifest = [xml](Get-Content "$pkgPath\ApplicationManifest.xml")

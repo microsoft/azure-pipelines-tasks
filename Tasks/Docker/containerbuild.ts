@@ -2,9 +2,10 @@
 
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "./containerconnection";
-import * as sourceUtils from "./sourceutils";
-import * as imageUtils from "./containerimageutils";
+import ContainerConnection from "docker-common/containerconnection";
+import * as sourceUtils from "docker-common/sourceutils";
+import * as imageUtils from "docker-common/containerimageutils";
+import * as utils from "./utils";
 
 function findDockerFile(dockerfilepath : string) : string {
 
@@ -44,7 +45,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["--build-arg", buildArgument]);
     });
 
-    var imageName = imageUtils.getImageName();
+    var imageName = imageUtils.getImageName(); 
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);

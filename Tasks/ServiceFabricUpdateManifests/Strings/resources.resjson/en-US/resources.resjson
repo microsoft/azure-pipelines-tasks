@@ -1,8 +1,10 @@
 {
-  "loc.friendlyName": "Update Service Fabric App Versions",
+  "loc.friendlyName": "Update Service Fabric Manifests",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
-  "loc.description": "Automatically updates the versions of a packaged Service Fabric application.",
-  "loc.instanceNameFormat": "Update Service Fabric App Versions",
+  "loc.description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
+  "loc.instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
+  "loc.input.label.updateType": "Update Type",
+  "loc.input.help.updateType": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
   "loc.input.label.applicationPackagePath": "Application Package",
   "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.versionSuffix": "Version Value",
@@ -19,6 +21,8 @@
   "loc.input.help.compareType": "The build for comparison.",
   "loc.input.label.buildNumber": "Build Number",
   "loc.input.help.buildNumber": "The build number for comparison.",
+  "loc.input.label.imageDigestsPath": "Image Digests Path",
+  "loc.input.help.imageDigestsPath": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'.",
   "loc.messages.ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
   "loc.messages.ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
   "loc.messages.SearchingForApplicationPackage": "Searching for application package: {0}",
@@ -52,5 +56,6 @@
   "loc.messages.FileAdded": "The file '{0}' has been added.",
   "loc.messages.FileChanged": "The file '{0}' has changed.",
   "loc.messages.NoChanges": "Found no changes.",
-  "loc.messages.PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed."
+  "loc.messages.PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
+  "loc.messages.InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'."
 }

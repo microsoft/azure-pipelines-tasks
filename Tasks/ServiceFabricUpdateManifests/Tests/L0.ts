@@ -8,7 +8,7 @@ var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
 var psr = null;
 
-describe('ServiceFabricUpdateAppVersions Suite', function () {
+describe('ServiceFabricUpdateManifests Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -98,6 +98,9 @@ describe('ServiceFabricUpdateAppVersions Suite', function () {
         })
         it('(Find-FileChanges) only the first change is logged', (done) => {
             psr.run(path.join(__dirname, 'Find-FileChanges.LogOnlyFirst.ps1'), done);
+        })
+        it('test Docker image settings', done => {
+            psr.run(path.join(__dirname, 'Test-DockerImageSettings.ps1'), done);
         })
     }
 });

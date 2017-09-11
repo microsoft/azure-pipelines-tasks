@@ -1,8 +1,8 @@
 {
     "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
-    "name": "ServiceFabricUpdateAppVersions",
-    "friendlyName": "Update Service Fabric App Versions",
-    "description": "Automatically updates the versions of a packaged Service Fabric application.",
+    "name": "ServiceFabricUpdateManifests",
+    "friendlyName": "Update Service Fabric Manifests",
+    "description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
     "category": "Utility",
@@ -16,13 +16,25 @@
         "Cmd"
     ],
     "version": {
-        "Major": 1,
-        "Minor": 1,
-        "Patch": 12
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
-    "instanceNameFormat": "Update Service Fabric App Versions",
+    "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
     "inputs": [
+        {
+            "name": "updateType",
+            "type": "pickList",
+            "label": "Update Type",
+            "defaultValue": "Manifest versions",
+            "required": true,
+            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
+            "options": {
+                "Manifest versions": "Manifest versions",
+                "Docker image settings": "Docker image settings"
+            }
+        },
         {
             "name": "applicationPackagePath",
             "type": "filePath",
@@ -38,6 +50,7 @@
             "label": "Version Value",
             "defaultValue": ".$(Build.BuildNumber)",
             "required": true,
+            "visibleRule": "updateType = Manifest versions",
             "helpMarkDown": "The value used to specify the version in the manifest files. Default is .$(Build.BuildNumber)."
         },
         {
@@ -46,6 +59,7 @@
             "label": "Version Behavior",
             "defaultValue": "Append",
             "required": false,
+            "visibleRule": "updateType = Manifest versions",
             "helpMarkDown": "Specify whether to append the version value to existing values in the manifest files or replace them.",
             "options": {
                 "Append": "Append",
@@ -58,6 +72,7 @@
             "label": "Update only if changed",
             "defaultValue": "false",
             "required": true,
+            "visibleRule": "updateType = Manifest versions",
             "helpMarkDown": "Incrementally update only the packages that have changed. Use the [deterministic compiler flag](https://go.microsoft.com/fwlink/?LinkId=808668) to ensure builds with the same inputs produce the same outputs."
         },
         {
@@ -67,7 +82,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The name of the artifact containing the application package for comparison.",
-            "visibleRule": "updateOnlyChanged = true"
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
         },
         {
             "name": "logAllChanges",
@@ -76,7 +91,7 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Compare all files in every package and log if the file was added, removed, or if its content changed. Otherwise, compare files in a package only until the first change is found for faster performance.",
-            "visibleRule": "updateOnlyChanged = true"
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
         },
         {
             "name": "compareType",
@@ -89,7 +104,7 @@
                 "LastSuccessful": "Last Successful Build",
                 "Specific": "Specific Build"
             },
-            "visibleRule": "updateOnlyChanged = true"
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
         },
         {
             "name": "buildNumber",
@@ -98,12 +113,21 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The build number for comparison.",
-            "visibleRule": "compareType = Specific"
+            "visibleRule": "updateType = Manifest versions && compareType = Specific"
+        },
+        {
+            "name": "imageDigestsPath",
+            "type": "filePath",
+            "label": "Image Digests Path",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "updateType = Docker image settings",
+            "helpMarkDown": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'."
         }
     ],
     "execution": {
         "PowerShell3": {
-            "target": "Update-ApplicationVersions.ps1"
+            "target": "Update-Manifests.ps1"
         }
     },
     "messages": {
@@ -140,6 +164,7 @@
         "FileAdded": "The file '{0}' has been added.",
         "FileChanged": "The file '{0}' has changed.",
         "NoChanges": "Found no changes.",
-        "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed."
+        "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
+        "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'."
     }
 }

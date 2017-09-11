@@ -49,8 +49,10 @@ try
         Register-Mock Update-ServiceVersions { "1.0.0$oldSuffix" }
     }
 
+    Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Update-ApplicationVersions.psm1"
+
     # Act
-    . $taskPath\Update-ApplicationVersions.ps1
+    Update-ApplicationVersions
 
     # Assert
     $appManifest = [xml](Get-Content "$pkgPath\ApplicationManifest.xml")

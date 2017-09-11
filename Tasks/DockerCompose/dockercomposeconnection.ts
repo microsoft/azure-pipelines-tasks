@@ -7,7 +7,7 @@ import * as tr from "vsts-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ContainerConnection from "./containerconnection"
+import ContainerConnection from "docker-common/containerconnection"
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
 

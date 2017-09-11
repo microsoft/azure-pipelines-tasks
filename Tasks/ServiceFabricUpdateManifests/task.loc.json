@@ -1,6 +1,6 @@
 {
   "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
-  "name": "ServiceFabricUpdateAppVersions",
+  "name": "ServiceFabricUpdateManifests",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -16,13 +16,25 @@
     "Cmd"
   ],
   "version": {
-    "Major": 1,
-    "Minor": 1,
-    "Patch": 12
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
+    {
+      "name": "updateType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.updateType",
+      "defaultValue": "Manifest versions",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.updateType",
+      "options": {
+        "Manifest versions": "Manifest versions",
+        "Docker image settings": "Docker image settings"
+      }
+    },
     {
       "name": "applicationPackagePath",
       "type": "filePath",
@@ -38,6 +50,7 @@
       "label": "ms-resource:loc.input.label.versionSuffix",
       "defaultValue": ".$(Build.BuildNumber)",
       "required": true,
+      "visibleRule": "updateType = Manifest versions",
       "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
     },
     {
@@ -46,6 +59,7 @@
       "label": "ms-resource:loc.input.label.versionBehavior",
       "defaultValue": "Append",
       "required": false,
+      "visibleRule": "updateType = Manifest versions",
       "helpMarkDown": "ms-resource:loc.input.help.versionBehavior",
       "options": {
         "Append": "Append",
@@ -58,6 +72,7 @@
       "label": "ms-resource:loc.input.label.updateOnlyChanged",
       "defaultValue": "false",
       "required": true,
+      "visibleRule": "updateType = Manifest versions",
       "helpMarkDown": "ms-resource:loc.input.help.updateOnlyChanged"
     },
     {
@@ -67,7 +82,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.pkgArtifactName",
-      "visibleRule": "updateOnlyChanged = true"
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
     },
     {
       "name": "logAllChanges",
@@ -76,7 +91,7 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.logAllChanges",
-      "visibleRule": "updateOnlyChanged = true"
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
     },
     {
       "name": "compareType",
@@ -89,7 +104,7 @@
         "LastSuccessful": "Last Successful Build",
         "Specific": "Specific Build"
       },
-      "visibleRule": "updateOnlyChanged = true"
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
     },
     {
       "name": "buildNumber",
@@ -98,12 +113,21 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.buildNumber",
-      "visibleRule": "compareType = Specific"
+      "visibleRule": "updateType = Manifest versions && compareType = Specific"
+    },
+    {
+      "name": "imageDigestsPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageDigestsPath",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "updateType = Docker image settings",
+      "helpMarkDown": "ms-resource:loc.input.help.imageDigestsPath"
     }
   ],
   "execution": {
     "PowerShell3": {
-      "target": "Update-ApplicationVersions.ps1"
+      "target": "Update-Manifests.ps1"
     }
   },
   "messages": {
@@ -140,6 +164,7 @@
     "FileAdded": "ms-resource:loc.messages.FileAdded",
     "FileChanged": "ms-resource:loc.messages.FileChanged",
     "NoChanges": "ms-resource:loc.messages.NoChanges",
-    "PdbWarning": "ms-resource:loc.messages.PdbWarning"
+    "PdbWarning": "ms-resource:loc.messages.PdbWarning",
+    "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue"
   }
 }
