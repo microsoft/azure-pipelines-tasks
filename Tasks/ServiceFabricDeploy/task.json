@@ -15,8 +15,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 3,
-        "Patch": 10
+        "Minor": 4,
+        "Patch": 0
     },
     "demands": [
         "Cmd"
@@ -67,6 +67,17 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile."
+        },
+        {
+            "name": "overriddenApplicationParameters",
+            "type": "multiLine",
+            "label": "Override Application Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "To override the application parameters in a grid, click on “…” next to Override Application Parameters textbox. Or else type the application parameters to override in the textbox. Example: <br>–StatefulService1_PartitionCount 1 –StatefulService1_MinReplicaSetSize $(minReplicaSetSize).",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
         },
         {
             "name": "compressPackage",
@@ -316,6 +327,7 @@
         "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
+        "OverriddenApplicationParametersNotInCorrectFormat": "The overridden application parameters are not specified in the correct format.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",
