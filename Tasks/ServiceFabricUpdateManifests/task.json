@@ -165,10 +165,6 @@
         "FileChanged": "The file '{0}' has changed.",
         "NoChanges": "Found no changes.",
         "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
-<<<<<<< HEAD:Tasks/ServiceFabricUpdateManifests/task.json
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'."
-=======
-        "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'registry/image_name@digest_value'."
->>>>>>> c0885a675a97a226fd5463a41faa13def8012f64:Tasks/ServiceFabricUpdateManifests/task.json
     }
 }
