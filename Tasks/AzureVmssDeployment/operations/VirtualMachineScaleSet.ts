@@ -48,21 +48,8 @@ export default class VirtualMachineScaleSet {
         let blobService = new BlobService.BlobService(storageDetails.name, storageDetails.primaryAccessKey);
         let blobsBaseUrl = util.format("%s%s/%s", storageDetails.primaryBlobUrl, "vststasks", customScriptInfo.blobsPrefixPath);
 
-        // find all files under dir
-        let fileList: string[] = tl.findMatch(customScriptInfo.localDirPath, "**/*.*");
-
-        let fileUris: string[] = [];
-        fileList.forEach((filePath) => {
-            let relativePath = path.relative(customScriptInfo.localDirPath, filePath);
-            let normalizedRelativePath = utils.normalizeRelativePath(relativePath);
-            let fileUri = util.format("%s/%s", blobsBaseUrl, normalizedRelativePath);
-            fileUris.push(fileUri);
-        });
-
         console.log(tl.loc("DestinationBlobContainer", blobsBaseUrl))
-        await blobService.uploadBlobs(customScriptInfo.localDirPath, "vststasks", customScriptInfo.blobsPrefixPath);
-
-        return fileUris;
+        return await blobService.uploadBlobs(customScriptInfo.localDirPath, "vststasks", customScriptInfo.blobsPrefixPath);
     }
 
     private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {

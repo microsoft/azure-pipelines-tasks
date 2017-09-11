@@ -63,14 +63,14 @@
   "loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
   "loc.messages.StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
   "loc.messages.ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
-  "loc.messages.CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
-  "loc.messages.CreatedContainer": "Created container {0}.",
-  "loc.messages.ErrorInReadStream": "Error in Read stream: {0}",
-  "loc.messages.ErrorInWriteStream": "Error in write stream: {0}",
-  "loc.messages.FailedToCreateBlob": "Failed to create blob {0}. Error: {1}",
-  "loc.messages.FailedToCreateContainer": "Failed to create container {0}. Error: {1}",
-  "loc.messages.FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
+  "loc.messages.CreatedBlobForItem": "Created blob for item %s. Blob uri: %s.",
+  "loc.messages.CreatedContainer": "Created container %s.",
+  "loc.messages.ErrorInReadStream": "Error in Read stream: %s.",
+  "loc.messages.ErrorInWriteStream": "Error in write stream: %s.",
+  "loc.messages.FailedToCreateBlob": "Failed to create blob %s. Error: %s.",
+  "loc.messages.FailedToCreateContainer": "Failed to create container %s. Error: %s.",
+  "loc.messages.FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
   "loc.messages.SuccessFullyFetchedItemList": "Successfully fetcted list of items",
-  "loc.messages.UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
-  "loc.messages.UploadingItem": "Uploading {0}."
+  "loc.messages.UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
+  "loc.messages.UploadingItem": "Uploading %s."
 }
