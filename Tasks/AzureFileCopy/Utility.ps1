@@ -745,20 +745,30 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     $debugLogsFlag= $env:system_debug
 
     # Getting endpoint used for the task
-    $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+    if($connectedServiceName)
+    {
+        $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+    }
+    
+    $isAzureStackEnvironment = $false
+    if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
+        $environmentName = $Endpoint.Data.Environment
+        if($environmentName -eq "AzureStack")
+        {
+            $isAzureStackEnvironment = $true
+        }
+    }
 
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
-            $environmentName = $Endpoint.Data.Environment
-            if($environmentName -eq "AzureStack")
-            {
-                $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
-            }
-            else
-            {
-                $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
-            }
+        
+        if($isAzureStackEnvironment) 
+        {
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
+        }
+        else 
+        {
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
         }
 
         $networkInterfaceResources = $azureRGResourcesDetails["networkInterfaceResources"]
