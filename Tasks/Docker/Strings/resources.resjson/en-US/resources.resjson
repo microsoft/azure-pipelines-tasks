@@ -60,7 +60,7 @@
   "loc.input.help.dockerHostEndpoint": "Select a Docker host connection. Defaults to the agent's host.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory for the Docker command.",
-  "loc.messages.ContainerPatternFound": "Pattern found in dockerfilepath parameter",
-  "loc.messages.ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
+  "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found."
 }
