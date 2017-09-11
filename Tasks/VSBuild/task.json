@@ -63,21 +63,24 @@
             "type": "string",
             "label": "Platform",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Specify the platform you want to build. Examples: Win32, x86, x64 or Any CPU"
         },
         {
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Specify the configuration you want to build. Examples: Debug or Release"
         },
         {
             "name": "clean",
             "type": "boolean",
             "label": "Clean",
             "defaultValue": "false",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Uncheck if you want to make this an incremental build. Check to make this a full build. Incremental builds might reduce your build time, especially if your codebase is large. The unchecked option has no practical effect unless you also set Clean repository in the Get Sources task to false."
         },
         {
             "name": "maximumCpuCount",
