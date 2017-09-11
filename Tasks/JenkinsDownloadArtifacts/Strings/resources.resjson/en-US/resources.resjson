@@ -14,12 +14,13 @@
   "loc.input.help.jenkinsBuild": "Download artifacts produced by the last successful build, or from a specific build instance.",
   "loc.input.label.jenkinsBuildNumber": "Jenkins build number",
   "loc.input.help.jenkinsBuildNumber": "Download artifacts produced by this build.",
+  "loc.input.label.itemPattern": "Item Pattern",
+  "loc.input.help.itemPattern": "Minimatch pattern to filter files to be downloaded.",
   "loc.messages.GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
   "loc.messages.GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
-  "loc.messages.CouldNotFindArtifacts": "Could not find any artifacts for job %s from build number %d",
   "loc.messages.CouldNotGetLastSuccessfuilBuildNumber": "Could not get last successful build number",
   "loc.messages.ServerCallFailed": "HTTP call to Jenkins server failed.",
   "loc.messages.ServerCallErrorCode": "HTTP response code: %d",
-  "loc.messages.DownloadFileTo": "Download %s to %s",
-  "loc.messages.FileSuccessfullyDownloaded": "Successfully downloaded file %s"
+  "loc.messages.ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
+  "loc.messages.ArtifactDownloadUrl": "Downloading artifacts from: %s"
 }

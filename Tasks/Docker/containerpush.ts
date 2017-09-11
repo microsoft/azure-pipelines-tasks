@@ -32,7 +32,7 @@ function dockerPush(connection: ContainerConnection, imageName: string, imageDig
 
 export function run(connection: ContainerConnection): any {
     var images = [];
-    var imageName = tl.getInput("imageName", true);
+    var imageName = imageUtils.getImageName();
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);

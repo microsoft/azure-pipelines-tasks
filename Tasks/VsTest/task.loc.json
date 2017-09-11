@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 7
+    "Patch": 11
   },
   "demands": [
     "vstest"
@@ -134,7 +134,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.searchFolder",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
       "groupName": "testSelection"
     },
@@ -450,6 +450,7 @@
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
+    "testSettingPropertiesNotSupported": "ms-resource:loc.messages.testSettingPropertiesNotSupported",
     "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
@@ -487,6 +488,7 @@
     "invalidTestBatchSize": "ms-resource:loc.messages.invalidTestBatchSize",
     "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
-    "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch"
+    "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
   }
 }
