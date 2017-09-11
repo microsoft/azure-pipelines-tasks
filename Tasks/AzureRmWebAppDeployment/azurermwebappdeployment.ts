@@ -52,7 +52,9 @@ async function run() {
         var runtimeStack = "";
         var linuxWebDeployPkg = "";
 
-        if (isLinuxWebApp && imageSource.indexOf("Builtin") >= 0) {
+        var isBuiltinLinuxWebApp: boolean = imageSource && imageSource.indexOf("Builtin") >=0;
+
+        if (isLinuxWebApp && isBuiltinLinuxWebApp) {
             linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
             runtimeStack = tl.getInput('RuntimeStack', true);
         }
@@ -72,7 +74,7 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(isLinuxWebApp && (!imageSource || imageSource.indexOf("Builtin") < 0) && dockerNamespace)
+        if(isLinuxWebApp && !isBuiltinLinuxWebApp && dockerNamespace)
         {
             tl.debug("Performing container based deployment.");
 
@@ -356,7 +358,7 @@ async function updateAppSetting(SPN, webAppName: string, resourceGroupName: stri
             console.log(tl.loc("SuccessfullyUpdatedWebAppSettings"));
         }
         catch (error) {
-            tl.warning(tl.loc("FailedToUpdateAppSettingsInConfigDetails", error));
+            tl.error(tl.loc("FailedToUpdateAppSettingsInConfigDetails", error));
         }
     }
 }
