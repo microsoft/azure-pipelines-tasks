@@ -1,6 +1,7 @@
 # Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
 
 $ErrorActionPreference = 'Stop'
+$azureStackEnvironment = "AzureStack"
 
 function Get-DeploymentModulePath
 {
@@ -753,7 +754,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     $isAzureStackEnvironment = $false
     if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
-        if($environmentName -eq "AzureStack")
+        if($environmentName -eq $azureStackEnvironment)
         {
             $isAzureStackEnvironment = $true
         }
