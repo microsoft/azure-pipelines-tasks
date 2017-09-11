@@ -1,0 +1,77 @@
+{
+	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
+	"name": "AzureMonitor",
+	"friendlyName": "Azure Monitor",
+	"description": "Observe the configured Azure monitor rules for active alerts.",
+	"author": "Microsoft Corporation",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+	"category": "Tool",
+	"visibility": [
+		"Release"
+	],
+	"runsOn": [
+		"Server"
+	],
+	"version": {
+		"Major": 0,
+		"Minor": 0,
+		"Patch": 1
+	},
+	"instanceNameFormat": "Azure Monitor",
+	"groups": [],
+	"inputs": [{
+			"name": "connectedServiceNameARM",
+			"type": "connectedService:AzureRM",
+			"label": "Azure subscription",
+			"defaultValue": "",
+			"required": "true",
+			"helpMarkDown": "Select an Azure resource manager subscription for monitoring the alerts."
+		}, {
+			"name": "resourceGroupName",
+			"type": "pickList",
+			"label": "Resource group",
+			"required": true,
+			"helpMarkDown": "Provide the name of a resource group.",
+			"properties": {
+				"EditableOptions": "True"
+			}
+		},
+		{
+			"name": "alertRules",
+			"type": "pickList",
+			"label": "Alert Rules",
+			"defaultValue": "",
+			"required": true,
+			"properties": {
+				"MultiSelectFlatList": "True"
+			},
+			"helpMarkDown": "Select alerts for monitoring."
+		}
+	],
+	"dataSourceBindings": [{
+			"target": "resourceGroupName",
+			"endpointId": "$(connectedServiceNameARM)",
+			"dataSourceName": "AzureResourceGroups"
+		}, {
+			"target": "alertRules",
+			"endpointId": "$(connectedServiceNameARM)",
+			"endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(resourceGroupName)/providers/microsoft.insights/alertrules?api-version=2016-03-01",
+			"resultSelector": "jsonpath:$.value[?(@.properties.isEnabled == true)]",
+			"resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\":\"{{{name}}}\"}"
+		}
+	],
+
+	"execution": {
+		"HttpRequest": {
+			"Execute": {
+				"EndpointId": "$(connectedServiceNameARM)",
+				"EndpointUrl": "$(endpoint.url)batch?api-version=2015-11-01",
+				"Method": "POST",
+				"Body": "{\"requests\":[{{#.}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"{{{ #stringReplace ',' '  ' alertRules }}}/incidents?api-version=2016-03-01\"},{{/.}}]}",				
+				"Headers": "{\"Content-Type\":\"application/json\"}",
+				"WaitForCompletion": "false",
+				"Expression": "eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0)"
+			}
+		}
+	}
+}
