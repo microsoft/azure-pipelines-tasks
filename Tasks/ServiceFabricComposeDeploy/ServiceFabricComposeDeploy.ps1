@@ -85,7 +85,7 @@ try {
         if (-not $isEncrypted)
         {
             Write-Host (Get-VstsLocString -Key EncryptingPassword)
-            $password = Get-EncryptedContainerRegistryPassword -Password $password -ClusterConnectionParameters $clusterConnectionParameters
+            $password = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $clusterConnectionParameters
             $isEncrypted = $true
         }
 

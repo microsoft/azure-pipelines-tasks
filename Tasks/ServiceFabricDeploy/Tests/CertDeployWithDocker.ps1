@@ -6,7 +6,7 @@ param()
 $publishProfilePath = "$PSScriptRoot\data\CertPublishProfile.xml"
 $applicationPackagePath = "$PSScriptRoot\pkg"
 $serviceConnectionName = "random connection name"
-$serverCertThumbprint = "random thumbprint"
+$serverCertThumbprint = "DC25F5F1A327D3B2F260FDCA710A52075FAA5236"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
 $overwriteBehavior = "SameAppTypeAndVersion"
@@ -24,7 +24,7 @@ Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion
 Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "true" } -- -Name configureDockerSettings
-Register-Mock Get-VstsInput { "Azure Container Registry" } -- -Name containerregistrytype -Require
+Register-Mock Get-VstsInput { "AzureResourceManagerEndpoint" } -- -Name registryCredentials -Require
 Register-Mock Get-VstsInput { $azureSubscriptionEndpoint } -- -Name azureSubscriptionEndpoint -Require
 
 
@@ -34,6 +34,7 @@ Register-Mock Find-VstsFiles { $applicationPackagePath } -- -LegacyPattern $appl
 
 Register-Mock Assert-VstsPath
 Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
+Register-Mock Get-Item { "dummyvalue" } -- "Cert:\CurrentUser\My\$serverCertThumbprint" -ErrorAction SilentlyContinue
 
 # Setup mock VSTS service endpoint
 # NOTE: The value defined here is a Base64 encoding of a self-signed certificate created specifically for this test.
@@ -61,7 +62,7 @@ $registryEndpoint = @{
 Register-Mock Get-VstsEndpoint { $registryEndpoint } -- -Name $azureSubscriptionEndpoint -Require
 
 $certFindType = [System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint
-$certFindValue = "DC25F5F1A327D3B2F260FDCA710A52075FAA5236"
+$certFindValue = $serverCertThumbprint
 $storeName = [System.Security.Cryptography.X509Certificates.StoreName]::My
 $storeLocation = [System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser
 
@@ -69,7 +70,7 @@ $encryptedPassword = "encrypted_password_text"
 
 # Setup mock for connection to cluster
 Register-Mock Connect-ServiceFabricCluster { $null } -- -X509Credential -FindType $certFindType.ToString() -FindValue $certFindValue -StoreName $storeName.ToString()  -StoreLocation $storeLocation.ToString() -ServerCertThumbprint:$serverCertThumbprint
-Register-Mock Invoke-ServiceFabricEncryptText { $encryptedPassword } -- -Text $servicePrincipalKey -CertStore -CertThumbprint $certFindValue -StoreName $storeName.ToString() -StoreLocation $storeLocation.ToString()
+Register-Mock Invoke-ServiceFabricEncryptText { $encryptedPassword } -- -Text $servicePrincipalKey -CertStore -CertThumbprint $serverCertThumbprint -StoreName $storeName.ToString() -StoreLocation $storeLocation.ToString()
 
 # Setup mock registry settings
 $regKeyObj = @{

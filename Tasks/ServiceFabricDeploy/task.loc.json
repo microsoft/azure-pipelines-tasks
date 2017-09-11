@@ -347,10 +347,30 @@
       "label": "ms-resource:loc.input.label.azureContainerRegistry",
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
-      "visibleRule": "configureDockerSettings = true && containerregistrytype = Azure Container Registry",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword",
       "defaultValue": "",
-      "required": true,
-      "groupname": "docker"
+      "required": false,
+      "groupName": "docker"
+    },
+    {
+      "name": "registryPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryPassword",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "passwordEncrypted",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.passwordEncrypted",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
     }
   ],
   "execution": {
