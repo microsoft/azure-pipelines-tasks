@@ -428,8 +428,8 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         } else {
             argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
         }
-    } else if (utils.Constants.systemDefaultWorkingDirectory && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-        argsArray.push('/TestAdapterPath:\"' + utils.Constants.systemDefaultWorkingDirectory + '\"');
+    } else if (vstestConfig.testDropLocation && isTestAdapterPresent(vstestConfig.testDropLocation)) {
+        argsArray.push('/TestAdapterPath:\"' + vstestConfig.testDropLocation + '\"');
     }
 
     if (vstestConfig.pathtoCustomTestAdapters && vstestConfig.pathtoCustomTestAdapters.toLowerCase().indexOf('usevsixextensions:true') !== -1) {
