@@ -8,6 +8,10 @@
         [ValidateNotNullOrEmpty()]
         [string]
         $PkgArtifactName,
+		
+        [Parameter(Mandatory=$true)]
+        [boolean]
+        $OverwritePkgArtifact,
 
         [Parameter(Mandatory=$true)]
         [ValidateSet("Specific", "LastSuccessful")]
@@ -63,11 +67,20 @@
                 $agentTmpFolder = Join-Path (Get-VstsTaskVariable -Name Agent.WorkFolder -Require) "tmp"
                 $artifactZipFile = Join-Path $agentTmpFolder "$PkgArtifactName.zip"
                 $artifactPath = Join-Path $agentTmpFolder $PkgArtifactName
-
+				$downloadArtifact = $true
+				
                 if (Test-Path $artifactPath)
                 {
-                    # If a previous artifact with the same name was already downloaded to the agent's temp folder, delete it
-                    Remove-Item $artifactPath -Recurse -Force | Out-Null
+					if ($OverwritePkgArtifact -eq $true)
+					{
+						# If a previous artifact with the same name was already downloaded to the agent's temp folder, delete it
+						Remove-Item $artifactPath -Recurse -Force | Out-Null
+					}
+					else
+					{
+						# Use prior download of artifact
+						$downloadArtifact = $false
+					}
                 }
                 elseif (!(Test-Path $agentTmpFolder))
                 {
@@ -75,16 +88,19 @@
                     New-Item $agentTmpFolder -ItemType Directory | Out-Null
                 }
 
-                Write-Host (Get-VstsLocString -Key DownloadingArtifact -ArgumentList $PkgArtifactName)
-                
-                # Download the artifact to the agent's temp folder and unzip it
-                Get-FileWithProgress $artifact.resource.downloadUrl $artifactZipFile $authHeader["Authorization"]
+				if ($downloadArtifact -eq $true)
+				{
+					Write-Host (Get-VstsLocString -Key DownloadingArtifact -ArgumentList $PkgArtifactName)
+					
+					# Download the artifact to the agent's temp folder and unzip it
+					Get-FileWithProgress $artifact.resource.downloadUrl $artifactZipFile $authHeader["Authorization"]
 
-                Write-Host (Get-VstsLocString -Key FinishedDownloadingArtifact -ArgumentList $PkgArtifactName)
+					Write-Host (Get-VstsLocString -Key FinishedDownloadingArtifact -ArgumentList $PkgArtifactName)
 
-                Add-Type -AssemblyName System.IO.Compression.FileSystem
-                [System.IO.Compression.ZipFile]::ExtractToDirectory("$artifactZipFile", "$agentTmpFolder")
-
+					Add-Type -AssemblyName System.IO.Compression.FileSystem
+					[System.IO.Compression.ZipFile]::ExtractToDirectory("$artifactZipFile", "$agentTmpFolder")
+				}
+				
                 # return the temp path to the artifact
                 $artifactPath
             }

@@ -123,6 +123,14 @@
             "required": true,
             "visibleRule": "updateType = Docker image settings",
             "helpMarkDown": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'."
+        },
+        {
+            "name": "overwritePkgArtifact",
+            "type": "boolean",
+            "label": "Overwrite Package Artifact",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Use prior download of package artifact or overwrite"
         }
     ],
     "execution": {
