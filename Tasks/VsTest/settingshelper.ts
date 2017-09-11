@@ -54,7 +54,7 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </DataCollectionRunSettings>
     </RunSettings>`;
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Q.Promise<string> {
+export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Q.Promise<string> {
     const defer = Q.defer<string>();
     let result: any;
 
@@ -63,128 +63,143 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         return defer.promise;
     }
 
-    //Get extension of settings file and contents
     let settingsExt = null;
     if (settingsFile && fs.lstatSync(settingsFile).isFile() && settingsFile.split('.').pop().toLowerCase() === 'testsettings') {
-        settingsExt = testSettingsExtension;
-        result = await utils.Helper.getXmlContents(settingsFile);
-        if (!result || result.TestSettings === undefined) {
-            tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
-            settingsExt = null;
-        }
-    } else if (settingsFile && utils.Helper.pathExistsAsFile(settingsFile)) {
-        settingsExt = runSettingsExtension;
-        result = await utils.Helper.getXmlContents(settingsFile);
-        if (!result || result.RunSettings === undefined) {
-            tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
-            settingsExt = null;
-        }
-    }
-
-    if (overrideParametersString) {
-        if (settingsExt === runSettingsExtension) {
-            result = updateRunSettingsWithParameters(result, overrideParametersString);
-        } else {
-            tl.warning(tl.loc('overrideNotSupported'));
-        }
-    }
-
-    if (isParallelRun) {
-        if (settingsExt === testSettingsExtension) {
-            tl.warning(tl.loc('RunInParallelNotSupported'));
-        } else if (settingsExt === runSettingsExtension) {
-            tl.debug('Enabling run in parallel by editing given runsettings.');
-            result = setupRunSettingsWithRunInParallel(result);
-        } else {
-            tl.debug('Enabling run in parallel by creating new runsettings.');
-            settingsExt = runSettingsExtension;
-            result = await CreateSettings(runSettingsForParallel);
-        }
-    }
-
-    if (videoCollector) {
-        //Enable video collector only in test settings.
-        let videoCollectorNode = null;
-        parser.parseString(videoDataCollectorTemplate, function (err, data) {
-            if (err) {
-                defer.reject(err);
-            }
-            videoCollectorNode = data;
-        });
-        if (settingsExt === testSettingsExtension) {
-            tl.debug('Enabling video data collector by editing given testsettings.')
-            result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode);
-        } else if (settingsExt === runSettingsExtension) {
-            tl.warning(tl.loc('VideoCollectorNotSupportedWithRunSettings'));
-        } else {
-            tl.debug('Enabling video data collection by creating new test settings.')
             settingsExt = testSettingsExtension;
-            result = await CreateSettings(testSettingsTemplate);
-            result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode)
-        }
+    }
+    else if (settingsFile && utils.Helper.pathExistsAsFile(settingsFile)) {
+            settingsExt = runSettingsExtension;
     }
 
-    if (tiaConfig.tiaEnabled && !tiaConfig.disableEnablingDataCollector) {
-        let testImpactCollectorNode = null;
-        parser.parseString(testImpactDataCollectorTemplate, function (err, data) {
-            if (err) {
-                defer.reject(err);
-            }
-            testImpactCollectorNode = data;
-            if (tiaConfig.useNewCollector) {
-                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion);
-            }
-            testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
-            if (getTIALevel(tiaConfig) === 'file') {
-                testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
-            }
-            if (tiaConfig.context === 'CD') {
-                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = '';
+    return utils.Helper.getXmlContents(settingsFile).then(function(result) {
+        if (!result || (result.TestSettings === undefined && result.runsettings === undefined)) {
+            tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
+            settingsExt = null;
+        }
+
+        if (overrideParametersString) {
+            if (settingsExt === runSettingsExtension) {
+                result = updateRunSettingsWithParameters(result, overrideParametersString);
             } else {
-                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
+                tl.warning(tl.loc('overrideNotSupported'));
             }
-        });
-
-        if (settingsExt === testSettingsExtension) {
-            tl.debug('Enabling Test Impact collector by editing given testsettings.')
-            result = updateTestSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
-        } else if (settingsExt === runSettingsExtension) {
-            tl.debug('Enabling Test Impact collector by editing given runsettings.')
-            result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
-        } else {
-            tl.debug('Enabling test impact data collection by creating new runsettings.')
-            settingsExt = runSettingsExtension;
-            result = await CreateSettings(runSettingsTemplate);
-            result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
         }
-    }
 
-    if (isDistributedRun && tiaConfig.tiaEnabled) {
-        let baseLineRunId = utils.Helper.readFileContentsSync(tiaConfig.baseLineBuildIdFile, 'utf-8');
-        if (settingsExt === testSettingsExtension) {
-            tl.debug('Enabling tia in testsettings.');
-            result = setupTestSettingsWithTestImpactOn(result, baseLineRunId);
-        } else if (settingsExt === runSettingsExtension) {
-            tl.debug('Enabling tia in runsettings.');
-            result = setupRunSettingsWithTestImpactOn(result, baseLineRunId);
-        } else {
-            tl.debug('Enabling tia by creating new runsettings.');
-            settingsExt = runSettingsExtension;
-            var runsettingsWithBaseLineRunId = runSettingsForTIAOn.replace("{0}", baseLineRunId);
-            result = await CreateSettings(runsettingsWithBaseLineRunId);
+        if (isParallelRun) {
+            if (settingsExt === testSettingsExtension) {
+                tl.warning(tl.loc('RunInParallelNotSupported'));
+            } else if (settingsExt === runSettingsExtension) {
+                tl.debug('Enabling run in parallel by editing given runsettings.');
+                result = setupRunSettingsWithRunInParallel(result);
+            } else {
+                tl.debug('Enabling run in parallel by creating new runsettings.');
+                settingsExt = runSettingsExtension;
+                return CreateSettings(runSettingsForParallel).then(function (res) {
+                    result = res;
+                });
+            }
         }
-    }
-
-    if (result) {
-        utils.Helper.writeXmlFile(result, settingsFile, settingsExt)
-            .then(function (filename) {
-                defer.resolve(filename);
+    }).catch( function(err){
+        // getXMLContents will always throw when settings file is not valid
+        // We should not fail here but continue
+        tl.debug(err);
+    }).then(function() {
+        if (videoCollector) {
+            //Enable video collector only in test settings.
+            let videoCollectorNode = null;
+            parser.parseString(videoDataCollectorTemplate, function (err, data) {
+                if (err) {
+                    defer.reject(err);
+                }
+                videoCollectorNode = data;
             });
-    } else {
-        tl.debug('Not editing settings file. Using specified file as it is.')
+            if (settingsExt === testSettingsExtension) {
+                tl.debug('Enabling video data collector by editing given testsettings.')
+                result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode);
+            } else if (settingsExt === runSettingsExtension) {
+                tl.warning(tl.loc('VideoCollectorNotSupportedWithRunSettings'));
+            } else {
+                tl.debug('Enabling video data collection by creating new test settings.')
+                settingsExt = testSettingsExtension;
+                return CreateSettings(testSettingsTemplate).then(function(res){
+                    result = res;                
+                }).then(function() {
+                    result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode)
+                });
+            }
+        }
+    }).then(function(){
+        if (tiaConfig.tiaEnabled && !tiaConfig.disableEnablingDataCollector) {
+            let testImpactCollectorNode = null;
+            parser.parseString(testImpactDataCollectorTemplate, function (err, data) {
+                if (err) {
+                    defer.reject(err);
+                }
+                testImpactCollectorNode = data;
+                if (tiaConfig.useNewCollector) {
+                    testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion);
+                }
+                testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
+                if (getTIALevel(tiaConfig) === 'file') {
+                    testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
+                }
+                if (tiaConfig.context === 'CD') {
+                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = '';
+                } else {
+                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
+                }
+            });
+
+            if (settingsExt === testSettingsExtension) {
+                tl.debug('Enabling Test Impact collector by editing given testsettings.')
+                result = updateTestSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
+            } else if (settingsExt === runSettingsExtension) {
+                tl.debug('Enabling Test Impact collector by editing given runsettings.')
+                result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
+            } else {
+                tl.debug('Enabling test impact data collection by creating new runsettings.')
+                settingsExt = runSettingsExtension;
+                return CreateSettings(runSettingsTemplate).then(function(res) {
+                    result = res;
+                }).then(function() {
+                    result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
+                });                
+            }
+        }
+    }).then(function() {
+        if (isDistributedRun && tiaConfig.tiaEnabled) {
+            let baseLineRunId = utils.Helper.readFileContentsSync(tiaConfig.baseLineBuildIdFile, 'utf-8');
+            if (settingsExt === testSettingsExtension) {
+                tl.debug('Enabling tia in testsettings.');
+                result = setupTestSettingsWithTestImpactOn(result, baseLineRunId);
+            } else if (settingsExt === runSettingsExtension) {
+                tl.debug('Enabling tia in runsettings.');
+                result = setupRunSettingsWithTestImpactOn(result, baseLineRunId);
+            } else {
+                tl.debug('Enabling tia by creating new runsettings.');
+                settingsExt = runSettingsExtension;
+                var runsettingsWithBaseLineRunId = runSettingsForTIAOn.replace("{0}", baseLineRunId);
+                return CreateSettings(runsettingsWithBaseLineRunId).then(function(res) {
+                    result = res;
+                });
+            }
+        }
+    }).then(function() {
+        if (result) {
+            utils.Helper.writeXmlFile(result, settingsFile, settingsExt)
+                .then(function (filename) {
+                    defer.resolve(filename);
+                });
+        } else {
+            tl.debug('Not editing settings file. Using specified file as it is.')
+            defer.resolve(settingsFile);
+        }
+        return defer.promise;
+    }).catch(function(err){
         defer.resolve(settingsFile);
-    }
-    return defer.promise;
+        tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
+        return defer.promise;
+    });
 }
 
 function updateRunSettingsWithParameters(result: any, overrideParametersString: string) {
