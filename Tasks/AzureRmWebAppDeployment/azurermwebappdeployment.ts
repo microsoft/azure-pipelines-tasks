@@ -340,11 +340,11 @@ async function updateStartupCommandAndRuntimeStack(SPN, webAppName: string, reso
 
             await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
-            console.log("SuccessfullyUpdatedRuntimeStackAndStartupCommand");
+            console.log(tl.loc("SuccessfullyUpdatedRuntimeStackAndStartupCommand"));
         }
     }
     catch (error) {
-        tl.error(tl.loc("FailedToUpdateRuntimeStackAndStartupCommand", error));
+        throw new Error(tl.loc("FailedToUpdateRuntimeStackAndStartupCommand", error));
     }
 }
 
@@ -358,7 +358,7 @@ async function updateAppSetting(SPN, webAppName: string, resourceGroupName: stri
             console.log(tl.loc("SuccessfullyUpdatedWebAppSettings"));
         }
         catch (error) {
-            tl.error(tl.loc("FailedToUpdateAppSettingsInConfigDetails", error));
+            throw new Error(tl.loc("FailedToUpdateAppSettingsInConfigDetails", error));
         }
     }
 }
