@@ -12,9 +12,8 @@ var fileTransformationsUtility = require('webdeployment-common/fileTransformatio
 var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
-var azureStackUtility = require('azurestack-common/azurestackrestutility.js');
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
 var updateAppSettings = require("./azurermwebappcontainerdeployment").updateAppSettings;
-
 async function run() {
     try {
 
@@ -49,12 +48,16 @@ async function run() {
         var inputAppSettings = tl.getInput('AppSettings', false);
         var imageSource = tl.getInput('ImageSource', false);
         var startupCommand = tl.getInput('StartupCommand', false);
-        var linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', false);
-        var runtimeStack = tl.getInput('RuntimeStack', true);
+        var isLinuxWebApp: boolean = webAppKind && webAppKind.indexOf("linux") >= 0;
+        var runtimeStack = "";
+        var linuxWebDeployPkg = "";
+
+        if (isLinuxWebApp) {
+            linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
+            runtimeStack = tl.getInput('RuntimeStack', true);
+        }
 
         var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
-
-        var isLinuxWebApp: boolean = webAppKind && webAppKind.indexOf("linux") >= 0;
 
         if(deployToSlotFlag) {
             if (slotName.toLowerCase() === "production") {
@@ -69,17 +72,20 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(isLinuxWebApp && (!imageSource || imageSource.indexOf("Builtin") < 0) && dockerNamespace) {
+        if(isLinuxWebApp && (!imageSource || imageSource.indexOf("Builtin") < 0) && dockerNamespace)
+        {
             tl.debug("Performing container based deployment.");
+
             if (webAppUri) {
                 tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
             }
+
             await deployWebAppImage(endPoint, resourceGroupName, webAppName, deployToSlotFlag, slotName);
         }
         else
         {
             tl.debug("Performing the deployment of webapp.");
-
+            
             if(isLinuxWebApp){
                 webDeployPkg = linuxWebDeployPkg;
             }
@@ -95,14 +101,14 @@ async function run() {
 
             var azureWebAppDetails = null;
             var virtualApplicationPhysicalPath = null;
-
-            if (!isLinuxWebApp){            
-                if(virtualApplication) {
+            
+            if (!isLinuxWebApp) {
+                if (virtualApplication) {
                     virtualApplication = (virtualApplication.startsWith("/")) ? virtualApplication.substr(1) : virtualApplication;
                     azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                     var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
                     var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-                    if(pathMappings[1] != null) {
+                    if (pathMappings[1] != null) {
                         virtualApplicationPhysicalPath = pathMappings[1];
                         await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
                     }
@@ -122,7 +128,7 @@ async function run() {
                         generateWebConfigUtil.addWebConfigFile(folderPath, webConfigParameters, virtualApplicationPhysicalPath);
                     }
                     if (applyFileTransformFlag) {
-                        var isMSBuildPackage = !isFolderBasedDeployment  && (await deployUtility.isMSDeployPackage(webDeployPkg));
+                        var isMSBuildPackage = !isFolderBasedDeployment && (await deployUtility.isMSDeployPackage(webDeployPkg));
                         fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath, isMSBuildPackage);
                     }
 
@@ -131,27 +137,26 @@ async function run() {
                     webDeployPkg = output.webDeployPkg;
                 }
 
-                if(virtualApplication) {
+                if (virtualApplication) {
                     publishingProfile.destinationAppUrl += "/" + virtualApplication;
                 }
             }
-
             if(webAppUri) {
                 tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
             }
 
-            if(publishingProfile && publishingProfile.destinationAppUrl) {
-                try {
-                    await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
-                } catch (error) {
-                    tl.debug("Failed to check availability of azure web app, error : " + error.message);
-                }
+        if(publishingProfile && publishingProfile.destinationAppUrl) {
+            try{
+                await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
+            } catch (error) {
+                tl.debug("Failed to check availability of azure web app, error : " + error.message);
             }
+        }
 
-            if (!isLinuxWebApp && deployUtility.canUseWebDeploy(useWebDeploy)) {
-                if(!tl.osType().match(/^Win/)){
-                    throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
-                }
+        if(!isLinuxWebApp && deployUtility.canUseWebDeploy(useWebDeploy)) {
+            if(!tl.osType().match(/^Win/)){
+                throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
+            }
 
                 var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 if(renameFilesFlag) {
@@ -171,28 +176,25 @@ async function run() {
                 await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                                 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                                 additionalArguments, isFolderBasedDeployment, useWebDeploy);
-            } else {
-                tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
+        } else {
+            tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
+            if(azureWebAppDetails == null) {
+                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            }
+            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
-                if(azureWebAppDetails == null) {
-                    azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                }
-
-                await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
-
-                if(isLinuxWebApp) {
+            if(isLinuxWebApp) {
                     await updateAppSetting(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, inputAppSettings);
                     
                     await updateStartupCommandAndRuntimeStack(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, runtimeStack, startupCommand);
                 }
-            }
-
-            if(!isLinuxWebApp && scriptType) {
-                var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
-                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
-            }
         }
-        await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        if(!isLinuxWebApp && scriptType) {
+            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
+            await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+        }
+    }
+    await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
     }
     catch (error) {
         isDeploymentSuccess = false;
@@ -211,7 +213,6 @@ async function run() {
             tl.warning(error);
         }
     }
-
     if(tempPackagePath) {
         tl.rmRF(tempPackagePath);
     }
@@ -290,59 +291,6 @@ async function updateWebAppConfigDetails(SPN, webAppName: string, resourceGroupN
     }
 }
 
-async function updateStartupCommandAndRuntimeStack(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, runtimeStack: string, startupCommand: string) {
-    try {
-        var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
-        var appCommandLine: string = configDetails.properties.appCommandLine;
-
-        var updatedConfigDetails: string = "";
-        var shouldUpdate: boolean = true;
-        
-        if(startupCommand == null){
-            startupCommand = "";
-        }
-
-        if (appCommandLine != startupCommand && runtimeStack != linuxFxVersion) {
-            shouldUpdate = true;
-            updatedConfigDetails = JSON.stringify({
-                "properties": {
-                    "linuxFxVersion": runtimeStack,
-                    "appCommandLine": startupCommand
-                }
-            });
-        }
-        else if (runtimeStack != linuxFxVersion) {
-            updatedConfigDetails = JSON.stringify({
-                "properties": {
-                    "linuxFxVersion": runtimeStack,
-                }
-            });
-        }
-        else if (appCommandLine != startupCommand) {
-            updatedConfigDetails = JSON.stringify({
-                "properties": {
-                    "appCommandLine": startupCommand
-                }
-            });
-        }
-        else {
-            shouldUpdate = false;
-        }
-
-        if (shouldUpdate) {
-            tl.debug("Updating webConfig with the details: " + updatedConfigDetails);
-
-            await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
-
-            console.log("SuccessfullyUpdatedRuntimeStackAndStartupCommand");
-        }
-    }
-    catch (error) {
-        tl.error(tl.loc("FailedToUpdateRuntimeStackAndStartupCommand", error));
-    }
-}
-
 async function updateArmMetadata(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
     var projectId = tl.getVariable("system.teamprojectId");
@@ -369,6 +317,38 @@ async function updateArmMetadata(SPN, webAppName: string, resourceGroupName: str
     await azureRESTUtility.updateAzureRMWebAppMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, metadata);
 }
 
+async function updateStartupCommandAndRuntimeStack(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, runtimeStack: string, startupCommand: string) {
+    try {
+        var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
+        var appCommandLine: string = configDetails.properties.appCommandLine;
+
+        var updatedConfigDetails: string = "";
+        
+        if(startupCommand == null){
+            startupCommand = "";
+        }
+
+        if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
+            updatedConfigDetails = JSON.stringify({
+                "properties": {
+                    "linuxFxVersion": runtimeStack,
+                    "appCommandLine": startupCommand
+                }
+            });
+
+            tl.debug("Updating webConfig with the details: " + updatedConfigDetails);
+
+            await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
+
+            console.log("SuccessfullyUpdatedRuntimeStackAndStartupCommand");
+        }
+    }
+    catch (error) {
+        tl.error(tl.loc("FailedToUpdateRuntimeStackAndStartupCommand", error));
+    }
+}
+
 async function updateAppSetting(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, appSettings: any) {
     if (appSettings) {
         try {
@@ -383,5 +363,4 @@ async function updateAppSetting(SPN, webAppName: string, resourceGroupName: stri
         }
     }
 }
-    
 run();
