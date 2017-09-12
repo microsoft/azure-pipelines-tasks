@@ -41,7 +41,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
       "options": {
-        "Container": "TFS/Visual Studio Team Services",
+        "Container": "Visual Studio Team Services/TFS",
         "FilePath": "A file share"
       }
     },
