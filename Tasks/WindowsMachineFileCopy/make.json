@@ -1,17 +1,5 @@
 {
-    "common": [
-        {
-            "module": "../Common/Deployment/TelemetryHelper",
-            "type": "ps"
-        }
-    ],
     "externals": {
-        "archivePackages": [
-            {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M123.3/DeploymentUtilities.zip",
-                "dest": "./"
-            }
-        ],
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
