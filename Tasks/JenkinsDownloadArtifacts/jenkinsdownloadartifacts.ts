@@ -12,6 +12,8 @@ import * as handlers from "item-level-downloader/Providers/Handlers"
 import * as providers from "item-level-downloader/Providers"
 import * as engine from "item-level-downloader/Engine"
 
+import {ArtifactDetailsDownloader} from "./ArtifactDetails/ArtifactDetailsDownloader"
+
 class Credential {
     mUsername: string;
     mPassword: string;
@@ -122,6 +124,16 @@ async function doWork() {
         await downloader.processItems(webProvider, localFileProvider, downloaderOptions);
 
         console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
+
+        let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
+        if (downloadCommitsAndWorkItems) {
+            new ArtifactDetailsDownloader()
+            .DownloadCommitsAndWorkItems()
+            .then(
+                () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
+                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+        }
+        
     } catch (err) {
         tl.debug(err.message);
         tl._writeError(err);
