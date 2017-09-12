@@ -6,7 +6,15 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments
-    )    
+    )
+
+    Write-Verbose "Entering script RobocopyJob.ps1"
+    Write-Verbose "fqdn = $fqdn"
+    Write-Verbose "sourcePath = $sourcePath"
+    Write-Verbose "targetPath = $targetPath"
+    Write-Verbose "credential = $credential"
+    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
+    Write-Verbose "additionalArguments = $additionalArguments"
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    

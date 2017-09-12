@@ -7,8 +7,8 @@ Trace-VstsEnteringInvocation $MyInvocation
 $machineNames = Get-VstsInput -Name MachineNames -Require
 $adminUserName = Get-VstsInput -Name AdminUserName -Require
 $adminPassword = Get-VstsInput -Name AdminPassword -Require
-$sourcePath = Get-VstsInput -Name SourcePath
-$targetPath = Get-VstsInput -Name TargetPath
+$sourcePath = Get-VstsInput -Name SourcePath -Require
+$targetPath = Get-VstsInput -Name TargetPath -Require
 $additionalArguments = Get-VstsInput -Name AdditionalArguments
 $cleanTargetBeforeCopy = Get-VstsInput -Name CleanTargetBeforeCopy
 $copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel
