@@ -969,8 +969,19 @@ function Get-AzureNetworkInterfaceDetails
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/networkInterfaces?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $networkInterfaceDtails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    return $networkInterfaceDtails.value
+    $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    
+    if(-not $networkInterfaceDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchNetworkInterfacesDetails)
+    }
+
+    if($networkInterfaceDetails.value) 
+    {
+        return $networkInterfaceDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+    
+    return $networkInterfaceDetails.value
 }
 
 function Get-AzurePublicIpAddressDetails
@@ -989,6 +1000,17 @@ function Get-AzurePublicIpAddressDetails
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+
+    if(-not $publicIPAddressesDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchPublicIPAddressesDetails)
+    }
+
+    if($publicIPAddressesDetails.value) 
+    {
+        return $publicIPAddressesDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+
     return $publicIPAddressesDetails.value
 }
 
@@ -1008,6 +1030,17 @@ function Get-AzureLoadBalancersDetails
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+
+    if(-not $loadBalancersDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchLoadbalancerDetails)
+    }
+
+    if($loadBalancersDetails.value) 
+    {
+        return $loadBalancersDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+
     return $loadBalancersDetails.value
 }
 
@@ -1028,6 +1061,12 @@ function Get-AzureLoadBalancerDetails
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    
+    if($loadBalancerDetails)
+    {
+        return $loadBalancersDetails | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+    
     return $loadBalancerDetails
 }
 
@@ -1037,10 +1076,10 @@ function Get-AzureRMLoadBalancerFrontendIpConfigDetails
     param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
 
     $frontendIPConfigurations = $loadBalancer.frontendIPConfigurations
-    if($frontendIPConfigurations -and ($frontendIPConfigurations.properties))
+
+    if($frontendIPConfigurations)
     {
-        $frontendIPConfigurations.properties.psObject.Properties | % { $frontendIPConfigurations | Add-Member -MemberType $_.MemberType -Name $_.Name -Value $_.Value}
-        $frontendIPConfigurations.psObject.properties.remove("properties");
+        return Add-PropertiesToRoot -rootObject $frontendIPConfigurations
     }
 
     return $frontendIPConfigurations
@@ -1052,13 +1091,27 @@ function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
     param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
 
     $inboundNatRules = $loadBalancer.inboundNatRules
-    if($inboundNatRules -and ($inboundNatRules.properties))
+    
+    if($inboundNatRules)
     {
-        $inboundNatRules.properties.psObject.Properties | % { $inboundNatRules | Add-Member -MemberType $_.MemberType -Name $_.Name -Value $_.Value -Force}
-        $inboundNatRules.psObject.properties.remove("properties");
+        return Add-PropertiesToRoot -rootObject $inboundNatRules
     }
 
     return $inboundNatRules
+}
+
+function Add-PropertiesToRoot
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $rootObject)
+
+    if($rootObject -and $rootObject.properties)
+    {
+        $rootObject.properties.psObject.Properties | % { $rootObject | Add-Member -MemberType $_.MemberType -Name $_.Name -Value $_.Value -Force}
+        $rootObject.psObject.properties.remove("properties");
+    }
+
+    return $rootObject
 }
 
 # Export only the public function.
