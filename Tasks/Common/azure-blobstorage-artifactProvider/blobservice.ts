@@ -14,10 +14,14 @@ export class BlobService {
         this._storageAccessKey = storageAccessKey;
     }
 
-    public async uploadBlobs(source: string, container: string, prefixFolderPath?: string, host?: string): Promise<string[]> {
+    public async uploadBlobs(source: string, container: string, prefixFolderPath?: string, host?: string, itemPattern?: string): Promise<string[]> {
         var fileProvider = new artifactProviders.FilesystemProvider(source);
         var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, host);
         var processor = new artifactProcessor.ArtifactEngine();
+        var processorOptions =  new artifactProcessor.ArtifactEngineOptions();
+        if (itemPattern) {
+            processorOptions.itemPattern = itemPattern;
+        }
 
         var uploadedItemTickets = await processor.processItems(fileProvider, azureProvider);
 
@@ -31,10 +35,15 @@ export class BlobService {
         return uploadedUrls;
     }
 
-    public async downloadBlobs(destination: string, container: string, prefixFolderPath?: string, host?: string): Promise<void> {
+    public async downloadBlobs(destination: string, container: string, prefixFolderPath?: string, host?: string, itemPattern?: string): Promise<void> {
         var fileProvider = new artifactProviders.FilesystemProvider(destination);
         var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, host);
         var processor = new artifactProcessor.ArtifactEngine();
-        await processor.processItems(azureProvider, fileProvider);
+        var processorOptions =  new artifactProcessor.ArtifactEngineOptions();
+        if (itemPattern) {
+            processorOptions.itemPattern = itemPattern;
+        }
+
+        await processor.processItems(azureProvider, fileProvider, processorOptions);
     }
 }

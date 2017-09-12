@@ -6,10 +6,10 @@
     "url": "git+https://github.com/microsoft/vsts-tasks.git"
   },
   "author": "Microsoft Corporation",
-  "license": "MIT",  
+  "license": "MIT",
   "dependencies": {
     "request": "2.74.0",
     "vsts-task-lib": "0.9.20",
-    "item-level-downloader": "1.0.16"
+    "item-level-downloader": "1.0.17"
   }
 }

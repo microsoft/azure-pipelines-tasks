@@ -25,6 +25,12 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+            "name":"azureStorage",
+            "displayName": "Azure Storage",
+            "isExpanded": true,
+            "visibleRule": "artifactProvider == Azure Storage"
         }
     ],
     "instanceNameFormat": "Download artifacts produced by $(jobName)",
@@ -83,6 +89,28 @@
             }
         },
         {
+            "name": "propagatedArtifacts",
+            "type": "boolean",
+            "label": "Propagated Artifacts",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Check this if Jenkins artifacts are propagated."
+        },
+        {
+            "name": "artifactProvider",
+            "type": "pickList",
+            "label": "Artifact Provider",
+            "defaultValue": "Azure Storage",
+            "required": true,
+            "options": {
+                "azureStorage":"Azure Storage"
+            },
+            "groupName": "advanced",
+            "visibleRule": "propagatedArtifacts == true",
+            "helpMarkDown": "Choose propagated artifact provider."
+        },
+        {
           "name": "itemPattern",
           "type": "string",
           "label": "Item Pattern",
@@ -122,6 +150,41 @@
             "visibleRule": "downloadCommitsAndWorkItems == true",
             "groupName": "advanced",
             "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json"
+        },
+        {
+            "name": "ConnectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "required": false,
+            "groupName": "azureStorage",
+            "helpMarkDown": "Choose the Azure Resource Manager Endpoint from the pick list."
+        },
+        {
+            "name": "storageAccountName",
+            "type": "pickList",
+            "label": "Storage Account Name",
+            "required": false,
+            "properties": {
+                "EditableOptions":"True"
+            },
+            "groupName": "azureStorage",
+            "helpMarkDown": "Select the Storage account name in which the artifacts are propagated."
+        },
+        {
+            "name": "containerName",
+            "type": "string",
+            "label": "Container Name",
+            "required": false,
+            "groupName": "azureStorage",
+            "helpMarkDown": "Enter the container name inside Storage account where artifacts are propagated"
+        },
+        {
+            "name": "commonVirtualPath",
+            "type": "string",
+            "label": "Common Virtual Path",
+            "required": false,
+            "groupName": "azureStorage",
+            "helpMarkDown": "Enter the container name inside Storage account where artifacts are propagated"
         }
     ],
     "dataSourceBindings": [
@@ -148,6 +211,11 @@
             "definition": "$(jobName)"
         },
         "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      },
+      {
+          "endpointId":"$(ConnectedServiceNameARM)",
+          "target": "storageAccountName",
+          "dataSourceName": "AzureStorageAccountRM"
       }
     ],
     "execution": {
@@ -186,6 +254,54 @@
         "CannotFindBuilds": "Cannot find builds",
         "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
         "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
-        "InvalidJenkinsStartBuildNumber": "Invalid value mentioned for Jenkins start build number."
+        "InvalidJenkinsStartBuildNumber": "Invalid value mentioned for Jenkins start build number.",
+        "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
+        "DomainCannotBeEmpty": "domain must be a non empty string.",
+        "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm Url must be a non empty string.",
+        "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
+        "ExpandShouldBeOfTypeString": "expand must be of type string.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
+        "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
+        "ParametersCannotBeNull": "parameters cannot be null or undefined.",
+        "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
+        "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
+        "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
+        "CredentialsCannotBeNull": "'credentials' cannot be null.",
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+        "TimeoutWhileWaiting": "Timed out while waiting",
+        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
+        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+        "VMSSImageUrlCannotBeNull": "Image url must be a non empty string.",
+        "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+        "NewVMSSImageUrl": "Url for new VMSS image: %s.",
+        "VMSSUpdateImage": "Updating VMSS %s to use new image...",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
+        "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
+        "ArtifactItemsTruncationWarning":"Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
+        "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
+        "CreatedContainer": "Created container {0}.",
+        "ErrorInReadStream": "Error in Read stream: {0}",
+        "ErrorInWriteStream": "Error in write stream: {0}",
+        "FailedToCreateBlob": "Failed to create blob {0}. Error: {1}",
+        "FailedToCreateContainer": "Failed to create container {0}. Error: {1}",
+        "FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
+        "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
+        "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
+        "UploadingItem": "Uploading {0}."
     }
 }

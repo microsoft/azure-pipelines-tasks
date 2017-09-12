@@ -25,6 +25,12 @@
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
+    },
+    {
+      "name": "azureStorage",
+      "displayName": "ms-resource:loc.group.displayName.azureStorage",
+      "isExpanded": true,
+      "visibleRule": "artifactProvider == Azure Storage"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -83,6 +89,28 @@
       }
     },
     {
+      "name": "propagatedArtifacts",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.propagatedArtifacts",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.propagatedArtifacts"
+    },
+    {
+      "name": "artifactProvider",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactProvider",
+      "defaultValue": "Azure Storage",
+      "required": true,
+      "options": {
+        "azureStorage": "Azure Storage"
+      },
+      "groupName": "advanced",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactProvider"
+    },
+    {
       "name": "itemPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.itemPattern",
@@ -122,6 +150,41 @@
       "visibleRule": "downloadCommitsAndWorkItems == true",
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "required": false,
+      "groupName": "azureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
+    },
+    {
+      "name": "storageAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.storageAccountName",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "azureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.storageAccountName"
+    },
+    {
+      "name": "containerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerName",
+      "required": false,
+      "groupName": "azureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.containerName"
+    },
+    {
+      "name": "commonVirtualPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.commonVirtualPath",
+      "required": false,
+      "groupName": "azureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.commonVirtualPath"
     }
   ],
   "dataSourceBindings": [
@@ -148,6 +211,11 @@
         "definition": "$(jobName)"
       },
       "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "target": "storageAccountName",
+      "dataSourceName": "AzureStorageAccountRM"
     }
   ],
   "execution": {
@@ -186,6 +254,54 @@
     "CannotFindBuilds": "ms-resource:loc.messages.CannotFindBuilds",
     "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
     "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
-    "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber"
+    "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber",
+    "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
+    "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
+    "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
+    "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
+    "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "VMNameCannotBeNull": "ms-resource:loc.messages.VMNameCannotBeNull",
+    "InvalidValue": "ms-resource:loc.messages.InvalidValue",
+    "VmExtensionNameCannotBeNull": "ms-resource:loc.messages.VmExtensionNameCannotBeNull",
+    "ExpandShouldBeOfTypeString": "ms-resource:loc.messages.ExpandShouldBeOfTypeString",
+    "ExtensionParametersCannotBeNull": "ms-resource:loc.messages.ExtensionParametersCannotBeNull",
+    "LoadBalancerNameCannotBeNull": "ms-resource:loc.messages.LoadBalancerNameCannotBeNull",
+    "ParametersCannotBeNull": "ms-resource:loc.messages.ParametersCannotBeNull",
+    "NetworkInterfaceNameCannotBeNull": "ms-resource:loc.messages.NetworkInterfaceNameCannotBeNull",
+    "NetworkSecurityGroupNameCannotBeNull": "ms-resource:loc.messages.NetworkSecurityGroupNameCannotBeNull",
+    "SecurityRuleNameCannotBeNull": "ms-resource:loc.messages.SecurityRuleNameCannotBeNull",
+    "SecurityRuleParametersCannotBeNull": "ms-resource:loc.messages.SecurityRuleParametersCannotBeNull",
+    "DeploymentNameCannotBeNull": "ms-resource:loc.messages.DeploymentNameCannotBeNull",
+    "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
+    "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
+    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
+    "ResourceGroupCannotBeNull": "ms-resource:loc.messages.ResourceGroupCannotBeNull",
+    "ResourceGroupExceededLength": "ms-resource:loc.messages.ResourceGroupExceededLength",
+    "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
+    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "VMSSNameCannotBeNull": "ms-resource:loc.messages.VMSSNameCannotBeNull",
+    "GetVMSSFailed": "ms-resource:loc.messages.GetVMSSFailed",
+    "VMSSDoesNotHaveCustomImage": "ms-resource:loc.messages.VMSSDoesNotHaveCustomImage",
+    "VMSSImageUrlCannotBeNull": "ms-resource:loc.messages.VMSSImageUrlCannotBeNull",
+    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate",
+    "NewVMSSImageUrl": "ms-resource:loc.messages.NewVMSSImageUrl",
+    "VMSSUpdateImage": "ms-resource:loc.messages.VMSSUpdateImage",
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
+    "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
+    "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull",
+    "ArtifactItemsTruncationWarning": "ms-resource:loc.messages.ArtifactItemsTruncationWarning",
+    "CreatedBlobForItem": "ms-resource:loc.messages.CreatedBlobForItem",
+    "CreatedContainer": "ms-resource:loc.messages.CreatedContainer",
+    "ErrorInReadStream": "ms-resource:loc.messages.ErrorInReadStream",
+    "ErrorInWriteStream": "ms-resource:loc.messages.ErrorInWriteStream",
+    "FailedToCreateBlob": "ms-resource:loc.messages.FailedToCreateBlob",
+    "FailedToCreateContainer": "ms-resource:loc.messages.FailedToCreateContainer",
+    "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem"
   }
 }
