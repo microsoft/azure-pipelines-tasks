@@ -12,12 +12,12 @@ export class ArtifactDetailsDownloader {
         let defer: Q.Deferred<any> = Q.defer<any>();
 
         console.log(tl.loc("DownloadingCommitsAndWorkItems"));
-        
+
+        let jenkinsBuild = tl.getInput('jenkinsBuild', true);
         let startBuildId: number = parseInt(tl.getInput("startJenkinsBuildNumber"))
         let commitsDownloader: CommitsDownloader = new CommitsDownloader();
 
-        if (isNaN(startBuildId) || !startBuildId) {
-            let jenkinsBuild = tl.getInput('jenkinsBuild', true);
+        if (isNaN(startBuildId) || !startBuildId || jenkinsBuild === 'LastSuccessfulBuild') {
             let endBuildId: string = "";
 
             if (jenkinsBuild === 'LastSuccessfulBuild') {
