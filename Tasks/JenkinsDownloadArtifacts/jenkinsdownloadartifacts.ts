@@ -8,6 +8,12 @@ import shell = require('shelljs');
 import Q = require('q');
 import request = require('request');
 
+import * as handlers from "item-level-downloader/Providers/Handlers"
+import * as providers from "item-level-downloader/Providers"
+import * as engine from "item-level-downloader/Engine"
+
+import {ArtifactDetailsDownloader} from "./ArtifactDetails/ArtifactDetailsDownloader"
+
 class Credential {
     mUsername: string;
     mPassword: string;
@@ -64,48 +70,6 @@ function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Cre
     return defer.promise;
 }
 
-function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, jobBuildId: number, cred: Credential, strictSSL: boolean): Q.Promise<string[]> {
-    const defer = Q.defer<string[]>();
-    const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/api/json?tree=artifacts[*]`;
-
-    getRequest(artifactQueryUrl, cred, strictSSL).then((result) => {
-            if (result && result['artifacts']) {
-                const artifacts = result['artifacts'];
-                if (artifacts.length === 0) {
-                    defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
-                } else {
-                    const artifactsRelativePaths = result['artifacts'].map((artifact) => {
-                        return artifact['relativePath'];
-                    });
-                    defer.resolve(artifactsRelativePaths);
-                }
-            } else {
-                // no artifacts for this job
-                defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
-            }
-        })
-        .fail((err) => { defer.reject(err); });
-
-    return defer.promise;
-}
-
-async function download(url: string, localFile: string, cred: Credential, strictSSL: boolean): Promise<void> {
-    tl.debug(tl.loc('DownloadFileTo', url, localFile));
-    await request.get( {url: url, strictSSL: strictSSL} )
-        .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', (err) => {
-            //TODO: Do we even need an 'error' handler here if we're just re-throwing?
-            throw new Error(err.message);
-        })
-        .pipe(fs.createWriteStream(localFile));
-
-    tl.debug(tl.loc('FileSuccessfullyDownloaded', localFile));
-}
-
-function getArtifactUrl(serverEndpointUrl: string, jobName: string, jobBuildId: number, relativePath: string): string {
-    return `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/artifact/${relativePath}`;
-}
-
 async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -134,18 +98,42 @@ async function doWork() {
         }
         tl.debug(tl.loc('GetArtifactsFromBuildNumber', buildId, jobName));
 
-        const artifactsRelativePaths: string[] = await getArtifactsRelativePaths(serverEndpointUrl, jobName, buildId, cred, strictSSL);
-        artifactsRelativePaths.forEach((relativePath) => {
-            const localPath: string = path.resolve(localPathRoot, relativePath);
-            const dir: string = path.dirname(localPath);
-            if (!tl.exist(dir)) {
-                tl.mkdirP(dir);
-            }
+        const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}/${buildId}/api/json?tree=artifacts[*]`;
+        console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
 
-            const artifactUrl: string = getArtifactUrl(serverEndpointUrl, jobName, buildId, relativePath);
-            //Q: Are we supposed to await on this download call?
-            download(artifactUrl, localPath, cred, strictSSL);
-        });
+        var templatePath = path.join(__dirname, 'jenkins.handlebars.txt');
+        var variables = {
+            "endpoint": {
+                "url": serverEndpointUrl
+            },
+            "definition": jobName,
+            "version": buildId
+        };
+        var handler = new handlers.BasicCredentialHandler(username, password);
+        
+        var webProvider = new providers.WebProvider(artifactQueryUrl, templatePath, variables, handler, { ignoreSslError: !strictSSL });
+        var localFileProvider = new providers.FilesystemProvider(localPathRoot);
+    
+        let downloader = new engine.ArtifactEngine();
+        var downloaderOptions = new engine.ArtifactEngineOptions();
+        downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || "**";
+        downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 4;
+        var debugMode = tl.getVariable('System.Debug');
+        downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
+
+        await downloader.processItems(webProvider, localFileProvider, downloaderOptions);
+
+        console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
+
+        let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
+        if (downloadCommitsAndWorkItems) {
+            new ArtifactDetailsDownloader()
+            .DownloadCommitsAndWorkItems()
+            .then(
+                () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
+                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+        }
+        
     } catch (err) {
         tl.debug(err.message);
         tl._writeError(err);
