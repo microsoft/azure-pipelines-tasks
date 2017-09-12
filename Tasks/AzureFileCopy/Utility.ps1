@@ -765,10 +765,12 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
         
         if($isAzureStackEnvironment) 
         {
+            Write-Verbose "Fetching resource group resources details for Azure Stack environment."
             $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
         }
         else 
         {
+            Write-Verbose "Fetching resource group resources details for Azure/National cloud environments."
             $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
         }
 
