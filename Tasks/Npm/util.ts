@@ -158,7 +158,32 @@ export async function getFeedRegistryUrl(feedId: string): Promise<string> {
     let collectionUrl = await getPackagingCollectionUrl();
     let vssConnection = new vsts.WebApi(collectionUrl, credentialHandler);
     let coreApi = vssConnection.getCoreApi();
-    let data = await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
 
+    let data = await Retry(async () => {
+         return await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
+    });
     return data.requestUrl;
 }
+
+// This should be replaced when retry is implemented in vso client.
+async function Retry<T>(cb : () => Promise<T>, max_retry: number = 4, retry_delay: number = 100) : Promise<T> {
+    try {
+        return await cb();
+    } catch(exception) {
+        tl.debug(JSON.stringify(exception));
+        if(max_retry > 0)
+        {
+            tl.debug("Waiting " + retry_delay + "ms...");
+            await delay(retry_delay);
+            tl.debug("Retrying...");
+            return await Retry<T>(cb, max_retry-1, retry_delay*2);
+        } else {
+            throw exception;
+        }
+    }
+}
+function delay(delayMs:number) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, delayMs);
+    });
+ }
