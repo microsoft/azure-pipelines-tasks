@@ -14,10 +14,20 @@ export class ArtifactDetailsDownloader {
         console.log(tl.loc("DownloadingCommitsAndWorkItems"));
 
         let jenkinsBuild = tl.getInput('jenkinsBuild', true);
-        let startBuildId: number = parseInt(tl.getInput("startJenkinsBuildNumber"))
+        let startBuildIdStr: string = tl.getInput("startJenkinsBuildNumber", false) || "";
+        let startBuildId: number = parseInt(startBuildIdStr)
         let commitsDownloader: CommitsDownloader = new CommitsDownloader();
 
-        if (isNaN(startBuildId) || !startBuildId || jenkinsBuild === 'LastSuccessfulBuild') {
+        // validate the start build only if its required.
+        if (startBuildIdStr.trim().length > 0 && isNaN(startBuildId) && jenkinsBuild !== 'LastSuccessfulBuild') {
+            defer.reject(new Error(tl.loc("InvalidJenkinsStartBuildNumber")));
+            return defer.promise;
+        }
+
+        // if you have a valid start and end buildId and then switch to LastSuccessfulBuild
+        //  previous start build still exists though its not visible. Hence check the jenkinsBuild input 
+        //  and if its set to LastSuccessfulBuild consider startBuild is not mentioned.
+        if (!startBuildId || jenkinsBuild === 'LastSuccessfulBuild') {
             let endBuildId: string = "";
 
             if (jenkinsBuild === 'LastSuccessfulBuild') {
@@ -55,7 +65,8 @@ export class ArtifactDetailsDownloader {
                 console.log(tl.loc("DownloadingJenkinsChangeBetween", startBuildId, endBuildId));
             }
             else if (startBuildId > endBuildId) {
-                console.log(tl.loc("JenkinsRollbackDeployment", startBuildId, endBuildId));
+                console.log(tl.loc("DownloadingJenkinsChangeBetween", endBuildId, startBuildId));
+                tl.debug(`Start build ${startBuildId} is greater than end build ${endBuildId}`);
 
                 // swap the Build IDs to fetch the roll back commits
                 let temp: number = startBuildId;

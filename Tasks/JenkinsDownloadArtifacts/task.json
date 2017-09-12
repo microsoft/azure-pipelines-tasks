@@ -185,7 +185,7 @@
         "CommitsAndWorkItemsDownloadFailed": "Downloading Jenkins Commits and WorkItem failed with an error: %s",
         "CannotFindBuilds": "Cannot find builds",
         "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
-        "JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)",
-        "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number."
+        "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
+        "InvalidJenkinsStartBuildNumber": "Invalid value mentioned for Jenkins start build number."
     }
 }

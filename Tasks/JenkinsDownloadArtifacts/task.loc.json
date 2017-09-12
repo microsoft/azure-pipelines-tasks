@@ -185,7 +185,7 @@
     "CommitsAndWorkItemsDownloadFailed": "ms-resource:loc.messages.CommitsAndWorkItemsDownloadFailed",
     "CannotFindBuilds": "ms-resource:loc.messages.CannotFindBuilds",
     "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
-    "JenkinsRollbackDeployment": "ms-resource:loc.messages.JenkinsRollbackDeployment",
-    "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber"
+    "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
+    "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber"
   }
 }

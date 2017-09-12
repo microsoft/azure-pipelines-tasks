@@ -50,6 +50,6 @@
   "loc.messages.CommitsAndWorkItemsDownloadFailed": "Downloading Jenkins Commits and WorkItem failed with an error: %s",
   "loc.messages.CannotFindBuilds": "Cannot find builds",
   "loc.messages.JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
-  "loc.messages.JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)",
-  "loc.messages.InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number."
+  "loc.messages.InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
+  "loc.messages.InvalidJenkinsStartBuildNumber": "Invalid value mentioned for Jenkins start build number."
 }
