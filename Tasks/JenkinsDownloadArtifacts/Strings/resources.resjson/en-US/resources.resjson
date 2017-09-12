@@ -30,10 +30,10 @@
   "loc.messages.ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
   "loc.messages.ArtifactDownloadUrl": "Downloading artifacts from: %s",
   "loc.messages.DownloadingCommitsAndWorkItems": "Downloading commits and work items",
-  "loc.messages.JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, will be fetching commits and workitems from build used to download artifacts only: %s",
-  "loc.messages.DownloadingJenkinsChangeBetween": "Downloading commits and workitems between build %s to %s",
+  "loc.messages.JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, commits and workitems will be downloaded from build: %s",
+  "loc.messages.DownloadingJenkinsChangeBetween": "Downloading commits and workitems between builds %s to %s",
   "loc.messages.GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
-  "loc.messages.DownloadingContentFromJenkinsServer": "Downloading content form Jenkins server:%s with strict SSL:%s",
+  "loc.messages.DownloadingContentFromJenkinsServer": "Downloading content from Jenkins server:%s with strict SSL:%s",
   "loc.messages.WritingCommitsTo": "Writing commits to file %s",
   "loc.messages.UploadingAttachment": "uploading %s as attachment",
   "loc.messages.SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
@@ -48,7 +48,8 @@
   "loc.messages.JenkinsArtifactDetailsParsingError": "Parsing ArtifactDetails failed with an error %s",
   "loc.messages.SuccessfullyDownloadedCommitsAndWorkItems": "Commits and WorkItems Downloaded successfully",
   "loc.messages.CommitsAndWorkItemsDownloadFailed": "Downloading Jenkins Commits and WorkItem failed with an error: %s",
-  "loc.messages.InvalidBuildIndex": "Invalid build index found",
-  "loc.messages.JenkinsNoCommitsToFetch": "Deploying same build. Nothing to fetch",
-  "loc.messages.JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)"
+  "loc.messages.CannotFindBuilds": "Cannot find builds",
+  "loc.messages.JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
+  "loc.messages.JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)",
+  "loc.messages.InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number."
 }

@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 8
+    "Minor": 123,
+    "Patch": 0
   },
   "groups": [
     {
@@ -183,8 +183,9 @@
     "JenkinsArtifactDetailsParsingError": "ms-resource:loc.messages.JenkinsArtifactDetailsParsingError",
     "SuccessfullyDownloadedCommitsAndWorkItems": "ms-resource:loc.messages.SuccessfullyDownloadedCommitsAndWorkItems",
     "CommitsAndWorkItemsDownloadFailed": "ms-resource:loc.messages.CommitsAndWorkItemsDownloadFailed",
-    "InvalidBuildIndex": "ms-resource:loc.messages.InvalidBuildIndex",
+    "CannotFindBuilds": "ms-resource:loc.messages.CannotFindBuilds",
     "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
-    "JenkinsRollbackDeployment": "ms-resource:loc.messages.JenkinsRollbackDeployment"
+    "JenkinsRollbackDeployment": "ms-resource:loc.messages.JenkinsRollbackDeployment",
+    "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber"
   }
 }

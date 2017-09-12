@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 8
+        "Minor": 123,
+        "Patch": 0
     },
     "groups": [
         {
@@ -165,10 +165,10 @@
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
         "ArtifactDownloadUrl": "Downloading artifacts from: %s",
         "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
-        "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, will be fetching commits and workitems from build used to download artifacts only: %s",
-        "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between build %s to %s",
+        "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, commits and workitems will be downloaded from build: %s",
+        "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between builds %s to %s",
         "GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
-        "DownloadingContentFromJenkinsServer": "Downloading content form Jenkins server:%s with strict SSL:%s",
+        "DownloadingContentFromJenkinsServer": "Downloading content from Jenkins server:%s with strict SSL:%s",
         "WritingCommitsTo": "Writing commits to file %s",
         "UploadingAttachment": "uploading %s as attachment",
         "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
@@ -183,8 +183,9 @@
         "JenkinsArtifactDetailsParsingError": "Parsing ArtifactDetails failed with an error %s",
         "SuccessfullyDownloadedCommitsAndWorkItems": "Commits and WorkItems Downloaded successfully",
         "CommitsAndWorkItemsDownloadFailed": "Downloading Jenkins Commits and WorkItem failed with an error: %s",
-        "InvalidBuildIndex": "Invalid build index found",
-        "JenkinsNoCommitsToFetch": "Deploying same build. Nothing to fetch",
-        "JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)"
+        "CannotFindBuilds": "Cannot find builds",
+        "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
+        "JenkinsRollbackDeployment": "Handling rollback deployment, start build (%s) is greater than end build (%s)",
+        "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number."
     }
 }

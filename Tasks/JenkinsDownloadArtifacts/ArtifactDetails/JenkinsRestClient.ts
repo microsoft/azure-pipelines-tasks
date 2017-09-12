@@ -10,7 +10,7 @@ export class JenkinsRestClient {
     }
 
     public RegisterCustomerHandleBars(): void {
-        handlebars.registerHelper('CaseIgnoreEqual', function(lhs, rhs, options) {
+        handlebars.registerHelper('caseIgnoreEqual', function(lhs, rhs, options) {
             if (!lhs && !rhs) {
                 return options.fn(this);
             }
@@ -109,7 +109,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     try {
-                        tl.debug(`Applying the handlbar source ${handlebarSource} on the result`);
+                        tl.debug(`Applying the handlebar source ${handlebarSource} on the result`);
                         let template = handlebars.compile(handlebarSource);
                         if (additionalHandlebarContext) {
                             for(let key in additionalHandlebarContext) {
@@ -122,8 +122,7 @@ export class JenkinsRestClient {
                         defer.resolve(result);
                     }
                     catch(err) {
-                        console.log(tl.loc("JenkinsArtifactDetailsParsingError", err));
-                        defer.reject(err)
+                        defer.reject(new Error(tl.loc("JenkinsArtifactDetailsParsingError", err)))
                     }
                 }
             }

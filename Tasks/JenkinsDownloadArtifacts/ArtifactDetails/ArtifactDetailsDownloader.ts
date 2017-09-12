@@ -16,7 +16,7 @@ export class ArtifactDetailsDownloader {
         let startBuildId: number = parseInt(tl.getInput("startJenkinsBuildNumber"))
         let commitsDownloader: CommitsDownloader = new CommitsDownloader();
 
-        if (!startBuildId) {
+        if (isNaN(startBuildId) || !startBuildId) {
             let jenkinsBuild = tl.getInput('jenkinsBuild', true);
             let endBuildId: string = "";
 
@@ -44,7 +44,13 @@ export class ArtifactDetailsDownloader {
             });
         }
         else {
-            let endBuildId = parseInt(tl.getInput("jenkinsBuildNumber", true));
+            let endBuildId: number = parseInt(tl.getInput("jenkinsBuildNumber", true));
+            
+            if (isNaN(endBuildId) || !endBuildId) {
+                defer.reject(new Error(tl.loc("InvalidJenkinsBuildNumber")));
+                return defer.promise;
+            }
+
             if (startBuildId < endBuildId) {
                 console.log(tl.loc("DownloadingJenkinsChangeBetween", startBuildId, endBuildId));
             }
@@ -88,7 +94,7 @@ export class ArtifactDetailsDownloader {
         return defer.promise;
     }
 
-    private GetBuildIdIndex(startBuildId, endBuildId): Q.Promise<any> {
+    private GetBuildIdIndex(startBuildId: number, endBuildId: number): Q.Promise<any> {
         let defer = Q.defer<any>();
         let buildUrl: string = "/api/json?tree=allBuilds[number]";
         let startIndex: number = 0;
@@ -110,8 +116,8 @@ export class ArtifactDetailsDownloader {
         downloadHelper.DownloadJsonContent(buildUrl, source, null).then(() => {
             console.log(tl.loc("FoundBuildIndex", startIndex, endIndex));
             if (startIndex === 0 || endIndex === 0) {
-                tl.debug('cannot find valid startIndex or endIndex');
-                defer.reject(tl.loc("InvalidBuildIndex"));
+                tl.debug(`cannot find valid startIndex ${startIndex} or endIndex ${endIndex}`);
+                defer.reject(tl.loc("CannotFindBuilds"));
             }
             else {
                 defer.resolve({startIndex: startIndex, endIndex: endIndex});

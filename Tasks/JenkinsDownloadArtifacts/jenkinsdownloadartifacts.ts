@@ -70,10 +70,6 @@ function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Cre
     return defer.promise;
 }
 
-function AddIssue(message) {
-    console.log(`##vso[task.logissue type=warning]${message}`);
-}
-
 async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -135,7 +131,7 @@ async function doWork() {
             .DownloadCommitsAndWorkItems()
             .then(
                 () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
-                (error) => AddIssue(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
         }
         
     } catch (err) {

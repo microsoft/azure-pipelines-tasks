@@ -16,13 +16,13 @@ const CommitTemplateBase: string = `{{#with changeSet as |changes|}}
     "Author": {
       "displayName": "{{commit.author.fullName}}"
     },
-    {{#CaseIgnoreEqual changes.kind 'git'}}
+    {{#caseIgnoreEqual changes.kind 'git'}}
     {{#with (lookupAction ../../actions 'remoteUrls') as |action|}}
     {{#if action.remoteUrls}}
     "DisplayUri": "{{#first action.remoteUrls}}{{/first}}/commit/{{commit.commitId}}",
     {{/if}}
     {{/with}}
-    {{/CaseIgnoreEqual}}
+    {{/caseIgnoreEqual}}
     "Timestamp": "{{commit.date}}"
   },
   {{/each}}
