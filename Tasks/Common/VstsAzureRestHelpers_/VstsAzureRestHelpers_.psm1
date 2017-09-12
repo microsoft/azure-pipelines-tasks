@@ -14,6 +14,7 @@ $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 
 # API-Version(s)
 $apiVersion = "2014-04-01"
+$azureStackapiVersion = "2015-06-15"
 
 # Constants
 $azureStack = "AzureStack"
@@ -953,6 +954,166 @@ function Parse-Exception($exception){
     return $null
 }
 
+function Get-AzureNetworkInterfaceDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+
+    Write-Verbose "[Azure Rest Call] Get Resource Groups"
+    
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/networkInterfaces?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    
+    if(-not $networkInterfaceDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchNetworkInterfacesDetails)
+    }
+
+    if($networkInterfaceDetails.value) 
+    {
+        return $networkInterfaceDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+    
+    return $networkInterfaceDetails.value
+}
+
+function Get-AzurePublicIpAddressDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+
+    Write-Verbose "[Azure Rest Call] Get Resource Groups"
+
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/publicIPAddresses?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+
+    if(-not $publicIPAddressesDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchPublicIPAddressesDetails)
+    }
+
+    if($publicIPAddressesDetails.value) 
+    {
+        return $publicIPAddressesDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+
+    return $publicIPAddressesDetails.value
+}
+
+function Get-AzureLoadBalancersDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+
+    Write-Verbose "[Azure Rest Call] Get Resource Groups"
+
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+
+    if(-not $loadBalancersDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchLoadbalancerDetails)
+    }
+
+    if($loadBalancersDetails.value) 
+    {
+        return $loadBalancersDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+
+    return $loadBalancersDetails.value
+}
+
+function Get-AzureLoadBalancerDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [String] [Parameter(Mandatory = $true)] $name,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+    
+    Write-Verbose "[Azure Rest Call] Get Resource Groups  $name"
+
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers/" + $name + "?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    
+    if($loadBalancerDetails)
+    {
+        return $loadBalancersDetails | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+    
+    return $loadBalancerDetails
+}
+
+function Get-AzureRMLoadBalancerFrontendIpConfigDetails
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
+
+    $frontendIPConfigurations = $loadBalancer.frontendIPConfigurations
+
+    if($frontendIPConfigurations)
+    {
+        return Add-PropertiesToRoot -rootObject $frontendIPConfigurations
+    }
+
+    return $frontendIPConfigurations
+}
+
+function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
+
+    $inboundNatRules = $loadBalancer.inboundNatRules
+    
+    if($inboundNatRules)
+    {
+        return Add-PropertiesToRoot -rootObject $inboundNatRules
+    }
+
+    return $inboundNatRules
+}
+
+function Add-PropertiesToRoot
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $rootObject)
+
+    if($rootObject -and $rootObject.properties)
+    {
+        $rootObject.properties.psObject.Properties | % { $rootObject | Add-Member -MemberType $_.MemberType -Name $_.Name -Value $_.Value -Force}
+        $rootObject.psObject.properties.remove("properties");
+    }
+
+    return $rootObject
+}
+
 # Export only the public function.
 Export-ModuleMember -Function Add-AzureSqlDatabaseServerFirewallRule
 Export-ModuleMember -Function Remove-AzureSqlDatabaseServerFirewallRule
@@ -963,3 +1124,9 @@ Export-ModuleMember -Function Remove-AzRmVmCustomScriptExtension
 Export-ModuleMember -Function Get-AzStorageAccount
 Export-ModuleMember -Function Get-AzRmStorageAccount
 Export-ModuleMember -Function Get-AzRmResourceGroup
+Export-ModuleMember -Function Get-AzureNetworkInterfaceDetails
+Export-ModuleMember -Function Get-AzurePublicIpAddressDetails
+Export-ModuleMember -Function Get-AzureLoadBalancersDetails
+Export-ModuleMember -Function Get-AzureLoadBalancerDetails
+Export-ModuleMember -Function Get-AzureRMLoadBalancerFrontendIpConfigDetails
+Export-ModuleMember -Function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
