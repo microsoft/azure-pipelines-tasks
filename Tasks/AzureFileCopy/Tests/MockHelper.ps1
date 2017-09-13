@@ -384,6 +384,39 @@ function Get-AzureRMResourceGroupResourcesDetails
     return @{}
 }
 
+function Get-Endpoint
+{
+    param([string]$connectedServiceName)
+
+    return @{
+        "Data"=@{
+            "EnvironmentName"="AzureStack"
+        }
+    }
+}
+
+function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
+{
+    param([string]$resourceGroupName,
+          [object]$azureRMVMResources,
+          [string]$connectedServiceName)
+
+    if(-not [string]::IsNullOrEmpty($resourceGroupName))
+    {
+        if(-not $resourceGroups.ContainsKey($resourceGroupName))
+        {
+            throw "Resource group '$resourceGroupName' could not be found."
+        }
+
+        if($resourceGroupDeployments.ContainsKey($resourceGroupName))
+        {
+            return $resourceGroupDeployments[$resourceGroupName]
+        }
+    }
+
+    return @{}
+}
+
 function Generate-AzureStorageContainerSASToken
 {
     param([string]$containerName,
