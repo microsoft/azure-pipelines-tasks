@@ -1,5 +1,5 @@
 {
-  "id": "B11E7738-E576-4ABD-A78B-09744F6A2564",
+  "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
   "name": "DownloadBuildArtifacts",
   "friendlyName": "Download Artifacts - Build",
   "description": "Download build artifacts",
@@ -7,8 +7,8 @@
   "category": "Utility",
   "author": "ms-vscs-rm",
   "version": {
-    "Major": 0,
-    "Minor": 1,
+    "Major": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "demands": [],
