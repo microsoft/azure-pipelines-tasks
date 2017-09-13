@@ -221,12 +221,12 @@ export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string
 
     let data = await Retry(async () => {
         return await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
-    });
+    }, 4, 100);
     return data.requestUrl;
 }
 
 // This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number = 4, retry_delay: number = 100) : Promise<T> {
+async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
     try {
         return await cb();
     } catch(exception) {

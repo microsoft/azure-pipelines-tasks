@@ -160,13 +160,14 @@ export async function getFeedRegistryUrl(feedId: string): Promise<string> {
     let coreApi = vssConnection.getCoreApi();
 
     let data = await Retry(async () => {
-         return await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
-    });
+        return await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
+    }, 4, 100);
+
     return data.requestUrl;
 }
 
 // This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number = 4, retry_delay: number = 100) : Promise<T> {
+async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
     try {
         return await cb();
     } catch(exception) {
@@ -187,3 +188,4 @@ function delay(delayMs:number) {
         setTimeout(resolve, delayMs);
     });
  }
+ 
