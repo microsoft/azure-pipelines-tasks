@@ -32,7 +32,6 @@
         "DotNetCoreCLI",
         "DotNetCoreInstaller",
         "DownloadBuildArtifact",
-        "DownloadBuildArtifacts",
         "ExtractFiles",
         "FtpUpload",
         "Gradle",
