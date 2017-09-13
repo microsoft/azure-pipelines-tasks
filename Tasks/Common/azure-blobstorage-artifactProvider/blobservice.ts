@@ -8,15 +8,17 @@ import util = require('util');
 export class BlobService {
     private _storageAccountName: string;
     private _storageAccessKey: string;
+    private _host: string;
 
-    public constructor(storageAccountName: string, storageAccessKey: string) {
+    public constructor(storageAccountName: string, storageAccessKey: string, host?: string) {
         this._storageAccountName = storageAccountName;
         this._storageAccessKey = storageAccessKey;
+        this._host = host;
     }
 
-    public async uploadBlobs(source: string, container: string, prefixFolderPath?: string, host?: string, itemPattern?: string): Promise<string[]> {
+    public async uploadBlobs(source: string, container: string, prefixFolderPath?: string, itemPattern?: string): Promise<string[]> {
         var fileProvider = new artifactProviders.FilesystemProvider(source);
-        var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, host);
+        var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, this._host);
         var processor = new artifactProcessor.ArtifactEngine();
         var processorOptions =  new artifactProcessor.ArtifactEngineOptions();
         if (itemPattern) {
@@ -35,9 +37,9 @@ export class BlobService {
         return uploadedUrls;
     }
 
-    public async downloadBlobs(destination: string, container: string, prefixFolderPath?: string, host?: string, itemPattern?: string): Promise<void> {
+    public async downloadBlobs(destination: string, container: string, prefixFolderPath?: string, itemPattern?: string): Promise<void> {
         var fileProvider = new artifactProviders.FilesystemProvider(destination);
-        var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, host);
+        var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, this._host);
         var processor = new artifactProcessor.ArtifactEngine();
         var processorOptions =  new artifactProcessor.ArtifactEngineOptions();
         if (itemPattern) {

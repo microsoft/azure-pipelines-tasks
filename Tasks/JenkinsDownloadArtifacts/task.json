@@ -233,6 +233,8 @@
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
         "ArtifactDownloadUrl": "Downloading artifacts from: %s",
         "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
+        "ArtifactProviderNotSupported":"Artifact provider: %s is not supported.",
+        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure Blob Storage, Container Name: %s",
         "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, commits and workitems will be downloaded from build: %s",
         "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between builds %s to %s",
         "GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",

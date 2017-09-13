@@ -43,6 +43,8 @@
   "loc.messages.ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
   "loc.messages.ArtifactDownloadUrl": "Downloading artifacts from: %s",
   "loc.messages.DownloadingCommitsAndWorkItems": "Downloading commits and work items",
+  "loc.messages.ArtifactProviderNotSupported": "Artifact provider: %s is not supported.",
+  "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
   "loc.messages.JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, commits and workitems will be downloaded from build: %s",
   "loc.messages.DownloadingJenkinsChangeBetween": "Downloading commits and workitems between builds %s to %s",
   "loc.messages.GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",

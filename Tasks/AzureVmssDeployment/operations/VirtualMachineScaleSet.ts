@@ -52,6 +52,24 @@ export default class VirtualMachineScaleSet {
         return await blobService.uploadBlobs(customScriptInfo.localDirPath, "vststasks", customScriptInfo.blobsPrefixPath);
     }
 
+    private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
+        tl.debug("Getting storage account details for " + this.taskParameters.customScriptsStorageAccount);
+        var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        let storageAccount: azureModel.StorageAccount = await storageArmClient.storageAccounts.get(this.taskParameters.customScriptsStorageAccount);
+
+        let storageAccountResourceGroupName = utils.getResourceGroupNameFromUri(storageAccount.id);
+
+        tl.debug("Listing storage access keys...");
+        let accessKeys = await storageArmClient.storageAccounts.listKeys(storageAccountResourceGroupName, this.taskParameters.customScriptsStorageAccount, null);
+
+        return <StorageAccountInfo>{
+            name: this.taskParameters.customScriptsStorageAccount,
+            primaryBlobUrl: storageAccount.properties.primaryEndpoints.blob,
+            resourceGroupName: storageAccountResourceGroupName,
+            primaryAccessKey: accessKeys[0]
+        }
+    }
+
     private async _configureAppUsingCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, osType: string): Promise<void> {
         if (!!this.taskParameters.customScriptsDirectory && !!this.taskParameters.customScript) {
             tl.debug("Preparing custom scripts...");
@@ -95,7 +113,7 @@ export default class VirtualMachineScaleSet {
         // upload custom script directory to blob storage
         try {
             var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-            customScriptInfo.storageAccount = await storageArmClient.storageAccounts._getStorageAccountDetails(this.taskParameters.customScriptsStorageAccount, this.taskParameters.credentials, this.taskParameters.subscriptionId);
+            customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch (error) {
             throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);

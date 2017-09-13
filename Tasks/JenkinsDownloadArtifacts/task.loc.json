@@ -233,6 +233,8 @@
     "ArtifactSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactSuccessfullyDownloaded",
     "ArtifactDownloadUrl": "ms-resource:loc.messages.ArtifactDownloadUrl",
     "DownloadingCommitsAndWorkItems": "ms-resource:loc.messages.DownloadingCommitsAndWorkItems",
+    "ArtifactProviderNotSupported": "ms-resource:loc.messages.ArtifactProviderNotSupported",
+    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
     "JenkinsDownloadingChangeFromCurrentBuild": "ms-resource:loc.messages.JenkinsDownloadingChangeFromCurrentBuild",
     "DownloadingJenkinsChangeBetween": "ms-resource:loc.messages.DownloadingJenkinsChangeBetween",
     "GettingCommitsFromSingleBuild": "ms-resource:loc.messages.GettingCommitsFromSingleBuild",
