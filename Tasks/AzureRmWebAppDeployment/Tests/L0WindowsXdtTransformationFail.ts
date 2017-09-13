@@ -62,7 +62,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw": {
+        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw i": {
             "code": 1,
             "stderr": "ctt execution failed"
         }
