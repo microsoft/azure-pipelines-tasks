@@ -155,7 +155,7 @@
       "name": "ConnectedServiceNameARM",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
-      "required": false,
+      "required": true,
       "groupName": "azureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
     },
@@ -163,7 +163,7 @@
       "name": "storageAccountName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.storageAccountName",
-      "required": false,
+      "required": true,
       "properties": {
         "EditableOptions": "True"
       },
@@ -174,7 +174,7 @@
       "name": "containerName",
       "type": "string",
       "label": "ms-resource:loc.input.label.containerName",
-      "required": false,
+      "required": true,
       "groupName": "azureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.containerName"
     },

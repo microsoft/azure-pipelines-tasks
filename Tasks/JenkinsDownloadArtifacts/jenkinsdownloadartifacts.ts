@@ -130,8 +130,7 @@ async function doWork() {
                     break;
 
                 default:
-                    tl.error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
-                    break;
+                throw Error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
             }
         }
         else {

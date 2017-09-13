@@ -155,7 +155,7 @@
             "name": "ConnectedServiceNameARM",
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
-            "required": false,
+            "required": true,
             "groupName": "azureStorage",
             "helpMarkDown": "Choose the Azure Resource Manager Endpoint from the pick list."
         },
@@ -163,7 +163,7 @@
             "name": "storageAccountName",
             "type": "pickList",
             "label": "Storage Account Name",
-            "required": false,
+            "required": true,
             "properties": {
                 "EditableOptions":"True"
             },
@@ -174,7 +174,7 @@
             "name": "containerName",
             "type": "string",
             "label": "Container Name",
-            "required": false,
+            "required": true,
             "groupName": "azureStorage",
             "helpMarkDown": "Enter the container name inside Storage account where artifacts are propagated"
         },

@@ -8,22 +8,22 @@ import BlobService = require('azure-blobstorage-artifactProvider/blobservice');
 
 export class AzureStorageArtifactDownloader {
   public connectedService: string;
-  public AzureRmStorageAccount: string;
+  public azureRmStorageAccount: string;
   public containerName: string;
   public commonVirtualPath: string;
 
 
   constructor() {
-    this.connectedService = tl.getInput('ConnectedServiceNameARM');
-    this.containerName = tl.getInput('containerName');
-    this.commonVirtualPath = tl.getInput('commonVirtualPath');
-    this.AzureRmStorageAccount = tl.getInput('storageAccountName');
+    this.connectedService = tl.getInput('ConnectedServiceNameARM', true);
+    this.azureRmStorageAccount = tl.getInput('storageAccountName', true);
+    this.containerName = tl.getInput('containerName', true);
+    this.commonVirtualPath = tl.getInput('commonVirtualPath', false);
   }
 
   public async downloadArtifacts(downloadToPath: string) {
     console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
 
-    let storageAccount: StorageAccountInfo = await this._getStorageAccountDetails(this.AzureRmStorageAccount);
+    let storageAccount: StorageAccountInfo = await this._getStorageAccountDetails(this.azureRmStorageAccount);
 
     let blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
 
