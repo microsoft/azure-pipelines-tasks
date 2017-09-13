@@ -36,7 +36,7 @@ export class WinRMExtensionHelper {
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient, this.networkClient);
     }
 
-    public async ConfigureWinRMExtension() {
+    public async ConfigureWinRMExtension(): Promise<void> {
         await this.AddInboundNatRulesOnLoadBalancers();
         await this.AddExtensionToVMsToConfigureWinRM();
         await this.AddNetworkSecurityRuleConfigForWinRMPort();
@@ -152,7 +152,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddNetworkSecurityRuleConfigForWinRMPort(): Promise<any> {
+    private async AddNetworkSecurityRuleConfigForWinRMPort(): Promise<void> {
         var ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var rulePriority: number = 3986;
         var winrmHttpsPort: string = "5986";
@@ -181,8 +181,8 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddInboundNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
-        return new Promise<any>(async (resolve, reject) => {
+    private async AddInboundNetworkSecurityRule(securityGrpName: string, ruleName: string, rulePriority: number, winrmHttpsPort: string): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
             tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
             var securityRuleParameters = {
                 properties: {
@@ -209,7 +209,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddInboundNetworkSecurityRuleWithRetry(retryCnt: number, securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
+    private async AddInboundNetworkSecurityRuleWithRetry(retryCnt: number, securityGrpName: string, ruleName: string, rulePriority: number, winrmHttpsPort: string) {
         for (var i = 0; i < 3; i++) {
             try {
                 await this.AddInboundNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
@@ -222,7 +222,7 @@ export class WinRMExtensionHelper {
         throw tl.loc("FailedAddingNSGRule3Times", securityGrpName);
     }
 
-    private async TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority: number, winrmHttpsPort: string) {
+    private async TryAddNetworkSecurityRule(securityGrpName: string, ruleName: string, rulePriority: number, winrmHttpsPort: string) {
         var result = await this.GetSecurityRules(securityGrpName, ruleName);
         if (!result) {
             tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
@@ -234,7 +234,7 @@ export class WinRMExtensionHelper {
         }
     }
 
-    private GetSecurityRules(securityGrpName, ruleName): Promise<any> {
+    private GetSecurityRules(securityGrpName: string, ruleName: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, null, (error, result, request, response) => {
                 if (error) {
@@ -258,7 +258,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddExtensionToVMsToConfigureWinRM(): Promise<any> {
+    private async AddExtensionToVMsToConfigureWinRM() {
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
         var promises = [];
         for (var vm of this.azureUtils.vmDetails) {
@@ -287,7 +287,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string): Promise<any> {
+    private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string) {
         var extensionName: string = "WinRMCustomScriptExtension";
         var configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
         var makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";

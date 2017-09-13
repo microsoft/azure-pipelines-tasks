@@ -15,8 +15,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 3,
-        "Patch": 10
+        "Minor": 4,
+        "Patch": 0
     },
     "demands": [
         "Cmd"
@@ -31,6 +31,11 @@
         {
             "name": "upgrade",
             "displayName": "Upgrade Settings",
+            "isExpanded": false
+        },
+        {
+            "name": "docker",
+            "displayName": "Docker Settings",
             "isExpanded": false
         }
     ],
@@ -297,6 +302,76 @@
             "required": false,
             "groupname": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "configureDockerSettings",
+            "type": "boolean",
+            "label": "Configure Docker settings",
+            "helpMarkDown": "Configures the application with the specified Docker settings.",
+            "groupname": "docker"
+        },
+        {
+            "name": "registryCredentials",
+            "type": "pickList",
+            "label": "Registry Credentials Source",
+            "defaultValue": "AzureResourceManagerEndpoint",
+            "required": true,
+            "options": {
+                "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+                "ContainerRegistryEndpoint": "Container Registry Endpoint",
+                "UsernamePassword": "Username and Password"
+            },
+            "visibleRule": "configureDockerSettings = true",
+            "groupName": "docker",
+            "helpMarkDown": "Choose how credentials for the Docker registry will be provided."
+        },
+        {
+            "name": "dockerRegistryEndpoint",
+            "type": "connectedService:dockerregistry",
+            "label": "Docker Registry Connection",
+            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
+            "required": true,
+            "groupname": "docker"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
+            "required": true,
+            "groupname": "docker"
+        },
+        {
+            "name": "registryUserName",
+            "type": "string",
+            "label": "Registry User Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Username for the Docker registry",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "registryPassword",
+            "type": "string",
+            "label": "Registry Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "passwordEncrypted",
+            "type": "boolean",
+            "label": "Password Encrypted",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
         }
     ],
     "execution": {
@@ -316,6 +391,7 @@
         "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
+        "UnsupportedDockerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",

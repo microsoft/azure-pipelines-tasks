@@ -6,7 +6,15 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments
-    )    
+    )
+
+    Write-Verbose "Entering script RobocopyJob.ps1"
+    Write-Verbose "fqdn = $fqdn"
+    Write-Verbose "sourcePath = $sourcePath"
+    Write-Verbose "targetPath = $targetPath"
+    Write-Verbose "credential = $credential"
+    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
+    Write-Verbose "additionalArguments = $additionalArguments"
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
@@ -21,23 +29,6 @@ param (
         $sourceDirectory = Split-Path $sourcePath
         $filesToCopy = Split-Path $sourcePath -Leaf
     }
-
-    if(Test-Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
-    {
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-        [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
-        }
-    }
-    else
-    {
-        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
-        {
-            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
-        }
-    }
-    
-    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     
     function ThrowError
     {
@@ -46,7 +37,7 @@ param (
             [string]$fqdn
         )
         
-        $failMessage = "Copying failed for resource : $fqdn"
+        $failMessage = (Get-VstsLocString -Key "WFC_CopyingFailedForResource" -ArgumentList $fqdn)
         throw "$failMessage`n$errorMessage"
     }
     
@@ -58,7 +49,7 @@ param (
         $value = $value.Trim()    
         if(-not $value)
         {
-            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList $variableName)
+            ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList $variableName)
         }
     }
     
@@ -72,7 +63,7 @@ param (
         }
         else
         {
-            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList "credential")
+            ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList "credential")
         }   
     }
 
@@ -195,7 +186,7 @@ param (
         $dtl_mapOut = iex $command
         if ($LASTEXITCODE -ne 0) 
         {
-            $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
+            $errorMessage = (Get-VstsLocString -Key "WFC_FailedToConnectToPathWithUser" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
             ThrowError -errorMessage $errorMessage -fqdn $fqdn
         }
     }
@@ -220,12 +211,12 @@ param (
         
         if ($LASTEXITCODE -ge 8)
         {
-            $errorMessage = Get-LocalizedString -Key "Copying failed. Consult the robocopy logs for more details."            
+            $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
             ThrowError -errorMessage $errorMessage -fqdn $fqdn            
         }
         else
         {            
-            $message = (Get-LocalizedString -Key "Copying recursively from {0} to {1} on machine {2} succeeded" -ArgumentList $sourcePath, $targetPath, $fqdn)
+            $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
             Write-Output $message            
         }        
     }
