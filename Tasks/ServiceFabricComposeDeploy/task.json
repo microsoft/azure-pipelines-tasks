@@ -119,7 +119,7 @@
             "label": "Password Encrypted",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
             "groupName": "registry",
             "visibleRule": "registryCredentials = UsernamePassword"
         },
@@ -166,7 +166,6 @@
         "RemovingApplication": "Removing the existing application '{0}'.",
         "ApplicationRemoved": "Application removed.",
         "EncryptingPassword": "Encrypting the password with the Server Certificate.",
-        "CertificateNotFound": "The Server Certificate was not found, the password will not be encrypted.",
         "CreatingApplication": "Creating application",
         "WaitingForDeploy": "Waiting for deploy...",
         "CurrentStatus": "Current Status: {0}",

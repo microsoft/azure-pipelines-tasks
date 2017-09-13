@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 6
+    "Minor": 123,
+    "Patch": 0
   },
   "groups": [
     {
@@ -39,11 +39,14 @@
     },
     {
       "name": "jobName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.jobName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jobName"
+      "helpMarkDown": "ms-resource:loc.input.help.jobName",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "saveTo",
@@ -68,13 +71,83 @@
     },
     {
       "name": "jenkinsBuildNumber",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.jenkinsBuildNumber",
       "defaultValue": "1",
       "required": true,
       "groupName": "advanced",
       "visibleRule": "jenkinsBuild == BuildNumber",
-      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuildNumber"
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuildNumber",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.itemPattern",
+      "defaultValue": "**",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+    },
+    {
+      "name": "downloadCommitsAndWorkItems",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.downloadCommitsAndWorkItems",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.downloadCommitsAndWorkItems"
+    },
+    {
+      "name": "startJenkinsBuildNumber",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.startJenkinsBuildNumber",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
+      "groupName": "advanced",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.startJenkinsBuildNumber"
+    },
+    {
+      "name": "artifactDetailsFileNameSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactDetailsFileNameSuffix",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jobName",
+      "dataSourceName": "Jobs",
+      "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsBuildNumber",
+      "dataSourceName": "Builds",
+      "parameters": {
+        "definition": "$(jobName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "startJenkinsBuildNumber",
+      "dataSourceName": "Builds",
+      "parameters": {
+        "definition": "$(jobName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
     }
   ],
   "execution": {
@@ -86,11 +159,33 @@
   "messages": {
     "GetArtifactsFromLastSuccessfulBuild": "ms-resource:loc.messages.GetArtifactsFromLastSuccessfulBuild",
     "GetArtifactsFromBuildNumber": "ms-resource:loc.messages.GetArtifactsFromBuildNumber",
-    "CouldNotFindArtifacts": "ms-resource:loc.messages.CouldNotFindArtifacts",
     "CouldNotGetLastSuccessfuilBuildNumber": "ms-resource:loc.messages.CouldNotGetLastSuccessfuilBuildNumber",
     "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed",
     "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
-    "DownloadFileTo": "ms-resource:loc.messages.DownloadFileTo",
-    "FileSuccessfullyDownloaded": "ms-resource:loc.messages.FileSuccessfullyDownloaded"
+    "ArtifactSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactSuccessfullyDownloaded",
+    "ArtifactDownloadUrl": "ms-resource:loc.messages.ArtifactDownloadUrl",
+    "DownloadingCommitsAndWorkItems": "ms-resource:loc.messages.DownloadingCommitsAndWorkItems",
+    "JenkinsDownloadingChangeFromCurrentBuild": "ms-resource:loc.messages.JenkinsDownloadingChangeFromCurrentBuild",
+    "DownloadingJenkinsChangeBetween": "ms-resource:loc.messages.DownloadingJenkinsChangeBetween",
+    "GettingCommitsFromSingleBuild": "ms-resource:loc.messages.GettingCommitsFromSingleBuild",
+    "DownloadingContentFromJenkinsServer": "ms-resource:loc.messages.DownloadingContentFromJenkinsServer",
+    "WritingCommitsTo": "ms-resource:loc.messages.WritingCommitsTo",
+    "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
+    "SuccessfullyUploadedCommitsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedCommitsAttachment",
+    "GetCommitMessages": "ms-resource:loc.messages.GetCommitMessages",
+    "GetCommitMessagesFailed": "ms-resource:loc.messages.GetCommitMessagesFailed",
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
+    "DownloadingWorkItemsFromSingleBuild": "ms-resource:loc.messages.DownloadingWorkItemsFromSingleBuild",
+    "WritingWorkItemsTo": "ms-resource:loc.messages.WritingWorkItemsTo",
+    "SuccessfullyUploadedWorkItemsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedWorkItemsAttachment",
+    "FindBuildIndex": "ms-resource:loc.messages.FindBuildIndex",
+    "FoundBuildIndex": "ms-resource:loc.messages.FoundBuildIndex",
+    "JenkinsArtifactDetailsParsingError": "ms-resource:loc.messages.JenkinsArtifactDetailsParsingError",
+    "SuccessfullyDownloadedCommitsAndWorkItems": "ms-resource:loc.messages.SuccessfullyDownloadedCommitsAndWorkItems",
+    "CommitsAndWorkItemsDownloadFailed": "ms-resource:loc.messages.CommitsAndWorkItemsDownloadFailed",
+    "CannotFindBuilds": "ms-resource:loc.messages.CannotFindBuilds",
+    "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
+    "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
+    "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber"
   }
 }

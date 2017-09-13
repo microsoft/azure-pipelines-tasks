@@ -209,7 +209,7 @@ var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit
             typeof sourceTask.version.Minor != 'number' ||
             typeof sourceTask.version.Patch != 'number') {
 
-            fail(`Expected task.version.Major/Minor/Patch to be numbers (${taskSourcePath})`);
+            throw new Error(`Expected task.version.Major/Minor/Patch to be numbers (${taskSourcePath})`);
         }
 
         // determine the dest folder based on the major version
@@ -228,7 +228,7 @@ var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit
             var sourceVersion = `${sourceTask.version.Major}.${sourceTask.version.Minor}.${sourceTask.version.Patch}`;
             var destVersion = `${destTask.version.Major}.${destTask.version.Minor}.${destTask.version.Patch}`;
             if (semver.gt(sourceVersion, destVersion)) {
-                fail(`Expected minor+patch version for task already in the aggregate layout, to be greater or equal than non-aggregate layout being merged. Source task: ${taskSourcePath}`);
+                throw new Error(`Expected minor+patch version for task already in the aggregate layout, to be greater or equal than non-aggregate layout being merged. Source task: ${taskSourcePath}`);
             }
         }
         else {
