@@ -144,7 +144,7 @@ export class NugetMockHelper {
                     getCoreApi: function() {
                         return { 
                             vsoClient: {
-                                getVersioningData: function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) { 
+                                getVersioningData: async function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) { 
                                     return { requestUrl:"foobar" }
                                 }
                             }
