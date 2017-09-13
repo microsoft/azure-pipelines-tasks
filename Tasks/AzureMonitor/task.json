@@ -15,7 +15,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 68
+		"Patch": 77
 	},
 	"instanceNameFormat": "Azure Monitor",
 	"groups": [],
@@ -57,7 +57,7 @@
 			"endpointId": "$(connectedServiceNameARM)",
 			"endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(resourceGroupName)/providers/microsoft.insights/alertrules?api-version=2016-03-01",
 			"resultSelector": "jsonpath:$.value[?(@.properties.isEnabled == true)]",
-			"resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\":\"{{name}}\"}"
+			"resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\":\"{{name}}\"}"
 		}
 	],
 
@@ -67,7 +67,7 @@
 				"EndpointId": "$(connectedServiceNameARM)",
 				"EndpointUrl": "$(endpoint.url)batch?api-version=2015-11-01",
 				"Method": "POST",
-				"Body": "{\"requests\":[{{#split , alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"{{this}}/incidents?api-version=2016-03-01\"},{{/split}}]}",
+				"Body": "{\"requests\":[{{#split , alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourceGroups/{{#..}}{{resourceGroupName}}{{/..}}/providers/microsoft.insights/alertrules/{{this}}/incidents?api-version=2016-03-01\"},{{/split}}]}",
 				"Headers": "{\"Content-Type\":\"application/json\"}",
 				"WaitForCompletion": "false",
 				"Expression": "eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0)"
