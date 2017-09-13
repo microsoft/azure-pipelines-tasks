@@ -218,10 +218,11 @@ export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string
 
     let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
     let coreApi = vssConnection.getCoreApi();
-    return await Retry<string>(async () => {
-        let data = await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
-        return data.requestUrl;
-    });    
+
+    let data = await Retry(async () => {
+        return await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+    });
+    return data.requestUrl;
 }
 
 // This should be replaced when retry is implemented in vso client.
