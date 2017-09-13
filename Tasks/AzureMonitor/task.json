@@ -15,7 +15,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 77
+		"Patch": 1
 	},
 	"instanceNameFormat": "Azure Monitor",
 	"groups": [],
@@ -70,7 +70,7 @@
 				"Body": "{\"requests\":[{{#split , alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourceGroups/{{#..}}{{resourceGroupName}}{{/..}}/providers/microsoft.insights/alertrules/{{this}}/incidents?api-version=2016-03-01\"},{{/split}}]}",
 				"Headers": "{\"Content-Type\":\"application/json\"}",
 				"WaitForCompletion": "false",
-				"Expression": "eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0)"
+				"Expression": "and(gt(count(root['responses']), 0), eq(count(jsonpath('$.responses[?(@.httpStatusCode != 200)]')), 0), eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0))"
 			}
 		}
 	}
