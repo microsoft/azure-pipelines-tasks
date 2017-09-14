@@ -1,3 +1,4 @@
+import fs = require('fs');
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
@@ -131,6 +132,11 @@ async function run() {
         }
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
+    } finally {
+        let keystoreFile: string = tl.getTaskVariable('KEYSTORE_FILE_PATH');
+        if (keystoreFile && tl.exist(keystoreFile)) {
+            fs.unlinkSync(keystoreFile);
+        }
     }
 }
 

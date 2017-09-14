@@ -21,8 +21,6 @@ async function run() {
         }
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
-    } finally {
-
     }
 }
 
