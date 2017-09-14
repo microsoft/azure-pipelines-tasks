@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848006)",
-  "loc.description": "Build, push or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
+  "loc.description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.containerregistrytype": "Container Registry Type",
@@ -23,7 +23,9 @@
   "loc.input.label.context": "Build Context",
   "loc.input.help.context": "Path to the build context.",
   "loc.input.label.imageName": "Image Name",
-  "loc.input.help.imageName": "Name of the Docker image to build, push or run.",
+  "loc.input.help.imageName": "Name of the Docker image to build, push, or run.",
+  "loc.input.label.imageNamesPath": "Image Names Path",
+  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line.",
   "loc.input.label.qualifyImageName": "Qualify Image Name",
   "loc.input.help.qualifyImageName": "Qualify the image name with the Docker registry connection's hostname if not otherwise specified.",
   "loc.input.label.additionalImageTags": "Additional Image Tags",
@@ -60,7 +62,8 @@
   "loc.input.help.dockerHostEndpoint": "Select a Docker host connection. Defaults to the agent's host.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory for the Docker command.",
-  "loc.messages.ContainerPatternFound": "Pattern found in dockerfilepath parameter",
-  "loc.messages.ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
-  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found."
+  "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
+  "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'."
 }

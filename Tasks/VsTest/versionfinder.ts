@@ -49,13 +49,13 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
 
     switch (majorVersion) {
         case 14:
-            testConfig.vsTestVersionDetais = new version.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails = new version.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
             break;
         case 15:
-            testConfig.vsTestVersionDetais = new version.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails = new version.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
             break;
         default:
-            testConfig.vsTestVersionDetais =  new version.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails =  new version.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
             break;
     }
 }

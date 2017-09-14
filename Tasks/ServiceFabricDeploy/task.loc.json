@@ -15,8 +15,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 3,
-    "Patch": 10
+    "Minor": 4,
+    "Patch": 1
   },
   "demands": [
     "Cmd"
@@ -31,6 +31,11 @@
     {
       "name": "upgrade",
       "displayName": "ms-resource:loc.group.displayName.upgrade",
+      "isExpanded": false
+    },
+    {
+      "name": "docker",
+      "displayName": "ms-resource:loc.group.displayName.docker",
       "isExpanded": false
     }
   ],
@@ -297,6 +302,76 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "configureDockerSettings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.configureDockerSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.configureDockerSettings",
+      "groupname": "docker"
+    },
+    {
+      "name": "registryCredentials",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.registryCredentials",
+      "defaultValue": "AzureResourceManagerEndpoint",
+      "required": true,
+      "options": {
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "UsernamePassword": "Username and Password"
+      },
+      "visibleRule": "configureDockerSettings = true",
+      "groupName": "docker",
+      "helpMarkDown": "ms-resource:loc.input.help.registryCredentials"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
+      "required": true,
+      "groupname": "docker"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
+      "required": true,
+      "groupname": "docker"
+    },
+    {
+      "name": "registryUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryUserName",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "registryPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryPassword",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "passwordEncrypted",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.passwordEncrypted",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
     }
   ],
   "execution": {
@@ -316,6 +391,7 @@
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
+    "UnsupportedDockerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedDockerRegistryAuthScheme",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

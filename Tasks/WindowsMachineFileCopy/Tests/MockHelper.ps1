@@ -4,10 +4,12 @@ function GetEnvironmentWithStandardProvider(
     return @{ "Name" = $environmentName }
 }
 
+Unregister-Mock Test-Path
+Unregister-Mock ConvertTo-SecureString
+Unregister-Mock Invoke-Command
+
 Register-Mock Test-Path { return $true } -ParametersEvaluator{ $LiteralPath -eq  $validSourcePackage }
 Register-Mock Test-Path { return $false } -ParametersEvaluator { $LiteralPath -eq $invalidSourcePath }
-Register-Mock Get-ResourceFQDNTagKey { return $validResourceFQDNKeyName }
-Register-Mock Get-VssConnection { return $null }
 
 Register-Mock Invoke-Command { }
-Register-Mock Get-ResourceCredentials { }
+Register-Mock ConvertTo-SecureString { return $password }
