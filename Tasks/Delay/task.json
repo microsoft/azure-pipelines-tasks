@@ -21,7 +21,7 @@
         {
             "name": "delayForMinutes",
             "type": "string",
-            "label": "Delay minutes (minutes)",
+            "label": "Delay Time (minutes)",
             "defaultValue": "0",
             "required": true,
             "helpMarkDown": "Delay the execution of the workflow by specified time in minutes."
