@@ -12,7 +12,7 @@ var fileTransformationsUtility = require('webdeployment-common/fileTransformatio
 var kuduUtility = require('./kuduutility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 var deployWebAppImage = require("./azurermwebappcontainerdeployment").deployWebAppImage;
-var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js');
 
 async function run() {
     try {
@@ -42,7 +42,7 @@ async function run() {
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var webAppKind = tl.getInput('WebAppKind', false);
-        var dockerNamespace = tl.getInput('DockerNamespace', false);
+        var imageSource = tl.getInput('ImageSource', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
 
@@ -61,7 +61,7 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(webAppKind && webAppKind.indexOf("linux") !== -1 && dockerNamespace)
+        if(webAppKind && webAppKind.indexOf("linux") !== -1 && imageSource)
         {
             tl.debug("Performing container based deployment.");
 

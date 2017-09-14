@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 14
+        "Patch": 15
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -65,7 +65,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
-        },
+        },        
         {
             "name": "WebAppKind",
             "type": "pickList",
@@ -77,6 +77,23 @@
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
             }
+        },
+        {
+            "name": "ImageSource",
+            "type": "pickList",
+            "label": "Image Source",
+            "defaultValue": "azureContainerRegistry",
+            "options": {
+                "azureContainerRegistry": "Azure Container Registry",
+                "dockerHub": "Docker Hub"
+            },
+            "required": true,
+            "properties": {
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
+            },
+            "helpMarkDown": "Select an image source.",
+            "visibleRule": "WebAppKind = applinux"
         },
         {
             "name": "DeployToSlotFlag",
@@ -112,22 +129,123 @@
             "visibleRule": "DeployToSlotFlag = true"
         },
         {
-            "name": "DockerNamespace",
-            "type": "string",
-            "label": "Registry or Namespace",
+            "name": "AzureContainerRegistry",
+            "type": "pickList",
+            "label": "Registry",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux",
-            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "A globally unique top-level domain name for your specific registry.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'.",
+            "visibleRule": "ImageSource = azureContainerRegistry"
+        },
+        {
+            "name": "AzureContainerRegistryLoginServer",
+            "type": "pickList",
+            "label": "Registry Login Server Name",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "EditableOptions": "False",
+                "PopulateDefaultValue": "True"
+            },
+            "helpMarkDown": "Enter or Select an Azure container registry login server name.",
+            "visibleRule": "ImageSource = invalidimagesource"
+        },
+        {
+            "name": "AzureContainerRegistryImage",
+            "type": "pickList",
+            "label": "Image",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'.",
+            "visibleRule": "ImageSource = azureContainerRegistry"
+        },
+        {
+            "name": "AzureContainerRegistryTag",
+            "type": "pickList",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
+            "visibleRule": "ImageSource = azureContainerRegistry"
+        },
+        {
+            "name": "DockerRepositoryAccess",
+            "type": "radio",
+            "label": "Repository Access",
+            "required": true,
+            "options": {
+               "private": "Private",
+               "public": "Public"
+            },
+            "defaultValue": "public",
+            "helpMarkDown": "Select the Docker repository access.",
+            "visibleRule": "ImageSource = invalidImage"
+        },
+        {
+            "name": "RegistryConnectedServiceName",
+            "type": "connectedService:dockerregistry",
+            "label": "Registry Connection",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Select the registry connection.",
+            "visibleRule": "DockerRepositoryAccess = private || ImageSource = privateRegistry"
+        },
+        {
+            "name": "PrivateRegistryImage",
+            "type": "pickList",
+            "label": "Image",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "ImageSource = privateRegistry",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+        },
+        {
+            "name": "PrivateRegistryTag",
+            "type": "pickList",
+            "label": "Tag",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "ImageSource = privateRegistry",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
+        },
+        {
+            "name": "DockerNamespace",
+            "type": "string",
+            "label": "Namespace",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "ImageSource = dockerHub",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "A globally unique top-level domain name for your specific namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>mynamespace</b>/nginx:latest'."
         },
         {
             "name": "DockerRepository",
             "type": "string",
-            "label": "Repository",
+            "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux",
-            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
+            "visibleRule": "ImageSource = dockerHub",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'mynamespace/<b>nginx</b>:latest'."
         },
         {
             "name": "DockerImageTag",
@@ -135,9 +253,12 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux",
-            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
-        },
+            "visibleRule": "ImageSource = dockerHub",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'mynamespace/nginx:<b>latest</b>'."
+        },        
         {
             "name": "StartupCommand",
             "type": "string",
@@ -351,7 +472,7 @@
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             }
-        },
+        },        
         {
             "target": "WebAppKind",
             "endpointId": "$(ConnectedServiceName)",
@@ -370,6 +491,74 @@
                 "ResourceGroupName": "$(ResourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+        },
+        {
+            "target": "AzureContainerRegistry",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMContainerRegistries",
+            "resultTemplate": "{\"Value\":\"{{{ name }}}\",\"DisplayValue\":\"{{{ name }}}\"}"
+        },
+        {
+            "target": "AzureContainerRegistryLoginServer",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureContainerRegistryLoginServer",
+            "parameters": {
+                "AzureContainerRegistry": "$(AzureContainerRegistry)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #stringReplace '.azurecr.io' '' loginServer }}}\",\"DisplayValue\":\"{{{ #stringReplace '.azurecr.io' '' loginServer }}}\"}"
+        },
+        {
+            "target": "AzureContainerRegistryImage",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureContainerRegistryImages",
+            "parameters": {
+                "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)"
+            }
+        },
+        {
+            "target": "AzureContainerRegistryTag",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureContainerRegistryTags",
+            "parameters": {
+                "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)",                
+                "AzureContainerRegistryImage": "$(AzureContainerRegistryImage)"
+            }
+        },
+        {
+            "target": "DockerNamespace",
+            "endpointId": "$(RegistryConnectedServiceName)",
+            "dataSourceName": "Namespaces"
+        },
+        {
+            "target": "DockerRepository",
+            "endpointId": "$(RegistryConnectedServiceName)",
+            "dataSourceName": "Repos",
+            "parameters": {
+                "namespaces": "$(DockerNamespace)"
+            }
+        },
+        {
+            "target": "DockerImageTag",
+            "endpointId": "$(RegistryConnectedServiceName)",
+            "dataSourceName": "Tags",
+            "parameters": {
+                "DockerNamespace": "$(DockerNamespace)",
+                "DockerRepository": "$(DockerRepository)"
+            }
+        },
+        {
+            "target": "PrivateRegistryImage",
+            "endpointId": "$(RegistryConnectedServiceName)",
+            "endpointUrl": "{{endpoint.url}}v2/_catalog",
+            "resultSelector": "jsonpath:$.repositories[*]",
+            "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"     
+        },
+        {
+            "target": "PrivateRegistryTag",
+            "endpointId": "$(RegistryConnectedServiceName)",
+            "endpointUrl": "{{endpoint.url}}v2/$(PrivateRegistryImage)/tags/list",
+            "resultSelector": "jsonpath:$.tags[*]",
+            "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"     
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -385,7 +574,7 @@
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
-        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
+        "UnabletoretrieveResourceID": "Unable to retrieve connection details for Azure Resource:'%s'. Status Code: %s",        
         "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
@@ -419,7 +608,7 @@
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
-        "WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
+        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",        
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
         "ShortFileBufferError": "File buffer is too short to detect encoding type : %s",
@@ -464,6 +653,7 @@
         "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
         "UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s', Error Message: '%s']"
     }
 }
