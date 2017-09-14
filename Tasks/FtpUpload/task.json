@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 116,
+        "Minor": 123,
         "Patch": 0
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
@@ -105,11 +105,21 @@
         {
             "name": "clean",
             "type": "boolean",
-            "label": "Clean remote directory",
+            "label": "Delete remote directory",
             "defaultValue": "false",
             "required": true,
-            "helpMarkDown": "Recursively delete all contents of the remote directory before uploading.",
+            "helpMarkDown": "Delete the remote directory including its contents before uploading.",
             "groupName": "advanced"
+        },
+        {
+            "name": "cleanContents",
+            "type": "boolean",
+            "label": "Clear remote directory contents",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Recursively delete all contents of the remote directory before uploading.  The existing directory will not be deleted.  For better performance, consider using `Delete remote directory` instead.",
+            "groupName": "advanced",
+            "visibleRule": "clean = false"
         },
         {
             "name": "overwrite",
@@ -146,7 +156,9 @@
         }
     },
     "messages": {
-        "CleanRemoteDir": "cleaning remote directory: %s",
+        "CleanRemoteDir": "removing remote directory: %s",
+        "CleanRemoteDirContents": "removing remote directory contents: %s",
+        "CleanFileDeleteFail": "an error occurred while trying to remove file: %s",
         "ConnectPort": "connecting to: %s:%s",
         "Disconnected": "disconnected",
         "DisconnectHost": "disconnecting from: %s",

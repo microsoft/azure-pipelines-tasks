@@ -5,13 +5,24 @@ param()
 . $PSScriptRoot\MockVariable.ps1 -Force
 . $PSScriptRoot\MockHelper.ps1 -Force
 
-Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator{$EnvironmentName -eq $EnvironmentNameForFailedJob}
+Unregister-Mock Get-VstsInput
+Unregister-Mock Start-Job
+Unregister-Mock Receive-Job
+Unregister-Mock Get-Job
+Unregister-Mock Remove-Job 
+Unregister-Mock Start-Sleep 
+Unregister-Mock Import-Module 
 
-Register-Mock Get-EnvironmentProperty { return $validMachineName1 } -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId1}
-Register-Mock Get-EnvironmentProperty { return $validMachineName2 } -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId2}
+Register-Mock Get-VstsInput { return $EnvironmentNameForFailedJob } -ParametersEvaluator{ $Name -eq  "MachineNames" }
+Register-Mock Get-VstsInput { return $password } -ParametersEvaluator{ $Name -eq  "AdminPassword" }
+Register-Mock Get-VstsInput { return $validSourcePackage } -ParametersEvaluator{ $Name -eq  "SourcePath" }
+Register-Mock Get-VstsInput { return $validApplicationPath } -ParametersEvaluator{ $Name -eq  "TargetPath" }
+Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "CleanTargetBeforeCopy" }
+Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "CopyFilesInParallel" }
 
 Register-Mock Receive-Job { }  -ParametersEvaluator { $Id -eq 1 }
 Register-Mock Receive-Job { throw "Copy to one or more machines failed." }  -ParametersEvaluator { $Id -eq 2 }
+
 
 #Start-Job Register-Mocks
 Register-Mock Start-Job { $testJobs.Add($Job1); return $job1} -ParametersEvaluator{$ArgumentList -contains $validResource1.Name }
@@ -33,5 +44,5 @@ Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $
 Register-Mock Import-Module { }
 
 Assert-Throws {
-    & "$copyFilesToMachinesPath" -environmentName $EnvironmentNameForFailedJob -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $false -copyFilesInParallel $true
+    & "$copyFilesToMachinesPath" 
 } -MessagePattern "Copy to one or more machines failed."

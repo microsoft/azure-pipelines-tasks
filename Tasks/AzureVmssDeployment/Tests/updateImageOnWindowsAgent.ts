@@ -8,6 +8,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("action", "Update image");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : (process.env["_vmssOsType_"] === "Linux" ? "testvmss2" : "testvmss1"));
+tr.setInput("vmssOsType", process.env["_vmssOsType_"] === "Linux" ? "Linux" : "Windows");
 tr.setInput("imageUrl", process.env["imageUrlAlreadyUptoDate"] === "true" ? "http://old-url" : "https://someurl");
 if (!(process.env["customScriptNotSpecified"] === "true")) {
     tr.setInput("customScriptsDirectory", "C:\\some\\dir with'quote");
@@ -58,7 +59,7 @@ Date.now = function (): number {
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('azure-arm-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 tr.registerMock('azure-arm-rest/azure-arm-storage', require('./mock_node_modules/azure-arm-storage'));
-tr.registerMock('../blobservice', require('./mock_node_modules/blobservice'));
+tr.registerMock('azure-blobstorage-artifactProvider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('utility-common/compressutility', require('./mock_node_modules/compressutility'));
 
 tr.run();

@@ -17,8 +17,7 @@ async function run() {
             tl.setVariable('DEVELOPER_DIR', devDir);
         }
 
-        var useXctool: boolean = tl.getBoolInput('useXctool', false);
-        var tool: string = useXctool ? tl.which('xctool', true) : tl.which('xcodebuild', true);
+        var tool: string = tl.which('xcodebuild', true);
         tl.debug('Tool selected: ' + tool);
 
         //--------------------------------------------------------
@@ -58,7 +57,6 @@ async function run() {
         var configuration: string = tl.getInput('configuration', false);
         var scheme: string = tl.getInput('scheme', false);
         var useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
-        var xctoolReporter: string = tl.getInput('xctoolReporter', false);
         var actions: string[] = tl.getDelimitedInput('actions', ' ', true);
         var packageApp: boolean = tl.getBoolInput('packageApp', true);
         var args: string = tl.getInput('args', false);
@@ -96,7 +94,6 @@ async function run() {
             xcb.arg(ws);
         }
         xcb.argIf(scheme, ['-scheme', scheme]);
-        xcb.argIf(useXctool && xctoolReporter, ['-reporter', 'plain', '-reporter', xctoolReporter]);
         xcb.arg(actions);
         if (actions.toString().indexOf('archive') < 0) {
             // redirect build output if archive action is not passed
@@ -187,10 +184,7 @@ async function run() {
         xcb.argIf(xcode_devTeam, xcode_devTeam);
 
         //--- Enable Xcpretty formatting if using xcodebuild ---
-        if (useXctool && useXcpretty) {
-            tl.warning(tl.loc('XcodebuildRequiredForXcpretty'));
-        }
-        if (!useXctool && useXcpretty) {
+        if (useXcpretty) {
             var xcPrettyPath: string = tl.which('xcpretty', true);
             var xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
@@ -208,21 +202,10 @@ async function run() {
         var publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
 
         if (publishResults) {
-            if (useXctool) {
-                if (xctoolReporter && 0 !== xctoolReporter.length) {
-                    var xctoolReporterString = xctoolReporter.split(":");
-                    if (xctoolReporterString && xctoolReporterString.length === 2) {
-                        testResultsFiles = tl.resolve(workingDir, xctoolReporterString[1].trim());
-                    }
-                } else {
-                    tl.warning(tl.loc('UseXcToolForTestPublishing'))
-                }
-            } else if (!useXctool) {
-                if (!useXcpretty) {
-                    tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-                } else {
-                    testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
-                }
+            if (!useXcpretty) {
+                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
+            } else {
+                testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
             }
 
             if (testResultsFiles && 0 !== testResultsFiles.length) {
@@ -249,182 +232,143 @@ async function run() {
         // Package app to generate .ipa
         //--------------------------------------------------------
         if (tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
-            //determine which tool to use for packaging the app
-            var packageToolToUse = 'xcrun';
+            // use xcodebuild to create the app package
+            if (!scheme) {
+                throw tl.loc("SchemeRequiredForArchive");
+            }
+            if (!ws || !tl.filePathSupplied('xcWorkspacePath')) {
+                throw tl.loc("WorkspaceOrProjectRequiredForArchive");
+            }
 
-            //check input on the task
-            var packageTool: string = tl.getInput('packageTool');
-            if (packageTool && packageTool.toString().toLowerCase() === 'xcodebuild') {
-                //user has specifically picked to use xcodebuild archive/export
-                packageToolToUse = 'xcodebuild';
+            // create archive
+            var xcodeArchive: ToolRunner = tl.tool(tl.which('xcodebuild', true));
+            if (ws && tl.filePathSupplied('xcWorkspacePath')) {
+                xcodeArchive.argIf(isProject, '-project');
+                xcodeArchive.argIf(!isProject, '-workspace');
+                xcodeArchive.arg(ws);
+            }
+            xcodeArchive.argIf(scheme, ['-scheme', scheme]);
+            xcodeArchive.arg('archive'); //archive action
+            xcodeArchive.argIf(sdk, ['-sdk', sdk]);
+            xcodeArchive.argIf(configuration, ['-configuration', configuration]);
+            var archivePath: string = tl.getInput('archivePath');
+            var archiveFolderRoot: string;
+            if (!archivePath.endsWith('.xcarchive')) {
+                archiveFolderRoot = archivePath;
+                archivePath = tl.resolve(archivePath, scheme);
             } else {
-                //check if useXcrun build variable is set explicitly to false
-                var useXcrun: string = tl.getVariable('useXcrun');
-                if (useXcrun === 'false') {
-                    packageToolToUse = 'xcodebuild';
-                }
+                //user specified a file path for archivePath
+                archiveFolderRoot = path.dirname(archivePath);
             }
+            xcodeArchive.arg(['-archivePath', archivePath]);
+            xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
+            xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
+            xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
+            xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
 
-            if (packageToolToUse === 'xcrun') {
-                // xcrun has been deprecated in Xcode 7 and higher
-                tl.debug('Packaging apps using xcrun.');
-                var buildOutputPath: string = tl.resolve(outPath, 'build.sym');
-                tl.debug('buildOutputPath: ' + buildOutputPath);
-                var appFolders: string[] = tl.findMatch(buildOutputPath, '**/*.app', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-                if (appFolders) {
-                    tl.debug(appFolders.length + ' apps found for packaging.');
-                    var xcrunPath: string = tl.which('xcrun', true);
-                    for (var i = 0; i < appFolders.length; i++) {
-                        var app: string = appFolders.pop();
-                        tl.debug('Packaging ' + app);
-                        var ipa: string = app.substring(0, app.length - 3) + 'ipa';
-                        var xcr: ToolRunner = tl.tool(xcrunPath);
-                        xcr.argIf(sdk, ['-sdk', sdk]);
-                        xcr.arg(['PackageApplication', '-v', app, '-o', ipa]);
-                        await xcr.exec();
+            if (useXcpretty) {
+                var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
+                xcPrettyTool.arg('--no-color');
+                xcodeArchive.pipeExecOutputToTool(xcPrettyTool);
+            }
+            await xcodeArchive.exec();
+
+            var archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+            if (archiveFolders && archiveFolders.length > 0) {
+                tl.debug(archiveFolders.length + ' archives found for exporting.');
+
+                //export options plist
+                var exportOptions: string = tl.getInput('exportOptions');
+                var exportMethod: string;
+                var exportTeamId: string;
+                var exportOptionsPlist: string;
+                var archiveToCheck: string = archiveFolders[0];
+                var embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+
+                if (exportOptions === 'auto') {
+                    // Automatically try to detect the export-method to use from the provisioning profile
+                    // embedded in the .xcarchive file
+                    if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
+                        tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
+                        exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
+                        tl.debug('Using export method = ' + exportMethod);
+                        if (!exportMethod) {
+                            tl.warning(tl.loc('ExportMethodNotIdentified'));
+                        }
+                    }
+                } else if (exportOptions === 'specify') {
+                    exportMethod = tl.getInput('exportMethod', true);
+                    exportTeamId = tl.getInput('exportTeamId');
+                } else if (exportOptions === 'plist') {
+                    exportOptionsPlist = tl.getInput('exportOptionsPlist');
+                    if (!tl.filePathSupplied('exportOptionsPlist') || !pathExistsAsFile(exportOptionsPlist)) {
+                        throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
                     }
                 }
-            }
-            else {
-                // use xcodebuild to create the app package
-                if (!scheme) {
-                    throw tl.loc("SchemeRequiredForArchive");
-                }
-                if (!ws || !tl.filePathSupplied('xcWorkspacePath')) {
-                    throw tl.loc("WorkspaceOrProjectRequiredForArchive");
-                }
 
-                // create archive
-                var xcodeArchive: ToolRunner = tl.tool(tl.which('xcodebuild', true));
-                if (ws && tl.filePathSupplied('xcWorkspacePath')) {
-                    xcodeArchive.argIf(isProject, '-project');
-                    xcodeArchive.argIf(!isProject, '-workspace');
-                    xcodeArchive.arg(ws);
-                }
-                xcodeArchive.argIf(scheme, ['-scheme', scheme]);
-                xcodeArchive.arg('archive'); //archive action
-                xcodeArchive.argIf(sdk, ['-sdk', sdk]);
-                xcodeArchive.argIf(configuration, ['-configuration', configuration]);
-                var archivePath: string = tl.getInput('archivePath');
-                var archiveFolderRoot: string;
-                if (!archivePath.endsWith('.xcarchive')) {
-                    archiveFolderRoot = archivePath;
-                    archivePath = tl.resolve(archivePath, scheme);
-                } else {
-                    //user specified a file path for archivePath
-                    archiveFolderRoot = path.dirname(archivePath);
-                }
-                xcodeArchive.arg(['-archivePath', archivePath]);
-                xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
-                xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
-                xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
-                xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
+                if (exportMethod) {
+                    // generate the plist file if we have an exportMethod set from exportOptions = auto or specify
+                    var plist: string = tl.which('/usr/libexec/PlistBuddy', true);
+                    exportOptionsPlist = '_XcodeTaskExportOptions.plist';
+                    tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
+                    tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
+                    if (exportTeamId) {
+                        tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
+                    }
 
-                if (useXcpretty) {
-                    var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
-                    xcPrettyTool.arg('--no-color');
-                    xcodeArchive.pipeExecOutputToTool(xcPrettyTool);
-                }
-                await xcodeArchive.exec();
+                    if (xcodeVersion >= 9 && !automaticSigningWithXcode && exportOptions === 'auto') {
+                        // Xcode 9 manual signing, set code sign style = manual
+                        tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
 
-                var archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-                if (archiveFolders && archiveFolders.length > 0) {
-                    tl.debug(archiveFolders.length + ' archives found for exporting.');
+                        // add provisioning profiles to the exportOptions plist
+                        // find bundle Id from Info.plist and prov profile name from the embedded profile in each .app package
+                        tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
 
-                    //export options plist
-                    var exportOptions: string = tl.getInput('exportOptions');
-                    var exportMethod: string;
-                    var exportTeamId: string;
-                    var exportOptionsPlist: string;
-                    var archiveToCheck: string = archiveFolders[0];
-                    var embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+                        for (let i = 0; i < embeddedProvProfiles.length; i++) {
+                            let embeddedProvProfile: string = embeddedProvProfiles[i];
+                            let profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
+                            tl.debug('embedded provisioning profile = ' + embeddedProvProfile + ', profile name = ' + profileName);
 
-                    if (exportOptions === 'auto') {
-                        // Automatically try to detect the export-method to use from the provisioning profile
-                        // embedded in the .xcarchive file
-                        if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
-                            tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
-                            exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
-                            tl.debug('Using export method = ' + exportMethod);
-                            if (!exportMethod) {
-                                tl.warning(tl.loc('ExportMethodNotIdentified'));
+                            let embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
+                            let bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
+                            tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
+
+                            if (!profileName || !bundleId) {
+                                throw tl.loc('FailedToGenerateExportOptionsPlist');
                             }
+
+                            tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
                         }
-                    } else if (exportOptions === 'specify') {
-                        exportMethod = tl.getInput('exportMethod', true);
-                        exportTeamId = tl.getInput('exportTeamId');
-                    } else if (exportOptions === 'plist') {
-                        exportOptionsPlist = tl.getInput('exportOptionsPlist');
-                        if (!tl.filePathSupplied('exportOptionsPlist') || !pathExistsAsFile(exportOptionsPlist)) {
-                            throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
-                        }
-                    }
-
-                    if (exportMethod) {
-                        // generate the plist file if we have an exportMethod set from exportOptions = auto or specify
-                        var plist: string = tl.which('/usr/libexec/PlistBuddy', true);
-                        exportOptionsPlist = '_XcodeTaskExportOptions.plist';
-                        tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
-                        tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
-                        if (exportTeamId) {
-                            tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
-                        }
-
-                        if (xcodeVersion >= 9 && !automaticSigningWithXcode && exportOptions === 'auto') {
-                            // Xcode 9 manual signing, set code sign style = manual
-                            tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
-
-                            // add provisioning profiles to the exportOptions plist
-                            // find bundle Id from Info.plist and prov profile name from the embedded profile in each .app package
-                            tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
-
-                            for (let i = 0; i < embeddedProvProfiles.length; i++) {
-                                let embeddedProvProfile: string = embeddedProvProfiles[i];
-                                let profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
-                                tl.debug('embedded provisioning profile = ' + embeddedProvProfile + ', profile name = ' + profileName);
-
-                                let embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
-                                let bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
-                                tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
-
-                                if (!profileName || !bundleId) {
-                                    throw tl.loc('FailedToGenerateExportOptionsPlist');
-                                }
-
-                                tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
-                            }
-                        }
-                    }
-
-                    //export path
-                    var exportPath: string = tl.getInput('exportPath');
-                    if (!exportPath.endsWith('.ipa')) {
-                        exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
-                    }
-                    // delete if it already exists, otherwise export will fail
-                    if (tl.exist(exportPath)) {
-                        tl.rmRF(exportPath);
-                    }
-
-                    for (var i = 0; i < archiveFolders.length; i++) {
-                        var archive: string = archiveFolders.pop();
-
-                        //export the archive
-                        var xcodeExport: ToolRunner = tl.tool(tl.which('xcodebuild', true));
-                        xcodeExport.arg(['-exportArchive', '-archivePath', archive]);
-                        xcodeExport.arg(['-exportPath', exportPath]);
-                        xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
-
-                        if (useXcpretty) {
-                            var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
-                            xcPrettyTool.arg('--no-color');
-                            xcodeExport.pipeExecOutputToTool(xcPrettyTool);
-                        }
-                        await xcodeExport.exec();
                     }
                 }
-            }
 
+                //export path
+                var exportPath: string = tl.getInput('exportPath');
+                if (!exportPath.endsWith('.ipa')) {
+                    exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
+                }
+                // delete if it already exists, otherwise export will fail
+                if (tl.exist(exportPath)) {
+                    tl.rmRF(exportPath);
+                }
+
+                for (var i = 0; i < archiveFolders.length; i++) {
+                    var archive: string = archiveFolders.pop();
+
+                    //export the archive
+                    var xcodeExport: ToolRunner = tl.tool(tl.which('xcodebuild', true));
+                    xcodeExport.arg(['-exportArchive', '-archivePath', archive]);
+                    xcodeExport.arg(['-exportPath', exportPath]);
+                    xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
+
+                    if (useXcpretty) {
+                        var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
+                        xcPrettyTool.arg('--no-color');
+                        xcodeExport.pipeExecOutputToTool(xcPrettyTool);
+                    }
+                    await xcodeExport.exec();
+                }
+            }
         }
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('XcodeSuccess'));
     }

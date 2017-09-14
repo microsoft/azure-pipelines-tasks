@@ -142,7 +142,7 @@ async function getContainerRegistrySettings(imageName,endPoint) {
     }    
 
     return containerRegistrySettings;
-}
+    }
 
 async function getAzureContainerRegistrySettings(endPoint, containerRegistrySettings, containerRegistryAuthParamsFormatString) {    
     var registryServerName = tl.getInput('AzureContainerRegistryLoginServer', true);
@@ -158,9 +158,9 @@ async function getAzureContainerRegistrySettings(endPoint, containerRegistrySett
 
     var username = creds.username;
     var password = creds["passwords"][0].value;
-  
+
     return containerRegistrySettings + " " + util.format(containerRegistryAuthParamsFormatString, registryUrl, username, password);
-}
+        }
 
 function getDockerPrivateRegistrySettings(containerRegistrySettings, containerRegistryAuthParamsFormatString) {
     var registryConnectedServiceName = tl.getInput('RegistryConnectedServiceName', true);    
