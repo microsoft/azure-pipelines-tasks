@@ -3,16 +3,10 @@ var parseString = require('xml2js').parseString;
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
-import httpClient = require('vso-node-api/HttpClient');
-import restClient = require('vso-node-api/RestClient');
-
 import * as hm from "typed-rest-client/HttpClient";
 import * as rm from "typed-rest-client/RestClient";
 
 var kuduDeploymentStatusUtility = require('./kududeploymentstatusutility.js');
-
-var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var restObj = new restClient.RestCallbackClient(httpObj);
 
 let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
@@ -29,7 +23,6 @@ var defaultWebAppAvailabilityTimeoutInMS = 3000;
 */
 export async function getResourceGroupName(endpoint, webAppName: string)
 {
-    console.log("inside getresourcegroupname function");
     var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
@@ -40,7 +33,6 @@ export async function getResourceGroupName(endpoint, webAppName: string)
     tl.debug('Web App details : ' + webAppID.id);
     var resourceGroupName = webAppID.id.split ('/')[4];
     tl.debug('Azure Resource Group Name : ' + resourceGroupName);
-    console.log("check");
     return resourceGroupName;
 }
 /**
@@ -96,7 +88,6 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  * @returns (JSON)
  */
 export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
-    console.log("inside getAzureRMWebAppPublishProfile function");
     var accessToken = await getAuthorizationToken(endPoint);
     var headers = {
         authorization: 'Bearer '+ accessToken
@@ -109,12 +100,10 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
 
     tl.debug('Requesting Azure Publish Profile: ' + url);
-    httpObj.send('POST', url, null, headers, (error, response, body) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
-            parseString(body, (error, result) => {
+    hc.post(url, null, headers).then(async (response) => {
+        if (response.message.statusCode === 200) {
+            let contents: string = await response.readBody();
+            parseString(contents, (error, result) => {
                 for (var index in result.publishData.publishProfile) {
                     if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
                         deferred.resolve(result.publishData.publishProfile[index].$);
@@ -122,18 +111,19 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
                 }
                 deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
             });
+        } else {
+            tl.error(response.message.statusMessage);
+            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp', webAppName, response.message.statusCode, response.message.statusMessage));
         }
-        else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp', webAppName, response.statusCode, response.statusMessage));
-        }
+    },
+    (error) => {
+        deferred.reject(error);
     });
 
     return deferred.promise;
 }
 
 function getAccessToken(endPoint) {
-    console.log("inside getAccessToken function");
     var deferred = Q.defer<string>();
     var retryCounter = 0;
 
@@ -161,8 +151,6 @@ function getAccessToken(endPoint) {
 }
 
 function getAuthorizationToken(endPoint): Q.Promise<string> {
-    console.log("inside getAuthorizationToken function");
-
     var deferred = Q.defer<string>();
     var envAuthUrl = (endPoint.envAuthUrl) ? (endPoint.envAuthUrl) : defaultAuthUrl;
     var authorityUrl = envAuthUrl + endPoint.tenantID + "/oauth2/token/";
@@ -173,113 +161,59 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
         client_secret: endPoint.servicePrincipalKey
     });
 
-    /*let requestData2 = {
-        resource: endPoint.activeDirectoryResourceId,
-        client_id: endPoint.servicePrincipalClientID,
-        grant_type: "client_credentials",
-        client_secret: endPoint.servicePrincipalKey
-    };*/
     var requestHeader = {
         "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
     }
 
-    /*let options: rm.IRequestOptions = {};
-    options.additionalHeaders = requestHeader;
-    let promise: Promise<rm.IRestResponse<any>> = rc.create(authorityUrl, requestData2, options);
-    promise.then((response) => {
-        console.log("#############");
-        console.log(JSON.stringify(response));
-        console.log("#############");
-        if(response.statusCode === 200) {
-            deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory", response.result.url));
+    tl.debug('Requesting for Auth Token: ' + authorityUrl);
+    hc.post(authorityUrl, requestData, requestHeader).then(async (response: hm.HttpClientResponse) => {
+        if (response.message.statusCode === 200) {
+            let contents: string = await response.readBody();
+            if (contents && contents.length > 0) {
+                deferred.resolve(JSON.parse(contents).access_token);
+            }
         } else {
-            tl.warning(response.result);
-            deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
+            deferred.reject(tl.loc('CouldnotfetchaccesstokenforAzureStatusCode', response.message.statusCode, response.message.statusMessage));
         }
     },
     (error) => {
-        console.log("ERROR ERROR ERROR");
-        console.log(error);
         deferred.reject(error);
-    });*/
-
-    tl.debug('Requesting for Auth Token: ' + authorityUrl);
-    httpObj.send('POST', authorityUrl, requestData, requestHeader, (error, response, body) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if (response.statusCode == 200) {
-            deferred.resolve(JSON.parse(body).access_token);
-        }
-        else {
-            deferred.reject(tl.loc('CouldnotfetchaccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
-        }
     });
 
     return deferred.promise;
 }
 
 async function getAzureRMWebAppID(endpoint, webAppName: string, url: string, headers) {
-    console.log("inside getAzureRMWebAppID function");
     var deferred = Q.defer<any>();
 
     tl.debug('Requesting Azure App Service ID: ' + url);
-    
-    /*let options: rm.IRequestOptions = {};
+    let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
-    let promise: Promise<rm.IRestResponse<any>> = rc.get(url, options);
-    promise.then((response) => {
+    let promise: Promise<any> = rc.get(url, options);
+    promise.then(async (response) => {
         if(response.statusCode === 200) {
-            var webAppIDDetails = JSON.parse(response.result);
-            if(webAppIDDetails.value.length === 0) {
+            let webAppIDDetails: any = response.result;
+            if (webAppIDDetails.value.length === 0) {
                 if(webAppIDDetails.nextLink) {
-                    tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
+                    tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);                    
                     try {
-                        deferred.resolve(await getAzureRMWebAppID(endpoint, webAppName, webAppIDDetails.nextLink, headers));
-                    }
-                    catch(error) {
+                        deferred.resolve(await getAzureRMWebAppID(endpoint, webAppName, webAppIDDetails.nextLink, headers));                        
+                    } catch(error) {
                         deferred.reject(error);
                     }
                 }
                 deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
             }
             deferred.resolve(webAppIDDetails.value[0]);
-        }
-        else {
+        } else {
             tl.error(response.statusMessage);
             deferred.reject(tl.loc('UnabletoretrieveWebAppID', webAppName, response.statusCode, response.statusMessage));
         }
     },
     (error) => {
         deferred.reject(error);
-    });*/
-    
-    httpObj.get('GET', url, headers, async (error, response, body) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
-            var webAppIDDetails = JSON.parse(body);
-
-            if(webAppIDDetails.value.length === 0) {
-                if(webAppIDDetails.nextLink) {
-                    tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
-                    try {
-                        deferred.resolve(await getAzureRMWebAppID(endpoint, webAppName, webAppIDDetails.nextLink, headers));
-                    }
-                    catch(error) {
-                        deferred.reject(error);
-                    }
-                }
-                deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
-            }
-            deferred.resolve(webAppIDDetails.value[0]);
-        }
-        else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveWebAppID', webAppName, response.statusCode, response.statusMessage));
-        }
     });
+
     return deferred.promise;
 }
 
@@ -413,7 +347,6 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
 }
 
 async function getOperationStatus(SPN, url: string) {
-    console.log("inside getOperationStatus function");
     var deferred = Q.defer();
     var accessToken = await getAccessToken(SPN);
     var headers = {
@@ -432,20 +365,11 @@ async function getOperationStatus(SPN, url: string) {
     (error) => {
         deferred.reject(error);
     });
-
-    /*httpObj.get('GET', url, headers, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
-        }
-        else {
-            deferred.resolve({ "response": response, "content": body } );
-        }
-    });*/
+    
     return deferred.promise;
 }
 
 function monitorSlotSwap(SPN, url) {
-    console.log("inside monitorSlotSwap function");
     tl.debug("Monitoring slot swap operation status from: "+ url);
     var deferred = Q.defer();
     var attempts = 0;
@@ -478,8 +402,6 @@ function monitorSlotSwap(SPN, url) {
 }
 
 export async function swapWebAppSlot(endpoint, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
-    console.log("inside swapWebAppSlot function");
-    
     var deferred = Q.defer<any>();
     var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
@@ -498,25 +420,25 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
     );
 
     console.log(tl.loc('StartingSwapSlot',webAppName));
-    httpObj.send('POST', url, body, headers, async (error, response, contents) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
+    hc.post(url, body, headers).then(async (response: hm.HttpClientResponse) => {
+        if(response.message.statusCode === 200) {
             deferred.resolve();
-        }
-        else if(response.statusCode === 202) {
-            await monitorSlotSwap(endpoint, response.headers.location).then(() => {
+        } else if(response.message.statusCode === 202) {
+            await monitorSlotSwap(endpoint, response.message.headers.location).then(() => {
                 deferred.resolve();
             }).catch((error) => {
                 deferred.reject(error);
-            });
-        }
-        else {
+            });            
+        } else {
+            let contents: string = await response.readBody();
             tl.debug ("Slot swap operation failed. Operation Response: " + contents);
-            deferred.reject(response.statusMessage);
+            deferred.reject(response.message.statusMessage);
         }
+    },
+    (error) => {
+        deferred.reject(error);
     });
+
     return deferred.promise;
 }
 
@@ -621,9 +543,7 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
 }
 
 export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
-    console.log("inside getAzureContainerRegistryCredentials function");
     var deferred = Q.defer<any>();
-
     var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
     tl.debug('Requesting Azure Contianer Registry Creds: ' + url);
 
@@ -644,34 +564,13 @@ export async function getAzureContainerRegistryCredentials(endpoint, azureContai
         }
     },
     (error) => {
-        //console.log(JSON.stringify(response));
         deferred.reject(error);
     });
-
-    /*httpObj.get('POST', url, headers, async (error, response, body) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
-            try {
-                var credentials = JSON.parse(body);
-                deferred.resolve(credentials);
-            }
-            catch (error) {
-                deferred.reject(error);
-            }
-        }
-        else {
-            tl.error(response.statusMessage);
-            deferred.reject("Unable to resolve creds for the registry");
-        }
-    });*/
 
     return deferred.promise;
 }
 
 export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout) {
-    console.log("inside testAzureWebAppAvailability function");
     var deferred = Q.defer();
     var headers = {};
 
@@ -689,26 +588,10 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
         }
     },
     (error) => {
-        //console.log(JSON.stringify(response));
         tl.debug("Failed to check availability of azure web app, error : " + error);
         deferred.reject(error);
     });
-    /*httpObj.get('GET', webAppUrl, headers, async (error, response, body) => {
-        if (error) {
-            tl.debug("Failed to check availability of azure web app, error : " + error);
-            deferred.reject(error);
-        } else {
-            if(response.statusCode === 200) {
-                tl.debug("Azure web app is available.");
-                var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeoutInMS; 
-                await sleep(webAppAvailabilityTimeout);
-                deferred.resolve("SUCCESS");
-            } else {
-                tl.debug("Azure web app in wrong state, status code : " + response.statusCode);
-                deferred.reject("FAILED");
-            }
-        }
-    });*/
+
     return deferred.promise;
 }
 
