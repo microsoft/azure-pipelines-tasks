@@ -145,4 +145,18 @@ describe('AndroidSigning Suite', function () {
 
         done();
     });
+
+    it('Download keystore file from SecureFile', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });
