@@ -14,9 +14,9 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
-    "preview": true,
+    "preview": false,
     "satisfies": ["NuGet"],
     "demands": [],
     "instanceNameFormat": "Use NuGet $(versionSpec)",
