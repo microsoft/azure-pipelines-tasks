@@ -102,6 +102,10 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         }
     }
 
+    if(tl.getVariable("system.debug") && tl.getVariable("system.debug").toLowerCase() == "true") {
+        msDeployCmdArgs += " -verbose";
+    }
+
     tl.debug('Constructed msDeploy comamnd line arguments');
     return msDeployCmdArgs;
 }
@@ -209,7 +213,9 @@ export function shouldRetryMSDeploy() {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
 
         if(errorFileContent !== "") {
-            if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
+            if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1 || errorFileContent.indexOf("4294967295") != -1) {
+                // retry deployment if msdeploy.exe throws ERROR_CONNECTION_TERMINATED
+                // retry deployment if msdeploy.exe failed with return code: 4294967295
                 tl.warning(errorFileContent);
                 return true;
             }
