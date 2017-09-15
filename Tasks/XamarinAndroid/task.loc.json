@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 119,
-    "Patch": 1
+    "Minor": 124,
+    "Patch": 0
   },
   "demands": [
     "AndroidSDK",
@@ -188,6 +188,7 @@
       "defaultValue": "x86",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
       "groupName": "jdkOptions",
       "options": {
         "x86": "x86",
