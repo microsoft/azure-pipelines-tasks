@@ -12,5 +12,6 @@
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
   "loc.messages.Error_NuGetToolInstallerFailer": "Tool install failed: %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
+  "loc.messages.Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s"
 }

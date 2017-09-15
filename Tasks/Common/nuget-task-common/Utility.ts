@@ -46,7 +46,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
     // Fail if no matching files were found
     if (!allowEmptyMatch && (!result || result.size === 0)) {
-        throw new Error("No matching files were found with search pattern: " + filterSpec);
+        throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", filterSpec));
     }
 
     return Array.from(result);
@@ -123,7 +123,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length === 0)) {
-            throw new Error("No matching files were found with search pattern: " + pattern);
+            throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern",  pattern));
         }
     }
 
@@ -183,7 +183,7 @@ export function getBundledNuGetLocation(uxOption: string): string {
 }
 
 export function locateCredentialProvider(): string {
-    return path.join(__dirname, 'NuGet/CredentialProvider'); 
+    return path.join(__dirname, 'NuGet/CredentialProvider');
 }
 
 // set the console code page to "UTF-8"
