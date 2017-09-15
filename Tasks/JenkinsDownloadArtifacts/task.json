@@ -30,7 +30,7 @@
             "name":"azureStorage",
             "displayName": "Azure Storage",
             "isExpanded": true,
-            "visibleRule": "artifactProvider == Azure Storage"
+            "visibleRule": "artifactProvider == azureStorage"
         }
     ],
     "instanceNameFormat": "Download artifacts produced by $(jobName)",
@@ -101,7 +101,7 @@
             "name": "artifactProvider",
             "type": "pickList",
             "label": "Artifact Provider",
-            "defaultValue": "Azure Storage",
+            "defaultValue": "azureStorage",
             "required": true,
             "options": {
                 "azureStorage":"Azure Storage"

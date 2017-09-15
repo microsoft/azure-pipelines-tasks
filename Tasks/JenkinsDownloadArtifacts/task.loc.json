@@ -30,7 +30,7 @@
       "name": "azureStorage",
       "displayName": "ms-resource:loc.group.displayName.azureStorage",
       "isExpanded": true,
-      "visibleRule": "artifactProvider == Azure Storage"
+      "visibleRule": "artifactProvider == azureStorage"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -101,7 +101,7 @@
       "name": "artifactProvider",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactProvider",
-      "defaultValue": "Azure Storage",
+      "defaultValue": "azureStorage",
       "required": true,
       "options": {
         "azureStorage": "Azure Storage"
