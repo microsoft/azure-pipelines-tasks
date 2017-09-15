@@ -1,7 +1,7 @@
 {
-  "name": "downloadbuildartifact",
+  "name": "downloadbuildartifacts",
   "version": "0.1.0",
-  "description": "Download Build Artifact Task",
+  "description": "Download Build Artifacts Task",
   "main": "download.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,9 +15,10 @@
   "bugs": {
     "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",  
   "dependencies": {
+    "vsts-task-lib": "0.9.20",
     "vso-node-api": "^6.2.5-preview",
-    "vsts-task-lib": "^2.0.3-preview"
+    "item-level-downloader": "1.0.19"
   }
 }
