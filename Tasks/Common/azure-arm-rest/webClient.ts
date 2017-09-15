@@ -59,7 +59,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
 async function sendReqeustInternal(request: WebRequest): Promise<WebResponse> {
     tl.debug(util.format("[%s]%s", request.method, request.uri));
     var response: httpClient.HttpClientResponse = await httpCallbackClient.request(request.method, request.uri, request.body, request.headers);
-    return await this.toWebResponse(response);
+    return await toWebResponse(response);
 }
 
 async function toWebResponse(response: httpClient.HttpClientResponse): Promise<WebResponse> {
