@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 18
+    "Patch": 93
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -82,11 +82,10 @@
       "name": "ImageSource",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ImageSource",
-      "defaultValue": "azureContainerRegistry",
+      "defaultValue": "Registry",
       "options": {
-        "builtin": "Built-in Image",
-        "azureContainerRegistry": "Azure Container Registry",
-        "dockerHub": "Docker Hub"
+        "Registry": "Container Registry",
+        "Builtin": "Built-in Image"
       },
       "required": false,
       "properties": {
@@ -230,7 +229,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "ImageSource = dockerHub",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -239,7 +238,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "ImageSource = dockerHub",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -248,7 +247,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "ImageSource = dockerHub",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {

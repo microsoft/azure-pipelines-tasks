@@ -6,9 +6,9 @@ var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var parameterParser = require("./parameterparser.js").parse;
 
 enum registryTypes {
-    "azureContainerRegistry",
-    "dockerHub",
-    "privateRegistry"
+    "AzureContainerRegistry",
+    "Registry", // TODO: Rename it to DockerHub while supporting all the registry types. Also add all these registry types in Task.json in ImageSource pick list.
+    "PrivateRegistry"
 }
 
 export async function deployWebAppImage(endPoint, resourceGroupName, webAppName, deployToSlotFlag, slotName) {
@@ -40,15 +40,15 @@ function getImageName() {
     var imageName = null;
 
     switch(registryType) {        
-        case registryTypes[registryTypes.azureContainerRegistry]:
+        case registryTypes[registryTypes.AzureContainerRegistry]:
             imageName = getAzureContainerImageName();
             break;
 
-        case registryTypes[registryTypes.dockerHub]:
+        case registryTypes[registryTypes.Registry]:
             imageName = getDockerHubImageName();
             break;
 
-        case registryTypes[registryTypes.privateRegistry]:
+        case registryTypes[registryTypes.PrivateRegistry]:
             imageName = getPrivateRegistryImageName();
             break;
     }
@@ -124,11 +124,11 @@ async function getContainerRegistrySettings(imageName,endPoint) {
     var containerRegistryAuthParamsFormatString = "-DOCKER_REGISTRY_SERVER_URL %s -DOCKER_REGISTRY_SERVER_USERNAME %s -DOCKER_REGISTRY_SERVER_PASSWORD %s";
 
     switch(containerRegistryType) {
-        case registryTypes[registryTypes.azureContainerRegistry]:
+        case registryTypes[registryTypes.AzureContainerRegistry]:
             containerRegistrySettings = await getAzureContainerRegistrySettings(endPoint, containerRegistrySettings, containerRegistryAuthParamsFormatString);
             break;
 
-        case registryTypes[registryTypes.dockerHub]:
+        case registryTypes[registryTypes.Registry]:
             var dockerRespositoryAccess = tl.getInput('DockerRepositoryAccess', true);
             if(dockerRespositoryAccess === "private")
             {
@@ -136,7 +136,7 @@ async function getContainerRegistrySettings(imageName,endPoint) {
             }
             break;
 
-        case registryTypes[registryTypes.privateRegistry]:            
+        case registryTypes[registryTypes.PrivateRegistry]:
             containerRegistrySettings = getDockerPrivateRegistrySettings(containerRegistrySettings, containerRegistryAuthParamsFormatString);
             break;           
     }    
@@ -176,10 +176,12 @@ function getDockerPrivateRegistrySettings(containerRegistrySettings, containerRe
 function updateWebAppSettings(appSettingsParameters, webAppSettings) {
     // In case of public repo, clear the connection details of a registry
     var dockerRespositoryAccess = tl.getInput('DockerRepositoryAccess', true);
-    if(dockerRespositoryAccess === "public")
-    {
-        deleteRegistryConnectionSettings(webAppSettings);
-    }
+    
+    // Uncomment the below lines while supprting all registry types.
+    // if(dockerRespositoryAccess === "public")
+    // {
+    //     deleteRegistryConnectionSettings(webAppSettings);
+    // }
     
     var parsedAppSettings =  parameterParser(appSettingsParameters);
     for (var settingName in parsedAppSettings) {

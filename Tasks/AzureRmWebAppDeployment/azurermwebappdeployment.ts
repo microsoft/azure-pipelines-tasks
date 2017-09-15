@@ -42,6 +42,7 @@ async function run() {
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var webAppKind = tl.getInput('WebAppKind', false);
+        var dockerNamespace = tl.getInput('DockerNamespace', false);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
         var inputAppSettings = tl.getInput('AppSettings', false);
@@ -51,7 +52,7 @@ async function run() {
         var runtimeStack = "";
         var linuxWebDeployPkg = "";
 
-        var isBuiltinLinuxWebApp: boolean = imageSource && imageSource.indexOf("builtin") >=0;
+        var isBuiltinLinuxWebApp: boolean = imageSource && imageSource.indexOf("Builtin") >=0;
 
         if (isLinuxWebApp && isBuiltinLinuxWebApp) {
             linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
@@ -73,7 +74,7 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(isLinuxWebApp && !isBuiltinLinuxWebApp && imageSource) {
+        if(isLinuxWebApp && !isBuiltinLinuxWebApp && dockerNamespace) {
             tl.debug("Performing container based deployment.");
 
             if (webAppUri) {

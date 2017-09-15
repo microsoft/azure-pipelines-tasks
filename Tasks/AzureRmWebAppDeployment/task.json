@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 18
+        "Patch": 93
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -82,11 +82,10 @@
             "name": "ImageSource",
             "type": "pickList",
             "label": "Image Source",
-            "defaultValue": "azureContainerRegistry",
+            "defaultValue": "Registry",
             "options": {
-                "builtin": "Built-in Image",
-                "azureContainerRegistry": "Azure Container Registry",
-                "dockerHub": "Docker Hub"
+                "Registry": "Container Registry",
+                "Builtin": "Built-in Image"
             },
             "required": false,
             "properties": {
@@ -227,11 +226,11 @@
         {
             "name": "DockerNamespace",
             "type": "string",
-            "label": "Namespace",
+            "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "ImageSource = dockerHub",
-            "helpMarkDown": "A globally unique top-level domain name for your specific namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>mynamespace</b>/nginx:latest'."
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
             "name": "DockerRepository",
@@ -239,8 +238,8 @@
             "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "ImageSource = dockerHub",
-            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'mynamespace/<b>nginx</b>:latest'."
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
             "name": "DockerImageTag",
@@ -248,8 +247,8 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "ImageSource = dockerHub",
-            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'mynamespace/nginx:<b>latest</b>'."
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
             "name": "VirtualApplication",
