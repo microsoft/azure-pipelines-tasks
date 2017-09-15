@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "azureps"
@@ -108,6 +108,9 @@
       "required": false,
       "options": {
         "LatestVersion": "Latest installed version",
+        "2.1.0": "2.1.0",
+        "3.8.0": "3.8.0",
+        "4.2.1": "4.2.1",
         "OtherVersion": "Specify other version"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
