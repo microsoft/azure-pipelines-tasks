@@ -65,7 +65,6 @@
         "PublishCodeCoverageResults",
         "PublishSymbols",
         "PublishTestResults",
-        "PublishToAzureServiceBus",
         "QuickPerfTest",
         "RunDistributedTests",
         "RunJMeterLoadTest",
