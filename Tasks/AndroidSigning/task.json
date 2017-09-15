@@ -132,11 +132,18 @@
             "argumentFormat": ""
         }
     },
+    "postjobexecution": {
+        "Node": {
+            "target": "postandroidsigning.js",
+            "argumentFormat": ""
+        }
+    },
     "messages": {
         "AndroidHomeNotSet": "The ANDROID_HOME environment variable is not set for the running user.",
         "CouldNotFindZipalign": "Could not find the zipalign tool.",
         "CouldNotFindZipalignInAndroidHome": "Could not find the zipalign tool inside ANDROID_HOME: %s",
         "JavaHomeNotSet": "The JAVA_HOME environment variable is not set for the running user.",
-        "NoMatchingFiles": "No matching files were found with search pattern: %s" 
+        "NoMatchingFiles": "No matching files were found with search pattern: %s",
+        "ErrorCleaningUpKeystoreFile": "Failed to delete keystore file downloaded from the server: %s"
     }
 }
