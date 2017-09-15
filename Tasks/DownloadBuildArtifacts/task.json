@@ -1,8 +1,8 @@
 {
   "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
-  "name": "DownloadBuildArtifact",
-  "friendlyName": "Download Build Artifact",
-  "description": "Download a build artifact.",
+  "name": "DownloadBuildArtifacts",
+  "friendlyName": "Download Build Artifacts",
+  "description": "Download Build Artifacts",
   "helpMarkDown": "",
   "category": "Utility",
   "author": "Microsoft Corporation",
@@ -10,28 +10,101 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 57
+    "Patch": 58
   },
+  "groups": [
+    {
+        "name": "advanced",
+        "displayName": "Advanced",
+        "isExpanded": false
+    }
+  ],
   "demands": [],
   "inputs": [
+    {
+      "name": "buildType",
+      "type": "radio",
+      "label": "Download artifacts produced by",
+      "defaultValue": "current",
+      "required": true,
+      "options": {
+          "current": "Current build",
+          "specific": "Specific build"
+      },
+      "helpMarkDown": "Download artifacts produced by the current build, or from a specific build."
+    },
+    {
+      "name": "project",
+      "type": "pickList",
+      "label": "Project",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "buildType == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "The project from which to download the build artifacts"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "Build definition",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "buildType == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "Select the build definition name"
+    },
     {
       "name": "buildId",
       "type": "pickList",
       "label": "Build",
-      "required": false,
-      "helpMarkDown": "The build from which to download the artifact",
-      "defaultValue": "$(Build.BuildId)",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "buildType == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "The build from which to download the artifacts"
+    },
+    {
+      "name": "downloadType",
+      "type": "radio",
+      "label": "Download type",
+      "defaultValue": "single",
+      "required": true,
       "options": {
-        "$(Build.BuildId)": "The current build"
-      }
+          "single": "Specific artifact",
+          "specific": "Specific files"
+      },
+      "helpMarkDown": "Download a specific artifact or specific files from the build."
     },
     {
       "name": "artifactName",
-      "type": "string",
+      "type": "pickList",
       "label": "Artifact name",
       "defaultValue": "drop",
       "required": true,
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "visibleRule": "downloadType == single",
       "helpMarkDown": "The name of the artifact to download"
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "Matching pattern",
+      "defaultValue": "**",
+      "required": false,
+      "visibleRule": "downloadType == specific",
+      "helpMarkDown": "Minimatch pattern to specify files to be downloaded. The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**."
     },
     {
       "name": "downloadPath",
@@ -39,12 +112,60 @@
       "label": "Destination directory",
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
-      "helpMarkDown": "Path on the agent machine where the artifact will be downloaded"
+      "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
+    },
+    {
+      "name": "parallelizationLimit",
+      "type": "string",
+      "label": "Parallelization limit",
+      "defaultValue": "8",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "Number of files to download simultaneously"
     }
   ],
   "dataSourceBindings": [
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "project",
+      "endpointUrl": "{{endpoint.url}}/_apis/projects",
+      "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "definition",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?$top=1000",
+      "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
+      "parameters": {
+          "project": "$(project)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "buildId",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
+      "resultSelector": "jsonpath:$.value[*]",
+      "parameters": {
+          "project": "$(project)",
+          "definition": "$(definition)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{buildNumber}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "artifactName",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts",
+      "resultSelector": "jsonpath:$.value[*]",
+      "parameters": {
+          "project": "$(project)",
+          "buildId": "$(buildId)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
   ],
-  "instanceNameFormat": "Download build artifact $(artifactName)",
+  "instanceNameFormat": "Download Build Artifacts",
   "execution": {
     "Node": {
       "target": "main.js",
@@ -52,14 +173,14 @@
     }
   },
   "messages": {
-    "FileContainerCredentialsNotFound": "Could not determine credentials to connect to file container service.",
-    "FileContainerInvalidArtifact": "Invalid file container artifact",
+    "DownloadArtifacts": "Downloading artifacts from: %s",
+    "LinkedArtifactCount": "Linked artifacts count:  %s",
     "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
-    "FilePathNotSupported": "File share artifacts are not yet supported in the early preview. Coming soon.",
-    "ArtifactProviderNotFound": "Could not determine a provider to download artifact of type %s",
-    "DownloadError": "Error downloading file %s",
-    "DownloadingFile": "Downloading '%s' to '%s' (file %d of %d)",
-    "DownloadingPercentage": "Downloading... %d%% (%d of %d)",
-    "InvalidBuildId": "Invalid build id specified (%s)"
+    "UnsupportedArtifactType" :"Unsupported artifact type: %s",
+    "BuildNotFound": "Build with id %s not found",
+    "BuildArtifactNotFound": "Artifact %s not found for build %s",
+    "NoArtifactsFound": "No artifacts found for build %s",
+    "BuildIdBuildDefinitionMismatch": "Build with id %s not found for build definition id %s",
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s"
   }
 }

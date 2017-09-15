@@ -1,6 +1,6 @@
 {
   "id": "a433f589-fce1-4460-9ee6-44a624aeb1fb",
-  "name": "DownloadBuildArtifact",
+  "name": "DownloadBuildArtifacts",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -10,28 +10,101 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 57
+    "Patch": 58
   },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "demands": [],
   "inputs": [
+    {
+      "name": "buildType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.buildType",
+      "defaultValue": "current",
+      "required": true,
+      "options": {
+        "current": "Current build",
+        "specific": "Specific build"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.buildType"
+    },
+    {
+      "name": "project",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.project",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "buildType == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.project"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.definition",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "buildType == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.definition"
+    },
     {
       "name": "buildId",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.buildId",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.buildId",
-      "defaultValue": "$(Build.BuildId)",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "buildType == specific",
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.buildId"
+    },
+    {
+      "name": "downloadType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.downloadType",
+      "defaultValue": "single",
+      "required": true,
       "options": {
-        "$(Build.BuildId)": "The current build"
-      }
+        "single": "Specific artifact",
+        "specific": "Specific files"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.downloadType"
     },
     {
       "name": "artifactName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "drop",
       "required": true,
+      "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+      },
+      "visibleRule": "downloadType == single",
       "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "itemPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.itemPattern",
+      "defaultValue": "**",
+      "required": false,
+      "visibleRule": "downloadType == specific",
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {
       "name": "downloadPath",
@@ -40,9 +113,58 @@
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+    },
+    {
+      "name": "parallelizationLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.parallelizationLimit",
+      "defaultValue": "8",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallelizationLimit"
     }
   ],
-  "dataSourceBindings": [],
+  "dataSourceBindings": [
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "project",
+      "endpointUrl": "{{endpoint.url}}/_apis/projects",
+      "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "definition",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?$top=1000",
+      "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
+      "parameters": {
+        "project": "$(project)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "buildId",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
+      "resultSelector": "jsonpath:$.value[*]",
+      "parameters": {
+        "project": "$(project)",
+        "definition": "$(definition)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{buildNumber}}}\" }"
+    },
+    {
+      "endpointId": "tfs:teamfoundation",
+      "target": "artifactName",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{buildId}}/artifacts",
+      "resultSelector": "jsonpath:$.value[*]",
+      "parameters": {
+        "project": "$(project)",
+        "buildId": "$(buildId)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
@@ -51,14 +173,14 @@
     }
   },
   "messages": {
-    "FileContainerCredentialsNotFound": "ms-resource:loc.messages.FileContainerCredentialsNotFound",
-    "FileContainerInvalidArtifact": "ms-resource:loc.messages.FileContainerInvalidArtifact",
+    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
+    "LinkedArtifactCount": "ms-resource:loc.messages.LinkedArtifactCount",
     "FileContainerInvalidArtifactData": "ms-resource:loc.messages.FileContainerInvalidArtifactData",
-    "FilePathNotSupported": "ms-resource:loc.messages.FilePathNotSupported",
-    "ArtifactProviderNotFound": "ms-resource:loc.messages.ArtifactProviderNotFound",
-    "DownloadError": "ms-resource:loc.messages.DownloadError",
-    "DownloadingFile": "ms-resource:loc.messages.DownloadingFile",
-    "DownloadingPercentage": "ms-resource:loc.messages.DownloadingPercentage",
-    "InvalidBuildId": "ms-resource:loc.messages.InvalidBuildId"
+    "UnsupportedArtifactType": "ms-resource:loc.messages.UnsupportedArtifactType",
+    "BuildNotFound": "ms-resource:loc.messages.BuildNotFound",
+    "BuildArtifactNotFound": "ms-resource:loc.messages.BuildArtifactNotFound",
+    "NoArtifactsFound": "ms-resource:loc.messages.NoArtifactsFound",
+    "BuildIdBuildDefinitionMismatch": "ms-resource:loc.messages.BuildIdBuildDefinitionMismatch",
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
   }
 }
