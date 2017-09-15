@@ -17,7 +17,7 @@ var jarsigning = (fn: string) => {
             throw tl.loc('JavaHomeNotSet');
         }
 
-        jarsigner = path.join(java_home, 'bin', 'jarsigner');
+        jarsigner = tl.resolve(java_home, 'bin', 'jarsigner');
     }
 
     var jarsignerRunner = tl.tool(jarsigner);
@@ -73,7 +73,7 @@ var zipaligning = (fn: string) => {
             throw tl.loc('AndroidHomeNotSet');
         }
 
-        var zipalignToolsList = tl.findMatch(path.join(android_home, 'build-tools'), "zipalign*", null, { matchBase: true });
+        var zipalignToolsList = tl.findMatch(tl.resolve(android_home, 'build-tools'), "zipalign*", null, { matchBase: true });
 
         if (!zipalignToolsList || zipalignToolsList.length === 0) {
             throw tl.loc('CouldNotFindZipalignInAndroidHome', android_home);

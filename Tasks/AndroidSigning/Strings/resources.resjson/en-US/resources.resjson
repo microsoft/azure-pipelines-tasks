@@ -28,5 +28,5 @@
   "loc.messages.CouldNotFindZipalignInAndroidHome": "Could not find the zipalign tool inside ANDROID_HOME: %s",
   "loc.messages.JavaHomeNotSet": "The JAVA_HOME environment variable is not set for the running user.",
   "loc.messages.NoMatchingFiles": "No matching files were found with search pattern: %s",
-  "loc.messages.ErrorCleaningUpKeystoreFile": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
 }
