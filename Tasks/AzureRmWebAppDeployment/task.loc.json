@@ -171,7 +171,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.AzureContainerRegistryTag",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "properties": {
         "EditableOptions": "True"
       },

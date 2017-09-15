@@ -171,7 +171,7 @@
             "type": "pickList",
             "label": "Tag",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
