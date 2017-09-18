@@ -32,7 +32,6 @@
         "DockerCompose",
         "DotNetCoreCLI",
         "DotNetCoreInstaller",
-        "DownloadBuildArtifact",
         "ExtractFiles",
         "FtpUpload",
         "Gradle",
