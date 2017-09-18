@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 93
+    "Patch": 18
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -138,7 +138,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistry",
-      "visibleRule": "ImageSource = azureContainerRegistry"
+      "visibleRule": "ImageSource = AzureContainerRegistry"
     },
     {
       "name": "AzureContainerRegistryLoginServer",
@@ -163,7 +163,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryImage",
-      "visibleRule": "ImageSource = azureContainerRegistry"
+      "visibleRule": "ImageSource = AzureContainerRegistry"
     },
     {
       "name": "AzureContainerRegistryTag",
@@ -175,7 +175,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryTag",
-      "visibleRule": "ImageSource = azureContainerRegistry"
+      "visibleRule": "ImageSource = AzureContainerRegistry"
     },
     {
       "name": "DockerRepositoryAccess",
@@ -197,7 +197,7 @@
       "required": true,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.RegistryConnectedServiceName",
-      "visibleRule": "DockerRepositoryAccess = private || ImageSource = privateRegistry"
+      "visibleRule": "DockerRepositoryAccess = private || ImageSource = PrivateRegistry"
     },
     {
       "name": "PrivateRegistryImage",
@@ -205,7 +205,7 @@
       "label": "ms-resource:loc.input.label.PrivateRegistryImage",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "ImageSource = privateRegistry",
+      "visibleRule": "ImageSource = PrivateRegistry",
       "properties": {
         "EditableOptions": "True"
       },
@@ -217,7 +217,7 @@
       "label": "ms-resource:loc.input.label.PrivateRegistryTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "ImageSource = privateRegistry",
+      "visibleRule": "ImageSource = PrivateRegistry",
       "properties": {
         "EditableOptions": "True"
       },

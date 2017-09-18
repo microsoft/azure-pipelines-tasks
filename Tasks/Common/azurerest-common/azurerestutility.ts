@@ -22,8 +22,13 @@ var defaultWebAppAvailabilityTimeoutInMS = 3000;
  * @param   endpoint            Service Principal Name
  * @param   resourceName        Name of the resource
 */
-export async function getResourceGroupName(endpoint, resourceName: string, resourceType = "Microsoft.Web/Sites")
+export async function getResourceGroupName(endpoint, resourceName: string, resourceType)
 {
+    if(resourceType==null || resourceType==undefined)
+    {
+        resourceType = "Microsoft.Web/Sites";
+    }
+    
     var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType + '\' AND name EQ \'' + resourceName + '\'&api-version=2016-07-01';
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
