@@ -18,19 +18,18 @@
     "version": {
         "Major": 1,
         "Minor": 123,
-        "Patch": 0
+        "Patch": 6
     },
     "groups": [
+        {
+            "name":"propagatedArtifactsGroup",
+            "displayName": "Propagated Artifacts",
+            "isExpanded": true
+        },
         {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
-        },
-        {
-            "name":"azureStorage",
-            "displayName": "Azure Storage",
-            "isExpanded": true,
-            "visibleRule": "artifactProvider == azureStorage"
         }
     ],
     "instanceNameFormat": "Download artifacts produced by $(jobName)",
@@ -89,28 +88,6 @@
             }
         },
         {
-            "name": "propagatedArtifacts",
-            "type": "boolean",
-            "label": "Propagated Artifacts",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Check this if Jenkins artifacts are propagated."
-        },
-        {
-            "name": "artifactProvider",
-            "type": "pickList",
-            "label": "Artifact Provider",
-            "defaultValue": "azureStorage",
-            "required": true,
-            "options": {
-                "azureStorage":"Azure Storage"
-            },
-            "groupName": "advanced",
-            "visibleRule": "propagatedArtifacts == true",
-            "helpMarkDown": "Choose propagated artifact provider."
-        },
-        {
           "name": "itemPattern",
           "type": "string",
           "label": "Item Pattern",
@@ -152,11 +129,34 @@
             "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json"
         },
         {
+            "name": "propagatedArtifacts",
+            "type": "boolean",
+            "label": "Artifacts are propagated to Azure",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "propagatedArtifactsGroup",
+            "helpMarkDown": "Check this if Jenkins artifacts are propagated."
+        },
+        {
+            "name": "artifactProvider",
+            "type": "pickList",
+            "label": "Artifact Provider",
+            "defaultValue": "azureStorage",
+            "required": true,
+            "options": {
+                "azureStorage":"Azure Storage"
+            },
+            "groupName": "propagatedArtifactsGroup",
+            "visibleRule": "propagatedArtifacts == true",
+            "helpMarkDown": "Choose propagated artifact provider."
+        },
+        {
             "name": "ConnectedServiceNameARM",
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "required": true,
-            "groupName": "azureStorage",
+            "groupName": "propagatedArtifactsGroup",
+            "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
             "helpMarkDown": "Choose the Azure Resource Manager Endpoint from the pick list."
         },
         {
@@ -167,7 +167,8 @@
             "properties": {
                 "EditableOptions":"True"
             },
-            "groupName": "azureStorage",
+            "groupName": "propagatedArtifactsGroup",
+            "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
             "helpMarkDown": "Select the Storage account name in which the artifacts are propagated."
         },
         {
@@ -175,7 +176,8 @@
             "type": "string",
             "label": "Container Name",
             "required": true,
-            "groupName": "azureStorage",
+            "groupName": "propagatedArtifactsGroup",
+            "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
             "helpMarkDown": "Enter the container name inside Storage account where artifacts are propagated"
         },
         {
@@ -183,7 +185,8 @@
             "type": "string",
             "label": "Common Virtual Path",
             "required": false,
-            "groupName": "azureStorage",
+            "groupName": "propagatedArtifactsGroup",
+            "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
             "helpMarkDown": "Enter the container name inside Storage account where artifacts are propagated"
         }
     ],

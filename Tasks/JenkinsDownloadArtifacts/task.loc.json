@@ -18,19 +18,18 @@
   "version": {
     "Major": 1,
     "Minor": 123,
-    "Patch": 0
+    "Patch": 6
   },
   "groups": [
+    {
+      "name": "propagatedArtifactsGroup",
+      "displayName": "ms-resource:loc.group.displayName.propagatedArtifactsGroup",
+      "isExpanded": true
+    },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
-    },
-    {
-      "name": "azureStorage",
-      "displayName": "ms-resource:loc.group.displayName.azureStorage",
-      "isExpanded": true,
-      "visibleRule": "artifactProvider == azureStorage"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -89,28 +88,6 @@
       }
     },
     {
-      "name": "propagatedArtifacts",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.propagatedArtifacts",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.propagatedArtifacts"
-    },
-    {
-      "name": "artifactProvider",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.artifactProvider",
-      "defaultValue": "azureStorage",
-      "required": true,
-      "options": {
-        "azureStorage": "Azure Storage"
-      },
-      "groupName": "advanced",
-      "visibleRule": "propagatedArtifacts == true",
-      "helpMarkDown": "ms-resource:loc.input.help.artifactProvider"
-    },
-    {
       "name": "itemPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.itemPattern",
@@ -152,11 +129,34 @@
       "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
     },
     {
+      "name": "propagatedArtifacts",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.propagatedArtifacts",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "propagatedArtifactsGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.propagatedArtifacts"
+    },
+    {
+      "name": "artifactProvider",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactProvider",
+      "defaultValue": "azureStorage",
+      "required": true,
+      "options": {
+        "azureStorage": "Azure Storage"
+      },
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactProvider"
+    },
+    {
       "name": "ConnectedServiceNameARM",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "required": true,
-      "groupName": "azureStorage",
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
     },
     {
@@ -167,7 +167,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "groupName": "azureStorage",
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.storageAccountName"
     },
     {
@@ -175,7 +176,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.containerName",
       "required": true,
-      "groupName": "azureStorage",
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.containerName"
     },
     {
@@ -183,7 +185,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.commonVirtualPath",
       "required": false,
-      "groupName": "azureStorage",
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.commonVirtualPath"
     }
   ],
