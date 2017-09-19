@@ -124,8 +124,8 @@ async function doWork() {
 
         if (tl.getBoolInput('propagatedArtifacts') == true) {
             var artifactProvider = tl.getInput('artifactProvider');
-            switch (artifactProvider) {
-                case "azureStorage":
+            switch (artifactProvider.toLowerCase()) {
+                case "azurestorage":
                     new AzureStorageArtifactDownloader().downloadArtifacts(localPathRoot);
                     break;
 
