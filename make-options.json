@@ -1,5 +1,6 @@
 {
     "tasks": [
+        "AndroidBuild",
         "AndroidSigning",
         "ANT",
         "ArchiveFiles",
@@ -82,6 +83,7 @@
         "WindowsMachineFileCopy",
         "XamarinAndroid",
         "XamarinComponentRestore",
+        "XamarinLicense",
         "XamariniOS",
         "XamarinTestCloud",
         "Xcode",
