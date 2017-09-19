@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 124,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "AndroidSDK",
@@ -185,7 +185,7 @@
             "name": "jdkArchitecture",
             "type": "pickList",
             "label": "JDK Architecture",
-            "defaultValue": "x86",
+            "defaultValue": "x64",
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
             "visibleRule": "jdkVersion != default",
