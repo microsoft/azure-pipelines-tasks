@@ -203,7 +203,7 @@ export class ResourceGroup {
         }
         name = path.basename(name).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes());
+        var depName = util.format("%s-%s%s%s-%s%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes(), ts.getSeconds());
         return depName;
     }
 
