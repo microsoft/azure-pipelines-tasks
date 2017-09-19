@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 123,
+    "Minor": 124,
     "Patch": 0
   },
   "demands": [
@@ -143,6 +143,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.exportOptionsPlist",
       "groupName": "package",
       "visibleRule": "exportOptions == plist"
+    },
+    {
+      "name": "exportArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportArgs",
+      "groupName": "package"
     },
     {
       "name": "xcode8AutomaticSigning",
