@@ -479,4 +479,43 @@ describe('Xcode L0 Suite', function () {
 
         done();
     });
+
+    it('Xcode 9 automatic signing with allowProvisioningUpdates', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0Xcode9AutomaticSignWithAllowProvisioningUpdates.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        //version
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        //build
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
+            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
+            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
+            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
+            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
+            '-allowProvisioningUpdates ' +
+            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
+            'xcodebuild for building the ios project/workspace should have been run with -allowProvisioningUpdates.');
+
+        //archive
+        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
+            'archive -sdk $(SDK) -configuration $(Configuration) ' +
+            '-archivePath /user/build/testScheme ' +
+            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
+            'xcodebuild archive should have been run to create the .xcarchive.');
+        //export
+        assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
+            '-archivePath /user/build/testScheme.xcarchive ' +
+            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist ' +
+            '-allowProvisioningUpdates'),
+            'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
+
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });
