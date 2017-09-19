@@ -71,6 +71,11 @@ async function run() {
 
         var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
+        if(slotName && slotName.toLowerCase() === 'production') {
+            specifySlotFlag = false;
+            slotName = null;
+        }
+
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
         }
