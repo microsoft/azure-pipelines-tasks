@@ -464,8 +464,8 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) ' +
             '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' + 
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) ' + 
+            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
+            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) ' +
             'PROVISIONING_PROFILE=testuuid'),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
