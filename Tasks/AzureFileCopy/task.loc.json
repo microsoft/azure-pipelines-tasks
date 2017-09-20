@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 99
+    "Patch": 102
   },
   "demands": [
     "azureps"
@@ -41,7 +41,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
       "helpMarkDown": "",
-      "defaultValue": "ConnectedServiceName",
+      "defaultValue": "ConnectedServiceNameARM",
       "options": {
         "ConnectedServiceName": "Azure Classic",
         "ConnectedServiceNameARM": "Azure Resource Manager"

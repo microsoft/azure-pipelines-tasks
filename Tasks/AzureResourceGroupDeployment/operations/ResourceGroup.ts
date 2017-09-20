@@ -8,9 +8,10 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
-var parameterParser = require("./ParameterParser").parse;
+import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
+import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -139,7 +140,7 @@ export class ResourceGroup {
         await this.registerEnvironmentIfRequired(armClient);
     }
 
-    private writeDeploymentErrors(error) {
+    private writeDeploymentErrors(error): void {
         console.log(tl.loc("ErrorsInYourDeployment", error.code));
         if (error.message) {
             tl.error(error.message);
@@ -206,18 +207,17 @@ export class ResourceGroup {
         return depName;
     }
 
-    private castToType(value: string, type: string) {
-        switch (type) {
+    private castToType(value: string, type: string): any {
+        switch (type.toLowerCase()) {
             case "int":
-                return parseInt(value);
             case "object":
-                return JSON.parse(value);
             case "secureObject":
-                return JSON.parse(value);
             case "array":
-                return JSON.parse(value);
             case "bool":
-                return value === "true";
+                return JSON.parse(value);
+            case "string":
+            case "securestring":
+                return JSON.parse(`"` + value + `"`); // Adding trailing quotes for JSON parser to detect string
             default:
                 // Sending as string
                 break;
@@ -225,19 +225,20 @@ export class ResourceGroup {
         return value;
     }
 
-    private updateOverrideParameters(template: Object, parameters: Object): Object {
+    private updateOverrideParameters(template: TemplateObject, parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
         tl.debug("Overriding Parameters..");
 
-        var overrideParameters = parameterParser(this.taskParameters.overrideParameters);
-        for (var key in overrideParameters) {
-            tl.debug("Overriding key: " + key);
+        var overrideParameters: NameValuePair[] = PowerShellParameters.parse(this.taskParameters.overrideParameters, true, "\\");
+        for (var overrideParameter of overrideParameters) {
+            tl.debug("Overriding key: " + overrideParameter.name);
             try {
-                overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
+                overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {
-                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+                console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
             }
-            parameters[key] = overrideParameters[key];
-
+            parameters[overrideParameter.name] = {
+                value: overrideParameter.value
+            } as ParameterValue;
         }
         return parameters;
     }
@@ -272,7 +273,7 @@ export class ResourceGroup {
     }
 
     private getDeploymentDataForLinkedArtifact(): Deployment {
-        var template: Object;
+        var template: TemplateObject;
         var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile);
         if (fileMatches.length > 1) {
             throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
@@ -294,7 +295,7 @@ export class ResourceGroup {
             throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmFilePath));
         }
 
-        var parameters = {};
+        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
             var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmParametersFile);
             if (fileMatches.length > 1) {
@@ -309,7 +310,7 @@ export class ResourceGroup {
                 try {
                     var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
                     tl.debug("Loaded Parameters File");
-                    parameters = parameterFile["parameters"];
+                    parameters = parameterFile["parameters"] as Map<string, ParameterValue>;
                 } catch (error) {
                     throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
                 }
@@ -337,7 +338,7 @@ export class ResourceGroup {
         properties["templateLink"] = {
             uri: this.taskParameters.csmFileLink
         };
-        var parameters = {};
+        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         var deployment = new Deployment(properties);
 
         if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
@@ -401,10 +402,10 @@ export class ResourceGroup {
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
-                    if (result && result["properties"] && result["properties"]["outputs"]) {
-                        tl.command("task.setvariable", { "isOutput": "true", "variable": "DeploymentOutputs" }, JSON.stringify(result["properties"]["outputs"]));
-                        console.log(tl.loc("AddedOutputVariable"));
-                    }
+                    // if (result && result["properties"] && result["properties"]["outputs"]) {
+                    //     tl.command("task.setvariable", { "isOutput": "true", "variable": "DeploymentOutputs" }, JSON.stringify(result["properties"]["outputs"]));
+                    //     console.log(tl.loc("AddedOutputVariable"));
+                    // }
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });

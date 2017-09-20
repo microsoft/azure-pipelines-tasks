@@ -264,7 +264,7 @@ export class publicIPAddresses {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -322,7 +322,7 @@ export class networkSecurityGroups {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }
@@ -377,7 +377,7 @@ export class NetworkInterfaces {
                     if (nextResult.error) {
                         return new azureServiceClient.ApiResult(nextResult.error);
                     }
-                    result = result.concat(nextResult);
+                    result = result.concat(nextResult.result);
                 }
                 return new azureServiceClient.ApiResult(null, result);
             }

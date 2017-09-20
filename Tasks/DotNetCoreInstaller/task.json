@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 5
     },
     "preview": true,
     "satisfies": ["DotNetCore"],
@@ -23,7 +23,7 @@
             "name": "packageType",
             "type": "pickList",
             "label": "Package to install",
-            "defaultValue": "runtime",
+            "defaultValue": "sdk",
             "required": true,
             "helpMarkDown": "Please select whether to install only runtime or full SDK.",
             "options": {

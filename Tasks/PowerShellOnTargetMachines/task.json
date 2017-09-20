@@ -11,10 +11,11 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 47
+        "Patch": 0
     },
+    "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
     "minimumAgentVersion": "1.104.0",
     "groups": [
         {
@@ -147,10 +148,17 @@
     ],
     "instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\PowerShellOnTargetMachines.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "PowerShell3": {
+            "target": "PowerShellOnTargetMachines.ps1"
         }
+    },
+    "messages": {
+        "PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
+        "PS_TM_DeploymentStartedForMachine0": "Deployment started for machine: '{0}'",
+        "PS_TM_DeploymentStatusForMachine01": "Deployment status for machine '{0}' : '{1}'",
+        "PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Deployment failed on machine '{0}' with following message : '{1}'",
+        "PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'",
+        "PS_TM_0PortWasNotProvidedForResource1": "{0} port was not provided for resource '{1}'",
+        "PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Deployment on one or more machines failed."
     }
 }

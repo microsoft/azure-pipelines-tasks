@@ -162,7 +162,7 @@ describe('Publish Build Artifacts Suite', function () {
 
 			tr.run()
 			.then(() => {
-				assert(tr.stderr.match(/Cannot publish artifacts from an OSX or Linux agent to a file share/), 'should have written error message');
+				assert(tr.stderr.match(/Publishing artifacts from a Linux or macOS agent to a file share is not supported/), 'should have written error message');
 				assert(tr.failed, 'task should have succeeded');
 				assert(tr.stdout.indexOf('##vso[artifact.associate') < 0, 'should not associate artifact.');
 				done();

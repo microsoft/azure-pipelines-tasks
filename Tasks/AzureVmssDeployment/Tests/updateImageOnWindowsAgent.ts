@@ -8,11 +8,14 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("action", "Update image");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : (process.env["_vmssOsType_"] === "Linux" ? "testvmss2" : "testvmss1"));
+tr.setInput("vmssOsType", process.env["_vmssOsType_"] === "Linux" ? "Linux" : "Windows");
 tr.setInput("imageUrl", process.env["imageUrlAlreadyUptoDate"] === "true" ? "http://old-url" : "https://someurl");
-if(!(process.env["customScriptNotSpecified"] === "true")) {
-    tr.setInput("customScriptsPath", "C:\\some\\dir");
-    tr.setInput("customScriptCommand", process.env["_vmssOsType_"] === "Linux" ? "./file.sh args" : "powershell .\\file.ps1 args");
+if (!(process.env["customScriptNotSpecified"] === "true")) {
+    tr.setInput("customScriptsDirectory", "C:\\some\\dir with'quote");
+    tr.setInput("customScript", process.env["_vmssOsType_"] === "Linux" ? "set V'a`r$.sh" : "de$p`l o'y.ps1");
+    tr.setInput("customScriptArguments", "\"first 'arg'\" seco`nd$arg");
     tr.setInput("customScriptsStorageAccount", "teststorage1");
+    tr.setInput("skipArchivingCustomScripts", process.env["_doNotArchive_"] === "true" ? "true" : "false");
 }
 
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
@@ -26,6 +29,7 @@ process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
 process.env["RELEASE_RELEASEID"] = "100";
+process.env["RELEASE_ENVIRONMENTID"] = "200";
 process.env["RELEASE_ATTEMPTNUMBER"] = "5";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -48,14 +52,14 @@ os.tmpdir = function tmpdir() {
     return "C:\\users\\temp";
 }
 
-Date.now = function(): number {
+Date.now = function (): number {
     return 12345;
 }
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('azure-arm-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 tr.registerMock('azure-arm-rest/azure-arm-storage', require('./mock_node_modules/azure-arm-storage'));
-tr.registerMock('../blobservice', require('./mock_node_modules/blobservice'));
+tr.registerMock('azure-blobstorage-artifactProvider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('utility-common/compressutility', require('./mock_node_modules/compressutility'));
 
 tr.run();

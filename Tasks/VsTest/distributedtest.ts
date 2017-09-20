@@ -87,7 +87,7 @@ export class DistributedTest {
         }
 
         // If we are setting the path version is not needed
-        const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetais.vstestExeLocation);
+        const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetails.vstestExeLocation);
         tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
 
         // Split the TestWindow path out of full path - if we can't find it, will assume
@@ -117,7 +117,7 @@ export class DistributedTest {
             // and writes info to stdout directly
             const lines = c.toString().split('\n');
             lines.forEach(function (line: string) {
-                if (line.length === 0) {
+                if (line.trim().length === 0) {
                     return;
                 }
                 if (line.startsWith('Web method')) {
@@ -197,7 +197,7 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                null, false, this.dtaTestConfig.overrideTestrunParameters, true);
+                    this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {

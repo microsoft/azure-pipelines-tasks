@@ -3,7 +3,7 @@ import * as nutil from "nuget-task-common/Utility";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as path from "path";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import * as packUtils from "./Common/NuGetPackUtilities";
+import * as packUtils from "nuget-task-common/PackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 
 class PackOptions implements INuGetCommandOptions {

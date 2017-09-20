@@ -2,7 +2,7 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure Web App Services, Web App On Linux , Function Apps, Mobile Apps using Web Deploy / Kudu REST APIs",
+    "description": "Update Azure WebApp Services On Windows, Web App On Linux with built-in images or docker containers, ASP.NET, .NET Core, PHP, Python or Node based Web applications, Function Apps, Mobile Apps, Api applications, Web Jobs using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 14
+        "Patch": 17
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -25,19 +25,19 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp"
+            "visibleRule": "WebAppKind != \"\""
         },
         {
             "name": "ApplicationSettings",
@@ -85,7 +85,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp || WebAppKind = applinux"
+            "visibleRule": "WebAppKind != \"\""
         },
         {
             "name": "ResourceGroupName",
@@ -112,12 +112,25 @@
             "visibleRule": "DeployToSlotFlag = true"
         },
         {
+            "name": "ImageSource",
+            "type": "pickList",
+            "label": "Image Source",
+            "defaultValue": "Registry",
+            "required": false,
+            "options": {
+                "Registry": "Container Registry",
+                "Builtin": "Built-in Image"
+            },
+            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
+            "visibleRule": "WebAppKind = applinux"
+        },
+        {
             "name": "DockerNamespace",
             "type": "string",
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux",
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -126,7 +139,7 @@
             "label": "Repository",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux",
+            "visibleRule": "WebAppKind = applinux && ImageSource = Registry",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -135,8 +148,60 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux",
+            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
+        },
+        {
+            "name": "VirtualApplication",
+            "type": "string",
+            "label": "Virtual application",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
+            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
+        },
+        {
+            "name": "Package",
+            "type": "filePath",
+            "label": "Package or folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+            "required": true,
+            "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
+            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+        },
+        {
+            "name": "BuiltinLinuxPackage",
+            "type": "filePath",
+            "label": "Package or folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+            "required": true,
+            "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
+            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+        },
+        {
+            "name": "RuntimeStack",
+            "type": "pickList",
+            "label": "Runtime Stack",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "node|4.4": "Node.js 4.4",
+                "node|4.5": "Node.js 4.5",
+                "node|6.2": "Node.js 6.2",
+                "node|6.6": "Node.js 6.6",
+                "node|6.9": "Node.js 6.9",
+                "node|6.10": "Node.js 6.10",
+                "node|6.11": "Node.js 6.11",
+                "node|8.0": "Node.js 8.0",
+                "node|8.1": "Node.js 8.1",
+                "php|5.6": "PHP 5.6",
+                "php|7.0": "PHP 7.0",
+                "dotnetcore|1.0": ".Net Core 1.0",
+                "dotnetcore|1.1": ".Net Core 1.1",
+                "ruby|2.3": "Ruby 2.3"
+            },
+            "helpMarkDown": "Select the framework and version.",
+            "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
         },
         {
             "name": "StartupCommand",
@@ -146,24 +211,6 @@
             "required": false,
             "visibleRule": "WebAppKind = applinux",
             "helpMarkDown": "Enter the start up command."
-        },
-        {
-            "name": "VirtualApplication",
-            "type": "string",
-            "label": "Virtual application",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
-            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
-        },
-        {
-            "name": "Package",
-            "type": "filePath",
-            "label": "Package or folder",
-            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-            "required": true,
-            "visibleRule": "WebAppKind = app || WebAppKind = functionapp",
-            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
             "name": "WebAppUri",
@@ -464,6 +511,10 @@
         "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
         "UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "Successfully updated the Runtime Stack and Startup Command.",
+        "FailedToUpdateRuntimeStackAndStartupCommand": "Failed to update the Runtime Stack and Startup Command. Error: %s.",
+        "SuccessfullyUpdatedWebAppSettings": "Successfully updated the App settings.",
+        "FailedToUpdateAppSettingsInConfigDetails": "Failed to update the App settings. Error: %s."
     }
 }

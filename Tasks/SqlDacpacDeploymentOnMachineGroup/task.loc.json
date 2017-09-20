@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
@@ -51,6 +51,33 @@
       "visibleRule": "TaskType = sqlQuery",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlFile"
+    },
+    {
+      "name": "ExecuteInTransaction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExecuteInTransaction",
+      "required": false,
+      "visibleRule": "TaskType = sqlQuery",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ExecuteInTransaction"
+    },
+    {
+      "name": "ExclusiveLock",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExclusiveLock",
+      "required": false,
+      "visibleRule": "ExecuteInTransaction = true",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ExclusiveLock"
+    },
+    {
+      "name": "AppLockName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppLockName",
+      "required": true,
+      "visibleRule": "ExclusiveLock = true",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AppLockName"
     },
     {
       "name": "InlineSql",

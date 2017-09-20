@@ -22,7 +22,13 @@ $runDuration,
 $machineType
 )
 
-$userAgent = "ApacheJmeterTestBuildTask"
+#Set the userAgent appropriately based on whether the task is running as part of a ci or cd
+if($Env:SYSTEM_HOSTTYPE -ieq "build") {
+    $userAgent = "ApacheJmeterTestBuildTask"
+}
+else {
+    $userAgent = "ApacheJmeterTestReleaseTask"
+}
 $global:RestTimeout = 60
 $global:apiVersion = "api-version=1.0"
 

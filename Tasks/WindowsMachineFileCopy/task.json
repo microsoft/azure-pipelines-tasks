@@ -11,10 +11,11 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 41
+        "Patch": 0
     },
+    "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
     "minimumAgentVersion": "1.104.0",
     "groups": [
         {
@@ -33,7 +34,7 @@
             "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber."
         },
         {
-            "name": "EnvironmentName",
+            "name": "MachineNames",
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
@@ -90,35 +91,24 @@
             "groupName": "advanced",
             "defaultValue": "",
             "helpMarkDown": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l."
-        },
-        {
-            "name": "ResourceFilteringMethod",
-            "type": "radio",
-            "label": "Select Machines By",
-            "required": false,
-            "defaultValue": "machineNames",
-            "groupName": "advanced",
-            "options": {
-                "machineNames": "Machine Names",
-                "tags": "Tags"
-            }
-        },
-        {
-            "name": "MachineNames",
-            "type": "string",
-            "label": "Filter Criteria",
-            "defaultValue": "",
-            "groupName": "advanced",
-            "required": false,
-            "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
         }
     ],
     "instanceNameFormat": "Copy files from $(SourcePath)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "PowerShell3": {
+            "target": "WindowsMachineFileCopy.ps1"
         }
+    },
+    "messages": {
+        "WFC_ParameterCannotBeNullorEmpty": "Parameter '{0}' cannot be null or empty.",
+        "WFC_FailedToConnectToPathWithUser": "Failed to connect to the path {0} with the user {1} for copying.",
+        "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "Copying failed. Consult the robocopy logs for more details.",
+        "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Copying recursively from {0} to {1} on machine {2} succeeded.",
+        "WFC_SourcePathDoesNotExist": "Source path '{0}' does not exist.",
+        "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Remote destination path '{0}' cannot contain environment variables.",
+        "WFC_CopyStartedFor0": "Copy started for - {0}",
+        "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
+        "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
+        "WFC_CopyingFailedForResource": "Copying failed for resource : {0}"
     }
 }

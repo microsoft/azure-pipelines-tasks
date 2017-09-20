@@ -2,7 +2,7 @@
     "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7C5D",
     "name": "NuGetToolInstaller",
     "friendlyName": "NuGet Tool Installer",
-    "description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet Restore and NuGet Command steps.",
+    "description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet steps.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
     "category": "Tool",
     "runsOn": [
@@ -14,9 +14,9 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 3
     },
-    "preview": true,
+    "preview": false,
     "satisfies": ["NuGet"],
     "demands": [],
     "instanceNameFormat": "Use NuGet $(versionSpec)",
@@ -24,7 +24,7 @@
         "name": "versionSpec",
         "type": "string",
         "label": "Version of NuGet.exe to install",
-        "defaultValue": "4.0.0",
+        "defaultValue": "4.3.0",
         "required": true,
         "helpMarkDown": "A version or version range that specifies the NuGet version to make available on the path. Use x as a wildcard. See the [list of available NuGet versions](http://dist.nuget.org/tools.json).\n\nIf you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0"
         },

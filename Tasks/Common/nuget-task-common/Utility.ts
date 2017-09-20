@@ -46,7 +46,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
     // Fail if no matching files were found
     if (!allowEmptyMatch && (!result || result.size === 0)) {
-        throw new Error("No matching files were found with search pattern: " + filterSpec);
+        throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", filterSpec));
     }
 
     return Array.from(result);
@@ -123,7 +123,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length === 0)) {
-            throw new Error("No matching files were found with search pattern: " + pattern);
+            throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", pattern));
         }
     }
 
@@ -219,7 +219,31 @@ export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string
     let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
     let coreApi = vssConnection.getCoreApi();
 
-    let data = await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
-
+    let data = await Retry(async () => {
+        return await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+    }, 4, 100);
     return data.requestUrl;
 }
+
+// This should be replaced when retry is implemented in vso client.
+async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+    try {
+        return await cb();
+    } catch(exception) {
+        tl.debug(JSON.stringify(exception));
+        if(max_retry > 0)
+        {
+            tl.debug("Waiting " + retry_delay + "ms...");
+            await delay(retry_delay);
+            tl.debug("Retrying...");
+            return await Retry<T>(cb, max_retry-1, retry_delay*2);
+        } else {
+            throw exception;
+        }
+    }
+}
+function delay(delayMs:number) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, delayMs);
+    });
+ }

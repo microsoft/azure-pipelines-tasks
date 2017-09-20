@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",
@@ -50,7 +50,34 @@
             "required": true,
             "visibleRule": "TaskType = sqlQuery",
             "defaultValue": "",
-            "helpMarkDown": "Location of the SQL file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.sql` for sql file present in all sub folders."
+            "helpMarkDown": "Location of the SQL file on the target. Provide semi-colon separated list of SQL script files to execute multiple files. The SQL scripts will be executed in the order given. Location can also be a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.sql` for sql file present in all sub folders."
+        },
+        {
+            "name": "ExecuteInTransaction",
+            "type": "boolean",
+            "label": "Execute within a transaction",
+            "required": false,
+            "visibleRule": "TaskType = sqlQuery",
+            "defaultValue": "false",
+            "helpMarkDown": "Executes SQL script(s) within a transaction"
+        },
+        {
+            "name": "ExclusiveLock",
+            "type": "boolean",
+            "label": "Acquire exclusive app lock while executing scripts",
+            "required": false,
+            "visibleRule": "ExecuteInTransaction = true",
+            "defaultValue": "false",
+            "helpMarkDown": "Executes SQL script(s) within a transaction"
+        },
+        {
+            "name": "AppLockName",
+            "type": "string",
+            "label": "App lock name",
+            "required": true,
+            "visibleRule": "ExclusiveLock = true",
+            "defaultValue": "",
+            "helpMarkDown": "App lock name"
         },
         {
             "name": "InlineSql",

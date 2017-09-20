@@ -258,6 +258,7 @@ describe('General Suite', function () {
 
         var supportedServerExecutionHandlers: string[] = [
             'RM:ManualIntervention', 
+            'Delay',
             'ServiceBus',
             'HttpRequest'];
 

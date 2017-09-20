@@ -21,7 +21,13 @@ $ThresholdLimit,
 $MachineType
 )
 
-$global:userAgent = "CloudLoadTestBuildTask"
+#Set the userAgent appropriately based on whether the task is running as part of a ci or cd
+if($Env:SYSTEM_HOSTTYPE -ieq "build") {
+    $userAgent = "CloudLoadTestBuildTask"
+}
+else {
+    $userAgent = "CloudLoadTestReleaseTask"
+}
 $global:apiVersion = "api-version=1.0"
 $global:ScopedTestDrop = $TestDrop
 $global:RunTestSettingsFile = $TestSettings

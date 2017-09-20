@@ -2,20 +2,20 @@
      "externals": {
          "archivePackages": [
             {
-                "url": "https://testexecution.blob.core.windows.net/testplatformdeployment/4071087/TestPlatform.Deployment.zip",
+                "url": "https://testexecution.blob.core.windows.net/testplatformdeployment/4183987/TestPlatform.Deployment.zip",
                 "dest": "./"
             }
         ],
         "files": [
-            {          
-                "url": "https://testexecution.blob.core.windows.net/testexecution/4071087/TestExecution.zip",
+            {
+                "url": "https://testexecution.blob.core.windows.net/testexecution/4182894/TestExecution.zip",
                 "dest": "./TestExecution.zip"
             }
         ],
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.7.1",
+                "version": "0.8.2",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
@@ -33,4 +33,4 @@
             }
         ]
     }
-} 
+}

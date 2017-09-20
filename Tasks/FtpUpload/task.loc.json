@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 116,
+    "Minor": 123,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -112,6 +112,16 @@
       "groupName": "advanced"
     },
     {
+      "name": "cleanContents",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanContents",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanContents",
+      "groupName": "advanced",
+      "visibleRule": "clean = false"
+    },
+    {
       "name": "overwrite",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.overwrite",
@@ -147,6 +157,8 @@
   },
   "messages": {
     "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
+    "CleanRemoteDirContents": "ms-resource:loc.messages.CleanRemoteDirContents",
+    "CleanFileDeleteFail": "ms-resource:loc.messages.CleanFileDeleteFail",
     "ConnectPort": "ms-resource:loc.messages.ConnectPort",
     "Disconnected": "ms-resource:loc.messages.Disconnected",
     "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",

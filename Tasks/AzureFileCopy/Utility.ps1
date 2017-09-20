@@ -1,6 +1,7 @@
 # Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
 
 $ErrorActionPreference = 'Stop'
+$azureStackEnvironment = "AzureStack"
 
 function Get-DeploymentModulePath
 {
@@ -744,9 +745,34 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$azureRMVMsDetails = @{}
     $debugLogsFlag= $env:system_debug
 
+    # Getting endpoint used for the task
+    if($connectedServiceName)
+    {
+        $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+    }
+    
+    $isAzureStackEnvironment = $false
+    if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
+        $environmentName = $Endpoint.Data.Environment
+        if($environmentName -eq $azureStackEnvironment)
+        {
+            $isAzureStackEnvironment = $true
+        }
+    }
+
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        
+        if($isAzureStackEnvironment) 
+        {
+            Write-Verbose "Fetching resource group resources details for Azure Stack environment."
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
+        }
+        else 
+        {
+            Write-Verbose "Fetching resource group resources details for Azure/National cloud environments."
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        }
 
         $networkInterfaceResources = $azureRGResourcesDetails["networkInterfaceResources"]
         $publicIPAddressResources = $azureRGResourcesDetails["publicIPAddressResources"]

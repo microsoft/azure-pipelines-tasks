@@ -7,10 +7,10 @@ import fs = require('fs');
 
 describe('AzureRmWebAppDeployment Suite', function() {
      before((done) => {
-        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), '-f', false);
+        tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), '-f', false);
         done();
     });
     after(function() {
@@ -533,4 +533,21 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
+    it('Runs successfully for Builtin Images', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0LinuxBuiltinImage.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        
+        var expectedOut = 'Successfully updated web app config details'; 
+        assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.search(expectedOut) > 1, 'should have said: ' + expectedOut + 'twice.');
+        expectedOut = 'Deployed using KuduDeploy';
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        expectedOut = 'Updated history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        done();
+    });
 });
