@@ -5,11 +5,22 @@ import Q = require('q');
 import querystring = require('querystring');
 import * as hm from "typed-rest-client/HttpClient";
 import * as rm from "typed-rest-client/RestClient";
+import httpInterfaces = require("typed-rest-client/Interfaces");
 
 var kuduDeploymentStatusUtility = require('./kududeploymentstatusutility.js');
 
-let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+    proxy: { 
+        proxyUrl: proxyUrl, 
+        proxyUsername: tl.getVariable("agent.proxyusername"), 
+        proxyPassword: tl.getVariable("agent.proxypassword"), 
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
+    } 
+} : null; 
+
+let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
+let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
 
 var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = 'api-version=2016-08-01';

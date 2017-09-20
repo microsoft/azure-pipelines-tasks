@@ -3,7 +3,19 @@ var parseString = require('xml2js').parseString;
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import * as rm from "typed-rest-client/RestClient";
-let rc: rm.RestClient = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+import httpInterfaces = require("typed-rest-client/Interfaces");
+
+let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+    proxy: { 
+        proxyUrl: proxyUrl, 
+        proxyUsername: tl.getVariable("agent.proxyusername"), 
+        proxyPassword: tl.getVariable("agent.proxypassword"), 
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
+    } 
+} : null; 
+
+let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
 
 var azureStackEnvironment = "AzureStack";
 var defaultAuthorityUrl = "https://login.windows.net/";

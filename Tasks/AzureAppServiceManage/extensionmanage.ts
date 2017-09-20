@@ -1,8 +1,19 @@
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
-import httpClient = require('vso-node-api/HttpClient');
+import * as rm from "typed-rest-client/RestClient";
+import httpInterfaces = require("typed-rest-client/Interfaces");
 
-var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+    proxy: { 
+        proxyUrl: proxyUrl, 
+        proxyUsername: tl.getVariable("agent.proxyusername"), 
+        proxyPassword: tl.getVariable("agent.proxypassword"), 
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
+    } 
+} : null; 
+
+let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
 
 export async function getInstalledExtensions(publishingProfile) {
     var defer = Q.defer();
@@ -14,24 +25,25 @@ export async function getInstalledExtensions(publishingProfile) {
     };
     var installedExtensionsList = {};
     tl.debug('Request to retrieve list of extensions already available in Azure App Service: ' + kuduPhysicalpathUrl);
-    httpObj.get('GET', kuduPhysicalpathUrl, headers, (error, response, body) => {
-        if(error) {
-            console.log(body);
-            defer.reject(tl.loc('ExtensionListFailedError', error.toString()));
-        }
-        else if(response.statusCode === 200) {
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.get(kuduPhysicalpathUrl, options);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
             tl.debug('Retrieved list of extensions already available in Azure App Service.');
-            var extensionsList = JSON.parse(body);
+            var extensionsList = response.result;
             for(var extension of extensionsList) {
                 tl.debug('* ' + extension['id']);
                 installedExtensionsList[extension['id']] = extension;
             }
             defer.resolve(installedExtensionsList);
-        }
-        else {
-            console.log(body);
+        } else {
+            console.log(JSON.stringify(response));
             defer.reject(tl.loc('ExtensionListFailedResponseError', response.statusCode, response.statusMessage));
         }
+    },
+    (error) => {
+        defer.reject(error);
     });
     return defer.promise;
 }
@@ -46,21 +58,22 @@ export async function installExtension(publishingProfile, extension: string) {
     };
     tl.debug('Requesting to install extension: ' + extension + ' using api: ' + kuduPhysicalpathUrl);
     console.log(tl.loc('InstallingSiteExtension', extension));
-    httpObj.get('PUT', kuduPhysicalpathUrl, headers, (error, response, body) => {
-        if(error) {
-            defer.reject(tl.loc('ExtensionInstallFailedError', extension, error.toString()));
-        }
-        else if(response.statusCode === 200) {
-            tl.debug(body);
-            var responseBody = JSON.parse(body);
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.replace(kuduPhysicalpathUrl, options);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
+            tl.debug(JSON.stringify(response));
+            var responseBody = response.result;
             console.log(tl.loc('ExtensionInstallSuccess', responseBody['title']));
             defer.resolve(responseBody);
-        }
-        else {
-            console.log(body);
+        } else {
+            console.log(JSON.stringify(response));
             defer.reject(tl.loc('ExtensionInstallFailedResponseError', extension, response.statusCode, response.statusMessage));
         }
-
+    },
+    (error) => {
+        defer.reject(tl.loc('ExtensionInstallFailedError', extension, error.toString()));
     });
     return defer.promise;
 }
