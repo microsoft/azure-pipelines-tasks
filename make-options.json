@@ -26,7 +26,6 @@
         "DeployVisualStudioTestAgent",
         "Docker",
         "DockerCompose",
-        "DownloadBuildArtifact",
         "ExtractFiles",
         "FtpUpload",
         "Gradle",
