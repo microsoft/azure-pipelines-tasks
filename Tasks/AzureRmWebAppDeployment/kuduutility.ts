@@ -2,8 +2,23 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
-import httpClient = require('vso-node-api/HttpClient');
-var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+//import httpClient = require('vso-node-api/HttpClient');
+import * as rm from "typed-rest-client/RestClient";
+import httpInterfaces = require("typed-rest-client/Interfaces");
+//var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+
+let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+    proxy: { 
+        proxyUrl: proxyUrl, 
+        proxyUsername: tl.getVariable("agent.proxyusername"), 
+        proxyPassword: tl.getVariable("agent.proxypassword"), 
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
+    } 
+} : null; 
+
+let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
+
 var fileEncoding = require('webdeployment-common/fileencoding.js');
 var azureUtility = require('azurerest-common/utility.js');
 
@@ -67,6 +82,34 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     }
     console.log(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var webAppReadStream = fs.createReadStream(webAppPackage);
+
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.uploadStream('PUT', kuduDeploymentURL, webAppReadStream, options);
+    promise.then(async (response) => {
+        if(response.statusCode === 200) {
+            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+            if(takeAppOfflineFlag) {
+                tl.debug('Trying to disable app offline mode.');
+                try {
+                    await appOfflineKuduService(publishingProfile, physicalPath, false);
+                    tl.debug('App Offline mode disabled.');
+                }
+                catch(error) {
+                    deferred.reject(error);
+                } 
+            }
+             deferred.resolve(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode, response.statusMessage));
+        }
+    },
+    (error) => {
+        deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
+    });
+/*
     httpObj.sendStream('PUT', kuduDeploymentURL, webAppReadStream, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
@@ -89,7 +132,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
             tl.error(response.statusMessage);
             deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode, response.statusMessage));
         }
-    });
+    });*/
     return deferred.promise;
 }
 
@@ -103,8 +146,26 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
         'If-Match': "*"
     };
     tl.debug("Requested URL for kudu physical path : " + kuduPhysicalpathUrl);
-
-    httpObj.send('GET', kuduPhysicalpathUrl, null, headers, async (error, response, body) => {
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.get(kuduPhysicalpathUrl, options);
+    promise.then(async (response) => {
+        if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
+            tl.debug("Physical path '" + physicalPath + "' already exists ");
+            defer.resolve(tl.loc('Physicalpathalreadyexists'));
+        }
+        else if(response.statusCode === 404) {
+            tl.debug("Physical path doesn't exists. Creating physical path.")
+            defer.resolve(await createPhysicalPath(publishingProfile, physicalPath));
+        } else {
+            tl.debug(JSON.stringify(response));
+            defer.reject(tl.loc('FailedtocheckphysicalPath', response.statusCode, response.statusMessage));
+        }
+    },
+    (error) => {
+        defer.reject(error);
+    });
+    /*httpObj.send('GET', kuduPhysicalpathUrl, null, headers, async (error, response, body) => {
         if (error) {
             defer.reject(error);
         }
@@ -119,7 +180,7 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
             tl.debug(body);
             defer.reject(tl.loc('FailedtocheckphysicalPath', response.statusCode, response.statusMessage));
         }
-    });
+    });*/
     return defer.promise;
 }
 
