@@ -3,7 +3,7 @@ import * as nuGetGetter from "nuget-task-common/NuGetToolGetter";
 import * as nutil from "nuget-task-common/Utility";
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import * as utility from './Common/utility';
+import * as utility from "nuget-task-common/PackUtilities";
 
 import { IExecOptions } from "vsts-task-lib/toolrunner";
 
@@ -38,7 +38,7 @@ export async function run(): Promise<void> {
             case "byPrereleaseNumber":
                 tl.debug(`Getting prerelease number`);
 
-                let nowUtcString = utility.getUtcDateString();
+                let nowUtcString = utility.getUtcDateString(new Date());
                 version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowUtcString}`;
                 break;
             case "byEnvVar":
