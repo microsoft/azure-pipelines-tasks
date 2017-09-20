@@ -140,7 +140,7 @@
       "name": "selectOrConfig",
       "type": "radio",
       "label": "ms-resource:loc.input.label.selectOrConfig",
-      "defaultValue": "config",
+      "defaultValue": "select",
       "helpMarkDown": "ms-resource:loc.input.help.selectOrConfig",
       "required": "true",
       "options": {
