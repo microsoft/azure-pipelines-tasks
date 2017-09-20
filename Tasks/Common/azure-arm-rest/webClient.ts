@@ -42,7 +42,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
 
     while (true) {
         try {
-            return await sendReqeustInternal(request);
+            return await sendRequestInternal(request);
         }
         catch (error) {
             if (retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
@@ -56,7 +56,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     }
 }
 
-async function sendReqeustInternal(request: WebRequest): Promise<WebResponse> {
+async function sendRequestInternal(request: WebRequest): Promise<WebResponse> {
     tl.debug(util.format("[%s]%s", request.method, request.uri));
     var response: httpClient.HttpClientResponse = await httpCallbackClient.request(request.method, request.uri, request.body, request.headers);
     return await toWebResponse(response);
