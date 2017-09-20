@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 3,
-        "Patch": 17
+        "Minor": 4,
+        "Patch": 0
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -439,7 +439,7 @@
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "Unabletoretrievewebconfigdetails": "Unable to retrieve App Service configuration details.[Status Code: '%s', Error Message: '%s']",
         "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
-        "Unabletoupdatewebappsettings": "Unable to update App service application settings. [Status Code: '%s', Error Message: '%s']",
+        "Unabletoupdatewebappsettings": "Unable to update App service application settings. Status Code: '%s'",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "PackageDeploymentSuccess": "Successfully deployed web package to App Service.",
         "PackageDeploymentFailed": "Failed to deploy web package to App Service.",
