@@ -154,14 +154,16 @@ if ($drop.dropType -eq "InPlaceDrop")
 	{
 		$thresholdMessage=("{0} thresholds violated." -f $thresholdViolationsCount)
 		$thresholdImage="bowtie-status-error"
+        $thresholdImageLabel="Error"
 	}
 	else
 	{
 		$thresholdMessage="No thresholds violated."
 		$thresholdImage="bowtie-status-success"
+        $thresholdImageLabel="Success"
 	}
 	$summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
-	$summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name, $thresholdImage, $thresholdMessage)
+	$summary = ('<span class="bowtie-icon {3}" role="img" aria-label="{5}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name, $thresholdImage, $thresholdMessage, $thresholdImageLabel)
 
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
 	UploadSummaryMdReport $summaryFile
