@@ -1,6 +1,6 @@
 {
     "name": "vsts-tasks-dotnetcoreexe",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "description": "Dotnet core exe",
     "main": "dotnetcore.js",
     "scripts": {
