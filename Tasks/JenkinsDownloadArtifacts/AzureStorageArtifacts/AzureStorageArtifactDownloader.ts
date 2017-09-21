@@ -3,7 +3,6 @@ import * as  tl from 'vsts-task-lib/task';
 import msRestAzure = require("azure-arm-rest/azure-arm-common");
 import Model = require("azure-arm-rest/azureModels");
 import armStorage = require('azure-arm-rest/azure-arm-storage');
-//import StorageAccounts = require('azure-arm-rest/azure-arm-storage/StorageAccounts')
 import BlobService = require('azure-blobstorage-artifactProvider/blobservice');
 
 export class AzureStorageArtifactDownloader {
@@ -45,7 +44,6 @@ export class AzureStorageArtifactDownloader {
 
     return <StorageAccountInfo>{
       name: storageAccountName,
-      primaryBlobUrl: storageAccount.properties.primaryEndpoints.blob,
       resourceGroupName: storageAccountResourceGroupName,
       primaryAccessKey: accessKeys[0]
     }
@@ -68,6 +66,5 @@ export class AzureStorageArtifactDownloader {
 interface StorageAccountInfo {
   name: string;
   resourceGroupName: string;
-  primaryBlobUrl: string;
   primaryAccessKey: string;
 }
