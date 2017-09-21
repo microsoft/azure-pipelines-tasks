@@ -1,7 +1,7 @@
 {
     "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
     "name": "AzureVmssDeployment",
-    "friendlyName": "Azure VM scale set Deployment (PREVIEW)",
+    "friendlyName": "Azure VM scale set Deployment",
     "description": "Deploy Virtual Machine scale set image",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
     "category": "Deploy",
