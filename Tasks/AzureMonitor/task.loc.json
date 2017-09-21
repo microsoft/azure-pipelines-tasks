@@ -1,10 +1,10 @@
 {
 	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
 	"name": "AzureMonitor",
-	"friendlyName": "Azure Monitor",
-	"description": "Observe the configured Azure monitor rules for active alerts.",
+	"friendlyName": "ms-resource:loc.friendlyName",
+	"description": "ms-resource:loc.description",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+	"helpMarkDown": "ms-resource:loc.helpMarkDown",
 	"category": "Tool",
 	"visibility": [
 		"Release"
@@ -17,22 +17,22 @@
 		"Minor": 0,
 		"Patch": 1
 	},
+	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
 	"preview": "true",
-	"instanceNameFormat": "Azure Monitor",
 	"groups": [],
 	"inputs": [{
 			"name": "connectedServiceNameARM",
 			"type": "connectedService:AzureRM",
-			"label": "Azure subscription",
+			"label": "ms-resource:loc.input.label.connectedServiceNameARM",
 			"defaultValue": "",
 			"required": "true",
-			"helpMarkDown": "Select an Azure resource manager subscription for monitoring the alerts."
+			"helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
 		}, {
 			"name": "resourceGroupName",
 			"type": "pickList",
-			"label": "Resource group",
+			"label": "ms-resource:loc.input.label.resourceGroupName",
 			"required": true,
-			"helpMarkDown": "Provide the name of a resource group.",
+			"helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
 			"properties": {
 				"EditableOptions": "True"
 			}
@@ -40,13 +40,13 @@
 		{
 			"name": "alertRules",
 			"type": "pickList",
-			"label": "Alert Rules",
+			"label": "ms-resource:loc.input.label.alertRules",
 			"defaultValue": "",
 			"required": true,
 			"properties": {
 				"MultiSelectFlatList": "True"
 			},
-			"helpMarkDown": "Select alerts for monitoring."
+			"helpMarkDown": "ms-resource:loc.input.help.alertRules"
 		}
 	],
 	"dataSourceBindings": [{
@@ -68,7 +68,7 @@
 				"EndpointId": "$(connectedServiceNameARM)",
 				"EndpointUrl": "$(endpoint.url)batch?api-version=2015-11-01",
 				"Method": "POST",
-				"Body": "{\"requests\":[{{#splitString , alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourceGroups/{{#..}}{{resourceGroupName}}{{/..}}/providers/microsoft.insights/alertrules/{{this}}/incidents?api-version=2016-03-01\"},{{/splitString}}]}",
+				"Body": "{\"requests\":[{{#splitString ',' alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourceGroups/{{#..}}{{resourceGroupName}}{{/..}}/providers/microsoft.insights/alertrules/{{this}}/incidents?api-version=2016-03-01\"},{{/splitString}}]}",
 				"Headers": "{\"Content-Type\":\"application/json\"}",
 				"WaitForCompletion": "false",
 				"Expression": "and(gt(count(root['responses']), 0), eq(count(jsonpath('$.responses[?(@.httpStatusCode != 200)]')), 0), eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0))"
