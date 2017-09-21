@@ -14,62 +14,7 @@ import * as engine from "item-level-downloader/Engine";
 
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
-
-class Credential {
-    mUsername: string;
-    mPassword: string;
-
-    constructor(username: string, password: string) {
-        this.mUsername = username;
-        this.mPassword = password;
-    }
-}
-
-function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promise<any> {
-    const defer = Q.defer<any>();
-
-    request.get({ url: url, strictSSL: strictSSL }, (err, res, body) => {
-        if (res && body && res.statusCode === 200) {
-            defer.resolve(JSON.parse(body));
-        } else {
-            if (res && res.statusCode) {
-                tl.debug(tl.loc('ServerCallErrorCode', res.statusCode));
-            }
-            if (body) {
-                tl.debug(body);
-            }
-            defer.reject(new Error(tl.loc('ServerCallFailed')));
-        }
-    })
-        .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', (err) => {
-            //TODO: Do we even need an 'error' handler here if we're just re-throwing?
-            defer.reject(new Error(err.message));
-        });
-
-    return defer.promise;
-}
-
-function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Credential, strictSSL: boolean): Q.Promise<number> {
-    const defer = Q.defer<number>();
-    const lastSuccessfulUrl: string = `${serverEndpointUrl}/job/${jobName}/api/json?tree=lastSuccessfulBuild[id,displayname]`;
-
-    getRequest(lastSuccessfulUrl, cred, strictSSL).then((result) => {
-        if (result && result['lastSuccessfulBuild']) {
-            const lastSuccessfulBuildId = result['lastSuccessfulBuild']['id'];
-            if (lastSuccessfulBuildId) {
-                defer.resolve(lastSuccessfulBuildId);
-            } else {
-                defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
-            }
-        } else {
-            defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
-        }
-    })
-        .fail((err) => { defer.reject(err); });
-
-    return defer.promise;
-}
+import {JenkinsRestClient, JenkinsJobDetails} from "./ArtifactDetails/JenkinsRestClient"
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
@@ -103,25 +48,17 @@ async function doWork() {
         const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
         const username: string = serverEndpointAuth['parameters']['username'];
         const password: string = serverEndpointAuth['parameters']['password'];
-        const cred: Credential = (username && password) ? new Credential(username, password) : new Credential('', '');
 
         const jobName: string = tl.getInput('jobName', true);
         const localPathRoot: string = tl.getPathInput('saveTo', true);
         const itemPattern: string = tl.getInput('itemPattern', false) || "**";
 
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
-        const jenkinsBuild: string = tl.getInput('jenkinsBuild', true);
+        let jenkinsClient: JenkinsRestClient = new JenkinsRestClient();
+        let jenkinsJobDetails: JenkinsJobDetails = await jenkinsClient.GetJobDetails();
 
-        let buildId: number;
-        if (jenkinsBuild === 'LastSuccessfulBuild') {
-            tl.debug(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
-            buildId = await getLastSuccessful(serverEndpointUrl, jobName, cred, strictSSL);
-        } else {
-            const buildIdStr: string = tl.getInput('jenkinsBuildNumber');
-            buildId = parseInt(buildIdStr);
-        }
-        tl.debug(tl.loc('GetArtifactsFromBuildNumber', buildId, jobName));
-
+        const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}${jenkinsJobDetails.multibranchPipelineUrlSuffix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
+        tl.debug(tl.loc('GetArtifactsFromBuildNumber', jenkinsJobDetails.buildId, jobName));
         if (tl.getBoolInput('propagatedArtifacts') == true) {
             var artifactProvider = tl.getInput('artifactProvider');
             switch (artifactProvider.toLowerCase()) {
@@ -140,9 +77,8 @@ async function doWork() {
                     "url": serverEndpointUrl
                 },
                 "definition": jobName,
-                "version": buildId
+                "version": jenkinsJobDetails.buildId
             };
-            var handler = new handlers.BasicCredentialHandler(username, password);
 
             getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
         }
@@ -152,7 +88,7 @@ async function doWork() {
         let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
         if (downloadCommitsAndWorkItems) {
             new ArtifactDetailsDownloader()
-                .DownloadCommitsAndWorkItems()
+            .DownloadCommitsAndWorkItems(jenkinsJobDetails)
                 .then(
                 () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
                 (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));

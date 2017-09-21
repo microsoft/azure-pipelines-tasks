@@ -54,6 +54,14 @@
             }
         },
         {
+            "name": "multibranchPipeline",
+            "type": "boolean",
+            "label": "Is Multibranch Pipeline",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Select this if the job is a multibranch pipeline type."
+        },
+        {
             "name": "saveTo",
             "type": "filePath",
             "label": "Save to",
@@ -204,26 +212,27 @@
       {
         "endpointId": "$(serverEndpoint)",
         "target": "jenkinsBuildNumber",
-        "dataSourceName": "Builds",
+        "dataSourceName": "{{#equals multibranchPipeline 'true' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
         "parameters": {
-            "definition": "$(jobName)"
+            "definition": "$(jobName)",
+            "multibranchPipeline": "$(multibranchPipeline)"
         },
-        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        "resultTemplate": "{{#equals multibranchPipeline 'true' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
         "endpointId": "$(serverEndpoint)",
         "target": "startJenkinsBuildNumber",
-        "dataSourceName": "Builds",
+        "dataSourceName": "{{#equals multibranchPipeline 'true' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
         "parameters": {
-            "definition": "$(jobName)"
+            "definition": "$(jobName)",
+            "multibranchPipeline": "$(multibranchPipeline)"
         },
-        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        "resultTemplate": "{{#equals multibranchPipeline 'true' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"      }
       },
       {
           "endpointId":"$(ConnectedServiceNameARM)",
           "target": "storageAccountName",
           "dataSourceName": "AzureStorageAccountRMandClassic"
-      }
     ],
     "execution": {
         "Node": {
@@ -234,7 +243,7 @@
     "messages": {
         "GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
         "GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
-        "CouldNotGetLastSuccessfuilBuildNumber": "Could not get last successful build number",
+        "CouldNotGetLastSuccessfulBuildNumber": "Getting last successful build number failed with an Error: %s",
         "ServerCallFailed": "HTTP call to Jenkins server failed.",
         "ServerCallErrorCode": "HTTP response code: %d",
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",

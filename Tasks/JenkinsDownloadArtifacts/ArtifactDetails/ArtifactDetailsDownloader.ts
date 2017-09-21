@@ -1,22 +1,29 @@
 import * as Q from 'q';
 import * as  tl from 'vsts-task-lib/task';
 
-import {JenkinsRestClient} from "./JenkinsRestClient"
+import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
 import {CommitsDownloader} from "./CommitsDownloader"
 import {WorkItemsDownloader} from "./WorkItemsDownloader"
 
 var handlebars = require('handlebars');
 
 export class ArtifactDetailsDownloader {
-    public DownloadCommitsAndWorkItems(): Q.Promise<void> {
+    public DownloadCommitsAndWorkItems(jenkinsJobDetails: JenkinsJobDetails): Q.Promise<void> {
         let defer: Q.Deferred<any> = Q.defer<any>();
 
         console.log(tl.loc("DownloadingCommitsAndWorkItems"));
 
         let jenkinsBuild = tl.getInput('jenkinsBuild', true);
         let startBuildIdStr: string = tl.getInput("startJenkinsBuildNumber", false) || "";
-        let startBuildId: number = parseInt(startBuildIdStr)
+        let startBuildId: number = this.GetBuildIdFromVersion(startBuildIdStr, jenkinsJobDetails.isMultibranchPipeline);
+        let endBuildId: number = jenkinsJobDetails.buildId;
         let commitsDownloader: CommitsDownloader = new CommitsDownloader();
+            
+        // validate endBuildId which is a mandatory parameter
+        if (isNaN(endBuildId) || !endBuildId) {
+            defer.reject(new Error(tl.loc("InvalidJenkinsBuildNumber")));
+            return defer.promise;
+        }
 
         // validate the start build only if its required.
         if (startBuildIdStr.trim().length > 0 && isNaN(startBuildId) && jenkinsBuild !== 'LastSuccessfulBuild') {
@@ -27,24 +34,12 @@ export class ArtifactDetailsDownloader {
         // if you have a valid start and end buildId and then switch to LastSuccessfulBuild
         //  previous start build still exists though its not visible. Hence check the jenkinsBuild input 
         //  and if its set to LastSuccessfulBuild consider startBuild is not mentioned.
-        if (!startBuildId || jenkinsBuild === 'LastSuccessfulBuild') {
-            let endBuildId: string = "";
-
-            if (jenkinsBuild === 'LastSuccessfulBuild') {
-                // If its LastSuccessfulBuild, we don't need to fetch the build number, we could just use the lastSuccessfulFull macro
-                endBuildId = 'lastSuccessfulBuild';
-            }
-            else {
-                // if its not LastSuccessfulBuild try to get the build number from input.
-                endBuildId = tl.getInput("jenkinsBuildNumber", false)
-            }
-
-            console.log(tl.loc("JenkinsDownloadingChangeFromCurrentBuild", endBuildId));
-
-            commitsDownloader.DownloadFromSingleBuildAndSave(endBuildId).then((commits: string) => {
+        if (!startBuildId || isNaN(startBuildId) || jenkinsBuild === 'LastSuccessfulBuild') {
+            console.log(tl.loc("JenkinsDownloadingChangeFromCurrentBuild", jenkinsJobDetails.buildId));
+            commitsDownloader.DownloadFromSingleBuildAndSave(jenkinsJobDetails).then((commits: string) => {
                     let commitMessages: string[] = CommitsDownloader.GetCommitMessagesFromCommits(commits);
                     let workItemsDownloader: WorkItemsDownloader = new WorkItemsDownloader(commitMessages); 
-                    workItemsDownloader.DownloadFromSingleBuildAndSave(endBuildId).then(() => {
+                    workItemsDownloader.DownloadFromSingleBuildAndSave(jenkinsJobDetails).then(() => {
                         defer.resolve(null);
                     }, (error) => {
                         defer.reject(error);
@@ -54,11 +49,14 @@ export class ArtifactDetailsDownloader {
             });
         }
         else {
-            let endBuildId: number = parseInt(tl.getInput("jenkinsBuildNumber", true));
-            
-            if (isNaN(endBuildId) || !endBuildId) {
-                defer.reject(new Error(tl.loc("InvalidJenkinsBuildNumber")));
-                return defer.promise;
+            if (jenkinsJobDetails.isMultibranchPipeline) {
+                // if multibranch validate if the branch names are same.
+                let startBuildBranchName: string = this.GetBranchNameFromVersion(startBuildIdStr, jenkinsJobDetails.isMultibranchPipeline);
+
+                if (startBuildBranchName.toLowerCase() !== jenkinsJobDetails.multibranchPipelineName) {
+                    defer.reject(new Error(tl.loc("InvalidMultibranchPipelineName", startBuildBranchName, jenkinsJobDetails.multibranchPipelineName)));
+                    return defer.promise;
+                }
             }
 
             if (startBuildId < endBuildId) {
@@ -85,11 +83,11 @@ export class ArtifactDetailsDownloader {
                 let endIndex: number = buildIndex['endIndex'];
 
                 //#2. Download the commits using range and save
-                commitsDownloader.DownloadFromBuildRangeAndSave(startIndex, endIndex).then((commits: string) => {
+                commitsDownloader.DownloadFromBuildRangeAndSave(jenkinsJobDetails, startIndex, endIndex).then((commits: string) => {
                     //#3. download workitems
                     let commitMessages: string[] = CommitsDownloader.GetCommitMessagesFromCommits(commits);
                     let workItemsDownloader: WorkItemsDownloader = new WorkItemsDownloader(commitMessages); 
-                    workItemsDownloader.DownloadFromBuildRangeAndSave(startIndex, endIndex).then(() => {
+                    workItemsDownloader.DownloadFromBuildRangeAndSave(jenkinsJobDetails, startIndex, endIndex).then(() => {
                         defer.resolve(null);
                     }, (error) => {
                         defer.reject(error);
@@ -103,6 +101,31 @@ export class ArtifactDetailsDownloader {
         }
 
         return defer.promise;
+    }
+
+    private GetBuildIdFromVersion(version: string, isMultibranchPipeline: boolean): number {
+        let buildId: number = NaN;
+
+        if (!!version) {
+            if (!isMultibranchPipeline) {
+                buildId = parseInt(version);
+            }
+            else {
+                buildId = parseInt(version.substring(version.lastIndexOf(JenkinsRestClient.JenkinsFolderSeperator) + 1));
+            }
+        }
+
+        return buildId;
+    }
+
+    private GetBranchNameFromVersion(version: string, isMultibranchPipeline: boolean): string {
+        let branchName: string = version;
+
+        if (!!version && isMultibranchPipeline) {
+            branchName = version.substring(0, version.lastIndexOf(JenkinsRestClient.JenkinsFolderSeperator));
+        }
+
+        return branchName;
     }
 
     private GetBuildIdIndex(startBuildId: number, endBuildId: number): Q.Promise<any> {
