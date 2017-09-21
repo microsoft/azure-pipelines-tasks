@@ -174,4 +174,12 @@ export class Helper {
         return argument;
     }
 
+    // set the console code page to "UTF-8"
+    public static setConsoleCodePage() {
+        if (tl.osType() === 'Windows_NT') {
+            tl.debug("Changing active code page to UTF-8");
+            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), "65001", ({ silent: true } as tr.IExecSyncOptions));
+        }
+    }
+
 }
