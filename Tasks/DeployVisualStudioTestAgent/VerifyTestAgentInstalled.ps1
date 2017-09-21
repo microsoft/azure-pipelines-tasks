@@ -1,6 +1,6 @@
 function CheckTestAgentIsRunning([string] $ProcessName) {
     $dtaProcess = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue
-    
+
     if (-not $dtaProcess)
     {
         Write-Verbose "DTAExecutionHost is not running" -Verbose
@@ -26,6 +26,7 @@ function CheckTestAgentInstalled([string] $ProductVersion = "14.0") {
         Write-Verbose -Message ("Test Agent already exists") -Verbose
         Write-Verbose -Message ("Version: $versionInstalled") -Verbose
 
+        Remove-Item -Recurse -Force "C:\TestAgent" -ErrorAction SilentlyContinue
         RemoveTestAgentServiceIfExists -ServiceName "DTAAgentExecutionService"
         CheckTestAgentIsRunning -ProcessName "DTAExecutionHost"
     } else {
