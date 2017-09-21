@@ -52,6 +52,7 @@ export class StorageAccounts {
 
         var deferred = Q.defer<Model.StorageAccount[]>();
         var result = [];
+        var self = this;
         this.client.beginRequest(httpRequest).then(async function(response) {
             if (response.statusCode == 200) {
                 if (response.body.value) {
@@ -60,7 +61,7 @@ export class StorageAccounts {
                 }
 
                 if (response.body.nextLink) {
-                    var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
+                    var nextResult = await self.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
                         deferred.reject(nextResult.error);
                     }
@@ -88,10 +89,11 @@ export class StorageAccounts {
 
          // Getting all storage accounts (azure rm and classic, along with resource group names) for the given subscription.
          httpRequest.uri = "https://management.azure.com/resources?api-version=2014-04-01-preview&%24filter=(subscriptionId%20eq%20'{subscriptionId}')%20and%20(resourceType%20eq%20'microsoft.storage%2Fstorageaccounts'%20or%20resourceType%20eq%20'microsoft.classicstorage%2Fstorageaccounts')";
-         httpRequest.uri.replace('{subscriptionId}', this.client.subscriptionId);
+         httpRequest.uri = httpRequest.uri.replace('{subscriptionId}', this.client.subscriptionId);
 
          var deferred = Q.defer<Model.StorageAccount[]>();
          var result = [];
+         var self = this;
          this.client.beginRequest(httpRequest).then(async function(response) {
              if (response.statusCode == 200) {
                  if (response.body.value) {
@@ -100,7 +102,7 @@ export class StorageAccounts {
                  }
 
                  if (response.body.nextLink) {
-                     var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
+                     var nextResult = await self.client.accumulateResultFromPagedResult(response.body.nextLink);
                      if (nextResult.error) {
                          deferred.reject(nextResult.error);
                      }
@@ -121,7 +123,7 @@ export class StorageAccounts {
          return deferred.promise;
      }
 
-    public async listKeys(resourceGroupName: string, accountName: string, options, provider?: string): Promise<string[]> {
+    public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
         if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
           throw new Error(tl.loc("ResourceGroupCannotBeNull"));
         }
@@ -132,7 +134,7 @@ export class StorageAccounts {
 
         var apiVersion = "2017-06-01";
         var resourceProvider = "Microsoft.Storage";
-        if(!!provider && provider.toLowerCase() === "microsoft.classicstorage") {
+        if(!!storageAccountType && storageAccountType.toLowerCase() === "classicstorage") {
             resourceProvider = "Microsoft.ClassicStorage";
             apiVersion = "2015-12-01";
         }
@@ -155,7 +157,10 @@ export class StorageAccounts {
         var accessKeys: string[] = [];
         this.client.beginRequest(httpRequest).then(function(response) {
             if (response.statusCode == 200) {
-                if (response.body.keys) {
+                if (resourceProvider === "Microsoft.ClassicStorage") {
+                    accessKeys[0] = response.body.primaryKey;
+                    accessKeys[1] = response.body.secondaryKey;
+                } else if (response.body.keys) {
                     let keys = response.body.keys;
                     for(let i = 0; i<keys.length; i++) {
                         accessKeys[i] = keys[i]["value"];
