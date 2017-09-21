@@ -79,6 +79,15 @@
       }
     },
     {
+      "name": "DeployToSlotFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
+      "visibleRule": "WebAppKind != \"\""
+    },
+    {
       "name": "ImageSource",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ImageSource",
@@ -94,15 +103,6 @@
       },
       "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
       "visibleRule": "WebAppKind = applinux"
-    },
-    {
-      "name": "DeployToSlotFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
-      "visibleRule": "WebAppKind != \"\""
     },
     {
       "name": "ResourceGroupName",

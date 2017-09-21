@@ -79,6 +79,15 @@
             }
         },
         {
+            "name": "DeployToSlotFlag",
+            "type": "boolean",
+            "label": "Deploy to slot",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
+            "visibleRule": "WebAppKind != \"\""
+        },
+        {
             "name": "ImageSource",
             "type": "pickList",
             "label": "Image Source",
@@ -94,15 +103,6 @@
             },
             "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
             "visibleRule": "WebAppKind = applinux"
-        },
-        {
-            "name": "DeployToSlotFlag",
-            "type": "boolean",
-            "label": "Deploy to slot",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
-            "visibleRule": "WebAppKind != \"\""
         },
         {
             "name": "ResourceGroupName",
