@@ -26,7 +26,7 @@ function CheckTestAgentInstalled([string] $ProductVersion = "14.0") {
         Write-Verbose -Message ("Test Agent already exists") -Verbose
         Write-Verbose -Message ("Version: $versionInstalled") -Verbose
 
-        Remove-Item -Recurse -Force "C:\TestAgent" -ErrorAction SilentlyContinue
+        Remove-Item -Recurse -Force "$Env:SystemDrive\TestAgent" -ErrorAction SilentlyContinue
         RemoveTestAgentServiceIfExists -ServiceName "DTAAgentExecutionService"
         CheckTestAgentIsRunning -ProcessName "DTAExecutionHost"
     } else {
