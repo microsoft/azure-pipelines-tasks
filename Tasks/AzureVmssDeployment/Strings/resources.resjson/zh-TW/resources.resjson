@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure VM 擴展集部署 (預覽)",
+  "loc.friendlyName": "Azure VM scale set Deployment",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "部署虛擬機器擴展集映像",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
