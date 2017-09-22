@@ -5,7 +5,7 @@
 	"description": "Observe the configured Azure monitor rules for active alerts.",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-	"category": "Tool",
+	"category": "Utility",
 	"visibility": [
 		"Release"
 	],

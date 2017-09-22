@@ -5,7 +5,7 @@
 	"description": "Invoke Azure Function as a part of your process.",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
-	"category": "Tool",
+	"category": "Utility",
 	"preview": "true",
 	"visibility": [
 		"Release"
@@ -18,22 +18,22 @@
 		"Minor": 0,
 		"Patch": 1
 	},
-	"instanceNameFormat": "Invoke Azure Function: $(function)",
+	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [],
 	"inputs": [{
 			"name": "function",
 			"type": "string",
-			"label": "Azure Function",
+			"label": "Azure Function Url",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "The Azure function Url for the function that needs to be invoked​."
+			"helpMarkDown": "Url of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
 		}, {
 			"name": "key",
 			"type": "string",
 			"label": "Function Key",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "The value for  an available function/host key for the function to be invoked. Advised to keep this secure using variables.​"
+			"helpMarkDown": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=="
 		}, {
 			"name": "headers",
 			"type": "multiLine",
@@ -69,12 +69,12 @@
 				"false": "Asynchronous"
 			}
 		}, {
-			"name": "parseExpression​",
+			"name": "successExpression",
 			"type": "string",
-			"label": "Response Parse Expression​",
+			"label": "Success Expression",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "How do parse the response body for success.​"
+			"helpMarkDown": "Expression which defines when to pass the task. Example:- eq(count(root['value']), 1), [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
 		}
 	],
 
@@ -87,7 +87,7 @@
 				"Body": "$(body)",
 				"Headers": "$(headers)",
 				"WaitForCompletion": "$(executionMode)",
-				"Expression": "$(parseExpression​)"
+				"Expression": "$(successExpression)"
 			}
 		}
 	}
