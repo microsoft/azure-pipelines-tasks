@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Computerimage erstellen (VORSCHAU)",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Computerimage mithilfe von Packer erstellen. Dieses Image kann für die Bereitstellung der Azure VM-Skalierungsgruppe verwendet werden.",
   "loc.instanceNameFormat": "Unveränderliches Image erstellen",

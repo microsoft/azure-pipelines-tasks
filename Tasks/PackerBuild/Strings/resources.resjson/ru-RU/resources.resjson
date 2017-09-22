@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Собрать образ компьютера (предварительная версия)",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Собрать образ компьютера с помощью средства Packer. Этот образ можно использовать для развертывания масштабируемого набора виртуальных машин Azure.",
   "loc.instanceNameFormat": "Собрать неизменяемый образ",

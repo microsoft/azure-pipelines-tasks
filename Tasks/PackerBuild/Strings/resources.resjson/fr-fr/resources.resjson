@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Générer une image de machine (PRÉVERSION)",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Générez une image de machine à l'aide de l'outil Packer. Vous pouvez utiliser cette image pour un déploiement de groupe de machines virtuelles identiques Azure",
   "loc.instanceNameFormat": "Générer l'image non modifiable",

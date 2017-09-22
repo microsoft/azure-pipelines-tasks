@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "マシン イメージのビルド (プレビュー)",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Packer を使ってマシン イメージをビルドします。このイメージは、Azure 仮想マシン スケール セットの配置に利用できます",
   "loc.instanceNameFormat": "不変イメージのビルド",
