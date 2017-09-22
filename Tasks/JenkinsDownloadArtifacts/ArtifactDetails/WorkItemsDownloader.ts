@@ -85,7 +85,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
     private GetWorkItemsFromSingleBuild(jenkinsJobDetails: JenkinsJobDetails, commitMessages: string[]): Q.Promise<string> {
         let defer = Q.defer<string>();
 
-        const workItemsUrl: string = `${jenkinsJobDetails.multibranchPipelineUrlSuffix}/${jenkinsJobDetails.buildId}/api/json?tree=actions[issues[*],serverURL]`;
+        const workItemsUrl: string = `${jenkinsJobDetails.multibranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=actions[issues[*],serverURL]`;
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
             tl.debug(`Downloaded workItems: ${workItemsResult}`);
             defer.resolve(workItemsResult);
@@ -100,7 +100,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         let defer = Q.defer<string>();
 
         const buildParameter: string = (startIndex >= 100 || endIndex >= 100) ? "allBuilds" : "builds"; // jenkins by default will return only 100 top builds. Have to use "allBuilds" if we are dealing with build which are older than 100 builds
-        const workItemsUrl: string = `${jenkinsJobDetails.multibranchPipelineUrlSuffix}/api/json?tree=${buildParameter}[actions[issues[*],serverURL]]{${endIndex},${startIndex}}`;
+        const workItemsUrl: string = `${jenkinsJobDetails.multibranchPipelineUrlInfix}/api/json?tree=${buildParameter}[actions[issues[*],serverURL]]{${endIndex},${startIndex}}`;
 
         tl.debug(`Downloading workItems from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {

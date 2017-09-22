@@ -9,7 +9,7 @@ export class JenkinsJobDetails {
     buildId: number;
     isMultibranchPipeline: boolean;
     multibranchPipelineName: string;
-    multibranchPipelineUrlSuffix: string;
+    multibranchPipelineUrlInfix: string;
 
     constructor(jobName: string, buildId: number, multibranchPipelineName?: string) {
         this.jobName = jobName;
@@ -22,7 +22,7 @@ export class JenkinsJobDetails {
         this.multibranchPipelineName = multibranchPipelineName;
 
         this.isMultibranchPipeline = !!multibranchPipelineName && multibranchPipelineName.trim().length > 0;
-        this.multibranchPipelineUrlSuffix = this.isMultibranchPipeline ? `/job/${this.multibranchPipelineName}` : "";
+        this.multibranchPipelineUrlInfix = this.isMultibranchPipeline ? `/job/${this.multibranchPipelineName}` : "";
     }
 }
 
@@ -117,7 +117,7 @@ export class JenkinsRestClient {
                     if (!!element) {
                         element = element[properties[propertyIndex]];
 
-                        if (!!element && propertyIndex + 1 == properties.length) {
+                        if (!!element && propertyIndex + 1 === properties.length) {
                             found = true;
                         }
                     }

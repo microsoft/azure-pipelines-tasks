@@ -57,7 +57,7 @@ async function doWork() {
         let jenkinsClient: JenkinsRestClient = new JenkinsRestClient();
         let jenkinsJobDetails: JenkinsJobDetails = await jenkinsClient.GetJobDetails();
 
-        const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}${jenkinsJobDetails.multibranchPipelineUrlSuffix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
+        const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}${jenkinsJobDetails.multibranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
         tl.debug(tl.loc('GetArtifactsFromBuildNumber', jenkinsJobDetails.buildId, jobName));
         if (tl.getBoolInput('propagatedArtifacts') == true) {
             var artifactProvider = tl.getInput('artifactProvider');
@@ -77,6 +77,7 @@ async function doWork() {
                     "url": serverEndpointUrl
                 },
                 "definition": jobName,
+            "multibranchPipelineUrlInfix": jenkinsJobDetails.multibranchPipelineUrlInfix,
                 "version": jenkinsJobDetails.buildId
             };
 

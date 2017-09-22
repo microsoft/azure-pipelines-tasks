@@ -227,12 +227,13 @@
             "definition": "$(jobName)",
             "multibranchPipeline": "$(multibranchPipeline)"
         },
-        "resultTemplate": "{{#equals multibranchPipeline 'true' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"      }
+        "resultTemplate": "{{#equals multibranchPipeline 'true' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
           "endpointId":"$(ConnectedServiceNameARM)",
           "target": "storageAccountName",
           "dataSourceName": "AzureStorageAccountRMandClassic"
+      }
     ],
     "execution": {
         "Node": {
