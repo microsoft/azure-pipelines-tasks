@@ -64,3 +64,9 @@ fs.mkdirSync(util.milestonePackSourcePath);
 
 // link the milestone layout
 fs.symlinkSync(util.milestoneLayoutPath, util.milestonePackSourceContentsPath, 'junction');
+
+if (process.env.PUBLISH_MILESTONE) {
+    // pack the milestone
+    process.chdir(util.packagePath);
+    util.run(`nuget pack "${util.milestoneNuspecPath}" -BasePath "${util.milestonePackSourcePath}" -NoDefaultExcludes`, /*inheritStreams:*/true);
+}

@@ -360,6 +360,8 @@ async function run() {
                     xcodeExport.arg(['-exportArchive', '-archivePath', archive]);
                     xcodeExport.arg(['-exportPath', exportPath]);
                     xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
+                    var exportArgs: string = tl.getInput('exportArgs');
+                    xcodeExport.argIf(exportArgs, exportArgs);
 
                     if (useXcpretty) {
                         var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));

@@ -48,18 +48,18 @@ fs.readdirSync(util.aggregateLayoutPath) // walk each item in the aggregate layo
         var taskPath = path.join(itemPath, 'task.json');
         var task = JSON.parse(fs.readFileSync(taskPath));
         if (typeof task.version.Major != 'number') {
-            fail(`Expected task.version.Major/Minor/Patch to be a number (${taskPath})`);
+            throw new Error(`Expected task.version.Major/Minor/Patch to be a number (${taskPath})`);
         }
 
         util.assert(task.id, `task.id (${taskPath})`);
         if (typeof task.id != 'string') {
-            fail(`Expected id to be a string (${taskPath})`);
+            throw new Error(`Expected id to be a string (${taskPath})`);
         }
 
         // validate GUID + Major version is unique
         var key = task.id + task.version.Major;
         if (majorVersions[key]) {
-            fail(`Tasks GUID + Major version must be unique within the aggregate layout. Task 1: ${majorVersions[key]}; task 2: ${taskPath}`);
+            throw new Error(`Tasks GUID + Major version must be unique within the aggregate layout. Task 1: ${majorVersions[key]}; task 2: ${taskPath}`);
         }
 
         majorVersions[key] = taskPath;
@@ -88,3 +88,11 @@ contents += '      <tags>VSSInternal</tags>' + os.EOL;
 contents += '   </metadata>' + os.EOL;
 contents += '</package>' + os.EOL;
 fs.writeFileSync(util.aggregateNuspecPath, contents);
+
+// pack
+fs.mkdirSync(util.publishLayoutPath);
+process.chdir(util.publishLayoutPath);
+util.run(`nuget pack "${util.aggregateNuspecPath}" -BasePath "${util.aggregatePackSourcePath}" -NoDefaultExcludes`, /*inheritStreams:*/true);
+
+// create push.cmd
+fs.writeFileSync(util.publishPushCmdPath, `nuget.exe push Mseng.MS.TF.Build.Tasks.${process.env.AGGREGATE_VERSION}.nupkg -source "${process.env.AGGREGATE_TASKS_FEED_URL}" -apikey Skyrise`);

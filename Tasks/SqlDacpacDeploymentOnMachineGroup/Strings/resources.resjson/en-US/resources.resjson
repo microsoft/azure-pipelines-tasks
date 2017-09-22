@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "SQL Server Database Deploy(Preview)",
+  "loc.friendlyName": "SQL Server Database Deploy",
   "loc.helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Deploy to SQL Server Database using DACPAC or SQL scripts",
   "loc.instanceNameFormat": "Deploy using : $(TaskType)",

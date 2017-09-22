@@ -66,11 +66,9 @@ export async function run(): Promise<void> {
             }
         }
 
-        const nuGetPath = await utility.getNuGetPath();
-
         // If there was no nuGetConfigPath, NuGetConfigHelper will create one
         let nuGetConfigHelper = new NuGetConfigHelper2(
-            nuGetPath,
+            null,
             nuGetConfigPath,
             authInfo,
             { credProviderFolder: null, extensionsDisabled: true },

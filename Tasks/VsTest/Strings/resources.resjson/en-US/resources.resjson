@@ -21,7 +21,7 @@
   "loc.input.label.tcmTestRun": "Test Run",
   "loc.input.help.tcmTestRun": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
   "loc.input.label.searchFolder": "Search folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.help.searchFolder": "Folder to search for the test assemblies.",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`. [More information](https://msdn.microsoft.com/en-us/library/jj155796.aspx)",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
@@ -38,7 +38,7 @@
   "loc.input.label.runSettingsFile": "Settings file",
   "loc.input.help.runSettingsFile": "Path to runsettings or testsettings file to use with the tests.",
   "loc.input.label.overrideTestrunParameters": "Override test run parameters",
-  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `-key1 value1 -key2 value2`",
+  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the `TestRunParameters` section of runsettings file or `Properties` section of testsettings file. For example: `-key1 value1 -key2 value2`. Note: Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher ",
   "loc.input.label.pathtoCustomTestAdapters": "Path to custom test adapters",
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
   "loc.input.label.runInParallel": "Run tests in parallel on multi-core machines",
@@ -100,7 +100,8 @@
   "loc.messages.ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
   "loc.messages.VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
   "loc.messages.runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
-  "loc.messages.overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
+  "loc.messages.overrideNotSupported": "Overriding test run parameters is supported only with valid runsettings or testsettings file. This option will be ignored.",
+  "loc.messages.testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
   "loc.messages.vstestVersionInvalid": "Given test platform version %s is not supported.",
   "loc.messages.configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
   "loc.messages.otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
@@ -138,5 +139,6 @@
   "loc.messages.invalidTestBatchSize": "Invalid batch size provided: %s",
   "loc.messages.invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
   "loc.messages.minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
-  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s"
+  "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s",
+  "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
 }

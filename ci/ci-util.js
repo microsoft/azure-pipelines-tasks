@@ -23,6 +23,8 @@ var aggregatePackSourceContentsPath = path.join(packagePath, 'aggregate-pack-sou
 var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
 var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
+var publishLayoutPath = path.join(packagePath, 'publish-layout');
+var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
 exports.tasksLayoutPath = tasksLayoutPath;
@@ -39,6 +41,8 @@ exports.aggregatePackSourceContentsPath = aggregatePackSourceContentsPath;
 exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
 exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
+exports.publishLayoutPath = publishLayoutPath;
+exports.publishPushCmdPath = publishPushCmdPath;
 
 //------------------------------------------------------------------------------
 // generic functions
@@ -205,7 +209,7 @@ var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit
             typeof sourceTask.version.Minor != 'number' ||
             typeof sourceTask.version.Patch != 'number') {
 
-            fail(`Expected task.version.Major/Minor/Patch to be numbers (${taskSourcePath})`);
+            throw new Error(`Expected task.version.Major/Minor/Patch to be numbers (${taskSourcePath})`);
         }
 
         // determine the dest folder based on the major version
@@ -224,7 +228,7 @@ var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit
             var sourceVersion = `${sourceTask.version.Major}.${sourceTask.version.Minor}.${sourceTask.version.Patch}`;
             var destVersion = `${destTask.version.Major}.${destTask.version.Minor}.${destTask.version.Patch}`;
             if (semver.gt(sourceVersion, destVersion)) {
-                fail(`Expected minor+patch version for task already in the aggregate layout, to be greater or equal than non-aggregate layout being merged. Source task: ${taskSourcePath}`);
+                throw new Error(`Expected minor+patch version for task already in the aggregate layout, to be greater or equal than non-aggregate layout being merged. Source task: ${taskSourcePath}`);
             }
         }
         else {

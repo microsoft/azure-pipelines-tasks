@@ -7,7 +7,17 @@ param()
 
 $remotePowershellRunnerPath = "$PSScriptRoot\..\PowerShellOnTargetMachines.ps1"
 
+Unregister-Mock Get-VstsInput
+Register-Mock Get-VstsInput { return $environmentWithSkipCANotSet } -ParametersEvaluator{ $Name -eq  "EnvironmentName" }
+Register-Mock Get-VstsInput { return $validMachineName1 } -ParametersEvaluator{ $Name -eq  "MachineNames" }
+Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $Name -eq  "ScriptPath" }
+Register-Mock Get-VstsInput { return $HTTP } -ParametersEvaluator{ $Name -eq  "protocol" }
+Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "RunPowershellInParallel" }
+Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
+Register-Mock Get-VstsInput { return "adminUser" } -ParametersEvaluator{ $Name -eq  "adminUsername" }
+
 Register-Mock Get-ParsedSessionVariables { }
+Register-Mock Receive-Job {return @{"Status"="Passed"}}
 
 Register-Mock Invoke-PsOnRemote { }
 Register-Mock Invoke-Command {
@@ -20,7 +30,7 @@ Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $
 Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $environmentWithSkipCANotSet}
 Register-Mock Get-EnvironmentProperty { return $environmentWinRMHttpPort } -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCANotSet -and $Key -eq $resourceWinRMHttpPortKeyName}
 
-& "$remotePowershellRunnerPath" -environmentName $environmentWithSkipCANotSet  -machineNames $validMachineName1 -scriptPath $validScriptPath -runPowershellInParallel $false -protocol "HTTP"
+& "$remotePowershellRunnerPath"
 
 Assert-WasCalled Get-EnvironmentProperty -Times 0 -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCANotSet -and $Key -eq $resourceWinRMHttpsPortKeyName}
 
