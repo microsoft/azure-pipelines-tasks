@@ -16,7 +16,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 4
+		"Patch": 1
 	},
 	"instanceNameFormat": "Invoke Azure Function: $(function)",
 	"groups": [],
@@ -63,7 +63,7 @@
 			"label": "Execution mode",
 			"defaultValue": "false",
 			"required": true,
-			"helpMarkDown": "Default value \"Asynchronous mode\". Available values : \"synchronous mode\", \"asynchronous mode\" call where the Azure function calls back to update the timeline record”​",
+			"helpMarkDown": "Default value \"Asynchronous mode\". Available values : \"synchronous mode\", \"asynchronous mode\" call where the Azure function calls back to update the timeline record​.",
 			"options": {
 				"true": "Synchronous",
 				"false": "Asynchronous"
