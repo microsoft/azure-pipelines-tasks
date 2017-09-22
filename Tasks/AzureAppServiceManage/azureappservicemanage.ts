@@ -110,7 +110,10 @@ async function run() {
                     targetSlot = "production";
                 }
 
-                if(sourceSlot.toLowerCase() == 'production') {
+                sourceSlot = sourceSlot.toLowerCase();
+                targetSlot = targetSlot.toLowerCase();
+
+                if(sourceSlot == 'production') {
                     sourceSlot = targetSlot;
                     targetSlot = 'production';
                 }
