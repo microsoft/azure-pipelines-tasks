@@ -1,10 +1,14 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
+
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
 var extensionManage = require('./extensionmanage.js');
-var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
+var appInsightsManageUtils = require('./appinsightsmanage.js');
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js');
+
+var APPLICATION_INSIGHTS_EXTENSION_NAME = "Microsoft.ApplicationInsights.AzureWebSites";
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
@@ -58,6 +62,7 @@ async function run() {
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
         var slotName: string = tl.getInput('Slot', false);
+        var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
@@ -109,6 +114,30 @@ async function run() {
                     throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
                 }
                 await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
+                break;
+            }
+            case "Enable Continuous Monitoring": {
+                var appInsightsManage = new appInsightsManageUtils.AppInsightsManage(endPoint, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                await appInsightsManage.configureAppInsights();
+                break;   
+            }
+            case "Start Webjobs": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
+                for(var continuousJob of continuousJobs) {
+                    await azureRmUtil.startContinuousWebJob(publishingProfile, continuousJob.name);
+                }
+                break;
+            }
+            case "Stop Webjobs": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                tl.debug('Retrieved publishing Profile');
+                var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
+                for(var continuousJob of continuousJobs) {
+                    await azureRmUtil.stopContinuousWebJob(publishingProfile, continuousJob.name);
+                }
                 break;
             }
             default:

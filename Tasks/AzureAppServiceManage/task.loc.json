@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 15
+    "Patch": 16
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -43,7 +43,10 @@
         "Start Azure App Service": "Start App Service",
         "Stop Azure App Service": "Stop App Service",
         "Restart Azure App Service": "Restart App Service",
-        "Install Extensions": "Install Extensions"
+        "Install Extensions": "Install Extensions",
+        "Enable Continuous Monitoring": "Enable Continuous Monitoring",
+        "Start Webjobs": "Start Webjobs",
+        "Stop Webjobs": "Stop Webjobs"
       }
     },
     {
@@ -164,6 +167,14 @@
       "defaultValue": "",
       "visibleRule": "Action = Install Extensions",
       "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
+    },
+    {
+      "name": "ApplicationInsightsResourceName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ApplicationInsightsResourceName",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "Action == Enable Continuous Monitoring"
     }
   ],
   "dataSourceBindings": [
@@ -179,6 +190,11 @@
       "parameters": {
         "WebAppName": "$(WebAppName)"
       }
+    },
+    {
+      "target": "ApplicationInsightsResourceName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMApplicationInsightsResources"
     },
     {
       "target": "Slot",
@@ -254,6 +270,11 @@
     "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
     "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
-    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "UnableToGetAppInsightsResource": "ms-resource:loc.messages.UnableToGetAppInsightsResource",
+    "UnableToIdentifyResourceGroupNameForAppInsightsResource": "ms-resource:loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource",
+    "ApplicationInsightsNotSupportedForLinuxApp": "ms-resource:loc.messages.ApplicationInsightsNotSupportedForLinuxApp",
+    "FailedToConfigureAlwaysOnProperty": "ms-resource:loc.messages.FailedToConfigureAlwaysOnProperty",
+    "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights"
   }
 }
