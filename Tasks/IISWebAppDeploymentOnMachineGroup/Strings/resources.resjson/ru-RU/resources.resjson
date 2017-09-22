@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Развертывание веб-приложения IIS (предварительная версия)",
+  "loc.friendlyName": "IIS Web App Deploy",
   "loc.helpMarkDown": "[Подробнее...](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Развернуть веб-сайт или веб-приложение с помощью WebDeploy",
   "loc.instanceNameFormat": "Развертывание веб-сайта IIS: $(WebDeployPackage)",
