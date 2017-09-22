@@ -13,9 +13,8 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 6
     },
-    "preview": true,
     "satisfies": ["DotNetCore"],
     "demands": [],
     "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
