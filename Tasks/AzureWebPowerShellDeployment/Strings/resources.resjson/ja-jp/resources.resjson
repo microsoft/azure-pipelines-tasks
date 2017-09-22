@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure App Service: クラシック (使用されていない)",
-  "loc.helpMarkDown": "詳細: “Azure App Service: クラシック” タスクは使用されなくなります。代わりに “Azure App Service 配置” タスクを使用するように定義の移行をお勧めします。詳細については、[こちら] (https://go.microsoft.com/fwlink/?LinkID=613750) を参照してください。",
-  "loc.description": "Azure PowerShell を使った Azure App Service の作成または更新",
+  "loc.friendlyName": "Azure App Service: Classic (Deprecated)",
+  "loc.helpMarkDown": "More Information : “Azure App Service: Classic” Task will be deprecated. We recommend migrating your definition to use “Azure App Service Deploy” Task instead. For more information please refer [this](https://go.microsoft.com/fwlink/?LinkID=613750).",
+  "loc.description": "Create or update Azure App Service using Azure PowerShell",
   "loc.instanceNameFormat": "Azure 配置: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション (クラシック)",
   "loc.input.help.ConnectedServiceName": "展開対象への Azure クラシック サブスクリプション。",
@@ -24,6 +24,6 @@
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "展開 {0} に関する展開履歴を更新しています",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "検索パターン {0} で、展開するファイルが見つかりませんでした",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "検索パターン {0} で、展開するファイルが複数見つかりました。1 つだけ指定してください。",
-  "loc.messages.FailedtodeployWebsiteError0": "Web サイトを配置できませんでした。エラー: {0}",
-  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' タスクは間もなく使用されなくなります。'Azure App Service Deploy' タスクが 'Azure App Service: Classic' タスクに置き換わります。ビルドまたはリリース プロセスで 'Azure App Service Deploy' タスクを使用するように移行することをお勧めします。詳細については、https://go.microsoft.com/fwlink/?LinkID=613750 をご覧ください。"
+  "loc.messages.FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}",
+  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
 }
