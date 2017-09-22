@@ -12,8 +12,8 @@ import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
-import * as uuid from "uuid";
 
+var uuid = require("uuid");
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
@@ -205,7 +205,7 @@ export class ResourceGroup {
         name = path.basename(name).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
         var uniqueId = uuid().substr(0,4);
-        var depName = util.format("%s-%s%s%s-%s%s%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes(), ts.getSeconds(), uniqueId);
+        var depName = util.format("%s-%s%s%s-%s%s%s-%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes(), ts.getSeconds(), uniqueId);
         if (depName.length > 64) {
             depName = depName.substr(depName.length - 64);
             if (depName[0] == "-") {
