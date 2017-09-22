@@ -1,14 +1,24 @@
-### Environment
-- Server - VSTS or TFS (provide version): 
+## Troubleshooting
+Checkout how to troubleshoot failures and collect debug logs: https://docs.microsoft.com/en-us/vsts/build-release/actions/troubleshooting
+
+## Environment
+- Server - VSTS or TFS on-premises?
+    
+    - If using TFS on-premises, provide the version: 
+    
+    - If using VSTS, provide the account name, team project name, build definition name/build number: 
+
 
 - Agent - Hosted or Private: 
-    - Agent queue name (if using Hosted agent): 
-    - Agent version and OS (if using Private agent): 
+    
+    - If using Hosted agent, provide agent queue name:
 
-### Issue Description
+    - If using private agent, provide the OS of the machine running the agent and the agent version: 
 
+## Issue Description
 
-### Debug logs
-> Run a build with variable `system.debug` set to `true` and attach the zip to the issue. If your logs have sensitive information, please sanitize them and paste relevant portion of the logs below.
+[Include task name(s), screenshots and any other relevant details]
 
-[INSERT ERROR LOGS HERE]
+### Error logs
+
+[Insert error from the logs here]
