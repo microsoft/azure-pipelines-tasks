@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [
         "vstest"
@@ -392,7 +392,7 @@
     "sourceDefinitions": [
         {
             "target": "testPlan",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2",
             "selector": "jsonpath:$.value[*].name",
             "keySelector": "jsonpath:$.value[*].id",
             "authKey": "tfs:teamfoundation"
