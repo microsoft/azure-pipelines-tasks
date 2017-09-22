@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Déconseillé] Déploiement d'applications web IIS",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Effectuer le déploiement avec MSDeploy, créer/mettre à jour un site web et un pool d'applications",
   "loc.instanceNameFormat": "[Déconseillé] Déployer une application IIS : $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Déploiement",
@@ -26,7 +26,7 @@
   "loc.input.label.CreateWebSite": "Créer ou mettre à jour un site web",
   "loc.input.help.CreateWebSite": "Sélectionnez l'option pour créer un site web ou mettre à jour un site web existant.",
   "loc.input.label.WebSiteName": "Nom du site web",
-  "loc.input.help.WebSiteName": "Nom du site web IIS qui sera créé s'il n'existe pas ou qui sera mis à jour s'il est déjà présent sur le serveur IIS. Le nom du site web doit être identique à celui spécifié dans le fichier de package zip de déploiement web. Si un fichier de paramètres et des valeurs de remplacement des paramètres sont également spécifiés, le nom du site web doit être identique à celui spécifié dans les valeurs de remplacement des paramètres.",
+  "loc.input.help.WebSiteName": "Nom du site web IIS à créer, s'il n'existe pas, ou à mettre à jour, s'il est déjà présent sur le serveur IIS. Le nom du site web doit être identique à celui spécifié dans le fichier de package zip Web Deploy. Si un fichier de paramètres et des valeurs de remplacement des paramètres sont également spécifiés, le nom du site web doit être identique à celui spécifié dans les valeurs de remplacement des paramètres.",
   "loc.input.label.WebSitePhysicalPath": "Chemin d'accès physique",
   "loc.input.help.WebSitePhysicalPath": "Chemin d'accès physique où est stocké le contenu du site web. Le contenu peut résider sur l'ordinateur local ou dans un répertoire ou partage distant, tel que C:\\Fabrikam ou \\\\\\\\ContentShare\\Fabrikam.",
   "loc.input.label.WebSitePhysicalPathAuth": "Authentification du chemin d'accès physique",
