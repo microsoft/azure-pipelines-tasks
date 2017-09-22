@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure CLI 预览",
+  "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "通过 Azure CLI 命令对Azure 订阅运行 Shell 或批处理脚本",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
