@@ -20,6 +20,7 @@ function Get-SingleFile($files, $pattern)
 }
 
 try{
+    write-host "hello world"
 
     $WebSiteName = Get-VstsInput -Name WebSiteName -Require
     $WebSiteLocation = Get-VstsInput -Name WebSiteLocation
