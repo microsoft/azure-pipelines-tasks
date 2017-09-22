@@ -1,7 +1,7 @@
 {
     "id": "19C02B15-D377-40E0-9EFA-3168506E0933",
     "name": "ServiceFabricComposeDeploy",
-    "friendlyName": "Service Fabric Compose Deploy (Preview)",
+    "friendlyName": "Service Fabric Compose Deploy",
     "description": "Deploy a docker-compose application to a Service Fabric cluster.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=847030)",
     "category": "Deploy",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 4
     },
     "demands": [
         "Cmd"
