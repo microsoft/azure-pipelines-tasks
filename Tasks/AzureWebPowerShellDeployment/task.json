@@ -1,7 +1,7 @@
 {
     "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
     "name": "AzureWebPowerShellDeployment",
-    "friendlyName": "Azure App Service: Classic (Deprecated)",
+    "friendlyName": "Azure App Service : Classic (Deprecated)",
     "description": "Create or update Azure App Service using Azure PowerShell",
     "helpMarkDown": "More Information : “Azure App Service: Classic” Task will be deprecated. We recommend migrating your definition to use “Azure App Service Deploy” Task instead. For more information please refer [this](https://go.microsoft.com/fwlink/?LinkID=613750).",
     "category": "Deploy",

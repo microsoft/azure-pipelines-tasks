@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure App Service: Classic (Deprecated)",
+  "loc.friendlyName": "Azure App Service : Classic (Deprecated)",
   "loc.helpMarkDown": "More Information : “Azure App Service: Classic” Task will be deprecated. We recommend migrating your definition to use “Azure App Service Deploy” Task instead. For more information please refer [this](https://go.microsoft.com/fwlink/?LinkID=613750).",
   "loc.description": "Create or update Azure App Service using Azure PowerShell",
   "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
