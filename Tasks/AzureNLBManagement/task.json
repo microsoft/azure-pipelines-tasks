@@ -1,7 +1,7 @@
 {
     "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
     "name": "AzureNLBManagement",
-    "friendlyName": "Azure Network Load Balancer (Preview)",
+    "friendlyName": "Azure Network Load Balancer",
     "description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
