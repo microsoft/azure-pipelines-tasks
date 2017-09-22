@@ -142,7 +142,7 @@ async function run() {
         if(action === "Swap Slots") {
             customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
             customMessage['sourceSlot'] = sourceSlot;
-            customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
+            customMessage['targetSlot'] = targetSlot;
 
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);
