@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Distribuzione database di SQL Server (anteprima)",
+  "loc.friendlyName": "SQL Server Database Deploy",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Consente di eseguire la distribuzione nel database di SQL Server con DACPAC o script SQL",
   "loc.instanceNameFormat": "Distribuisci tramite: $(TaskType)",

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Развертывание базы данных SQL Server (предварительная версия)",
+  "loc.friendlyName": "SQL Server Database Deploy",
   "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Развертывание в базу данных SQL Server с помощью сценариев DACPAC или SQL",
   "loc.instanceNameFormat": "Развертывание с помощью: $(TaskType)",
