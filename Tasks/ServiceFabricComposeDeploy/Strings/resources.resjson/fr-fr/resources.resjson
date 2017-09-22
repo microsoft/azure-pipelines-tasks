@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Déploiement Docker Compose sur Service Fabric (préversion)",
+  "loc.friendlyName": "Service Fabric Compose Deploy",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Déployez une application Docker Compose sur un cluster Service Fabric.",
   "loc.instanceNameFormat": "Déployer l'application Compose sur Service Fabric",
