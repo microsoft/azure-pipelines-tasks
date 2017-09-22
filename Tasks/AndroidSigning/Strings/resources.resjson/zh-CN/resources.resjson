@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "为 APK 签名",
   "loc.input.help.jarsign": "若要使用提供的密钥存储文件对 APK 签名，请选择此项。未签名的 APK 只能在仿真器中运行。若要在设备上运行，必需对 APK 签名。",
   "loc.input.label.keystoreFile": "Keystore 文件",
-  "loc.input.help.keystoreFile": "输入用于对 APK 进行签名的密钥存储文件的文件路径。管理员能够将其签入源控件，也可以直接将其置于生成计算机上。建议在源控件中加密密钥存储文件，并在生成过程中使用“加密文件”任务解密文件。",
+  "loc.input.help.keystoreFile": "输入用于对 APK 进行签名的密钥存储文件的文件路径。管理员能够将其签入源代码管理，也可以直接将其置于生成计算机上。建议在源代码管理中加密密钥存储文件，并在生成过程中使用“加密文件”任务解密文件。",
   "loc.input.label.keystorePass": "Keystore 密码",
   "loc.input.help.keystorePass": "输入提供的密钥存储文件的密码。对“变量”选项卡使用已启用锁定的新变量来加密该值。",
   "loc.input.label.keystoreAlias": "别名",
