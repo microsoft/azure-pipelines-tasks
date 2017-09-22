@@ -1,7 +1,7 @@
 {
     "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
     "name": "AzureCLI",
-    "friendlyName": "Azure CLI Preview",
+    "friendlyName": "Azure CLI",
     "description": "Run a Shell or Batch script with Azure CLI commands against an azure subscription",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 5
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
