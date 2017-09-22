@@ -55,7 +55,10 @@
 			"dataSourceName": "AzureResourceGroups"
 		}, {
 			"target": "alertRules",
-			"endpointId": "$(connectedServiceNameARM)",
+			"endpointId": "$(connectedServiceNameARM)",					
+            "parameters": {
+                "resourceGroupName": "$(resourceGroupName)"
+            },
 			"endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(resourceGroupName)/providers/microsoft.insights/alertrules?api-version=2016-03-01",
 			"resultSelector": "jsonpath:$.value[?(@.properties.isEnabled == true)]",
 			"resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\":\"{{name}}\"}"
