@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure VM scale set Deployment (PREVIEW)",
+  "loc.friendlyName": "Azure VM scale set Deployment",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "Deploy Virtual Machine scale set image",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
