@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Licencia de Xamarin",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613739)",
-  "loc.description": "Activar o desactivar licencias de Xamarin",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.description": "[Deprecated] Upgrade to free version of Xamarin: https://store.xamarin.com",
   "loc.instanceNameFormat": "$(action) licencia de Xamarin",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.action": "Acción",
