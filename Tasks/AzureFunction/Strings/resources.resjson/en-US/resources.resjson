@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Invoke Azure Function",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Invoke Azure Function as a part of your process.",
+  "loc.instanceNameFormat": "Invoke Azure Function: $(function)",
+  "loc.input.label.function": "Azure Function",
+  "loc.input.help.function": "The Azure function Url for the function that needs to be invoked​.",
+  "loc.input.label.key": "Function Key",
+  "loc.input.help.key": "The value for  an available function/host key for the function to be invoked. Advised to keep this secure using variables.​",
+  "loc.input.label.headers": "Headers",
+  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
+  "loc.input.label.body": "Body",
+  "loc.input.label.executionMode": "Execution mode",
+  "loc.input.help.executionMode": "Default value \"Asynchronous mode\". Available values : \"synchronous mode\", \"asynchronous mode\" call where the Azure function calls back to update the timeline record​.",
+  "loc.input.label.parseExpression​": "Response Parse Expression​",
+  "loc.input.help.parseExpression​": "How do parse the response body for success.​"
+}

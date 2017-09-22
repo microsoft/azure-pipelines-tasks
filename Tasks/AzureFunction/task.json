@@ -1,0 +1,94 @@
+{
+	"id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
+	"name": "InvokeAzureFunction",
+	"friendlyName": "Invoke Azure Function",
+	"description": "Invoke Azure Function as a part of your process.",
+	"author": "Microsoft Corporation",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+	"category": "Tool",
+	"preview": "true",
+	"visibility": [
+		"Release"
+	],
+	"runsOn": [
+		"Server"
+	],
+	"version": {
+		"Major": 0,
+		"Minor": 0,
+		"Patch": 4
+	},
+	"instanceNameFormat": "Invoke Azure Function: $(function)",
+	"groups": [],
+	"inputs": [{
+			"name": "function",
+			"type": "string",
+			"label": "Azure Function",
+			"defaultValue": "",
+			"required": true,
+			"helpMarkDown": "The Azure function Url for the function that needs to be invoked​."
+		}, {
+			"name": "key",
+			"type": "string",
+			"label": "Function Key",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "The value for  an available function/host key for the function to be invoked. Advised to keep this secure using variables.​"
+		}, {
+			"name": "headers",
+			"type": "multiLine",
+			"label": "Headers",
+			"required": "false",
+			"defaultValue": "{\n\"Content-Type\":\"application/json\"\n}",
+			"properties": {
+				"resizable": "true",
+				"rows": "3",
+				"maxLength": "500"
+			},
+			"helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
+		}, {
+			"name": "body",
+			"type": "multiLine",
+			"label": "Body",
+			"required": "false",
+			"defaultValue": "",
+			"properties": {
+				"resizable": "true",
+				"rows": "3",
+				"maxLength": "2000"
+			}
+		}, {
+			"name": "executionMode",
+			"type": "pickList",
+			"label": "Execution mode",
+			"defaultValue": "false",
+			"required": true,
+			"helpMarkDown": "Default value \"Asynchronous mode\". Available values : \"synchronous mode\", \"asynchronous mode\" call where the Azure function calls back to update the timeline record”​",
+			"options": {
+				"true": "Synchronous",
+				"false": "Asynchronous"
+			}
+		}, {
+			"name": "parseExpression​",
+			"type": "string",
+			"label": "Response Parse Expression​",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "How do parse the response body for success.​"
+		}
+	],
+
+	"execution": {
+		"HttpRequest": {
+			"Execute": {
+				"EndpointId": "",
+				"EndpointUrl": "$(function)?code=$(key)",
+				"Method": "POST",
+				"Body": "$(body)",
+				"Headers": "$(headers)",
+				"WaitForCompletion": "$(executionMode)",
+				"Expression": "$(parseExpression​)"
+			}
+		}
+	}
+}
