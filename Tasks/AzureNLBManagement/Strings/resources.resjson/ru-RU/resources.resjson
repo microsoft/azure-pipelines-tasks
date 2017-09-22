@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Балансировщик сетевой нагрузки Azure (предварительная версия)",
+  "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[Дополнительная информация](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Подключение сетевого интерфейса виртуальной машины Azure к серверному пулу адресов балансировщика нагрузки или отключение от него",
   "loc.instanceNameFormat": "Балансировщик сетевой нагрузки Azure: $(LoadBalancer) — $(Action)",

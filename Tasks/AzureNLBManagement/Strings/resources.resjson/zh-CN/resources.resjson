@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure 网络负载均衡器(预览版)",
+  "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[更多信息](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "建立/断开 Azure 虚拟机的网络接口与负载均衡器的后端地址池的连接",
   "loc.instanceNameFormat": "Azure 网络负载均衡器: $(LoadBalancer) - $(Action)",

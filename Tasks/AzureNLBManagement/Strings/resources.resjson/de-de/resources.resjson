@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure-Netzwerklastenausgleich (Vorschau)",
+  "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Stellen Sie eine Verbindung her/trennen Sie die Verbindung zwischen der Netzwerkschnittstelle des virtuellen Azure-Computers und dem Back-End-Adresspool des Lastenausgleichs.",
   "loc.instanceNameFormat": "Azure-Netzwerklastenausgleich: $(LoadBalancer) - $(Action)",
