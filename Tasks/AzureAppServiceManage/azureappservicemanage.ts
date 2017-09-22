@@ -109,6 +109,12 @@ async function run() {
                 if (swapWithProduction) {
                     targetSlot = "production";
                 }
+
+                if(sourceSlot.toLowerCase() == 'production') {
+                    sourceSlot = targetSlot;
+                    targetSlot = 'production';
+                }
+
                 if (sourceSlot === targetSlot) {
                     updateDeploymentStatus = false;
                     throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
