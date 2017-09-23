@@ -109,7 +109,7 @@
   "loc.messages.testSelectorInput": "Selector de pruebas: %s",
   "loc.messages.searchFolderInput": "Carpeta de búsqueda: %s",
   "loc.messages.testFilterCriteriaInput": "Criterios de filtro de la prueba: %s",
-  "loc.messages.runSettingsFileInput": "Run settings file : %s",
+  "loc.messages.runSettingsFileInput": "Archivo de parámetros de ejecución: %s",
   "loc.messages.runInParallelInput": "Ejecutar en paralelo: %s",
   "loc.messages.runInIsolationInput": "Ejecutar de forma aislada: %s",
   "loc.messages.pathToCustomAdaptersInput": "Ruta de acceso a los adaptadores personalizados: %s",
