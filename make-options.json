@@ -53,6 +53,7 @@
         "MSBuild",
         "NodeTool",
         "Npm",
+        "NpmAuthenticate",
         "NuGet",
         "NugetPackager",
         "NuGetPublisher",

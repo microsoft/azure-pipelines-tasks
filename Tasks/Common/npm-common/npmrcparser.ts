@@ -22,9 +22,8 @@ export function GetRegistries(npmrc: string): string[] {
 }
 
 export function NormalizeRegistry(registry: string): string {
-    if (registry) {
-        registry = registry.slice(-1) !== '/' ? registry + '/' : registry;
+    if ( registry && !registry.endsWith('/') ) {
+        registry += '/';
     }
-
     return registry;
 }
