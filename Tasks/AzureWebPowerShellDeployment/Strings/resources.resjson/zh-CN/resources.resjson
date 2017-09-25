@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure 应用服务: 经典(已弃用)",
-  "loc.helpMarkDown": "详细信息:“Azure应用服务: 经典”任务即将弃用。建议改用“Azure 应用服务部署”任务迁移定义。有关详细信息，请参阅[此处](https://go.microsoft.com/fwlink/?LinkID=613750)。",
-  "loc.description": "使用 Azure PowerShell 创建或更新 Azure 应用服务",
+  "loc.friendlyName": "Azure App Service: Classic (Deprecated)",
+  "loc.helpMarkDown": "More Information : “Azure App Service: Classic” Task will be deprecated. We recommend migrating your definition to use “Azure App Service Deploy” Task instead. For more information please refer [this](https://go.microsoft.com/fwlink/?LinkID=613750).",
+  "loc.description": "Create or update Azure App Service using Azure PowerShell",
   "loc.instanceNameFormat": "Azure 部署: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure 订阅(经典)",
   "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 经典订阅。",
@@ -24,6 +24,6 @@
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "正在更新部署 {0} 的部署历史记录",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "使用搜索模式“{0}”没有找到要部署的文件",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "使用搜索模式“{0}”找到了多个要部署的文件。只能有一个要部署的文件。",
-  "loc.messages.FailedtodeployWebsiteError0": "未能部署网站。错误: {0}",
-  "loc.messages.DeprecatedWarning": "“Azure App Service: 经典”任务将很快就被否决。“Azure App Service 部署”任务将替换“Azure App Service: 经典”任务，建议迁移生成或发布进程，以使用“Azure App Service 部署”任务。有关更多详细信息，请参阅 https://go.microsoft.com/fwlink/?LinkID=613750。"
+  "loc.messages.FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}",
+  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
 }

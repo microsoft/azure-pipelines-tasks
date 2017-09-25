@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Servizio app di Azure: classico (deprecato)",
-  "loc.helpMarkDown": "Altre informazioni: l'attività \"Servizio app di Azure: classico\" verrà deprecata. È consigliabile eseguire la migrazione della definizione in modo da usare l'attività \"Distribuzione Servizio app di Azure\". Per altre informazioni, fare clic [qui](https://go.microsoft.com/fwlink/?LinkID=613750).",
-  "loc.description": "Consente di creare o aggiornare Servizio app di Azure con Azure PowerShell",
+  "loc.friendlyName": "Azure App Service: Classic (Deprecated)",
+  "loc.helpMarkDown": "More Information : “Azure App Service: Classic” Task will be deprecated. We recommend migrating your definition to use “Azure App Service Deploy” Task instead. For more information please refer [this](https://go.microsoft.com/fwlink/?LinkID=613750).",
+  "loc.description": "Create or update Azure App Service using Azure PowerShell",
   "loc.instanceNameFormat": "Distribuzione Azure: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure (classico)",
   "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure classico usata come destinazione della distribuzione.",
@@ -24,6 +24,6 @@
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "Aggiornamento della cronologia per la distribuzione {0}",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Non sono stati trovati file da distribuire con il criterio di ricerca {0}",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Con il criterio di ricerca {0} sono stati trovati più file da distribuire. È possibile distribuirne uno solo.",
-  "loc.messages.FailedtodeployWebsiteError0": "Non è stato possibile distribuire il sito Web. Errore: {0}",
-  "loc.messages.DeprecatedWarning": "A breve l'attività 'Servizio app di Azure: classico' sarà deprecata e sostituita dall'attività 'Distribuzione servizio app di Azure. Per usare l'attività 'Distribuzione servizio app di Azure' è consigliabile eseguire la migrazione del processo di compilazione o versione. Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkID=613750."
+  "loc.messages.FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}",
+  "loc.messages.DeprecatedWarning": "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
 }
