@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Предварительная версия интерфейса командной строки Azure",
+  "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[Дополнительная информация](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Запустить сценарий оболочки или пакетный сценарий с командами Azure CLI для подписки Azure",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
