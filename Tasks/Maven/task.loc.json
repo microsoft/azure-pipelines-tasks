@@ -14,14 +14,14 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 124,
+    "Patch": 0
+  },
   "demands": [
     "maven"
   ],
-  "version": {
-    "Major": 1,
-    "Minor": 117,
-    "Patch": 0
-  },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -56,17 +56,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },
     {
-      "name": "options",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.options",
-      "defaultValue": "",
-      "required": false
-    },
-    {
       "name": "goals",
       "type": "string",
       "label": "ms-resource:loc.input.label.goals",
       "defaultValue": "package",
+      "required": false
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.options",
+      "defaultValue": "",
       "required": false
     },
     {
@@ -197,6 +197,7 @@
       "defaultValue": "x86",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
@@ -244,6 +245,15 @@
       "groupName": "advanced",
       "defaultValue": "-Xmx1024m",
       "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
+    },
+    {
+      "name": "mavenFeedAuthenticate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mavenFeedAuthenticate",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenFeedAuthenticate"
     },
     {
       "name": "sqAnalysisEnabled",
@@ -412,6 +422,10 @@
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "EntryAlreadyExists": "ms-resource:loc.messages.EntryAlreadyExists",
+    "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
+    "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
+    "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
   }
 }

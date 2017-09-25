@@ -33,6 +33,17 @@ try {
         'ApplicationName' = $applicationName
     }
 
+    $usePreviewApi = $false
+    $regKey = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -ErrorAction SilentlyContinue
+    if ($regKey)
+    {
+        if ($regKey.FabricVersion.StartsWith('255.255'))
+        {
+            $usePreviewApi = $true
+            Write-Verbose (Get-VstsLocString -Key UsingPreviewAPI)
+        }
+    }
+
     # Test the compose file
     Write-Host (Get-VstsLocString -Key CheckingComposeFile)
     $valid = Test-ServiceFabricApplicationPackage -ComposeFilePath $composeFilePath -ErrorAction Stop
@@ -71,25 +82,24 @@ try {
 
     if ($registryCredentials -ne "None")
     {
-        if ((-not $isEncrypted) -and $connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
+        if (-not $isEncrypted)
         {
-            $thumbprint = $connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint
-
-            $cert = Get-Item -Path "Cert:\CurrentUser\My\$thumbprint" -ErrorAction SilentlyContinue
-            if($cert -ne $null)
-            {
-                Write-Host (Get-VstsLocString -Key EncryptingPassword)
-                $password = Invoke-ServiceFabricEncryptText -Text $password -CertStore -CertThumbprint $thumbprint -StoreName "My" -StoreLocation CurrentUser
-                $isEncrypted = $true
-            }
-            else
-            {
-                Write-Host (Get-VstsLocString -Key CertificateNotFound)
-            }
+            Write-Host (Get-VstsLocString -Key EncryptingPassword)
+            $password = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $clusterConnectionParameters
+            $isEncrypted = $true
         }
 
-        $deployParameters['RepositoryUserName'] = $username
-        $deployParameters['RepositoryPassword'] = $password
+        if ($usePreviewApi)
+        {
+            $deployParameters['RepositoryUserName'] = $username
+            $deployParameters['RepositoryPassword'] = $password
+        }
+        else
+        {
+            $deployParameters['RegistryUserName'] = $username
+            $deployParameters['RegistryPassword'] = $password
+        }
+
         $deployParameters['PasswordEncrypted'] = $isEncrypted
     }
 
@@ -106,7 +116,7 @@ try {
         $getStatusParameters['TimeoutSec'] = $getStatusTimeoutSec
     }
 
-    $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
     if ($existingApplication -ne $null)
     {
         Write-Host (Get-VstsLocString -Key RemovingApplication -ArgumentList $applicationName)
@@ -117,7 +127,8 @@ try {
         {
             Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.ComposeApplicationStatus)
             Start-Sleep -Seconds 3
-            $existingApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+            $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
+
         }
         while ($existingApplication -ne $null)
         Write-Host (Get-VstsLocString -Key ApplicationRemoved)
@@ -127,7 +138,7 @@ try {
     New-ServiceFabricComposeApplication @deployParameters
 
     Write-Host (Get-VstsLocString -Key WaitingForDeploy)
-    $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+    $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
     while (($newApplication -eq $null) -or `
            ($newApplication.ComposeApplicationStatus -eq 'Provisioning') -or `
            ($newApplication.ComposeApplicationStatus -eq 'Creating'))
@@ -141,7 +152,7 @@ try {
             Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
         }
         Start-Sleep -Seconds 3
-        $newApplication = Get-ServiceFabricComposeApplicationStatusPaged @getStatusParameters
+        $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
     }
     Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
 

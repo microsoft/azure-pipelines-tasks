@@ -5,13 +5,14 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
+  "preview": true,
   "visibility": [
     "Build"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 118,
+    "Minor": 123,
     "Patch": 0
   },
   "groups": [
@@ -67,7 +68,8 @@
         "appium": "Appium",
         "espresso": "Espresso",
         "calabash": "Calabash",
-        "uitest": "UI Test"
+        "uitest": "Xamarin UI Test",
+        "xcuitest": "XCUITest"
       }
     },
     {
@@ -204,6 +206,26 @@
       "visibleRule": "framework = calabash || framework = uitest",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signInfo",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestBuildDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcuitestBuildDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcuitestBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestTestIpaPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcuitestTestIpaPath",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcuitestTestIpaPath",
       "groupName": "prepare"
     },
     {

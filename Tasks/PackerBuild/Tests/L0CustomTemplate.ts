@@ -9,6 +9,8 @@ tr.setInput('templateType', 'custom');
 tr.setInput('customTemplateLocation', 'C:\\custom.template.json');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
+tr.setInput("additionalBuilderParameters", "{}");
+tr.setInput("customTemplateParameters", "{\"client_id\": \"abcdef\", \"drop-location\":\"C:\\\\folder 1\\\\folder-2\"}");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 
@@ -26,26 +28,25 @@ let a: any = <any>{
             "code": 0,
             "stdout": "0.12.3"
         },
-        "packer fix -validate=false F:\\somedir\\tempdir\\100\\custom.template.json": {
+        "packer fix -validate=false C:\\custom.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate F:\\somedir\\tempdir\\100\\custom.template-fixed.json": {
+        "packer validate -var client_id=abcdef -var drop-location=C:\\folder 1\\folder-2 C:\\custom.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force F:\\somedir\\tempdir\\100\\custom.template-fixed.json": {
+        "packer build -force -var client_id=abcdef -var drop-location=C:\\folder 1\\folder-2 C:\\custom.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
          }
     },
     "exist": {
-        "F:\\somedir\\tempdir\\100": true,
-        "F:\\somedir\\tempdir\\100\\": true,
-        "packer": true       
+        "C:\\": true,
+        "packer": true
     },
     "rmRF": {
-        "F:\\somedir\\tempdir\\100": { 'success': true }
+        "C:\\": { 'success': true }
     },
     "osType": {
         "osType": "Windows_NT"
@@ -78,13 +79,10 @@ tr.registerMock('./utilities', {
     getCurrentTime: function() {
         return 100;
     },
-    getTempDirectory: function() {
-        return "F:\\somedir\\tempdir"
-    },
     getCurrentDirectory: function() {
         return "basedir\\currdir";
     }
-}); 
+});
 
 tr.setAnswers(a);
 tr.run();

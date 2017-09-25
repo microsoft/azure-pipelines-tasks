@@ -9,6 +9,7 @@ tmr.setInput('command', "publish");
 tmr.setInput('projects', process.env["__projects__"]);
 tmr.setInput('publishWebProjects', process.env["__publishWebProjects__"] && process.env["__publishWebProjects__"] == "true" ? "true" : "false");
 tmr.setInput('arguments', process.env["__arguments__"] ? process.env["__arguments__"] : "");
+tmr.setInput('modifyOutputPath', process.env["modifyOutput"] == "false" ? "false" : "true");
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": { "dotnet": "dotnet" },
@@ -53,12 +54,32 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "published",
             "stderr": ""
         },
+         "dotnet publish web3/project.json --configuration release --output /usr/out": {
+            "code": 0,
+            "stdout": "published web3 without adding project name to path\n",
+            "stderr": ""
+        },
+        "dotnet publish lib2/project.json --configuration release --output /usr/out": {
+            "code": 0,
+            "stdout": "published lib2 without adding project name to path\n",
+            "stderr": ""
+        },
         "dotnet publish --configuration release --output /usr/out": {
+            "code": 0,
+            "stdout": "published without adding project name to path\n",
+            "stderr": ""
+        },
+        "dotnet publish": {
             "code": 0,
             "stdout": "published",
             "stderr": ""
         },
-        "dotnet publish": {
+        "dotnet publish web/project.csproj --configuration release --output /usr/out/web": {
+            "code": 0,
+            "stdout": "published",
+            "stderr": ""
+        },
+        "dotnet publish lib/project.csproj --configuration release --output /usr/out": {
             "code": 0,
             "stdout": "published",
             "stderr": ""
@@ -73,11 +94,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/project.json": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
         "**/project.json;**/*.csproj": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
         "**/project.json;**/*.csproj;**/*.vbproj": ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"],
-        "**/*.csproj\n**/*.vbproj": ["web/project.csproj"],
+        "**/*.csproj\n**/*.vbproj\n**/*.fsproj": ["web/project.csproj"],
         "*fail*/project.json": [],
         "*customoutput/project.json": ["web3/project.json", "lib2/project.json"],
         "dummy/project.json": ["dummy/project.json"],
-        "" : [""]
+        "" : []
     }
 };
 

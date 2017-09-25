@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 117,
-    "Patch": 0
+    "Minor": 124,
+    "Patch": 1
   },
   "demands": [
     "AndroidSDK",
@@ -185,9 +185,10 @@
       "name": "jdkArchitecture",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
-      "defaultValue": "x86",
+      "defaultValue": "x64",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
       "groupName": "jdkOptions",
       "options": {
         "x86": "x86",

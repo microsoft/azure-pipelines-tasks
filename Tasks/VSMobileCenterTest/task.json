@@ -3,15 +3,16 @@
     "name": "VSMobileCenterTest",
     "friendlyName": "Mobile Center Test",
     "description": "Test mobile app packages with Visual Studio Mobile Center.",
-    "helpMarkDown": "Test mobile app packages with Visual Studio Mobile Center.",
+    "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
     "category": "Test",
+    "preview": true,
     "visibility": [
         "Build"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 118,
+        "Minor": 123,
         "Patch": 0
     },
     "groups": [
@@ -67,7 +68,8 @@
                 "appium": "Appium",
                 "espresso": "Espresso",
                 "calabash": "Calabash",
-                "uitest": "UI Test"
+                "uitest": "Xamarin UI Test",
+                "xcuitest": "XCUITest"
             }
         },
         {
@@ -192,7 +194,7 @@
             "label":"Test Tools Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
-            "helpMarkDown":"Path to directory with Xamarin UI Tets tools that contains test-cloud.exe.",
+            "helpMarkDown":"Path to directory with Xamarin UI test tools that contains test-cloud.exe.",
             "required": false,
             "groupName": "prepare"
         },
@@ -204,6 +206,26 @@
             "visibleRule": "framework = calabash || framework = uitest",
             "required": false,
             "helpMarkDown": "Use Signing Infor for signing the test server.",
+            "groupName": "prepare"
+        },
+        {
+            "name":"xcuitestBuildDir",
+            "type":"string",
+            "label":"Build Directory",
+            "defaultValue":"",
+            "visibleRule":"enablePrepare = true && framework = xcuitest",
+            "required": false,
+            "helpMarkDown": "Path to the build output directory (usually $(ProjectDir)/Build/Products/Debug-iphoneos).",
+            "groupName": "prepare"
+        },
+        {
+            "name":"xcuitestTestIpaPath",
+            "type":"string",
+            "label":"Test IPA Path",
+            "defaultValue":"",
+            "visibleRule":"enablePrepare = true && framework = xcuitest",
+            "required": false,
+            "helpMarkDown": "Path to the *.ipa file with the XCUITest tests.",
             "groupName": "prepare"
         },
         {
@@ -300,7 +322,7 @@
         {
             "name": "dsymDir",
             "type": "string",
-            "label": "dSym Directory",
+            "label": "dSYM Directory",
             "defaultValue": "",
             "visibleRule": "enableRun = true",
             "required": false,

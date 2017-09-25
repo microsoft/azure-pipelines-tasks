@@ -1,7 +1,7 @@
 {
     "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
     "name": "AzureCLI",
-    "friendlyName": "Azure CLI Preview",
+    "friendlyName": "Azure CLI",
     "description": "Run a Shell or Batch script with Azure CLI commands against an azure subscription",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 5
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -114,6 +114,6 @@
         "ScriptFailed": "Script failed with error: %s",
         "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Service Principal for AzureRM",
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
-        "FailedToLogout": "The following error occured while logging out: %s"
+        "FailedToLogout": "The following error occurred while logging out: %s"
     }
 }

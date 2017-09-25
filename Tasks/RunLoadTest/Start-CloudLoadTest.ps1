@@ -21,7 +21,13 @@ $ThresholdLimit,
 $MachineType
 )
 
-$global:userAgent = "CloudLoadTestBuildTask"
+#Set the userAgent appropriately based on whether the task is running as part of a ci or cd
+if($Env:SYSTEM_HOSTTYPE -ieq "build") {
+    $userAgent = "CloudLoadTestBuildTask"
+}
+else {
+    $userAgent = "CloudLoadTestReleaseTask"
+}
 $global:apiVersion = "api-version=1.0"
 $global:ScopedTestDrop = $TestDrop
 $global:RunTestSettingsFile = $TestSettings
@@ -167,25 +173,29 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	{
 		$thresholdMessage=("{0} thresholds violated." -f $thresholdsViolatedCount)
 		$thresholdImage="bowtie-status-error"
+		$thresholdImageLabel="Error"
 	}
 	elseif ($thresholdsViolatedCount -gt 1)
 	{
 		$thresholdMessage=("{0} thresholds violated." -f $thresholdsViolatedCount)
 		$thresholdImage="bowtie-status-warning"
+		$thresholdImageLabel="Warning"
 	}
 	elseif ($thresholdsViolatedCount -eq 1)
 	{
 		$thresholdMessage=("{0} threshold violated." -f $thresholdsViolatedCount)
 		$thresholdImage="bowtie-status-warning"
+		$thresholdImageLabel="Warning"
 	}
 	else
 	{
 		$thresholdMessage="No thresholds violated."
 		$thresholdImage="bowtie-status-success"
+		$thresholdImageLabel="Success"
 	}
 	
 	
-	$summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
+	$summary = ('<span class="bowtie-icon {3}" role="img" aria-label="{5}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage, $thresholdImageLabel)
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
 	UploadSummaryMdReport $summaryFile
 }

@@ -20,7 +20,7 @@ export function getVirtualAndPhysicalPaths(virtualApplication: string, virtualAp
     
     for( var index in virtualApplicationMappings ) {
         var mapping = virtualApplicationMappings[index];
-        if( mapping.virtualPath == virtualPath){
+        if( mapping.virtualPath.toLowerCase() == virtualPath.toLowerCase()){
             physicalPath = mapping.physicalPath;
             break;
         }

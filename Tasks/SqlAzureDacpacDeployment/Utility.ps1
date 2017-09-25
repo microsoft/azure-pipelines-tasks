@@ -9,6 +9,29 @@ function Check-ServerName
     }
 }
 
+function Get-FormattedSqlUsername
+{
+    param(
+        [String] $sqlUserName,
+        [String] $serverName
+    )
+
+    if ($serverName)
+    {
+        $serverNameSplittedArgs = $serverName.Trim().Split(".")
+        if ($serverNameSplittedArgs.Length -gt 0)
+        {
+            $sqlServerFirstName = $serverNameSplittedArgs[0]
+            if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
+            {
+                $sqlUsername = $sqlUsername + "@" + $serverName 
+            }
+        }
+    }
+
+    return $sqlUsername
+}
+
 function Get-AgentIPRange
 {
     param(
@@ -19,79 +42,51 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Get-Command -Name "SqlCmd.exe" -ErrorAction SilentlyContinue
-    if ($sqlCmd)
+    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+    $env:SQLCMDPASSWORD = $sqlPassword
+
+    $formattedSqlUsername = $sqlUserName
+
+    if($sqlUserName)
     {
-        $sqlCmdArgs = "-S `"$serverName`" -U `"$sqlUsername`" -P `"$sqlPassword`" -Q `"select getdate()`""
+        $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
+    }
+
+    $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
     
-        Write-Verbose "Reching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
+    Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
 
-        $ErrorActionPreference = 'Continue'
+    $ErrorActionPreference = 'Continue'
 
-        $sqlCmdPath = $sqlCmd.Path
-        ( Invoke-Expression "& '$sqlCmdPath' --% $sqlCmdArgs" -ErrorVariable errors -OutVariable output 2>&1 ) | Out-Null   
+    $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
 
-        $ErrorActionPreference = 'Stop'
+    $ErrorActionPreference = 'Stop'
 
-        if($errors.Count -gt 0)
+    if($errors.Count -gt 0)
+    {
+        $errMsg = $errors[0].ToString()
+        Write-Verbose "Error Message : $errMsg"
+        $output = $errMsg
+    }
+
+    if($output)
+    {
+        Write-Verbose "Message To Parse: $output"
+
+        $pattern = "([0-9]+)\.([0-9]+)\.([0-9]+)\."
+        $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+        if($output.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($output) -eq $true)
         {
-            $errorMsg = $errors[0].ToString()
-            Write-Verbose "Error Message: $errorMsg"
+            $ipRangePrefix = $regex.Match($output).Groups[0].Value;
+            Write-Verbose "IP Range Prefix $ipRangePrefix"
 
-            $pattern = "([0-9]+).([0-9]+).([0-9]+)."
-            $regex = New-Object  -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-            if($errorMsg.Contains("sp_set_firewall_rule") -eq $true -and $regex.IsMatch($errorMsg) -eq $true)
-            {
-                $ipRangePrefix = $regex.Match($errorMsg).Groups[0].Value;
-                Write-Verbose "IP Range Prefix $ipRangePrefix"
-
-                $IPRange.StartIPAddress = $ipRangePrefix + '0'
-                $IPRange.EndIPAddress = $ipRangePrefix + '255'
-            }
+            $IPRange.StartIPAddress = $ipRangePrefix + '0'
+            $IPRange.EndIPAddress = $ipRangePrefix + '255'
         }
     }
-    else
-    {
-        Write-Verbose "SqlCmd.exe is not found in PATH" 
-
-        $IPRange.StartIPAddress = Get-AgentStartIPAddress
-        $IPRange.EndIPAddress = $IPRange.StartIPAddress
-    }    
 
     return $IPRange
-}
-
-
-function Get-AgentStartIPAddress
-{
-    $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
-    $vssCredential = [string]$endpoint.auth.parameters.AccessToken
-
-    $vssUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
-    if ($vssUri.IndexOf("visualstudio.com", [System.StringComparison]::OrdinalIgnoreCase) -ne -1) {
-        # This hack finds the DTL uri for a hosted account. Note we can't support devfabric since the
-        # there subdomain is not used for DTL endpoint
-        $vssUri = $vssUri.Replace("visualstudio.com", "vsdtl.visualstudio.com")
-    }
-
-    Write-Verbose "Querying VSTS uri '$vssUri' to get external ip address"
-
-    # Getting start ip address from dtl service
-    Write-Verbose "Getting external ip address by making call to dtl service"
-    $vssUri = $vssUri + "/_apis/vslabs/ipaddress"
-    $username = ""
-    $password = $vssCredential
-
-    $basicAuth = ("{0}:{1}" -f $username, $password)
-    $basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
-    $basicAuth = [System.Convert]::ToBase64String($basicAuth)
-    $headers = @{Authorization=("Basic {0}" -f $basicAuth)}
-
-    $response = Invoke-RestMethod -Uri $($vssUri) -headers $headers -Method Get -ContentType "application/json"
-    Write-Verbose "Response: $response"
-
-    return $response.Value
 }
 
 function Get-Endpoint
@@ -180,18 +175,7 @@ function Get-SqlPackageCommandArguments
 
         if($sqlUsername)
         {
-            if ($serverName)
-            {
-                $serverNameSplittedArgs = $serverName.Trim().Split(".")
-                if ($serverNameSplittedArgs.Length -gt 0)
-                {
-                    $sqlServerFirstName = $serverNameSplittedArgs[0]
-                    if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
-                    {
-                        $sqlUsername = $sqlUsername + "@" + $serverName 
-                    }
-                }
-            }
+            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
 
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))

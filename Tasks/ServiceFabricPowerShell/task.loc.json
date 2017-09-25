@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [
     "Cmd"
@@ -73,7 +73,7 @@
       "defaultValue": "",
       "required": false,
       "properties": {
-        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     }

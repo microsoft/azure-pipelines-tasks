@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Deploy to Kubernetes",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=846415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running kubectl commands.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.group.displayName.registry": "Container Registry Details",
@@ -37,5 +37,8 @@
   "loc.messages.DownloadingClient": "Downloading kubernetes client.",
   "loc.messages.CreatingSecret": "Executing create docker-registry %s secret.",
   "loc.messages.DeleteSecret": "Executing delete docker-registry %s secret",
-  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified"
+  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
+  "loc.messages.FileNotFoundException": "Can not find file at location: %s",
+  "loc.messages.DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
+  "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s"
 }

@@ -22,11 +22,16 @@ export function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles:
         var environmentName = tl.getVariable('Release.EnvironmentName');
         if(tl.osType().match(/^Win/)) {
             var transformConfigs = ["Release.config"];
-            if(environmentName && environmentName != 'Release') {
+            if(environmentName && environmentName.toLowerCase() != 'release') {
                 transformConfigs.push(environmentName + ".config");
             }
-            xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);  
-            console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
+            var isTransformationApplied: boolean = xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);
+            
+            if(isTransformationApplied)
+            {
+                console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
+            }
+            
         }
         else {
             throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));

@@ -14,21 +14,26 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
 
     public register(packerHost: definitions.IPackerHost): void {
         packerHost.registerTemplateVariablesProvider(definitions.VariablesProviderTypes.TaskInput, this);
-        tl.debug("registered task input variables provider");        
+        tl.debug("registered task input variables provider");
     }
 
-    public getTemplateVariables(packerHost: definitions.IPackerHost): Map<string, string> {
+    public async getTemplateVariables(packerHost: definitions.IPackerHost): Promise<Map<string, string>> {
         if(!!this._templateVariables) {
             return this._templateVariables;
         }
 
         var taskParameters = packerHost.getTaskParameters();
 
-        // if custom template is used, task input variables are not required
+        // custom template variables
         if(taskParameters.templateType === constants.TemplateTypeCustom) {
             this._templateVariables = new Map<string, string>();
+            var customTemplateParameters = taskParameters.customTemplateParameters;
+            for (var key in customTemplateParameters) {
+                this._templateVariables.set(key, customTemplateParameters[key])
+            }
+
             return this._templateVariables;
-        }        
+        }
 
         // VM specific variables
         this._templateVariables = new Map<string, string>();
@@ -36,18 +41,19 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
 
         if(taskParameters.baseImageSource === constants.BaseImageSourceCustomVhd) {
-            this._templateVariables.set(constants.TemplateVariableImageUrlName, taskParameters.customBaseImageUrl);            
+            this._templateVariables.set(constants.TemplateVariableImageUrlName, taskParameters.customBaseImageUrl);
         } else {
             this._templateVariables.set(constants.TemplateVariableImagePublisherName, taskParameters.imagePublisher);
             this._templateVariables.set(constants.TemplateVariableImageOfferName, taskParameters.imageOffer);
             this._templateVariables.set(constants.TemplateVariableImageSkuName, taskParameters.imageSku);
         }
 
-        this._templateVariables.set(constants.TemplateVariableLocationName, taskParameters.location);        
+        this._templateVariables.set(constants.TemplateVariableLocationName, taskParameters.location);
 
         var capturePrefix = tl.getVariable('release.releaseName') || tl.getVariable('build.buildnumber') || "vstscapture";
-        this._templateVariables.set(constants.TemplateVariableCapturePrefixName, capturePrefix);        
-        
+        this._templateVariables.set(constants.TemplateVariableCapturePrefixName, capturePrefix);
+        this._templateVariables.set(constants.TemplateVariableSkipCleanName, taskParameters.skipTempFileCleanupDuringVMDeprovision.toString());
+
         // user deployment script specific variables
         var deployScriptPath = taskParameters.deployScriptPath;
         var packagePath = taskParameters.packagePath;
@@ -55,10 +61,10 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariablePackagePathName, packagePath);
         this._templateVariables.set(constants.TemplateVariablePackageName, path.basename(packagePath));
         if(!utils.IsNullOrEmpty(taskParameters.deployScriptArguments)) {
-            this._templateVariables.set(constants.TemplateVariableScriptArgumentsName, taskParameters.deployScriptArguments);            
+            this._templateVariables.set(constants.TemplateVariableScriptArgumentsName, taskParameters.deployScriptArguments);
         }
 
-        
+
         return this._templateVariables;
     }
 

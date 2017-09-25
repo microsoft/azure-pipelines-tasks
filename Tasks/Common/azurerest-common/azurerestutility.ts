@@ -13,28 +13,35 @@ var restObj = new restClient.RestCallbackClient(httpObj);
 
 var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = 'api-version=2016-08-01';
+var azureContainerRegistryApiVersion = "api-version=2017-03-01";
 var defaultWebAppAvailabilityTimeoutInMS = 3000;
 
 /**
- * gets the name of the ResourceGroup that contains the webApp
+ * gets the name of the ResourceGroup that contains the resource
  *
  * @param   endpoint            Service Principal Name
- * @param   webAppName          Name of the web App
+ * @param   resourceName        Name of the resource
 */
-export async function getResourceGroupName(endpoint, webAppName: string)
+export async function getResourceGroupName(endpoint, resourceName: string, resourceType)
 {
-    var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
+    if(resourceType==null || resourceType==undefined)
+    {
+        resourceType = "Microsoft.Web/Sites";
+    }
+    
+    var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType + '\' AND name EQ \'' + resourceName + '\'&api-version=2016-07-01';
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
-    var webAppID = await getAzureRMWebAppID(endpoint, webAppName, requestURL, headers);
+    var resourceID = await getAzureRMResourceID(endpoint, resourceName, requestURL, headers);
 
-    tl.debug('Web App details : ' + webAppID.id);
-    var resourceGroupName = webAppID.id.split ('/')[4];
+    tl.debug('Web App details : ' + resourceID.id);
+    var resourceGroupName = resourceID.id.split ('/')[4];
     tl.debug('Azure Resource Group Name : ' + resourceGroupName);
     return resourceGroupName;
 }
+
 /**
  * updates the deployment status in kudu service
  * 
@@ -124,13 +131,40 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
     return deferred.promise;
 }
 
+function getAccessToken(endPoint) {
+    var deferred = Q.defer<string>();
+    var retryCounter = 0;
+
+    var getAccessTokenInternal = async function () {
+        retryCounter++;
+        await getAuthorizationToken(endPoint).then((value) => {
+            return deferred.resolve(value);
+        }, (error) => {
+            if (error.code == "ETIMEDOUT") {
+                tl.debug("Request for Auth token failed with error ETIMEDOUT. Retry Attempt: "+ retryCounter);
+                if(retryCounter <= 5) {
+                    setTimeout(getAccessTokenInternal, 5000);
+                }
+                else {
+                    deferred.reject(error);
+                }
+            }
+            else {
+                deferred.reject(error);
+            }
+        });
+    }
+    getAccessTokenInternal();
+    return deferred.promise;
+}
+
 function getAuthorizationToken(endPoint): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
     var envAuthUrl = (endPoint.envAuthUrl) ? (endPoint.envAuthUrl) : defaultAuthUrl;
     var authorityUrl = envAuthUrl + endPoint.tenantID + "/oauth2/token/";
     var requestData = querystring.stringify({
-        resource: endPoint.url,
+        resource: endPoint.activeDirectoryResourceId,
         client_id: endPoint.servicePrincipalClientID,
         grant_type: "client_credentials",
         client_secret: endPoint.servicePrincipalKey
@@ -148,14 +182,14 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
             deferred.resolve(JSON.parse(body).access_token);
         }
         else {
-            deferred.reject(tl.loc('CouldnotfetchacccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc('CouldnotfetchaccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
         }
     });
 
     return deferred.promise;
 }
 
-async function getAzureRMWebAppID(endpoint, webAppName: string, url: string, headers) {
+async function getAzureRMResourceID(endpoint, resourceName: string, url: string, headers) {
     var deferred = Q.defer<any>();
 
     tl.debug('Requesting Azure App Service ID: ' + url);
@@ -164,25 +198,25 @@ async function getAzureRMWebAppID(endpoint, webAppName: string, url: string, hea
             deferred.reject(error);
         }
         else if(response.statusCode === 200) {
-            var webAppIDDetails = JSON.parse(body);
+            var resourceIDDetails = JSON.parse(body);
 
-            if(webAppIDDetails.value.length === 0) {
-                if(webAppIDDetails.nextLink) {
-                    tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
+            if(resourceIDDetails.value.length === 0) {
+                if(resourceIDDetails.nextLink) {
+                    tl.debug("Requesting nextLink to accesss Id for resource " + resourceName);
                     try {
-                        deferred.resolve(await getAzureRMWebAppID(endpoint, webAppName, webAppIDDetails.nextLink, headers));
+                        deferred.resolve(await getAzureRMResourceID(endpoint, resourceName, resourceIDDetails.nextLink, headers));
                     }
                     catch(error) {
                         deferred.reject(error);
                     }
                 }
-                deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
+                deferred.reject(tl.loc("ResourceDoesntExist", resourceName));
             }
-            deferred.resolve(webAppIDDetails.value[0]);
+            deferred.resolve(resourceIDDetails.value[0]);
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveWebAppID', webAppName, response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc('UnabletoretrieveResourceID', resourceName, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
@@ -208,7 +242,7 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
     var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 
-    tl.debug('Requesting Azure App Service Config Details: ' + configUrl);
+    tl.debug('Requesting Azure App Service web config Details: ' + configUrl);
     httpObj.get('GET', configUrl, headers, (error, response, body) => {
         if( error ) {
             deferred.reject(error);
@@ -238,7 +272,7 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
     var configUrl = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 	
-    tl.debug('Updating config details at: ' + configUrl);
+    tl.debug('Updating web config details at: ' + configUrl);
 	
     httpObj.send('PATCH', configUrl, configDetails, headers, (error, response, body) =>{
 		if(error){
@@ -317,7 +351,7 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
 
 async function getOperationStatus(SPN, url: string) {
     var deferred = Q.defer();
-    var accessToken = await getAuthorizationToken(SPN);
+    var accessToken = await getAccessToken(SPN);
     var headers = {
         authorization: 'Bearer ' + accessToken
     };
@@ -500,25 +534,26 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     return deferred.promise;
 }
 
-export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string) {
+export async function getAzureContainerRegistryCredentials(endpoint, azureContainerRegistry: string, resourceGroupName: string) {
     var deferred = Q.defer<any>();
 
-    var url = endpoint.url + azureContainerRegistry + '/listCredentials?api-version=2017-03-01';
-    tl.debug('Requesting Azure Contianer Registry Creds: ' + url);
+    var credsUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+            '/providers/Microsoft.ContainerRegistry/registries/' + azureContainerRegistry + '/listCredentials?' + azureContainerRegistryApiVersion;
+    
+    tl.debug('Requesting Azure Contianer Registry Creds: ' + credsUrl);
 
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-
-    httpObj.get('POST', url, headers, async (error, response, body) => {
+    
+    httpObj.get('POST', credsUrl, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
         else if(response.statusCode === 200) {
             try {
-                var credentials = JSON.parse(body);
-                deferred.resolve(credentials);
+                deferred.resolve(JSON.parse(body));
             }
             catch (error) {
                 deferred.reject(error);
@@ -526,7 +561,7 @@ export async function getAzureContainerRegistryCredentials(endpoint, azureContai
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject("Unable to resolve creds for the registry");
+            deferred.reject(tl.loc('Unabletoretrieveazureregistrycredentials', response.statusCode, response.statusMessage));
         }
     });
 
@@ -579,6 +614,76 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
         else {
             console.log(body);
             deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
+export async function getAzureRMWebAppMetadata(
+    endpoint,
+    webAppName: string,
+    resourceGroupName: string,
+    deployToSlotFlag: boolean,
+    slotName: string) {
+
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(endpoint);
+    var headers = {
+        authorization: 'Bearer ' + accessToken
+    };
+
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+        '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/config/metadata/list?' + azureApiVersion;
+
+    tl.debug('Requesting Azure App Service Metadata: ' + metadataUrl);
+    httpObj.get('POST', metadataUrl, headers, (error, response, body) => {
+        if (error) {
+            deferred.reject(error);
+        }
+        else if (response.statusCode === 200) {
+            var obj = JSON.parse(body);
+            deferred.resolve(obj);
+        }
+        else {
+            tl.debug(body);
+            deferred.reject(response.statusMessage);
+        }
+    });
+    return deferred.promise;
+}
+
+export async function updateAzureRMWebAppMetadata(
+    endPoint,
+    webAppName: string,
+    resourceGroupName: string,
+    deployToSlotFlag: boolean,
+    slotName: string,
+    webAppMetadata: Object) {
+
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(endPoint);
+    var headers = {
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+    };
+
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var metadataUrl = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+        '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/config/metadata?' + azureApiVersion;
+
+    tl.debug('Updating Azure App Service Metadata at: ' + metadataUrl);
+
+    restObj._sendJson('PUT', metadataUrl, "", webAppMetadata, headers, null, (error, response, body) => {
+        if (error) {
+            deferred.reject(error);
+        }
+        else if (response === 200) {
+            deferred.resolve();
+        }
+        else {
+            tl.debug(body);
+            deferred.reject(response);
         }
     });
     return deferred.promise;

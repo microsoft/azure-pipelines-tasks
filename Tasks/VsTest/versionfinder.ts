@@ -1,9 +1,11 @@
 import * as tl from 'vsts-task-lib/task';
+import tr = require('vsts-task-lib/toolrunner');
 import * as path from 'path';
 import * as Q from 'q';
 import * as models from './models';
 import * as version from './vstestversion';
 import * as utils from './helpers';
+import * as ci from './cieventlogger';
 
 const regedit = require('regedit');
 const xml2js = require('xml2js');
@@ -14,10 +16,15 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
     const wmicTool = tl.tool('wmic');
     const wmicArgs = ['datafile', 'where', 'name=\''.concat(vstestLocationEscaped, '\''), 'get', 'Version', '/Value'];
     wmicTool.arg(wmicArgs);
-    const output = wmicTool.execSync();
-    tl.debug('VSTest Version information: ' + output.stdout);
+    let output = wmicTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
 
-    const verSplitArray = output.stdout.split('=');
+    if (utils.Helper.isNullOrWhitespace(output)) {
+        tl.error(tl.loc('ErrorReadingVstestVersion'));
+        throw new Error(tl.loc('ErrorReadingVstestVersion'));
+    }
+    output = output.trim();
+    tl.debug('VSTest Version information: ' + output);
+    const verSplitArray = output.split('=');
     if (verSplitArray.length !== 2) {
         tl.error(tl.loc('ErrorReadingVstestVersion'));
         throw new Error(tl.loc('ErrorReadingVstestVersion'));
@@ -25,13 +32,15 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
 
     const versionArray = verSplitArray[1].split('.');
     if (versionArray.length !== 4) {
-        tl.warning(tl.loc('UnexpectedVersionString', output.stdout));
-        throw new Error(tl.loc('UnexpectedVersionString', output.stdout));
+        tl.warning(tl.loc('UnexpectedVersionString', output));
+        throw new Error(tl.loc('UnexpectedVersionString', output));
     }
 
     const majorVersion = parseInt(versionArray[0]);
     const minorVersion = parseInt(versionArray[1]);
     const patchNumber = parseInt(versionArray[2]);
+
+    ci.publishEvent({ testplatform: `${majorVersion}.${minorVersion}.${patchNumber}` });
 
     if (isNaN(majorVersion) || isNaN(minorVersion) || isNaN(patchNumber)) {
         tl.warning(tl.loc('UnexpectedVersionNumber', verSplitArray[1]));
@@ -40,18 +49,18 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
 
     switch (majorVersion) {
         case 14:
-            testConfig.vsTestVersionDetais = new version.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails = new version.Dev14VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
             break;
         case 15:
-            testConfig.vsTestVersionDetais = new version.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails = new version.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
             break;
         default:
-            testConfig.vsTestVersionDetais =  new version.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails =  new version.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
             break;
     }
 }
 
-function locateVSTestConsole(testConfig : models.TestConfigurations) : string{
+function locateVSTestConsole(testConfig : models.TestConfigurations) : string {
     const vstestExeFolder = locateTestWindow(testConfig);
     let vstestExePath : string = vstestExeFolder;
     if (vstestExeFolder) {
@@ -76,21 +85,23 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     if (testConfig.vsTestVersion.toLowerCase() === 'latest') {
         // latest
         tl.debug('Searching for latest Visual Studio');
-        const vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        const vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
+            testConfig.vsTestVersion = "15.0";
             return vstestconsole15Path;
         }
 
         // fallback
         tl.debug('Unable to find an instance of Visual Studio 2017..');
         tl.debug('Searching for Visual Studio 2015..');
+        testConfig.vsTestVersion = "14.0";
         return getVSTestLocation(14);
     }
 
     const vsVersion: number = parseFloat(testConfig.vsTestVersion);
 
     if (vsVersion === 15.0) {
-        const vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+        const vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
             return vstestconsole15Path;
         }
@@ -101,27 +112,16 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     return getVSTestLocation(vsVersion);
 }
 
-function getVSTestConsole15Path(vs15HelperPath: string): string {
-    const powershellTool = tl.tool('powershell');
-    const powershellArgs = ['-NonInteractive', '-ExecutionPolicy', 'Unrestricted', '-file', vs15HelperPath]
-    powershellTool.arg(powershellArgs);
-    const xml = powershellTool.execSync().stdout;
-    const deferred = Q.defer<string>();
-    let vstestconsolePath: string = null;
-    xml2js.parseString(xml, (err, result) => {
-        if (result) {
-            try {
-                const vs15InstallDir = result['Objs']['S'][0];
-                vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
-            } catch (e) {
-                tl.debug('Unable to read Visual Studio 2017 installation path');
-                tl.debug(e);
-                vstestconsolePath = null;
-            }
-        }
-    });
-
-    return vstestconsolePath;
+function getVSTestConsole15Path(): string {
+    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line('-version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
+    let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        return path.join(vsPath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
+    }
+    return null;
 }
 
 function getVSTestLocation(vsVersion: number): string {

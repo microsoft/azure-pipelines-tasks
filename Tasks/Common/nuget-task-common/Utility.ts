@@ -1,13 +1,20 @@
 import * as path from "path";
-
 import * as tl from "vsts-task-lib/task";
-
 import * as ngToolRunner from "./NuGetToolRunner";
+import * as vsts from "vso-node-api/WebApi";
+import {VersionInfo} from "./pe-parser/VersionResource";
+import locationHelpers = require("./LocationHelpers");
+import * as url from "url";
+
+export function getPatternsArrayFromInput(pattern: string): string[]
+{
+    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
+    return pattern.split(";").map(x => x.trim()).filter(x => !!x);
+}
 
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
 export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean, includeFolders?: boolean): string[] {
-    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
-    let patterns = filterSpec.split(";").map(x => x.trim()).filter(x => !!x);
+    let patterns = getPatternsArrayFromInput(filterSpec);
     let result = new Set<string>();
 
     patterns.forEach(pattern => {
@@ -39,7 +46,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
     // Fail if no matching files were found
     if (!allowEmptyMatch && (!result || result.size === 0)) {
-        throw new Error("No matching files were found with search pattern: " + filterSpec);
+        throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", filterSpec));
     }
 
     return Array.from(result);
@@ -116,7 +123,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length === 0)) {
-            throw new Error("No matching files were found with search pattern: " + pattern);
+            throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", pattern));
         }
     }
 
@@ -185,3 +192,58 @@ export function setConsoleCodePage() {
         tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
     }
 }
+
+export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string, nuGetVersion: VersionInfo): Promise<string>
+{
+    const ApiVersion = "3.0-preview.1";
+    let PackagingAreaName: string = "nuget";
+    // If no version is received, V3 is assumed
+    let PackageAreaId: string = nuGetVersion && nuGetVersion.productVersion.a < 3 ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA" : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
+
+    let credentialHandler = vsts.getBearerHandler(accessToken);
+    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+    // The second element contains the transformed packaging URL
+    let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
+
+    if (!packagingCollectionUrl)
+    {
+        packagingCollectionUrl = collectionUrl;
+    }
+
+    const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
+    if (overwritePackagingCollectionUrl) {
+        tl.debug("Overwriting packaging collection URL");
+        packagingCollectionUrl = overwritePackagingCollectionUrl;
+    }
+
+    let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
+    let coreApi = vssConnection.getCoreApi();
+
+    let data = await Retry(async () => {
+        return await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+    }, 4, 100);
+    return data.requestUrl;
+}
+
+// This should be replaced when retry is implemented in vso client.
+async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+    try {
+        return await cb();
+    } catch(exception) {
+        tl.debug(JSON.stringify(exception));
+        if(max_retry > 0)
+        {
+            tl.debug("Waiting " + retry_delay + "ms...");
+            await delay(retry_delay);
+            tl.debug("Retrying...");
+            return await Retry<T>(cb, max_retry-1, retry_delay*2);
+        } else {
+            throw exception;
+        }
+    }
+}
+function delay(delayMs:number) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, delayMs);
+    });
+ }

@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 117,
-    "Patch": 1
+    "Minor": 120,
+    "Patch": 0
   },
   "demands": [
     "msbuild"
@@ -50,7 +50,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.msbuildVersion",
       "required": false,
-      "defaultValue": "15.0",
+      "defaultValue": "latest",
       "helpMarkDown": "ms-resource:loc.input.help.msbuildVersion",
       "visibleRule": "msbuildLocationMethod = version",
       "options": {

@@ -13,12 +13,12 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 27
   },
   "runsOn": [
     "Agent"
   ],
-  "releaseNotes": "<ul><li>Support for Visual Studio Test Agent 2017: You can now deploy and run tests using multiple versions of Visual Studio Test Agent. Versions 2015 and 2017 are supported.</li><li>Machine groups created from the Test hub are no longer supported. You can continue to use a list of machines or Azure resource groups.</li></ul>",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "groups": [
@@ -162,5 +162,9 @@
     "PowerShell3": {
       "target": "DeployTestAgent.ps1"
     }
+  },
+  "messages": {
+    "InvalidAccessToken": "ms-resource:loc.messages.InvalidAccessToken",
+    "NotSupportedWithParallel": "ms-resource:loc.messages.NotSupportedWithParallel"
   }
 }

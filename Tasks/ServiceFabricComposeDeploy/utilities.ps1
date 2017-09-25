@@ -52,3 +52,25 @@ function Get-SinglePathOfType
 
     return $path
 }
+
+function Get-ServiceFabricComposeApplicationStatusHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [bool]
+        $UsePreviewAPI,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $GetStatusParameters
+    )
+
+        if ($UsePreviewAPI)
+        {
+            return Get-ServiceFabricComposeApplicationStatusPaged @GetStatusParameters
+        }
+        else
+        {
+            return Get-ServiceFabricComposeApplicationStatus @GetStatusParameters
+        }
+}

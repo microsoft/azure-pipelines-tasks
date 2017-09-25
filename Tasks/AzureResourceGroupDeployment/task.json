@@ -13,11 +13,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 3
+        "Minor": 2,
+        "Patch": 8
     },
     "demands": [],
-    "minimumAgentVersion": "2.0.0",
+    "minimumAgentVersion": "2.119.1",
     "groups": [
         {
             "name": "AzureDetails",
@@ -60,7 +60,7 @@
                 "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
-                "StopWithDeallocate":  "Stop and deallocate virtual machines", 
+                "StopWithDeallocate": "Stop and deallocate virtual machines",
                 "Restart": "Restart virtual machines",
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
@@ -108,7 +108,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "Template",
-            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
             "visibleRule": "templateLocation = URL of the file"
         },
         {
@@ -118,7 +118,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
             "visibleRule": " templateLocation = URL of the file"
         },
         {
@@ -129,7 +129,7 @@
             "required": true,
             "groupName": "Template",
             "visibleRule": " templateLocation = Linked artifact",
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
+            "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
         },
         {
             "name": "csmParametersFile",
@@ -138,7 +138,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager template.",
+            "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.",
             "visibleRule": " templateLocation = Linked artifact"
         },
         {
@@ -148,7 +148,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "To  view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
+            "helpMarkDown": "To view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
             }
@@ -204,7 +204,6 @@
                 "EditableOptions": "True"
             }
         },
-        
         {
             "name": "deploymentGroupName",
             "type": "pickList",
@@ -235,6 +234,12 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
             "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
+        }
+    ],
+    "OutputVariables": [
+        {
+            "name": "DeploymentOutputs",
+            "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
         }
     ],
     "dataSourceBindings": [
@@ -278,9 +283,9 @@
         "CreatingNewRG": "Creating resource Group: %s",
         "CreatedRG": "Resource Group created successfully.",
         "CreatingTemplateDeployment": "Creating deployment parameters.",
-        "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
+        "TemplateParsingFailed": "Ensure the Template file ( '%s' ) is valid. Task failed while parsing with following error: %s",
         "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
-        "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
+        "ParametersFileParsingFailed": "Ensure the Parameters file ( '%s' ) is valid. Task failed while parsing with following error: %s",
         "StartingDeployment": "Starting Deployment.",
         "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
         "CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
@@ -345,14 +350,14 @@
         "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
         "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
         "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+        "ARG_SetExtensionFailedForVm": "Standard Error Message: Failed to set extension on Virtual Machine %s. Error: %s",
         "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
         "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
         "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
         "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
         "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
-        "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
+        "CreationOfExtensionFailed": "Failed to add the extension to the vm: '%s'. Error: %s",
         "AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
         "AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
         "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
@@ -373,13 +378,29 @@
         "AddingExtensionFailed": "Addition of extension on vm %s failed",
         "TimeoutWhileWaiting": "Timed out while waiting",
         "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
-        "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported encodings are ['utf-8', 'utf-16le']",
+        "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+        "DetectedFileEncoding": "The detected encoding for file '%s' is '%s'",
         "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
         "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
         "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
         "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
         "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
-        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s'."
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', make sure it follows JavaScript Object Notation (JSON)",
+        "TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
+        "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
+        "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+        "TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+        "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
+        "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
+        "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
+        "ExtensionNotFound": "Extension not found on the vm: %s",
+        "AddedOutputVariable": "Updated output variable 'DeploymentOutputs', which contains the outputs section of the current deployment object in string format. Follow this link: https://go.microsoft.com/fwlink/?linkid=853539 to learn how to use it in your defintion",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
+        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
+        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}"
     }
 }

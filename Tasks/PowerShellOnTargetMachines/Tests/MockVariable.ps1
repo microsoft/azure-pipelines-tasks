@@ -97,11 +97,10 @@ $PassedStatus = "Passed"
 $SuccessLog = "Success Logs"
 $FailedLog = "Failed Logs"
 $FailedCopyLog = "Failed Copy Operation."
-$FailedDeployLog = "Failed Deployment Operation."
+$FailedDeployLog = "PS_TM_DeploymentOnOneOrMoreMachinesFailed"
 
 
 # Response Error
-
 $FailedError = "Operation Failed"
 $FailedCopyError = $FailedCopyLog
 $FailedDeployError = $FailedDeployLog

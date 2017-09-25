@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure Network Load Balancer (Preview)",
+  "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
   "loc.instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",

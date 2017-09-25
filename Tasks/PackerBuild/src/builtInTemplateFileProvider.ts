@@ -39,6 +39,9 @@ export default class BuiltInTemplateFileProvider extends TemplateFileProviderBas
 
             // move file to a temp folder - this is a cautionary approach so that previous packer execution which still has handle on template does not cause any problem
             this.moveTemplateFile(initialTemplateFileLocation, packerHost.getStagingDirectory());
+
+            this.updateTemplateBuilderSection(taskParameters.additionalBuilderParameters);
+            
             return this._templateFileLocation; 
         }
 

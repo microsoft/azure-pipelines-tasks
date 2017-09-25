@@ -12,9 +12,9 @@
     "author": "Microsoft",
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 115,
-        "Patch": 1
+        "Major": 2,
+        "Minor": 120,
+        "Patch": 0
     },
     "groups": [
         {
@@ -97,6 +97,12 @@
                 "resizable": "true",
                 "rows": "4"
             }
+        }
+    ],
+    "outputVariables" : [
+        {
+            "name" : "JENKINS_JOB_ID",
+            "description" : "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
         }
     ],
     "execution": {

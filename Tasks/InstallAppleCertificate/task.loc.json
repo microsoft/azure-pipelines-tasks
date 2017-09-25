@@ -5,7 +5,6 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "preview": true,
   "visibility": [
     "Build",
     "Release"
@@ -13,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 116,
+    "Minor": 124,
     "Patch": 0
   },
   "runsOn": [
@@ -95,6 +94,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.deleteCustomKeychain",
       "visibleRule": "keychain = custom",
+      "groupName": "advanced"
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "advanced"
     }
   ],

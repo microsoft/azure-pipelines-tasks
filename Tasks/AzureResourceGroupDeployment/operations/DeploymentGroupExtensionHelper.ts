@@ -1,9 +1,9 @@
-import computeManagementClient = require("./azure-rest/azure-arm-compute");
+import computeManagementClient = require("azure-arm-rest/azure-arm-compute");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
-import az = require("./azure-rest/azureModels");
+import az = require("azure-arm-rest/azureModels");
 import utils = require("./Utils");
 
 export class DeploymentGroupExtensionHelper {
@@ -25,7 +25,7 @@ export class DeploymentGroupExtensionHelper {
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient);
     }
 
-    public async addExtensionOnResourceGroup() {
+    public async addExtensionOnResourceGroup(): Promise<any> {
         console.log(tl.loc("AddingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var extensionAddedOnVMsPromises: Promise<any>[] = [];
@@ -38,7 +38,7 @@ export class DeploymentGroupExtensionHelper {
         }
     }
 
-    public async deleteExtensionFromResourceGroup(): Promise<void> {
+    public async deleteExtensionFromResourceGroup(): Promise<any> {
         console.log(tl.loc("DeletingDGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
@@ -57,7 +57,7 @@ export class DeploymentGroupExtensionHelper {
             var extensionParameters = this.formExtensionParameters(vm, "delete");
             var extensionName = extensionParameters["extensionName"];
             console.log(tl.loc("DeleteExtension", extensionName, vmName));
-            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, vmName, extensionName, (error, result, request, response) => {
+            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, (error, result, request, response) => {
                 if (error) {
                     tl.warning(tl.loc("DeleteAgentManually", vmName, this.taskParameters.deploymentGroupName));
                     return reject(tl.loc("DeletionFailed", vmName, utils.getError(error)));
@@ -68,7 +68,7 @@ export class DeploymentGroupExtensionHelper {
         });
     }
 
-    private async addExtensionOnSingleVM(vm: az.VM) {
+    private async addExtensionOnSingleVM(vm: az.VM): Promise<any> {
         var vmName = vm.name;
         var operation = "add";
         var vmWithInstanceView: az.VM = await this.getVmWithInstanceView(this.taskParameters.resourceGroupName, vmName, { expand: 'instanceView' });
@@ -137,7 +137,7 @@ export class DeploymentGroupExtensionHelper {
         });
     }
 
-    private async tryDeleteFailedExtension(vm: az.VM) {
+    private async tryDeleteFailedExtension(vm: az.VM): Promise<any> {
         try {
             await this.deleteExtensionFromSingleVM(vm);
         }
@@ -152,12 +152,12 @@ export class DeploymentGroupExtensionHelper {
             var extensionParameters = this.formExtensionParameters(vm, "add");
             var extensionName = extensionParameters["extensionName"];
             var parameters = extensionParameters["parameters"];
-            this.computeClient.virtualMachineExtensions.get(this.taskParameters.resourceGroupName, vmName, extensionName, null, async (error, result: az.VMExtension, request, response) => {
+            this.computeClient.virtualMachineExtensions.get(this.taskParameters.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, null, async (error, result: az.VMExtension, request, response) => {
                 if (result && result.properties.provisioningState === "Failed") {
                     await this.tryDeleteFailedExtension(vm);
                 }
                 console.log(tl.loc("AddExtension", extensionName, vmName));
-                this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
+                this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, az.ComputeResourceType.VirtualMachine, extensionName, parameters, async (error, result, request, response) => {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                         await this.tryDeleteFailedExtension(vm);
@@ -170,7 +170,7 @@ export class DeploymentGroupExtensionHelper {
         })
     }
 
-    private formExtensionParameters(vm: az.VM, operation) {
+    private formExtensionParameters(vm: az.VM, operation): { vmName: string, extensionName: string, parameters: Object } {
         var vmId = vm.id;
         var vmName = vm.name;
         console.log("virtual machine : " + vmName);

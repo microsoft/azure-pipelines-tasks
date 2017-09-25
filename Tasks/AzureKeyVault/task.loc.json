@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "visibility": [
     "Build",
     "Release"
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -53,7 +53,8 @@
     {
       "target": "KeyVaultName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureKeyVaults"
+      "dataSourceName": "AzureKeyVaultsList",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -79,12 +80,15 @@
     "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
     "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
     "AzKv_ConstructorFailed": "ms-resource:loc.messages.AzKv_ConstructorFailed",
+    "SubscriptionIdLabel": "ms-resource:loc.messages.SubscriptionIdLabel",
+    "KeyVaultNameLabel": "ms-resource:loc.messages.KeyVaultNameLabel",
     "DownloadingSecretsUsing": "ms-resource:loc.messages.DownloadingSecretsUsing",
     "GetSecretsFailed": "ms-resource:loc.messages.GetSecretsFailed",
     "NoSecretsFound": "ms-resource:loc.messages.NoSecretsFound",
     "NumberOfSecretsFound": "ms-resource:loc.messages.NumberOfSecretsFound",
     "NumberOfEnabledSecretsFound": "ms-resource:loc.messages.NumberOfEnabledSecretsFound",
     "DownloadingSecretValue": "ms-resource:loc.messages.DownloadingSecretValue",
+    "AccessDeniedError": "ms-resource:loc.messages.AccessDeniedError",
     "GetSecretValueFailed": "ms-resource:loc.messages.GetSecretValueFailed",
     "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound"
   }

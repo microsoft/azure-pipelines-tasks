@@ -177,16 +177,13 @@ function Get-VisualStudio_15_0 {
     try {
         if (!$script:visualStudioCache.ContainsKey('15.0')) {
             try {
-                # Query for the latest 15.0.* version.
+                # Query for the latest 15.* version.
                 #
-                # Note, even though VS 15 Update 1 is sometimes referred to as "15.1", the actual installation
-                # version number is 15.0.26403.7.
-                #
-                # Also note, the capability is registered as VisualStudio_15.0, so the following code should
-                # query for 15.0.* versions only.
+                # Note, the capability is registered as VisualStudio_15.0, however the actual version
+                # may be something like 15.2.
                 Write-Verbose "Getting latest Visual Studio 15 setup instance."
                 $output = New-Object System.Text.StringBuilder
-                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,15.1) -latest -format json" -RequireExitCodeZero 2>&1 |
+                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -latest -format json" -RequireExitCodeZero 2>&1 |
                     ForEach-Object {
                         if ($_ -is [System.Management.Automation.ErrorRecord]) {
                             Write-Verbose "STDERR: $($_.Exception.Message)"
@@ -198,6 +195,26 @@ function Get-VisualStudio_15_0 {
                     }
                 $script:visualStudioCache['15.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
                     Select-Object -First 1
+                if (!$script:visualStudioCache['15.0']) {
+                    # Query for the latest 15.* BuildTools.
+                    #
+                    # Note, whereas VS 15.x version number is always 15.0.*, BuildTools does not follow the
+                    # the same scheme. It appears to follow the 15.<UPDATE_NUMBER>.* versioning scheme.
+                    Write-Verbose "Getting latest BuildTools 15 setup instance."
+                    $output = New-Object System.Text.StringBuilder
+                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                        ForEach-Object {
+                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                                Write-Verbose "STDERR: $($_.Exception.Message)"
+                            }
+                            else {
+                                Write-Verbose $_
+                                $null = $output.AppendLine($_)
+                            }
+                        }
+                    $script:visualStudioCache['15.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
+                        Select-Object -First 1
+                }
             } catch {
                 Write-Verbose ($_ | Out-String)
                 $script:visualStudioCache['15.0'] = $null
@@ -252,14 +269,7 @@ function Select-MSBuildPath {
                 return $path
             }
 
-            # Do not fallback from 15.0.
-            if ($PreferredVersion -eq '15.0') {
-                Write-Error (Get-VstsLocString -Key 'MSB_MSBuild15NotFoundionArchitecture0' -ArgumentList $Architecture)
-                return
-            }
-
             # Attempt to fallback.
-            $versions = $versions | Where-Object { $_ -ne '15.0' } # Fallback is only between 14.0-4.0.
             Write-Verbose "Specified version '$PreferredVersion' and architecture '$Architecture' not found. Attempting to fallback."
         }
 

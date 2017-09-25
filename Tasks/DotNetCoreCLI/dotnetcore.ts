@@ -3,6 +3,11 @@ import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
 
+import * as packCommand from './packcommand';
+import * as pushCommand from './pushcommand';
+import * as restoreCommand from './restorecommand';
+import * as utility from "./Common/utility";
+
 export class dotNetExe {
     private command: string;
     private projects: string[];
@@ -22,14 +27,44 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        if (this.command === "custom") {
+            this.command = tl.getInput("custom", true);
+        }
+
+        switch (this.command) {
+            case "build":
+            case "publish":
+            case "run":
+            case "test":
+                await this.executeBasicCommand();
+                break;
+            case "restore":
+                await restoreCommand.run();
+                break;
+            case "pack":
+                await packCommand.run();
+                break;
+            case "push":
+                await pushCommand.run();
+                break;
+            default:
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        }
+    }
+
+    private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
-        var projectFiles = [""];
-        if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
-            projectFiles = this.getProjectFiles();
+        var projectFiles = this.getProjectFiles();
+        if (projectFiles.length == 0) {
+            if (this.command === "test") {
+                tl.warning(tl.loc("noProjectFilesFound"));
+            } else {
+                throw tl.loc("noProjectFilesFound");
+            }
         }
         var failedProjects: string[] = [];
         for (var fileIndex in projectFiles) {
@@ -38,7 +73,7 @@ export class dotNetExe {
             dotnet.arg(this.command);
             dotnet.arg(projectFile);
             var dotnetArguments = this.arguments;
-            if (this.isPublishCommand() && this.outputArgument) {
+            if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }
@@ -66,10 +101,15 @@ export class dotNetExe {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
             if (this.outputArgument) {
-                outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                if (tl.getBoolInput("modifyOutputPath")) {
+                    outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                } else {
+                    outputSource = this.outputArgument;
+                }
+
             }
             else {
-                var pattern = "/**/publish";
+                var pattern = "**/publish";
                 var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
@@ -87,7 +127,7 @@ export class dotNetExe {
                 tl.rmRF(outputSource);
             }
             else {
-                tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
+                throw tl.loc("noPublishFolderFoundToZip", projectFile);
             }
         }
     }
@@ -186,14 +226,10 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = ["**/*.csproj", "**/*.vbproj"];
+            projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
-        if (!projectFiles || !projectFiles.length) {
-            tl.warning(tl.loc("noProjectFilesFound"));
-            return [];
-        }
+        var projectFiles = utility.getProjectFiles(projectPattern);
 
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {
@@ -203,7 +239,7 @@ export class dotNetExe {
             });
 
             if (!projectFiles.length) {
-                tl.warning(tl.loc("noWebProjctFound"));
+                tl.error(tl.loc("noWebProjctFound"));
             }
         }
 

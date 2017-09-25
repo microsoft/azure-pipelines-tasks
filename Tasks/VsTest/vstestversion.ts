@@ -18,8 +18,11 @@ export class VSTestVersion {
     public isRunInParallelSupported(): boolean {
         return (this.majorVersion >= 15);
     }
-}
 
+    public isTestSettingsPropertiesSupported(): boolean {
+        return (this.majorVersion > 15) || (this.majorVersion === 15) && (this.patchNumber > 26906); 
+    }
+}
 
 export class Dev14VSTestVersion extends VSTestVersion {
     constructor(runnerLocation: string, minorVersion: number, patchNumber: number) {

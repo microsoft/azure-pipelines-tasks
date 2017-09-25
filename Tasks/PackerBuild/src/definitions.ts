@@ -30,11 +30,11 @@ export interface IPackerHost {
 export interface ITemplateFileProvider {
     register(packerHost: IPackerHost): void;
     getTemplateFileLocation(packerHost: IPackerHost): string;
-    updateTemplateFile(content: string): void;
+    saveUpdatedTemplateFile(content: string, newNameSuffix: string): void;
     cleanup(): void;
 }
 
 export interface ITemplateVariablesProvider {
     register(packerHost: IPackerHost): void;
-    getTemplateVariables(packerHost: IPackerHost): Map<string, string>;
+    getTemplateVariables(packerHost: IPackerHost): Promise<Map<string, string>>;
 }

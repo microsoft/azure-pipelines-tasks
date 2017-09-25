@@ -35,8 +35,8 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp=\'" + webAppPackage + "\'";
-        msDeployCmdArgs += " -dest:iisApp=\'" + webApplicationDeploymentPath + "\'";
+        msDeployCmdArgs += " -source:IisApp=\"'" + webAppPackage + "'\"";
+        msDeployCmdArgs += " -dest:iisApp=\"'" + webApplicationDeploymentPath + "'\"";
     }
     else {
         if (webAppPackage && webAppPackage.toLowerCase().endsWith('.war')) {
@@ -46,29 +46,29 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
             tl.debug('WAR: warFile = ' + warFile);
             warFile = (virtualApplication) ? warFile + "/" + virtualApplication + warExt : warFile + warExt;
             tl.debug('WAR: warFile = ' + warFile);
-            msDeployCmdArgs += " -source:contentPath=\'" + webAppPackage + "\'";
+            msDeployCmdArgs += " -source:contentPath=\"'" + webAppPackage + "'\"";
             // tomcat, jetty location on server => /site/webapps/
             tl.debug('WAR: dest = /site/webapps/' + warFile);
-            msDeployCmdArgs += " -dest:contentPath=\'/site/webapps/" + warFile + "\'";
+            msDeployCmdArgs += " -dest:contentPath=\"'/site/webapps/" + warFile + "'\"";
         } else {
-            msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
+            msDeployCmdArgs += " -source:package=\"'" + webAppPackage + "'\"";
 
             if(isParamFilePresentInPacakge) {
                 msDeployCmdArgs += " -dest:auto";
             }
             else {
-                msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
+                msDeployCmdArgs += " -dest:contentPath=\"'" + webApplicationDeploymentPath + "'\"";
             }
         }
     }
 
     if(publishingProfile != null) {
-        msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-        msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+        msDeployCmdArgs += ",ComputerName=\"'https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "'\",";
+        msDeployCmdArgs += "UserName=\"'" + publishingProfile.userName + "'\",Password=\"'" + publishingProfile.userPWD + "'\",AuthType=\"'Basic'\"";
     }
     
     if(isParamFilePresentInPacakge) {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
+        msDeployCmdArgs += " -setParam:name=\"'IIS Web Application Name'\",value=\"'" + webApplicationDeploymentPath + "'\"";
     }
 
     if(takeAppOfflineFlag) {
@@ -150,7 +150,7 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
             }
         }
         if(latestKeyVersion < 3) {
-            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", latestKeyVersion));
+            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove", latestKeyVersion));
         }
          defer.resolve(latestSubKey);
     });

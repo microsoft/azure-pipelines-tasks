@@ -10,15 +10,15 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 115,
+        "Major": 2,
+        "Minor": 124,
         "Patch": 0
     },
     "demands": [
         "JDK",
         "AndroidSDK"
     ],
-    "minimumAgentVersion": "1.98.1",
+    "minimumAgentVersion": "2.116.0",
     "groups": [
         {
             "name": "jarsignerOptions",
@@ -51,13 +51,13 @@
         },
         {
             "name": "keystoreFile",
-            "type": "filePath",
+            "type": "secureFile",
             "label": "Keystore File",
             "defaultValue": "",
             "required": true,
             "visibleRule": "jarsign = true",
             "groupName": "jarsignerOptions",
-            "helpMarkDown": "Enter the file path to the keystore file that should be used to sign the APK. It can either be checked into source control or placed on the build machine directly by an administrator. It is recommended to encrypt the keystore file in source control and use the 'Decrypt File' task to decrypt the file during the build."
+            "helpMarkDown": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK."
         },
         {
             "name": "keystorePass",
@@ -120,10 +120,30 @@
         }
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
+    "prejobexecution": {
+        "Node": {
+            "target": "preandroidsigning.js",
+            "argumentFormat": ""
+        }
+    },
     "execution": {
         "Node": {
             "target": "androidsigning.js",
             "argumentFormat": ""
         }
+    },
+    "postjobexecution": {
+        "Node": {
+            "target": "postandroidsigning.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "AndroidHomeNotSet": "The ANDROID_HOME environment variable is not set for the running user.",
+        "CouldNotFindZipalign": "Could not find the zipalign tool.",
+        "CouldNotFindZipalignInAndroidHome": "Could not find the zipalign tool inside ANDROID_HOME: %s",
+        "JavaHomeNotSet": "The JAVA_HOME environment variable is not set for the running user.",
+        "NoMatchingFiles": "No matching files were found with search pattern: %s",
+        "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
     }
 }

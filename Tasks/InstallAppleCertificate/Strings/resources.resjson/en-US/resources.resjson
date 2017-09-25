@@ -18,5 +18,7 @@
   "loc.input.help.deleteCert": "Select to delete the certificate from the keychain after the build or release is complete.",
   "loc.input.label.deleteCustomKeychain": "Delete Custom Keychain",
   "loc.input.help.deleteCustomKeychain": "Select to delete the custom keychain from the agent after the build or release is complete.",
+  "loc.input.label.signingIdentity": "Certificate Signing Identity",
+  "loc.input.help.signingIdentity": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
   "loc.messages.INVALID_P12": "Unable to find the certificate SHA1 hash and common name (CN). Verify that the certificate is a valid P12."
 }

@@ -1,105 +1,72 @@
-param (
-    [string]$environmentName,
-    [string]$adminUserName,
-    [string]$adminPassword,
-    [string]$resourceFilteringMethod,
-    [string]$machineNames,
-    [string]$sourcePath,
-    [string]$targetPath,
-    [string]$additionalArguments,
-    [string]$cleanTargetBeforeCopy,
-    [string]$copyFilesInParallel
-    )
+[CmdletBinding()]
+param()
 
-Write-Verbose "Entering script WindowsMachineFileCopy.ps1"
-Write-Verbose "environmentName = $environmentName"
-Write-Verbose "adminUserName = $adminUserName"
-Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod"
-Write-Verbose "machineNames = $machineNames"
-Write-Verbose "sourcePath = $sourcePath"
-Write-Verbose "targetPath = $targetPath"
-Write-Verbose "additionalArguments = $additionalArguments"
-Write-Verbose "copyFilesInParallel = $copyFilesInParallel"
-Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
+Trace-VstsEnteringInvocation $MyInvocation
+
+# Get inputs for the task
+$machineNames = Get-VstsInput -Name MachineNames -Require
+$adminUserName = Get-VstsInput -Name AdminUserName -Require
+$adminPassword = Get-VstsInput -Name AdminPassword -Require
+$sourcePath = Get-VstsInput -Name SourcePath -Require
+$targetPath = Get-VstsInput -Name TargetPath -Require
+$additionalArguments = Get-VstsInput -Name AdditionalArguments
+$cleanTargetBeforeCopy = Get-VstsInput -Name CleanTargetBeforeCopy
+$copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel
+
+# Import the loc strings.
+Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
 
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
-
-# keep machineNames parameter name unchanged due to back compatibility
-$machineFilter = $machineNames
-$sourcePath = $sourcePath.Trim('"')
-$targetPath = $targetPath.Trim('"')
-
-# Default + constants #
-$resourceFQDNKeyName = Get-ResourceFQDNTagKey
-
-$envOperationStatus = 'Passed'
-
-Validate-SourcePath $sourcePath
-Validate-DestinationPath $targetPath $environmentName
-
-if([string]::IsNullOrWhiteSpace($environmentName))
+try 
 {
-    Write-Verbose "No environment found. Copying to destination."
+    $sourcePath = $sourcePath.Trim('"')
+    $targetPath = $targetPath.Trim('"')
 
-    Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
-    Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
-                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments
-    Write-Verbose "Files copied to destination successfully."
-}
-else
-{
-
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-    Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter"
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
-    Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName"
-
-    $fetchedEnvironmentName = $environment.Name
-
-    Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName"
-    $resources = Get-EnvironmentResources -Environment $environment
-    Write-Verbose "Completed Get-EnvironmentResources cmdlet call for environment name: $fetchedEnvironmentName"
-
-    if ($resources.Count -eq 0)
+    # Normalize admin username
+    if($adminUserName -and (-not $adminUserName.StartsWith(".\")) -and ($adminUserName.IndexOf("\") -eq -1) -and ($adminUserName.IndexOf("@") -eq -1))
     {
-         throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for deployment" -ArgumentList $environmentName)
+        $adminUserName = ".\" + $adminUserName 
     }
 
-    $resourcesPropertyBag = Get-ResourcesProperties -envName $fetchedEnvironmentName -resources $resources
+    $envOperationStatus = 'Passed'
 
-    if($copyFilesInParallel -eq "false" -or  ( $resources.Count -eq 1 ))
+    Validate-SourcePath $sourcePath
+    Validate-DestinationPath $targetPath $machineNames
+
+    $machines = $machineNames.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
+
+    $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
+    $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
+
+    if ($machines.Count -eq 0)
     {
-        foreach($resource in $resources)
+        throw (Get-VstsLocString -Key "WFC_NoMachineExistsUnderEnvironment0ForDeployment" -ArgumentList $machineNames)
+    }
+
+    if($copyFilesInParallel -eq $false -or  ( $machines.Count -eq 1 ))
+    {
+        foreach($machine in $machines)
         {
-            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
-            $machine = $resourceProperties.fqdn        
 
-            Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
+            Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments
         } 
     }
     else
     {
         [hashtable]$Jobs = @{} 
 
-        foreach($resource in $resources)
+        foreach($machine in $machines)
         {
-            $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
 
-            $machine = $resourceProperties.fqdn        
+            Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
-
-            $Jobs.Add($job.Id, $resourceProperties)
+            $Jobs.Add($job.Id, $machine)
         }        
 
         While ($Jobs.Count -gt 0)
@@ -116,6 +83,14 @@ else
             }
         }
     }
-}
 
-Write-Verbose "Leaving script WindowsMachineFileCopy.ps1"
+}
+catch
+{
+    Write-Verbose $_.Exception.ToString() -Verbose
+    throw
+}
+finally
+{
+    Trace-VstsLeavingInvocation $MyInvocation
+}

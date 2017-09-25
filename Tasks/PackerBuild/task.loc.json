@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "visibility": [
     "Build",
     "Release"
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 11
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -29,6 +29,12 @@
       "name": "DeploymentInputs",
       "displayName": "ms-resource:loc.group.displayName.DeploymentInputs",
       "isExpanded": true,
+      "visibleRule": "templateType = builtin"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": false,
       "visibleRule": "templateType = builtin"
     },
     {
@@ -57,6 +63,18 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.customTemplateLocation",
       "visibleRule": "templateType = custom"
+    },
+    {
+      "name": "customTemplateParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.customTemplateParameters",
+      "required": false,
+      "defaultValue": "{}",
+      "visibleRule": "templateType = custom",
+      "helpMarkDown": "ms-resource:loc.input.help.customTemplateParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
     },
     {
       "name": "ConnectedServiceName",
@@ -181,6 +199,26 @@
       "groupName": "DeploymentInputs"
     },
     {
+      "name": "additionalBuilderParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.additionalBuilderParameters",
+      "required": false,
+      "defaultValue": "{}",
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
+      "name": "skipTempFileCleanupDuringVMDeprovision",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipTempFileCleanupDuringVMDeprovision",
+      "defaultValue": true,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipTempFileCleanupDuringVMDeprovision"
+    },
+    {
       "name": "imageUri",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageUri",
@@ -252,6 +290,15 @@
     "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
     "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
     "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
-    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion"
+    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
+    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
+    "ResolvingDeployPackageInput": "ms-resource:loc.messages.ResolvingDeployPackageInput",
+    "ResolvingDeployScriptInput": "ms-resource:loc.messages.ResolvingDeployScriptInput",
+    "ParsingAdditionalBuilderParameters": "ms-resource:loc.messages.ParsingAdditionalBuilderParameters",
+    "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed",
+    "ParsingCustomTemplateParameters": "ms-resource:loc.messages.ParsingCustomTemplateParameters",
+    "FetchingSPNDetailsRemotely": "ms-resource:loc.messages.FetchingSPNDetailsRemotely",
+    "FetchedSPNDetailsRemotely": "ms-resource:loc.messages.FetchedSPNDetailsRemotely",
+    "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely"
   }
 }

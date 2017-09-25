@@ -12,6 +12,8 @@
   "loc.input.help.commands": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line. To run multiple commands together, enter them on the same line separated by semi-colons (e.g. cd /home/user/myFolder;build).",
   "loc.input.label.scriptPath": "Shell script path",
   "loc.input.help.scriptPath": "Path to the shell script file to run on the remote machine.",
+  "loc.input.label.inline": "Inline Script",
+  "loc.input.help.inline": "Write the shell script to run on the remote machine.",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments to pass to the shell script.",
   "loc.input.label.failOnStdErr": "Fail on STDERR",

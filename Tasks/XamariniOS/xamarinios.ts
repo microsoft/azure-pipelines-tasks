@@ -55,6 +55,9 @@ async function run() {
             cleanBuildRunner.arg(solutionPath);
             cleanBuildRunner.argIf(configuration, '/p:Configuration=' + configuration);
             cleanBuildRunner.argIf(device, '/p:Platform=' + device);
+            if (args) {
+                cleanBuildRunner.line(args);
+            }
             cleanBuildRunner.arg('/t:Clean');
             await cleanBuildRunner.exec();
         }
@@ -128,7 +131,15 @@ async function run() {
             buildRunner.line(args);
         }
         buildRunner.argIf(codesignKeychain, '/p:CodesignKeychain=' + codesignKeychain);
-        buildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
+        if (buildTool === 'msbuild' && signIdentity && signIdentity.indexOf(',') > 0) {
+            // Escape the input to workaround msbuild bug https://github.com/Microsoft/msbuild/issues/471
+            tl.debug('Escaping , in arg /p:Codesignkey to workaround msbuild bug.');
+            let signIdentityEscaped = signIdentity.replace(/[,]/g, '%2C');
+            buildRunner.arg('/p:Codesignkey=' + signIdentityEscaped);
+        } else {
+            tl.debug('Passing in arg /p:Codesignkey as is without escpaing any characters.')
+            buildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
+        }
         buildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
 
         // Execute build

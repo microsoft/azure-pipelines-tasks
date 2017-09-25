@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 117,
+        "Minor": 120,
         "Patch": 0
     },
     "demands": [
@@ -41,7 +41,7 @@
             "label": "Visual Studio Version",
             "required": false,
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
-            "defaultValue": "15.0",
+            "defaultValue": "latest",
             "options": {
                 "latest": "Latest",
                 "15.0": "Visual Studio 2017",

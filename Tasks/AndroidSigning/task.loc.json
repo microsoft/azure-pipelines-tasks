@@ -10,15 +10,15 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 115,
+    "Major": 2,
+    "Minor": 124,
     "Patch": 0
   },
   "demands": [
     "JDK",
     "AndroidSDK"
   ],
-  "minimumAgentVersion": "1.98.1",
+  "minimumAgentVersion": "2.116.0",
   "groups": [
     {
       "name": "jarsignerOptions",
@@ -51,7 +51,7 @@
     },
     {
       "name": "keystoreFile",
-      "type": "filePath",
+      "type": "secureFile",
       "label": "ms-resource:loc.input.label.keystoreFile",
       "defaultValue": "",
       "required": true,
@@ -120,10 +120,30 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node": {
+      "target": "preandroidsigning.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "Node": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "postandroidsigning.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "AndroidHomeNotSet": "ms-resource:loc.messages.AndroidHomeNotSet",
+    "CouldNotFindZipalign": "ms-resource:loc.messages.CouldNotFindZipalign",
+    "CouldNotFindZipalignInAndroidHome": "ms-resource:loc.messages.CouldNotFindZipalignInAndroidHome",
+    "JavaHomeNotSet": "ms-resource:loc.messages.JavaHomeNotSet",
+    "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
+    "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
   }
 }

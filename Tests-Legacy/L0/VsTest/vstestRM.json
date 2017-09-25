@@ -39,7 +39,9 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": false,
         "some\\path\\to\\vstest.console.exe": true,
         "some\\illegal\\path\\to\\vstest.console.exe": false,
-        "\\path\\to\\vstest\\directory": true
+        "\\path\\to\\vstest\\directory": true,
+        "\\artifacts\\dir":true,
+        "E:\\source": true
     },
     "stats": {
         "settings.runsettings": {
@@ -53,6 +55,12 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
+        },
+        "\\artifacts\\dir": {
+            "isDirectory":true
+        },
+        "E:\\source": {
+            "isDirectory":true
         }
     }
 }

@@ -16,14 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 47
+    "Minor": 1,
+    "Patch": 14
   },
   "demands": [
     "vstest"
   ],
-  "releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
-  "minimumAgentVersion": "1.89.0",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "2.103.0",
   "groups": [
     {
       "name": "testSelection",
@@ -34,6 +34,11 @@
       "name": "executionOptions",
       "displayName": "ms-resource:loc.group.displayName.executionOptions",
       "isExpanded": true
+    },
+    {
+      "name": "advancedExecutionOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedExecutionOptions",
+      "isExpanded": false
     },
     {
       "name": "reportingOptions",
@@ -53,7 +58,7 @@
       "options": {
         "testAssemblies": "Test assemblies",
         "testPlan": "Test plan",
-        "testRun": "Test run (for on-demand runs)"
+        "testRun": "Test run"
       }
     },
     {
@@ -129,7 +134,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.searchFolder",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
       "groupName": "testSelection"
     },
@@ -233,6 +238,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "pathtoCustomTestAdapters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "runInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runInParallel",
@@ -248,15 +262,6 @@
       "defaultValue": "False",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runTestsInIsolation",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "pathtoCustomTestAdapters",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
       "groupName": "executionOptions"
     },
     {
@@ -276,6 +281,76 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "distributionBatchType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.distributionBatchType",
+      "defaultValue": "basedOnTestCases",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.distributionBatchType",
+      "groupName": "advancedExecutionOptions",
+      "options": {
+        "basedOnTestCases": "Based on number of tests and agents",
+        "basedOnExecutionTime": "Based on past running time of tests"
+      }
+    },
+    {
+      "name": "batchingBasedOnAgentsOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.batchingBasedOnAgentsOption",
+      "required": false,
+      "groupName": "advancedExecutionOptions",
+      "defaultValue": "autoBatchSize",
+      "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnAgentsOption",
+      "options": {
+        "autoBatchSize": "Automatically determine the batch size",
+        "customBatchSize": "Specify a batch size"
+      },
+      "visibleRule": "distributionBatchType = basedOnTestCases"
+    },
+    {
+      "name": "customBatchSizeValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customBatchSizeValue",
+      "defaultValue": "10",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customBatchSizeValue",
+      "groupName": "advancedExecutionOptions",
+      "visibleRule": "distributionBatchType = basedOnTestCases && batchingBasedOnAgentsOption = customBatchSize"
+    },
+    {
+      "name": "batchingBasedOnExecutionTimeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.batchingBasedOnExecutionTimeOption",
+      "required": false,
+      "groupName": "advancedExecutionOptions",
+      "defaultValue": "autoBatchSize",
+      "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnExecutionTimeOption",
+      "options": {
+        "autoBatchSize": "Automatically determine the batch time",
+        "customTimeBatchSize": "Specify running time per batch"
+      },
+      "visibleRule": "distributionBatchType = basedOnExecutionTime"
+    },
+    {
+      "name": "customRunTimePerBatchValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customRunTimePerBatchValue",
+      "defaultValue": "60",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customRunTimePerBatchValue",
+      "groupName": "advancedExecutionOptions",
+      "visibleRule": "distributionBatchType = basedOnExecutionTime && batchingBasedOnExecutionTimeOption = customTimeBatchSize"
+    },
+    {
+      "name": "dontDistribute",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dontDistribute",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dontDistribute",
+      "groupName": "advancedExecutionOptions"
     },
     {
       "name": "testRunTitle",
@@ -374,8 +449,8 @@
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
-    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
+    "testSettingPropertiesNotSupported": "ms-resource:loc.messages.testSettingPropertiesNotSupported",
     "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
@@ -399,6 +474,21 @@
     "vstestLocationSpecified": "ms-resource:loc.messages.vstestLocationSpecified",
     "uitestsparallel": "ms-resource:loc.messages.uitestsparallel",
     "pathToCustomAdaptersInvalid": "ms-resource:loc.messages.pathToCustomAdaptersInvalid",
-    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters"
+    "pathToCustomAdaptersContainsNoAdapters": "ms-resource:loc.messages.pathToCustomAdaptersContainsNoAdapters",
+    "testAssembliesSelector": "ms-resource:loc.messages.testAssembliesSelector",
+    "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
+    "testRunSelector": "ms-resource:loc.messages.testRunSelector",
+    "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
+    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound",
+    "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning",
+    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole",
+    "numberOfTestCasesPerSlice": "ms-resource:loc.messages.numberOfTestCasesPerSlice",
+    "invalidTestBatchSize": "ms-resource:loc.messages.invalidTestBatchSize",
+    "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
+    "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
+    "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
   }
 }

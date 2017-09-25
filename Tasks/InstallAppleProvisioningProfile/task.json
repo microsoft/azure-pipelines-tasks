@@ -5,7 +5,6 @@
     "description": "Install an Apple provisioning profile required to build on a macOS agent",
     "helpMarkDown": "",
     "category": "Utility",
-    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -13,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 116,
+        "Minor": 124,
         "Patch": 0
     },
     "runsOn": [

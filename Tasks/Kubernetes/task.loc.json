@@ -13,10 +13,10 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [],
-  "preview": "true",
+  "preview": "false",
   "groups": [
     {
       "name": "registry",
@@ -199,6 +199,9 @@
     "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
     "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
     "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
-    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified"
+    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
+    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
+    "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
+    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt"
   }
 }

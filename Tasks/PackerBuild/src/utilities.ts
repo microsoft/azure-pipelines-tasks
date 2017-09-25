@@ -15,7 +15,7 @@ export function copyFile(sourceFile: string, destinationFolder: string): void {
     if(!tl.exist(destinationFolder)) {
         console.log(tl.loc("CreatingDestinationDir", destinationFolder));
         tl.mkdirP(destinationFolder);
-        console.log(tl.loc("CreatedDestinationDir", destinationFolder));        
+        console.log(tl.loc("CreatedDestinationDir", destinationFolder));
     }
 
     tl.cp(sourceFile, destinationFolder, "-f")
@@ -42,14 +42,14 @@ export async function download(url: string, downloadPath: string): Promise<void>
         req.end();
     });
 
-    file.end(null, null, file.close);    
+    file.end(null, null, file.close);
 }
 
 export async function unzip(zipLocation, unzipLocation): Promise<string> {
 
     var finishPromise = new Promise<string>(function (resolve, reject) {
         if(tl.exist(unzipLocation)) {
-            tl.rmRF(unzipLocation, false);
+            tl.rmRF(unzipLocation);
         }
 
         var unzipper = new DecompressZip(zipLocation);
@@ -66,6 +66,22 @@ export async function unzip(zipLocation, unzipLocation): Promise<string> {
     });
 
     return finishPromise;
+}
+
+export function readJsonFile(filePath: string): string {
+    var content = null;
+    if (tl.exist(filePath)) {
+        var content = fs.readFileSync(filePath, 'utf8').toString();
+
+        // remove BOM
+        if (content.indexOf('\uFEFF') == 0) {
+            content = content.slice(1);
+        }
+    }
+    else {
+        tl.debug('Json file not found: ' + filePath);
+    }
+    return content;
 }
 
 export function writeFile(filePath: string, content: string): void {
@@ -116,6 +132,10 @@ export function HasItems(arr: any[]): boolean {
     return true;
 }
 
+export function sleep (time): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, time));
+}
+
 export function deleteDirectory(dir: string): void {
     if(!dir) {
         return;
@@ -123,7 +143,9 @@ export function deleteDirectory(dir: string): void {
 
     if(tl.exist(dir)) {
         tl.debug("Cleaning-up directory " + dir);
-        tl.rmRF(dir, true);
+        try {
+            tl.rmRF(dir);
+        } catch(error) {}
     }
 }
 

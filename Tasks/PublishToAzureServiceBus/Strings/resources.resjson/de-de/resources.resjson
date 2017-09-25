@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Manueller Eingriff",
+  "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.description": "Bereitstellung anhalten und auf Eingriff warten",
+  "loc.instanceNameFormat": "Manueller Eingriff",
+  "loc.input.label.instructions": "Anweisungen",
+  "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser den manuellen Eingriff fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu diesem manuellen Eingriff treffen.",
+  "loc.input.label.emailRecipients": "Benutzer benachrichtigen",
+  "loc.input.help.emailRecipients": "Senden Sie eine E-Mail an bestimmte Benutzer (oder Gruppen), um diese über ausstehende manuelle Eingriffe zu informieren. Nur Benutzer mit der Berechtigung zur Bereitstellungsverwaltung können manuelle Eingriffe vornehmen.",
+  "loc.input.label.onTimeout": "Bei Zeitlimit",
+  "loc.input.help.onTimeout": "Lehnen Sie diese manuelle Intervention automatisch ab, oder nehmen Sie sie wieder auf, wenn sie für das angegebene Zeitlimit oder 60 Tage lang (je nachdem, was früher ist) aussteht."
+}

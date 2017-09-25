@@ -5,7 +5,6 @@
     "description": "Install an Apple certificate required to build on a macOS agent",
     "helpMarkDown": "",
     "category": "Utility",
-    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -13,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 116,
+        "Minor": 124,
         "Patch": 0
     },
     "runsOn": [
@@ -95,6 +94,14 @@
             "required": false,
             "helpMarkDown": "Select to delete the custom keychain from the agent after the build or release is complete.",
             "visibleRule": "keychain = custom",
+            "groupName": "advanced"
+        },
+        {
+            "name": "signingIdentity",
+            "type": "string",
+            "label": "Certificate Signing Identity",
+            "required": false,
+            "helpMarkDown": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
             "groupName": "advanced"
         }
     ],

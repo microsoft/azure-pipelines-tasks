@@ -1,7 +1,7 @@
 {
     "id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
     "name": "IISWebAppManagementOnMachineGroup",
-    "friendlyName": "IIS WebApp Manage(Preview)",
+    "friendlyName": "IIS Web App Manage",
     "description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=839731)",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 1
+        "Patch": 4
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Manage $(IISDeploymentType)",

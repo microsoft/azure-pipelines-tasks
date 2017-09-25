@@ -5,9 +5,10 @@ import * as path from 'path';
 import * as Q from 'q';
 import * as models from './models';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 
 const str = require('string');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
@@ -15,6 +16,7 @@ const builder = new xml2js.Builder();
 export class Constants {
     public static vsTestVersionString = 'version';
     public static vsTestLocationString = 'location';
+    public static systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 }
 
 export class Helper {
@@ -38,12 +40,35 @@ export class Helper {
         return obj === null || obj === '' || obj === undefined;
     }
 
+    public static isNullOrWhitespace(input) {
+        if (typeof input === 'undefined' || input === null) {
+            return true;
+        }
+        return input.replace(/\s/g, '').length < 1;
+    }
+
+    public static trimString(input: string): string {
+        if (input) {
+            return input.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, '');
+        }
+        return input;
+    }
+
     public static pathExistsAsFile(path: string) {
         return tl.exist(path) && tl.stats(path).isFile();
     }
 
     public static pathExistsAsDirectory(path: string) {
         return tl.exist(path) && tl.stats(path).isDirectory();
+    }
+
+    public static publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: boolean) {
+        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false};
+        taskProps.areacode = areaCode;
+        taskProps.result = message;
+        taskProps.tracepoint = tracePoint;
+        taskProps.isusererror = isUserError;
+        ci.publishEvent(taskProps);
     }
 
     public static getXmlContents(filePath: string): Q.Promise<any> {
@@ -118,11 +143,35 @@ export class Helper {
         }
     }
 
-    public static printMultiLineLog (multiLineString : string, logFunction : Function) {
+    public static printMultiLineLog(multiLineString: string, logFunction: Function) {
         const lines = multiLineString.toString().split('\n');
-            lines.forEach(function (line: string) {
-                logFunction(line);
-            });
+        lines.forEach(function (line: string) {
+            if (line.trim().length === 0) {
+                return;
+            }
+            logFunction(line);
+        });
+    }
+
+    public static modifyVsTestConsoleArgsForResponseFile(argument: string): string {
+        if (argument) {
+            if (!argument.startsWith('/')) {
+                return '\"' + argument + '\"';
+            } else {
+                // we need to add quotes to args we are passing after : as the arg value can have spaces
+                // we dont need to changes the guy who is creating the args as toolrunner already takes care of this
+                // for response file we need to take care of this ourselves
+                // eg: /settings:c:\a b\1.settings should become /settings:"C:\a b\1.settings"
+                let indexOfColon = argument.indexOf(':'); // find if args has ':'
+                if (indexOfColon > 0 && argument[indexOfColon + 1] !== '\"') { // only process when quotes are not there
+                    let modifyString = argument.substring(0, indexOfColon + 1); // get string till colon
+                    modifyString = modifyString + '\"' + argument.substring(indexOfColon + 1) + '\"'; // append '"' and rest of the string
+                    return modifyString;
+                }
+            }
+        }
+
+        return argument;
     }
 
 }

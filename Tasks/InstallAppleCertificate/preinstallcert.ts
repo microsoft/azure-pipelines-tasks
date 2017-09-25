@@ -21,7 +21,12 @@ async function run() {
 
         // get the P12 details - SHA1 hash and common name (CN)
         let p12Hash: string = await sign.getP12SHA1Hash(certPath, certPwd);
-        let p12CN: string = await sign.getP12CommonName(certPath, certPwd);
+        // give user an option to override the CN as a workaround if we can't parse the certificate
+        let p12CN: string = tl.getInput('certSigningIdentity', false);
+        if (!p12CN) {
+            p12CN = await sign.getP12CommonName(certPath, certPwd);
+        }
+
         if (!p12Hash || !p12CN) {
             throw tl.loc('INVALID_P12');
         }

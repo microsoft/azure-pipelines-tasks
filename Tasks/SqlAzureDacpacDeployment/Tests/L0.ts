@@ -85,5 +85,8 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
         it('Validate SQL Package Command Line Arguments (Get-SqlPackageCommandArguments)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityGetSqlCmdArgs.ps1'), done);
         });
+        it('Validate Username (Get-FormattedSqlUsername)', (done) => {
+            psr.run(path.join(__dirname, 'L0UtilityFormatUsername.ps1'), done);
+        });
     }
 });

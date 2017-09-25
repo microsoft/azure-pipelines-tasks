@@ -12,11 +12,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 4
+    "Minor": 3,
+    "Patch": 1
   },
   "demands": [],
-  "preview": "true",
+  "preview": "false",
   "groups": [
     {
       "name": "advanced",
@@ -67,7 +67,9 @@
       "required": true,
       "options": {
         "Build an image": "Build an image",
+        "Tag images": "Tag images",
         "Push an image": "Push an image",
+        "Push images": "Push images",
         "Run an image": "Run an image",
         "Run a Docker command": "Run a Docker command"
       },
@@ -114,15 +116,23 @@
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
       "required": true,
-      "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
+      "visibleRule": "action == Build an image || action == Push an image || action == Run an image",
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "imageNamesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageNamesPath",
+      "required": true,
+      "visibleRule": "action == Tag images || action == Push images",
+      "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
     },
     {
       "name": "qualifyImageName",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.qualifyImageName",
       "defaultValue": "true",
-      "visibleRule": "action = Build an image || action = Push an image || action = Run an image",
+      "visibleRule": "action = Build an image || action = Tag images || action = Push an image || action = Push images || action = Run an image",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
     },
     {
@@ -133,7 +143,7 @@
         "rows": "2"
       },
       "label": "ms-resource:loc.input.label.additionalImageTags",
-      "visibleRule": "action = Build an image || action = Push an image",
+      "visibleRule": "action = Build an image || action = Tag images || action = Push an image || action = Push images",
       "helpMarkDown": "ms-resource:loc.input.help.additionalImageTags"
     },
     {
@@ -141,7 +151,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeSourceTags",
       "defaultValue": "false",
-      "visibleRule": "action = Build an image || action = Push an image",
+      "visibleRule": "action = Build an image || action = Tag image || action = Push an image || action = Push images",
       "helpMarkDown": "ms-resource:loc.input.help.includeSourceTags"
     },
     {
@@ -149,14 +159,14 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeLatestTag",
       "defaultValue": "false",
-      "visibleRule": "action = Build an image || action = Push an image",
+      "visibleRule": "action = Build an image || action = Push an image || action = Push images",
       "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
     },
     {
       "name": "imageDigestFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.imageDigestFile",
-      "visibleRule": "action = Push an image",
+      "visibleRule": "action = Push an image || action = Push images",
       "helpMarkDown": "ms-resource:loc.input.help.imageDigestFile"
     },
     {
@@ -291,6 +301,7 @@
   "messages": {
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
-    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound"
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile"
   }
 }

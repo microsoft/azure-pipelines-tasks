@@ -1,0 +1,73 @@
+{
+  "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
+  "name": "PublishToAzureServiceBus",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Utility",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "Server"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 3
+  },
+  "preview": "true",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:AzureServiceBus",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "messageBody",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.messageBody",
+      "required": true,
+      "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
+      "helpMarkDown": "ms-resource:loc.input.help.messageBody",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000",
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForCompletion",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "ServiceBus": {
+      "events": {
+        "taskCompleted": {
+          "enabled": "$(waitForCompletion)"
+        }
+      },
+      "execute": {
+        "endpointId": "$(connectedServiceName)",
+        "connectionString": "$(endpoint.serviceBusConnectionString)",
+        "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
+        "messageBody": "$(messageBody)",
+        "messageProperties": {
+          "jobid": "$(system.jobId)",
+          "taskId": "$(system.taskId)"
+        }
+      }
+    }
+  }
+}

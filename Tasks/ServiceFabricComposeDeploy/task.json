@@ -1,7 +1,7 @@
 {
     "id": "19C02B15-D377-40E0-9EFA-3168506E0933",
     "name": "ServiceFabricComposeDeploy",
-    "friendlyName": "Service Fabric Compose Deploy (Preview)",
+    "friendlyName": "Service Fabric Compose Deploy",
     "description": "Deploy a docker-compose application to a Service Fabric cluster.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=847030)",
     "category": "Deploy",
@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 38
+        "Minor": 1,
+        "Patch": 5
     },
     "demands": [
         "Cmd"
@@ -119,7 +119,7 @@
             "label": "Password Encrypted",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
             "groupName": "registry",
             "visibleRule": "registryCredentials = UsernamePassword"
         },
@@ -166,11 +166,11 @@
         "RemovingApplication": "Removing the existing application '{0}'.",
         "ApplicationRemoved": "Application removed.",
         "EncryptingPassword": "Encrypting the password with the Server Certificate.",
-        "CertificateNotFound": "The Server Certificate was not found, the password will not be encrypted.",
         "CreatingApplication": "Creating application",
         "WaitingForDeploy": "Waiting for deploy...",
         "CurrentStatus": "Current Status: {0}",
         "DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
-        "CheckingComposeFile": "Checking compose file"
+        "CheckingComposeFile": "Checking compose file",
+        "UsingPreviewAPI": "Using the preview APIs"
     }
 }
