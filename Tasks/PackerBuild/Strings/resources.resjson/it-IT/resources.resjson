@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Crea immagine macchina virtuale (ANTEPRIMA)",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Crea l'immagine della macchina virtuale con lo strumento di creazione pacchetti. È possibile usare questa immagine per la distribuzione di set di scalabilità di macchine virtuali di Azure",
   "loc.instanceNameFormat": "Crea immagine non modificabile",

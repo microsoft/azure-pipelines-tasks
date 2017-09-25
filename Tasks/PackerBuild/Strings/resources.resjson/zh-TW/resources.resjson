@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "建置機器映像 (預覽)",
+  "loc.friendlyName": "Build Machine Image",
   "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "使用 Packer 建置機器映像。此映像可用於 Azure 虛擬機器擴展集部署",
   "loc.instanceNameFormat": "建置不可變的映像",
