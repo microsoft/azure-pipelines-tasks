@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web 应用部署(预览)",
+  "loc.friendlyName": "IIS Web App Deploy",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "使用 WebDeploy 部署网站或 Web 应用程序",
   "loc.instanceNameFormat": "部署 IIS 网站/应用: $(WebDeployPackage)",

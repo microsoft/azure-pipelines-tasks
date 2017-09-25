@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Distribuzione app Web IIS (anteprima)",
+  "loc.friendlyName": "IIS Web App Deploy",
   "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Consente di distribuire un sito Web o un'applicazione Web con WebDeploy",
   "loc.instanceNameFormat": "Distribuisci sito Web/app IIS: $(WebDeployPackage)",
