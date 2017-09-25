@@ -506,6 +506,12 @@ function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: s
 
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
     const defer = Q.defer<number>();
+
+    //Re-calculate the results directory based on final runsettings and clean up again if required.
+    testResultsDirectory = getTestResultsDirectory(settingsFile, testResultsDirectory);
+    tl.rmRF(testResultsDirectory);
+    tl.mkdirP(testResultsDirectory);
+
     if (isTiaAllowed()) {
         let testCaseFilterFile = "";
         let testCaseFilterOutput = "";
