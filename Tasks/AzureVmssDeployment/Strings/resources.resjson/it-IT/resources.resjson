@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Distribuzione set di scalabilità macchine virtuali di Azure (ANTEPRIMA)",
+  "loc.friendlyName": "Azure VM scale set Deployment",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "Distribuisce l'immagine del set di scalabilità di macchine virtuali",
   "loc.instanceNameFormat": "Set di scalabilità di macchine virtuali di Azure $(vmssName): $(action)",
