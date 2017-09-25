@@ -26,10 +26,10 @@ export class NuGetConfigHelper2 {
         private authInfo: auth.NuGetExtendedAuthInfo,
         private environmentSettings: ngToolRunner.NuGetEnvironmentSettings,
         private tempConfigPath: string /*optional*/,
-        private useNuGetToModifyConfigFile?: boolean /* optional */)
+        useNuGetToModifyConfigFile?: boolean /* optional */)
     {
         this.tempNugetConfigPath = tempConfigPath || this.getTempNuGetConfigPath();
-        this.useNuGetToModifyConfigFile = useNuGetToModifyConfigFile || true;
+        useNuGetToModifyConfigFile = useNuGetToModifyConfigFile || true;
         this.nugetXmlHelper = useNuGetToModifyConfigFile ?
             new NuGetExeXmlHelper(this.nugetPath, this.tempNugetConfigPath, this.authInfo, this.environmentSettings) :
             new NuGetXmlHelper(this.tempNugetConfigPath);
