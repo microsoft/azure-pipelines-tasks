@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Équilibreur de charge réseau Azure (préversion)",
+  "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Connecter/déconnecter l'interface réseau d'une machine virtuelle Azure à un pool d'adresses principal d'un équilibreur de charge",
   "loc.instanceNameFormat": "Équilibreur de charge réseau Azure : $(LoadBalancer) - $(Action)",

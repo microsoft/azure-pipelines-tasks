@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure ネットワーク ロード バランサー (プレビュー)",
+  "loc.friendlyName": "Azure Network Load Balancer",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Azure 仮想マシンのネットワーク インターフェイスのロード バランサーのバックエンド アドレス プールへの接続/切断",
   "loc.instanceNameFormat": "Azure ネットワーク ロード バランサー: $(LoadBalancer) - $(Action)",
