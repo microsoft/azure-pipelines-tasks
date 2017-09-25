@@ -7,11 +7,12 @@ var request = require('request');
 export class JenkinsJobDetails {
     jobName: string;
     buildId: number;
+    jenkinsJobType: string;
     isMultibranchPipeline: boolean;
     multibranchPipelineName: string;
     multibranchPipelineUrlInfix: string;
 
-    constructor(jobName: string, buildId: number, multibranchPipelineName?: string) {
+    constructor(jobName: string, buildId: number, jenkinsJobType?: string, multibranchPipelineName?: string) {
         this.jobName = jobName;
 
         if (isNaN(buildId)) {
@@ -19,11 +20,17 @@ export class JenkinsJobDetails {
         }
         
         this.buildId = buildId;
+        this.jenkinsJobType = jenkinsJobType;
         this.multibranchPipelineName = multibranchPipelineName;
 
-        this.isMultibranchPipeline = !!multibranchPipelineName && multibranchPipelineName.trim().length > 0;
+        this.isMultibranchPipeline = this.jenkinsJobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
         this.multibranchPipelineUrlInfix = this.isMultibranchPipeline ? `/job/${this.multibranchPipelineName}` : "";
     }
+}
+
+export class JenkinsJobTypes {
+    public static Folder: string = "com.cloudbees.hudson.plugins.folder.Folder";
+    public static MultibranchPipeline: string = "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject";
 }
 
 export class JenkinsRestClient {
@@ -206,36 +213,65 @@ export class JenkinsRestClient {
         return defer.promise;
     }
 
+    public GetJobType(): Q.Promise<string> {
+        let defer = Q.defer<string>();
+        let jenkinsJobType: string = tl.getInput("jenkinsJobType", false) || "";
+
+        if (!!jenkinsJobType && jenkinsJobType.trim().length > 0) {
+            // if the jenkins server is reachable its already either set by the service or in the task
+            defer.resolve(jenkinsJobType.trim());
+        }
+        else {
+            const lastSuccessfulUrlSuffix: string = "/api/json";
+            const handlerbarSource = "{{_class}}";
+            tl.debug("Trying to get job type");
+
+            this.DownloadJsonContent(lastSuccessfulUrlSuffix, handlerbarSource, null).then((result) => {
+                defer.resolve(result.trim());
+            }, (error) => {
+                tl.debug('Could not detect project type');
+                defer.resolve("");
+            });
+        }
+
+        return defer.promise;
+    }
+
     public GetJobDetails(): Q.Promise<JenkinsJobDetails> {
         const jenkinsBuild: string = tl.getInput('jenkinsBuild', true);
-
         if (jenkinsBuild === 'LastSuccessfulBuild') {
             return this.GetLastSuccessfulBuild();
         } else {
             let defer = Q.defer<JenkinsJobDetails>();
             const jobName: string = tl.getInput('jobName', true);
-            const isJenkinsMultibranchPipeline: boolean = tl.getBoolInput("multibranchPipeline", false);
-
+            let jobType: string = "";
             let buildIdStr: string = tl.getInput('jenkinsBuildNumber');
             let branchName: string;
-            
-            // if its multibranch pipeline extract the branch name and buildId from the buildNumber input
-            if (isJenkinsMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsFolderSeperator) != -1) {
-                tl.debug(`Extracting branchname and buildId from selected version`);
-                let position: number = buildIdStr.indexOf(JenkinsRestClient.JenkinsFolderSeperator);
-                branchName = buildIdStr.substring(0, position);
-                buildIdStr = buildIdStr.substring(position + 1);
-            }
 
-            const buildId = parseInt(buildIdStr);
-            if (isNaN(buildId)) {
-                let errorMessage = tl.loc("InvalidBuildId", buildIdStr);
-                defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", errorMessage)));
-            }
-            else {
-                console.log(tl.loc("FoundJenkinsJobDetails", jobName, buildId, branchName));
-                defer.resolve(new JenkinsJobDetails(jobName, buildId, branchName));
-            }
+            this.GetJobType().then((result: string) => {
+                jobType = result;
+            }).fin(() => {
+
+                let isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
+
+                tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
+                // if its multibranch pipeline extract the branch name and buildId from the buildNumber input
+                if (isMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsFolderSeperator) != -1) {
+                    tl.debug(`Extracting branchname and buildId from selected version`);
+                    let position: number = buildIdStr.indexOf(JenkinsRestClient.JenkinsFolderSeperator);
+                    branchName = buildIdStr.substring(0, position);
+                    buildIdStr = buildIdStr.substring(position + 1);
+                }
+
+                const buildId = parseInt(buildIdStr);
+                if (isNaN(buildId)) {
+                    defer.reject(new Error(tl.loc("InvalidBuildId", buildIdStr)));
+                }
+                else {
+                    console.log(tl.loc("FoundJenkinsJobDetails", jobName, buildId, branchName));
+                    defer.resolve(new JenkinsJobDetails(jobName, buildId, jobType, branchName));
+                }
+            });
 
             return defer.promise;
         }
@@ -243,49 +279,57 @@ export class JenkinsRestClient {
 
     public GetLastSuccessfulBuild(): Q.Promise<JenkinsJobDetails> {
         let defer = Q.defer<JenkinsJobDetails>();
+        let jobType: string = "";
         const jobName: string = tl.getInput('jobName', true);
-        const isJenkinsMultibranchPipeline: boolean = tl.getBoolInput("multibranchPipeline", false);
+
+        this.GetJobType().then((result: string) => {
+            jobType = result;
+        }).fin(() => {
+
+            let jenkinsTreeParameter = "lastSuccessfulBuild[id,displayname]";
+            let handlerbarSource = "{{lastSuccessfulBuild.id}}";
+            const isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
+
+            tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
+            if (isMultibranchPipeline) {
+                jenkinsTreeParameter = "jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]"
+                handlerbarSource = "{{#with (selectMaxOf jobs 'lastSuccessfulBuild.timestamp') as |job|}}{ \"branchName\": \"{{job.name}}\", \"buildId\": \"{{job.lastSuccessfulBuild.id}}\" }{{/with}}"
+            }
+
+            const lastSuccessfulUrlSuffix: string = `/api/json?tree=${jenkinsTreeParameter}`;
+            this.DownloadJsonContent(lastSuccessfulUrlSuffix, handlerbarSource, null).then((result) => {
+                let buildId: number;
+                let branchName: string;
+                let succeeded: boolean = false;
+
+                if (isMultibranchPipeline) {
+                    try {
+                        let jsonResult = JSON.parse(result);
+                        branchName = jsonResult["branchName"];
+                        buildId = parseInt(jsonResult["buildId"]);
+                        tl.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
+                    } catch(error) {
+                        defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
+                    }
+                }
+                else {
+                    buildId = parseInt(result);
+                }
+
+                if (isNaN(buildId)) {
+                    defer.reject(new Error(tl.loc("InvalidBuildId", buildId)));
+                }
+                else {
+                    defer.resolve(new JenkinsJobDetails(jobName, buildId, jobType, branchName));
+                }
+
+            }, (error) => {
+                defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
+            });
+
+        });
 
         tl.debug(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
-
-        let jenkinsTreeParameter = "lastSuccessfulBuild[id,displayname]";
-        let handlerbarSource = "{{lastSuccessfulBuild.id}}";
-        if (isJenkinsMultibranchPipeline) {
-            jenkinsTreeParameter = "jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]"
-            handlerbarSource = "{{#with (selectMaxOf jobs 'lastSuccessfulBuild.timestamp') as |job|}}{ \"branchName\": \"{{job.name}}\", \"buildId\": \"{{job.lastSuccessfulBuild.id}}\" }{{/with}}"
-        }
-
-        const lastSuccessfulUrlSuffix: string = `/api/json?tree=${jenkinsTreeParameter}`;
-        this.DownloadJsonContent(lastSuccessfulUrlSuffix, handlerbarSource, null).then((result) => {
-            let buildId: number;
-            let branchName: string;
-            let succeeded: boolean = false;
-
-            if (isJenkinsMultibranchPipeline) {
-                try {
-                    let jsonResult = JSON.parse(result);
-                    branchName = jsonResult["branchName"];
-                    buildId = parseInt(jsonResult["buildId"]);
-                    tl.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
-                } catch(error) {
-                    defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
-                }
-            }
-            else {
-                buildId = parseInt(result);
-            }
-
-            if (isNaN(buildId)) {
-                let errorMessage = tl.loc("InvalidBuildId", result);
-                defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", errorMessage)));
-            }
-            else {
-                defer.resolve(new JenkinsJobDetails(jobName, buildId, branchName));
-            }
-
-        }, (error) => {
-            defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
-        });
 
         return defer.promise;
     }

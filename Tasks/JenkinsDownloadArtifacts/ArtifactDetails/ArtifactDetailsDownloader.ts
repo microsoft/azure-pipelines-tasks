@@ -53,7 +53,7 @@ export class ArtifactDetailsDownloader {
                 // if multibranch validate if the branch names are same.
                 let startBuildBranchName: string = this.GetBranchNameFromVersion(startBuildIdStr, jenkinsJobDetails.isMultibranchPipeline);
 
-                if (startBuildBranchName.toLowerCase() !== jenkinsJobDetails.multibranchPipelineName) {
+                if (startBuildBranchName.toLowerCase() !== jenkinsJobDetails.multibranchPipelineName.toLowerCase()) {
                     defer.reject(new Error(tl.loc("InvalidMultibranchPipelineName", startBuildBranchName, jenkinsJobDetails.multibranchPipelineName)));
                     return defer.promise;
                 }
@@ -78,7 +78,7 @@ export class ArtifactDetailsDownloader {
             }
 
             // #1. Since we have two builds, we need to figure the build index
-            this.GetBuildIdIndex(startBuildId, endBuildId).then((buildIndex) => {
+            this.GetBuildIdIndex(jenkinsJobDetails, startBuildId, endBuildId).then((buildIndex) => {
                 let startIndex: number = buildIndex['startIndex'];
                 let endIndex: number = buildIndex['endIndex'];
 
@@ -128,11 +128,11 @@ export class ArtifactDetailsDownloader {
         return branchName;
     }
 
-    private GetBuildIdIndex(startBuildId: number, endBuildId: number): Q.Promise<any> {
+    private GetBuildIdIndex(jenkinsJobDetails: JenkinsJobDetails, startBuildId: number, endBuildId: number): Q.Promise<any> {
         let defer = Q.defer<any>();
-        let buildUrl: string = "/api/json?tree=allBuilds[number]";
-        let startIndex: number = 0;
-        let endIndex: number = 0;
+        let buildUrl: string = `${jenkinsJobDetails.multibranchPipelineUrlInfix}/api/json?tree=allBuilds[number]`;
+        let startIndex: number = -1;
+        let endIndex: number = -1;
 
         console.log(tl.loc("FindBuildIndex"));
         handlebars.registerHelper('BuildIndex', function(buildId, index, options) {
@@ -149,7 +149,7 @@ export class ArtifactDetailsDownloader {
         let downloadHelper: JenkinsRestClient = new JenkinsRestClient();
         downloadHelper.DownloadJsonContent(buildUrl, source, null).then(() => {
             console.log(tl.loc("FoundBuildIndex", startIndex, endIndex));
-            if (startIndex === 0 || endIndex === 0) {
+            if (startIndex === -1 || endIndex === -1) {
                 tl.debug(`cannot find valid startIndex ${startIndex} or endIndex ${endIndex}`);
                 defer.reject(tl.loc("CannotFindBuilds"));
             }

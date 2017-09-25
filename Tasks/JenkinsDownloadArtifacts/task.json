@@ -54,12 +54,17 @@
             }
         },
         {
-            "name": "multibranchPipeline",
-            "type": "boolean",
-            "label": "Is Multibranch Pipeline",
-            "defaultValue": false,
+            "name": "jenkinsJobType",
+            "type": "pickList",
+            "label": "Jenkins Job Type",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Select this if the job is a multibranch pipeline type."
+            "helpMarkDown": "Jenkins job type, detected automatically.",
+            "visibleRule": "jobName = invalidjobName",
+            "properties": {
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
+            }
         },
         {
             "name": "saveTo",
@@ -132,7 +137,7 @@
             "label": "Commit and WorkItem FileName",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "downloadCommitsAndWorkItems == true",
+            "visibleRule": "downloadCommitsAndWorkItems == invalid",
             "groupName": "advanced",
             "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json"
         },
@@ -211,23 +216,32 @@
       },
       {
         "endpointId": "$(serverEndpoint)",
+        "target": "jenkinsJobType",
+        "dataSourceName": "JenkinsJobType",
+        "parameters": {
+            "definition": "$(jobName)"
+        },
+        "resultTemplate": "{ \"Value\" : \"{{_class}}\", \"DisplayValue\" : \"{{{_class}}}\" }"
+      },
+      {
+        "endpointId": "$(serverEndpoint)",
         "target": "jenkinsBuildNumber",
-        "dataSourceName": "{{#equals multibranchPipeline 'true' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+        "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
         "parameters": {
             "definition": "$(jobName)",
-            "multibranchPipeline": "$(multibranchPipeline)"
+            "jenkinsJobType": "$(jenkinsJobType)"
         },
-        "resultTemplate": "{{#equals multibranchPipeline 'true' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
         "endpointId": "$(serverEndpoint)",
         "target": "startJenkinsBuildNumber",
-        "dataSourceName": "{{#equals multibranchPipeline 'true' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+        "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
         "parameters": {
             "definition": "$(jobName)",
-            "multibranchPipeline": "$(multibranchPipeline)"
+            "jenkinsJobType": "$(jenkinsJobType)"
         },
-        "resultTemplate": "{{#equals multibranchPipeline 'true' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
           "endpointId":"$(ConnectedServiceNameARM)",
