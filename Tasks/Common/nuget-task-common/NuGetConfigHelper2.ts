@@ -1,4 +1,4 @@
-﻿import * as fs from "fs";
+import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
 import * as Q from "q";
@@ -29,7 +29,7 @@ export class NuGetConfigHelper2 {
         useNuGetToModifyConfigFile?: boolean /* optional */)
     {
         this.tempNugetConfigPath = tempConfigPath || this.getTempNuGetConfigPath();
-        useNuGetToModifyConfigFile = useNuGetToModifyConfigFile || true;
+        useNuGetToModifyConfigFile = useNuGetToModifyConfigFile === undefined ? true : useNuGetToModifyConfigFile;
         this.nugetXmlHelper = useNuGetToModifyConfigFile ?
             new NuGetExeXmlHelper(this.nugetPath, this.tempNugetConfigPath, this.authInfo, this.environmentSettings) :
             new NuGetXmlHelper(this.tempNugetConfigPath);
