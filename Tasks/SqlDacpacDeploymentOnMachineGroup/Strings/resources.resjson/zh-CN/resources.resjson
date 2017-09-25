@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "SQL Server 数据库部署(预览)",
+  "loc.friendlyName": "SQL Server Database Deploy",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "使用 DACPAC 或 SQL 脚本部署到 SQL Server 数据库 ",
   "loc.instanceNameFormat": "使用以下方式部署: $(TaskType)",
