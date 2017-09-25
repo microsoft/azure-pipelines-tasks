@@ -203,16 +203,15 @@ export class ResourceGroup {
             name = this.taskParameters.csmFileLink;
         }
         name = path.basename(name).split(".")[0].replace(" ", "");
-        var ts = new Date(Date.now());
-        var uniqueId = uuid().substr(0,4);
-        var depName = util.format("%s-%s%s%s-%s%s%s-%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes(), ts.getSeconds(), uniqueId);
-        if (depName.length > 64) {
-            depName = depName.substr(depName.length - 64);
-            if (depName[0] == "-") {
-                depName = depName.substr(1);
-            }
+        name = name.substr(0, 40);
+        var timestamp = new Date(Date.now());
+        var uniqueId = uuid().substr(0, 4);
+        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate(), timestamp.getHours(), timestamp.getMinutes(), timestamp.getSeconds(), uniqueId);
+        var deploymentName = util.format("%s-%s", name, suffix);
+        if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
+            deploymentName = util.format("deployment-%s", suffix);
         }
-        return depName;
+        return deploymentName;
     }
 
     private castToType(value: string, type: string): any {
