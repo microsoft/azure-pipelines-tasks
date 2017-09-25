@@ -13,6 +13,7 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 
+var uuid = require("uuid");
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
@@ -202,9 +203,15 @@ export class ResourceGroup {
             name = this.taskParameters.csmFileLink;
         }
         name = path.basename(name).split(".")[0].replace(" ", "");
-        var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes());
-        return depName;
+        name = name.substr(0, 40);
+        var timestamp = new Date(Date.now());
+        var uniqueId = uuid().substr(0, 4);
+        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate(), timestamp.getHours(), timestamp.getMinutes(), timestamp.getSeconds(), uniqueId);
+        var deploymentName = util.format("%s-%s", name, suffix);
+        if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
+            deploymentName = util.format("deployment-%s", suffix);
+        }
+        return deploymentName;
     }
 
     private castToType(value: string, type: string): any {
