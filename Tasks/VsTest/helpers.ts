@@ -179,7 +179,7 @@ export class Helper {
         tl.debug("Changing active code page to UTF-8");
         const chcp = tl.tool(path.resolve(process.env.windir, "system32", "chcp.com"));
         chcp.arg(["65001"]);
-        let output = chcp.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+        chcp.execSync({ silent: true } as tr.IExecSyncOptions);
     }
 
 }
