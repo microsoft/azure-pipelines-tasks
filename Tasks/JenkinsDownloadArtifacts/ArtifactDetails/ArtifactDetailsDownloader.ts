@@ -15,7 +15,7 @@ export class ArtifactDetailsDownloader {
 
         let jenkinsBuild = tl.getInput('jenkinsBuild', true);
         let startBuildIdStr: string = tl.getInput("startJenkinsBuildNumber", false) || "";
-        let startBuildId: number = this.GetBuildIdFromVersion(startBuildIdStr, jenkinsJobDetails.isMultibranchPipeline);
+        let startBuildId: number = this.GetBuildIdFromVersion(startBuildIdStr, jenkinsJobDetails.isMultiBranchPipeline);
         let endBuildId: number = jenkinsJobDetails.buildId;
         let commitsDownloader: CommitsDownloader = new CommitsDownloader();
             
@@ -27,7 +27,7 @@ export class ArtifactDetailsDownloader {
 
         // validate the start build only if its required.
         if (startBuildIdStr.trim().length > 0 && isNaN(startBuildId) && jenkinsBuild !== 'LastSuccessfulBuild') {
-            defer.reject(new Error(tl.loc("InvalidJenkinsStartBuildNumber")));
+            defer.reject(new Error(tl.loc("InvalidJenkinsStartBuildNumber", startBuildIdStr)));
             return defer.promise;
         }
 
@@ -49,12 +49,12 @@ export class ArtifactDetailsDownloader {
             });
         }
         else {
-            if (jenkinsJobDetails.isMultibranchPipeline) {
+            if (jenkinsJobDetails.isMultiBranchPipeline) {
                 // if multibranch validate if the branch names are same.
-                let startBuildBranchName: string = this.GetBranchNameFromVersion(startBuildIdStr, jenkinsJobDetails.isMultibranchPipeline);
+                let startBuildBranchName: string = this.GetBranchNameFromVersion(startBuildIdStr, jenkinsJobDetails.isMultiBranchPipeline);
 
-                if (startBuildBranchName.toLowerCase() !== jenkinsJobDetails.multibranchPipelineName.toLowerCase()) {
-                    defer.reject(new Error(tl.loc("InvalidMultibranchPipelineName", startBuildBranchName, jenkinsJobDetails.multibranchPipelineName)));
+                if (startBuildBranchName.toLowerCase() !== jenkinsJobDetails.multiBranchPipelineName.toLowerCase()) {
+                    defer.reject(new Error(tl.loc("InvalidMultibranchPipelineName", startBuildBranchName, jenkinsJobDetails.multiBranchPipelineName)));
                     return defer.promise;
                 }
             }
@@ -111,7 +111,7 @@ export class ArtifactDetailsDownloader {
                 buildId = parseInt(version);
             }
             else {
-                buildId = parseInt(version.substring(version.lastIndexOf(JenkinsRestClient.JenkinsFolderSeperator) + 1));
+                buildId = parseInt(version.substring(version.lastIndexOf(JenkinsRestClient.JenkinsBranchPathSeparator) + 1));
             }
         }
 
@@ -122,7 +122,7 @@ export class ArtifactDetailsDownloader {
         let branchName: string = version;
 
         if (!!version && isMultibranchPipeline) {
-            branchName = version.substring(0, version.lastIndexOf(JenkinsRestClient.JenkinsFolderSeperator));
+            branchName = version.substring(0, version.lastIndexOf(JenkinsRestClient.JenkinsBranchPathSeparator));
         }
 
         return branchName;
@@ -130,7 +130,7 @@ export class ArtifactDetailsDownloader {
 
     private GetBuildIdIndex(jenkinsJobDetails: JenkinsJobDetails, startBuildId: number, endBuildId: number): Q.Promise<any> {
         let defer = Q.defer<any>();
-        let buildUrl: string = `${jenkinsJobDetails.multibranchPipelineUrlInfix}/api/json?tree=allBuilds[number]`;
+        let buildUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/api/json?tree=allBuilds[number]`;
         let startIndex: number = -1;
         let endIndex: number = -1;
 

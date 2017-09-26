@@ -8,9 +8,9 @@ export class JenkinsJobDetails {
     jobName: string;
     buildId: number;
     jobType: string;
-    isMultibranchPipeline: boolean;
-    multibranchPipelineName: string;
-    multibranchPipelineUrlInfix: string;
+    isMultiBranchPipeline: boolean;
+    multiBranchPipelineName: string;
+    multiBranchPipelineUrlInfix: string;
 
     constructor(jobName: string, buildId: number, jenkinsJobType?: string, multibranchPipelineName?: string) {
         this.jobName = jobName;
@@ -21,16 +21,16 @@ export class JenkinsJobDetails {
         
         this.buildId = buildId;
         this.jobType = jenkinsJobType;
-        this.multibranchPipelineName = multibranchPipelineName;
+        this.multiBranchPipelineName = multibranchPipelineName;
 
-        this.isMultibranchPipeline = this.jobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
-        this.multibranchPipelineUrlInfix = this.isMultibranchPipeline ? `/job/${this.multibranchPipelineName}` : "";
+        this.isMultiBranchPipeline = this.jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
+        this.multiBranchPipelineUrlInfix = this.isMultiBranchPipeline ? `/job/${this.multiBranchPipelineName}` : "";
     }
 }
 
 export class JenkinsJobTypes {
     public static Folder: string = "com.cloudbees.hudson.plugins.folder.Folder";
-    public static MultibranchPipeline: string = "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject";
+    public static MultiBranchPipeline: string = "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject";
 }
 
 export class JenkinsRestClient {
@@ -227,9 +227,10 @@ export class JenkinsRestClient {
             tl.debug("Trying to get job type");
 
             this.DownloadJsonContent(lastSuccessfulUrlSuffix, handlerbarSource, null).then((result) => {
+                tl.debug(`Found job type ${result}`);
                 defer.resolve(result.trim());
             }, (error) => {
-                tl.debug('Could not detect project type');
+                tl.debug('Could not detect job type');
                 defer.resolve("");
             });
         }
@@ -252,13 +253,13 @@ export class JenkinsRestClient {
                 jobType = result;
             }).fin(() => {
 
-                let isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
+                let isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
 
                 tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
                 // if its multibranch pipeline extract the branch name and buildId from the buildNumber input
-                if (isMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsFolderSeperator) != -1) {
+                if (isMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsBranchPathSeparator) != -1) {
                     tl.debug(`Extracting branchname and buildId from selected version`);
-                    let position: number = buildIdStr.indexOf(JenkinsRestClient.JenkinsFolderSeperator);
+                    let position: number = buildIdStr.indexOf(JenkinsRestClient.JenkinsBranchPathSeparator);
                     branchName = buildIdStr.substring(0, position);
                     buildIdStr = buildIdStr.substring(position + 1);
                 }
@@ -269,7 +270,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
-                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultibranchPipeline}, MultiBranchPipelineName:${jobDetail.multibranchPipelineName}`);
+                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
                     defer.resolve(jobDetail);
                 }
             });
@@ -289,7 +290,7 @@ export class JenkinsRestClient {
 
             let jenkinsTreeParameter = "lastSuccessfulBuild[id,displayname]";
             let handlerbarSource = "{{lastSuccessfulBuild.id}}";
-            const isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
+            const isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
 
             tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
             if (isMultibranchPipeline) {
@@ -322,7 +323,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
-                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultibranchPipeline}, MultiBranchPipelineName:${jobDetail.multibranchPipelineName}`);
+                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
                     defer.resolve(jobDetail);
                 }
 
@@ -337,5 +338,5 @@ export class JenkinsRestClient {
         return defer.promise;
     }
 
-    public static JenkinsFolderSeperator: string = "/";
+    public static JenkinsBranchPathSeparator: string = "/";
 }

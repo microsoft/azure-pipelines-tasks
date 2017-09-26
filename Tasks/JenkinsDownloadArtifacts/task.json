@@ -231,7 +231,7 @@
             "definition": "$(jobName)",
             "jenkinsJobType": "$(jenkinsJobType)"
         },
-        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
         "endpointId": "$(serverEndpoint)",
@@ -241,7 +241,7 @@
             "definition": "$(jobName)",
             "jenkinsJobType": "$(jenkinsJobType)"
         },
-        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[{{#jobs}}{{#builds}}{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" },{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
           "endpointId":"$(ConnectedServiceNameARM)",
@@ -258,7 +258,7 @@
     "messages": {
         "GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
         "GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
-        "CouldNotGetLastSuccessfulBuildNumber": "Getting last successful build number failed with an Error: %s",
+        "CouldNotGetLastSuccessfulBuildNumber": "Getting last successful build number failed with an error: %s",
         "ServerCallFailed": "HTTP call to Jenkins server failed.",
         "ServerCallErrorCode": "HTTP response code: %d",
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
@@ -287,7 +287,7 @@
         "CannotFindBuilds": "Cannot find builds",
         "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
         "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
-        "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number is not valid.",
+        "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
         "FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
         "ClientIdCannotBeEmpty": "ClientID is a required parameter.",
         "DomainCannotBeEmpty": "Domain is a required parameter.",
