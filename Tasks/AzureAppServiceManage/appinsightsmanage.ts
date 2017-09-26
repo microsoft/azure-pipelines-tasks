@@ -11,14 +11,16 @@ var APPLICATION_INSIGHTS_EXTENSION_NAME = "Microsoft.ApplicationInsights.AzureWe
 export class AppInsightsManage {
 
     private endpoint;
+    private appInsightsResourceGroupName: string;
     private appInsightsResourceName: string;
     private webAppName: string;
     private resourceGroupName: string;
     private specifySlotFlag: boolean;
     private slotName: string;
 
-    constructor(endpoint, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName) {
+    constructor(endpoint, appInsightsResourceGroupName, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName) {
         this.endpoint = endpoint;
+        this.appInsightsResourceGroupName = appInsightsResourceGroupName;
         this.appInsightsResourceName = appInsightsResourceName;
         this.webAppName = webAppName;
         this.resourceGroupName = resourceGroupName;
@@ -58,7 +60,7 @@ export class AppInsightsManage {
     }
 
     private async getApplicationInsightResource() {
-        var appInsightsResources =  await azureRESTUtils.getApplicationInsightsResources(this.endpoint);
+        var appInsightsResources =  await azureRESTUtils.getApplicationInsightsResources(this.endpoint, this.appInsightsResourceGroupName);
         if(this.appInsightsResourceName != null) {
             for(var appInsightResource of appInsightsResources) {
                 if(appInsightResource.name.toLowerCase() == this.appInsightsResourceName.toLowerCase()) {
@@ -75,11 +77,6 @@ export class AppInsightsManage {
         var isAppInsightsAlreadyConfigured = false;
         var appInsightsLinkingTag = await this.getAppServiceHiddenLink();
 
-        var appInsightsResourceGroupName = azureUtils.getResourceGroupName(appInsightsResource.id);
-        if(appInsightsResourceGroupName == null) {
-            throw new Error(tl.loc("UnableToIdentifyResourceGroupNameForAppInsightsResource", appInsightsResource.name));
-        }
-
         for(var tagKey in appInsightsResourceTags) {
             if(tagKey == appInsightsLinkingTag) {
                 isAppInsightsAlreadyConfigured =  true;
@@ -91,7 +88,7 @@ export class AppInsightsManage {
             tl.debug("App service '" + this.webAppName + "' is already linked to app insights : " + appInsightsResource.name)
         } else {
             appInsightsResourceTags[appInsightsLinkingTag] = "Resource";
-            appInsightsResource = await azureRESTUtils.updateApplicationInsightsResource(this.endpoint, appInsightsResourceGroupName, appInsightsResource);
+            appInsightsResource = await azureRESTUtils.updateApplicationInsightsResource(this.endpoint, this.appInsightsResourceGroupName, appInsightsResource);
         }
 
         return appInsightsResource;

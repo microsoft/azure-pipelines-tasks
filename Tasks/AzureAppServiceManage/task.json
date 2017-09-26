@@ -169,7 +169,7 @@
             "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2"
         },
         {
-            "name": "ApplicationInsightsResourceGroupName",
+            "name": "AppInsightsResourceGroupName",
             "type": "pickList",
             "label": "App Insights Resource Group Name",
             "defaultValue": "",
@@ -206,7 +206,7 @@
             }
         },
         {
-            "target": "ApplicationInsightsResourceGroupName",
+            "target": "AppInsightsResourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups"
         },
@@ -215,7 +215,7 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMApplicationInsightsResources",
             "parameters": {
-                "AppInsightsResourceGroupName": "$(ApplicationInsightsResourceGroupName)"
+                "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
             }
         },
         {

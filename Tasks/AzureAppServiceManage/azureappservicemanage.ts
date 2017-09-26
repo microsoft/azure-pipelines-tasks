@@ -62,6 +62,7 @@ async function run() {
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
         var slotName: string = tl.getInput('Slot', false);
+        var appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
         var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
@@ -117,7 +118,7 @@ async function run() {
                 break;
             }
             case "Enable Continuous Monitoring": {
-                var appInsightsManage = new appInsightsManageUtils.AppInsightsManage(endPoint, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                var appInsightsManage = new appInsightsManageUtils.AppInsightsManage(endPoint, appInsightsResourceGroupName, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName);
                 await appInsightsManage.configureAppInsights();
                 break;   
             }

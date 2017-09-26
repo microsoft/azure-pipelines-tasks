@@ -169,11 +169,25 @@
       "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
     },
     {
+      "name": "AppInsightsResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppInsightsResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring"
+    },
+    {
       "name": "ApplicationInsightsResourceName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ApplicationInsightsResourceName",
       "defaultValue": "",
       "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "Action == Enable Continuous Monitoring"
     }
   ],
@@ -192,9 +206,17 @@
       }
     },
     {
+      "target": "AppInsightsResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
       "target": "ApplicationInsightsResourceName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMApplicationInsightsResources"
+      "dataSourceName": "AzureRMApplicationInsightsResources",
+      "parameters": {
+        "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
+      }
     },
     {
       "target": "Slot",

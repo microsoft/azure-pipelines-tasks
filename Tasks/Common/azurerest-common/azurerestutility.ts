@@ -791,7 +791,7 @@ export async function updateAzureRMWebAppMetadata(
     return deferred.promise;
 }
 
-export async function getApplicationInsightsResources(endpoint) {
+export async function getApplicationInsightsResources(endpoint, appInsightsResourceGroupName) {
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endpoint);
@@ -801,7 +801,9 @@ export async function getApplicationInsightsResources(endpoint) {
         authorization: 'Bearer ' + accessToken
     };
 
-    var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + 
+    var resourceGroupPath = (appInsightsResourceGroupName) ? "/resourceGroups/" + appInsightsResourceGroupName : "";
+
+    var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + resourceGroupPath + 
                  '/providers/microsoft.insights/components?api-version=2015-05-01';
 
     tl.debug('Requesting Application insights resources : ' + metadataUrl);
