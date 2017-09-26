@@ -52,7 +52,6 @@ export class StorageAccounts {
 
         var deferred = Q.defer<Model.StorageAccount[]>();
         var result = [];
-        var self = this;
         this.client.beginRequest(httpRequest).then(async function(response) {
             if (response.statusCode == 200) {
                 if (response.body.value) {
@@ -61,7 +60,7 @@ export class StorageAccounts {
                 }
 
                 if (response.body.nextLink) {
-                    var nextResult = await self.client.accumulateResultFromPagedResult(response.body.nextLink);
+                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
                         deferred.reject(nextResult.error);
                     }
@@ -93,7 +92,6 @@ export class StorageAccounts {
 
          var deferred = Q.defer<Model.StorageAccount[]>();
          var result = [];
-         var self = this;
          this.client.beginRequest(httpRequest).then(async function(response) {
              if (response.statusCode == 200) {
                  if (response.body.value) {
@@ -102,7 +100,7 @@ export class StorageAccounts {
                  }
 
                  if (response.body.nextLink) {
-                     var nextResult = await self.client.accumulateResultFromPagedResult(response.body.nextLink);
+                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                      if (nextResult.error) {
                          deferred.reject(nextResult.error);
                      }
