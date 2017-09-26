@@ -8,6 +8,7 @@
         "AzureCloudPowerShellDeployment",
         "AzureFileCopy",
         "AzureKeyVault",
+        "AzureMonitorAlerts",
         "AzureNLBManagement",
         "AzurePowerShell",
         "AzureResourceGroupDeployment",

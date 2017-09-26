@@ -1,0 +1,15 @@
+{
+  "name": "azuremonitoralerts",
+  "version": "0.0.1",
+  "description": "Azure monitor alerts",
+  "main": "azuremonitoralerts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+    "q": "1.5.0",
+    "vsts-task-lib": "2.1.0"
+  }
+}
