@@ -69,5 +69,6 @@
   "loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for app insights resource : %s",
   "loc.messages.ApplicationInsightsNotSupportedForLinuxApp": "Application insights resource is being supported for linux web app : %s",
   "loc.messages.FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
-  "loc.messages.SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights"
+  "loc.messages.SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights",
+  "loc.messages.UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s"
 }

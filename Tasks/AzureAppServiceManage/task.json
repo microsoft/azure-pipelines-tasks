@@ -297,6 +297,7 @@
         "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for app insights resource : %s",
         "ApplicationInsightsNotSupportedForLinuxApp": "Application insights resource is being supported for linux web app : %s",
         "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
-        "SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights"
+        "SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights",
+        "UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s"
     }
 }

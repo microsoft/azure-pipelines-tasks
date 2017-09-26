@@ -297,6 +297,7 @@
     "UnableToIdentifyResourceGroupNameForAppInsightsResource": "ms-resource:loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource",
     "ApplicationInsightsNotSupportedForLinuxApp": "ms-resource:loc.messages.ApplicationInsightsNotSupportedForLinuxApp",
     "FailedToConfigureAlwaysOnProperty": "ms-resource:loc.messages.FailedToConfigureAlwaysOnProperty",
-    "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights"
+    "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights",
+    "UnableToConfigureWebTest": "ms-resource:loc.messages.UnableToConfigureWebTest"
   }
 }

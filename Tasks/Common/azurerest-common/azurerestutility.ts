@@ -868,3 +868,108 @@ function getRandomString() {
 function sleep(timeInMilliSecond) {
   return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
 }
+
+export async function getAppInsightsWebTests(endpoint, appInsightsResourceGroupName) {
+
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(endpoint);
+    
+    var headers = {
+        "Content-Type": "application/json",
+        authorization: 'Bearer ' + accessToken
+    };
+
+    var resourceGroupPath = (appInsightsResourceGroupName) ? "/resourceGroups/" + appInsightsResourceGroupName : "";
+
+    var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + resourceGroupPath + 
+                 '/providers/microsoft.insights/webTests?api-version=2015-05-01';
+
+    tl.debug('Requesting App Insights web tests : ' + metadataUrl);
+    httpObj.send('GET', metadataUrl, null, headers, (error, response, body) => {
+        if (error) {
+            deferred.reject(error);
+        }
+        else if (response.statusCode === 200) {
+            var obj = JSON.parse(body);
+            deferred.resolve(obj.value);
+        }
+        else {
+            tl.debug(body);
+            deferred.reject(response.statusMessage);
+        }
+    });
+
+    return deferred.promise;
+}
+
+export async function createAppInsightsWebTest(endpoint, appInsightsResourceGroupName, webTestName, appInsightsResourceData, appServiceUrl) {
+    
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(endpoint);
+    
+    var headers = {
+        "Content-Type": "application/json",
+        authorization: 'Bearer ' + accessToken
+    };
+
+    var webTestHiddenLink = "hidden-link:" + appInsightsResourceData.id;
+    webTestName = "webtest" + webTestName;
+    appServiceUrl = ((appServiceUrl.indexOf("https") != -1) ? "" : "https://") + appServiceUrl;
+
+    var webTestData = {
+        "name": webTestName,
+        "location": appInsightsResourceData.location,
+        "tags": {},
+        "properties": {
+            "SyntheticMonitorId": webTestName,
+            "Name": webTestName,
+            "Description": "",
+            "Enabled": true,
+            "Frequency": 300,
+            "Timeout": 120,
+            "Kind": "ping",
+            "RetryEnabled": true,
+            "Locations": [
+                {
+                    "Id": "us-tx-sn1-azr"
+                },
+                {
+                    "Id": "us-il-ch1-azr"
+                },
+                {
+                    "Id": "us-ca-sjc-azr"
+                },
+                {
+                    "Id": "us-va-ash-azr"
+                },
+                {
+                    "Id": "us-fl-mia-edge"
+                }
+            ],
+            "Configuration": {
+                "WebTest": "<WebTest Name=\"" + webTestName + "\" Enabled=\"True\" CssProjectStructure=\"\"  CssIteration=\"\"  Timeout=\"120\"  WorkItemIds=\"\"  xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\" Description=\"\" CredentialUserName=\"\" CredentialPassword=\"\" PreAuthenticate=\"True\" Proxy=\"default\" StopOnError=\"False\" RecordedResultFile=\"\" ResultsLocale=\"\"> <Items> <Request Method=\"GET\"  Version=\"1.1\"  Url=\"" + appServiceUrl + "\"  ThinkTime=\"0\" Timeout=\"120\" ParseDependentRequests=\"True\" FollowRedirects=\"True\"         RecordResult=\"True\"         Cache=\"False\" ResponseTimeGoal=\"0\" Encoding=\"utf-8\"  ExpectedHttpStatusCode=\"200\" ExpectedResponseUrl=\"\"  ReportingName=\"\" IgnoreHttpStatusCode=\"False\" /></Items></WebTest>"
+            }
+        }
+    }
+
+    webTestData.tags[webTestHiddenLink] = "Resource";
+
+    var metadataUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + appInsightsResourceGroupName +
+            '/providers/microsoft.insights/webTests/' + webTestName + '?api-version=2015-05-01';
+
+    tl.debug('Updating Application insights resources : ' + metadataUrl);
+    restObj._sendJson('PUT', metadataUrl, "", webTestData, headers, null, (error, response, body) => {
+        if (error) {
+            deferred.reject(error);
+        }
+        else if (response === 200) {
+            deferred.resolve(body);
+        }
+        else {
+            tl.debug(body);
+            deferred.reject(response);
+        }
+    });
+
+    return deferred.promise;
+}

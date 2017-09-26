@@ -35,7 +35,8 @@ export class AppInsightsManage {
         if(appServiceDetails && appServiceDetails.kind && appServiceDetails.kind == "app,linux") {
             throw new Error(tl.loc("ApplicationInsightsNotSupportedForLinuxApp", this.webAppName));
         } else {
-            await this.installApplicationInsightsExtension();
+            var publishingProfile = await azureRESTUtils.getAzureRMWebAppPublishProfile(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
+            await this.installApplicationInsightsExtension(publishingProfile);
 
             var appInsightsResource = await this.getApplicationInsightResource();
             if (appInsightsResource == null) {
@@ -45,12 +46,12 @@ export class AppInsightsManage {
             appInsightsResource = await this.linkAppInsightsWithAppService(appInsightsResource);
             await this.configureInstrumentationKey(appInsightsResource);
             await this.configureAppServiceAlwaysOnProperty();
+            await this.configureAppInsightsWebTest(appInsightsResource, publishingProfile);
             console.log(tl.loc("SuccessfullyConfiguredAppInsights"));
         }
     }
 
-    private async installApplicationInsightsExtension() {
-        var publishingProfile = await azureRESTUtils.getAzureRMWebAppPublishProfile(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
+    private async installApplicationInsightsExtension(publishingProfile) {
         tl.debug('Retrieved publishing Profile');
         var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, [APPLICATION_INSIGHTS_EXTENSION_NAME], []);
         
@@ -110,7 +111,7 @@ export class AppInsightsManage {
     }
 
     private async configureAppServiceAlwaysOnProperty() {
-        try{
+        try {
             var appServiceWebSettings = await azureRESTUtils.getAzureRMWebAppConfigDetails(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
             if(appServiceWebSettings && appServiceWebSettings.properties && appServiceWebSettings.properties.alwaysOn == false) {
                     var configSettings = JSON.stringify({
@@ -122,6 +123,39 @@ export class AppInsightsManage {
             }
         } catch (err) {
             tl.warning(tl.loc("FailedToConfigureAlwaysOnProperty", JSON.stringify(err)));
+        }
+    }
+
+    private async configureAppInsightsWebTest(appInsightResource, publishingProfile) {
+        try {
+            var allWebTestsInRG = await azureRESTUtils.getAppInsightsWebTests(this.endpoint, this.appInsightsResourceGroupName);
+            var isWebTestAlreadyConfigured = false;
+            
+            for(var webTest of allWebTestsInRG) {
+                var webTestTags = webTest.tags;
+                if(webTestTags) {
+                    for(var tagKey in webTestTags) {
+                        if(tagKey.indexOf(appInsightResource.id) != -1) {
+                            isWebTestAlreadyConfigured =  true;
+                            tl.debug("WebTest already configured for app insights resource : " + appInsightResource.name);
+                            break;
+                        }
+                    }
+
+                    if(isWebTestAlreadyConfigured) {
+						break;
+					}
+                }
+            }
+
+            if(!isWebTestAlreadyConfigured) {
+                var webTestName = azureUtils.generateDeploymentId();
+                await azureRESTUtils.createAppInsightsWebTest(this.endpoint, this.appInsightsResourceGroupName, webTestName, appInsightResource, publishingProfile.publishUrl);
+            }
+
+        } catch (err) {
+            tl.warning(tl.loc("UnableToConfigureWebTest", appInsightResource.name));
+            tl.warning(err);
         }
     }
 }
