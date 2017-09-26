@@ -52,7 +52,7 @@ export class StorageAccounts {
 
         var deferred = Q.defer<Model.StorageAccount[]>();
         var result = [];
-        this.client.beginRequest(httpRequest).then(async function(response) {
+        this.client.beginRequest(httpRequest).then(async (response) => {
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     let storageAccounts: Model.StorageAccount[] = response.body.value;
@@ -92,7 +92,7 @@ export class StorageAccounts {
 
          var deferred = Q.defer<Model.StorageAccount[]>();
          var result = [];
-         this.client.beginRequest(httpRequest).then(async function(response) {
+         this.client.beginRequest(httpRequest).then(async (response) => {
              if (response.statusCode == 200) {
                  if (response.body.value) {
                      let storageAccounts: Model.StorageAccount[] = response.body.value;
@@ -132,7 +132,7 @@ export class StorageAccounts {
 
         var apiVersion = "2017-06-01";
         var resourceProvider = "Microsoft.Storage";
-        if(!!storageAccountType && storageAccountType.toLowerCase() === "classicstorage") {
+        if(!!storageAccountType && storageAccountType.toLowerCase().indexOf("classicstorage") > 0) {
             resourceProvider = "Microsoft.ClassicStorage";
             apiVersion = "2015-12-01";
         }
@@ -153,7 +153,7 @@ export class StorageAccounts {
 
         var deferred = Q.defer<string[]>();
         var accessKeys: string[] = [];
-        this.client.beginRequest(httpRequest).then(function(response) {
+        this.client.beginRequest(httpRequest).then((response) => {
             if (response.statusCode == 200) {
                 if (resourceProvider === "Microsoft.ClassicStorage") {
                     accessKeys[0] = response.body.primaryKey;
@@ -174,6 +174,17 @@ export class StorageAccounts {
         });
 
         return deferred.promise;
+    }
+
+    public async get(storageAccountName: string): Promise<Model.StorageAccount> {
+        let storageAccounts = await this.list(null);
+        let index = storageAccounts.findIndex(account => account.name.toLowerCase() === storageAccountName.toLowerCase());
+
+        if (index < 0) {
+          throw new Error(tl.loc("StorageAccountDoesNotExist", storageAccountName));
+        }
+
+        return storageAccounts[index];
     }
 
     public static getResourceGroupNameFromUri(resourceUri: string): string {
