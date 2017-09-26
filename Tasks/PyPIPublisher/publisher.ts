@@ -1,7 +1,7 @@
+import * as tl from 'vsts-task-lib/task';
 var os = require('os');
 var path = require('path');
 var util = require("util");
-var tl = require('vsts-task-lib');
 
 var workingDirectory = tl.getInput('wd', true);
 var serviceEndpointId = tl.getInput('serviceEndpoint', true);
