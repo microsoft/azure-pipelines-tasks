@@ -5,5 +5,10 @@
     },
     "exist": {
         "C:/vstest.console.exe" : false
+    },
+    "exec": {
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        }
     }
 }
