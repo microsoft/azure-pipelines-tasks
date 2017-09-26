@@ -2,9 +2,9 @@
   "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
   "name": "PyPIPublisher",
   "friendlyName": "PyPI Publisher",
-  "description": "Publish Python packages to the Python Package Index",
+  "description": "Publish Python packages to the PyPI",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "Publish Python packages to the Python Package Index",
+  "helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -31,7 +31,7 @@
       "type": "connectedService:generic",
       "label": "PyPI connection",
       "required": true,
-      "helpMarkDown": "Select the Generic endpoint where PyPI server details are present"
+      "helpMarkDown": "Select the generic endpoint where PyPI server details are present"
     }
   ],
   "execution": {
