@@ -69,6 +69,7 @@
   "loc.messages.JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
   "loc.messages.InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
   "loc.messages.InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number is not valid.",
+  "loc.messages.FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
   "loc.messages.ClientIdCannotBeEmpty": "ClientID is a required parameter.",
   "loc.messages.DomainCannotBeEmpty": "Domain is a required parameter.",
   "loc.messages.SecretCannotBeEmpty": "Secret is a required parameter.",

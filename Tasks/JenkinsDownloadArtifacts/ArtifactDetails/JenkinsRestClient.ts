@@ -7,7 +7,7 @@ var request = require('request');
 export class JenkinsJobDetails {
     jobName: string;
     buildId: number;
-    jenkinsJobType: string;
+    jobType: string;
     isMultibranchPipeline: boolean;
     multibranchPipelineName: string;
     multibranchPipelineUrlInfix: string;
@@ -20,10 +20,10 @@ export class JenkinsJobDetails {
         }
         
         this.buildId = buildId;
-        this.jenkinsJobType = jenkinsJobType;
+        this.jobType = jenkinsJobType;
         this.multibranchPipelineName = multibranchPipelineName;
 
-        this.isMultibranchPipeline = this.jenkinsJobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
+        this.isMultibranchPipeline = this.jobType.toLowerCase() === JenkinsJobTypes.MultibranchPipeline.toLowerCase();
         this.multibranchPipelineUrlInfix = this.isMultibranchPipeline ? `/job/${this.multibranchPipelineName}` : "";
     }
 }
@@ -268,8 +268,9 @@ export class JenkinsRestClient {
                     defer.reject(new Error(tl.loc("InvalidBuildId", buildIdStr)));
                 }
                 else {
-                    console.log(tl.loc("FoundJenkinsJobDetails", jobName, buildId, branchName));
-                    defer.resolve(new JenkinsJobDetails(jobName, buildId, jobType, branchName));
+                    let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
+                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultibranchPipeline}, MultiBranchPipelineName:${jobDetail.multibranchPipelineName}`);
+                    defer.resolve(jobDetail);
                 }
             });
 
@@ -320,7 +321,9 @@ export class JenkinsRestClient {
                     defer.reject(new Error(tl.loc("InvalidBuildId", buildId)));
                 }
                 else {
-                    defer.resolve(new JenkinsJobDetails(jobName, buildId, jobType, branchName));
+                    let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
+                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultibranchPipeline}, MultiBranchPipelineName:${jobDetail.multibranchPipelineName}`);
+                    defer.resolve(jobDetail);
                 }
 
             }, (error) => {

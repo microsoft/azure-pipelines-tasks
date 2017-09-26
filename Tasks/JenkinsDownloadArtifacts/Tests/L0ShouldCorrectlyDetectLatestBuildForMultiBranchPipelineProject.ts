@@ -10,11 +10,11 @@ tr.setInput("serverEndpoint", "ID1");
 tr.setInput("jobName", "myfreestyleproject")
 tr.setInput("saveTo", "jenkinsArtifacts");
 tr.setInput("filePath", "/");
-tr.setInput("jenkinsBuild", "BuildNumber");
-tr.setInput("jenkinsBuildNumber", "20");
+tr.setInput("jenkinsBuild", "LastSuccessfulBuild");
+//tr.setInput("jenkinsBuildNumber", "10"); No explicit build number set
 tr.setInput("itemPattern", "**");
-tr.setInput("downloadCommitsAndWorkItems", "true");
-tr.setInput("artifactDetailsFileNameSuffix", "alias_v1.json");
+tr.setInput("jenkinsJobType", "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject");
+tr.setInput("downloadCommitsAndWorkItems", "false");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
@@ -26,7 +26,7 @@ tr.registerMock("item-level-downloader/Engine" , {
         return { 
             processItems: function(A,B,C) {},
         }
-    } ,
+    },
     ArtifactEngineOptions: function() {
     }
 });
@@ -35,8 +35,37 @@ tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
 
-        if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
-            callback(0, {statusCode: 200}, '{}');
+        if (urlObject.url === "http://url/job/myfreestyleproject//api/json?tree=jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]") {
+            let result = `
+{
+  "jobs": [
+    {
+      "name": "master",
+      "lastSuccessfulBuild": {
+        "displayName": "#4",
+        "id": "4",
+        "timestamp": 1505833256600
+      }
+    },
+    {
+      "name": "branch1",
+      "lastSuccessfulBuild": {
+        "displayName": "#200",
+        "id": "200",
+        "timestamp": 1509900296722
+      }
+    },
+    {
+      "name": "branch2",
+      "lastSuccessfulBuild": {
+        "displayName": "#4",
+        "id": "4",
+        "timestamp": 1506054333275
+      }
+    }
+  ]
+}`
+            callback(0, {statusCode: 200}, result);
         }
 
         return {auth: function(A,B,C) {}}

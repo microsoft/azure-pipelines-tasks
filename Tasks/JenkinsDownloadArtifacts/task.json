@@ -288,6 +288,7 @@
         "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
         "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
         "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number is not valid.",
+        "FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
         "ClientIdCannotBeEmpty": "ClientID is a required parameter.",
         "DomainCannotBeEmpty": "Domain is a required parameter.",
         "SecretCannotBeEmpty": "Secret is a required parameter.",

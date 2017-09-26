@@ -56,6 +56,7 @@ async function doWork() {
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
         let jenkinsClient: JenkinsRestClient = new JenkinsRestClient();
         let jenkinsJobDetails: JenkinsJobDetails = await jenkinsClient.GetJobDetails();
+        console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multibranchPipelineName));
 
         const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}${jenkinsJobDetails.multibranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
         tl.debug(tl.loc('GetArtifactsFromBuildNumber', jenkinsJobDetails.buildId, jobName));
