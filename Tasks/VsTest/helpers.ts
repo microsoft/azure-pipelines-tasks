@@ -89,6 +89,19 @@ export class Helper {
         return defer.promise;
     }
 
+    public static getXmlContentsSync(filePath: string): string {
+        try {
+            let xmlContents = Helper.readFileContentsSync(filePath, 'utf-8');
+            let parsedXmlContents =  parser.parseStringSync(xmlContents);
+            return parsedXmlContents;
+        }
+        catch (err)
+        {
+            tl.debug(err);
+        }
+            
+    }
+
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
         const defer = Q.defer<string>();
         const tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
@@ -100,6 +113,19 @@ export class Helper {
             defer.resolve(tempFile);
         });
         return defer.promise;
+    }
+
+    public static saveToFileSync(fileContents: string, extension: string): string {
+        try {
+            const tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
+            fs.writeFileSync(tempFile, fileContents);
+            tl.debug('Temporary file created at ' + tempFile);        
+            return tempFile;
+        }
+        catch (err) {
+            tl.error(err);
+            throw err;
+        }
     }
 
     public static readFileContents(filePath: string, encoding: string): Q.Promise<string> {
@@ -134,6 +160,14 @@ export class Helper {
         return defer.promise;
     }
 
+    public static writeXmlFileSync(result: any, settingsFile: string, fileExt: string): string {
+        let runSettingsContent = builder.buildObject(result);
+        runSettingsContent = str(runSettingsContent).replaceAll('&#xD;', '').s;
+        //This is to fix carriage return any other special chars will not be replaced
+        let fileName = Helper.saveToFileSync(runSettingsContent, fileExt);
+        return fileName;
+    }
+    
     public static getVSVersion(versionNum: number) {
         switch (versionNum) {
             case 12: return '2013';

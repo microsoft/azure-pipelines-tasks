@@ -4,15 +4,14 @@ import * as Q from 'q';
 import * as models from './models';
 import * as utils from './helpers';
 import * as parameterParser from './parameterparser'
+import * as version from './vstestversion';
 import * as os from 'os';
 import * as fs from 'fs';
 
 const xml2js = require('./node_modules/xml2js');
 const uuid = require('uuid');
-
-const parser = new xml2js.Parser();
-const builder = new xml2js.Builder();
-const headlessBuilder = new xml2js.Builder({ headless: true });
+const parser = require('xml2js-parser');
+//const parser = new xml2js.Parser();
 
 const runSettingsExtension = '.runsettings';
 const testSettingsExtension = '.testsettings';
@@ -54,32 +53,39 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </DataCollectionRunSettings>
     </RunSettings>`;
 
-export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: number, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Q.Promise<string> {
-    const defer = Q.defer<string>();
-    let result: any;
 
-    if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString) {
-        defer.resolve(settingsFile);
-        return defer.promise;
-    }
+export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): string {
+    try {
+        let result: any;
 
-    let settingsExt = null;
-    if (settingsFile && fs.lstatSync(settingsFile).isFile() && settingsFile.split('.').pop().toLowerCase() === 'testsettings') {
-            settingsExt = testSettingsExtension;
-    }
-    else if (settingsFile && utils.Helper.pathExistsAsFile(settingsFile)) {
-            settingsExt = runSettingsExtension;
-    }
+        if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString) {
+            return settingsFile;
+        }
 
-    return utils.Helper.getXmlContents(settingsFile).then(function(result) {
-        if (!result || (result.TestSettings === undefined && result.runsettings === undefined)) {
+        let settingsExt = null;
+        if (settingsFile && fs.lstatSync(settingsFile).isFile() && settingsFile.split('.').pop().toLowerCase() === 'testsettings') {
+                settingsExt = testSettingsExtension;
+        }
+        else if (settingsFile && utils.Helper.pathExistsAsFile(settingsFile)) {
+                settingsExt = runSettingsExtension;   
+        } 
+
+        result = utils.Helper.getXmlContentsSync(settingsFile);
+
+        if (!result || (result.TestSettings === undefined && result.RunSettings === undefined)) {
             tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
             settingsExt = null;
         }
 
+        if(settingsExt === testSettingsExtension && result.TestSettings && 
+            result.TestSettings.Properties && result.TestSettings.Properties[0] && 
+            result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()){
+                tl.warning(tl.loc('testSettingPropertiesNotSupported'))  
+        } 
+
         if (overrideParametersString) {
-            if (settingsExt === runSettingsExtension) {
-                result = updateRunSettingsWithParameters(result, overrideParametersString);
+            if (settingsExt === runSettingsExtension || settingsExt === testSettingsExtension) {
+                result = updateSettingsWithParameters(result, overrideParametersString);
             } else {
                 tl.warning(tl.loc('overrideNotSupported'));
             }
@@ -94,25 +100,16 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
             } else {
                 tl.debug('Enabling run in parallel by creating new runsettings.');
                 settingsExt = runSettingsExtension;
-                return CreateSettings(runSettingsForParallel).then(function (res) {
-                    result = res;
-                });
+                result = CreateSettings(runSettingsForParallel);
             }
         }
-    }).catch( function(err){
-        // getXMLContents will always throw when settings file is not valid
-        // We should not fail here but continue
-        tl.debug(err);
-    }).then(function() {
+        
+        
         if (videoCollector) {
             //Enable video collector only in test settings.
             let videoCollectorNode = null;
-            parser.parseString(videoDataCollectorTemplate, function (err, data) {
-                if (err) {
-                    defer.reject(err);
-                }
-                videoCollectorNode = data;
-            });
+            videoCollectorNode = parser.parseStringSync(videoDataCollectorTemplate);
+
             if (settingsExt === testSettingsExtension) {
                 tl.debug('Enabling video data collector by editing given testsettings.')
                 result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode);
@@ -121,34 +118,27 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
             } else {
                 tl.debug('Enabling video data collection by creating new test settings.')
                 settingsExt = testSettingsExtension;
-                return CreateSettings(testSettingsTemplate).then(function(res){
-                    result = res;                
-                }).then(function() {
-                    result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode)
-                });
+                result = CreateSettings(testSettingsTemplate);
+                result = updateTestSettingsWithDataCollector(result, videoCollectorFriendlyName, videoCollectorNode);
             }
         }
-    }).then(function(){
+        
         if (tiaConfig.tiaEnabled && !tiaConfig.disableEnablingDataCollector) {
             let testImpactCollectorNode = null;
-            parser.parseString(testImpactDataCollectorTemplate, function (err, data) {
-                if (err) {
-                    defer.reject(err);
-                }
-                testImpactCollectorNode = data;
-                if (tiaConfig.useNewCollector) {
-                    testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion);
-                }
-                testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
-                if (getTIALevel(tiaConfig) === 'file') {
-                    testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
-                }
-                if (tiaConfig.context === 'CD') {
-                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = '';
-                } else {
-                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
-                }
-            });
+            testImpactCollectorNode = parser.parseStringSync(testImpactDataCollectorTemplate);
+
+            if (tiaConfig.useNewCollector) {
+                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion.majorVersion);
+            }
+            testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
+            if (getTIALevel(tiaConfig) === 'file') {
+                testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
+            }
+            if (tiaConfig.context === 'CD') {
+                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = '';
+            } else {
+                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
+            }
 
             if (settingsExt === testSettingsExtension) {
                 tl.debug('Enabling Test Impact collector by editing given testsettings.')
@@ -159,14 +149,11 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
             } else {
                 tl.debug('Enabling test impact data collection by creating new runsettings.')
                 settingsExt = runSettingsExtension;
-                return CreateSettings(runSettingsTemplate).then(function(res) {
-                    result = res;
-                }).then(function() {
-                    result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
-                });                
+                result = CreateSettings(runSettingsTemplate);
+                result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
             }
         }
-    }).then(function() {
+        
         if (isDistributedRun && tiaConfig.tiaEnabled) {
             let baseLineRunId = utils.Helper.readFileContentsSync(tiaConfig.baseLineBuildIdFile, 'utf-8');
             if (settingsExt === testSettingsExtension) {
@@ -179,46 +166,61 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
                 tl.debug('Enabling tia by creating new runsettings.');
                 settingsExt = runSettingsExtension;
                 var runsettingsWithBaseLineRunId = runSettingsForTIAOn.replace("{0}", baseLineRunId);
-                return CreateSettings(runsettingsWithBaseLineRunId).then(function(res) {
-                    result = res;
-                });
+                result = CreateSettings(runsettingsWithBaseLineRunId);
             }
         }
-    }).then(function() {
+        
         if (result) {
-            utils.Helper.writeXmlFile(result, settingsFile, settingsExt)
-                .then(function (filename) {
-                    defer.resolve(filename);
-                });
+            let fileName = utils.Helper.writeXmlFileSync(result, settingsFile, settingsExt);
+            return fileName;
         } else {
             tl.debug('Not editing settings file. Using specified file as it is.')
-            defer.resolve(settingsFile);
+            return settingsFile;
         }
-        return defer.promise;
-    }).catch(function(err){
-        defer.resolve(settingsFile);
+    }
+    catch(err) {        
         tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
-        return defer.promise;
-    });
+        return settingsFile;
+    }    
 }
 
-function updateRunSettingsWithParameters(result: any, overrideParametersString: string) {
+function updateSettingsWithParameters(result: any, overrideParametersString: string) {
     const overrideParameters = parameterParser.parse(overrideParametersString);
-    if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
-        result.RunSettings.TestRunParameters[0].Parameter) {
-        tl.debug('Overriding test run parameters.');
-        const parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-        parametersArray.forEach(function (parameter) {
-            const key = parameter.$.Name || parameter.$.name;
-            if (overrideParameters[key] && overrideParameters[key].value) {
-                if (parameter.$.Value) {
-                    parameter.$.Value = overrideParameters[key].value;
-                } else {
-                    parameter.$.value = overrideParameters[key].value;
-                }
-            }
-        });
+    var parametersArray;
+    if (result.RunSettings) 
+	{
+		if(result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
+        result.RunSettings.TestRunParameters[0].Parameter) 
+		{
+			tl.debug('Overriding test run parameters for run settings.');
+			parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
+		}
     }
+	else if(result.TestSettings)
+	{
+	    if(result.TestSettings.Properties && result.TestSettings.Properties[0] &&
+        result.TestSettings.Properties[0].Property) 
+		{
+			tl.debug('Overriding test run parameters for test settings.');
+		    parametersArray = result.TestSettings.Properties[0].Property;
+        }  
+    }	
+    
+    if(parametersArray)
+        {
+            parametersArray.forEach(function (parameter) {
+				const key = parameter.$.Name || parameter.$.name;
+				if (overrideParameters[key] && overrideParameters[key].value) {
+                    tl.debug('Overriding value for parameter : ' + key );
+					if (parameter.$.Value) {
+						parameter.$.Value = overrideParameters[key].value;
+					} else {
+						parameter.$.value = overrideParameters[key].value;
+					}
+				}
+			});
+        }
+    
     return result;
 }
 
@@ -292,15 +294,15 @@ function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyN
     return result;
 }
 
-function CreateSettings(runSettingsContents: string): Q.Promise<any> {
-    const defer = Q.defer<any>();
-    parser.parseString(runSettingsContents, function (err, result) {
-        if (err) {
-            defer.reject(err);
-        }
-        defer.resolve(result);
-    });
-    return defer.promise;
+function CreateSettings(runSettingsContents: string): any {
+    try {
+        let parsedContent = parser.parseStringSync(runSettingsContents); 
+        return parsedContent;
+    }
+    catch (err) {
+        tl.error(err);
+        throw err;
+    }
 }
 
 function setupRunSettingsWithRunInParallel(result: any) {

@@ -266,6 +266,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
     tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
     const useNewCollector = tl.getVariable('tia.useNewCollector');
     if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {

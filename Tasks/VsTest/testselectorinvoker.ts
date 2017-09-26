@@ -2,6 +2,7 @@ import models = require('./models');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
+import {Helper} from './helpers'
 
 let perf = require('performance-now');
 
@@ -86,6 +87,7 @@ export class TestSelectorInvoker {
 
         endTime = perf();
         elapsedTime = endTime - startTime;
+        console.log('##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=' + elapsedTime + ']');
         tl.debug(tl.loc('PublishCodeChangesPerfTime', elapsedTime));
 
         if (output.code !== 0) {
@@ -93,6 +95,151 @@ export class TestSelectorInvoker {
         }
 
         tl.debug('completed publish code changes');
+        return output.code;
+    }
+
+    public generateResponseFile(tiaConfig: models.TiaConfiguration, vstestConfig: models.VsTestConfigurations, discoveredTests: string, testCaseFilterOutputFile: string): number {
+        const startTime = perf();
+        let endTime: number;
+        let elapsedTime: number;
+        let definitionRunId: string;
+        let title: string;
+        let platformInput: string;
+        let configurationInput: string;
+        let useTestCaseFilterInResponseFile: string;
+        tl.debug('Response file will be generated at ' + tiaConfig.responseFile);
+        tl.debug('RunId file will be generated at ' + tiaConfig.runIdFile);
+
+        const selectortool = tl.tool(this.getTestSelectorLocation());
+        selectortool.arg('GetImpactedtests');
+    
+        if (tiaConfig.context === 'CD') {
+            // Release context. Passing Release Id.
+            definitionRunId = tl.getVariable('Release.ReleaseId');
+        } else {
+            // Build context. Passing build id.
+            definitionRunId = tl.getVariable('Build.BuildId');
+        }
+    
+        if (vstestConfig.buildPlatform) {
+            platformInput = vstestConfig.buildPlatform;
+        } else {
+            platformInput = '';
+        }
+    
+        if (vstestConfig.testRunTitle) {
+            title = vstestConfig.testRunTitle;
+        } else {
+            title = '';
+        }
+    
+        if (vstestConfig.buildConfig) {
+            configurationInput = vstestConfig.buildConfig;
+        } else {
+            configurationInput = '';
+        }
+    
+        if (tiaConfig.useTestCaseFilterInResponseFile && tiaConfig.useTestCaseFilterInResponseFile.toUpperCase() === 'TRUE') {
+            useTestCaseFilterInResponseFile = 'true';
+        } else {
+            useTestCaseFilterInResponseFile = 'false';
+        }
+    
+        let output = selectortool.execSync({
+            cwd: null,
+            env: {
+                'collectionurl': tl.getVariable('System.TeamFoundationCollectionUri'),
+                'projectid': tl.getVariable('System.TeamProject'),
+                'definitionrunid': definitionRunId,
+                'releaseuri': tl.getVariable('release.releaseUri'),
+                'releaseenvuri': tl.getVariable('release.environmentUri'),
+                'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
+                'responsefilepath': tiaConfig.responseFile,
+                'discoveredtestspath': discoveredTests,
+                'runidfilepath': tiaConfig.runIdFile,
+                'testruntitle': title,
+                'baselinebuildfilepath': tiaConfig.baseLineBuildIdFile,
+                'context': tiaConfig.context,
+                'platform': platformInput,
+                'configuration': configurationInput,
+                'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
+                'testCaseFilterOutputFile': testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
+                'isCustomEngineEnabled': String(!Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
+                'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+                'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
+            },
+            silent: null,
+            outStream: null,
+            errStream: null,
+            windowsVerbatimArguments: null
+        });
+
+        endTime = perf();
+        elapsedTime = endTime - startTime;
+        console.log('##vso[task.logissue type=warning;SubTaskName=GetImpactedTests;SubTaskDuration=' + elapsedTime + ']');
+        tl.debug(tl.loc('GenerateResponseFilePerfTime', elapsedTime));
+
+        if (output.code !== 0) {
+            tl.error(output.stderr);
+        }
+
+        tl.debug('completed publish code changes');
+        return output.code;
+    }
+
+    public uploadTestResults(tiaConfig: models.TiaConfiguration, vstestConfig: models.VsTestConfigurations, testResultsDirectory: string): number {
+        const startTime = perf();
+        let endTime;
+        let elapsedTime;
+        let definitionRunId: string;
+        let resultFile: string;
+        let resultFiles;
+        if (!Helper.isNullOrWhitespace(testResultsDirectory)) {
+            resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
+        }
+    
+        const selectortool = tl.tool(this.getTestSelectorLocation());
+        selectortool.arg('UpdateTestResults');
+    
+        if (tiaConfig.context === 'CD') {
+            definitionRunId = tl.getVariable('Release.ReleaseId');
+        } else {
+            definitionRunId = tl.getVariable('Build.BuildId');
+        }
+    
+        if (resultFiles && resultFiles[0]) {
+            resultFile = resultFiles[0];
+        }
+    
+        let output = selectortool.execSync({
+            cwd: null,
+            env: {
+                'collectionurl': tl.getVariable('System.TeamFoundationCollectionUri'),
+                'projectid': tl.getVariable('System.TeamProject'),
+                'definitionrunid': definitionRunId,
+                'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
+                'resultfile': resultFile,
+                'runidfile': tiaConfig.runIdFile,
+                'context': tiaConfig.context,
+                'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+                'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
+            },
+            silent: null,
+            outStream: null,
+            errStream: null,
+            windowsVerbatimArguments: null
+        });
+        
+        endTime = perf();
+        elapsedTime = endTime - startTime;
+        console.log('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
+        tl.debug(tl.loc('UploadTestResultsPerfTime', elapsedTime));
+        
+        if (output.code !== 0) {
+            tl.error(output.stderr);
+        }
+        
+        tl.debug('Completed updating test results');
         return output.code;
     }
 

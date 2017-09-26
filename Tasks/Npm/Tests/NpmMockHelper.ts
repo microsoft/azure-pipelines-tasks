@@ -87,7 +87,7 @@ export class NpmMockHelper extends TaskMockRunner {
                     getCoreApi: function() {
                         return {
                             vsoClient: {
-                                getVersioningData: function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
+                                getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
                                     return { requestUrl: 'foobar' };
                                 }
                             }
@@ -132,3 +132,4 @@ export class NpmMockHelper extends TaskMockRunner {
         return NpmMockHelper.CollectionUrl + '/_packaging/' + feedId + '/npm/registry/';
     }
 }
+

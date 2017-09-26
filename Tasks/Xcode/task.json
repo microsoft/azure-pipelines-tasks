@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 123,
+        "Minor": 124,
         "Patch": 0
     },
     "demands": [
@@ -143,6 +143,15 @@
             "helpMarkDown": "Path to a plist file that configures archive exporting.",
             "groupName": "package",
             "visibleRule": "exportOptions == plist"
+        },
+        {
+            "name": "exportArgs",
+            "type": "string",
+            "label": "Export Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional command line arguments that should be used to export.",
+            "groupName": "package"
         },
         {
             "name": "xcode8AutomaticSigning",
