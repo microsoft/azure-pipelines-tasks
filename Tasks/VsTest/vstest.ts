@@ -76,7 +76,7 @@ export function startTest() {
                 else {
                     tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode', code));
                 }
-                
+
             } catch (error) {
                 uploadVstestDiagFile();
                 utils.Helper.publishEventToCi(AreaCodes.PUBLISHRESULTS, error.message, 1001, false);
@@ -304,12 +304,11 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
 
         var vstestExecutionResult = vstest.execSync(<tr.IExecSyncOptions>{ cwd: workingDirectory });
 
-        if (vstestExecutionResult.code != 0)
-        {
+        if (vstestExecutionResult.code != 0) {
             tl.debug('Listing tests from VsTest failed.');
-            tl.error(vstestExecutionResult.error? vstestExecutionResult.error.message : vstestExecutionResult.stderr);
-            utils.Helper.publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, vstestExecutionResult.error? vstestExecutionResult.error.message : vstestExecutionResult.stderr, 1006, false);
-            return vstestExecutionResult.error? vstestExecutionResult.error.message : vstestExecutionResult.stderr;
+            tl.error(vstestExecutionResult.error ? vstestExecutionResult.error.message : vstestExecutionResult.stderr);
+            utils.Helper.publishEventToCi(AreaCodes.GETVSTESTTESTSLISTINTERNAL, vstestExecutionResult.error ? vstestExecutionResult.error.message : vstestExecutionResult.stderr, 1006, false);
+            return vstestExecutionResult.error ? vstestExecutionResult.error.message : vstestExecutionResult.stderr;
         }
 
         console.log(vstestExecutionResult.stdout);
@@ -359,8 +358,8 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
         let testselector = new testselectorinvoker.TestSelectorInvoker();
         let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
         if (code === 0) {
-            try{                
-                listFile = getVstestTestsList(vsVersion); 
+            try {
+                listFile = getVstestTestsList(vsVersion);
                 discoverTestFromFilteredFilter(vsVersion, testCaseFilterFile, testCaseFilterOutput);
 
                 try {
@@ -377,8 +376,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     tl.debug('Empty response file detected. All tests will be executed.');
                     return runVsTestAndUploadResults(testResultsDirectory, settingsFile, vsVersion, false);
                 }
-                else
-                {
+                else {
                     if (responseContainsNoTests(tiaConfig.responseFile)) {
                         tl.debug('No tests impacted. Not running any tests.');
                         let updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, '');
@@ -403,14 +401,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     }
                 }
             }
-            catch (err)
-            {
+            catch (err) {
                 // The errors and logging tasks are handled in individual calls before
                 // Just failing the task here
                 return Q.resolve(tl.TaskResult.Failed);
             }
         }
-        else{
+        else {
             tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
             return executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
                 publishTestResults(testResultsDirectory);
@@ -439,7 +436,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             tl.error(err);
             return tl.TaskResult.Failed;
         });
-    }  
+    }
 }
 
 function runVsTestAndUploadResults(testResultsDirectory: string, settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile?: string): Q.Promise<tl.TaskResult> {
@@ -459,12 +456,11 @@ function runVsTestAndUploadResults(testResultsDirectory: string, settingsFile: s
             utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + updateTestResultsOutputCode, 1011, false);
             return Q.resolve(tl.TaskResult.Failed);
         }
-        if (vscode !== 0)
-        {
+        if (vscode !== 0) {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
             return Q.resolve(tl.TaskResult.Failed);
         }
-        return Q.resolve(tl.TaskResult.Succeeded);    
+        return Q.resolve(tl.TaskResult.Succeeded);
     }).catch(function (err) {
         utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1010, false);
         tl.error(err)
@@ -511,7 +507,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<tl.TaskResult> {
         newSettingsFile = settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false);
         return vsTestCall(testResultsDirectory, newSettingsFile, vsVersion);
     }
-    catch(err) {        
+    catch (err) {
         //Should continue to run without the selected configurations.
         return vsTestCall(testResultsDirectory, newSettingsFile, vsVersion);
     }
@@ -625,7 +621,7 @@ function isTiaAllowed(): boolean {
 
 function responseContainsNoTests(filePath: string): boolean {
     try {
-        let resp = utils.Helper.readFileContentsSync(filePath, 'utf-8');    
+        let resp = utils.Helper.readFileContentsSync(filePath, 'utf-8');
         if (resp === '/Tests:"' || resp === '/Tests:' || resp === '/TestCaseFilter:') {
             return true;
         } else {

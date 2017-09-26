@@ -62,8 +62,8 @@ export class Helper {
         return tl.exist(path) && tl.stats(path).isDirectory();
     }
 
-    public static publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: boolean) {
-        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false};
+    public static publishEventToCi(areaCode: string, message: string, tracePoint: number, isUserError: boolean) {
+        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false };
         taskProps.areacode = areaCode;
         taskProps.result = message;
         taskProps.tracepoint = tracePoint;
@@ -92,14 +92,13 @@ export class Helper {
     public static getXmlContentsSync(filePath: string): string {
         try {
             let xmlContents = Helper.readFileContentsSync(filePath, 'utf-8');
-            let parsedXmlContents =  parser.parseStringSync(xmlContents);
+            let parsedXmlContents = parser.parseStringSync(xmlContents);
             return parsedXmlContents;
         }
-        catch (err)
-        {
+        catch (err) {
             tl.debug(err);
         }
-            
+
     }
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
@@ -119,7 +118,7 @@ export class Helper {
         try {
             const tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
             fs.writeFileSync(tempFile, fileContents);
-            tl.debug('Temporary file created at ' + tempFile);        
+            tl.debug('Temporary file created at ' + tempFile);
             return tempFile;
         }
         catch (err) {
@@ -167,7 +166,7 @@ export class Helper {
         let fileName = Helper.saveToFileSync(runSettingsContent, fileExt);
         return fileName;
     }
-    
+
     public static getVSVersion(versionNum: number) {
         switch (versionNum) {
             case 12: return '2013';

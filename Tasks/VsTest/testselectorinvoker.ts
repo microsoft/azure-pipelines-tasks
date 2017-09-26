@@ -2,7 +2,7 @@ import models = require('./models');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
-import {Helper} from './helpers'
+import { Helper } from './helpers'
 
 let perf = require('performance-now');
 
@@ -76,8 +76,8 @@ export class TestSelectorInvoker {
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
-				'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-				'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier
+                'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+                'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier
             },
             silent: null,
             outStream: null,
@@ -112,7 +112,7 @@ export class TestSelectorInvoker {
 
         const selectortool = tl.tool(this.getTestSelectorLocation());
         selectortool.arg('GetImpactedtests');
-    
+
         if (tiaConfig.context === 'CD') {
             // Release context. Passing Release Id.
             definitionRunId = tl.getVariable('Release.ReleaseId');
@@ -120,31 +120,31 @@ export class TestSelectorInvoker {
             // Build context. Passing build id.
             definitionRunId = tl.getVariable('Build.BuildId');
         }
-    
+
         if (vstestConfig.buildPlatform) {
             platformInput = vstestConfig.buildPlatform;
         } else {
             platformInput = '';
         }
-    
+
         if (vstestConfig.testRunTitle) {
             title = vstestConfig.testRunTitle;
         } else {
             title = '';
         }
-    
+
         if (vstestConfig.buildConfig) {
             configurationInput = vstestConfig.buildConfig;
         } else {
             configurationInput = '';
         }
-    
+
         if (tiaConfig.useTestCaseFilterInResponseFile && tiaConfig.useTestCaseFilterInResponseFile.toUpperCase() === 'TRUE') {
             useTestCaseFilterInResponseFile = 'true';
         } else {
             useTestCaseFilterInResponseFile = 'false';
         }
-    
+
         let output = selectortool.execSync({
             cwd: null,
             env: {
@@ -197,20 +197,20 @@ export class TestSelectorInvoker {
         if (!Helper.isNullOrWhitespace(testResultsDirectory)) {
             resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, '*.trx'));
         }
-    
+
         const selectortool = tl.tool(this.getTestSelectorLocation());
         selectortool.arg('UpdateTestResults');
-    
+
         if (tiaConfig.context === 'CD') {
             definitionRunId = tl.getVariable('Release.ReleaseId');
         } else {
             definitionRunId = tl.getVariable('Build.BuildId');
         }
-    
+
         if (resultFiles && resultFiles[0]) {
             resultFile = resultFiles[0];
         }
-    
+
         let output = selectortool.execSync({
             cwd: null,
             env: {
@@ -229,16 +229,16 @@ export class TestSelectorInvoker {
             errStream: null,
             windowsVerbatimArguments: null
         });
-        
+
         endTime = perf();
         elapsedTime = endTime - startTime;
         console.log('##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=' + elapsedTime + ']');
         tl.debug(tl.loc('UploadTestResultsPerfTime', elapsedTime));
-        
+
         if (output.code !== 0) {
             tl.error(output.stderr);
         }
-        
+
         tl.debug('Completed updating test results');
         return output.code;
     }
