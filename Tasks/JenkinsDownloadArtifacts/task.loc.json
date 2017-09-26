@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 123,
-    "Patch": 1
+    "Minor": 124,
+    "Patch": 0
   },
   "groups": [
     {
@@ -146,8 +146,12 @@
       "options": {
         "azureStorage": "Azure Storage"
       },
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      },
       "groupName": "propagatedArtifactsGroup",
-      "visibleRule": "propagatedArtifacts == true",
+      "visibleRule": "propagatedArtifacts == notValid",
       "helpMarkDown": "ms-resource:loc.input.help.artifactProvider"
     },
     {
@@ -156,7 +160,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "required": true,
       "groupName": "propagatedArtifactsGroup",
-      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
+      "visibleRule": "propagatedArtifacts == true",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
     },
     {
@@ -168,7 +172,7 @@
         "EditableOptions": "True"
       },
       "groupName": "propagatedArtifactsGroup",
-      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
+      "visibleRule": "propagatedArtifacts == true",
       "helpMarkDown": "ms-resource:loc.input.help.storageAccountName"
     },
     {
@@ -177,7 +181,7 @@
       "label": "ms-resource:loc.input.label.containerName",
       "required": true,
       "groupName": "propagatedArtifactsGroup",
-      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
+      "visibleRule": "propagatedArtifacts == true",
       "helpMarkDown": "ms-resource:loc.input.help.containerName"
     },
     {
@@ -186,7 +190,7 @@
       "label": "ms-resource:loc.input.label.commonVirtualPath",
       "required": false,
       "groupName": "propagatedArtifactsGroup",
-      "visibleRule": "propagatedArtifacts == true && artifactProvider == azureStorage",
+      "visibleRule": "propagatedArtifacts == true",
       "helpMarkDown": "ms-resource:loc.input.help.commonVirtualPath"
     }
   ],
@@ -218,7 +222,7 @@
     {
       "endpointId": "$(ConnectedServiceNameARM)",
       "target": "storageAccountName",
-      "dataSourceName": "AzureStorageAccountRM"
+      "dataSourceName": "AzureStorageAccountRMandClassic"
     }
   ],
   "execution": {

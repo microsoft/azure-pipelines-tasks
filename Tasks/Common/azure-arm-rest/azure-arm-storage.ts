@@ -44,7 +44,7 @@ export class StorageAccounts {
     }
 
     public async list(options): Promise<Model.StorageAccount[]> {
-       var httpRequest = new webClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
         // Getting all azure rm storage accounts (along with resource group names) for the given subscription.
@@ -74,7 +74,7 @@ export class StorageAccounts {
             else {
                 deferred.reject(azureServiceClient.ToError(response));
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             deferred.reject(error);
         });
 
@@ -123,16 +123,16 @@ export class StorageAccounts {
 
     public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
         if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-          throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            throw new Error(tl.loc("ResourceGroupCannotBeNull"));
         }
 
         if (accountName === null || accountName === undefined || typeof accountName.valueOf() !== 'string') {
-          throw new Error(tl.loc("StorageAccountCannotBeNull"));
+            throw new Error(tl.loc("StorageAccountCannotBeNull"));
         }
 
         var apiVersion = "2017-06-01";
         var resourceProvider = "Microsoft.Storage";
-        if(!!storageAccountType && storageAccountType.toLowerCase().indexOf("classicstorage") > 0) {
+        if (!!storageAccountType && storageAccountType.toLowerCase().indexOf("classicstorage") > 0) {
             resourceProvider = "Microsoft.ClassicStorage";
             apiVersion = "2015-12-01";
         }
@@ -160,7 +160,7 @@ export class StorageAccounts {
                     accessKeys[1] = response.body.secondaryKey;
                 } else if (response.body.keys) {
                     let keys = response.body.keys;
-                    for(let i = 0; i<keys.length; i++) {
+                    for (let i = 0; i < keys.length; i++) {
                         accessKeys[i] = keys[i]["value"];
                     }
                 }
@@ -169,7 +169,7 @@ export class StorageAccounts {
             } else {
                 deferred.reject(azureServiceClient.ToError(response));
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             deferred.reject(error);
         });
 
@@ -181,7 +181,7 @@ export class StorageAccounts {
         let index = storageAccounts.findIndex(account => account.name.toLowerCase() === storageAccountName.toLowerCase());
 
         if (index < 0) {
-          throw new Error(tl.loc("StorageAccountDoesNotExist", storageAccountName));
+            throw new Error(tl.loc("StorageAccountDoesNotExist", storageAccountName));
         }
 
         return storageAccounts[index];
