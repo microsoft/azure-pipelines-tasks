@@ -43,13 +43,12 @@ export function ToError(response: webClient.WebResponse): AzureError {
 
 export class ServiceClient {
     private credentials: msRestAzure.ApplicationTokenCredentials;
+    private subscriptionId: string;
     protected apiVersion: string;
     protected baseUri: string;
     protected acceptLanguage: string;
     protected longRunningOperationRetryTimeout: number;
     protected generateClientRequestId: boolean;
-
-    public subscriptionId: string;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, timeout?: number) {
         this.validateInputs(credentials, subscriptionId);
@@ -73,11 +72,11 @@ export class ServiceClient {
         return this.credentials;
     }
 
-    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
-        return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters, apiVersion);
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+        return this.getRequestUriForBaseUri(this.baseUri, uriFormat, parameters, queryParameters);
     }
 
-    public getRequestUriForBaseUri(baseUri: string, uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
+    public getRequestUriForBaseUri(baseUri: string, uriFormat: string, parameters: {}, queryParameters?: string[]): string {
         var requestUri = baseUri + uriFormat;
         requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
         for (var key in parameters) {
@@ -90,7 +89,7 @@ export class ServiceClient {
 
         // process query paramerters
         queryParameters = queryParameters || [];
-        queryParameters.push('api-version=' + encodeURIComponent(apiVersion || this.apiVersion));
+        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
         if (queryParameters.length > 0) {
             requestUri += '?' + queryParameters.join('&');
         }
