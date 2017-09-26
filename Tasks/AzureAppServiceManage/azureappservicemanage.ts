@@ -6,6 +6,8 @@ var kuduLogUtil = require('azurerest-common/utility.js');
 var extensionManage = require('./extensionmanage.js');
 var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
 
+const productionSlot: string = "production";
+
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
         await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
@@ -107,15 +109,20 @@ async function run() {
             }
             case "Swap Slots": {
                 if (swapWithProduction) {
-                    targetSlot = "production";
+                    targetSlot = productionSlot;
                 }
 
                 sourceSlot = sourceSlot.toLowerCase();
                 targetSlot = targetSlot.toLowerCase();
 
-                if(sourceSlot == 'production') {
+                if(sourceSlot == productionSlot) {
                     sourceSlot = targetSlot;
-                    targetSlot = 'production';
+                    targetSlot = productionSlot;
+                }
+
+                if(targetSlot == productionSlot) {
+                    tl.debug('Set swap with production to true as target is production');
+                    swapWithProduction = true;
                 }
 
                 if (sourceSlot === targetSlot) {
