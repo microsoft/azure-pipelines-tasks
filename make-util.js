@@ -916,7 +916,7 @@ var createHotfixLayout = function (packagePath, taskName) {
     // create the script
     var hotfixPath = path.join(packagePath, 'hotfix');
     mkdir('-p', hotfixPath);
-    var scriptPath = path.join(hotfixPath, `${taskName}.ps1`);
+    var scriptPath = path.join(hotfixPath, `hotfix.ps1`);
     var scriptContent = '# Hotfix created from branch: ' + branch + os.EOL;
     scriptContent += '# Commit: ' + commitInfo + os.EOL;
     scriptContent += '$ErrorActionPreference=\'Stop\'' + os.EOL;
