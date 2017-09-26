@@ -177,7 +177,9 @@ export class Helper {
     // set the console code page to "UTF-8"
     public static setConsoleCodePage() {
         tl.debug("Changing active code page to UTF-8");
-        tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), "65001", ({ silent: true } as tr.IExecSyncOptions));
+        const chcp = tl.tool(path.resolve(process.env.windir, "system32", "chcp.com"));
+        chcp.arg(["65001"]);
+        let output = chcp.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
     }
 
 }
