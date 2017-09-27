@@ -4,9 +4,11 @@ import * as taskInputParser from './taskinputparser';
 import * as localTest from './vstest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
+import * as utils from './helpers';
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
+    utils.Helper.setConsoleCodePage();
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
     tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
