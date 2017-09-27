@@ -86,7 +86,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain": {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain -allowProvisioningUpdates": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
