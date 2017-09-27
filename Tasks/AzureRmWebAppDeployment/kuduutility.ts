@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
 import * as rm from "typed-rest-client/RestClient";
+import * as hm from "typed-rest-client/HttpClient";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
@@ -15,6 +16,7 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
     } 
 } : null; 
 
+let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
 
 var fileEncoding = require('webdeployment-common/fileencoding.js');
@@ -100,8 +102,8 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
              deferred.resolve(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
         }
         else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode, response.statusMessage));
+            tl.debug("Action: deployWebAppPackage, Response: " + JSON.stringify(response));
+            deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
         }
     },
     (error) => {
@@ -133,8 +135,8 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
             tl.debug("Physical path doesn't exists. Creating physical path.")
             defer.resolve(await createPhysicalPath(publishingProfile, physicalPath));
         } else {
-            tl.debug(JSON.stringify(response));
-            defer.reject(tl.loc('FailedtocheckphysicalPath', response.statusCode, response.statusMessage));
+            tl.debug("Action: ensurePhysicalPathExists, Response: " + JSON.stringify(response));
+            defer.reject(tl.loc('FailedtocheckphysicalPath', response.statusCode));
         }
     },
     (error) => {
@@ -227,8 +229,8 @@ async function createPhysicalPath(publishingProfile, physicalPath: string) {
             defer.resolve(tl.loc('KuduPhysicalpathCreatedSuccessfully', physicalPath));
         }
         else {
-            tl.error(response.statusMessage);
-            defer.reject(tl.loc('FailedtocreateKuduPhysicalPath', response.statusCode, response.statusMessage));
+            tl.debug("Action: createPhysicalPath, Response: " + JSON.stringify(response));
+            defer.reject(tl.loc('FailedtocreateKuduPhysicalPath', response.statusCode));
         }
     },
     (error) => {
@@ -258,7 +260,8 @@ async function uploadFiletoKudu(publishingProfile, physicalPath: string, fileNam
             defer.resolve('file uploaded to Kudu');
         }
         else {
-            defer.reject(tl.loc('failedtoUploadFileToKudu', fileName, kuduDeploymentURL, response.statusCode, response.statusMessage));
+            tl.debug("Action: uploadFiletoKudu, Response: " + JSON.stringify(response));
+            defer.reject(tl.loc('failedtoUploadFileToKudu', fileName, kuduDeploymentURL, response.statusCode));
         }
     },
     (error) => {
@@ -288,10 +291,10 @@ async function deleteFileFromKudu(publishingProfile, physicalPath: string, fileN
             defer.resolve('file removed from kudu');
         } else {
             if(continueOnError) {
-                tl.debug('Unable to delete file: ' + fileName + ' using publishURL : ' + kuduDeploymentURL + '. statusCode: ' + response.statusCode + ' (' + response.statusMessage + ')');
+                tl.debug('Unable to delete file: ' + fileName + ' using publishURL : ' + kuduDeploymentURL + '. statusCode: ' + response.statusCode);
                 defer.resolve(' ');    
             }
-            defer.reject(tl.loc('FailedtoDeleteFileFromKudu', fileName, kuduDeploymentURL, response.statusCode, response.statusMessage));
+            defer.reject(tl.loc('FailedtoDeleteFileFromKudu', fileName, kuduDeploymentURL, response.statusCode));
         }
     },
     (error) => {
@@ -331,20 +334,19 @@ async function getFileContent(publishingProfile, physicalPath, fileName) {
     tl.debug('Getting content of file: ' + fileName + ' using publishUrl: ' + kuduGetFileUrl);
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
-    let promise: Promise<any> = rc.get(kuduGetFileUrl, options);
-    promise.then((response) => {
-        if(response.statusCode === 200) {
+    let promise: Promise<any> = hc.get(kuduGetFileUrl, options);
+    promise.then(async (response) => {
+        let contents: string = await response.readBody();
+        if(response.message.statusCode === 200) {
             tl.debug('retrieved file content : ' + fileName);
             defer.resolve({
-                content: response.result
+                content: contents
             });
         } else {
-            defer.reject(
-                {
-                    statusCode: response.statusCode,
-                    statusMessage: response.statusMessage 
-                }
-            );
+            defer.reject({
+                statusCode: response.message.statusCode,
+                statusMessage: response.message.statusMessage
+            });
         }
     },
     (error) => {
@@ -491,7 +493,7 @@ async function runCommandOnKudu(publishingProfile, physicalPath: string, command
             defer.resolve(response.result);
         }
         else {
-            defer.reject(tl.loc('FailedToRunScriptOnKudu', kuduDeploymentURL, response.statusCode, response.statusMessage));
+            defer.reject(tl.loc('FailedToRunScriptOnKudu', kuduDeploymentURL, response.statusCode));
         }
     },
     async (error) => {

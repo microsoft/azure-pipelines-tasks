@@ -38,8 +38,8 @@ export async function getInstalledExtensions(publishingProfile) {
             }
             defer.resolve(installedExtensionsList);
         } else {
-            console.log(JSON.stringify(response));
-            defer.reject(tl.loc('ExtensionListFailedResponseError', response.statusCode, response.statusMessage));
+            tl.debug("Action: getInstalledExtensions, Response: " + JSON.stringify(response));
+            defer.reject(tl.loc('ExtensionListFailedResponseError', response.statusCode));
         }
     },
     (error) => {
@@ -63,13 +63,12 @@ export async function installExtension(publishingProfile, extension: string) {
     let promise: Promise<any> = rc.replace(kuduPhysicalpathUrl, options);
     promise.then((response) => {
         if(response.statusCode === 200) {
-            tl.debug(JSON.stringify(response));
             var responseBody = response.result;
             console.log(tl.loc('ExtensionInstallSuccess', responseBody['title']));
             defer.resolve(responseBody);
         } else {
-            console.log(JSON.stringify(response));
-            defer.reject(tl.loc('ExtensionInstallFailedResponseError', extension, response.statusCode, response.statusMessage));
+            tl.debug("Action: installExtension, Response: " + JSON.stringify(response));
+            defer.reject(tl.loc('ExtensionInstallFailedResponseError', extension, response.statusCode));
         }
     },
     (error) => {

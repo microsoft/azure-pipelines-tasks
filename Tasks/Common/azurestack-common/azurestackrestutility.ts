@@ -110,8 +110,8 @@ export async function initializeAzureStackData(endpoint): Promise<any>
             deferred.resolve(endpoint);
         }
         else {
-            tl.debug(JSON.stringify(response));
-            deferred.reject(tl.loc("FailedToFetchAzureStackDependencyData", response.statusMessage));
+            tl.debug("Action: initializeAzureStackData, Response: " + JSON.stringify(response));
+            deferred.reject(tl.loc("FailedToFetchAzureStackDependencyData", response.statusCode));
         }
     },
     (error) => {

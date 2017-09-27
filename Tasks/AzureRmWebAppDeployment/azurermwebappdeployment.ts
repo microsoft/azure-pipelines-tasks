@@ -74,8 +74,7 @@ async function run() {
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
-        if(isLinuxWebApp && !isBuiltinLinuxWebApp && dockerNamespace)
-        {
+        if(isLinuxWebApp && !isBuiltinLinuxWebApp && dockerNamespace) {
             tl.debug("Performing container based deployment.");
 
             if (webAppUri) {
@@ -84,11 +83,10 @@ async function run() {
 
             await deployWebAppImage(endPoint, resourceGroupName, webAppName, deployToSlotFlag, slotName);
         }
-        else
-        {
+        else {
             tl.debug("Performing the deployment of webapp.");
             
-            if(isLinuxWebApp){
+            if(isLinuxWebApp) {
                 webDeployPkg = linuxWebDeployPkg;
             }
             var availableWebPackages = deployUtility.findfiles(webDeployPkg);
@@ -147,18 +145,18 @@ async function run() {
                 tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
             }
 
-        if(publishingProfile && publishingProfile.destinationAppUrl) {
-            try{
-                await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
-            } catch (error) {
-                tl.debug("Failed to check availability of azure web app, error : " + error.message);
+            if(publishingProfile && publishingProfile.destinationAppUrl) {
+                try{
+                    await azureRESTUtility.testAzureWebAppAvailability(publishingProfile.destinationAppUrl, 3000);
+                } catch (error) {
+                    tl.debug("Failed to check availability of azure web app, error : " + error.message);
+                }
             }
-        }
 
-        if(!isLinuxWebApp && deployUtility.canUseWebDeploy(useWebDeploy)) {
-            if(!tl.osType().match(/^Win/)){
-                throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
-            }
+            if(!isLinuxWebApp && deployUtility.canUseWebDeploy(useWebDeploy)) {
+                if(!tl.osType().match(/^Win/)){
+                    throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
+                }
 
                 var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 if(renameFilesFlag) {
@@ -281,6 +279,7 @@ async function updateWebAppConfigDetails(SPN, webAppName: string, resourceGroupN
                         "scmType": "VSTSRM"
                     }
                 });
+            
             await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
             await updateArmMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
