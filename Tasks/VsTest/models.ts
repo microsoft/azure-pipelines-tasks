@@ -61,6 +61,8 @@ export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
     ignoreVstestFailure: string;
+    responseFile: string;
+    responseFileSupported: boolean;
 }
 
 export interface TiaConfiguration {
