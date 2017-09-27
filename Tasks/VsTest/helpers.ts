@@ -70,7 +70,7 @@ export class Helper {
         taskProps.isusererror = isUserError;
         ci.publishEvent(taskProps);
     }
-    
+
     public static getXmlContentsSync(filePath: string): string {
         try {
             let xmlContents = Helper.readFileContentsSync(filePath, 'utf-8');

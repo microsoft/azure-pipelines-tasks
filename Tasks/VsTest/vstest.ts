@@ -71,7 +71,7 @@ export function startTest() {
             }
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
-            }            
+            }
         }).catch(function (err) {
             uploadVstestDiagFile();
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002, false);
@@ -339,7 +339,7 @@ function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: s
     }
 }
 
-function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {    
+function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {
     if (isTiaAllowed()) {
         let testCaseFilterFile = "";
         let testCaseFilterOutput = "";
@@ -374,7 +374,7 @@ function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskRe
                     tl.debug('Empty response file detected. All tests will be executed.');
                     return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
                 }
-                else {                    
+                else {
                     if (responseContainsNoTests(tiaConfig.responseFile)) {
                         // Case where response file indicated no tests were impacted. E.g.: "/Tests:"
                         tl.debug('No tests impacted. Not running any tests.');
@@ -431,15 +431,11 @@ function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isRe
     }
 
     return executeVstest(settingsFile, vsVersion, vstestArgs, !isResponseFileRun).then(function (vscode) {
+        let updateTestResultsOutputCode: number;
         if (uploadResults) {
-            let updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, resultsDirectory);
-            if (updateTestResultsOutputCode !== 0) {
-                utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + updateTestResultsOutputCode, 1011, false);
-                return Q.resolve(tl.TaskResult.Failed);
-            }        
-            return Q.resolve(tl.TaskResult.Succeeded);
+            updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, resultsDirectory);
         }
-        if (vscode !== 0) {
+        if (vscode !== 0 || (uploadResults && updateTestResultsOutputCode !== 0)) {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
             return Q.resolve(tl.TaskResult.Failed);
         }
@@ -459,7 +455,7 @@ function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: nu
         utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
         tl.error(err);
         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', tiaConfig.responseFile));
-        return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function() {
+        return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function () {
             return publishTestResults(resultsDirectory);
         });
     }

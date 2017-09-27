@@ -53,13 +53,13 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </RunSettings>`;
 
 
-export function updateSettingsFileAsRequired(settingsFile: string, 
-                                            isParallelRun: boolean, 
-                                            tiaConfig: models.TiaConfiguration, 
-                                            vsVersion: version.VSTestVersion, 
-                                            videoCollector: boolean, 
-                                            overrideParametersString: string, 
-                                            isDistributedRun: boolean): string {
+export function updateSettingsFileAsRequired(settingsFile: string,
+    isParallelRun: boolean,
+    tiaConfig: models.TiaConfiguration,
+    vsVersion: version.VSTestVersion,
+    videoCollector: boolean,
+    overrideParametersString: string,
+    isDistributedRun: boolean): string {
     try {
         let result: any;
         let parser = new xmlParser.Parser();
@@ -299,7 +299,7 @@ function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyN
 
 function CreateSettings(runSettingsContents: string): any {
     try {
-        let parser = new xmlParser.Parser({trim: true});
+        let parser = new xmlParser.Parser({ trim: true });
         let parsedContent = xmlParser.parseStringSync(runSettingsContents);
         return parsedContent;
     }
