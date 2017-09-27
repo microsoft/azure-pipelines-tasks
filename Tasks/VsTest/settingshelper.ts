@@ -9,8 +9,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 
 const xml2js = require('./node_modules/xml2js');
-const uuid = require('uuid');
-const parser = require('xml2js-parser');
+const xmlParser = require('./node_modules/xml2js-parser');
 //const parser = new xml2js.Parser();
 
 const runSettingsExtension = '.runsettings';
@@ -54,9 +53,16 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
     </RunSettings>`;
 
 
-export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): string {
+export function updateSettingsFileAsRequired(settingsFile: string, 
+                                            isParallelRun: boolean, 
+                                            tiaConfig: models.TiaConfiguration, 
+                                            vsVersion: version.VSTestVersion, 
+                                            videoCollector: boolean, 
+                                            overrideParametersString: string, 
+                                            isDistributedRun: boolean): string {
     try {
         let result: any;
+        let parser = new xmlParser.Parser();
 
         if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString) {
             return settingsFile;
@@ -70,7 +76,9 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
             settingsExt = runSettingsExtension;
         }
 
-        result = utils.Helper.getXmlContentsSync(settingsFile);
+        if (settingsFile) {
+            result = utils.Helper.getXmlContentsSync(settingsFile);
+        }
 
         if (!result || (result.TestSettings === undefined && result.RunSettings === undefined)) {
             tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
@@ -108,7 +116,7 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
         if (videoCollector) {
             //Enable video collector only in test settings.
             let videoCollectorNode = null;
-            videoCollectorNode = parser.parseStringSync(videoDataCollectorTemplate);
+            videoCollectorNode = xmlParser.parseStringSync(videoDataCollectorTemplate);
 
             if (settingsExt === testSettingsExtension) {
                 tl.debug('Enabling video data collector by editing given testsettings.')
@@ -125,7 +133,7 @@ export function updateSettingsFileAsRequired(settingsFile: string, isParallelRun
 
         if (tiaConfig.tiaEnabled && !tiaConfig.disableEnablingDataCollector) {
             let testImpactCollectorNode = null;
-            testImpactCollectorNode = parser.parseStringSync(testImpactDataCollectorTemplate);
+            testImpactCollectorNode = xmlParser.parseStringSync(testImpactDataCollectorTemplate);
 
             if (tiaConfig.useNewCollector) {
                 testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion.majorVersion);
@@ -291,7 +299,8 @@ function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyN
 
 function CreateSettings(runSettingsContents: string): any {
     try {
-        let parsedContent = parser.parseStringSync(runSettingsContents);
+        let parser = new xmlParser.Parser({trim: true});
+        let parsedContent = xmlParser.parseStringSync(runSettingsContents);
         return parsedContent;
     }
     catch (err) {

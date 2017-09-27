@@ -67,10 +67,10 @@ export function startTest() {
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
             if (taskResult == tl.TaskResult.Failed) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode', taskResult));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
             }
             else {
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode', taskResult));
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
             }            
         }).catch(function (err) {
             uploadVstestDiagFile();
@@ -443,6 +443,7 @@ function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isRe
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
             return Q.resolve(tl.TaskResult.Failed);
         }
+        return Q.resolve(tl.TaskResult.Succeeded);
     }).catch(function (err) {
         utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1010, false);
         tl.error(err)
@@ -468,6 +469,7 @@ function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: nu
         if (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) {
             return tl.TaskResult.Failed;
         }
+        return tl.TaskResult.Succeeded;
     }).catch(function (err) {
         tl.error(err);
         return tl.TaskResult.Failed;

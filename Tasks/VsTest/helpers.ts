@@ -10,8 +10,8 @@ import * as ci from './cieventlogger';
 const str = require('string');
 const uuid = require('uuid');
 const xml2js = require('xml2js');
-const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
+const xmlParser = require('./node_modules/xml2js-parser');
 
 export class Constants {
     public static vsTestVersionString = 'version';
@@ -70,29 +70,11 @@ export class Helper {
         taskProps.isusererror = isUserError;
         ci.publishEvent(taskProps);
     }
-
-    public static getXmlContents(filePath: string): Q.Promise<any> {
-        const defer = Q.defer<any>();
-        Helper.readFileContents(filePath, 'utf-8')
-            .then(function (xmlContents) {
-                parser.parseString(xmlContents, function (err, result) {
-                    if (err) {
-                        defer.resolve(null);
-                    } else {
-                        defer.resolve(result);
-                    }
-                });
-            })
-            .fail(function (err) {
-                defer.reject(err);
-            });
-        return defer.promise;
-    }
-
+    
     public static getXmlContentsSync(filePath: string): string {
         try {
             let xmlContents = Helper.readFileContentsSync(filePath, 'utf-8');
-            let parsedXmlContents = parser.parseStringSync(xmlContents);
+            let parsedXmlContents = xmlParser.parseStringSync(xmlContents);
             return parsedXmlContents;
         }
         catch (err) {
