@@ -175,11 +175,7 @@
   "loc.messages.FailedToUpdateRuntimeStackAndStartupCommand": "Failed to update the Runtime Stack and Startup Command. Error: %s.",
   "loc.messages.SuccessfullyUpdatedWebAppSettings": "Successfully updated the App settings.",
   "loc.messages.FailedToUpdateAppSettingsInConfigDetails": "Failed to update the App settings. Error: %s.",
-<<<<<<< HEAD
   "loc.messages.UnableToGetAzureRMWebAppMetadata": "Failed to fetch AzureRM WebApp metadata. ErrorCode: %s",
   "loc.messages.UnableToUpdateAzureRMWebAppMetadata": "Unable to update AzureRM WebApp metadata. Error Code: %s",
   "loc.messages.Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s']"
-=======
-  "loc.messages.Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s', Error Message: '%s']"
->>>>>>> master
 }

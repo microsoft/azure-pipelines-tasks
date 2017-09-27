@@ -16,11 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-<<<<<<< HEAD
-    "Patch": 30
-=======
-    "Patch": 18
->>>>>>> master
+    "Patch": 19
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -149,7 +145,6 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.AzureContainerRegistryLoginServer",
       "defaultValue": "",
-<<<<<<< HEAD
       "required": false,
       "properties": {
         "EditableOptions": "False",
@@ -177,35 +172,6 @@
       "defaultValue": "",
       "required": false,
       "properties": {
-=======
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "PopulateDefaultValue": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryLoginServer",
-      "visibleRule": "ImageSource = invalidimagesource"
-    },
-    {
-      "name": "AzureContainerRegistryImage",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureContainerRegistryImage",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryImage",
-      "visibleRule": "ImageSource = AzureContainerRegistry"
-    },
-    {
-      "name": "AzureContainerRegistryTag",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureContainerRegistryTag",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
->>>>>>> master
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryTag",
@@ -717,11 +683,8 @@
     "FailedToUpdateRuntimeStackAndStartupCommand": "ms-resource:loc.messages.FailedToUpdateRuntimeStackAndStartupCommand",
     "SuccessfullyUpdatedWebAppSettings": "ms-resource:loc.messages.SuccessfullyUpdatedWebAppSettings",
     "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails",
-<<<<<<< HEAD
     "UnableToGetAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToGetAzureRMWebAppMetadata",
     "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
-=======
->>>>>>> master
     "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials"
   }
 }
