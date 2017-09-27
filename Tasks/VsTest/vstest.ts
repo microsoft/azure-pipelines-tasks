@@ -198,7 +198,7 @@ function getTestSelectorLocation(): string {
     return path.join(__dirname, 'TestSelector/TestSelector.exe');
 }
 
-function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
+function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
     const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
@@ -345,7 +345,7 @@ function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: s
     }
 }
 
-function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {
+function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {    
     if (isTiaAllowed()) {
         let testCaseFilterFile = "";
         let testCaseFilterOutput = "";
@@ -409,7 +409,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
         }
         else {
             tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
-            return executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
+            return executeVstest(settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
                 publishTestResults(testResultsDirectory);
                 if (code !== 0) {
                     utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1028, false);
@@ -425,7 +425,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     }
     else {
         tl.debug('Non TIA mode of test execution');
-        return executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
+        return executeVstest(settingsFile, vsVersion, getVstestArguments(settingsFile, false), true).then(function (code) {
             if (code !== 0) {
                 utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.EXECUTEVSTESTRETURNED + code, 1030, false);
                 return tl.TaskResult.Failed
@@ -450,7 +450,7 @@ function runVsTestAndUploadResults(testResultsDirectory: string, settingsFile: s
         vstestArgs = getVstestArguments(settingsFile, false);
     }
 
-    return executeVstest(testResultsDirectory, settingsFile, vsVersion, vstestArgs, !isResponseFileRun).then(function (vscode) {
+    return executeVstest(settingsFile, vsVersion, vstestArgs, !isResponseFileRun).then(function (vscode) {
         let updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, testResultsDirectory);
         if (updateTestResultsOutputCode !== 0) {
             utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + updateTestResultsOutputCode, 1011, false);
