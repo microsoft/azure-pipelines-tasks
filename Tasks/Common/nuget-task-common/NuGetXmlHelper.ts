@@ -10,7 +10,7 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
     }
 
     public SetApiKeyInNuGetConfig(source: string, apiKey: string): void {
-        throw new Error(tl.loc('Error_ApiKeyNotSupported'));
+        throw new Error(tl.loc("Error_ApiKeyNotSupported"));
     }
 
     public AddSourceToNuGetConfig(name: string, source: string, username?: string, password?: string): void {
@@ -25,7 +25,7 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
 
                 if (username || password) {
                     if (!username || !password) {
-                        tl.debug('Adding NuGet source with username and password, but one of them is missing.');
+                        tl.debug("Adding NuGet source with username and password, but one of them is missing.");
                     }
 
                     xml = this._addCredentialsToSource(xml, name, username, password);
@@ -41,7 +41,7 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
             if (xml) {
                 NuGetXmlHelper._validateXmlIsConfiguration(xml);
                 let xmlSources = xml.getChildrenByFilter((child: any): boolean => {
-                    return typeof(child) === 'object' &&
+                    return typeof(child) === "object" &&
                            child.getName().toLowerCase() === "add" &&
                            child.up().getName().toLowerCase() === "packagesources" &&
                            child.attrs.key === name;
@@ -78,7 +78,7 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
     private _removeSourceCredentials(xml: any, name: string): any {
         if (xml) {
             let xmlSourceCredentials = xml.getChildrenByFilter((child: any): boolean => {
-                return typeof(child) === 'object' &&
+                return typeof(child) === "object" &&
                        child.getName() === NuGetXmlHelper._nuGetEncodeElementName(name) &&
                        child.up().getName().toLowerCase() === "packagesourcecredentials";
             }, true);
@@ -98,8 +98,8 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
      */
     private static _validateXmlIsConfiguration(xml: any): void {
         if (xml) {
-            if (xml.getName().toLowerCase() !== 'configuration') {
-                throw Error(tl.loc('Error_ExpectedConfigurationElement'));
+            if (xml.getName().toLowerCase() !== "configuration") {
+                throw Error(tl.loc("Error_ExpectedConfigurationElement"));
             }
         }
     }
@@ -139,11 +139,30 @@ export class NuGetXmlHelper implements INuGetXmlHelper {
             return name;
         }
 
+        // replace the following
+        const invalidCharacters = [" ", ":"];
+        for (let i = 1; i < name.length; i++) {
+            if (invalidCharacters.indexOf(name[i]) >= 0) {
+                name = name.substr(0, i) + NuGetXmlHelper._nuGetEncodeCharater(name[i]) + name.substr(i + 1);
+            }
+        }
+
+        // if the first character is a number, encode it
         if (isNaN(parseInt(name.charAt(0)))) {
             return name;
         }
 
-        let firstCharHex = name.charCodeAt(0).toString(16);
-        return `_x00${firstCharHex}_${name.substr(1)}`;
+        let firstCharHex = NuGetXmlHelper._nuGetEncodeCharater(name[0]);
+        return firstCharHex + name.substr(1);
+    }
+
+    private static _nuGetEncodeCharater(char: string): string {
+        let hexValue = char.charCodeAt(0).toString(16);
+        // pad
+        while (hexValue.length < 4) {
+            hexValue = "0" + hexValue;
+        }
+
+        return `_x${hexValue}_`;
     }
 }

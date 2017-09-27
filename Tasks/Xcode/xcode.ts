@@ -265,6 +265,9 @@ async function run() {
             xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
             xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
             xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
+            if (args) {
+                xcodeArchive.line(args);
+            }
 
             if (useXcpretty) {
                 var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
@@ -360,6 +363,8 @@ async function run() {
                     xcodeExport.arg(['-exportArchive', '-archivePath', archive]);
                     xcodeExport.arg(['-exportPath', exportPath]);
                     xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
+                    var exportArgs: string = tl.getInput('exportArgs');
+                    xcodeExport.argIf(exportArgs, exportArgs);
 
                     if (useXcpretty) {
                         var xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));

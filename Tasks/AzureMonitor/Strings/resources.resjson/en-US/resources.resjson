@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Azure Monitor",
+  "loc.description": "Observe the configured Azure monitor rules for active alerts.",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.instanceNameFormat": "Azure Monitor",
+  "loc.input.label.connectedServiceNameARM": "Azure subscription",  
+  "loc.input.help.connectedServiceNameARM": "Select an Azure resource manager subscription for monitoring.",
+  "loc.input.label.resourceGroupName": "Resource group",
+  "loc.input.help.resourceGroupName": "Provide the name of a resource group.",
+  "loc.input.label.alertRules": "Alert Rules",
+  "loc.input.help.alertRules": "Select alerts for monitoring."
+}

@@ -85,7 +85,6 @@ async function run() {
         }
         else {
             tl.debug("Performing the deployment of webapp.");
-            
             if(isLinuxWebApp) {
                 webDeployPkg = linuxWebDeployPkg;
             }
@@ -158,43 +157,43 @@ async function run() {
                     throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
                 }
 
-                var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                if(renameFilesFlag) {
-                    if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
-                        appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
-                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                    if(renameFilesFlag) {
+                        if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
+                            appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
+                            await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                        }
                     }
-                }
-                else {
-                    if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
-                        delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
-                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                    else {
+                        if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
+                            delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
+                            await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                        }
                     }
+                    console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
+                    console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+                    await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+                                    excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
+                                    additionalArguments, isFolderBasedDeployment, useWebDeploy);
+            } else {
+                tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
+                if(azureWebAppDetails == null) {
+                    azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 }
-                console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
-                console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
-                await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-                                excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
-                                additionalArguments, isFolderBasedDeployment, useWebDeploy);
-        } else {
-            tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
-            if(azureWebAppDetails == null) {
-                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            }
-            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+                await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
-            if(isLinuxWebApp) {
+                if(isLinuxWebApp) {
                     await updateAppSetting(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, inputAppSettings);
-                    
+                        
                     await updateStartupCommandAndRuntimeStack(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, runtimeStack, startupCommand);
                 }
+            }
+            if(!isLinuxWebApp && scriptType) {
+                var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
+                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+            }
         }
-        if(!isLinuxWebApp && scriptType) {
-            var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
-            await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
-        }
-    }
-    await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
     }
     catch (error) {
         isDeploymentSuccess = false;

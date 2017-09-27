@@ -49,7 +49,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     public getRootItems(): Promise<models.ArtifactItem[]> {
-        return this._getItems(this._container)
+        return this._getItems(this._container, this._prefixFolderPath);
     }
 
     public getArtifactItems(artifactItem: models.ArtifactItem): Promise<models.ArtifactItem[]> {

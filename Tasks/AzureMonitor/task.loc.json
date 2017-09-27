@@ -1,0 +1,78 @@
+{
+	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
+	"name": "AzureMonitor",
+	"friendlyName": "ms-resource:loc.friendlyName",
+	"description": "ms-resource:loc.description",
+	"author": "Microsoft Corporation",
+	"helpMarkDown": "ms-resource:loc.helpMarkDown",
+	"category": "Tool",
+	"visibility": [
+		"Release"
+	],
+	"runsOn": [
+		"Server"
+	],
+	"version": {
+		"Major": 0,
+		"Minor": 0,
+		"Patch": 1
+	},
+	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+	"preview": "true",
+	"groups": [],
+	"inputs": [{
+			"name": "connectedServiceNameARM",
+			"type": "connectedService:AzureRM",
+			"label": "ms-resource:loc.input.label.connectedServiceNameARM",
+			"defaultValue": "",
+			"required": "true",
+			"helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+		}, {
+			"name": "resourceGroupName",
+			"type": "pickList",
+			"label": "ms-resource:loc.input.label.resourceGroupName",
+			"required": true,
+			"helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+			"properties": {
+				"EditableOptions": "True"
+			}
+		},
+		{
+			"name": "alertRules",
+			"type": "pickList",
+			"label": "ms-resource:loc.input.label.alertRules",
+			"defaultValue": "",
+			"required": true,
+			"properties": {
+				"MultiSelectFlatList": "True"
+			},
+			"helpMarkDown": "ms-resource:loc.input.help.alertRules"
+		}
+	],
+	"dataSourceBindings": [{
+			"target": "resourceGroupName",
+			"endpointId": "$(connectedServiceNameARM)",
+			"dataSourceName": "AzureResourceGroups"
+		}, {
+			"target": "alertRules",
+			"endpointId": "$(connectedServiceNameARM)",
+			"endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(resourceGroupName)/providers/microsoft.insights/alertrules?api-version=2016-03-01",
+			"resultSelector": "jsonpath:$.value[?(@.properties.isEnabled == true)]",
+			"resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\":\"{{name}}\"}"
+		}
+	],
+
+	"execution": {
+		"HttpRequest": {
+			"Execute": {
+				"EndpointId": "$(connectedServiceNameARM)",
+				"EndpointUrl": "$(endpoint.url)batch?api-version=2015-11-01",
+				"Method": "POST",
+				"Body": "{\"requests\":[{{#splitAndIterate ',' alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourceGroups/{{#..}}{{resourceGroupName}}{{/..}}/providers/microsoft.insights/alertrules/{{this}}/incidents?api-version=2016-03-01\"},{{/splitAndIterate}}]}",
+				"Headers": "{\"Content-Type\":\"application/json\"}",
+				"WaitForCompletion": "false",
+				"Expression": "and(gt(count(root['responses']), 0), eq(count(jsonpath('$.responses[?(@.httpStatusCode != 200)]')), 0), eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0))"
+			}
+		}
+	}
+}

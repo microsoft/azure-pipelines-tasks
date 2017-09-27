@@ -218,7 +218,7 @@ describe('Npm Task', function () {
         };
         mockery.registerMock('fs', mockFs);
 
-        let npmrcParser = require('../npmrcparser');
+        let npmrcParser = require('npm-common/npmrcparser');
         let registries = npmrcParser.GetRegistries('');
 
         assert.equal(registries.length, 3);
@@ -231,7 +231,7 @@ describe('Npm Task', function () {
 
     it('gets feed id from VSTS registry', (done: MochaDone) => {
         mockery.registerMock('vsts-task-lib/task', {});
-        let util = require('../util');
+        let util = require('npm-common/util');
 
         assert.equal(util.getFeedIdFromRegistry(
             'http://account.visualstudio.com/_packaging/feedId/npm/registry'),
@@ -264,7 +264,7 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        let util = require('../util');
+        let util = require('npm-common/util');
 
         return util.getPackagingCollectionUrl().then(u => {
             assert.equal(u, 'http://example.pkgs.visualstudio.com/'.toLowerCase());
@@ -306,7 +306,7 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        let util = require('../util');
+        let util = require('npm-common/util');
 
         return util.getLocalRegistries('').then((registries: string[]) => {
             assert.equal(registries.length, 1);

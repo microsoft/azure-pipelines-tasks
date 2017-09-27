@@ -27,7 +27,7 @@ var azureApiVersion = 'api-version=2016-08-01';
 var azureContainerRegistryApiVersion = "api-version=2017-03-01";
 var defaultWebAppAvailabilityTimeoutInMS = 3000;
 
-function fn(response) {
+/*function fn(response) {
     console.log("##############");
     if(typeof(response) == "string") {
         console.log(response);
@@ -35,13 +35,13 @@ function fn(response) {
         console.log(JSON.stringify(response));
     }
     console.log("##############");
-}
+}*/
 
 /**
  * gets the name of the ResourceGroup that contains the resource
  *
  * @param   endpoint            Service Principal Name
- * @param   resource            Name of the resource
+ * @param   resourceName        Name of the resource
 */
 export async function getResourceGroupName(endpoint, resourceName: string, resourceType)
 {
@@ -49,6 +49,7 @@ export async function getResourceGroupName(endpoint, resourceName: string, resou
     {
         resourceType = "Microsoft.Web/Sites";
     }
+    
     var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType + '\' AND name EQ \'' + resourceName + '\'&api-version=2016-07-01';
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
@@ -61,6 +62,7 @@ export async function getResourceGroupName(endpoint, resourceName: string, resou
     tl.debug('Azure Resource Group Name : ' + resourceGroupName);
     return resourceGroupName;
 }
+
 /**
  * updates the deployment status in kudu service
  * 
@@ -84,7 +86,6 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
         options.additionalHeaders = headers;
         let promise: Promise<rm.IRestResponse<any>> = rc.replace(requestDetails['requestUrl'], requestDetails['requestBody'], options);
         promise.then((response) => {
-            //fn(response);
             if(response.statusCode === 200) {
                 deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory", response.result.url));
             } else {
@@ -219,7 +220,6 @@ async function getAzureRMResourceID(endpoint, resourceName: string, url: string,
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.get(url, options);
     promise.then(async (response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             let resourceIDDetails: any = response.result;
             if (resourceIDDetails.value.length === 0) {
@@ -270,7 +270,6 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.get(configUrl, options);
     promise.then((response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             deferred.resolve(response.result);
         } else {
@@ -302,7 +301,6 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.update(configUrl, JSON.parse(configDetails), options);
     promise.then((response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             deferred.resolve();
         } else {
@@ -334,7 +332,6 @@ export async function getWebAppAppSettings(endpoint, webAppName: string, resourc
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.create(configUrl, null, options);
     promise.then((response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             deferred.resolve(response.result);
         } else {
@@ -365,7 +362,6 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
     options.additionalHeaders = headers;
     let promise: Promise<rm.IRestResponse<any>> = rc.replace(configUrl, appSettings, options);
     promise.then((response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             deferred.resolve(appSettings);
         } else {
@@ -409,7 +405,6 @@ function monitorSlotSwap(SPN, url) {
             attempts++;
             tl.debug("Slot swap operation is in progress. Attempt : "+ attempts);
             await  getOperationStatus(SPN, url).then((response: rm.IRestResponse<any>) => {
-                //var response = status["response"];
                 if (response.statusCode === 200) {
                     deferred.resolve();
                 }
@@ -685,7 +680,6 @@ export async function getAzureRMWebAppMetadata(
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.create(metadataUrl, null, options);
     promise.then((response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             deferred.resolve(response.result);
         } else {
@@ -725,7 +719,6 @@ export async function updateAzureRMWebAppMetadata(
     options.additionalHeaders = headers;
     let promise: Promise<any> = rc.replace(metadataUrl, webAppMetadata, options);
     promise.then((response) => {
-        //fn(response);
         if(response.statusCode === 200) {
             deferred.resolve();
         } else {
