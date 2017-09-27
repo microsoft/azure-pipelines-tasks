@@ -221,7 +221,7 @@
       "parameters": {
         "definition": "$(jobName)"
       },
-      "resultTemplate": "{ \"Value\" : \"{{_class}}\", \"DisplayValue\" : \"{{{_class}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
     },
     {
       "endpointId": "$(serverEndpoint)",

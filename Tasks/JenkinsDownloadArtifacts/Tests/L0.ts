@@ -219,8 +219,8 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
-    it('Job type should be fetched if its not already mentioned in the task input', (done) => {
-        const tp: string = path.join(__dirname, 'L0GetJobTypeIfItsNotMentionedInInput.js');
+    it('Job type should be fetched even if its mentioned in the task input', (done) => {
+        const tp: string = path.join(__dirname, 'L0JobTypeShouldAlwaysBeFetched.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
@@ -237,14 +237,15 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
-    it('Job type should not be fetched if its already mentioned in the task input', (done) => {
-        const tp: string = path.join(__dirname, 'L0ShouldNotGetJobTypeIfItsMentionedInInput.js');
+    it('Should fail if invalid buildId mentioned for MultiBranch job type', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldFailIfInvalidBuildIdMentionedForMultiBranch.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             tr.run();
 
-            assert(tr.stdout.indexOf('Trying to get job type') === -1, "Should not try to find the job type");
+            assert(tr.stdout.indexOf('InvalidBuildId') !== -1, tr.stdout);
+            assert(tr.failed, 'task should have failed');
 
             done();
         } catch(err) {
@@ -255,6 +256,24 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
+    it('Should fail if invalid buildId mentioned for Freestyle job type', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldFailIfInvalidBuildIdMentionedForFreestyleJob.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('InvalidBuildId') !== -1, tr.stdout);
+            assert(tr.failed, 'task should have failed');
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
 
     it('Should find jobId and branchName if its multibranch pipeline project', (done) => {
         const tp: string = path.join(__dirname, 'L0ShouldCorrectlyDetectMultiBranchPipelineProject.js');
@@ -263,7 +282,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         try {
             tr.run();
 
-            let expectedMessage: string = "Found Jenkins job details jobName:myfreestyleproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:20, IsMultiBranchPipeline:true, MultiBranchPipelineName:mybranch";
+            let expectedMessage: string = "Found Jenkins job details jobName:multibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:20, IsMultiBranchPipeline:true, MultiBranchPipelineName:mybranch";
             assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the jobId and branchName if its multibranch project");
 
             done();
@@ -320,8 +339,8 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         try {
             tr.run();
 
-            let expectedMessage: string = "Found Jenkins job details jobName:myfreestyleproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:200, IsMultiBranchPipeline:true, MultiBranchPipelineName:branch1";
-            assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the Latest jobId  if its freestyle project");
+            let expectedMessage: string = "Found Jenkins job details jobName:mymultibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:200, IsMultiBranchPipeline:true, MultiBranchPipelineName:branch1";
+            assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the Latest jobId  if its multibranch project");
 
             done();
         } catch(err) {

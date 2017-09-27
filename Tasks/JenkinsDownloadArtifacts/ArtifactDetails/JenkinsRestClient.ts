@@ -215,25 +215,17 @@ export class JenkinsRestClient {
 
     public GetJobType(): Q.Promise<string> {
         let defer = Q.defer<string>();
-        let jenkinsJobType: string = tl.getInput("jenkinsJobType", false) || "";
+        const jobTypeApiUrlSuffix: string = "/api/json";
+        const handlerbarSource = "{{_class}}";
+        tl.debug("Trying to get job type");
 
-        if (!!jenkinsJobType && jenkinsJobType.trim().length > 0) {
-            // if the jenkins server is reachable its already either set by the service or in the task
-            defer.resolve(jenkinsJobType.trim());
-        }
-        else {
-            const lastSuccessfulUrlSuffix: string = "/api/json";
-            const handlerbarSource = "{{_class}}";
-            tl.debug("Trying to get job type");
-
-            this.DownloadJsonContent(lastSuccessfulUrlSuffix, handlerbarSource, null).then((result) => {
-                tl.debug(`Found job type ${result}`);
-                defer.resolve(result.trim());
-            }, (error) => {
-                tl.debug('Could not detect job type');
-                defer.resolve("");
-            });
-        }
+        this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
+            tl.debug(`Found job type ${result}`);
+            defer.resolve(result.trim());
+        }, (error) => {
+            tl.debug('Could not detect job type');
+            defer.resolve("");
+        });
 
         return defer.promise;
     }
@@ -265,7 +257,7 @@ export class JenkinsRestClient {
                 }
 
                 const buildId = parseInt(buildIdStr);
-                if (isNaN(buildId)) {
+                if (!this.IsValidBuildId(buildId, branchName, isMultibranchPipeline)) {
                     defer.reject(new Error(tl.loc("InvalidBuildId", buildIdStr)));
                 }
                 else {
@@ -318,7 +310,7 @@ export class JenkinsRestClient {
                     buildId = parseInt(result);
                 }
 
-                if (isNaN(buildId)) {
+                if (!this.IsValidBuildId(buildId, branchName, isMultibranchPipeline)) {
                     defer.reject(new Error(tl.loc("InvalidBuildId", buildId)));
                 }
                 else {
@@ -336,6 +328,27 @@ export class JenkinsRestClient {
         tl.debug(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
 
         return defer.promise;
+    }
+
+    private IsValidBuildId(buildId: number, multiBranchName: string, isMultiBranch: boolean): boolean {
+        if (isNaN(buildId)) {
+            return false;
+        }
+
+        if (isMultiBranch) {
+            // if its multibranch, valid branchname should exist
+            if (!multiBranchName || multiBranchName.trim().length === 0) {
+                return false;
+            }
+        }
+        else {
+            // if its not multibranch there should not be a branch name
+            if (!!multiBranchName && multiBranchName.trim().length > 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static JenkinsBranchPathSeparator: string = "/";

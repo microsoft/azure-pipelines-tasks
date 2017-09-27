@@ -7,13 +7,12 @@ const taskPath = path.join(__dirname, '..', 'jenkinsdownloadartifacts.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("serverEndpoint", "ID1");
-tr.setInput("jobName", "myfreestyleproject")
+tr.setInput("jobName", "mymultibranchproject")
 tr.setInput("saveTo", "jenkinsArtifacts");
 tr.setInput("filePath", "/");
 tr.setInput("jenkinsBuild", "LastSuccessfulBuild");
 //tr.setInput("jenkinsBuildNumber", "10"); No explicit build number set
 tr.setInput("itemPattern", "**");
-tr.setInput("jenkinsJobType", "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject");
 tr.setInput("downloadCommitsAndWorkItems", "false");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
@@ -35,7 +34,11 @@ tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
 
-        if (urlObject.url === "http://url/job/myfreestyleproject//api/json?tree=jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]") {
+        if (urlObject.url === "http://url/job/mymultibranchproject//api/json") {
+            callback(0, {statusCode: 200}, '{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
+        }
+
+        if (urlObject.url === "http://url/job/mymultibranchproject//api/json?tree=jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]") {
             let result = `
 {
   "jobs": [

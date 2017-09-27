@@ -14,7 +14,6 @@ tr.setInput("jenkinsBuild", "BuildNumber");
 tr.setInput("jenkinsBuildNumber", "master/20");
 tr.setInput("startJenkinsBuildNumber", "master/15");
 tr.setInput("itemPattern", "**");
-tr.setInput("jenkinsJobType", "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject");
 tr.setInput("downloadCommitsAndWorkItems", "true");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
@@ -35,6 +34,10 @@ tr.registerMock("item-level-downloader/Engine" , {
 tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
+
+        if (urlObject.url === "http://url/job/testmultibranchproject//api/json") {
+            callback(0, {statusCode: 200}, '{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
+        }
 
         if (urlObject.url.indexOf('allBuilds[number]') !== -1) {
             callback(0, {statusCode: 200}, '{"allBuilds":[{"number":22},{"number":21},{"number":20},{"number":18},{"number":15},{"number":14},{"number":13}]}');

@@ -7,12 +7,13 @@ const taskPath = path.join(__dirname, '..', 'jenkinsdownloadartifacts.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("serverEndpoint", "ID1");
-tr.setInput("jobName", "multibranchproject")
+tr.setInput("jobName", "project")
 tr.setInput("saveTo", "jenkinsArtifacts");
 tr.setInput("filePath", "/");
 tr.setInput("jenkinsBuild", "BuildNumber");
-tr.setInput("jenkinsBuildNumber", "mybranch/20");
+tr.setInput("jenkinsBuildNumber", "master/20");
 tr.setInput("itemPattern", "**");
+
 tr.setInput("downloadCommitsAndWorkItems", "false");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
@@ -34,8 +35,8 @@ tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
 
-        if (urlObject.url === "http://url/job/multibranchproject//api/json") {
-            callback(0, {statusCode: 200}, '{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
+        if (urlObject.url === "http://url/job/project//api/json") {
+            callback(0, {statusCode: 200}, '{ "_class": "hudson.model.FreeStyleProject" }');
         }
 
         return {auth: function(A,B,C) {}}

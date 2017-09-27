@@ -35,7 +35,7 @@ tr.registerMock("request", {
         console.log(`Mock invoked for ${urlObject.url}`)
 
         if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
-            callback(0, {statusCode: 200}, '{ "_class": "hudson.model.FreeStyleProject" }'); //instead of setting this in input let the task finds out
+            callback(0, {statusCode: 200}, '{ "_class": "hudson.model.FreeStyleProject" }');
         }
 
         return {auth: function(A,B,C) {}}
