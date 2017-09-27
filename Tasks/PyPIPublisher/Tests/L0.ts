@@ -3,26 +3,30 @@ import * as ttm from 'vsts-task-lib/mock-test';
 import * as path from 'path';
 
 describe('PyPI Publisher', function () {
-    
-    before(() => {
-        //Enable this for output
-        //process.env['TASK_TEST_TRACE'] = 1; 
 
-        //setup endpoint
-        process.env["ENDPOINT_AUTH_MyTestEndpoint"] = "{\"parameters\":{\"username\":\"username\", \"password\":\"password\"},\"scheme\":\"usernamepassword\"}";
-        process.env["ENDPOINT_URL_MyTestEndpoint"] = "https://example/test";
-        process.env["ENDPOINT_AUTH_PARAMETER_MyTestEndpoint_USERNAME"] = "username";
-        process.env["ENDPOINT_AUTH_PARAMETER_MyTestEndpoint_PASSWORD"] = "password";
-    });
-
-    it('Python tool should be present', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, 'L0PythonAvailability.js');
+    it('Test to verify pip command arguements', (done: MochaDone) => {        
+        let tp = path.join(__dirname, 'L0PipCommands.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
+        //console.log(tr.stderr, tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('twine installed successfully'));
+        assert(tr.stdOutContained('distribution files created successfully'));
+        assert(tr.stdOutContained('distribution files uploaded successfully'));
+        assert(tr.stdOutContained('Upload Successful'));
+        done();
+    });
+
+    it('Test for Python tool execution failure ', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'L0PythonExecFail.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        //console.log(tr.stderr, tr.stdout);
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained('Upload Failed'));
+        assert(tr.stdOutContained('twine installed failed'));
         done();
     });
 });
