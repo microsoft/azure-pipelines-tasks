@@ -120,6 +120,7 @@ async function run() {
             case "Enable Continuous Monitoring": {
                 var appInsightsManage = new appInsightsManageUtils.AppInsightsManage(endPoint, appInsightsResourceGroupName, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName);
                 await appInsightsManage.configureAppInsights();
+                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;   
             }
             case "Start Webjobs": {

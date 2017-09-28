@@ -186,7 +186,9 @@
             "defaultValue": "",
             "required": true,
             "properties": {
-                "EditableOptions": "True"
+                "EditableOptions": "True",
+                "enableManage": "True",
+                "manageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights"
             },
             "visibleRule": "Action == Enable Continuous Monitoring"
         }
