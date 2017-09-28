@@ -38,7 +38,7 @@ async function run(){
 }
 
 async function executePythonTool(commandToExecute){
-    let pythonTool = tl.tool(pythonToolPath);
+    var pythonTool = tl.tool(pythonToolPath);
     pythonTool.on('stderr', function (data) {
         error += (data || '').toString();
     });

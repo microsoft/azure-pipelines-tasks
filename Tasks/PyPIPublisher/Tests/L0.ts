@@ -9,7 +9,7 @@ describe('PyPI Publisher', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stderr, tr.stdout);
+        //console.log(tr.stderr, tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('twine installed successfully'));
         assert(tr.stdOutContained('distribution files created successfully'));
