@@ -87,7 +87,7 @@
         Import-Module "$SetupPath\TfsAssemblies\Microsoft.TeamFoundation.Test.WebApi.dll"
         Import-Module "$SetupPath\TfsAssemblies\Microsoft.VisualStudio.Services.Common.dll"
         Import-Module "$SetupPath\TfsAssemblies\Microsoft.VisualStudio.Services.WebApi.dll"
-        Import-Module "$SetupPath\PrivateAssemblies\Microsoft.VisualStudio.TestService.Utility.dll"
+        Import-Module "$SetupPath\PrivateAssemblies\MS.VS.TestService.Client.Utility.dll"
 
         $MachineName = $Env:COMPUTERNAME
 
@@ -105,7 +105,7 @@
         Write-Verbose "****************************************************************"
 
         Try {
-            $DtaAgentClient = New-Object Microsoft.VisualStudio.TestService.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
+            $DtaAgentClient = New-Object MS.VS.TestService.Client.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
         }
         Catch {
             Write-Verbose "Unable to connect to Team Foundation Server, Check if TFS is reachable from the test agent. Exception Details : "
