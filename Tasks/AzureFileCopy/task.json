@@ -13,7 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
+<<<<<<< HEAD
         "Patch": 102
+=======
+        "Patch": 101
+>>>>>>> 6c37a258b... Changing in Azure file copy task
     },
     "demands": [
         "azureps"
