@@ -8,10 +8,10 @@ import * as Q from 'q';
 import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
-import { GetRegistries, NormalizeRegistry } from './npmrcparser';
-import { INpmRegistry, NpmRegistry } from './npmregistry';
+import { GetRegistries, NormalizeRegistry } from 'npm-common/npmrcparser';
+import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from './util';
+import * as util from 'npm-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));

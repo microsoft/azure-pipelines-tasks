@@ -6,7 +6,6 @@
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
     "category": "Utility",
     "visibility": [
-        "Build",
         "Release"
     ],
     "author": "Microsoft Corporation",
@@ -16,13 +15,13 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "inputs": [
         {
             "name": "delayForMinutes",
             "type": "string",
-            "label": "Delay minutes (minutes)",
+            "label": "Delay Time (minutes)",
             "defaultValue": "0",
             "required": true,
             "helpMarkDown": "Delay the execution of the workflow by specified time in minutes."

@@ -13,7 +13,7 @@ ci.publishEvent(taskProps);
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-
+    utils.Helper.setConsoleCodePage();
     const useDtaExecutionEngine = isDtaEngineRequired();
     if (useDtaExecutionEngine) {
         ci.publishEvent({ runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),

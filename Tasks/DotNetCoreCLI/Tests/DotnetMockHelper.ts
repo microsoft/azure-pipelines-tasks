@@ -89,7 +89,7 @@ export class DotnetMockHelper {
     }
 
         public registerNuGetPackUtilsMock() {
-        this.tmr.registerMock('./Common/utility', {
+        this.tmr.registerMock( "nuget-task-common/PackUtilities", {
             getUtcDateString: function() {
                 return 'YYYYMMDD-HHMMSS';
             }

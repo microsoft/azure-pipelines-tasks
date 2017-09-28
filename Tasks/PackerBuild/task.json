@@ -1,7 +1,7 @@
 {
     "id": "845fd4f4-642d-4694-8514-047948a5a556",
     "name": "PackerBuild",
-    "friendlyName": "Build Machine Image (PREVIEW)",
+    "friendlyName": "Build Machine Image",
     "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 11
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
