@@ -5,6 +5,7 @@ import * as path from "path";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as packUtils from "nuget-task-common/PackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import * as vstsNuGetCommandHelper from "./Common/VstsNuGetCommandHelper";
 
 class PackOptions implements INuGetCommandOptions {
     constructor(
@@ -123,10 +124,14 @@ export async function run(nuGetPath: string): Promise<void> {
             filesList = nutil.resolveFilterSpec(searchPatternInput);
         }
 
-        tl.debug(`Found ${filesList.length} files`);
+        let searchPatternArray = searchPatternInput.split(";");
+        tl.debug(`Found ${filesList.length} files out of ${searchPatternArray.length}`);
         filesList.forEach(file => {
             tl.debug(`--File: ${file}`);
         });
+        if (filesList.length < searchPatternArray.length) {
+            vstsNuGetCommandHelper.logFileNotFoundWarning(tl, filesList, searchPatternArray);
+        }
 
         let props: string[] = [];
         if(configuration && configuration !== "$(BuildConfiguration)")

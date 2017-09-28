@@ -18,6 +18,7 @@ import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
 import peParser = require('nuget-task-common/pe-parser/index');
 import * as commandHelper from "nuget-task-common/CommandHelper";
+import * as vstsNuGetCommandHelper from "./Common/VstsNuGetCommandHelper";
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -66,8 +67,13 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         });
 
-        if (filesList && filesList.length < 1)
-        {
+        let searchPatternArray = searchPatternInput.split(";");
+        tl.debug(`Found ${filesList.length} files out of ${searchPatternArray.length}`);
+        if (filesList.length < searchPatternArray.length) {
+            vstsNuGetCommandHelper.logFileNotFoundWarning(tl, filesList, searchPatternArray);
+        }
+        
+        if (filesList && filesList.length < 1) {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
             return;
         }
