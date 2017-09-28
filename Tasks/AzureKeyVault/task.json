@@ -5,7 +5,7 @@
     "description": "Download Azure Key Vault Secrets",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
     "category": "Deploy",
-    "releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
+    "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
     "visibility": [
         "Build",
         "Release"
