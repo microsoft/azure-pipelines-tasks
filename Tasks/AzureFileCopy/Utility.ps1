@@ -1290,9 +1290,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$location,
           [string]$connectedServiceName)
 
-    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
-    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
-    $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
+    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/ConfigureWinRM.ps1"
+    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/makecert.exe"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
     $ruleName = "VSO-Custom-WinRM-Https-Port"
@@ -1317,7 +1316,7 @@ function Add-AzureVMCustomScriptExtension
             return
         }
 
-        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
+        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
         Write-Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
