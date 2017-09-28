@@ -8,6 +8,7 @@ var serviceEndpointId = tl.getInput('serviceEndpoint', true);
 var homedir = os.homedir();
 var pypircFilePath = path.join(homedir, ".pypirc");
 var pythonToolPath = tl.which('python', true);
+var error = '';
 
 //Generic service endpoint
 var pythonServer = tl.getEndpointUrl(serviceEndpointId, false);
@@ -27,17 +28,21 @@ async function run(){
         await executePythonTool("-m twine upload dist/*");
     }
     catch(err){
-        tl.setResult(tl.TaskResult.Failed, "Upload Failed");
+        tl.setResult(tl.TaskResult.Failed, error);
     }
     finally{
         //Delete .pypirc file
         tl.rmRF(pypircFilePath);
-        tl.setResult(tl.TaskResult.Succeeded, "Upload Successful");
+        tl.setResult(tl.TaskResult.Succeeded);
     };
 }
 
 async function executePythonTool(commandToExecute){
-    await tl.tool(pythonToolPath).line(commandToExecute).exec();
+    let pythonTool = tl.tool(pythonToolPath);
+    pythonTool.on('stderr', function (data) {
+        error += (data || '').toString();
+    });
+    await pythonTool.line(commandToExecute).exec();
 }
 
 run();
