@@ -5,7 +5,6 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "preview": true,
   "visibility": [
     "Build",
     "Release"
@@ -13,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 122,
+    "Minor": 124,
     "Patch": 0
   },
   "runsOn": [

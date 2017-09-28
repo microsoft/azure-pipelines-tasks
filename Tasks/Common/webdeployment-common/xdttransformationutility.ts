@@ -27,7 +27,8 @@ export function applyXdtTransformation(sourceFile, transformFile) {
         "s:" + sourceFile,
         "t:" + transformFile,
         "d:" + sourceFile,
-        "pw"
+        "pw",
+        "i"
     ];
     
     var debugModeEnabled = tl.getVariable('system.debug');

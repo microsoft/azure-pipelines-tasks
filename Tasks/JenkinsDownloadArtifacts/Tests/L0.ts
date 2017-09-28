@@ -132,7 +132,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.stdout.indexOf('FoundBuildIndex') !== -1, "Failed to find the build index");
             assert(tr.stdout.indexOf('api/json?tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}') !== -1 , "API parameter to fetch commits range have changed");
-            
+
             done();
         } catch(err) {
             console.log(tr.stdout);
@@ -155,6 +155,63 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             done();
         } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('run JenkinsDownloadArtifacts for propagated artifacts with Artifact Provider not as Azure Storage', (done) => {
+        const tp: string = path.join(__dirname, 'L0UnkownArtifactProvider.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try{
+            tr.run();
+
+            assert(tr.stderr.indexOf('loc_mock_ArtifactProviderNotSupported') !== -1, tr.stderr);
+            assert(tr.failed, 'task should have failed');
+            done();
+        }
+        catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('run JenkinsDownloadArtifacts for propagated artifacts with no azure server endpoint', (done) => {
+        const tp: string = path.join(__dirname, 'L0NoAzureEndpointFailure.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try{
+            tr.run();
+
+            assert(tr.stderr.indexOf('Input required: ConnectedServiceNameARM') !== -1, tr.stderr);
+            assert(tr.failed, 'task should have failed');
+            done();
+        }
+        catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('run JenkinsDownloadArtifacts for propagated artifacts should run successfully', (done) => {
+        const tp: string = path.join(__dirname, 'L0DownloadArtifactsFromAzureStorage.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try{
+            tr.run();
+
+            assert(tr.stdout.indexOf('loc_mock_ArtifactSuccessfullyDownloaded') !== -1, tr.stdout);
+            assert(tr.succeeded, 'task should have succedded.');
+            done();
+        }
+        catch(err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
