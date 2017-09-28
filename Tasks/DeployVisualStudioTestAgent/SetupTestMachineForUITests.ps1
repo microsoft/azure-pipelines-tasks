@@ -5,14 +5,14 @@
     {
         Write-Verbose -Message "Admin auto logon is disabled" -Verbose
     }
- 
-    #check for both 64 bit & 32 bit, as policy can be used from both 
+
+    #check for both 64 bit & 32 bit, as policy can be used from both
     $policy64registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\policies\system"
     $policy32registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system"
-    
-    #check only for 32 bit reg key as winlogon process is 32 bit 
+
+    #check only for 32 bit reg key as winlogon process is 32 bit
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-    
+
     if( LegalNoticeKeysAreNotEmpty($policy64registryPath) -or LegalNoticeKeysAreNotEmpty($policy32registryPath) )
     {
         Write-Verbose -Message "Show logon message policy is enabled" -Verbose
@@ -25,7 +25,7 @@
 
 function IsAutoLogonDisabled()
 {
-    #check only for 32 bit reg key as winlogon process is 32 bit 
+    #check only for 32 bit reg key as winlogon process is 32 bit
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
     if (-not (Test-Path $registryPath))
@@ -33,7 +33,7 @@ function IsAutoLogonDisabled()
         Write-Verbose -Message "Registry path $registryPath not found" -Verbose
         return $true
     }
-    
+
     $autoadminLogon = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).AutoAdminLogon
     if ([string]::IsNullOrEmpty($autoadminLogon))
     {
@@ -66,7 +66,7 @@ function IsDontShowUISetInRegistryPath($registryPath)
     elseif($dontShowUI -eq "1")
     {
         return $true
-    }    
+    }
     elseif($dontShowUI -eq "0")
     {
         Write-Verbose -Message "Registry path $registryPath found. DontShowUI key is set to 0." -Verbose
@@ -75,19 +75,19 @@ function IsDontShowUISetInRegistryPath($registryPath)
 }
 
 function IsWindowsErrorReportingDontShowUISet($TestUserDomain, $TestUserName)
-{  
+{
     if( -not(IsDontShowUISetInRegistryPath -registryPath "HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting"))
     {
         $filter = "name = '" + $TestUserName +"' AND domain = '" + $TestUserDomain + "'"
         $user = $null;
-        
+
         try {
-            $user = Get-WmiObject win32_useraccount -Filter $filter            
+            $user = Get-WmiObject win32_useraccount -Filter $filter
         }
-        catch {          
+        catch {
         }
-        
-        if($user -and $user.SID) { 
+
+        if($user -and $user.SID) {
             $hkuPath = "HKU:\" + $user.SID + "\SOFTWARE\Microsoft\Windows\Windows Error Reporting"
             New-PSDrive -PSProvider Registry -Name HKU -Root HKEY_USERS
             if( -not(IsDontShowUISetInRegistryPath -registryPath $hkuPath))
@@ -108,7 +108,7 @@ function LegalNoticeKeysAreNotEmpty([string] $registryPath)
         Write-Verbose -Message "Registry path $registryPath not found" -Verbose
         return $false
     }
-    
+
     $legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticecaption
     $legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticetext
     if ((-not [string]::IsNullOrEmpty($legalCaption)) -and (-not [string]::IsNullOrEmpty($legalText)))
@@ -129,7 +129,7 @@ function Update-RebootCount([string] $environmentURL)
     }
     else
     {
-        $testAgentRegPath = "HKLM:\SOFTWARE\Microsoft\TestAgentConfig" 
+        $testAgentRegPath = "HKLM:\SOFTWARE\Microsoft\TestAgentConfig"
     }
 
     #in case registry key is not found create a new one with required values
@@ -141,7 +141,7 @@ function Update-RebootCount([string] $environmentURL)
         New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force -ErrorAction SilentlyContinue | Out-Null
         return 1;
     }
- 
+
     [int]$machineRebootCount = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).MachineRebootCount
     $savedEnvURL = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).EnvironmentURL
 
@@ -795,7 +795,7 @@ function SetupTestMachine($TestUserName, $TestUserPassword, $EnvironmentURL) {
 
     Set-DisableScreenSaverReg | Out-Null
     ConfigurePowerOptions | Out-Null
-    IsWindowsErrorReportingDontShowUISet -TestUserDomain $Domain -TestUserName $TestUser
+    #IsWindowsErrorReportingDontShowUISet -TestUserDomain $Domain -TestUserName $TestUser
 
     $isTestUserLogged = IsTestUserCurrentlyLoggedIn -TestUserDomain $Domain -TestUserName $TestUser
     if(-not $isTestUserLogged)
