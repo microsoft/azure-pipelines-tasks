@@ -2,13 +2,13 @@ import * as tl from "vsts-task-lib/task";
 import * as Q from "q";
 import * as path from "path";
 
-import * as  azureRmUtility from "azurerest-common/azurerestutility";
 import { initializeAzureRMEndpointData } from "azurestack-common/azurestackrestutility";
+
+import * as  azureRmUtility from "./azurerestutility";
 import { 
-	IAzureRestUtilityResponse,
 	IAzureMetricAlertRulesList,
-	IAzureMetricAlertRule
- } from "azurerest-common/Interfaces";
+	IAzureMetricAlertRule 
+} from "./interfaces";
 
 async function run() {
 	try {
@@ -35,12 +35,6 @@ async function run() {
 		await addOrUpdateAlertRules(endpoint, resourceGroupName, resourceId, alertRules.rules, notifyServiceOwners, notifyEmails);
 	}
 	catch (error) {
-		if (typeof error === 'object') {
-            if (!error.message) {
-                error = JSON.stringify(error, null, 2);
-            }
-        }
-        
         tl.setResult(tl.TaskResult.Failed, error);
 	}
 }
@@ -50,10 +44,10 @@ async function addOrUpdateAlertRules(endpoint, resourceGroupName: string, resour
 	for(var i in alertRules) {
 		tl.debug(`Processing rule '${alertRules[i].alertName}'`);
 		
-		let responseObject: IAzureRestUtilityResponse = await azureRmUtility.addOrUpdateAzureMetricAlertRule(endpoint, resourceGroupName, resourceId, alertRules[i], notifyServiceOwners, notifyEmails);
+		let responseObject = await azureRmUtility.addOrUpdateAzureMetricAlertRule(endpoint, resourceGroupName, resourceId, alertRules[i], notifyServiceOwners, notifyEmails);
 		
-		tl.debug(`Status : ${responseObject.statusCode} ${responseObject.statusMessage}`);
-		tl.debug(JSON.stringify(responseObject.responseBody, null, 2));
+		console.log(tl.loc("UpdatedRule", alertRules[i].alertName));
+		tl.debug(JSON.stringify(responseObject, null, 2));
 	}
 }
 

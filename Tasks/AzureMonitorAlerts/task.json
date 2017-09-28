@@ -75,7 +75,7 @@
 				"resizable": "true",
 				"rows": 5,
                 "editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-                "displayFormat": "{{#rules}}{{{alertName}}} - {{{metric}}} {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"              
+                "displayFormat": "{{#rules}}{{{alertName}}} - '{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"              
 			}
 		},
 		{
@@ -123,6 +123,8 @@
 		"AlertRuleCheck": "Checking if alert rule '%s' exists in the resource group '%s'.",
 		"AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with id '%s'. Please select a different alert rule name.",
 		"AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
-		"AlertRuleDoesNotExist": "Alert rule '%s' doesn't exist in resource group '%s'. Creating a new alert rule.`);"		
+		"AlertRuleDoesNotExist": "Alert rule '%s' doesn't exist in resource group '%s'. Creating a new alert rule.",
+		"UpdatedRule": "Updated rule '%s'",
+		"CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)."
 	}
 }

@@ -1,10 +1,3 @@
-export interface IAzureRestUtilityResponse {
-	statusCode?: number;
-	statusMessage?: string;
-	responseBody?: any;
-	errorMessage?: string;
-}
-
 export interface IThresholdRuleConditionDataSource {
 	"odata.type": string;
 	resourceUri: string;
@@ -39,15 +32,20 @@ export interface IAzureMetricAlertRequestBody {
 	properties: IAzureMetricAlertRequestBodyProperties;
 }
 
+export interface IMetric {
+	value: string;
+	displayValue: string;
+	unit: string;
+}
+
 export interface IAzureMetricAlertRule {
 	alertName: string;
-	metric: string;
+	metric: IMetric;
 	thresholdCondition: string;
 	thresholdValue: string;
 	timePeriod: string;
 }
 
-// come up with a cool name 
 export interface IAzureMetricAlertRulesList {
 	resourceId: string;
 	rules: IAzureMetricAlertRule[];

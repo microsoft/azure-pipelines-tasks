@@ -75,7 +75,7 @@
         "resizable": "true",
         "rows": 5,
         "editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-        "displayFormat": "{{#rules}}{{{alertName}}} - {{{metric}}} {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"
+        "displayFormat": "{{#rules}}{{{alertName}}} - '{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"
       }
     },
     {
@@ -123,6 +123,8 @@
     "AlertRuleCheck": "ms-resource:loc.messages.AlertRuleCheck",
     "AlertRuleTargetResourceIdMismatchError": "ms-resource:loc.messages.AlertRuleTargetResourceIdMismatchError",
     "AlertRuleExists": "ms-resource:loc.messages.AlertRuleExists",
-    "AlertRuleDoesNotExist": "ms-resource:loc.messages.AlertRuleDoesNotExist"
+    "AlertRuleDoesNotExist": "ms-resource:loc.messages.AlertRuleDoesNotExist",
+    "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
+    "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode"
   }
 }
