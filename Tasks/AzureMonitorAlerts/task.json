@@ -125,6 +125,6 @@
 		"AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
 		"AlertRuleDoesNotExist": "Alert rule '%s' doesn't exist in resource group '%s'. Creating a new alert rule.",
 		"UpdatedRule": "Updated rule '%s'",
-		"CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)."
+		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s."
 	}
 }

@@ -125,6 +125,6 @@
     "AlertRuleExists": "ms-resource:loc.messages.AlertRuleExists",
     "AlertRuleDoesNotExist": "ms-resource:loc.messages.AlertRuleDoesNotExist",
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
-    "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode"
+    "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken"
   }
 }

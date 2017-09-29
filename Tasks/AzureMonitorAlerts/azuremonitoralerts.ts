@@ -1,14 +1,13 @@
 import * as tl from "vsts-task-lib/task";
-import * as Q from "q";
 import * as path from "path";
 
 import { initializeAzureRMEndpointData } from "azurestack-common/azurestackrestutility";
 
-import * as  azureRmUtility from "./azurerestutility";
+import { AzureRmRestClient } from "./AzureRmRestClient";
 import { 
 	IAzureMetricAlertRulesList,
 	IAzureMetricAlertRule 
-} from "./interfaces";
+} from "./Interfaces";
 
 async function run() {
 	try {
@@ -41,12 +40,13 @@ async function run() {
 
 async function addOrUpdateAlertRules(endpoint, resourceGroupName: string, resourceId: string, alertRules: IAzureMetricAlertRule[], notifyServiceOwners: boolean, notifyEmails: string) {
 	
-	for(var i in alertRules) {
-		tl.debug(`Processing rule '${alertRules[i].alertName}'`);
+	let azureRmRestClient = new AzureRmRestClient(endpoint);
+
+	for(let rule of alertRules) {
 		
-		let responseObject = await azureRmUtility.addOrUpdateAzureMetricAlertRule(endpoint, resourceGroupName, resourceId, alertRules[i], notifyServiceOwners, notifyEmails);
-		
-		console.log(tl.loc("UpdatedRule", alertRules[i].alertName));
+		console.log(tl.loc("ProcessingRule", rule.alertName));
+		let responseObject = await azureRmRestClient.addOrUpdateAzureMetricAlertRule(resourceGroupName, resourceId, rule, notifyServiceOwners, notifyEmails);
+		console.log(tl.loc("UpdatedRule", rule.alertName));
 		tl.debug(JSON.stringify(responseObject, null, 2));
 	}
 }
