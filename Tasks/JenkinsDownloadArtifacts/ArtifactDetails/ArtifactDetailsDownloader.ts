@@ -54,7 +54,7 @@ export class ArtifactDetailsDownloader {
                 let startBuildBranchName: string = this.GetBranchNameFromVersion(startBuildIdStr, jenkinsJobDetails.isMultiBranchPipeline);
 
                 if (startBuildBranchName.toLowerCase() !== jenkinsJobDetails.multiBranchPipelineName.toLowerCase()) {
-                    defer.reject(new Error(tl.loc("InvalidMultibranchPipelineName", startBuildBranchName, jenkinsJobDetails.multiBranchPipelineName)));
+                    defer.reject(new Error(tl.loc("InvalidMultiBranchPipelineName", startBuildBranchName, jenkinsJobDetails.multiBranchPipelineName)));
                     return defer.promise;
                 }
             }
@@ -103,11 +103,11 @@ export class ArtifactDetailsDownloader {
         return defer.promise;
     }
 
-    private GetBuildIdFromVersion(version: string, isMultibranchPipeline: boolean): number {
+    private GetBuildIdFromVersion(version: string, isMultiBranchPipeline: boolean): number {
         let buildId: number = NaN;
 
         if (!!version) {
-            if (!isMultibranchPipeline) {
+            if (!isMultiBranchPipeline) {
                 buildId = parseInt(version);
             }
             else {

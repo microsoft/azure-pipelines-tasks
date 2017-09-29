@@ -221,7 +221,7 @@
       "parameters": {
         "definition": "$(jobName)"
       },
-      "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\" }"
     },
     {
       "endpointId": "$(serverEndpoint)",
@@ -289,7 +289,7 @@
     "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
     "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber",
     "InvalidBuildId": "ms-resource:loc.messages.InvalidBuildId",
-    "InvalidMultibranchPipelineName": "ms-resource:loc.messages.InvalidMultibranchPipelineName",
+    "InvalidMultiBranchPipelineName": "ms-resource:loc.messages.InvalidMultiBranchPipelineName",
     "FoundJenkinsJobDetails": "ms-resource:loc.messages.FoundJenkinsJobDetails",
     "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
     "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
@@ -338,6 +338,8 @@
     "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
-    "UploadingItem": "ms-resource:loc.messages.UploadingItem"
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem",
+    "FoundJobType": "ms-resource:loc.messages.FoundJobType",
+    "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType"
   }
 }

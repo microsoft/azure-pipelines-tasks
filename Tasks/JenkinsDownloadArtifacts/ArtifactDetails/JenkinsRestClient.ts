@@ -220,10 +220,10 @@ export class JenkinsRestClient {
         tl.debug("Trying to get job type");
 
         this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
-            tl.debug(`Found job type ${result}`);
+            console.log(tl.loc("FoundJobType", result));
             defer.resolve(result.trim());
         }, (error) => {
-            tl.debug('Could not detect job type');
+            console.log(tl.loc("CannotFindJobType"));
             defer.resolve("");
         });
 
@@ -250,7 +250,7 @@ export class JenkinsRestClient {
                 tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
                 // if its multibranch pipeline extract the branch name and buildId from the buildNumber input
                 if (isMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsBranchPathSeparator) != -1) {
-                    tl.debug(`Extracting branchname and buildId from selected version`);
+                    tl.debug(`Extracting branchName and buildId from selected version`);
                     let position: number = buildIdStr.indexOf(JenkinsRestClient.JenkinsBranchPathSeparator);
                     branchName = buildIdStr.substring(0, position);
                     buildIdStr = buildIdStr.substring(position + 1);
@@ -325,7 +325,7 @@ export class JenkinsRestClient {
 
         });
 
-        tl.debug(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
+        console.log(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
 
         return defer.promise;
     }

@@ -56,7 +56,7 @@
         {
             "name": "jenkinsJobType",
             "type": "pickList",
-            "label": "Jenkins Job Type",
+            "label": "Jenkins job type",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Jenkins job type, detected automatically.",
@@ -221,7 +221,7 @@
         "parameters": {
             "definition": "$(jobName)"
         },
-        "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
+        "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\" }"
       },
       {
         "endpointId": "$(serverEndpoint)",
@@ -289,7 +289,7 @@
         "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
         "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
         "InvalidBuildId": "Received an invalid buildId %s",
-        "InvalidMultibranchPipelineName": "Multibranch pipeline job's startBuild branch %s and endBuild branch %s are different. Commits and workitems will not be downloaded.",
+        "InvalidMultiBranchPipelineName": "Multibranch pipeline job's startBuild branch %s and endBuild branch %s are different. Commits and workitems will not be downloaded.",
         "FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
         "ClientIdCannotBeEmpty": "ClientID is a required parameter.",
         "DomainCannotBeEmpty": "Domain is a required parameter.",
@@ -338,6 +338,8 @@
         "FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
         "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
         "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
-        "UploadingItem": "Uploading {0}."
+        "UploadingItem": "Uploading {0}.",
+        "FoundJobType": "Found job type %s",
+        "CannotFindJobType": "Could not detect job type"
     }
 }
