@@ -54,6 +54,19 @@
       }
     },
     {
+      "name": "jenkinsJobType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jenkinsJobType",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsJobType",
+      "visibleRule": "jobName = invalidjobName",
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      }
+    },
+    {
       "name": "saveTo",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.saveTo",
@@ -124,7 +137,7 @@
       "label": "ms-resource:loc.input.label.artifactDetailsFileNameSuffix",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "downloadCommitsAndWorkItems == true",
+      "visibleRule": "downloadCommitsAndWorkItems == invalid",
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
     },
@@ -203,21 +216,32 @@
     },
     {
       "endpointId": "$(serverEndpoint)",
-      "target": "jenkinsBuildNumber",
-      "dataSourceName": "Builds",
+      "target": "jenkinsJobType",
+      "dataSourceName": "JenkinsJobType",
       "parameters": {
         "definition": "$(jobName)"
       },
-      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsBuildNumber",
+      "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+      "parameters": {
+        "definition": "$(jobName)",
+        "jenkinsJobType": "$(jenkinsJobType)"
+      },
+      "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
     },
     {
       "endpointId": "$(serverEndpoint)",
       "target": "startJenkinsBuildNumber",
-      "dataSourceName": "Builds",
+      "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
       "parameters": {
-        "definition": "$(jobName)"
+        "definition": "$(jobName)",
+        "jenkinsJobType": "$(jenkinsJobType)"
       },
-      "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
     },
     {
       "endpointId": "$(ConnectedServiceNameARM)",
@@ -234,7 +258,7 @@
   "messages": {
     "GetArtifactsFromLastSuccessfulBuild": "ms-resource:loc.messages.GetArtifactsFromLastSuccessfulBuild",
     "GetArtifactsFromBuildNumber": "ms-resource:loc.messages.GetArtifactsFromBuildNumber",
-    "CouldNotGetLastSuccessfuilBuildNumber": "ms-resource:loc.messages.CouldNotGetLastSuccessfuilBuildNumber",
+    "CouldNotGetLastSuccessfulBuildNumber": "ms-resource:loc.messages.CouldNotGetLastSuccessfulBuildNumber",
     "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed",
     "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
     "ArtifactSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactSuccessfullyDownloaded",
@@ -264,6 +288,9 @@
     "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
     "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
     "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber",
+    "InvalidBuildId": "ms-resource:loc.messages.InvalidBuildId",
+    "InvalidMultiBranchPipelineName": "ms-resource:loc.messages.InvalidMultiBranchPipelineName",
+    "FoundJenkinsJobDetails": "ms-resource:loc.messages.FoundJenkinsJobDetails",
     "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
     "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
     "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
@@ -311,6 +338,8 @@
     "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
-    "UploadingItem": "ms-resource:loc.messages.UploadingItem"
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem",
+    "FoundJobType": "ms-resource:loc.messages.FoundJobType",
+    "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType"
   }
 }
