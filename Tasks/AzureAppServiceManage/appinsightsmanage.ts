@@ -32,23 +32,22 @@ export class AppInsightsManage {
         this.resourceGroupName  = (this.specifySlotFlag ? this.resourceGroupName : await azureRESTUtils.getResourceGroupName(this.endpoint, this.webAppName));
         var appServiceDetails = await azureRESTUtils.getAppServiceDetails(this.endpoint, this.resourceGroupName, this.webAppName, this.specifySlotFlag, this.slotName);
         
-        if(appServiceDetails && appServiceDetails.kind && appServiceDetails.kind == "app,linux") {
-            throw new Error(tl.loc("ApplicationInsightsNotSupportedForLinuxApp", this.webAppName));
-        } else {
-            var publishingProfile = await azureRESTUtils.getAzureRMWebAppPublishProfile(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
+        var publishingProfile = await azureRESTUtils.getAzureRMWebAppPublishProfile(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
+        if(appServiceDetails && appServiceDetails.kind && appServiceDetails.kind != "app,linux") {
             await this.installApplicationInsightsExtension(publishingProfile);
+        } 
 
-            var appInsightsResource = await this.getApplicationInsightResource();
-            if (appInsightsResource == null) {
-                throw new Error(tl.loc('UnableToGetAppInsightsResource', this.appInsightsResourceName));
-            }
-
-            appInsightsResource = await this.linkAppInsightsWithAppService(appInsightsResource);
-            await this.configureInstrumentationKey(appInsightsResource);
-            await this.configureAppServiceAlwaysOnProperty();
-            await this.configureAppInsightsWebTest(appInsightsResource, publishingProfile);
-            console.log(tl.loc("SuccessfullyConfiguredAppInsights"));
+        var appInsightsResource = await this.getApplicationInsightResource();
+        if (appInsightsResource == null) {
+            throw new Error(tl.loc('UnableToGetAppInsightsResource', this.appInsightsResourceName));
         }
+
+        appInsightsResource = await this.linkAppInsightsWithAppService(appInsightsResource);
+        await this.configureInstrumentationKey(appInsightsResource);
+        await this.configureAppServiceAlwaysOnProperty();
+        await this.configureAppInsightsWebTest(appInsightsResource, publishingProfile);
+        console.log(tl.loc("SuccessfullyConfiguredAppInsights"));
+
     }
 
     private async installApplicationInsightsExtension(publishingProfile) {
@@ -90,6 +89,7 @@ export class AppInsightsManage {
         } else {
             appInsightsResourceTags[appInsightsLinkingTag] = "Resource";
             appInsightsResource = await azureRESTUtils.updateApplicationInsightsResource(this.endpoint, this.appInsightsResourceGroupName, appInsightsResource);
+            tl.debug("Successfully linked app service '" + this.webAppName + "' to app insights : " + appInsightsResource.name);
         }
 
         return appInsightsResource;
@@ -107,6 +107,7 @@ export class AppInsightsManage {
         if(appInsightsInstrumenationKey && appServiceAppSettings) {
             appServiceAppSettings.properties["APPINSIGHTS_INSTRUMENTATIONKEY"] = appInsightsInstrumenationKey;
             appServiceAppSettings = await azureRESTUtils.updateWebAppAppSettings(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName, appServiceAppSettings);
+            tl.debug("Instrumentation key successfully configured for app service : " + this.webAppName);
         }
     }
 
@@ -120,6 +121,7 @@ export class AppInsightsManage {
 						}
 					});
                     appServiceWebSettings = await azureRESTUtils.updateAzureRMWebAppConfigDetails(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName, configSettings);
+                    tl.debug("Always on property is successfully configured for app service : " + this.webAppName);
             }
         } catch (err) {
             tl.warning(tl.loc("FailedToConfigureAlwaysOnProperty", JSON.stringify(err)));
@@ -151,6 +153,8 @@ export class AppInsightsManage {
             if(!isWebTestAlreadyConfigured) {
                 var webTestName = azureUtils.generateDeploymentId();
                 await azureRESTUtils.createAppInsightsWebTest(this.endpoint, this.appInsightsResourceGroupName, webTestName, appInsightResource, publishingProfile.publishUrl);
+            } else {
+                tl.debug("WebTest is already configured for app insights : " + appInsightResource.name);
             }
 
         } catch (err) {
