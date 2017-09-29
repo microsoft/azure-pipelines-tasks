@@ -257,7 +257,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
     });
 
     it('Should fail if invalid buildId mentioned for Freestyle job type', (done) => {
-        const tp: string = path.join(__dirname, 'L0ShouldFailIfInvalidBuildIdMentionedForFreestyleJob.js');
+        const tp: string = path.join(__dirname, 'L0ShouldFailIfInvalidBuildIdMentionedForFreeStyleJob.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
