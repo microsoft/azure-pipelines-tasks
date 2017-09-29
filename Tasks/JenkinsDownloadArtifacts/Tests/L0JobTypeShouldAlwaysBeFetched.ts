@@ -13,8 +13,8 @@ tr.setInput("filePath", "/");
 tr.setInput("jenkinsBuild", "BuildNumber");
 tr.setInput("jenkinsBuildNumber", "20");
 tr.setInput("itemPattern", "**");
-tr.setInput("downloadCommitsAndWorkItems", "true");
-tr.setInput("artifactDetailsFileNameSuffix", "alias_v1.json");
+tr.setInput("jenkinsJobType", "somejobtype");
+tr.setInput("downloadCommitsAndWorkItems", "false");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
@@ -26,7 +26,7 @@ tr.registerMock("item-level-downloader/Engine" , {
         return { 
             processItems: function(A,B,C) {},
         }
-    } ,
+    },
     ArtifactEngineOptions: function() {
     }
 });
@@ -34,10 +34,6 @@ tr.registerMock("item-level-downloader/Engine" , {
 tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
-
-        if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
-            callback(0, {statusCode: 200}, '{}');
-        }
 
         return {auth: function(A,B,C) {}}
     }
