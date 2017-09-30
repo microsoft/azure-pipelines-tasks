@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Build Machine Image",
+  "loc.friendlyName": "生成计算机映像",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "使用 Packer 生成计算机映像。此映像可用于 Azure 虚拟机规模集部署",
   "loc.instanceNameFormat": "生成不可变映像",
