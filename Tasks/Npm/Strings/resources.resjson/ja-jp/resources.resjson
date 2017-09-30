@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "次のレジストリを使用しています: %s",
   "loc.messages.AddingAuthRegistry": "次のレジストリに権限を追加しています: %s",
   "loc.messages.FoundLocalRegistries": "このアカウント/コレクションに %d 個のレジストリが見つかりました",
-  "loc.messages.ForcePackagingUrl": "コレクション URL を %s に強制してパッケージ化しています",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "キャッシュまたは作業ディレクトリにデバッグ ログが見つかりませんでした",
   "loc.messages.NpmFailed": "npm でエラーが発生しました。リターン コード: %s",
   "loc.messages.FoundNpmDebugLog": "npm デバッグ ログが見つかりました。パスが、npm の出力にある 1 つのパスと一致することをご確認ください: %s",
