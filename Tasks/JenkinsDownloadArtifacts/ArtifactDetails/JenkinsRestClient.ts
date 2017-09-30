@@ -12,7 +12,7 @@ export class JenkinsJobDetails {
     multiBranchPipelineName: string;
     multiBranchPipelineUrlInfix: string;
 
-    constructor(jobName: string, buildId: number, jenkinsJobType?: string, multibranchPipelineName?: string) {
+    constructor(jobName: string, buildId: number, jenkinsJobType?: string, multiBranchPipelineName?: string) {
         this.jobName = jobName;
 
         if (isNaN(buildId)) {
@@ -21,7 +21,7 @@ export class JenkinsJobDetails {
         
         this.buildId = buildId;
         this.jobType = jenkinsJobType;
-        this.multiBranchPipelineName = multibranchPipelineName;
+        this.multiBranchPipelineName = multiBranchPipelineName;
 
         this.isMultiBranchPipeline = this.jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
         this.multiBranchPipelineUrlInfix = this.isMultiBranchPipeline ? `/job/${this.multiBranchPipelineName}` : "";
