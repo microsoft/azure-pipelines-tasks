@@ -9,6 +9,8 @@
   "loc.input.help.serverEndpoint": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint.",
   "loc.input.label.jobName": "Job name",
   "loc.input.help.jobName": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
+  "loc.input.label.jenkinsJobType": "Jenkins job type",
+  "loc.input.help.jenkinsJobType": "Jenkins job type, detected automatically.",
   "loc.input.label.saveTo": "Save to",
   "loc.input.help.saveTo": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist.",
   "loc.input.label.jenkinsBuild": "Download artifacts produced by",
@@ -37,7 +39,7 @@
   "loc.input.help.commonVirtualPath": "Path to the artifacts inside the Azure storage container.",
   "loc.messages.GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
   "loc.messages.GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
-  "loc.messages.CouldNotGetLastSuccessfuilBuildNumber": "Could not get last successful build number",
+  "loc.messages.CouldNotGetLastSuccessfulBuildNumber": "Getting last successful build number failed with an error: %s",
   "loc.messages.ServerCallFailed": "HTTP call to Jenkins server failed.",
   "loc.messages.ServerCallErrorCode": "HTTP response code: %d",
   "loc.messages.ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
@@ -66,7 +68,10 @@
   "loc.messages.CannotFindBuilds": "Cannot find builds",
   "loc.messages.JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
   "loc.messages.InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
-  "loc.messages.InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number is not valid.",
+  "loc.messages.InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
+  "loc.messages.InvalidBuildId": "Received an invalid buildId %s",
+  "loc.messages.InvalidMultiBranchPipelineName": "Multibranch pipeline job's startBuild branch %s and endBuild branch %s are different. Commits and workitems will not be downloaded.",
+  "loc.messages.FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
   "loc.messages.ClientIdCannotBeEmpty": "ClientID is a required parameter.",
   "loc.messages.DomainCannotBeEmpty": "Domain is a required parameter.",
   "loc.messages.SecretCannotBeEmpty": "Secret is a required parameter.",
@@ -114,5 +119,7 @@
   "loc.messages.FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
   "loc.messages.SuccessFullyFetchedItemList": "Successfully fetcted list of items",
   "loc.messages.UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
-  "loc.messages.UploadingItem": "Uploading {0}."
+  "loc.messages.UploadingItem": "Uploading {0}.",
+  "loc.messages.FoundJobType": "Found job type %s",
+  "loc.messages.CannotFindJobType": "Could not detect job type"
 }

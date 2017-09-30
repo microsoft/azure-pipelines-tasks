@@ -34,7 +34,13 @@ tr.registerMock("item-level-downloader/Engine" , {
 
 tr.registerMock("request", {
     get: function(urlObject, callback) {
+        if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
+            callback(0, {statusCode: 200}, '{}');
+        }
+
+        return {auth: function(A,B,C) {}}
     }
+    
 });
 
 tr.run();
