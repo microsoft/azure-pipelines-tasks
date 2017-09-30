@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "SQL Server Database Deploy",
+  "loc.friendlyName": "SQL Server-Datenbank bereitstellen",
   "loc.helpMarkDown": "[Weitere Informationen](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Stellen Sie die SQL Server-Datenbank mithilfe von DACPAC- oder SQL-Skripts bereit.",
   "loc.instanceNameFormat": "Bereitstellen über: $(TaskType)",
