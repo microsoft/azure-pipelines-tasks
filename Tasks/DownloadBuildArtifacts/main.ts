@@ -6,10 +6,10 @@ import { IBuildApi } from 'vso-node-api/BuildApi';
 import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from 'vso-node-api/WebApi';
 
-import * as models from 'item-level-downloader/Models';
-import * as engine from 'item-level-downloader/Engine';
-import * as providers from 'item-level-downloader/Providers';
-import * as webHandlers from 'item-level-downloader/Providers/Handlers';
+import * as models from 'artifact-engine/Models';
+import * as engine from 'artifact-engine/Engine';
+import * as providers from 'artifact-engine/Providers';
+import * as webHandlers from 'artifact-engine/Providers/Handlers';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
