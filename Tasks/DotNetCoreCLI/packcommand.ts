@@ -9,7 +9,7 @@ import { IExecOptions } from "vsts-task-lib/toolrunner";
 
 export async function run(): Promise<void> {
 
-    let searchPattern = tl.getPathInput("searchPatternPack", true);
+    let searchPattern = tl.getDelimitedInput("searchPatternPack", '\n', true);
     let configuration = tl.getInput("configurationToPack");
     let versioningScheme = tl.getInput("versioningScheme");
     let versionEnvVar = tl.getInput("versionEnvVar");
@@ -94,7 +94,8 @@ export async function run(): Promise<void> {
                 filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
             }
             else {
-                filesList = nutil.resolveFilterSpec(searchPattern);
+                // TODO: See what we need to do in legacy scenarios.
+                filesList = nutil.resolveFilterSpec(searchPattern[0]);
             }
         }
 
