@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "Verbosity",
   "loc.input.help.verbosityRestore": "Specifies the amount of detail displayed in the output.",
   "loc.input.label.searchPatternPush": "Path to NuGet package(s) to publish",
-  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "Target feed location",
   "loc.input.label.feedPublish": "Target feed",
   "loc.input.help.feedPublish": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",

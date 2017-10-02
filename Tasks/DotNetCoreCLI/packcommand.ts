@@ -9,7 +9,7 @@ import { IExecOptions } from "vsts-task-lib/toolrunner";
 
 export async function run(): Promise<void> {
 
-    let searchPattern = tl.getPathInput("searchPatternPack", true);
+    let searchPatternInput = tl.getPathInput("searchPatternPack", true);
     let configuration = tl.getInput("configurationToPack");
     let versioningScheme = tl.getInput("versioningScheme");
     let versionEnvVar = tl.getInput("versionEnvVar");
@@ -84,17 +84,18 @@ export async function run(): Promise<void> {
 
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
-        if (!searchPattern) {
+        if (!searchPatternInput) {
             // Use empty string when no project file is specified to operate on the current directory
             filesList = [""];
         } else {
             if (!useLegacyFind) {
                 let findOptions: tl.FindOptions = <tl.FindOptions>{};
                 let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-                filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+                let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+                filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
             }
             else {
-                filesList = nutil.resolveFilterSpec(searchPattern);
+                filesList = nutil.resolveFilterSpec(searchPatternInput);
             }
         }
 
