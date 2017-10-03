@@ -11,10 +11,7 @@ import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
 import { AreaCodes, ResultMessages } from './constants';
-
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
-
 let os = require('os');
 let regedit = require('regedit');
 let uuid = require('uuid');
@@ -40,7 +37,7 @@ export function startTest() {
             vstestConfig = taskInputParser.getvsTestConfigurations();
         } catch (error) {
             utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1038, true);
-            tl.setResult(tl.TaskResult.Failed, error);
+            throw(error);
         }
         console.log('========================================================');
 
@@ -193,7 +190,6 @@ function getTestSelectorLocation(): string {
 }
 
 function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
-    const defer = Q.defer<number>();
     const vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
@@ -222,8 +218,8 @@ function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsA
     };
     return vstest.exec(execOptions).then(function (code) {
         cleanUp(parallelRunSettingsFile);
-        if (ignoreTestFailures === true) {
-            return tl.TaskResult.Succeeded; // ignore failures.
+        if (ignoreTestFailures) {
+            return 0; // ignore failures.
         } else {
             return code;
         }
@@ -232,11 +228,11 @@ function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsA
         tl.warning(tl.loc('VstestFailed'));
         if (ignoreTestFailures) {
             tl.warning(err);
-            return tl.TaskResult.Succeeded;
+            return 0;
         } else {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1005, true);
             tl.error(err);
-            return tl.TaskResult.Failed;
+            return 1;
         }
     });
 }
@@ -340,82 +336,81 @@ function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: s
 }
 
 function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {
-    if (isTiaAllowed()) {
-        let testCaseFilterFile = "";
-        let testCaseFilterOutput = "";
-        let listFile = "";
-        if (tiaConfig.userMapFile) {
-            testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-            testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
-        }
-
-        let testselector = new testselectorinvoker.TestSelectorInvoker();
-        let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
-        if (code === 0) {
-            // Code changes were published successfully. We will create the run and populate it with discovered test cases now ->
-            try {
-                // Discovering the test cases and writing them to a file.
-                listFile = getVstestTestsList(vsVersion);
-                discoverTestFromFilteredFilter(vsVersion, testCaseFilterFile, testCaseFilterOutput);
-
-                try {
-                    // This calls GetImpactedTests from test selector. Response file will contain the impacted tests in the format: /Tests:Method1,Method2
-                    testselector.generateResponseFile(tiaConfig, vstestConfig, listFile, testCaseFilterOutput);
-                }
-                catch (err) {
-                    utils.Helper.publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1024, false);
-                    tl.error(err);
-                    tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
-                    return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
-                }
-
-                if (isEmptyResponseFile(tiaConfig.responseFile)) {
-                    // Empty response file indicates some issue. We run all tests here.
-                    tl.debug('Empty response file detected. All tests will be executed.');
-                    return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
-                }
-                else {
-                    if (responseContainsNoTests(tiaConfig.responseFile)) {
-                        // Case where response file indicated no tests were impacted. E.g.: "/Tests:"
-                        tl.debug('No tests impacted. Not running any tests.');
-                        let updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, '');
-                        if (updateTestResultsOutputCode !== 0) {
-                            utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + updateTestResultsOutputCode, 1011, false);
-                            return Q.resolve(tl.TaskResult.Failed);
-                        }
-                        return Q.resolve(tl.TaskResult.Succeeded);
-                    }
-                    else {
-                        // Response file indicates that only few tests were impacted E.g.: "/Tests:MyNamespace.MyClass.TestMethod1"
-                        try {
-                            updateResponseFile(getVstestArguments(settingsFile, true));
-                        }
-                        catch (err) {
-                            utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
-                            tl.error(err);
-                            tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', tiaConfig.responseFile));
-                            return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
-                        }
-
-                        return runVsTestAndUploadResults(settingsFile, vsVersion, true, tiaConfig.responseFile, true);
-                    }
-                }
-            }
-            catch (err) {
-                // The errors and logging tasks are handled in individual calls before. Just failing the task here
-                return Q.resolve(tl.TaskResult.Failed);
-            }
-        }
-        else {
-            // If publishing code changes fails, we run all tests. Here we are calling the non tia run because
-            // the run was not yet created by TIA and we dont want to update the results via test selector
-            tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
-            return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
-        }
-    }
-    else {
+    if (!isTiaAllowed()) {
         // Test Impact was not enabled
         return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
+    }
+    
+    let testCaseFilterFile = "";
+    let testCaseFilterOutput = "";
+    let listFile = "";
+    if (tiaConfig.userMapFile) {
+        testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+        testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    }
+
+    let testselector = new testselectorinvoker.TestSelectorInvoker();
+    let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
+
+    if (code !== 0) {
+        // If publishing code changes fails, we run all tests. Here we are calling the non tia run because
+        // the run was not yet created by TIA and we dont want to update the results via test selector
+        tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
+        return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
+    }
+    
+    // Code changes were published successfully. We will create the run and populate it with discovered test cases now ->
+    try {
+        // Discovering the test cases and writing them to a file.
+        listFile = getVstestTestsList(vsVersion);
+        discoverTestFromFilteredFilter(vsVersion, testCaseFilterFile, testCaseFilterOutput);
+
+        try {
+            // This calls GetImpactedTests from test selector. Response file will contain the impacted tests in the format: /Tests:Method1,Method2
+            testselector.generateResponseFile(tiaConfig, vstestConfig, listFile, testCaseFilterOutput);
+        }
+        catch (err) {
+            utils.Helper.publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1024, false);
+            tl.error(err);
+            tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+            return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
+        }
+
+        if (isEmptyResponseFile(tiaConfig.responseFile)) {
+            // Empty response file indicates some issue. We run all tests here.
+            tl.debug('Empty response file detected. All tests will be executed.');
+            return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
+        }
+        else {
+            if (responseContainsNoTests(tiaConfig.responseFile)) {
+                // Case where response file indicated no tests were impacted. E.g.: "/Tests:"
+                tl.debug('No tests impacted. Not running any tests.');
+                let updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, '');
+                if (updateTestResultsOutputCode !== 0) {
+                    utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + updateTestResultsOutputCode, 1011, false);
+                    return Q.resolve(tl.TaskResult.Failed);
+                }
+                return Q.resolve(tl.TaskResult.Succeeded);
+            }
+            else {
+                // Response file indicates that only few tests were impacted E.g.: "/Tests:MyNamespace.MyClass.TestMethod1"
+                try {
+                    updateResponseFile(getVstestArguments(settingsFile, true));
+                }
+                catch (err) {
+                    utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
+                    tl.error(err);
+                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', tiaConfig.responseFile));
+                    return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
+                }
+
+                return runVsTestAndUploadResults(settingsFile, vsVersion, true, tiaConfig.responseFile, true);
+            }
+        }
+    }
+    catch (err) {
+        // The errors and logging tasks are handled in individual calls before. Just failing the task here
+        return Q.resolve(tl.TaskResult.Failed);
     }
 }
 
