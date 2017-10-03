@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure VM scale set Deployment",
+  "loc.friendlyName": "Azure-VM-Skalierungsgruppenbereitstellung",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=852117)",
   "loc.description": "VM-Skalierungsgruppenimage bereitstellen",
   "loc.instanceNameFormat": "Azure-VMSS $(vmssName): $(action)",
