@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web App Deploy",
+  "loc.friendlyName": "IIS Web アプリの配置",
   "loc.helpMarkDown": "[詳細] (https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "WebDeploy を使って、Web サイトまたは Web アプリケーションを配置します",
   "loc.instanceNameFormat": "IIS Web サイト/アプリを配置します: $(WebDeployPackage)",
