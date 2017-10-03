@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web アプリの管理 (プレビュー)",
+  "loc.friendlyName": "IIS Web App Manage",
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "Web サイト、Web アプリ、仮想ディレクトリ、アプリケーション プールを作成または更新します",
   "loc.instanceNameFormat": "$(IISDeploymentType) の管理",
