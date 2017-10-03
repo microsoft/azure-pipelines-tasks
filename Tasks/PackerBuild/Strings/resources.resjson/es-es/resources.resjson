@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Build Machine Image",
+  "loc.friendlyName": "Compilar imagen de máquina",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Compila una imagen de máquina con Packer. Esta imagen se puede usar para la implementación del conjunto de escalado de máquinas virtuales de Azure.",
   "loc.instanceNameFormat": "Compilar imagen inmutable",
