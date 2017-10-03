@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as  tl from 'vsts-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
-import {JenkinsRestClient} from "./JenkinsRestClient"
+import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
 
@@ -52,10 +52,10 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         this.jenkinsClient = new JenkinsRestClient();
     }
 
-    public DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string> {
+    public DownloadFromSingleBuildAndSave(jenkinsJobDetails: JenkinsJobDetails): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
-        console.log(tl.loc("DownloadingWorkItemsFromSingleBuild", buildId));
-        this.GetWorkItemsFromSingleBuild(buildId, this.commitMessages).then((workItems: string) => {
+        console.log(tl.loc("DownloadingWorkItemsFromSingleBuild", jenkinsJobDetails.buildId));
+        this.GetWorkItemsFromSingleBuild(jenkinsJobDetails, this.commitMessages).then((workItems: string) => {
             this.UploadWorkItems(workItems).then(() => {
                 defer.resolve(null);
             }, (error) => {
@@ -66,10 +66,10 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    public DownloadFromBuildRangeAndSave(startIndex: number, endIndex: number): Q.Promise<string> {
+    public DownloadFromBuildRangeAndSave(jenkinsJobDetails: JenkinsJobDetails, startIndex: number, endIndex: number): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
 
-        this.GetWorkItems(startIndex, endIndex, this.commitMessages).then((workItems: string) => {
+        this.GetWorkItems(jenkinsJobDetails, startIndex, endIndex, this.commitMessages).then((workItems: string) => {
             this.UploadWorkItems(workItems).then(() => {
                 defer.resolve(workItems);
             }, (error) => {
@@ -82,10 +82,10 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    private GetWorkItemsFromSingleBuild(buildId: string, commitMessages: string[]): Q.Promise<string> {
+    private GetWorkItemsFromSingleBuild(jenkinsJobDetails: JenkinsJobDetails, commitMessages: string[]): Q.Promise<string> {
         let defer = Q.defer<string>();
 
-        const workItemsUrl: string = `/${buildId}/api/json?tree=actions[issues[*],serverURL]`;
+        const workItemsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=actions[issues[*],serverURL]`;
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
             tl.debug(`Downloaded workItems: ${workItemsResult}`);
             defer.resolve(workItemsResult);
@@ -96,11 +96,11 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
  
-    private GetWorkItems(startIndex: number, endIndex: number, commitMessages: string[]): Q.Promise<string> {
+    private GetWorkItems(jenkinsJobDetails: JenkinsJobDetails, startIndex: number, endIndex: number, commitMessages: string[]): Q.Promise<string> {
         let defer = Q.defer<string>();
 
         const buildParameter: string = (startIndex >= 100 || endIndex >= 100) ? "allBuilds" : "builds"; // jenkins by default will return only 100 top builds. Have to use "allBuilds" if we are dealing with build which are older than 100 builds
-        const workItemsUrl: string = `/api/json?tree=${buildParameter}[actions[issues[*],serverURL]]{${endIndex},${startIndex}}`;
+        const workItemsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/api/json?tree=${buildParameter}[actions[issues[*],serverURL]]{${endIndex},${startIndex}}`;
 
         tl.debug(`Downloading workItems from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xcode Build",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
-  "loc.description": "Build an Xcode workspace on Mac OS",
+  "loc.description": "Build an Xcode workspace on macOS",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Signing & Provisioning",
   "loc.group.displayName.package": "Package Options",
