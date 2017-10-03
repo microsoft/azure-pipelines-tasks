@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure Network Load Balancer",
+  "loc.friendlyName": "Azure 네트워크 부하 분산 장치",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Azure 가상 컴퓨터의 네트워크 인터페이스를 부하 분산 장치 백 엔드 주소 풀에 연결/연결 끊기",
   "loc.instanceNameFormat": "Azure 네트워크 부하 분산 장치: $(LoadBalancer) - $(Action)",
