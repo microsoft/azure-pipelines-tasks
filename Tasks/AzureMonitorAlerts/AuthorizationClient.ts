@@ -45,34 +45,34 @@ export class AuthorizationClient {
 		let envAuthUrl = (this._endpoint.envAuthUrl) ? (this._endpoint.envAuthUrl) : this._defaultAuthUrl;
 		let authorityUrl = envAuthUrl + this._endpoint.tenantID + "/oauth2/token/";
 		let requestData = querystring.stringify({
-    		resource: this._endpoint.activeDirectoryResourceId,
-    		client_id: this._endpoint.servicePrincipalClientID,
-    		grant_type: "client_credentials",
-    		client_secret: this._endpoint.servicePrincipalKey
+			resource: this._endpoint.activeDirectoryResourceId,
+			client_id: this._endpoint.servicePrincipalClientID,
+			grant_type: "client_credentials",
+			client_secret: this._endpoint.servicePrincipalKey
 		});
 
-	    let requestHeader = {
-	        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
-	    }
+		let requestHeader = {
+			"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+		}
 
 		tl.debug('Requesting for Auth Token: ' + authorityUrl);
 		this._httpClient.post(authorityUrl, requestData, requestHeader)
-    		.then(async (response: HttpClientResponse) => {
-        		let contents: string = await response.readBody();
-        		if (response.message.statusCode == 200) {
-	                if(!!contents) {
-	                    deferred.resolve(JSON.parse(contents));
-	                }
-        		}
-        		else {
-            		deferred.reject(tl.loc('Couldnotfetchaccesstoken', response.message.statusCode, response.message.statusMessage, contents));
-        		}
-    		}, (error) => {
-        		deferred.reject(error);
-    		}
-    	);
+			.then(async (response: HttpClientResponse) => {
+				let contents: string = await response.readBody();
+				if (response.message.statusCode == 200) {
+					if(!!contents) {
+						deferred.resolve(JSON.parse(contents));
+					}
+				}
+				else {
+					deferred.reject(tl.loc('Couldnotfetchaccesstoken', response.message.statusCode, response.message.statusMessage, contents));
+				}
+			}, (error) => {
+				deferred.reject(error);
+			}
+		);
 
-    	return deferred.promise;
+		return deferred.promise;
 	}
 
 	private _getCurrentTimeInUTCSeconds(): number {

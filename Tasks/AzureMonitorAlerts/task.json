@@ -19,52 +19,52 @@
 	"minimumAgentVersion": "2.111.0",
 	"instanceNameFormat": "Azure Monitor Alerts for resource $(ResourceName)",
 	"groups": [
-        {
-            "name": "NotifyViaEmail",
-            "displayName": "Notify via email",
-            "isExpanded": true
-        }
-    ],
+		{
+			"name": "NotifyViaEmail",
+			"displayName": "Notify via email",
+			"isExpanded": true
+		}
+	],
 	"inputs": [
 		{
-            "name": "ConnectedServiceName",
-            "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
-            "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription. \n\nNote: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. \n\nIf your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button."
-        },
-        {
-            "name": "ResourceGroupName",
-            "type": "pickList",
-            "label": "Resource Group",
-            "required": true,
-            "properties": {
-            	"EditableOptions": true
-            },
-            "helpMarkDown": "Select the Azure Resource Group that contains the Azure resource where you want to configure an alert."
-        },
-        {
-            "name": "ResourceType",
-            "type": "pickList",
-            "label": "Resource Type",
-            "defaultValue": "Microsoft.Insights/components",
-            "options": {
-            	"Microsoft.Insights/components": "Application Insights",
-            	"Microsoft.Web/sites": "App Services",
-            	"Microsoft.Compute/virtualMachines": "Virtual Machines",
-            	"Microsoft.Storage/storageAccounts": "Storage Account",
-            	"Microsoft.Network/networkInterfaces": "Network Interface"
-            },
-            "required": true,
-            "helpMarkDown": "Select the Azure resource type."
-        },
-        {
-            "name": "ResourceName",
-            "type": "pickList",
-            "label": "Resource name",
-            "required": true,
-            "helpMarkDown": "Select name of Azure resource where you want to configure an alert."
-        },
+			"name": "ConnectedServiceName",
+			"type": "connectedService:AzureRM",
+			"label": "Azure Subscription",
+			"required": true,
+			"helpMarkDown": "Select the Azure Resource Manager subscription. \n\nNote: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. \n\nIf your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button."
+		},
+		{
+			"name": "ResourceGroupName",
+			"type": "pickList",
+			"label": "Resource Group",
+			"required": true,
+			"properties": {
+				"EditableOptions": true
+			},
+			"helpMarkDown": "Select the Azure Resource Group that contains the Azure resource where you want to configure an alert."
+		},
+		{
+			"name": "ResourceType",
+			"type": "pickList",
+			"label": "Resource Type",
+			"defaultValue": "Microsoft.Insights/components",
+			"options": {
+				"Microsoft.Insights/components": "Application Insights",
+				"Microsoft.Web/sites": "App Services",
+				"Microsoft.Compute/virtualMachines": "Virtual Machines",
+				"Microsoft.Storage/storageAccounts": "Storage Account",
+				"Microsoft.Network/networkInterfaces": "Network Interface"
+			},
+			"required": true,
+			"helpMarkDown": "Select the Azure resource type."
+		},
+		{
+			"name": "ResourceName",
+			"type": "pickList",
+			"label": "Resource name",
+			"required": true,
+			"helpMarkDown": "Select name of Azure resource where you want to configure an alert."
+		},
 		{
 			"name": "AlertRules",
 			"type": "multiLine",
@@ -74,26 +74,26 @@
 			"properties": {
 				"resizable": "true",
 				"rows": 5,
-                "editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-                "displayFormat": "{{#rules}}{{{alertName}}} - '{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"              
+				"editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
+				"displayFormat": "{{#rules}}{{{alertName}}} - '{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"              
 			}
 		},
 		{
-            "name": "NotifyServiceOwners",
-            "type": "boolean",
-            "label": "Subscription owners, contributors and readers",
-            "required": false,
-            "helpMarkDown": "Send email notification to everyone who has access to this resource group.",
-            "groupName": "NotifyViaEmail"
-        },
+			"name": "NotifyServiceOwners",
+			"type": "boolean",
+			"label": "Subscription owners, contributors and readers",
+			"required": false,
+			"helpMarkDown": "Send email notification to everyone who has access to this resource group.",
+			"groupName": "NotifyViaEmail"
+		},
 		{
-            "name": "NotifyEmails",
-            "type": "string",
-            "label": "Additional administrator emails",
-            "required": false,
-            "helpMarkDown": "Add additional email addresses separated by semicolons(;) if you want to send email notification to additional people (whether or not you checked the \"subscription owners...\" box).",
-            "groupName": "NotifyViaEmail"
-        }
+			"name": "NotifyEmails",
+			"type": "string",
+			"label": "Additional administrator emails",
+			"required": false,
+			"helpMarkDown": "Add additional email addresses separated by semicolons(;) if you want to send email notification to additional people (whether or not you checked the \"subscription owners...\" box).",
+			"groupName": "NotifyViaEmail"
+		}
 	],
 	"execution": {
 		"Node": {
@@ -102,20 +102,20 @@
 	},
 	"dataSourceBindings": [
 		{
-            "target": "ResourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups"
-        },
-        {
-            "target": "ResourceName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMResourcesInRGBasedOnType",
-            "parameters": {
-                "ResourceGroupName": "$(ResourceGroupName)",
-                "ResourceType":"$(ResourceType)"	
-            },
-            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-        }
+			"target": "ResourceGroupName",
+			"endpointId": "$(ConnectedServiceName)",
+			"dataSourceName": "AzureResourceGroups"
+		},
+		{
+			"target": "ResourceName",
+			"endpointId": "$(ConnectedServiceName)",
+			"dataSourceName": "AzureRMResourcesInRGBasedOnType",
+			"parameters": {
+				"ResourceGroupName": "$(ResourceGroupName)",
+				"ResourceType":"$(ResourceType)"	
+			},
+			"resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+		}
 	],
 	"messages": {
 		"ResourceIdMismatchError": "Conflict: The resource for which metrics were entered doesn't match the resource details provided. ResourceId : %s . Alert rules entered for resource : %s",

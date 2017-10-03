@@ -34,7 +34,7 @@ async function run() {
 		await addOrUpdateAlertRules(endpoint, resourceGroupName, resourceId, alertRules.rules, notifyServiceOwners, notifyEmails);
 	}
 	catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
+		tl.setResult(tl.TaskResult.Failed, error);
 	}
 }
 
