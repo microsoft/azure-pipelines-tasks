@@ -38,6 +38,7 @@ export function startTest() {
         } catch (error) {            
             utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1038, true);
             tl.setResult(tl.TaskResult.Failed, error);
+            return;
         }
         console.log('========================================================');
 
