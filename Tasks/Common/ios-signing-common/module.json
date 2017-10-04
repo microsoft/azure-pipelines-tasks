@@ -3,6 +3,7 @@
     "SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
     "TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
     "ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
-    "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s"
+    "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+    "NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
   }
 }

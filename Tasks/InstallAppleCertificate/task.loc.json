@@ -11,7 +11,7 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 125,
     "Patch": 0
   },
@@ -103,6 +103,12 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "advanced"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "SigningIdentity",
+      "description": "The resolved Common Name of the subject in the signing certificate. Either supplied as an input or parsed from the P12 certificate file."
     }
   ],
   "prejobexecution": {

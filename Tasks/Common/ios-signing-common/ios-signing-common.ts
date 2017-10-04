@@ -426,7 +426,16 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string) {
             }
         }
     })
-    await openssl1.exec();
+
+    try {
+        await openssl1.exec();
+    } catch (err) {
+        if (!p12Pwd) {
+            tl.warning(tl.loc('NoP12PwdWarning'));
+        }
+        throw err;
+    }
+
     tl.debug('P12 SHA1 hash = ' + sha1Hash);
     return sha1Hash;
 }

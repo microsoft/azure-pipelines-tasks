@@ -13,14 +13,9 @@ tr.setInput('configuration', '$(Configuration)');
 tr.setInput('sdk', '$(SDK)');
 tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
 tr.setInput('scheme', 'testScheme');
+tr.setInput('xcodeVersion', 'default');
 tr.setInput('packageApp', 'true');
-tr.setInput('signMethod', 'id');
-tr.setInput('p12', '');
-tr.setInput('p12pwd', '');
-tr.setInput('provProfile', '');
-tr.setInput('removeProfile', 'false');
-tr.setInput('unlockDefaultKeychain', 'false');
-tr.setInput('defaultKeychainPassword', '');
+tr.setInput('signStyle', 'manual');
 tr.setInput('iosSigningIdentity', 'iPhone Developer: XcodeTask Tester (HE432Y3E2Q)');
 tr.setInput('provProfileUuid', 'testuuid');
 tr.setInput('args', '');
@@ -59,8 +54,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/users/test"
     },
     "exist": {
-        "/user/build/cert.p12": true,
-        "/user/build/testuuid.mobileprovision": true,
         "/user/build/_XcodeTaskExport_testScheme": false
     },
     "stats": {
@@ -84,11 +77,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Xcode 7.3.1"
         },
-        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid": {
+        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid": {
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid": {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },

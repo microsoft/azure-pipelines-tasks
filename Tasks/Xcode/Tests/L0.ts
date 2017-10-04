@@ -180,43 +180,6 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
-    it('Xcode 7 create IPA with code signing files', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, 'L0CreateIpaWithCodeSigning.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        //version
-        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-        //build
-        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
-            'xcodebuild for building the ios project/workspace should have been run.');
-        //archive
-        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
-            'archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
-            'xcodebuild archive should have been run to create the .xcarchive.');
-        //export
-        assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
-            '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
-            'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
-
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
     it('Xcode 7 create IPA with code signing identifiers', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -233,49 +196,12 @@ describe('Xcode L0 Suite', function () {
             'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
             'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
             'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
+            'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme ' +
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
-            'xcodebuild archive should have been run to create the .xcarchive.');
-        //export
-        assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
-            '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
-            'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
-
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
-    it('Xcode 8 automatic signing with files', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, 'L0Xcode8AutomaticSignWithFiles.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        //version
-        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-        //build
-        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
-            'xcodebuild for building the ios project/workspace should have been run.');
-
-        //archive
-        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
-            'archive -sdk $(SDK) -configuration $(Configuration) ' +
-            '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
+            'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
@@ -304,11 +230,11 @@ describe('Xcode L0 Suite', function () {
             'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
             'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
             'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
+            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Automatic'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
-            'archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme'),
+            'archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme CODE_SIGN_STYLE=Automatic'),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
@@ -338,16 +264,14 @@ describe('Xcode L0 Suite', function () {
             'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
             'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
             'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'DEVELOPMENT_TEAM=testDevTeamId'),
+            'CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId'),
             'xcodebuild for building the ios project/workspace should have been run.');
 
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) ' +
             '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'DEVELOPMENT_TEAM=testDevTeamId'),
+            'CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId'),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
@@ -377,16 +301,14 @@ describe('Xcode L0 Suite', function () {
             'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
             'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
             'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'DEVELOPMENT_TEAM=testDevTeamId'),
+            'CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId'),
             'xcodebuild for building the ios project/workspace should have been run.');
 
         //archive
         assert(tr.ran('/home/bin/xcodebuild -project /user/build/fun.xcodeproj -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) ' +
             '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'DEVELOPMENT_TEAM=testDevTeamId'),
+            'CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId'),
             'xcodebuild archive should have been run to create the .xcarchive.');
 
         //export
@@ -417,56 +339,14 @@ describe('Xcode L0 Suite', function () {
             'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
             'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
             'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
+            'CODE_SIGN_STYLE=Automatic'),
             'xcodebuild for building the ios project/workspace should have been run.');
 
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) ' +
             '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
-            'xcodebuild archive should have been run to create the .xcarchive.');
-        //export
-        assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
-            '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
-            'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
-
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
-    it('Xcode 9 manual signing with files', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, 'L0Xcode9ManualSignWithFiles.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        //version
-        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-
-        //build
-        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) ' +
-            'PROVISIONING_PROFILE=testuuid'),
-            'xcodebuild for building the ios project/workspace should have been run.');
-
-        //archive
-        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
-            'archive -sdk $(SDK) -configuration $(Configuration) ' +
-            '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' +
-            'CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) ' +
-            'PROVISIONING_PROFILE=testuuid'),
+            'CODE_SIGN_STYLE=Automatic'),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
@@ -496,16 +376,14 @@ describe('Xcode L0 Suite', function () {
             'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
             'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
             'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
-            '-allowProvisioningUpdates ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain'),
+            '-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic'),
             'xcodebuild for building the ios project/workspace should have been run with -allowProvisioningUpdates.');
 
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) ' +
             '-archivePath /user/build/testScheme ' +
-            'OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain ' + 
-            '-allowProvisioningUpdates'),
+            'CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates'),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
