@@ -191,7 +191,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         versionFinder.getVsTestRunnerDetails(testConfiguration);
     } catch (error) {
         utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
-        tl.setResult(tl.TaskResult.Failed, error);
+        throw error;
     }
 }
 
