@@ -6,6 +6,7 @@ import * as models from './models';
 import * as utils from './helpers';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
+import { AreaCodes, ResultMessages } from './constants';
 const uuid = require('uuid');
 const regedit = require('regedit');
 
@@ -186,7 +187,12 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.taskInstanceIdentifier = uuid.v1();
 
-    versionFinder.getVsTestRunnerDetails(testConfiguration);
+    try {
+        versionFinder.getVsTestRunnerDetails(testConfiguration);
+    } catch (error) {
+        utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
+        tl.setResult(tl.TaskResult.Failed, error);
+    }
 }
 
 async function logWarningForWER(runUITests : boolean) {
