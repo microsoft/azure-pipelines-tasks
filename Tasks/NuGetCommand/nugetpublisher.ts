@@ -18,7 +18,7 @@ import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
 import peParser = require('nuget-task-common/pe-parser/index');
 import * as commandHelper from "nuget-task-common/CommandHelper";
-import * as vstsNuGetCommandHelper from "./Common/VstsNuGetCommandHelper";
+import * as filesListHelper from "nuget-task-common/FilesListHelper";
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -48,30 +48,13 @@ export async function run(nuGetPath: string): Promise<void> {
 
         // Get list of files to pusblish
         let searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
-
-        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
-        let filesList: string[] = [];
-        if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
-            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
-        }
-        else {
-            filesList = nutil.resolveFilterSpec(searchPatternInput);
-        }
+        let filesList = filesListHelper.createFoundFilesList(tl, searchPatternInput);
 
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("Error_PushNotARegularFile", packageFile));
             }
         });
-
-        let searchPatternArray = searchPatternInput.split(";");
-        tl.debug(`Found ${filesList.length} files out of ${searchPatternArray.length}`);
-        if (filesList.length < searchPatternArray.length) {
-            vstsNuGetCommandHelper.logFileNotFoundWarning(tl, filesList, searchPatternArray);
-        }
         
         if (filesList && filesList.length < 1) {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));

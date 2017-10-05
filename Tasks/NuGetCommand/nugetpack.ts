@@ -5,7 +5,7 @@ import * as path from "path";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as packUtils from "nuget-task-common/PackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
-import * as vstsNuGetCommandHelper from "./Common/VstsNuGetCommandHelper";
+import * as filesListHelper from "nuget-task-common/FilesListHelper";
 
 class PackOptions implements INuGetCommandOptions {
     constructor(
@@ -106,40 +106,18 @@ export async function run(nuGetPath: string): Promise<void> {
 
         tl.debug(`Version to use: ${version}`);
 
-        if(outputDir && !tl.exist(outputDir))
-        {
+        if(outputDir && !tl.exist(outputDir)) {
             tl.debug(`Creating output directory: ${outputDir}`);
             tl.mkdirP(outputDir);
         }
 
-        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
-        let filesList: string[] = [];
-        if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
-            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
-        }
-        else {
-            filesList = nutil.resolveFilterSpec(searchPatternInput);
-        }
-
-        let searchPatternArray = searchPatternInput.split(";");
-        tl.debug(`Found ${filesList.length} files out of ${searchPatternArray.length}`);
-        filesList.forEach(file => {
-            tl.debug(`--File: ${file}`);
-        });
-        if (filesList.length < searchPatternArray.length) {
-            vstsNuGetCommandHelper.logFileNotFoundWarning(tl, filesList, searchPatternArray);
-        }
+        let filesList = filesListHelper.createFoundFilesList(tl, searchPatternInput);
 
         let props: string[] = [];
-        if(configuration && configuration !== "$(BuildConfiguration)")
-        {
+        if(configuration && configuration !== "$(BuildConfiguration)") {
             props.push(`Configuration=${configuration}`);
         }
-        if(propertiesInput)
-        {
+        if(propertiesInput) {
             props = props.concat(propertiesInput.split(";"));
         }
 

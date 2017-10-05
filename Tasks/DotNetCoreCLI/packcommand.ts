@@ -4,8 +4,8 @@ import * as nutil from "nuget-task-common/Utility";
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as utility from "nuget-task-common/PackUtilities";
-
 import { IExecOptions } from "vsts-task-lib/toolrunner";
+import * as filesListHelper from "nuget-task-common/FilesListHelper";
 
 export async function run(): Promise<void> {
 
@@ -82,32 +82,18 @@ export async function run(): Promise<void> {
             tl.mkdirP(outputDir);
         }
 
-        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!searchPatternInput) {
             // Use empty string when no project file is specified to operate on the current directory
             filesList = [""];
         } else {
-            if (!useLegacyFind) {
-                let findOptions: tl.FindOptions = <tl.FindOptions>{};
-                let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-                let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
-                filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
-            }
-            else {
-                filesList = nutil.resolveFilterSpec(searchPatternInput);
-            }
+            filesList = filesListHelper.createFoundFilesList(tl, searchPatternInput);
         }
 
         if (!filesList || !filesList.length) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NoFilesMatchedTheSearchPattern"));
             return;
         }
-
-        tl.debug(`Found ${filesList.length} files`);
-        filesList.forEach(file => {
-            tl.debug(`--File: ${file}`);
-        });
 
         let props: string[] = [];
         if (configuration && configuration !== "$(BuildConfiguration)") {
