@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "发布符号",
   "loc.input.help.PublishSymbols": "指示是否发布符号文件。",
   "loc.input.label.SymbolServerType": "符号服务器类型",
-  "loc.input.help.SymbolServerType": "选择发布符号的位置。\"Team Services\" 选项处于个人预览版中。若要加入个人预览版，请遵循[这些说明](https://go.microsoft.com/fwlink/?linkid=846265)。",
+  "loc.input.help.SymbolServerType": "选择发布符号的位置。\"Team Services\" 选项处于个人预览版中。Team Foundation Server 仅支持“文件共享”选项。请按照[这些说明](https://go.microsoft.com/fwlink/?linkid=846265) 操作，加入个人预览版。",
   "loc.input.label.SymbolsPath": "发布符号的路径",
   "loc.input.help.SymbolsPath": "发布符号的路径。",
   "loc.input.label.DetailedLog": "详细日志记录",

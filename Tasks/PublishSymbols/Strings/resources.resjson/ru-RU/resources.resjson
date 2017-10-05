@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Публикация символов",
   "loc.input.help.PublishSymbols": "Указывает, следует ли публиковать файлы символов.",
   "loc.input.label.SymbolServerType": "Тип сервера символов",
-  "loc.input.help.SymbolServerType": "Выберите место для публикации символов. Вариант \"Team Services\" доступен в виде закрытой предварительной версии. Чтобы получить к ней доступ, выполните [эти инструкции](https://go.microsoft.com/fwlink/?linkid=846265).",
+  "loc.input.help.SymbolServerType": "Выберите место для публикации символов. Вариант \"Team Services\" доступен в виде закрытой предварительной версии. Team Foundation Server поддерживает только вариант \"Общая папка\". Чтобы получить доступ к закрытой предварительной версии, выполните [эти инструкции](https://go.microsoft.com/fwlink/?linkid=846265).",
   "loc.input.label.SymbolsPath": "Путь для публикации символов",
   "loc.input.help.SymbolsPath": "Путь для публикации символов.",
   "loc.input.label.DetailedLog": "Подробное ведение журнала",
