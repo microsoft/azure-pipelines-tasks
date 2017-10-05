@@ -13,6 +13,7 @@ export module AreaCodes {
     export const TESTRUNUPDATIONFAILED = 'TestRunUpdationFailed';
     export const UPLOADTESTRESULTS = 'UploadTestResults';
     export const RUNVSTEST = 'RunVsTest';
+    export const SPECIFIEDVSVERSIONNOTFOUND = 'SpecifiedVsVersionNotFound'
 }
 
 export module ResultMessages {
