@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "Используется реестр: %s",
   "loc.messages.AddingAuthRegistry": "Добавление проверки подлинности для реестра: %s",
   "loc.messages.FoundLocalRegistries": "В этой учетной записи и коллекции найдено реестров: %d",
-  "loc.messages.ForcePackagingUrl": "Принудительная упаковка URL-адреса коллекции: %s",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "Не удалось найти журнал отладки в кэше или рабочем каталоге",
   "loc.messages.NpmFailed": "Сбой npm с кодом возврата: %s",
   "loc.messages.FoundNpmDebugLog": "Найден журнал отладки npm. Убедитесь в том, что путь соответствует указанному в выходных данных npm: %s",
