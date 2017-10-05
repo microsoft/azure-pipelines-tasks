@@ -7,6 +7,9 @@
         "C:/vstest.console.exe" : false
     },
     "exec": {
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
         "C:\\WINDOWS\\system32\\chcp.com 65001": {
             "code": 0
         }
