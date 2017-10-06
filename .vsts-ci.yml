@@ -134,7 +134,6 @@ phases:
   # Publish milestone package
   - task: NuGetCommand@2
     displayName: Publish milestone package
-    condition: and(succeeded(), variables.publish_milestone)
     inputs:
       command: push
       searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
