@@ -104,10 +104,12 @@ export class AppInsightsManage {
         var appInsightsInstrumenationKey = appInsightsResource.properties.InstrumentationKey;
         var appServiceAppSettings = await azureRESTUtils.getWebAppAppSettings(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
 
-        if(appInsightsInstrumenationKey && appServiceAppSettings) {
+        if(appInsightsInstrumenationKey && appServiceAppSettings && appServiceAppSettings.propertiles) {
             appServiceAppSettings.properties["APPINSIGHTS_INSTRUMENTATIONKEY"] = appInsightsInstrumenationKey;
             appServiceAppSettings = await azureRESTUtils.updateWebAppAppSettings(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName, appServiceAppSettings);
             tl.debug("Instrumentation key successfully configured for app service : " + this.webAppName);
+        } else {
+            throw new Error(tl.loc("UnableToConfigureInstrumentationKeyForAppService", this.webAppName));
         }
     }
 

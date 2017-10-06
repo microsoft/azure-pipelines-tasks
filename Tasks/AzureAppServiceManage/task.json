@@ -45,8 +45,8 @@
                 "Restart Azure App Service": "Restart App Service",
                 "Install Extensions": "Install Extensions",
                 "Enable Continuous Monitoring": "Enable Continuous Monitoring",
-                "Start Webjobs": "Start Webjobs",
-                "Stop Webjobs": "Stop Webjobs"
+                "Start all continuous webjobs": "Start all continuous webjobs",
+                "Stop all continuous webjobs": "Stop all continuous webjobs"
             }
         },
         {
@@ -297,9 +297,9 @@
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "UnableToGetAppInsightsResource": "Unable to get app insights resource with name : %s",
         "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for app insights resource : %s",
-        "ApplicationInsightsNotSupportedForLinuxApp": "Application insights resource is being supported for linux web app : %s",
         "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
         "SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights",
-        "UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s"
+        "UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s",
+        "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s"
     }
 }

@@ -17,16 +17,3 @@ export function generateDeploymentId(): string {
         throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
     }
 }
-
-export function getResourceGroupName(resourceId) {
-    var resourceGroupName = null;
-
-    if(resourceId) {
-        var resourceIdComponents = resourceId.split('/');
-        if(resourceIdComponents.length > 4) {
-            resourceGroupName =  resourceIdComponents[4];
-        }
-    }
-
-    return resourceGroupName;
-}

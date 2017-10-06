@@ -854,17 +854,6 @@ export async function updateApplicationInsightsResource(endpoint, appInsightsRes
     return deferred.promise;
 }
 
-function getRandomString() {
-  var resultString = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < 10; i++) {
-    resultString += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-
-  return resultString;
-}
-
 function sleep(timeInMilliSecond) {
   return new Promise(resolve => setTimeout(resolve,timeInMilliSecond));
 }

@@ -123,7 +123,7 @@ async function run() {
                 await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
                 break;   
             }
-            case "Start Webjobs": {
+            case "Start all continuous webjobs": {
                 resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
                 var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
                 var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
@@ -132,7 +132,7 @@ async function run() {
                 }
                 break;
             }
-            case "Stop Webjobs": {
+            case "Stop all continuous webjobs": {
                 resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
                 var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
                 tl.debug('Retrieved publishing Profile');
