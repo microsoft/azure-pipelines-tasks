@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 120,
+    "Minor": 125,
     "Patch": 0
   },
   "demands": [
@@ -62,6 +62,7 @@
       "name": "platform",
       "type": "string",
       "label": "ms-resource:loc.input.label.platform",
+      "helpMarkDown": "ms-resource:loc.input.help.platform",
       "defaultValue": "",
       "required": false
     },
@@ -69,6 +70,7 @@
       "name": "configuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
       "defaultValue": "",
       "required": false
     },
@@ -76,6 +78,7 @@
       "name": "clean",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.clean",
+      "helpMarkDown": "ms-resource:loc.input.help.clean",
       "defaultValue": "false",
       "required": false
     },

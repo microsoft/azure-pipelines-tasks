@@ -37,7 +37,7 @@ export function startTest() {
             vstestConfig = taskInputParser.getvsTestConfigurations();
         } catch (error) {
             utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1038, true);
-            throw(error);
+            throw(error);            
         }
         console.log('========================================================');
 
