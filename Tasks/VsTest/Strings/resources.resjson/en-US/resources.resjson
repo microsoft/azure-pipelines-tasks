@@ -141,5 +141,6 @@
   "loc.messages.invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
   "loc.messages.minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
   "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s",
-  "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
+  "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
+  "loc.messages.InvalidSettingsExtension": "The specified settings file %s has invalid file extension. Provide a valid extension or clear the field."
 }

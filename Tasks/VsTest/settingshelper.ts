@@ -10,7 +10,6 @@ import * as fs from 'fs';
 
 const xml2js = require('./node_modules/xml2js');
 const xmlParser = require('./node_modules/xml2js-parser');
-//const parser = new xml2js.Parser();
 
 const runSettingsExtension = '.runsettings';
 const testSettingsExtension = '.testsettings';
@@ -85,10 +84,16 @@ export function updateSettingsFileAsRequired(settingsFile: string,
             settingsExt = null;
         }
 
+        if (result && (settingsExt === runSettingsExtension && result.RunSettings === undefined) ||
+            (settingsExt === testSettingsExtension && result.TestSettings === undefined)) {
+            throw new Error(tl.loc('InvalidSettingsExtension', settingsFile));
+        }
+
         if (settingsExt === testSettingsExtension && result.TestSettings &&
             result.TestSettings.Properties && result.TestSettings.Properties[0] &&
             result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()) {
-            tl.warning(tl.loc('testSettingPropertiesNotSupported'))
+
+            tl.warning(tl.loc('testSettingPropertiesNotSupported'));
         }
 
         if (overrideParametersString) {
@@ -188,7 +193,7 @@ export function updateSettingsFileAsRequired(settingsFile: string,
     }
     catch (err) {
         tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
-        return settingsFile;
+        throw (err);
     }
 }
 

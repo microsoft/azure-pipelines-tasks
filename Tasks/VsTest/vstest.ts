@@ -37,7 +37,7 @@ export function startTest() {
             vstestConfig = taskInputParser.getvsTestConfigurations();
         } catch (error) {
             utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1038, true);
-            throw(error);            
+            throw (error);
         }
         console.log('========================================================');
 
@@ -216,6 +216,9 @@ function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsA
         // Keeping this code in case we want to change failOnStdErr
         errStream: new outStream.StringErrorWritable({ decodeStrings: false })
     };
+    // The error codes return below are not the same as tl.TaskResult which follows a different convention.
+    // Here we are returning the code as returned to us by vstest.console in case of complete run
+    // In case of a failure 1 indicates error to our calling function
     return vstest.exec(execOptions).then(function (code) {
         cleanUp(parallelRunSettingsFile);
         if (ignoreTestFailures) {
@@ -340,7 +343,7 @@ function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskRe
         // Test Impact was not enabled
         return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
     }
-    
+
     let testCaseFilterFile = "";
     let testCaseFilterOutput = "";
     let listFile = "";
@@ -358,7 +361,7 @@ function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskRe
         tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
         return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
     }
-    
+
     // Code changes were published successfully. We will create the run and populate it with discovered test cases now ->
     try {
         // Discovering the test cases and writing them to a file.
@@ -449,7 +452,7 @@ function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: nu
     catch (err) {
         utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
         tl.error(err);
-        tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', tiaConfig.responseFile));
+        tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', vstestConfig.responseFile));
         return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function () {
             return publishTestResults(resultsDirectory);
         });
@@ -508,7 +511,7 @@ function invokeVSTest(): Q.Promise<tl.TaskResult> {
     }
     catch (err) {
         //Should continue to run without the selected configurations.
-        return vsTestCall(newSettingsFile, vsVersion);
+        throw err;
     }
 }
 

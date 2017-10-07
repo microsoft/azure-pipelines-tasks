@@ -59,7 +59,7 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isTestImpactSupported();
+    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     return vsTestConfiguration;
 }
