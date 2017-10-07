@@ -67,8 +67,8 @@
   "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
   "loc.messages.UnableToGetAppInsightsResource": "Unable to get app insights resource with name : %s",
   "loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for app insights resource : %s",
-  "loc.messages.ApplicationInsightsNotSupportedForLinuxApp": "Application insights resource is being supported for linux web app : %s",
   "loc.messages.FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
   "loc.messages.SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights",
-  "loc.messages.UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s"
+  "loc.messages.UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s",
+  "loc.messages.UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s"
 }

@@ -171,26 +171,30 @@
         {
             "name": "AppInsightsResourceGroupName",
             "type": "pickList",
-            "label": "App Insights Resource Group Name",
+            "label": "Application Insights Resource Group Name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule": "Action == Enable Continuous Monitoring"
+            "visibleRule": "Action == Enable Continuous Monitoring",
+            "helpMarkDown": "Enter or Select resource group to which Application Insights resources belongs."
         },
         {
             "name": "ApplicationInsightsResourceName",
             "type": "pickList",
-            "label": "App Insights Resource Name",
+            "label": "Application Insights Resource Name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True",
                 "enableManage": "True",
-                "manageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights"
+                "manageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
+                "manageIcon": "Add",
+                "manageButtonName": "New"
             },
-            "visibleRule": "Action == Enable Continuous Monitoring"
+            "visibleRule": "Action == Enable Continuous Monitoring",
+            "helpMarkDown": "Enter or Select Application Insights resource to enable continuous montioring."
         }
     ],
     "dataSourceBindings": [
@@ -295,11 +299,11 @@
         "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
-        "UnableToGetAppInsightsResource": "Unable to get app insights resource with name : %s",
-        "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for app insights resource : %s",
+        "UnableToGetAppInsightsResource": "Unable to get Application Insights resource with name : %s",
+        "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for Application Insights resource : %s",
         "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
-        "SuccessfullyConfiguredAppInsights": "Successfully Configured App Insights",
-        "UnableToConfigureWebTest": "Unable to configure web test for app insights resource : %s",
+        "SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
+        "UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
         "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s"
     }
 }
