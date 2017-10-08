@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "레지스트리 사용 중: %s",
   "loc.messages.AddingAuthRegistry": "레지스트리에 대한 인증 추가: %s",
   "loc.messages.FoundLocalRegistries": "이 계정/컬렉션에서 레지스트리 %d개를 찾았습니다.",
-  "loc.messages.ForcePackagingUrl": "강제로 다음 위치에 컬렉션 URL 패키징 중: %s",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "캐시 또는 작업 디렉터리에서 디버그 로그를 찾을 수 없습니다.",
   "loc.messages.NpmFailed": "npm이 실패했습니다(반환 코드: %s).",
   "loc.messages.FoundNpmDebugLog": "npm 디버그 로그를 찾았습니다. 경로가 npm 출력에 표시된 경로와 일치하는지 확인하세요. %s",

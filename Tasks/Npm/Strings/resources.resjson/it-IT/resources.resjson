@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "Uso del registro: %s",
   "loc.messages.AddingAuthRegistry": "Aggiunta dell'autenticazione per il registro: %s",
   "loc.messages.FoundLocalRegistries": "Sono stati trovati %d registri in questo account/raccolta",
-  "loc.messages.ForcePackagingUrl": "Creazione pacchetto dell'URL della raccolta forzata su: %s",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "Non è stato possibile trovare un log di debug nella cache o nella directory di lavoro",
   "loc.messages.NpmFailed": "Npm non riuscito. Codice restituito: %s",
   "loc.messages.FoundNpmDebugLog": "È stato trovato un log di debug npm. Assicurarsi che il percorso corrisponda a quello nell'output di npm: %s",
