@@ -15,7 +15,7 @@
   "loc.input.label.Protocol": "通訊協定",
   "loc.input.help.Protocol": "選取 WinRM 與電腦連線時所囡使用的通訊協定。預設值為 HTTPS。",
   "loc.input.label.TestCertificate": "測試憑證",
-  "loc.input.help.TestCertificate": "選取此選項可略過驗證電腦憑證是否確實經由信任的憑證授權單位簽署。WinRM HTTPS 通訊協定需要此參數。",
+  "loc.input.help.TestCertificate": "選取選項，跳過由受信任的憑證授權單位驗證電腦憑證真確性。WinRM HTTPS 通訊協定需要參數。",
   "loc.input.label.DacpacFile": "DACPAC 檔案",
   "loc.input.help.DacpacFile": "目標電腦或 UNC 路徑上的 DACPAC 檔案位置，例如 \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac。電腦的系統管理員帳戶必須可以存取 UNC 路徑，並同時支援環境變數，例如 $env:windir、$env:systemroot、$env:windir\\FabrikamFibre\\Web。",
   "loc.input.label.TargetMethod": "使用下列項目指定 SQL:",

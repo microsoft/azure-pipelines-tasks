@@ -15,7 +15,7 @@
   "loc.input.label.Protocol": "Protocolo",
   "loc.input.help.Protocol": "Seleccione el protocolo que se usará para la conexión WinRM con los equipos. El valor predeterminado es HTTPS.",
   "loc.input.label.TestCertificate": "Certificado de prueba",
-  "loc.input.help.TestCertificate": "Seleccione la opción para omitir la validación de la autenticidad del certificado del equipo por parte de una entidad de certificación de confianza. El parámetro es obligatorio para el protocolo HTTPS de WinRM.",
+  "loc.input.help.TestCertificate": "Seleccione la opción de omitir la validación de la autenticidad del certificado del equipo por una autoridad de certificación de confianza. El parámetro es obligatorio para el protocolo HTTPS de WinRM.",
   "loc.input.label.DacpacFile": "Archivo DACPAC",
   "loc.input.help.DacpacFile": "Ubicación del archivo DACPAC en las máquinas de destino o en una ruta de acceso UNC, como \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. La ruta de acceso UNC debe ser accesible para la cuenta del administrador de la máquina. También se admiten variables de entorno, como $env:windir, $env:systemroot, like, $env:windir\\FabrikamFibre\\Web.",
   "loc.input.label.TargetMethod": "Especificar el SQL con",
@@ -38,6 +38,6 @@
   "loc.input.help.DeployInParallel": "Si se establece en true, la tarea de implementación de la base de datos se ejecutará en paralelo en las máquinas de destino.",
   "loc.input.label.ResourceFilteringMethod": "Seleccionar máquinas por",
   "loc.input.help.ResourceFilteringMethod": "También puede seleccionar un subconjunto de máquinas especificando nombres de máquina o etiquetas.",
-  "loc.input.label.MachineFilter": "Implementar en máquinas",
+  "loc.input.label.MachineFilter": "Implementar en las máquinas",
   "loc.input.help.MachineFilter": "Esta entrada solo es válida para los grupos de máquinas y no se admite para una lista plana de máquinas o de variables de salida. Proporcione una lista de máquinas (como dbserver.fabrikam.com, webserver.fabrikam.com o 192.168.12.34) o etiquetas (como Role:DB; OS:Win8.1). Si se proporcionan varias etiquetas, la tarea se ejecutará en todas las máquinas que tengan las etiquetas especificadas. Para los grupos de recursos de Azure, proporcione el nombre de la máquina virtual, como ffweb o ffdb. La opción predeterminada es ejecutar la tarea en todas las máquinas."
 }
