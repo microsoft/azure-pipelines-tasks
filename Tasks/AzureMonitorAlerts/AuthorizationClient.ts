@@ -60,14 +60,19 @@ export class AuthorizationClient {
 		tl.debug('Requesting for Auth Token: ' + this._authorityUrl);
 		this._httpClient.post(this._authorityUrl, requestData, requestHeader)
 			.then(async (response: HttpClientResponse) => {
-				let contents: string = await response.readBody();
-				if (response.message.statusCode == 200) {
-					if(!!contents) {
-						deferred.resolve(JSON.parse(contents));
+				try {
+					let contents: string = await response.readBody();
+					if (response.message.statusCode == 200) {
+						if(!!contents) {
+							deferred.resolve(JSON.parse(contents));
+						}
+					}
+					else {
+						deferred.reject(tl.loc('Couldnotfetchaccesstoken', response.message.statusCode, response.message.statusMessage, contents));
 					}
 				}
-				else {
-					deferred.reject(tl.loc('Couldnotfetchaccesstoken', response.message.statusCode, response.message.statusMessage, contents));
+				catch (error) {
+					deferred.reject(error);
 				}
 			}, (error) => {
 				deferred.reject(error);
