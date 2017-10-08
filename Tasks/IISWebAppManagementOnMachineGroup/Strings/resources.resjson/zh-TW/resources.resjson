@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web 應用程式管理 (預覽)",
+  "loc.friendlyName": "IIS Web 應用程式管理",
   "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "建立或更新網站、Web App、虛擬目錄及應用程式集區",
   "loc.instanceNameFormat": "管理 $(IISDeploymentType)",
