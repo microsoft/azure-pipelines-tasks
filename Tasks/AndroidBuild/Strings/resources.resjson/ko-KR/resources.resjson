@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Android Build",
+  "loc.friendlyName": "Android 빌드",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "[Deprecated]  Use Gradle",
+  "loc.description": "[사용되지 않음] Gradle 사용",
   "loc.instanceNameFormat": "Android 빌드 $(gradleProj)",
   "loc.group.displayName.avdOptions": "AVD(Android 가상 장치) 옵션",
   "loc.group.displayName.emulatorOptions": "에뮬레이터 옵션",
