@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin 许可证",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613739)",
-  "loc.description": "[Deprecated] Upgrade to free version of Xamarin: https://store.xamarin.com",
+  "loc.description": "[已弃用] 升级到 Xamarin 的免费版本: https://store.xamarin.com",
   "loc.instanceNameFormat": "$(action) Xamarin 许可证",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.action": "操作",
