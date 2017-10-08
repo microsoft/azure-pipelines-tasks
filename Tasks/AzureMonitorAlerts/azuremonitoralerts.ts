@@ -3,7 +3,7 @@ import * as path from "path";
 
 import { initializeAzureRMEndpointData } from "azurestack-common/azurestackrestutility";
 
-import { AzureRmRestClient } from "./AzureRmRestClient";
+import { AzureRmAlertRulesRestClient } from "./AzureRmAlertRulesRestClient";
 import { 
 	IAzureMetricAlertRulesList,
 	IAzureMetricAlertRule 
@@ -23,13 +23,6 @@ async function run() {
 		let endpoint = await initializeAzureRMEndpointData(connectedServiceName);
 
 		let resourceId: string = `/subscriptions/${endpoint["subscriptionId"]}/resourceGroups/${resourceGroupName}/providers/${resourceType}/${resourceName}`
-		let storedResourceId: string = alertRules.resourceId;
-
-		// compare the resource id with the one stored in alertRule json and throw error if it does not match 
-		// this check will fail for $variables 
-		if(!!storedResourceId && storedResourceId.toLowerCase() !== resourceId.toLowerCase()) {
-			throw new Error(tl.loc("ResourceIdMismatchError", resourceId.toLowerCase(), storedResourceId.toLowerCase()));
-		}
 
 		await addOrUpdateAlertRules(endpoint, resourceGroupName, resourceId, alertRules.rules, notifyServiceOwners, notifyEmails);
 	}
@@ -40,7 +33,7 @@ async function run() {
 
 async function addOrUpdateAlertRules(endpoint, resourceGroupName: string, resourceId: string, alertRules: IAzureMetricAlertRule[], notifyServiceOwners: boolean, notifyEmails: string) {
 	
-	let azureRmRestClient = new AzureRmRestClient(endpoint);
+	let azureRmRestClient = new AzureRmAlertRulesRestClient(endpoint);
 
 	for(let rule of alertRules) {
 		

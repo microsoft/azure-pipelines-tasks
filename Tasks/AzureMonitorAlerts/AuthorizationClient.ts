@@ -16,11 +16,15 @@ export interface IAccessToken {
 	// ignored other properties as they won't be useful in the current scenario
 }
 
+const defaultAuthUrl = "https://login.windows.net/";
+
 export class AuthorizationClient {
 	constructor(endpoint, httpClient: HttpClient) {
 		this._httpClient = httpClient; 
 		this._endpoint = endpoint;
-		this._defaultAuthUrl = "https://login.windows.net/";
+
+		let envAuthUrl = (this._endpoint.envAuthUrl) ? (this._endpoint.envAuthUrl) : defaultAuthUrl;
+		this._authorityUrl = envAuthUrl + this._endpoint.tenantID + "/oauth2/token/";
 	}
 
 	public async getBearerToken(): Promise<any> {
@@ -41,9 +45,7 @@ export class AuthorizationClient {
 
 	private async _refreshAccessToken(): Promise<IAccessToken> {
 		let deferred: Q.Deferred<IAccessToken> = Q.defer<IAccessToken>();
-		
-		let envAuthUrl = (this._endpoint.envAuthUrl) ? (this._endpoint.envAuthUrl) : this._defaultAuthUrl;
-		let authorityUrl = envAuthUrl + this._endpoint.tenantID + "/oauth2/token/";
+
 		let requestData = querystring.stringify({
 			resource: this._endpoint.activeDirectoryResourceId,
 			client_id: this._endpoint.servicePrincipalClientID,
@@ -55,8 +57,8 @@ export class AuthorizationClient {
 			"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
 		}
 
-		tl.debug('Requesting for Auth Token: ' + authorityUrl);
-		this._httpClient.post(authorityUrl, requestData, requestHeader)
+		tl.debug('Requesting for Auth Token: ' + this._authorityUrl);
+		this._httpClient.post(this._authorityUrl, requestData, requestHeader)
 			.then(async (response: HttpClientResponse) => {
 				let contents: string = await response.readBody();
 				if (response.message.statusCode == 200) {
@@ -82,5 +84,5 @@ export class AuthorizationClient {
 	private _endpoint: any;
 	private _httpClient: HttpClient;
 	private _accessToken: IAccessToken;
-	private _defaultAuthUrl: string;
+	private _authorityUrl: string;
 }

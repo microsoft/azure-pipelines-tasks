@@ -6,6 +6,7 @@
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
+  "preview": true,
   "visibility": [
     "Build",
     "Release"
@@ -22,7 +23,7 @@
     {
       "name": "NotifyViaEmail",
       "displayName": "ms-resource:loc.group.displayName.NotifyViaEmail",
-      "isExpanded": true
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -51,9 +52,8 @@
       "options": {
         "Microsoft.Insights/components": "Application Insights",
         "Microsoft.Web/sites": "App Services",
-        "Microsoft.Compute/virtualMachines": "Virtual Machines",
         "Microsoft.Storage/storageAccounts": "Storage Account",
-        "Microsoft.Network/networkInterfaces": "Network Interface"
+        "Microsoft.Compute/virtualMachines": "Virtual Machines"
       },
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ResourceType"
@@ -75,7 +75,7 @@
         "resizable": "true",
         "rows": 5,
         "editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-        "displayFormat": "{{#rules}}{{{alertName}}} - '{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{timePeriod}}}\n{{/rules}}"
+        "displayFormat": "{{#rules}}{{{alertName}}} - '{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}}, {{{timePeriod}}}\n{{/rules}}"
       }
     },
     {
@@ -97,7 +97,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "azuremonitoralerts.js"
+      "target": "AzureMonitorAlerts.js"
     }
   },
   "dataSourceBindings": [
