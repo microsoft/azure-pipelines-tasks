@@ -71,12 +71,15 @@ async function run() {
         //                                    // encode the BOM into its UTF8 binary sequence.
 
         // Run the script.
+        //
+        // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
+        // comment on Windows implementation for an explanation why "-Command" is preferred.
         let powershell = tl.tool(tl.which('powershell', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
-            .arg('-File')
-            .arg(filePath);
+            .arg('-Command')
+            .arg(`. '${filePath.replace("'", "''")}'`);
         let options = <tr.IExecOptions>{
             cwd: input_workingDirectory,
             failOnStdErr: false,
