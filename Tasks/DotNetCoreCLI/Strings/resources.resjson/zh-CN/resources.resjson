@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "详细信息",
   "loc.input.help.verbosityRestore": "指定在输出中显示的详细信息量。",
   "loc.input.label.searchPatternPush": "要发布的 NuGet 包的路径",
-  "loc.input.help.searchPatternPush": "要匹配的模式或要上传的 nupkg 文件的路径。多个模式可用分号分隔。",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "目标源位置",
   "loc.input.label.feedPublish": "目标源",
   "loc.input.help.feedPublish": "选择此帐户中托管的源。必须安装有包管理并授予其许可，才能在此处选择源。",
