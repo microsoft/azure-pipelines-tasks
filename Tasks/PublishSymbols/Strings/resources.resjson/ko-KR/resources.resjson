@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "기호 게시",
   "loc.input.help.PublishSymbols": "기호 파일을 게시할지 여부를 나타냅니다.",
   "loc.input.label.SymbolServerType": "기호 서버 유형",
-  "loc.input.help.SymbolServerType": "기호를 게시할지 여부를 선택합니다. \"Team Services\" 옵션은 비공개 미리 보기 상태입니다. 비공개 미리 보기에 참여하려면 [이러한 지침](https://go.microsoft.com/fwlink/?linkid=846265)을 따르세요.",
+  "loc.input.help.SymbolServerType": "기호를 게시할지 여부를 선택합니다. \"Team Services\" 옵션은 비공개 미리 보기 상태입니다. Team Foundation Server는 \"파일 공유\" 옵션만 지원합니다. 비공개 미리 보기에 참여하려면 [이러한 지침](https://go.microsoft.com/fwlink/?linkid=846265)을 따르세요.",
   "loc.input.label.SymbolsPath": "기호를 게시할 경로",
   "loc.input.help.SymbolsPath": "기호를 게시할 경로입니다.",
   "loc.input.label.DetailedLog": "자세한 정보 로깅",
