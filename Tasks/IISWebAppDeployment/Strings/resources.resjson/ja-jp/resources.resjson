@@ -15,9 +15,9 @@
   "loc.input.help.AdminPassword": "対象のコンピューターの管理者パスワード。<br>ビルド/リリース定義で '$(passwordVariable)' として定義された変数を受け入れることができます。<br>変数タイプを 'シークレット' とマークして保護することもできます。",
   "loc.input.label.WinRMProtocol": "プロトコル",
   "loc.input.help.WinRMProtocol": "コンピューターとの WinRM 接続に使用するプロトコルを選びます。既定は HTTPS です。",
-  "loc.input.label.TestCertificate": "証明書のテスト",
-  "loc.input.help.TestCertificate": "信頼された証明機関によるコンピューターの証明書の信頼性の検証をスキップするにはこのオプションを選びます。WinRM HTTPS プロトコルにはこのパラメーターが必要です。",
-  "loc.input.label.WebDeployPackage": "Web 展開パッケージ",
+  "loc.input.label.TestCertificate": "テスト証明書",
+  "loc.input.help.TestCertificate": "信頼された証明機関によるマシンの証明書の信頼性検証をスキップするオプションを選択します。このパラメーターは、WinRM の HTTPS プロトコルでは必須です。",
+  "loc.input.label.WebDeployPackage": "Web 配置パッケージ",
   "loc.input.help.WebDeployPackage": "対象のコンピューターまたは UNC パス (\\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip など) 上の Web 展開 (MSDeploy) zip ファイルの場所。UNC パスはコンピューターの管理者アカウントからアクセスできる必要があります。$env:windir、$env:systemroot などの環境変数を使って $env:windir\\FabrikamFibre\\Web のように指定することもサポートされます。",
   "loc.input.label.WebDeployParamFile": "Web 展開パラメーター ファイル",
   "loc.input.help.WebDeployParamFile": "対象のコンピューターまたは UNC パスにあるパラメーター ファイルの場所。パラメーター ファイルは IIS Web アプリケーション名やデータベース接続文字列などの Web アプリケーション構成設定を上書きするために用いられます。",
@@ -73,7 +73,7 @@
   "loc.input.label.DeployInParallel": "並列で展開",
   "loc.input.help.DeployInParallel": "この値を [True] に設定すると、対象のコンピューターで平行して Web アプリケーションが展開されます。",
   "loc.input.label.ResourceFilteringMethod": "以下の条件でコンピューターを選択",
-  "loc.input.help.ResourceFilteringMethod": "必要に応じて、コンピューター名またはタグを指定してコンピューターのサブセットを選択します。",
+  "loc.input.help.ResourceFilteringMethod": "必要に応じて、コンピューター名またはタグを指定してコンピューターのサブセットを選びます。",
   "loc.input.label.MachineFilter": "コンピューターに展開",
   "loc.input.help.MachineFilter": "この入力はコンピューター グループでのみ使用でき、コンピューターまたは出力変数の単純なリストではまだサポートされていません。コンピューターのリスト (dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 など)、またはタグのリスト (Role:DB; OS:Win8.1) をご指定ください。複数のタグを指定した場合、指定されたタグを持つすべてのコンピューターでタスクが実行されます。Azure リソース グループの場合は、ffweb または ffdb のような仮想マシン名をご指定ください。既定値ではタスクがすべてのコンピューターで実行されます。"
 }

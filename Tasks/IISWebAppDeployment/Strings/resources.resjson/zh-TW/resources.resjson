@@ -16,7 +16,7 @@
   "loc.input.label.WinRMProtocol": "通訊協定",
   "loc.input.help.WinRMProtocol": "選取 WinRM 與電腦連線時所囡使用的通訊協定。預設值為 HTTPS。",
   "loc.input.label.TestCertificate": "測試憑證",
-  "loc.input.help.TestCertificate": "選取此選項可略過驗證電腦憑證是否確實經由信任的憑證授權單位簽署。WinRM HTTPS 通訊協定需要此參數。",
+  "loc.input.help.TestCertificate": "選取選項，跳過由受信任的憑證授權單位驗證電腦憑證真確性。WinRM HTTPS 通訊協定需要參數。",
   "loc.input.label.WebDeployPackage": "Web Deploy 封裝",
   "loc.input.help.WebDeployPackage": "目標電腦或 UNC 路徑上的 Web Deploy (MSDeploy) 壓縮檔位置，例如 \\\\\\\\BudgetIT\\WebDeploy\\WebDeployPackage.zip。電腦的系統管理員帳戶必須可以存取 UNC 路徑。同時也支援環境變數，例如 $env:windir、$env:systemroot 像是 $env:windir\\FabrikamFibre\\Web。",
   "loc.input.label.WebDeployParamFile": "Web Deploy 參數檔",
@@ -72,7 +72,7 @@
   "loc.input.help.AppCmdCommands": "其他用來設定網站或應用程式集區屬性的 AppCmd.exe 命令。使用一個以上的命令時，請利用行分隔符號，例如 <br/> list apppools <br/> list sites",
   "loc.input.label.DeployInParallel": "平行部署",
   "loc.input.help.DeployInParallel": "設定為 true 即會以平行方式在目標電腦上部署 Web 應用程式。",
-  "loc.input.label.ResourceFilteringMethod": "選取電腦依據",
+  "loc.input.label.ResourceFilteringMethod": "選取電腦依據 ",
   "loc.input.help.ResourceFilteringMethod": "選擇性地提供電腦名稱或標記來選取電腦的子集。",
   "loc.input.label.MachineFilter": "部署至電腦",
   "loc.input.help.MachineFilter": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變數目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。若為 Azure 資源群組，請提供虛擬機器的名稱 (例如 ffweb、ffdb)。預設會在所有電腦上執行此工作。"
