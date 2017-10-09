@@ -171,7 +171,12 @@ export class AzureRmAlertRulesRestClient {
 		
 		// Add email action
 		if(notifyViaEmails) {
-			let notifyEmailsList: string[] = !!notifyEmails ? notifyEmails.split(";") : []; // BUG server throws 400 error, check with team 
+			let notifyEmailsList: string[] = !!notifyEmails ? notifyEmails.split(";") : []; 
+			notifyEmailsList.forEach((value, index, array) => {
+                array[index] = value.trim();
+            });
+            notifyEmailsList = notifyEmailsList.filter((value) => !!value);
+
 			alertRuleActions.push({ 
 				"odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
 				"sendToServiceOwners": notifyServiceOwners, 
