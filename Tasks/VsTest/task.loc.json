@@ -490,6 +490,7 @@
     "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
     "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
-    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
+    "InvalidSettingsExtension": "ms-resource:loc.messages.InvalidSettingsExtension"
   }
 }

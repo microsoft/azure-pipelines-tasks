@@ -417,7 +417,7 @@ function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskRe
     }
 }
 
-function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile?: string, uploadResults?: boolean): Q.Promise<tl.TaskResult> {
+function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile: string, uploadResults: boolean): Q.Promise<tl.TaskResult> {
     var vstestArgs;
     let testselector = new testselectorinvoker.TestSelectorInvoker();
 
