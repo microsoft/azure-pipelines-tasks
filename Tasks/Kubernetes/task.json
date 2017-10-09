@@ -169,7 +169,10 @@
                 "yaml": "yaml"
             },
             "helpMarkDown": "Output format.",
-            "groupName": "output"
+            "groupName": "output",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "kubectlOutput",
