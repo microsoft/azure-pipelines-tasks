@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Android Build",
+  "loc.friendlyName": "Сборка Android",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "[Deprecated]  Use Gradle",
+  "loc.description": "[Устарело] Используйте Gradle",
   "loc.instanceNameFormat": "Сборка Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Параметры виртуального устройства Android (AVD)",
   "loc.group.displayName.emulatorOptions": "Параметры эмулятора",

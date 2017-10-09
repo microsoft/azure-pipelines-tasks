@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Android Build",
+  "loc.friendlyName": "Compilazione Android",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613716)",
-  "loc.description": "[Deprecated]  Use Gradle",
+  "loc.description": "[Deprecato] Usare Gradle",
   "loc.instanceNameFormat": "Build Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Opzioni del dispositivo virtuale Android (AVD)",
   "loc.group.displayName.emulatorOptions": "Opzioni emulatore",
