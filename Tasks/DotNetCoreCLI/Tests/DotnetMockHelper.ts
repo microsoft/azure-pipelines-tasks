@@ -66,7 +66,9 @@ export class DotnetMockHelper {
     public registerNugetUtilityMock(projectFile: string[]) {
         this.tmr.registerMock('nuget-task-common/Utility', {
             getPatternsArrayFromInput: function(input) {
-                return [`fromMockedUtility-${input}`];
+                return input.split(";").map((i) => {
+                    return `fromMockedUtility-${i}`;
+                });
             },
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;

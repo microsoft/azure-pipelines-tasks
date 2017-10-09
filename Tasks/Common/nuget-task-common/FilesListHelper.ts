@@ -3,11 +3,11 @@
 const nutil = require("nuget-task-common/Utility");
 import * as tl from "vsts-task-lib/task";
 
-export function createFoundFilesList(currentTl, searchPatternInput: string, ignoreLegacyFind?: boolean, basePathForLegacyFind?: string): string[] {
+export function createFoundFilesList(currentTaskLib: any, searchPatternInput: string, ignoreLegacyFind?: boolean, basePathForLegacyFind?: string): string[] {
     let filesList: string[] = [];
     let searchPatternArray: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
-    let useLegacyFind = currentTl.getVariable("NuGet.UseLegacyFindFiles") === "true";
-    let cwd = currentTl.cwd();
+    let useLegacyFind = ignoreLegacyFind ? null : currentTaskLib.getVariable("NuGet.UseLegacyFindFiles") === "true";
+    let cwd = currentTaskLib.cwd();
     tl.debug(`Current working directory: ${cwd}`);
 
     if (useLegacyFind) {
@@ -21,21 +21,19 @@ export function createFoundFilesList(currentTl, searchPatternInput: string, igno
         searchPatternArray.forEach((pattern: string) => {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            let filesFound: string[] = [];
-
-            filesFound = currentTl.findMatch(undefined, pattern, findOptions, matchOptions);
+            let filesFound: string[] = currentTaskLib.findMatch(undefined, pattern, findOptions, matchOptions);
             if (filesFound && filesFound.length > 0) {
                 filesFound.forEach((file: string) => {
                     if (filesList.indexOf(file) === -1) {
                         filesList.push(file);
-                        currentTl.debug(`--File: ${file}`);
+                        tl.debug(`--File: ${file}`);
                     }
                 });
             } else {
-                let fullFilePath: string = (pattern.indexOf(cwd) !== -1)
-                    ? pattern
-                    : cwd + `\\` + pattern;
-                currentTl.warning(currentTl.loc("Info_NoMatchingFilesFoundForPattern", fullFilePath));
+                let fullFilePath: string = (cwd && pattern.indexOf(cwd) === -1)
+                    ? cwd + `\\` + pattern
+                    : pattern;
+                tl.warning(tl.loc("Info_NoMatchingFilesFoundForPattern", fullFilePath));
             }
         });
     }

@@ -63,7 +63,7 @@ export class NugetMockHelper {
     public registerNugetUtilityMock(projectFile: string[]) {
         this.tmr.registerMock('nuget-task-common/Utility', {
             getPatternsArrayFromInput: function(input) {
-                return [input];
+                return input.split(";");
             },
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
@@ -87,7 +87,7 @@ export class NugetMockHelper {
         });
     }
 
-        public registerNugetUtilityMockUnix() {
+    public registerNugetUtilityMockUnix() {
         this.tmr.registerMock('nuget-task-common/Utility', {
             getPatternsArrayFromInput: function(input) {
                 return [input];
