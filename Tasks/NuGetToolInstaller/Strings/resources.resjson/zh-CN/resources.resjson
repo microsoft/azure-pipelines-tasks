@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet 工具安装程序",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "从 Internet 或工具缓存获取 NuGet 特定版本，并将其添加到路径。通过此步骤更改 NuGet 还原和 NuGet 命令步骤中所使用的 NuGet 版本。",
+  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet steps.",
   "loc.instanceNameFormat": "使用 NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "要安装的 NuGet.exe 版本",
   "loc.input.help.versionSpec": "路径上指定 NuGet 版本可用的版本或版本范围。使用 x 作为通配符。请参阅[NuGet 可用版本列表](http://dist.nuget.org/tools.json)。\n\n若要匹配预发布版本，规范必须包含上方列表中的主要、次要、修补程序和预发布版本。\n\n示例: 4.x、3.3.x、2.8.6、>=4.0.0-0",
