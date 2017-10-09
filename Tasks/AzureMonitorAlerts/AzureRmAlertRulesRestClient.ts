@@ -191,9 +191,9 @@ export class AzureRmAlertRulesRestClient {
 					"dataSource": {
 						"odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
 						"resourceUri": resourceUri,
-						"metricName": rule.metric.value,
-						"operator": Util.getThresholdConditionForMetricAlertRule(rule.thresholdCondition)
+						"metricName": rule.metric.value
 					},
+					"operator": Util.getThresholdConditionForMetricAlertRule(rule.thresholdCondition),
 					"threshold": rule.thresholdValue,
 					"windowSize": Util.getWindowSizeForMetricAlertRule(rule.timePeriod)
 				},

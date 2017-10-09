@@ -2,13 +2,13 @@ export interface IThresholdRuleConditionDataSource {
 	"odata.type": string;
 	resourceUri: string;
 	metricName: string;
-	operator: string;
 }
 
 export interface IThresholdRuleCondition {
 	"odata.type": string; // "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition"
 	dataSource: IThresholdRuleConditionDataSource;
 	threshold: string;
+	operator: string;
 	windowSize: string;
 }
 
