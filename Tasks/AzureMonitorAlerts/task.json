@@ -4,7 +4,7 @@
 	"friendlyName": "Azure Monitor Alerts",
 	"description": "Configure alerts on available metrics for an Azure resource",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "More Information -- Get the link ",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=859947)",
 	"category": "Deploy",
 	"preview": true, 
 	"visibility": [
