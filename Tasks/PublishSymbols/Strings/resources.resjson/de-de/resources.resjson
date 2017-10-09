@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Symbole veröffentlichen",
   "loc.input.help.PublishSymbols": "Gibt an, ob die Symboldateien veröffentlicht werden sollen.",
   "loc.input.label.SymbolServerType": "Symbolservertyp",
-  "loc.input.help.SymbolServerType": "Wählen Sie aus, wo Symbole veröffentlicht werden sollen. Die Option \"Team Services\" befindet sich in der privaten Vorschau. Befolgen Sie [diese Anweisungen](https://go.microsoft.com/fwlink/?linkid=846265) zum Teilnehmen an der privaten Vorschau.",
+  "loc.input.help.SymbolServerType": "Wählen Sie aus, wo Symbole veröffentlicht werden sollen. Die Option \"Team Services\" befindet sich in der privaten Vorschau. Team Foundation Server unterstützt nur die Option \"Dateifreigabe\". Befolgen Sie [diese Anweisungen](https://go.microsoft.com/fwlink/?linkid=846265), um an der privaten Vorschau teilzunehmen.",
   "loc.input.label.SymbolsPath": "Pfad zum Veröffentlichen von Symbolen",
   "loc.input.help.SymbolsPath": "Pfad zum Veröffentlichen von Symbolen.",
   "loc.input.label.DetailedLog": "Ausführliche Protokollierung",
