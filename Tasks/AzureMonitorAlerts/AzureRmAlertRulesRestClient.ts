@@ -57,6 +57,8 @@ export class AzureRmAlertRulesRestClient {
 			}	
 		};
 
+		tl.debug(`Requesting : ${restUrl}`);
+
 		this._restClient.get(restUrl, restOptions)
 			.then((response: IRestResponse<any>) => {
 				if(response.statusCode === 200) {
@@ -84,6 +86,7 @@ export class AzureRmAlertRulesRestClient {
 		let deferred: Q.Deferred<IRestResponse<any>> = Q.defer<IRestResponse<any>>();
 		
 		let requestBody: IAzureMetricAlertRequestBody = await this._getRequestBodyForAddingAlertRule(resourceGroupName, resourceUri, rule, notifyServiceOwners, notifyEmails);
+
 		tl.debug(`Sending PUT request with request body \n${JSON.stringify(requestBody, null, 2)}`); 
 
 		let accessToken: string = await this._authorizationClient.getBearerToken();
@@ -94,6 +97,8 @@ export class AzureRmAlertRulesRestClient {
 				"Authorization": "Bearer " + accessToken
 			}
 		};
+
+		tl.debug(`Requesting : ${restUrl}`);
 
 		this._restClient.replace(restUrl, requestBody, restOptions)
 			.then((response: IRestResponse<any>) => {
@@ -228,6 +233,8 @@ export class AzureRmAlertRulesRestClient {
 			}
 		};
 
+		tl.debug(`Requesting : ${restUrl}`);
+		
 		this._restClient.get(restUrl, restOptions)
 			.then((response: IRestResponse<any>) => {
 				if(response.statusCode === 200) {
