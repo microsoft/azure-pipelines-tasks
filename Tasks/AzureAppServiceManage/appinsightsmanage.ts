@@ -104,7 +104,7 @@ export class AppInsightsManage {
         var appInsightsInstrumenationKey = appInsightsResource.properties.InstrumentationKey;
         var appServiceAppSettings = await azureRESTUtils.getWebAppAppSettings(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
 
-        if(appInsightsInstrumenationKey && appServiceAppSettings && appServiceAppSettings.propertiles) {
+        if(appInsightsInstrumenationKey && appServiceAppSettings && appServiceAppSettings.properties) {
             appServiceAppSettings.properties["APPINSIGHTS_INSTRUMENTATIONKEY"] = appInsightsInstrumenationKey;
             appServiceAppSettings = await azureRESTUtils.updateWebAppAppSettings(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName, appServiceAppSettings);
             tl.debug("Instrumentation key successfully configured for app service : " + this.webAppName);
@@ -118,10 +118,10 @@ export class AppInsightsManage {
             var appServiceWebSettings = await azureRESTUtils.getAzureRMWebAppConfigDetails(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
             if(appServiceWebSettings && appServiceWebSettings.properties && appServiceWebSettings.properties.alwaysOn == false) {
                     var configSettings = JSON.stringify({
-						"properties": {
-							"alwaysOn" : true
-						}
-					});
+                            "properties": {
+                            "alwaysOn" : true
+                        }
+                    });
                     appServiceWebSettings = await azureRESTUtils.updateAzureRMWebAppConfigDetails(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName, configSettings);
                     tl.debug("Always on property is successfully configured for app service : " + this.webAppName);
             }
@@ -147,8 +147,8 @@ export class AppInsightsManage {
                     }
 
                     if(isWebTestAlreadyConfigured) {
-						break;
-					}
+                        break;
+                    }
                 }
             }
 
