@@ -36,10 +36,10 @@ export function getWindowSizeForMetricAlertRule(key: string): string {
 
 export function getThresholdConditionForMetricAlertRule(operator: string): string {
 	let operatorMap: {[key: string]: string} = {
-		">": "gt",
-		">=": "gte",
-		"<": "lt",
-		"<=": "lte"
+		">": "GreaterThan",
+		">=": "GreaterThanOrEqual",
+		"<": "LessThan",
+		"<=": "LessThanOrEqual"
 	}
 
 	return operatorMap[operator] || "";
