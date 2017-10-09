@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin-Lizenz",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613739)",
-  "loc.description": "[Deprecated] Upgrade to free version of Xamarin: https://store.xamarin.com",
+  "loc.description": "[Veraltet] Upgrade auf eine kostenlose Version von Xamarin: https://store.xamarin.com",
   "loc.instanceNameFormat": "Xamarin-Lizenz $(action)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.action": "Aktion",

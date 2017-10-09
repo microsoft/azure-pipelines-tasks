@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Лицензия Xamarin",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613739)",
-  "loc.description": "[Deprecated] Upgrade to free version of Xamarin: https://store.xamarin.com",
+  "loc.description": "[Устарело] Перейдите на бесплатную версию Xamarin: https://store.xamarin.com",
   "loc.instanceNameFormat": "Лицензия Xamarin - $(action)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.action": "Действие",
