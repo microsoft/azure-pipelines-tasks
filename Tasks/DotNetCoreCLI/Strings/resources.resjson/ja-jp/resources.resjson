@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "詳細",
   "loc.input.help.verbosityRestore": "出力に表示する詳細の量を指定します。",
   "loc.input.label.searchPatternPush": "発行する NuGet パッケージへのパス",
-  "loc.input.help.searchPatternPush": "アップロードする Nupkg ファイルとの一致を探すパターンまたはパス。複数のパターンをセミコロンで区切ることができます。",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "ターゲット フィードの場所",
   "loc.input.label.feedPublish": "ターゲット フィード",
   "loc.input.help.feedPublish": "このアカウントでホストされているフィードを選択します。ここでフィードを選択するには、パッケージ管理をインストールしてライセンス認証をしておく必要があります。",

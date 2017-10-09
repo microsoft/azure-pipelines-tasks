@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "Détail",
   "loc.input.help.verbosityRestore": "Spécifie le niveau de détail affiché dans la sortie.",
   "loc.input.label.searchPatternPush": "Chemin des packages NuGet à publier",
-  "loc.input.help.searchPatternPush": "Modèle de correspondance ou chemin des fichiers nupkg à charger. Vous devez séparer plusieurs modèles par un point-virgule.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "Emplacement du flux cible",
   "loc.input.label.feedPublish": "Flux cible",
   "loc.input.help.feedPublish": "Sélectionnez un flux hébergé dans ce compte. Pour permettre la sélection d'un flux, la fonctionnalité de gestion des packages doit être installée et associée à une licence.",

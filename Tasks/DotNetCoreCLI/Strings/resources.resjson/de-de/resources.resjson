@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "Ausführlichkeit",
   "loc.input.help.verbosityRestore": "Gibt die Menge der Details an, die in der Ausgabe angezeigt werden.",
   "loc.input.label.searchPatternPush": "Pfad zu den zu veröffentlichenden NuGet-Paketen",
-  "loc.input.help.searchPatternPush": "Das Muster, mit dem eine Übereinstimmung vorliegen soll, oder der Pfad zu den NUPKG-Dateien, die hochgeladen werden sollen. Mehrere Muster können durch ein Semikolon getrennt werden.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "Speicherort für Zielfeed",
   "loc.input.label.feedPublish": "Zielfeed",
   "loc.input.help.feedPublish": "Wählen Sie einen Feed aus, der in diesem Konto gehostet wird. Die Paketverwaltung muss installiert und lizenziert sein, damit Sie hier einen Feed auswählen können.",

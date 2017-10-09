@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "詳細資訊",
   "loc.input.help.verbosityRestore": "請指定顯示在輸出中的詳細資料量。",
   "loc.input.label.searchPatternPush": "要發行之 NuGet 套件的路徑",
-  "loc.input.help.searchPatternPush": "要比對的模式，或 nupkg 檔案上傳至的路徑。可使用分號分隔多個模式。",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "目標摘要位置",
   "loc.input.label.feedPublish": "目標摘要",
   "loc.input.help.feedPublish": "選取裝載於此帳戶中的摘要。您必須已安裝並授權套件管理，才可於此處選取摘要。",

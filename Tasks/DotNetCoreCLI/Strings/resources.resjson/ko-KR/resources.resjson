@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "자세한 정도",
   "loc.input.help.verbosityRestore": "출력에 표시되는 세부 정보의 양을 지정합니다.",
   "loc.input.label.searchPatternPush": "게시할 NuGet 패키지의 경로",
-  "loc.input.help.searchPatternPush": "일치시킬 패턴 또는 업로드할 nupkg 파일의 경로입니다. 여러 개의 패턴은 세미콜론으로 구분할 수 있습니다.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "대상 피드 위치",
   "loc.input.label.feedPublish": "대상 피드",
   "loc.input.help.feedPublish": "이 계정에 호스트된 피드를 선택합니다. 여기서 피드를 선택하려면 패키지 관리가 설치되고 사용이 허가된 상태여야 합니다.",
