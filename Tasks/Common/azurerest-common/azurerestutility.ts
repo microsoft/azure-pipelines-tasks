@@ -903,7 +903,7 @@ export async function createAppInsightsWebTest(endpoint, appInsightsResourceGrou
 
     var webTestHiddenLink = "hidden-link:" + appInsightsResourceData.id;
     webTestName = "webtest" + webTestName;
-    appServiceUrl = ((appServiceUrl.indexOf("https") != -1) ? "" : "https://") + appServiceUrl;
+    appServiceUrl = ((appServiceUrl.indexOf("http") != -1) ? "" : "http://") + appServiceUrl;
 
     var webTestData = {
         "name": webTestName,

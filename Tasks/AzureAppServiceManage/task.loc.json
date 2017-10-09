@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 16
+    "Patch": 17
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -177,7 +177,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "Action == Enable Continuous Monitoring"
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.AppInsightsResourceGroupName"
     },
     {
       "name": "ApplicationInsightsResourceName",
@@ -192,7 +193,8 @@
         "manageIcon": "Add",
         "manageButtonName": "New"
       },
-      "visibleRule": "Action == Enable Continuous Monitoring"
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
     }
   ],
   "dataSourceBindings": [

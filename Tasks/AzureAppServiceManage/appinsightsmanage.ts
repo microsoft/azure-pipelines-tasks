@@ -30,9 +30,9 @@ export class AppInsightsManage {
 
     public async configureAppInsights() {
         this.resourceGroupName  = (this.specifySlotFlag ? this.resourceGroupName : await azureRESTUtils.getResourceGroupName(this.endpoint, this.webAppName));
-        var appServiceDetails = await azureRESTUtils.getAppServiceDetails(this.endpoint, this.resourceGroupName, this.webAppName, this.specifySlotFlag, this.slotName);
-        
+        var appServiceDetails = await azureRESTUtils.getAppServiceDetails(this.endpoint, this.resourceGroupName, this.webAppName, this.specifySlotFlag, this.slotName);       
         var publishingProfile = await azureRESTUtils.getAzureRMWebAppPublishProfile(this.endpoint, this.webAppName, this.resourceGroupName, this.specifySlotFlag, this.slotName);
+
         if(appServiceDetails && appServiceDetails.kind && appServiceDetails.kind != "app,linux") {
             await this.installApplicationInsightsExtension(publishingProfile);
         } 
@@ -45,9 +45,15 @@ export class AppInsightsManage {
         appInsightsResource = await this.linkAppInsightsWithAppService(appInsightsResource);
         await this.configureInstrumentationKey(appInsightsResource);
         await this.configureAppServiceAlwaysOnProperty();
-        await this.configureAppInsightsWebTest(appInsightsResource, publishingProfile);
-        console.log(tl.loc("SuccessfullyConfiguredAppInsights"));
+        
+        if(appServiceDetails && appServiceDetails.properties && appServiceDetails.properties.defaultHostName) {
+            var webAppUrl = appServiceDetails.properties.defaultHostName;
+            await this.configureAppInsightsWebTest(appInsightsResource, webAppUrl);
+        } else {
+            tl.warning(tl.loc("UnableToConfigureWebTest", appInsightsResource.name));
+        }
 
+        console.log(tl.loc("SuccessfullyConfiguredAppInsights"));
     }
 
     private async installApplicationInsightsExtension(publishingProfile) {
@@ -130,7 +136,7 @@ export class AppInsightsManage {
         }
     }
 
-    private async configureAppInsightsWebTest(appInsightResource, publishingProfile) {
+    private async configureAppInsightsWebTest(appInsightResource, webAppUrl) {
         try {
             var allWebTestsInRG = await azureRESTUtils.getAppInsightsWebTests(this.endpoint, this.appInsightsResourceGroupName);
             var isWebTestAlreadyConfigured = false;
@@ -154,7 +160,7 @@ export class AppInsightsManage {
 
             if(!isWebTestAlreadyConfigured) {
                 var webTestName = azureUtils.generateDeploymentId();
-                await azureRESTUtils.createAppInsightsWebTest(this.endpoint, this.appInsightsResourceGroupName, webTestName, appInsightResource, publishingProfile.publishUrl);
+                await azureRESTUtils.createAppInsightsWebTest(this.endpoint, this.appInsightsResourceGroupName, webTestName, appInsightResource, webAppUrl);
             } else {
                 tl.debug("WebTest is already configured for app insights : " + appInsightResource.name);
             }
