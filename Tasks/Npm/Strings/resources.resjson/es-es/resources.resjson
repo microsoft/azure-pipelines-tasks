@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "Usando el registro %s",
   "loc.messages.AddingAuthRegistry": "Agregando autenticación para el registro: %s",
   "loc.messages.FoundLocalRegistries": "Se encontraron %d registros en esta cuenta o colección",
-  "loc.messages.ForcePackagingUrl": "URL de empaquetado de la colección forzada a: %s",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "No se encuentra ningún registro de depuración en la memoria caché o el directorio de trabajo",
   "loc.messages.NpmFailed": "No se pudo ejecutar npm. Código de retorno: %s",
   "loc.messages.FoundNpmDebugLog": "Se encontró un registro de depuración npm. Asegúrese de que la ruta de acceso coincide con la de la salida de npm: %s",

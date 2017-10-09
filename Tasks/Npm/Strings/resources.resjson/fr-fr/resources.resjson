@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "Utilisation du registre : %s",
   "loc.messages.AddingAuthRegistry": "Ajout de l'authentification pour le registre : %s",
   "loc.messages.FoundLocalRegistries": "%d registres trouvés dans ce compte/cette collection",
-  "loc.messages.ForcePackagingUrl": "URL de collection de création de package forcée vers : %s",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "Journal de débogage introuvable dans le répertoire de cache ou le répertoire de travail",
   "loc.messages.NpmFailed": "Échec de npm. Code de retour : %s",
   "loc.messages.FoundNpmDebugLog": "Journal de débogage npm trouvé. Vérifiez que le chemin correspond au chemin situé dans la sortie de npm : %s",
