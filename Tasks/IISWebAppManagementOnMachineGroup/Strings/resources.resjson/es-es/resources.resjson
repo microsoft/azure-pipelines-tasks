@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web App Manage (versión preliminar)",
+  "loc.friendlyName": "Administrar aplicación web de IIS",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "Cree o actualice un sitio web, una aplicación web, directorios virtuales y un grupo de aplicaciones",
   "loc.instanceNameFormat": "Administrar $(IISDeploymentType)",

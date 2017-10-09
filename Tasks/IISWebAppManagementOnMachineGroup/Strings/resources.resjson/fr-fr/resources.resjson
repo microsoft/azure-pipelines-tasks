@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Gestion d'application web IIS (préversion)",
+  "loc.friendlyName": "Gestion d'application web IIS",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "Créer ou mettre à jour un site web, une application web, des répertoires virtuels et un pool d'applications",
   "loc.instanceNameFormat": "Gérer $(IISDeploymentType)",

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS-Web-App verwalten (Vorschau)",
+  "loc.friendlyName": "IIS-Web-App verwalten",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "Erstellen oder aktualisieren Sie eine Website, eine Web-App, virtuelle Verzeichnisse und einen Anwendungspool.",
   "loc.instanceNameFormat": "$(IISDeploymentType) verwalten",

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Gestione app Web IIS (anteprima)",
+  "loc.friendlyName": "Gestione app Web IIS",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=839731)",
   "loc.description": "Consente di creare o aggiornare un sito Web, un'app Web, directory virtuali e il pool di applicazioni",
   "loc.instanceNameFormat": "Gestisci $(IISDeploymentType)",
