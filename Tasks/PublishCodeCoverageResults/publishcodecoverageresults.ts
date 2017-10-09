@@ -104,6 +104,7 @@ function pathExistsAsFile(path: string) {
         return tl.stats(path).isFile();
     }
     catch (error) {
+        tl.debug(error);
         return false;
     }
 }
