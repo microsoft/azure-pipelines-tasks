@@ -9,6 +9,7 @@
         "AzureFileCopy",
         "AzureFunction",
         "AzureKeyVault",
+        "AzureMonitorAlerts",
         "AzureMonitor",		
         "AzureNLBManagement",
         "AzurePowerShell",
