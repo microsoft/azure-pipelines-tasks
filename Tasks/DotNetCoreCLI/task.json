@@ -18,12 +18,11 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 5
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
-    "groups": [
-        {
+    "groups": [{
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
             "isExpanded": true,
@@ -60,8 +59,7 @@
             "visibleRule": "command = pack"
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -140,7 +138,7 @@
             "name": "selectOrConfig",
             "type": "radio",
             "label": "Feeds to use",
-            "defaultValue": "config",
+            "defaultValue": "select",
             "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {
@@ -235,7 +233,7 @@
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
-            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
             "required": true,
             "visibleRule": "command = push"
         },
@@ -386,8 +384,7 @@
             }
         }
     ],
-    "dataSourceBindings": [
-        {
+    "dataSourceBindings": [{
             "target": "feedRestore",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
@@ -417,14 +414,9 @@
         "Error_NoVersionFoundInBuildNumber": "Could not find version number data in the following environment variable: BUILD_BUILDNUMBER. The value of the variable should contain a substring with the following formats: X.Y.Z or X.Y.Z.A where A, X, Y, and Z are positive integers.",
         "Error_PackageFailure": "An error ocurred while trying to pack the files.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
-        "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
-        "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
         "Info_NoFilesMatchedTheSearchPattern": "No files matched the search pattern.",
-        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
-        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
-        "Info_UsingVersion": "Using version: %s",
         "PackagesFailedToInstall": "Packages failed to restore",
         "PackagesFailedToPublish": "Packages failed to publish",
         "PackagesInstalledSuccessfully": "Packages were restored successfully",
@@ -436,6 +428,33 @@
         "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
         "noWebProjctFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
-        "zipFailed": "Zip failed with error: %s"
+        "zipFailed": "Zip failed with error: %s",
+
+        "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
+        "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+        "Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",
+        "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+        "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+        "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+        "Info_AvailableVersions": "The available versions are: %s",
+        "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+        "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
+        "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+        "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
+        "Info_UsingToolPath": "Using tool path: %s",
+        "Info_UsingVersion": "Using version: %s",
+        "NGCommon_AddingSources": "Setting credentials in NuGet.config",
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+        "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
+        "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
+        "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
+        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
+        "NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
+        "NGCommon_NuGetConfigIsPackagesConfig": "Expected a NuGet.config file at %s, but its contents appear to be a packages.config. Check the settings for the %s task and confirm you selected NuGet.config rather than packages.config.",
+        "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
+        "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
+        "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
+        "NGCommon_UnableToFindTool": "Unable to find tool %s",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
     }
 }

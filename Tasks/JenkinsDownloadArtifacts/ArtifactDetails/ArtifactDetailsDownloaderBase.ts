@@ -2,6 +2,7 @@ import * as Q from 'q';
 import * as fs from 'fs';
 import * as path from 'path'
 import * as tl from 'vsts-task-lib/task';
+import {JenkinsJobDetails} from "./JenkinsRestClient"
 
 export abstract class ArtifactDetailsDownloaderBase {
     protected WriteContentToFileAndUploadAsAttachment(content: string, filePath: string): Q.Promise<any> {
@@ -27,6 +28,6 @@ export abstract class ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    public abstract DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string>; //buildId is string here, it could be a number or 'lastSuccessfulBuild'
-    public abstract DownloadFromBuildRangeAndSave(startIndex: number, endIndex: number): Q.Promise<string>;
+    public abstract DownloadFromSingleBuildAndSave(jenkinsJobDetails: JenkinsJobDetails): Q.Promise<string>;
+    public abstract DownloadFromBuildRangeAndSave(jenkinsJobDetails: JenkinsJobDetails, startIndex: number, endIndex: number): Q.Promise<string>;
 }

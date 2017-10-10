@@ -963,13 +963,22 @@ function Get-AzureNetworkInterfaceDetails
     $accessToken = Get-SpnAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
-    Write-Verbose "[Azure Rest Call] Get Resource Groups"
+    Write-Verbose "[Azure Rest Call] Get Network Interface Details"
     
     $method = "GET"
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/networkInterfaces?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
     
     if(-not $networkInterfaceDetails) 
     {
@@ -993,13 +1002,22 @@ function Get-AzurePublicIpAddressDetails
     $accessToken = Get-SpnAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
-    Write-Verbose "[Azure Rest Call] Get Resource Groups"
+    Write-Verbose "[Azure Rest Call] Get Public IP Addresses Details"
 
     $method = "GET"
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/publicIPAddresses?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
 
     if(-not $publicIPAddressesDetails) 
     {
@@ -1023,13 +1041,22 @@ function Get-AzureLoadBalancersDetails
     $accessToken = Get-SpnAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
-    Write-Verbose "[Azure Rest Call] Get Resource Groups"
+    Write-Verbose "[Azure Rest Call] Get Load Balancers details"
 
     $method = "GET"
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
 
     if(-not $loadBalancersDetails) 
     {
@@ -1054,13 +1081,22 @@ function Get-AzureLoadBalancerDetails
     $accessToken = Get-SpnAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     
-    Write-Verbose "[Azure Rest Call] Get Resource Groups  $name"
+    Write-Verbose "[Azure Rest Call] Get Load balancer details with name : $name"
 
     $method = "GET"
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers/" + $name + "?api-version=$azureStackapiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
     
     if($loadBalancerDetails)
     {

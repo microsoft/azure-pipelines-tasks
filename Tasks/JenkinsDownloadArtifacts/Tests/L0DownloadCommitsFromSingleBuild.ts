@@ -35,6 +35,10 @@ tr.registerMock("request", {
     get: function(urlObject, callback) {
         console.log(`Mock invoked for ${urlObject.url}`)
 
+        if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
+            callback(0, {statusCode: 200}, '{}');
+        }
+
         return {auth: function(A,B,C) {}}
     }
 });

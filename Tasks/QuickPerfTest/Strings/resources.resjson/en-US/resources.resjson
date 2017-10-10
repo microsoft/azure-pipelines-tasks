@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cloud-based Web Performance Test",
-  "loc.helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.helpMarkDown": "Triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
   "loc.description": "Runs a quick web performance test in the cloud with Visual Studio Team Services",
   "loc.instanceNameFormat": "Quick Web Performance Test $(testName)",
   "loc.input.label.connectedServiceName": "VS Team Services Connection",
@@ -14,7 +14,7 @@
   "loc.input.label.runDuration": "Run Duration (sec)",
   "loc.input.help.runDuration": "Load test run duration in seconds.",
   "loc.input.label.geoLocation": "Load Location",
-  "loc.input.help.geoLocation": "Geographical region to generate the load from. See help for more details.",
+  "loc.input.help.geoLocation": "Geographical region to generate the load from.",
   "loc.input.label.machineType": "Run load test using",
   "loc.input.label.avgResponseTimeThreshold": "Fail test if Avg.Response Time(ms) exceeds",
   "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xcode Build",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
-  "loc.description": "Build an Xcode workspace on Mac OS",
+  "loc.description": "Build an Xcode workspace on macOS",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Signing & Provisioning",
   "loc.group.displayName.package": "Package Options",
@@ -29,6 +29,8 @@
   "loc.input.help.exportTeamId": "The 10 digit Team ID from the Apple Developer Portal to use for this export.",
   "loc.input.label.exportOptionsPlist": "Export Options Plist",
   "loc.input.help.exportOptionsPlist": "Path to a plist file that configures archive exporting.",
+  "loc.input.label.exportArgs": "Export Arguments",
+  "loc.input.help.exportArgs": "Additional command line arguments that should be used to export.",
   "loc.input.label.xcode8AutomaticSigning": "Automatic Signing",
   "loc.input.help.xcode8AutomaticSigning": "Select this if you have an Xcode 8 or Xcode 9 project configured for Automatic Signing.",
   "loc.input.label.teamId": "Team ID",
