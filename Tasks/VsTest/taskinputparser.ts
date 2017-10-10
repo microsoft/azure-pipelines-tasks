@@ -67,32 +67,32 @@ function initDtaEnvironment(): models.DtaEnvironment {
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+    dtaEnvironment.environmentUri = getEnvironmentUri();
+    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+    return dtaEnvironment;
+}
 
-    //TODO : Consider build scenario
+function getEnvironmentUri(): string {
+    let environmentUri: string = '';
+
+    const buildId = tl.getVariable('Build.BuildId');
     const releaseId = tl.getVariable('Release.ReleaseId');
     const phaseId = tl.getVariable('Release.DeployPhaseId');
     const projectName = tl.getVariable('System.TeamProject');
-    const taskInstanceId = getDtaInstanceId();
+    const jobId = tl.getVariable('System.JobId');
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    const taskInstanceId = getDtaInstanceId();
     const dontDistribute = tl.getBoolInput('dontDistribute');
+    const pipelineId = utils.Helper.isNullEmptyOrUndefined(releaseId) ? 'build'.concat(`/${buildId}`) : 'release'.concat(`${releaseId}`);
 
-    if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
-        if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
-            || dontDistribute) {
-            // If dontDistribute irrespective of whether is None or MultiAgent or MultiConfig, we will create one run per agent
-            // run creation depends of the environment Id
-            const jobId = tl.getVariable('System.JobId');
-            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
-        } else {
-            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
-        }
+    if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
+        || dontDistribute) {
+        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
     } else {
-        const buildId = tl.getVariable('Build.BuildId');
-        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/build/' + buildId + '/' + taskInstanceId;
+        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
     }
 
-    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
-    return dtaEnvironment;
+    return environmentUri;
 }
 
 function getDtaInstanceId(): number {
@@ -121,7 +121,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     if (testConfiguration.testDropLocation && !utils.Helper.pathExistsAsDirectory(testConfiguration.testDropLocation)) {
         throw new Error(tl.loc('searchLocationNotDirectory', testConfiguration.testDropLocation));
     }
-    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));    
+    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
     if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
