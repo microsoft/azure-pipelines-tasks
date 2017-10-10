@@ -10,7 +10,7 @@ import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
 import * as os from 'os';
 import * as ci from './cieventlogger';
-import {TestSelectorInvoker} from './testselectorinvoker';
+import { TestSelectorInvoker } from './testselectorinvoker';
 
 const uuid = require('uuid');
 
@@ -43,9 +43,11 @@ export class DistributedTest {
 
         try {
             const agentId = await ta.TestAgent.createAgent(this.dtaTestConfig.dtaEnvironment, 3);
-            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, agentid: agentId,
+            ci.publishEvent({
+                environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, agentid: agentId,
                 agentsize: this.dtaTestConfig.numberOfAgentsInPhase, vsTestConsole: this.dtaTestConfig.useVsTestConsole,
-                batchsize: this.dtaTestConfig.numberOfTestCasesPerSlice});
+                batchsize: this.dtaTestConfig.numberOfTestCasesPerSlice
+            });
 
             await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
@@ -59,7 +61,7 @@ export class DistributedTest {
             }
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
-            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error});
+            ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error });
             tl.error(error);
             tl.setResult(tl.TaskResult.Failed, error);
         }
@@ -161,12 +163,12 @@ export class DistributedTest {
         this.dtaPid = -1;
     }
 
-    private createTestSourcesFile() : string {
+    private createTestSourcesFile(): string {
         try {
             const sources = tl.findMatch(this.dtaTestConfig.testDropLocation, this.dtaTestConfig.sourceFilter);
             tl.debug('tl match count :' + sources.length);
             const filesMatching = [];
-            sources.forEach(function(match: string) {
+            sources.forEach(function (match: string) {
                 if (!fs.lstatSync(match).isDirectory()) {
                     filesMatching.push(match);
                 }
@@ -197,7 +199,7 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                    this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true);
+                this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {
@@ -226,15 +228,15 @@ export class DistributedTest {
         utils.Helper.setEnvironmentVariableToString(envVars, 'maxagentphaseslicing', this.dtaTestConfig.numberOfAgentsInPhase.toString());
         tl.debug("Type of batching" + this.dtaTestConfig.batchingType);
         const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);
-        tl.debug("isTimeBasedBatching : "+ isTimeBasedBatching);
-        utils.Helper.setEnvironmentVariableToString(envVars, 'istimebasedslicing',  isTimeBasedBatching.toString());
+        tl.debug("isTimeBasedBatching : " + isTimeBasedBatching);
+        utils.Helper.setEnvironmentVariableToString(envVars, 'istimebasedslicing', isTimeBasedBatching.toString());
         if (isTimeBasedBatching && this.dtaTestConfig.runningTimePerBatchInMs) {
             tl.debug("[RunStatistics] Run Time per batch" + this.dtaTestConfig.runningTimePerBatchInMs);
-            utils.Helper.setEnvironmentVariableToString(envVars, 'slicetime',  this.dtaTestConfig.runningTimePerBatchInMs.toString());
+            utils.Helper.setEnvironmentVariableToString(envVars, 'slicetime', this.dtaTestConfig.runningTimePerBatchInMs.toString());
         }
         if (this.dtaTestConfig.numberOfTestCasesPerSlice) {
             utils.Helper.setEnvironmentVariableToString(envVars, 'numberoftestcasesperslice',
-                        this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
+                this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
         }
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });

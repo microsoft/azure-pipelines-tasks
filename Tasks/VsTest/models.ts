@@ -61,6 +61,8 @@ export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
     ignoreVstestFailure: string;
+    responseFile: string;
+    responseFileSupported: boolean;
 }
 
 export interface TiaConfiguration {
@@ -71,6 +73,7 @@ export interface TiaConfiguration {
     sourcesDir: string;
     runIdFile: string;
     baseLineBuildIdFile: string;
+    responseFile: string;
     useNewCollector: boolean;
     isPrFlow: string;
     context: string;

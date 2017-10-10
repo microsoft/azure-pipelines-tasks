@@ -58,6 +58,8 @@ export function getvsTestConfigurations() {
     initTestConfigurations(vsTestConfiguration);
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     return vsTestConfiguration;
 }
@@ -113,19 +115,17 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     getTestSelectorBasedInputs(testConfiguration);
 
     testConfiguration.testDropLocation = tl.getInput('searchFolder');
-    if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation))
-    {
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation)) {
         testConfiguration.testDropLocation = path.resolve(testConfiguration.testDropLocation);
     }
 
     if (testConfiguration.testDropLocation && !utils.Helper.pathExistsAsDirectory(testConfiguration.testDropLocation)) {
         throw new Error(tl.loc('searchLocationNotDirectory', testConfiguration.testDropLocation));
     }
-    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));    
+    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
-    if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
-    {
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile)) {
         testConfiguration.settingsFile = path.resolve(testConfiguration.settingsFile);
     }
     console.log(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
@@ -143,8 +143,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    if (!utils.Helper.isNullOrWhitespace(testConfiguration.pathtoCustomTestAdapters))
-    {
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.pathtoCustomTestAdapters)) {
         testConfiguration.pathtoCustomTestAdapters = path.resolve(testConfiguration.pathtoCustomTestAdapters);
     }
     if (testConfiguration.pathtoCustomTestAdapters &&
@@ -195,7 +194,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
 }
 
-async function logWarningForWER(runUITests : boolean) {
+async function logWarningForWER(runUITests: boolean) {
     if (!runUITests) {
         return;
     }
@@ -211,15 +210,15 @@ async function logWarningForWER(runUITests : boolean) {
     }
 }
 
-function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean>  {
+function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
     const defer = Q.defer<boolean>();
     const regValue = 'DontShowUI';
     regedit.list(regPath).on('data', (entry) => {
-            if (entry && entry.data && entry.data.values &&
+        if (entry && entry.data && entry.data.values &&
             entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
-                defer.resolve(true);
-            }
-            defer.resolve(false);
+            defer.resolve(true);
+        }
+        defer.resolve(false);
     });
     return defer.promise;
 }
@@ -275,6 +274,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
     tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
     const useNewCollector = tl.getVariable('tia.useNewCollector');
     if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
