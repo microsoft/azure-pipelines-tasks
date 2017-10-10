@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "シンボルを発行する",
   "loc.input.help.PublishSymbols": "シンボル ファイルを発行するかどうかを示します。",
   "loc.input.label.SymbolServerType": "シンボル サーバーの種類",
-  "loc.input.help.SymbolServerType": "シンボルを発行する場所を選びます。[Team Services] オプションは、プライベート プレビュー中です。プライベート プレビューに参加するには、[こちらの手順](https://go.microsoft.com/fwlink/?linkid=846265)をご覧ください。",
+  "loc.input.help.SymbolServerType": "シンボルを発行する場所を選びます。[Team Services] オプションは、プライベート プレビュー中です。Team Foundation Server は [ファイル共有] オプションのみをサポートします。プライベート プレビューに参加するには、[こちらの手順](https://go.microsoft.com/fwlink/?linkid=846265) をご覧ください。",
   "loc.input.label.SymbolsPath": "シンボルを発行するためのパス",
   "loc.input.help.SymbolsPath": "シンボルの発行先のパスです。",
   "loc.input.label.DetailedLog": "詳細なログ",

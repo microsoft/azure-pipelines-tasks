@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "發行符號",
   "loc.input.help.PublishSymbols": "指出是否發行符號檔。",
   "loc.input.label.SymbolServerType": "符號伺服器類型",
-  "loc.input.help.SymbolServerType": "選擇要發行符號的位置。[Team Services] 選項處於私人預覽狀態。請遵循 [這些指示](https://go.microsoft.com/fwlink/?linkid=846265) 以參與私人預覽。",
+  "loc.input.help.SymbolServerType": "選擇要發行符號的位置。[Team Services] 選項處於私人預覽狀態。Team Foundation Server 僅支援 [檔案共用] 選項。請遵循 [這些指示](https://go.microsoft.com/fwlink/?linkid=846265) 以參與私人預覽。",
   "loc.input.label.SymbolsPath": "發行符號的路徑",
   "loc.input.help.SymbolsPath": "到達發行符號的路徑。",
   "loc.input.label.DetailedLog": "詳細資訊記錄",
