@@ -1,15 +1,14 @@
+var tl = require('vsts-task-lib/task');
 var os = require('os');
 var path = require('path');
 var util = require("util");
-var tl = require('vsts-task-lib');
 
 var workingDirectory = tl.getInput('wd', true);
 var serviceEndpointId = tl.getInput('serviceEndpoint', true);
 var homedir = os.homedir();
 var pypircFilePath = path.join(homedir, ".pypirc");
-var setupFilePath = path.join(workingDirectory, "setup.py");
-var distDirectoryPath = path.join(workingDirectory, "dist");
-var uploadArtifactsPath = distDirectoryPath+"/*";
+var pythonToolPath = tl.which('python', true);
+var error = '';
 
 //Generic service endpoint
 var pythonServer = tl.getEndpointUrl(serviceEndpointId, false);
@@ -19,27 +18,31 @@ var password = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'password
 //Create .pypirc file
 var text = util.format("[distutils] \nindex-servers =\n    pypi \n[pypi] \nrepository=%s \nusername=%s \npassword=%s", pythonServer, username, password);
 tl.writeFile(pypircFilePath, text, 'utf8');
-publishPythonPackage();
 
-async function publishPythonPackage(){
+async function run(){
     //PyPI upload
     try{
-        await executePythonTool("-m pip install wheel twine --user");
-        await executePythonTool(util.format("%s sdist --dist-dir %s bdist_wheel", setupFilePath, distDirectoryPath));    
-        await executePythonTool(util.format("-m twine upload %s", uploadArtifactsPath));    
+        tl.cd(workingDirectory);
+        await executePythonTool("-m pip install twine --user");
+        await executePythonTool("setup.py sdist");
+        await executePythonTool("-m twine upload dist/*");
     }
     catch(err){
-        tl.setResult(tl.TaskResult.Failed, err);
+        tl.setResult(tl.TaskResult.Failed, error);
     }
     finally{
-        tl.setResult(tl.TaskResult.Succeeded, "Upload Successful");
         //Delete .pypirc file
         tl.rmRF(pypircFilePath);
+        tl.setResult(tl.TaskResult.Succeeded);
     };
 }
 
-async function executePythonTool(lineToAdd){
-    await tl.tool(tl.which('python', true)).line(lineToAdd).exec().fail(function (err) {
-        throw new Error(err);
+async function executePythonTool(commandToExecute){
+    var pythonTool = tl.tool(pythonToolPath);
+    pythonTool.on('stderr', function (data) {
+        error += (data || '').toString();
     });
+    await pythonTool.line(commandToExecute).exec();
 }
+
+run();

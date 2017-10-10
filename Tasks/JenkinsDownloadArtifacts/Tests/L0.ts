@@ -218,4 +218,183 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             done(err);
         }
     });
+
+    it('Job type should be fetched even if its mentioned in the task input', (done) => {
+        const tp: string = path.join(__dirname, 'L0JobTypeShouldAlwaysBeFetched.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Trying to get job type') !== -1, "Should try to find the job type");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should fail if invalid buildId mentioned for MultiBranch job type', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldFailIfInvalidBuildIdMentionedForMultiBranch.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('InvalidBuildId') !== -1, tr.stdout);
+            assert(tr.failed, 'task should have failed');
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should fail if invalid buildId mentioned for Freestyle job type', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldFailIfInvalidBuildIdMentionedForFreeStyleJob.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('InvalidBuildId') !== -1, tr.stdout);
+            assert(tr.failed, 'task should have failed');
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should find jobId and branchName if its multibranch pipeline project', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldCorrectlyDetectMultiBranchPipelineProject.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            let expectedMessage: string = "Found Jenkins job details jobName:multibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:20, IsMultiBranchPipeline:true, MultiBranchPipelineName:mybranch";
+            assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the jobId and branchName if its multibranch project");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should find jobId and branchName if its freestyle pipeline project', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldCorrectlyDetectFreeStyleProject.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            let expectedMessage: string = "Found Jenkins job details jobName:myfreestyleproject, jobType:hudson.model.FreeStyleProject, buildId:10, IsMultiBranchPipeline:false, MultiBranchPipelineName:undefined";
+            assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the jobId if its freestyle project");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should fetch the LastSuccesful build correctly when its Freestyle project', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldCorrectlyDetectLatestBuildForFreeStyleProject.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            let expectedMessage: string = "Found Jenkins job details jobName:myfreestyleproject, jobType:hudson.model.FreeStyleProject, buildId:100, IsMultiBranchPipeline:false, MultiBranchPipelineName:undefined";
+            assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the Latest jobId  if its freestyle project");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should fetch the LastSuccesful build correctly when its MultiBranch Pipeline project', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldCorrectlyDetectLatestBuildForMultiBranchPipelineProject.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            let expectedMessage: string = "Found Jenkins job details jobName:mymultibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:200, IsMultiBranchPipeline:true, MultiBranchPipelineName:branch1";
+            assert(tr.stdout.indexOf(expectedMessage) !== -1, "Should correctly find the Latest jobId  if its multibranch project");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should have the correct url when downloading commits from multibranch pipeline project', (done) => {
+        const tp: string = path.join(__dirname, 'L0FindingBuildRangeShouldHaveCorrectUrlIfItsMultiBranchPipelineProject.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+            let expectedFindingBuildIndexApi: string = "http://url/job/testmultibranchproject//job/master/api/json?tree=allBuilds[number]";
+            assert(tr.stdout.indexOf(expectedFindingBuildIndexApi) !== -1, "Should correctly find the build range when its multibranch project");
+
+            let expectedDownloadCommitsApi: string = "http://url/job/testmultibranchproject//job/master/api/json?tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}";
+            assert(tr.stdout.indexOf(expectedDownloadCommitsApi) !== -1 , "API to download multibranch pipeline job's commits is not correct");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+
+    it('Should throw if the start and end builds are from different branch in multibranch pipeline project', (done) => {
+        const tp: string = path.join(__dirname, 'L0ShouldThrowIfBuildsAreFromDifferentBranchInMultiBranchProject.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should not have failed'); // We don't fail the task if the downloading commits failed
+            assert(tr.stdout.indexOf('CommitsAndWorkItemsDownloadFailed') !== -1, "Download Commits should have failed")
+
+            let buildIndexApi: string = "http://url/job/testmultibranchproject//job/master/api/json?tree=allBuilds[number]";
+            assert(tr.stdout.indexOf(buildIndexApi) === -1, "Should not try to find the build range");
+
+            let downloadCommitsApi: string = "tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}";
+            assert(tr.stdout.indexOf(downloadCommitsApi) === -1 , "Should not try to download the commits");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
 });

@@ -1,6 +1,6 @@
-{
+﻿{
 	"id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
-	"name": "InvokeAzureFunction",
+	"name": "AzureFunction",
 	"friendlyName": "ms-resource:loc.friendlyName",
 	"description": "ms-resource:loc.description",
 	"author": "Microsoft Corporation",

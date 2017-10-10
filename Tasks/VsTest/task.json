@@ -9,7 +9,7 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
@@ -17,12 +17,12 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 14
+        "Patch": 17
     },
     "demands": [
         "vstest"
     ],
-    "releaseNotes" : "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+    "releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
     "minimumAgentVersion": "2.103.0",
     "groups": [
         {
@@ -198,10 +198,10 @@
             "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
-             "options": {
-                 "latest": "Latest",
-                 "15.0": "Visual Studio 2017",
-                 "14.0": "Visual Studio 2015"
+            "options": {
+                "latest": "Latest",
+                "15.0": "Visual Studio 2017",
+                "14.0": "Visual Studio 2015"
             }
         },
         {
@@ -254,8 +254,8 @@
             "required": false,
             "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. This will override the MaxCpuCount if specified in your runsettings file. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
-         },
-         {
+        },
+        {
             "name": "runTestsInIsolation",
             "type": "boolean",
             "label": "Run tests in isolation",
@@ -265,7 +265,7 @@
             "groupName": "executionOptions"
         },
         {
-           "name": "codeCoverageEnabled",
+            "name": "codeCoverageEnabled",
             "type": "boolean",
             "label": "Code coverage enabled",
             "defaultValue": "False",
@@ -392,7 +392,7 @@
     "sourceDefinitions": [
         {
             "target": "testPlan",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2",
             "selector": "jsonpath:$.value[*].name",
             "keySelector": "jsonpath:$.value[*].id",
             "authKey": "tfs:teamfoundation"
@@ -419,7 +419,8 @@
     },
     "messages": {
         "VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
-        "VstestReturnCode": "Vstest exited with return code: %d.",
+        "VstestFailedReturnCode": "VsTest task failed.",
+        "VstestPassedReturnCode": "VsTest task succeeded.",
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Visual Studio %d is not found. Try again with a version that exists on your build agent machine.",
         "NoVstestFound": "Test platform is not found. Try again after installing it on your build agent machine.",
@@ -460,8 +461,8 @@
         "searchFolderInput": "Search folder : %s",
         "testFilterCriteriaInput": "Test filter criteria : %s",
         "runSettingsFileInput": "Run settings file : %s",
-        "runInParallelInput":"Run in parallel : %s",
-        "runInIsolationInput":"Run in isolation : %s",
+        "runInParallelInput": "Run in parallel : %s",
+        "runInIsolationInput": "Run in isolation : %s",
         "pathToCustomAdaptersInput": "Path to custom adapters : %s",
         "otherConsoleOptionsInput": "Other console options : %s",
         "codeCoverageInput": "Code coverage enabled : %s",

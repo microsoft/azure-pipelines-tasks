@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 17
+        "Patch": 19
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -43,7 +43,10 @@
                 "Start Azure App Service": "Start App Service",
                 "Stop Azure App Service": "Stop App Service",
                 "Restart Azure App Service": "Restart App Service",
-                "Install Extensions": "Install Extensions"
+                "Install Extensions": "Install Extensions",
+                "Enable Continuous Monitoring": "Enable Continuous Monitoring",
+                "Start all continuous webjobs": "Start all continuous webjobs",
+                "Stop all continuous webjobs": "Stop all continuous webjobs"
             }
         },
         {
@@ -164,6 +167,34 @@
             "defaultValue": "",
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2"
+        },
+        {
+            "name": "AppInsightsResourceGroupName",
+            "type": "pickList",
+            "label": "Application Insights Resource Group Name",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "Action == Enable Continuous Monitoring",
+            "helpMarkDown": "Enter or Select resource group to which Application Insights resources belongs."
+        },
+        {
+            "name": "ApplicationInsightsResourceName",
+            "type": "pickList",
+            "label": "Application Insights Resource Name",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True",
+                "EnableManage": "True",
+                "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
+                "ManageIcon": "Add",
+                "ManageButtonName": "New"
+            },
+            "visibleRule": "Action == Enable Continuous Monitoring",
+            "helpMarkDown": "Enter or Select Application Insights resource to enable continuous montioring."
         }
     ],
     "dataSourceBindings": [
@@ -178,6 +209,19 @@
             "dataSourceName": "AzureRMWebAppResourceGroup",
             "parameters": {
                 "WebAppName": "$(WebAppName)"
+            }
+        },
+        {
+            "target": "AppInsightsResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "ApplicationInsightsResourceName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMApplicationInsightsResources",
+            "parameters": {
+                "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
             }
         },
         {
@@ -254,6 +298,12 @@
         "InstallingSiteExtension": "Installing site extension '%s' in Azure App Service.",
         "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "UnableToGetAppInsightsResource": "Unable to get Application Insights resource with name : %s",
+        "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for Application Insights resource : %s",
+        "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
+        "SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
+        "UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
+        "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s"
     }
 }

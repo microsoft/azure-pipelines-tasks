@@ -34,7 +34,9 @@ export async function initializeAzureRMEndpointData(connectedServiceName)
 
     if(endPoint["environment"] != null && endPoint["environment"].toLowerCase() == azureStackEnvironment.toLowerCase()) {
         if(!endPoint["envAuthUrl"] || !endPoint["activeDirectoryResourceId"]) {
-            endPoint =  await initializeAzureStackData({"url":endPoint["url"]});
+            endPoint =  await initializeAzureStackData(endPoint);
+            endPoint["envAuthUrl"] = endPoint['environmentAuthorityUrl'];
+            endPoint["activeDirectoryResourceId"] = endPoint['activeDirectoryServiceEndpointResourceId'];
             
             if(endPoint["envAuthUrl"] == null) {
                 throw tl.loc("UnableToFetchAuthorityURL");
@@ -70,6 +72,7 @@ export async function initializeAzureStackData(endpoint): Promise<any>
             if(authenticationData) {
                 var loginEndpoint = authenticationData.loginEndpoint;
                 if(loginEndpoint) {
+                    loginEndpoint += (loginEndpoint.lastIndexOf("/") == loginEndpoint.length - 1) ? "" : "/";
                     endpoint['activeDirectoryAuthority'] = loginEndpoint;
                     endpoint['environmentAuthorityUrl'] = loginEndpoint;
                 }

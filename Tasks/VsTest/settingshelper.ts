@@ -82,11 +82,11 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         }
     }
 
-    if(settingsExt === testSettingsExtension && result.TestSettings && 
-        result.TestSettings.Properties && result.TestSettings.Properties[0] && 
-        result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()){
-            tl.warning(tl.loc('testSettingPropertiesNotSupported'))  
-    } 
+    if (settingsExt === testSettingsExtension && result.TestSettings &&
+        result.TestSettings.Properties && result.TestSettings.Properties[0] &&
+        result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()) {
+        tl.warning(tl.loc('testSettingPropertiesNotSupported'))
+    }
 
     if (overrideParametersString) {
         if (settingsExt === runSettingsExtension || settingsExt === testSettingsExtension) {
@@ -197,40 +197,35 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
 function updateSettingsWithParameters(result: any, overrideParametersString: string) {
     const overrideParameters = parameterParser.parse(overrideParametersString);
     var parametersArray;
-    if (result.RunSettings) 
-	{
-		if(result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
-        result.RunSettings.TestRunParameters[0].Parameter) 
-		{
-			tl.debug('Overriding test run parameters for run settings.');
-			parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-		}
-    }
-	else if(result.TestSettings)
-	{
-	    if(result.TestSettings.Properties && result.TestSettings.Properties[0] &&
-        result.TestSettings.Properties[0].Property) 
-		{
-			tl.debug('Overriding test run parameters for test settings.');
-		    parametersArray = result.TestSettings.Properties[0].Property;
-        }  
-    }	
-    
-    if(parametersArray)
-        {
-            parametersArray.forEach(function (parameter) {
-				const key = parameter.$.Name || parameter.$.name;
-				if (overrideParameters[key] && overrideParameters[key].value) {
-                    tl.debug('Overriding value for parameter : ' + key );
-					if (parameter.$.Value) {
-						parameter.$.Value = overrideParameters[key].value;
-					} else {
-						parameter.$.value = overrideParameters[key].value;
-					}
-				}
-			});
+    if (result.RunSettings) {
+        if (result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
+            result.RunSettings.TestRunParameters[0].Parameter) {
+            tl.debug('Overriding test run parameters for run settings.');
+            parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
         }
-    
+    }
+    else if (result.TestSettings) {
+        if (result.TestSettings.Properties && result.TestSettings.Properties[0] &&
+            result.TestSettings.Properties[0].Property) {
+            tl.debug('Overriding test run parameters for test settings.');
+            parametersArray = result.TestSettings.Properties[0].Property;
+        }
+    }
+
+    if (parametersArray) {
+        parametersArray.forEach(function (parameter) {
+            const key = parameter.$.Name || parameter.$.name;
+            if (overrideParameters[key] && overrideParameters[key].value) {
+                tl.debug('Overriding value for parameter : ' + key);
+                if (parameter.$.Value) {
+                    parameter.$.Value = overrideParameters[key].value;
+                } else {
+                    parameter.$.value = overrideParameters[key].value;
+                }
+            }
+        });
+    }
+
     return result;
 }
 
@@ -274,16 +269,16 @@ function isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName: s
 function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {
     if (!result.TestSettings) {
         tl.debug('Updating testsettings file from TestSettings node');
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors:  dataCollectorNodeToAdd  } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: dataCollectorNodeToAdd } } };
         result.TestSettings.Execution.AgentRule.$ = { name: testSettingsAgentNameTag };
         result.TestSettings.$ = { name: testSettingsNameTag, id: testSettingsIDTag, xmlns: testSettingsXmlnsTag };
     } else if (!result.TestSettings.Execution) {
         tl.debug('Updating testsettings file from Execution node');
-        result.TestSettings.Execution = { AgentRule: { DataCollectors:  dataCollectorNodeToAdd  } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: dataCollectorNodeToAdd } };
         result.TestSettings.Execution.AgentRule.$ = { name: testSettingsAgentNameTag };
     } else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug('Updating testsettings file from AgentRule node');
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: dataCollectorNodeToAdd  } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: dataCollectorNodeToAdd } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: testSettingsAgentNameTag };
     } else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug('Updating testsettings file from DataCollectors node');
@@ -348,14 +343,14 @@ function setupRunSettingsWithTestImpactOn(result: any, baseLineRunId: String) {
     if (!result.RunSettings.RunConfiguration) {
         tl.debug('Run configuration not found in the runsettings, so adding one with TestImpact on');
         result.RunSettings.RunConfiguration = tiaNode;
-    } else if (!result.RunSettings.RunConfiguration[0]){
+    } else if (!result.RunSettings.RunConfiguration[0]) {
         result.RunSettings.RunConfiguration.TestImpact = {};
         result.RunSettings.RunConfiguration.BaseLineRunId = {};
         result.RunSettings.RunConfiguration.TestImpact.$ = {};
         result.RunSettings.RunConfiguration.BaseLineRunId.$ = {};
         result.RunSettings.RunConfiguration.TestImpact.$.enabled = true;
         result.RunSettings.RunConfiguration.BaseLineRunId.$.value = baseLineRunId;
-    }else{
+    } else {
         result.RunSettings.RunConfiguration[0].TestImpact = {};
         result.RunSettings.RunConfiguration[0].BaseLineRunId = {};
         result.RunSettings.RunConfiguration[0].TestImpact.$ = {};
@@ -383,14 +378,14 @@ function setupTestSettingsWithTestImpactOn(result: any, baseLineRunId: String) {
     if (!result.TestSettings.Execution) {
         tl.debug('Execution not found in the testsettings, so adding one with TestImpact on');
         result.TestSettings.Execution = tiaNode;
-    } else if (!result.TestSettings.Execution[0]){
+    } else if (!result.TestSettings.Execution[0]) {
         result.TestSettings.Execution.TestImpact = {};
         result.TestSettings.Execution.BaseLineRunId = {};
         result.TestSettings.Execution.TestImpact.$ = {};
         result.TestSettings.Execution.BaseLineRunId.$ = {};
         result.TestSettings.Execution.TestImpact.$.enabled = true;
         result.TestSettings.Execution.BaseLineRunId.$.value = baseLineRunId;
-    }else{
+    } else {
         result.TestSettings.Execution[0].TestImpact = {};
         result.TestSettings.Execution[0].BaseLineRunId = {};
         result.TestSettings.Execution[0].TestImpact.$ = {};

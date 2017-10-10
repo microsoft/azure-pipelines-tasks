@@ -28,7 +28,7 @@ Assert-Throws {
 # Test 4 "Should fail to provision winrm custom script extension and remove the failed extension"
 $extensionName="WinRMCustomScriptExtension"
 Register-Mock Set-AzureMachineCustomScriptExtension {
-    return Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $invalidCustomScriptName -argument $dnsName -location $location 
+    return Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile  -run $invalidCustomScriptName -argument $dnsName -location $location 
 } -ParametersEvaluator { $run -eq $scriptToRun }
 
 Assert-Throws {

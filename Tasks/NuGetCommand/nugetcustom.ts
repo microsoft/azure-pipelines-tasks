@@ -20,11 +20,9 @@ class NuGetExecutionOptions {
 export async function run(nuGetPath: string): Promise<void> {
     nutil.setConsoleCodePage();
 
-    tl.setResourcePath(path.join(__dirname, "task.json"));
-
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
-    
+
     let args: string = tl.getInput("arguments", false);
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
@@ -66,7 +64,7 @@ export async function run(nuGetPath: string): Promise<void> {
             environmentSettings,
             args,
             authInfo);
-            
+
         await runNuGetAsync(executionOptions);
     } catch (err) {
         tl.error(err);
