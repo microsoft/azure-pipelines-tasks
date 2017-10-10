@@ -111,8 +111,8 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  * 
  * @returns promise with string
  */
-export function getAllContinuousWebJobs(publishingProfile): Q.Promise<string>  {
-    var deferred = Q.defer<string>();
+export function getAllContinuousWebJobs(publishingProfile): Q.Promise<any>  {
+    var deferred = Q.defer<any>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     tl.debug('Web App Publish Kudu URL: ' + webAppPublishKuduUrl);
@@ -123,18 +123,18 @@ export function getAllContinuousWebJobs(publishingProfile): Q.Promise<string>  {
             authorization: accessToken
         };
 
-        httpObj.get('GET', requestUrl, headers,
-            (error, response, body) => {
-                if(error) {
-                    deferred.reject(error);
-                }
-                else if(response.statusCode === 200) {
-                    deferred.resolve(JSON.parse(body));
-                }
-                else {
-                    tl.warning(body);
-                    deferred.reject(tl.loc("UnableToFetchContinuousWebJobs"));
-                }
+        let options: rm.IRequestOptions = {};
+        options.additionalHeaders = headers;
+        rc.get(requestUrl, options).then((response) => {
+            if(response.statusCode === 200) {
+                deferred.resolve(response.result);
+            } else {
+                tl.debug("Action: getAllContinuousWebJobs, Response: " + JSON.stringify(response));
+                deferred.reject(tl.loc("UnableToFetchContinuousWebJobs"));
+            }
+        },
+        (error) => {
+            deferred.reject(error);
         });
     }
     else {
@@ -155,19 +155,18 @@ export function startContinuousWebJob(publishingProfile, continuousWebJobName): 
         var headers = {
             authorization: accessToken
         };
-
-        httpObj.send('POST', requestUrl, null, headers,
-            (error, response, body) => {
-                if(error) {
-                    deferred.reject(error);
-                }
-                else if(response.statusCode === 200) {
-                    deferred.resolve(body);
-                }
-                else {
-                    tl.warning(body);
-                    deferred.reject(tl.loc("UnableToStartContinuousWebJob", continuousWebJobName));
-                }
+        let options: rm.IRequestOptions = {};
+        options.additionalHeaders = headers;
+        rc.create(requestUrl, null, options).then((response) => {
+            if(response.statusCode === 200) {
+                deferred.resolve();
+            } else {
+                tl.debug("Action: startContinuousWebJob, Response: " + JSON.stringify(response));
+                deferred.reject(tl.loc("UnableToStartContinuousWebJob", continuousWebJobName));
+            }
+        },
+        (error) => {
+            deferred.reject(error);
         });
     }
     else {
@@ -188,19 +187,18 @@ export function stopContinuousWebJob(publishingProfile, continuousWebJobName): Q
         var headers = {
             authorization: accessToken
         };
-
-        httpObj.send('POST', requestUrl, null, headers,
-            (error, response, body) => {
-                if(error) {
-                    deferred.reject(error);
-                }
-                else if(response.statusCode === 200) {
-                    deferred.resolve(body);
-                }
-                else {
-                    tl.warning(body);
-                    deferred.reject(tl.loc("UnableToStopContinuousWebJob", continuousWebJobName));
-                }
+        let options: rm.IRequestOptions = {};
+        options.additionalHeaders = headers;
+        rc.create(requestUrl, null, options).then((response) => {
+            if(response.statusCode === 200) {
+                deferred.resolve();
+            } else {
+                tl.debug("Action: stopContinuousWebJob, Response: " + JSON.stringify(response));
+                deferred.reject(tl.loc("UnableToStopContinuousWebJob", continuousWebJobName));
+            }
+        },
+        (error) => {
+            deferred.reject(error);
         });
     }
     else {
@@ -235,7 +233,13 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
 
     tl.debug('Requesting Azure Publish Profile: ' + url);
     hc.post(url, null, headers).then(async (response) => {
-        let contents: string = await response.readBody();
+        let contents: string = "";
+        try {
+            contents = await response.readBody();
+        } catch (error) {
+            deferred.reject(tl.loc("UnableToReadResponseBody", error));
+        }
+        
         if (response.message.statusCode === 200) {
             parseString(contents, (error, result) => {
                 for (var index in result.publishData.publishProfile) {
@@ -303,7 +307,12 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
     tl.debug('Requesting for Auth Token: ' + authorityUrl);
     hc.post(authorityUrl, requestData, requestHeader).then(async (response: hm.HttpClientResponse) => {
         if (response.message.statusCode === 200) {
-            let contents: string = await response.readBody();
+            let contents: string = "";
+            try {
+                contents = await response.readBody();
+            } catch (error) {
+                deferred.reject(tl.loc("UnableToReadResponseBody", error));
+            }
             if (contents && contents.length > 0) {
                 deferred.resolve(JSON.parse(contents).access_token);
             }
@@ -563,7 +572,12 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
                 deferred.reject(error);
             });            
         } else {
-            let contents: string = await response.readBody();
+            let contents: string = "";
+            try {
+                contents = await response.readBody();
+            } catch (error) {
+                deferred.reject(tl.loc("UnableToReadResponseBody", error));
+            }
             tl.debug ("Slot swap operation failed. Operation Response: " + contents);
             deferred.reject(response.message.statusMessage);
         }
@@ -855,18 +869,17 @@ export async function getApplicationInsightsResources(endpoint, appInsightsResou
                  '/providers/microsoft.insights/components?api-version=2015-05-01';
 
     tl.debug('Requesting Application insights resources : ' + metadataUrl);
-    httpObj.send('GET', metadataUrl, null, headers, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    rc.get(metadataUrl, options).then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve(response.result['value']);
+        } else {
+            tl.debug("Action: getApplicationInsightsResources, Response: " + JSON.stringify(response));
         }
-        else if (response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            deferred.resolve(obj.value);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(response.statusMessage);
-        }
+    },
+    (error) => {
+        deferred.reject(error);
     });
 
     return deferred.promise;
@@ -886,17 +899,18 @@ export async function updateApplicationInsightsResource(endpoint, appInsightsRes
             '/providers/microsoft.insights/components/' + appInsightsResourceData.name + '?api-version=2015-05-01';
 
     tl.debug('Updating Application insights resources : ' + metadataUrl);
-    restObj._sendJson('PUT', metadataUrl, "", appInsightsResourceData, headers, null, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    rc.replace(metadataUrl, appInsightsResourceData, options).then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve(response.result);
+        } else {
+            tl.debug("Action: updateApplicationInsightsResource, Response: " + JSON.stringify(response));
+            deferred.reject(new Error(response.statusCode.toString()));
         }
-        else if (response === 200) {
-            deferred.resolve(body);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(response);
-        }
+    },
+    (error) => {
+        deferred.reject(error);
     });
 
     return deferred.promise;
@@ -922,18 +936,18 @@ export async function getAppInsightsWebTests(endpoint, appInsightsResourceGroupN
                  '/providers/microsoft.insights/webTests?api-version=2015-05-01';
 
     tl.debug('Requesting App Insights web tests : ' + metadataUrl);
-    httpObj.send('GET', metadataUrl, null, headers, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    rc.get(metadataUrl, options).then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve(response.result['value']);
+        } else {
+            tl.debug("Action: getAppInsightsWebTests, Response: " + JSON.stringify(response));
+            deferred.reject(response.statusCode);
         }
-        else if (response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            deferred.resolve(obj.value);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(response.statusMessage);
-        }
+    },
+    (error) => {
+        deferred.reject(error);
     });
 
     return deferred.promise;
@@ -995,17 +1009,18 @@ export async function createAppInsightsWebTest(endpoint, appInsightsResourceGrou
             '/providers/microsoft.insights/webTests/' + webTestName + '?api-version=2015-05-01';
 
     tl.debug('Updating Application insights resources : ' + metadataUrl);
-    restObj._sendJson('PUT', metadataUrl, "", webTestData, headers, null, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    rc.replace(metadataUrl, webTestData, options).then((response) => {
+        if(response.statusCode === 200) {
+            deferred.resolve(response.result);
+        } else {
+            tl.debug("Action: createAppInsightsWebTest, Response: " + JSON.stringify(response));
+            deferred.reject(response.statusCode);
         }
-        else if (response === 200) {
-            deferred.resolve(body);
-        }
-        else {
-            tl.debug(body);
-            deferred.reject(response);
-        }
+    },
+    (error) => {
+        deferred.reject(error);
     });
 
     return deferred.promise;

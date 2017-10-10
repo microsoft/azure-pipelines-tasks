@@ -685,6 +685,7 @@
         "FailedToUpdateAppSettingsInConfigDetails": "Failed to update the App settings. Error: %s.",
         "UnableToGetAzureRMWebAppMetadata": "Failed to fetch AzureRM WebApp metadata. ErrorCode: %s",
         "UnableToUpdateAzureRMWebAppMetadata": "Unable to update AzureRM WebApp metadata. Error Code: %s",
-        "Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s']"
+        "Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s']",
+        "UnableToReadResponseBody": "Unable to read response body. Error: %s"
     }
 }

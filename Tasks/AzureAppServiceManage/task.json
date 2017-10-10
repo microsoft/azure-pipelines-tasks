@@ -304,6 +304,7 @@
         "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
         "SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
         "UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
-        "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s"
+        "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s",
+        "UnableToReadResponseBody": "Unable to read response body. Error: %s"
     }
 }
