@@ -165,7 +165,7 @@ function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLoc
     # Check latest package version.
     $availableVersion = Get-SymbolClientVersion $symbolServiceUri
 
-    $symbolPathRoot = Join-Path $env:APPDATA "VSOSymbolClient"
+    $symbolPathRoot = Join-Path $env:AGENT_TOOLSDIRECTORY "VSOSymbolClient"
     $clientPath = Join-Path $symbolPathRoot $availableVersion
     $completeMarkerFile = Join-Path $clientPath "symbol.app.buildtask.complete"
     $symbolClientZip = Join-Path $clientPath "symbol.app.buildtask.zip"
