@@ -96,7 +96,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "AzureMonitorAlerts.js"
+      "target": "azuremonitoralerts.js"
     }
   },
   "dataSourceBindings": [

@@ -2,7 +2,7 @@ import * as tl from "vsts-task-lib/task";
 
 export function getDeploymentUri(): string {
 	let buildUri: string = tl.getVariable("Build.BuildUri");
-	let releaseUri: string = tl.getVariable("Release.ReleaseUri");
+	let releaseUri: string = tl.getVariable("Release.ReleaseWebUrl");
 	
 	if(!!buildUri) {
 		return buildUri;
