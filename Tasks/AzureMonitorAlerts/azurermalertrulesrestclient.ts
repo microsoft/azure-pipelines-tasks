@@ -13,13 +13,13 @@ import {
 
 import { IRequestOptions as IHttpRequestOptions } from "typed-rest-client/Interfaces";
 
-import { AuthorizationClient } from "./AuthorizationClient";
+import { AuthorizationClient } from "./authorizationclient";
 
-import * as Util from "./Utility";
+import * as Util from "./utility";
 import { 
 	IAzureMetricAlertRequestBody,
 	IAzureMetricAlertRule
-} from "./Interfaces";
+} from "./interfaces";
 
 export class AzureRmAlertRulesRestClient {
 	constructor(endpoint) {

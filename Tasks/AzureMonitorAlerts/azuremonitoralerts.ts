@@ -3,11 +3,11 @@ import * as path from "path";
 
 import { initializeAzureRMEndpointData } from "azurestack-common/azurestackrestutility";
 
-import { AzureRmAlertRulesRestClient } from "./AzureRmAlertRulesRestClient";
+import { AzureRmAlertRulesRestClient } from "./azurermalertrulesrestclient";
 import { 
 	IAzureMetricAlertRulesList,
 	IAzureMetricAlertRule 
-} from "./Interfaces";
+} from "./interfaces";
 
 async function run() {
 	try {
