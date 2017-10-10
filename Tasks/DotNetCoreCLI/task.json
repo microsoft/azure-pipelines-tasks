@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 8
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -115,6 +115,15 @@
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
+        },
+        {
+            "name": "publishTestResults",
+            "type": "boolean",
+            "label": "Publish test results",
+            "defaultValue": "true",
+            "visibleRule": "command = test",
+            "required": false,
+            "helpMarkDown": "By default, test results will be published and `trx` is generated in `$(Agent.TempDirectory)`. By enabling this, we append `--logger trx --results-directory $(Agent.TempDirectory)` to command arguments."
         },
         {
             "name": "zipAfterPublish",

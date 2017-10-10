@@ -35,8 +35,10 @@ export class dotNetExe {
             case "build":
             case "publish":
             case "run":
-            case "test":
                 await this.executeBasicCommand();
+                break;
+            case "test":
+                await this.executeTestCommand();
                 break;
             case "restore":
                 await restoreCommand.run();
@@ -59,15 +61,11 @@ export class dotNetExe {
 
         // Use empty string when no project file is specified to operate on the current directory
         var projectFiles = this.getProjectFiles();
-        if (projectFiles.length == 0) {
-            if (this.command === "test") {
-                tl.warning(tl.loc("noProjectFilesFound"));
-            } else {
-                throw tl.loc("noProjectFilesFound");
-            }
+        if (projectFiles.length === 0) {
+            throw tl.loc("noProjectFilesFound");
         }
         var failedProjects: string[] = [];
-        for (var fileIndex in projectFiles) {
+        for (const fileIndex of Object.keys(projectFiles)) {
             var projectFile = projectFiles[fileIndex];
             var dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
@@ -88,6 +86,58 @@ export class dotNetExe {
         }
         if (failedProjects.length > 0) {
             throw tl.loc("dotnetCommandFailed", failedProjects);
+        }
+    }
+
+    private async executeTestCommand(): Promise<void> {
+        const dotnetPath = tl.which('dotnet', true);
+        const enablePublishTestResults: string = tl.getInput('publishTestResults', false) || 'false';
+        this.extractOutputArgument();
+        const resultsDirectory = tl.getVariable('Agent.TempDirectory');
+
+        if (enablePublishTestResults && enablePublishTestResults === 'true') {
+            this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
+        }
+
+        // Use empty string when no project file is specified to operate on the current directory
+        const projectFiles = this.getProjectFiles();
+        if (projectFiles.length === 0) {
+            tl.warning(tl.loc('noProjectFilesFound'));
+        }
+
+        const failedProjects: string[] = [];
+        for (const fileIndex of Object.keys(projectFiles)) {
+            const projectFile = projectFiles[fileIndex];
+            const dotnet = tl.tool(dotnetPath);
+            dotnet.arg(this.command);
+            dotnet.arg(projectFile);
+            dotnet.line(this.arguments);
+            try {
+                const result = await dotnet.exec();
+            } catch (err) {
+                tl.error(err);
+                failedProjects.push(projectFile);
+            } finally {
+                if (enablePublishTestResults && enablePublishTestResults === 'true') {
+                    this.publishTestResults(resultsDirectory);
+                }
+            }
+        }
+        if (failedProjects.length > 0) {
+            throw tl.loc('dotnetCommandFailed', failedProjects);
+        }
+    }
+
+    private publishTestResults(resultsDir: string): void {
+        const buildConfig = tl.getVariable('BuildConfiguration');
+        const buildPlaform = tl.getVariable('BuildPlatform');
+        const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
+            tl.warning('No test result files were found.');
+        } else {
+            const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true');
+            //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }
 
