@@ -1,7 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
-import Q = require('q');
 import models = require('./models');
 import taskInputParser = require('./taskinputparser');
 import settingsHelper = require('./settingshelper');
@@ -167,7 +166,7 @@ function addVstestArgs(argsArray: string[], vstest: any) {
     });
 }
 
-function updateResponseFile(argsArray: string[], tiaMode: boolean = true): void {
+function updateResponseFile(argsArray: string[], tiaMode: boolean): void {
     argsArray.forEach(function (arr, i) {
         argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
     });
@@ -189,7 +188,7 @@ function getTestSelectorLocation(): string {
     return path.join(__dirname, 'TestSelector/TestSelector.exe');
 }
 
-function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
+async function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Promise<number> {
     const vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
@@ -219,14 +218,16 @@ function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsA
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
     // Here we are returning the code as returned to us by vstest.console in case of complete run
     // In case of a failure 1 indicates error to our calling function
-    return vstest.exec(execOptions).then(function (code) {
+    try {
+        var code = await vstest.exec(execOptions);
         cleanUp(parallelRunSettingsFile);
         if (ignoreTestFailures) {
             return 0; // ignore failures.
         } else {
             return code;
         }
-    }).catch(function (err) {
+    }
+    catch (err) {
         cleanUp(parallelRunSettingsFile);
         tl.warning(tl.loc('VstestFailed'));
         if (ignoreTestFailures) {
@@ -237,7 +238,7 @@ function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsA
             tl.error(err);
             return 1;
         }
-    });
+    }
 }
 
 function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, outputFile: string): string {
@@ -338,7 +339,7 @@ function discoverTestFromFilteredFilter(vsVersion: number, testCaseFilterFile: s
     }
 }
 
-function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {
+async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
     if (!isTiaAllowed()) {
         // Test Impact was not enabled
         return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
@@ -391,14 +392,14 @@ function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskRe
                 let updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, '');
                 if (updateTestResultsOutputCode !== 0) {
                     utils.Helper.publishEventToCi(AreaCodes.UPLOADTESTRESULTS, ResultMessages.UPLOADTESTRESULTSRETURNED + updateTestResultsOutputCode, 1011, false);
-                    return Q.resolve(tl.TaskResult.Failed);
+                    return tl.TaskResult.Failed;
                 }
-                return Q.resolve(tl.TaskResult.Succeeded);
+                return tl.TaskResult.Succeeded;
             }
             else {
                 // Response file indicates that only few tests were impacted E.g.: "/Tests:MyNamespace.MyClass.TestMethod1"
                 try {
-                    updateResponseFile(getVstestArguments(settingsFile, true));
+                    updateResponseFile(getVstestArguments(settingsFile, true), true);
                 }
                 catch (err) {
                     utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
@@ -413,11 +414,11 @@ function runVStest(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskRe
     }
     catch (err) {
         // The errors and logging tasks are handled in individual calls before. Just failing the task here
-        return Q.resolve(tl.TaskResult.Failed);
+        return tl.TaskResult.Failed;
     }
 }
 
-function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile: string, uploadResults: boolean): Q.Promise<tl.TaskResult> {
+async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile: string, uploadResults: boolean): Promise<tl.TaskResult> {
     var vstestArgs;
     let testselector = new testselectorinvoker.TestSelectorInvoker();
 
@@ -428,24 +429,26 @@ function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isRe
         vstestArgs = getVstestArguments(settingsFile, false);
     }
 
-    return executeVstest(settingsFile, vsVersion, vstestArgs, !isResponseFileRun).then(function (vscode) {
+    try {
+        var vscode = await executeVstest(settingsFile, vsVersion, vstestArgs, !isResponseFileRun);
         let updateTestResultsOutputCode: number;
         if (uploadResults) {
             updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, resultsDirectory);
         }
         if (vscode !== 0 || (uploadResults && updateTestResultsOutputCode !== 0)) {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
-            return Q.resolve(tl.TaskResult.Failed);
+            return tl.TaskResult.Failed;
         }
-        return Q.resolve(tl.TaskResult.Succeeded);
-    }).catch(function (err) {
+        return tl.TaskResult.Succeeded;
+    }
+    catch (err) {
         utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1010, false);
         tl.error(err)
         return tl.TaskResult.Failed;
-    });
+    }
 }
 
-function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Q.Promise<tl.TaskResult> {
+async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
     try {
         updateResponseFile(getVstestArguments(settingsFile, false), false);
     }
@@ -470,7 +473,7 @@ function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: nu
     });
 }
 
-function invokeVSTest(): Q.Promise<tl.TaskResult> {
+async function invokeVSTest(): Promise<tl.TaskResult> {
     try {
         const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
         if (disableTIA !== undefined && disableTIA.toLowerCase() === 'true') {
@@ -506,7 +509,7 @@ function invokeVSTest(): Q.Promise<tl.TaskResult> {
     }
 
     try {
-        newSettingsFile = settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false);
+        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false);
         return vsTestCall(newSettingsFile, vsVersion);
     }
     catch (err) {
@@ -515,7 +518,7 @@ function invokeVSTest(): Q.Promise<tl.TaskResult> {
     }
 }
 
-function vsTestCall(newSettingsFile, vsVersion): Q.Promise<tl.TaskResult> {
+async function vsTestCall(newSettingsFile, vsVersion): Promise<tl.TaskResult> {
     return runVStest(newSettingsFile, vsVersion).then(function (code) {
         if (code !== 0) {
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1036, false);

@@ -18,8 +18,7 @@
     "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
     "vsts-task-lib": "2.0.6",
-    "xml2js": "0.4.16",
-    "xml2js-parser": "1.1.1"
+    "xml2js": "0.4.16"
   },
   "optionalDependencies": {
     "regedit": "2.2.6"

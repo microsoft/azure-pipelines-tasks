@@ -10,8 +10,8 @@ import * as ci from './cieventlogger';
 const str = require('string');
 const uuid = require('uuid');
 const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
-const xmlParser = require('./node_modules/xml2js-parser');
 
 export class Constants {
     public static vsTestVersionString = 'version';
@@ -71,16 +71,22 @@ export class Helper {
         ci.publishEvent(taskProps);
     }
 
-    public static getXmlContentsSync(filePath: string): string {
-        try {
-            let xmlContents = Helper.readFileContentsSync(filePath, 'utf-8');
-            let parsedXmlContents = xmlParser.parseStringSync(xmlContents);
-            return parsedXmlContents;
-        }
-        catch (err) {
-            tl.debug(err);
-        }
-
+    public static getXmlContents(filePath: string): Q.Promise<any> {
+        const defer = Q.defer<any>();
+        Helper.readFileContents(filePath, 'utf-8')
+            .then(function (xmlContents) {
+                parser.parseString(xmlContents, function (err, result) {
+                    if (err) {
+                        defer.resolve(null);
+                    } else {
+                        defer.resolve(result);
+                    }
+                });
+            })
+            .fail(function (err) {
+                defer.reject(err);
+            });
+        return defer.promise;
     }
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
@@ -94,19 +100,6 @@ export class Helper {
             defer.resolve(tempFile);
         });
         return defer.promise;
-    }
-
-    public static saveToFileSync(fileContents: string, extension: string): string {
-        try {
-            const tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
-            fs.writeFileSync(tempFile, fileContents);
-            tl.debug('Temporary file created at ' + tempFile);
-            return tempFile;
-        }
-        catch (err) {
-            tl.error(err);
-            throw err;
-        }
     }
 
     public static readFileContents(filePath: string, encoding: string): Q.Promise<string> {
@@ -139,14 +132,6 @@ export class Helper {
                 defer.reject(err);
             });
         return defer.promise;
-    }
-
-    public static writeXmlFileSync(result: any, settingsFile: string, fileExt: string): string {
-        let runSettingsContent = builder.buildObject(result);
-        runSettingsContent = str(runSettingsContent).replaceAll('&#xD;', '').s;
-        //This is to fix carriage return any other special chars will not be replaced
-        let fileName = Helper.saveToFileSync(runSettingsContent, fileExt);
-        return fileName;
     }
 
     public static getVSVersion(versionNum: number) {

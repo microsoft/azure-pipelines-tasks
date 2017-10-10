@@ -8,7 +8,6 @@ import * as utils from './helpers';
 import * as ci from './cieventlogger';
 
 const regedit = require('regedit');
-const xml2js = require('xml2js');
 
 export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     const vstestexeLocation = locateVSTestConsole(testConfig);
