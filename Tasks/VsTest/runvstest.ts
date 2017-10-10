@@ -13,11 +13,13 @@ ci.publishEvent(taskProps);
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-
+    utils.Helper.setConsoleCodePage();
     const useDtaExecutionEngine = isDtaEngineRequired();
     if (useDtaExecutionEngine) {
-        ci.publishEvent({ runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
-                 testtype: tl.getInput('testSelector') });
+        ci.publishEvent({
+            runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
+            testtype: tl.getInput('testSelector')
+        });
 
         console.log(tl.loc('distributedTestWorkflow'));
         console.log('======================================================');
@@ -38,7 +40,7 @@ try {
     ci.publishEvent(taskProps);
 }
 
-function isDtaEngineRequired() : boolean {
+function isDtaEngineRequired(): boolean {
     const batchType = tl.getInput('distributionBatchType');
     if (batchType && batchType === 'basedOnTestCases') {
         const batchSize = tl.getInput('batchingBasedOnAgentsOption');

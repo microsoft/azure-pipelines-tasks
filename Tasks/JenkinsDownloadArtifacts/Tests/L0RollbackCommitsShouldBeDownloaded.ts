@@ -41,6 +41,10 @@ tr.registerMock("request", {
             callback(0, {statusCode: 200}, '{"allBuilds":[{"number":22},{"number":21},{"number":20},{"number":18},{"number":15},{"number":14},{"number":13}]}');
         }
 
+        if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
+            callback(0, {statusCode: 200}, '{}');
+        }
+
         return {auth: function(A,B,C) {}}
     }
 });

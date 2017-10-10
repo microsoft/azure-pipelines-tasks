@@ -2,7 +2,7 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-.NET Core (PREVIEW) - (DotNetCoreCLI) incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
+.NET Core task - (DotNetCoreCLI) incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.
 
 1.	Archiver (https://github.com/archiverjs/node-archiver)
 2.	archiver-utils  (https://github.com/archiverjs/archiver-utils)
@@ -27,20 +27,30 @@ Do Not Translate or Localize
 21.	lodash (https://lodash.com/)
 		Includes:File(s) copyright John Resig (http://ejohn.org/blog/javascript-micro-templating/)
 		Includes:File(s) copyright Laura Doktorova (https://github.com/olado/doT)
-22.	minimatch (https://github.com/isaacs/minimatch)
-23.	normalize-path (https://github.com/jonschlinkert/normalize-path)
-24.	once (https://github.com/isaacs/once)
-25.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
-26.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
-27.	readable-stream (https://github.com/isaacs/readable-stream)
-28.	string_decoder (https://github.com/rvagg/string_decoder)
-29.	tar-stream (https://github.com/mafintosh/tar-stream)
-30.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
-31.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-32.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
-33.	wrappy (https://github.com/npm/wrappy)
-34.	xtend (https://github.com/Raynos/xtend)
-35.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
+22.	ltx (https://github.com/node-xmpp/ltx)
+23.	minimatch (https://github.com/isaacs/minimatch)
+24. node-xmlreader (https://github.com/SamDecrock/node-xmlreader/)
+25.	normalize-path (https://github.com/jonschlinkert/normalize-path)
+26.	once (https://github.com/isaacs/once)
+27.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
+28.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+29. q (https://github.com/kriskowal/q)
+30.	readable-stream (https://github.com/isaacs/readable-stream)
+31. safe-buffer (https://github.com/feross/safe-buffer)
+32.	sax js (https://github.com/isaacs/sax-js)
+33.	semver (https://github.com/npm/node-semver/)
+34. semver-compare (https://github.com/substack/semver-compare)
+35.	ShellJS (https://github.com/shelljs/shelljs)
+36.	string_decoder (https://github.com/rvagg/string_decoder)
+37.	tar-stream (https://github.com/mafintosh/tar-stream)
+38.	tunnel (https://github.com/koichik/node-tunnel)
+39.	underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
+40.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
+41.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
+42.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+43.	wrappy (https://github.com/npm/wrappy)
+44.	xtend (https://github.com/Raynos/xtend)
+45.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
 
 
 %% Archiver NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -173,18 +183,18 @@ The MIT License
 
 Copyright (c) 2013 Brian J. Brennan
 
-Permission is hereby granted, free of charge, to any person obtaining a copy 
-of this software and associated documentation files (the "Software"), to deal in 
-the Software without restriction, including without limitation the rights to use, 
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-Software, and to permit persons to whom the Software is furnished to do so, 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished to do so,
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all 
+The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -616,6 +626,31 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF lodash NOTICES, INFORMATION, AND LICENSE
 
+%% Ltx NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2010 Stephan Maka
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+=========================================
+END OF Ltx NOTICES, INFORMATION, AND LICENSE
+
 %% minimatch NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The ISC License
@@ -635,6 +670,18 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 =========================================
 END OF minimatch NOTICES, INFORMATION, AND LICENSE
+
+%% node-xmlreader NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2013 Sam Decrock
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF node-xmlreader NOTICES, INFORMATION, AND LICENSE
 
 %% normalize-path NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -745,6 +792,30 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 =========================================
 END OF process-nextick-args NOTICES, INFORMATION, AND LICENSE
 
+%% q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright 2009–2017 Kristopher Michael Kowal. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+=========================================
+END OF q NOTICES, INFORMATION, AND LICENSE
+
 %% readable-stream NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 Copyright Joyent, Inc. and other Node contributors. All rights reserved.
@@ -768,6 +839,152 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 =========================================
 END OF readable-stream NOTICES, INFORMATION, AND LICENSE
+
+%% safe-buffer NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+
+Copyright (c) Feross Aboukhadijeh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+=========================================
+END OF safe-buffer NOTICES, INFORMATION, AND LICENSE
+
+%% sax js NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The ISC License
+
+Copyright (c) Isaac Z. Schlueter and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+====
+
+`String.fromCodePoint` by Mathias Bynens used according to terms of MIT
+License, as follows:
+
+    Copyright Mathias Bynens <https://mathiasbynens.be/>
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF sax js NOTICES, INFORMATION, AND LICENSE
+
+%% semver NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The ISC License
+
+Copyright (c) Isaac Z. Schlueter and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+=========================================
+END OF semver NOTICES, INFORMATION, AND LICENSE
+
+%% semver-compare NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2014 James Halliday
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF semver-compare NOTICES, INFORMATION, AND LICENSE
+
+%% ShellJS NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2012, Artur Adib <arturadib@gmail.com>
+All rights reserved.
+
+You may use this project under the terms of the New BSD license as follows:
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Artur Adib nor the
+      names of the contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL ARTUR ADIB BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+=========================================
+END OF ShellJS NOTICES, INFORMATION, AND LICENSE
 
 %% string_decoder NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -820,6 +1037,61 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 =========================================
 END OF tar-stream NOTICES, INFORMATION, AND LICENSE
+
+%% tunnel NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+
+Copyright (c) 2012 Koichi Kobayashi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+=========================================
+END OF tunnel NOTICES, INFORMATION, AND LICENSE
+
+%% underscore.js NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2009-2017 Jeremy Ashkenas, DocumentCloud and Investigative
+Reporters & Editors
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=========================================
+END OF underscore.js NOTICES, INFORMATION, AND LICENSE
 
 %% util-deprecate NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -970,5 +1242,4 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF zip-stream  NOTICES, INFORMATION, AND LICENSE
-
 

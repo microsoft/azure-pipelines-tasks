@@ -10,6 +10,8 @@ var azureStackUtility = require ('azurestack-common/azurestackrestutility.js');
 
 var APPLICATION_INSIGHTS_EXTENSION_NAME = "Microsoft.ApplicationInsights.AzureWebSites";
 
+const productionSlot: string = "production";
+
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
         await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
@@ -77,6 +79,11 @@ async function run() {
 
         var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
+        if(slotName && slotName.toLowerCase() === 'production') {
+            specifySlotFlag = false;
+            slotName = null;
+        }
+
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
         }
@@ -108,8 +115,22 @@ async function run() {
             }
             case "Swap Slots": {
                 if (swapWithProduction) {
-                    targetSlot = "production";
+                    targetSlot = productionSlot;
                 }
+
+                sourceSlot = sourceSlot.toLowerCase();
+                targetSlot = targetSlot.toLowerCase();
+
+                if(sourceSlot == productionSlot) {
+                    sourceSlot = targetSlot;
+                    targetSlot = productionSlot;
+                }
+
+                if(targetSlot == productionSlot) {
+                    tl.debug('Set swap with production to true as target is production');
+                    swapWithProduction = true;
+                }
+
                 if (sourceSlot === targetSlot) {
                     updateDeploymentStatus = false;
                     throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
@@ -159,7 +180,7 @@ async function run() {
         if(action === "Swap Slots") {
             customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
             customMessage['sourceSlot'] = sourceSlot;
-            customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
+            customMessage['targetSlot'] = targetSlot;
 
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);

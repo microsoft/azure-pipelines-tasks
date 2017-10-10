@@ -62,8 +62,8 @@ export class Helper {
         return tl.exist(path) && tl.stats(path).isDirectory();
     }
 
-    public static publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: boolean) {
-        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false};
+    public static publishEventToCi(areaCode: string, message: string, tracePoint: number, isUserError: boolean) {
+        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false };
         taskProps.areacode = areaCode;
         taskProps.result = message;
         taskProps.tracepoint = tracePoint;
@@ -172,6 +172,14 @@ export class Helper {
         }
 
         return argument;
+    }
+
+    // set the console code page to "UTF-8"
+    public static setConsoleCodePage() {
+        tl.debug("Changing active code page to UTF-8");
+        const chcp = tl.tool(path.resolve(process.env.windir, "system32", "chcp.com"));
+        chcp.arg(["65001"]);
+        chcp.execSync({ silent: true } as tr.IExecSyncOptions);
     }
 
 }
