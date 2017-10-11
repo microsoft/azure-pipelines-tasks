@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 26
+        "Patch": 27
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
@@ -170,7 +170,6 @@
         "Configfiledoesntexists": "Configuration file %s doesn't exist.",
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
-        "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",

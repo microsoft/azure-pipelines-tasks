@@ -73,9 +73,6 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
             throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern', jsonSubFile));
         }
         for(let file of matchFiles) {
-            if(path.extname(file) !== '.json') {
-                throw new Error(tl.loc('JSONvariablesubstitutioncanonlybeappliedforJSONfiles'));
-            }
             var fileBuffer: Buffer = fs.readFileSync(file);
             var fileEncodeType = fileEncoding.detectFileEncoding(file, fileBuffer);
             var fileContent: string = fileBuffer.toString(fileEncodeType[0]);
