@@ -103,6 +103,7 @@ export class dotNetExe {
         const projectFiles = this.getProjectFiles();
         if (projectFiles.length === 0) {
             tl.warning(tl.loc('noProjectFilesFound'));
+            return;
         }
 
         const failedProjects: string[] = [];
