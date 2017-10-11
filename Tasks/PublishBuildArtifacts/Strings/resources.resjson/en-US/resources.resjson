@@ -15,7 +15,7 @@
   "loc.input.help.Parallel": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
   "loc.input.label.ParallelCount": "Parallel count",
   "loc.input.help.ParallelCount": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
-  "loc.messages.ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `server` or use a Windows agent.",
+  "loc.messages.ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Visual Studio Team Services/TFS` or use a Windows agent.",
   "loc.messages.ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Visual Studio Team Services/TFS.",
   "loc.messages.PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
   "loc.messages.UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128."

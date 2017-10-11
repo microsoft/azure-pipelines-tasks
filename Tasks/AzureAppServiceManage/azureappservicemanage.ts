@@ -1,10 +1,16 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
+
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
 var extensionManage = require('./extensionmanage.js');
-var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
+var appInsightsManageUtils = require('./appinsightsmanage.js');
+var azureStackUtility = require ('azurestack-common/azurestackrestutility.js');
+
+var APPLICATION_INSIGHTS_EXTENSION_NAME = "Microsoft.ApplicationInsights.AzureWebSites";
+
+const productionSlot: string = "production";
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
@@ -58,6 +64,8 @@ async function run() {
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
         var slotName: string = tl.getInput('Slot', false);
+        var appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
+        var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
@@ -70,6 +78,11 @@ async function run() {
         var updateDeploymentStatus: boolean = true;
 
         var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
+
+        if(slotName && slotName.toLowerCase() === 'production') {
+            specifySlotFlag = false;
+            slotName = null;
+        }
 
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
@@ -102,13 +115,52 @@ async function run() {
             }
             case "Swap Slots": {
                 if (swapWithProduction) {
-                    targetSlot = "production";
+                    targetSlot = productionSlot;
                 }
+
+                sourceSlot = sourceSlot.toLowerCase();
+                targetSlot = targetSlot.toLowerCase();
+
+                if(sourceSlot == productionSlot) {
+                    sourceSlot = targetSlot;
+                    targetSlot = productionSlot;
+                }
+
+                if(targetSlot == productionSlot) {
+                    tl.debug('Set swap with production to true as target is production');
+                    swapWithProduction = true;
+                }
+
                 if (sourceSlot === targetSlot) {
                     updateDeploymentStatus = false;
                     throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
                 }
                 await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
+                break;
+            }
+            case "Enable Continuous Monitoring": {
+                var appInsightsManage = new appInsightsManageUtils.AppInsightsManage(endPoint, appInsightsResourceGroupName, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                await appInsightsManage.configureAppInsights();
+                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                break;   
+            }
+            case "Start all continuous webjobs": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
+                for(var continuousJob of continuousJobs) {
+                    await azureRmUtil.startContinuousWebJob(publishingProfile, continuousJob.name);
+                }
+                break;
+            }
+            case "Stop all continuous webjobs": {
+                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
+                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
+                tl.debug('Retrieved publishing Profile');
+                var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
+                for(var continuousJob of continuousJobs) {
+                    await azureRmUtil.stopContinuousWebJob(publishingProfile, continuousJob.name);
+                }
                 break;
             }
             default:
@@ -128,7 +180,7 @@ async function run() {
         if(action === "Swap Slots") {
             customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
             customMessage['sourceSlot'] = sourceSlot;
-            customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
+            customMessage['targetSlot'] = targetSlot;
 
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);

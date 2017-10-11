@@ -7,6 +7,10 @@ export class VSTestVersion {
         return (this.majorVersion >= 15);
     }
 
+    public isResponseFileSupported(): boolean {
+        return (this.majorVersion >= 15);
+    }
+
     public vstestDiagSupported(): boolean {
         return (this.majorVersion >= 15);
     }
@@ -20,7 +24,7 @@ export class VSTestVersion {
     }
 
     public isTestSettingsPropertiesSupported(): boolean {
-        return (this.majorVersion > 15) || (this.majorVersion === 15) && (this.patchNumber > 26906); 
+        return (this.majorVersion > 15) || (this.majorVersion === 15) && (this.patchNumber > 26906);
     }
 }
 
@@ -30,6 +34,10 @@ export class Dev14VSTestVersion extends VSTestVersion {
     }
 
     public isTestImpactSupported(): boolean {
+        return (this.patchNumber >= 25420);
+    }
+
+    public isResponseFileSupported(): boolean {
         return (this.patchNumber >= 25420);
     }
 
@@ -49,6 +57,10 @@ export class Dev15VSTestVersion extends VSTestVersion {
 
     public isTestImpactSupported(): boolean {
         return (this.patchNumber >= 25727);
+    }
+
+    public isResponseFileSupported(): boolean {
+        return (this.patchNumber >= 25420);
     }
 
     public vstestDiagSupported(): boolean {

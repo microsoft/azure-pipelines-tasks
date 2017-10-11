@@ -105,16 +105,6 @@ phases:
   - script: node .\ci\stage-milestone.js
     displayName: Stage milestone
 
-  # Publish milestone package
-  - task: NuGetCommand@2
-    displayName: Publish milestone package
-    condition: and(succeeded(), variables.publish_milestone)
-    inputs:
-      command: push
-      searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
-      nuGetFeedType: internal
-      feedPublish: $(task_milestone_feed_name)
-
   # Create packages.config for restoring previous milestones
   - script: node .\ci\create-restore-config.js
     displayName: Create packages.config for restoring previous milestones
@@ -140,6 +130,16 @@ phases:
       pathToPublish: _package/publish-layout
       artifactName: TaskPackage
       artifactType: container
+
+  # Publish milestone package
+  - task: NuGetCommand@2
+    displayName: Publish milestone package
+    condition: and(succeeded(), variables.publish_milestone)
+    inputs:
+      command: push
+      searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
+      nuGetFeedType: internal
+      feedPublish: $(task_milestone_feed_name)
 
   # Update build number
   - script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"

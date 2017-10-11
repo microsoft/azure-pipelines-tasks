@@ -55,20 +55,16 @@ export default class VirtualMachineScaleSet {
     private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
         tl.debug("Getting storage account details for " + this.taskParameters.customScriptsStorageAccount);
         var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        let storageAccounts: azureModel.StorageAccount[] = await storageArmClient.storageAccounts.list(null);
-        let index = storageAccounts.findIndex(account => account.name.toLowerCase() === this.taskParameters.customScriptsStorageAccount.toLowerCase());
-        if (index < 0) {
-            throw new Error(tl.loc("StorageAccountDoesNotExist", this.taskParameters.customScriptsStorageAccount));
-        }
+        let storageAccount: azureModel.StorageAccount = await storageArmClient.storageAccounts.get(this.taskParameters.customScriptsStorageAccount);
 
-        let storageAccountResourceGroupName = utils.getResourceGroupNameFromUri(storageAccounts[index].id);
+        let storageAccountResourceGroupName = utils.getResourceGroupNameFromUri(storageAccount.id);
 
         tl.debug("Listing storage access keys...");
         let accessKeys = await storageArmClient.storageAccounts.listKeys(storageAccountResourceGroupName, this.taskParameters.customScriptsStorageAccount, null);
 
         return <StorageAccountInfo>{
             name: this.taskParameters.customScriptsStorageAccount,
-            primaryBlobUrl: storageAccounts[index].properties.primaryEndpoints.blob,
+            primaryBlobUrl: storageAccount.properties.primaryEndpoints.blob,
             resourceGroupName: storageAccountResourceGroupName,
             primaryAccessKey: accessKeys[0]
         }
@@ -116,6 +112,7 @@ export default class VirtualMachineScaleSet {
 
         // upload custom script directory to blob storage
         try {
+            var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch (error) {
