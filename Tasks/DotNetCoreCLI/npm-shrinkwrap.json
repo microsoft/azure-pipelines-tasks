@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-dotnetcoreexe",
-  "version": "2.1.5",
+  "version": "2.1.2",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -219,7 +219,7 @@
           "bundled": true
         },
         "q": {
-          "version": "1.5.0",
+          "version": "1.4.1",
           "bundled": true
         },
         "sax": {
@@ -262,7 +262,7 @@
           "version": "5.1.2",
           "bundled": true,
           "requires": {
-            "q": "1.5.0",
+            "q": "1.4.1",
             "tunnel": "0.0.4",
             "underscore": "1.8.3"
           }
@@ -273,7 +273,7 @@
           "requires": {
             "minimatch": "3.0.4",
             "mockery": "1.7.0",
-            "q": "1.5.0",
+            "q": "1.4.1",
             "semver": "5.4.1",
             "shelljs": "0.3.0",
             "uuid": "3.1.0"
@@ -296,7 +296,7 @@
               "requires": {
                 "minimatch": "3.0.4",
                 "mockery": "1.7.0",
-                "q": "1.5.0",
+                "q": "1.4.1",
                 "semver": "5.4.1",
                 "shelljs": "0.3.0",
                 "uuid": "3.1.0"
@@ -329,9 +329,8 @@
       "integrity": "sha1-FQ4gt1ZZCtP5EJPyWk8q2L/zC6M="
     },
     "q": {
-      "version": "1.5.0",
-      "resolved": "https://registry.npmjs.org/q/-/q-1.5.0.tgz",
-      "integrity": "sha1-3QG6ydBtMObyGa7LglPunr3DCPE="
+      "version": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
+      "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
     },
     "readable-stream": {
       "version": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.2.tgz",
@@ -389,7 +388,7 @@
       "version": "https://registry.npmjs.org/vso-node-api/-/vso-node-api-6.0.1-preview.tgz",
       "integrity": "sha1-RBprv5s8aNpiTbAeo1y6jwpMLKs=",
       "requires": {
-        "q": "1.5.0",
+        "q": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
         "tunnel": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.4.tgz",
         "underscore": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
       }
@@ -401,7 +400,7 @@
       "requires": {
         "minimatch": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.3.tgz",
         "mockery": "https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz",
-        "q": "1.5.0",
+        "q": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
         "semver": "https://registry.npmjs.org/semver/-/semver-5.3.0.tgz",
         "shelljs": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
         "uuid": "3.1.0"
