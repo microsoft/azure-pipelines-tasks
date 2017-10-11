@@ -41,7 +41,10 @@ param(
     [string] $ExpirationInDays,
 
     [Parameter(Mandatory=$false)]
-    [string] $PersonalAccessToken
+    [string] $PersonalAccessToken,
+
+    [Parameter(Mandatory=$false)]
+    [bool] $DetailedLog
 )
 
 # -----------------------------------------------------------------------------
@@ -139,7 +142,8 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
 {
     $exe = "$assemblyPath\symbol.exe"
-    $arguments += " --tracelevel verbose"
+    $traceLevel = if ($DetailedLog) { "verbose" } else { "info" }
+    $arguments += " --tracelevel $traceLevel"
 
     Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
 
