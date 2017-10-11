@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 4,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "Cmd"
@@ -307,6 +307,7 @@
             "name": "configureDockerSettings",
             "type": "boolean",
             "label": "Configure Docker settings",
+            "defaultValue": "false",
             "helpMarkDown": "Configures the application with the specified Docker settings.",
             "groupname": "docker"
         },
