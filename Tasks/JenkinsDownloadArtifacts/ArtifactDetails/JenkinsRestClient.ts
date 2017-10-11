@@ -10,14 +10,20 @@ export class JenkinsJobDetails {
     jobType: string;
     isMultiBranchPipeline: boolean;
     multiBranchPipelineName: string;
+    jobUrlInfix: string;
     multiBranchPipelineUrlInfix: string;
 
     constructor(jobName: string, buildId: number, jenkinsJobType?: string, multibranchPipelineName?: string) {
-        this.jobName = jobName;
-
         if (isNaN(buildId)) {
             throw new Error(tl.loc("InvalidBuildId", buildId));
         }
+
+        if (!jobName || jobName.trim().length < 1) {
+            throw new Error(tl.loc("InvalidJobName", jobName))
+        }
+
+        this.jobName = jobName;
+        this.jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(this.jobName)
         
         this.buildId = buildId;
         this.jobType = jenkinsJobType;
@@ -25,6 +31,19 @@ export class JenkinsJobDetails {
 
         this.isMultiBranchPipeline = this.jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
         this.multiBranchPipelineUrlInfix = this.isMultiBranchPipeline ? `/job/${this.multiBranchPipelineName}` : "";
+    }
+
+    public static GetJobUrlInfix(jenkinsJobName: string): string {
+        jenkinsJobName = jenkinsJobName.replace(/\\$/, '').replace(/^\\/, '');
+        let result: string = "";
+
+        jenkinsJobName.split('\\').forEach((token: string) => {
+            if (!!token && token.length > 0) {
+                result = `${result}/job/${token}`
+            }
+        });
+
+        return result;
     }
 }
 
@@ -166,8 +185,9 @@ export class JenkinsRestClient {
         const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', true);
         const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
+        const jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(jobName);
 
-        let requestUrl: string = `${endpointUrl}/job/${jobName}/${urlPath}`;
+        let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
         console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
         request.get({url: requestUrl, strictSSL: strictSSL}, (err, res, body) => {

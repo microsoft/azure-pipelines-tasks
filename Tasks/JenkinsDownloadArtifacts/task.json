@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 124,
+        "Minor": 125,
         "Patch": 0
     },
     "groups": [
@@ -212,7 +212,7 @@
         "endpointId": "$(serverEndpoint)",
         "target": "jobName",
         "dataSourceName": "Jobs",
-        "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        "resultTemplate": "{{#recursiveSelect jobs 'parentPath=name'}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{parentPath}}{{name}}\", \"DisplayValue\" : \"{{parentPath}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}"
       },
       {
         "endpointId": "$(serverEndpoint)",
@@ -340,6 +340,7 @@
         "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
         "UploadingItem": "Uploading {0}.",
         "FoundJobType": "Found job type %s",
-        "CannotFindJobType": "Could not detect job type"
+        "CannotFindJobType": "Could not detect job type",
+        "InvalidJobName": "Invalid Job name %s"
     }
 }
