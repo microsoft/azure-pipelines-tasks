@@ -3,7 +3,7 @@
     "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
     "description": "Index your source code and publish symbols to a file share",
-    "helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
+    "helpMarkDown": "Indexing enables you to use your .pdb symbol files to debug an app on a machine other than the one you used to build the app. For example, you can debug an app built by a build agent from a dev machine that does not have the source code.<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
     "category": "Build",
     "visibility": [
         "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 38
+        "Patch": 39
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
