@@ -117,11 +117,10 @@ export class dotNetExe {
             } catch (err) {
                 tl.error(err);
                 failedProjects.push(projectFile);
-            } finally {
-                if (enablePublishTestResults && enablePublishTestResults === 'true') {
-                    this.publishTestResults(resultsDirectory);
-                }
             }
+        }
+        if (enablePublishTestResults && enablePublishTestResults === 'true') {
+            this.publishTestResults(resultsDirectory);
         }
         if (failedProjects.length > 0) {
             throw tl.loc('dotnetCommandFailed', failedProjects);
