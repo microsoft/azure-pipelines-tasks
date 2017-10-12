@@ -123,7 +123,7 @@
             "defaultValue": "true",
             "visibleRule": "command = test",
             "required": false,
-            "helpMarkDown": "By default, test results will be published and `trx` is generated in `$(Agent.TempDirectory)`. By enabling this, we append `--logger trx --results-directory $(Agent.TempDirectory)` to command arguments."
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments."
         },
         {
             "name": "zipAfterPublish",
