@@ -245,16 +245,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         }
         var physicalPath = "/site/wwwroot";
         var virtualPath = "/";
-        if(virtualApplication) {
-            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if(pathMappings[1] != null) {
-                virtualPath = pathMappings[0];
-                physicalPath = pathMappings[1];
-            } else {
-                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
-            }
-        }
-
+        
         if (webDeployPkg && webDeployPkg.toLowerCase().endsWith('.war')) {
             tl.debug('WAR: webAppPackage = ' + webDeployPkg);
             let warFile = path.basename(webDeployPkg.slice(0, webDeployPkg.length - '.war'.length));
@@ -264,6 +255,17 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             tl.debug('WAR: warFile = ' + warFile);
             physicalPath = physicalPath + "/webapps/" + warFile;
             await kuduUtility.ensurePhysicalPathExists(publishingProfile, physicalPath); 
+        } else {
+            console.log("I am in else part");
+            if(virtualApplication) {
+                var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+                if(pathMappings[1] != null) {
+                    virtualPath = pathMappings[0];
+                    physicalPath = pathMappings[1];
+                } else {
+                    throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+                }
+            }
         }
 
         await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, virtualPath, physicalPath, takeAppOfflineFlag);
