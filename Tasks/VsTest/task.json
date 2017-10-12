@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [
         "vstest"
@@ -243,7 +243,7 @@
             "label": "Path to custom test adapters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "helpMarkDown": "Directory path to custom test adapters. Adapters residing in the same folder as the test assemblies are automatically discovered.",
             "groupName": "executionOptions"
         },
         {
