@@ -42,6 +42,8 @@ try {
     if ($outputDir) {
         $msBuildArguments = "$msBuildArguments /p:OutputPath=""$outputDir"""
     }
+    
+    Write-Host "##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]jdkVersion=`"$jdkVersion`""
     if ($jdkVersion -and $jdkVersion -ne "default")
     {
         $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture

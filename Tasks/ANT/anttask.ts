@@ -214,6 +214,7 @@ async function doWork() {
             tl.debug('Using JDK version to find and set JAVA_HOME');
             var jdkVersion = tl.getInput('jdkVersion');
             var jdkArchitecture = tl.getInput('jdkArchitecture');
+            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Ant]jdkVersion=' + jdkVersion);
 
             if (jdkVersion != 'default') {
                 specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
@@ -223,6 +224,7 @@ async function doWork() {
             tl.debug('Using path from user input to set JAVA_HOME');
             var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
             specifiedJavaHome = jdkUserInputPath;
+            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Ant]jdkVersion=custom');
         }
 
         if (specifiedJavaHome) {

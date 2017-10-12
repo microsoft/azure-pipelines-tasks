@@ -27,6 +27,7 @@ async function run() {
             tl.debug('Using JDK version to find JDK path');
             let jdkVersion: string = tl.getInput('jdkVersion');
             let jdkArchitecture: string = tl.getInput('jdkArchitecture');
+            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]jdkVersion=' + jdkVersion);                        
 
             if (jdkVersion !== 'default') {
                 // jdkVersion should be in the form of 1.7, 1.8, or 1.10
@@ -43,6 +44,7 @@ async function run() {
             tl.debug('Using path from user input to find JDK');
             let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
             specifiedJavaHome = jdkUserInputPath;
+            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]jdkVersion=custom');                                    
         }
 
         //find build tool path to use

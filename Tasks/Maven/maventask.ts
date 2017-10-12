@@ -101,6 +101,7 @@ if (javaHomeSelection == 'JDKVersion') {
     tl.debug('Using the specified JDK version to find and set JAVA_HOME');
     var jdkVersion: string = tl.getInput('jdkVersion');
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
+    console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Maven]jdkVersion=' + jdkVersion);            
 
     if (jdkVersion != 'default') {
          specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
@@ -111,6 +112,7 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
+    console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Maven]jdkVersion=custom');                
 }
 
 // Set JAVA_HOME as determined above (if different than default)

@@ -136,6 +136,7 @@ function setJavaHome(javaHomeSelection: string): void {
         tl.debug('Using JDK version to find and set JAVA_HOME');
         let jdkVersion: string = tl.getInput('jdkVersion');
         let jdkArchitecture: string = tl.getInput('jdkArchitecture');
+        console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Gradle]jdkVersion=' + jdkVersion);        
 
         if (jdkVersion !== 'default') {
             specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
@@ -144,6 +145,7 @@ function setJavaHome(javaHomeSelection: string): void {
         tl.debug('Using path from user input to set JAVA_HOME');
         let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
         specifiedJavaHome = jdkUserInputPath;
+        console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Gradle]jdkVersion=custom');                
     }
     if (specifiedJavaHome) {
         tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
