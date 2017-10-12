@@ -40,7 +40,7 @@
   "loc.input.label.overrideTestrunParameters": "Override test run parameters",
   "loc.input.help.overrideTestrunParameters": "Override parameters defined in the `TestRunParameters` section of runsettings file or `Properties` section of testsettings file. For example: `-key1 value1 -key2 value2`. Note: Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher ",
   "loc.input.label.pathtoCustomTestAdapters": "Path to custom test adapters",
-  "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+  "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Adapters residing in the same folder as the test assemblies are automatically discovered.",
   "loc.input.label.runInParallel": "Run tests in parallel on multi-core machines",
   "loc.input.help.runInParallel": "If set, tests will run in parallel leveraging available cores of the machine. This will override the MaxCpuCount if specified in your runsettings file. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
   "loc.input.label.runTestsInIsolation": "Run tests in isolation",
