@@ -149,6 +149,7 @@
             $DtaProcess.StartInfo = $Processinfo
             if ($DtaProcess.Start()) {
                 Write-Verbose "DTAExecutionHost Process Id: $($DtaProcess.Id)"
+                Start-Sleep -Seconds 60 # required to keep service active till process loads Assembly_Resolve
                 return 0
             }
 
