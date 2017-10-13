@@ -22,7 +22,7 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
-tr.registerMock("item-level-downloader/Engine" , { 
+tr.registerMock("artifact-engine/Engine" , { 
     ArtifactEngine: function() {
         return { 
             processItems: function(A,B,C) {},
