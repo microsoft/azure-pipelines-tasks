@@ -71,6 +71,7 @@
         "PublishTestResults",
         "PublishToAzureServiceBus",
         "PyPIPublisher",
+        "QueryWorkItems",
         "QuickPerfTest",
         "RunDistributedTests",
         "RunJMeterLoadTest",
