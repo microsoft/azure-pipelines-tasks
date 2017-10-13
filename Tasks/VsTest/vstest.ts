@@ -141,10 +141,10 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     argsArray.push('/logger:trx');
     if (utils.Helper.isNullOrWhitespace(vstestConfig.pathtoCustomTestAdapters)) {
         if (vstestConfig.testDropLocation && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-            argsArray.push('/TestAdapterPath:\"' + vstestConfig.testDropLocation + '\"');
+            argsArray.push('/TestAdapterPath:' + vstestConfig.testDropLocation + '');
         }
     } else {
-        argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
+        argsArray.push('/TestAdapterPath:' + vstestConfig.pathtoCustomTestAdapters + '');
     }
 
     if (isDebugEnabled()) {
@@ -424,12 +424,12 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
     }
     if (vstestConfig.pathtoCustomTestAdapters) {
         if (utils.Helper.pathExistsAsDirectory(vstestConfig.pathtoCustomTestAdapters)) {
-            argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
+            argsArray.push('/TestAdapterPath:' + vstestConfig.pathtoCustomTestAdapters + '');
         } else {
-            argsArray.push('/TestAdapterPath:\"' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '\"');
+            argsArray.push('/TestAdapterPath:' + path.dirname(vstestConfig.pathtoCustomTestAdapters) + '');
         }
     } else if (vstestConfig.testDropLocation && isTestAdapterPresent(vstestConfig.testDropLocation)) {
-        argsArray.push('/TestAdapterPath:\"' + vstestConfig.testDropLocation + '\"');
+        argsArray.push('/TestAdapterPath:' + vstestConfig.testDropLocation + '');
     }
 
     if (vstestConfig.pathtoCustomTestAdapters && vstestConfig.pathtoCustomTestAdapters.toLowerCase().indexOf('usevsixextensions:true') !== -1) {
@@ -761,8 +761,8 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         }
 
         if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null || !vstestConfig.vsTestVersionDetails.isTestImpactSupported())) {
-            tl.warning(tl.loc('VstestTIANotSupported'));
-            tiaConfig.tiaEnabled = false;
+            //tl.warning(tl.loc('VstestTIANotSupported'));
+            //tiaConfig.tiaEnabled = false;
         }
     } catch (e) {
         utils.Helper.publishEventToCi(AreaCodes.TIACONFIG, e.message, 1032, false);

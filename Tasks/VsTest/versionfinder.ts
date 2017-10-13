@@ -66,6 +66,8 @@ function locateVSTestConsole(testConfig : models.TestConfigurations) : string {
     if (vstestExeFolder) {
         vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
     }
+
+    vstestExePath = path.join(__dirname, 'TestPlatform/vstest.console.exe')
     return vstestExePath;
 }
 
@@ -101,7 +103,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     const vsVersion: number = parseFloat(testConfig.vsTestVersion);
 
     if (vsVersion === 15.0) {
-        const vstestconsole15Path = getVSTestConsole15Path();
+        const vstestconsole15Path = path.join(__dirname, 'TestPlatform/vstest.console.exe')
         if (vstestconsole15Path) {
             return vstestconsole15Path;
         }
@@ -127,9 +129,10 @@ function getVSTestConsole15Path(): string {
 function getVSTestLocation(vsVersion: number): string {
     const vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
     if (!vsCommon) {
-        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+        //throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
     }
-    return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
+    //return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
+    return path.join(__dirname, 'TestPlatform')
 }
 
 function getFloatsFromStringArray(inputArray: string[]): number[] {

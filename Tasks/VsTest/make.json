@@ -19,7 +19,7 @@
         "nugetv2": [
             {
               "name": "Microsoft.TestPlatform",
-              "version": "15.5.0-preview-20170913-02",
+              "version": "15.5.0-preview-20170914-13",
               "repository": "https://dotnet.myget.org/F/vstest/api/v2",
               "cp": [
                 {
