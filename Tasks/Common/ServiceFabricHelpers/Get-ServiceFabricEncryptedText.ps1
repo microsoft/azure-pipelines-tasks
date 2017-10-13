@@ -18,7 +18,7 @@ function Get-ServiceFabricEncryptedText
     if (-not $cert)
     {
         Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertThumbprint)
-        return $Text
+        return $null
     }
 
     # Encrypt the text using the cluster connection's certificate.
