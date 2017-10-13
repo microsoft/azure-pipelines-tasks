@@ -3,6 +3,6 @@
   "main": "main.js",
   "dependencies": {
     "vsts-task-lib": "2.0.5",
-    "item-level-downloader": "1.0.9"
+    "artifact-engine": "0.1.0"
   }
 }
