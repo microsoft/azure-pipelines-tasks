@@ -43,7 +43,7 @@ function Update-DockerSettings
             }
         }
 
-        if (-not $isPasswordEncrypted)
+        if (-not $isPasswordEncrypted -and $ClusterConnectionParameters["ServerCertThumbprint"])
         {
             $password = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $ClusterConnectionParameters
             $isPasswordEncrypted = $true

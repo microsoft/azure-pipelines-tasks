@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 4,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "Cmd"
@@ -307,6 +307,7 @@
       "name": "configureDockerSettings",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.configureDockerSettings",
+      "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.configureDockerSettings",
       "groupname": "docker"
     },
