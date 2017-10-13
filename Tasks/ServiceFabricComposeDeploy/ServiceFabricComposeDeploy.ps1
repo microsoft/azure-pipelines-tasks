@@ -82,7 +82,7 @@ try {
 
     if ($registryCredentials -ne "None")
     {
-        if (-not $isEncrypted)
+        if (-not $isEncrypted -and $clusterConnectionParameters["ServerCertThumbprint"])
         {
             Write-Host (Get-VstsLocString -Key EncryptingPassword)
             $password = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $clusterConnectionParameters
