@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Query Work Items",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.description": "Executes a work item query and checks for the number of items returned.",
+  "loc.instanceNameFormat": "Query Work Items",
+  "loc.input.label.queryId": "Query",
+  "loc.input.help.queryId": "Select a saved work query to execute.",
+  "loc.input.label.maxThreshold": "Maximum Threshold",
+  "loc.input.help.maxThreshold": "The maximum number of matching workitems from the query.",
+  "loc.input.label.minThreshold": "Minimum Threshold",
+  "loc.input.help.minThreshold": "The minimum number of matching workitems from the query."
+}
