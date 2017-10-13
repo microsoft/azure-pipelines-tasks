@@ -256,7 +256,6 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             physicalPath = physicalPath + "/webapps/" + warFile;
             await kuduUtility.ensurePhysicalPathExists(publishingProfile, physicalPath); 
         } else {
-            console.log("I am in else part");
             if(virtualApplication) {
                 var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
                 if(pathMappings[1] != null) {
