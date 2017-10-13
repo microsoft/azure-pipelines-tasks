@@ -77,9 +77,9 @@ function getEnvironmentUri(): string {
 
     const buildId = tl.getVariable('Build.BuildId');
     const releaseId = tl.getVariable('Release.ReleaseId');
-    const phaseId = tl.getVariable('Release.DeployPhaseId');
+    const phaseId = tl.getVariable('System.PhaseId');
     const projectName = tl.getVariable('System.TeamProject');
-    const jobId = tl.getVariable('System.JobId');
+    const jobId = tl.getVariable('System.JobPositionInPhase');
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
     const taskInstanceId = getDtaInstanceId();
     const dontDistribute = tl.getBoolInput('dontDistribute');
