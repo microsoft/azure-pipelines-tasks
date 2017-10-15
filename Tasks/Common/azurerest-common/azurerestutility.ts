@@ -27,16 +27,6 @@ var azureApiVersion = 'api-version=2016-08-01';
 var azureContainerRegistryApiVersion = "api-version=2017-03-01";
 var defaultWebAppAvailabilityTimeoutInMS = 3000;
 
-/*function fn(response) {
-    console.log("##############");
-    if(typeof(response) == "string") {
-        console.log(response);
-    } else {
-        console.log(JSON.stringify(response));
-    }
-    console.log("##############");
-}*/
-
 /**
  * gets the name of the ResourceGroup that contains the resource
  *
@@ -725,17 +715,17 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
     var deferred = Q.defer();
     var headers = {};
 
-    let promise: Promise<any> = rc.get(webAppUrl, headers);
-    promise.then((response) => {
-        // NOT WORKING fn(response);
-        if(response.statusCode === 200) {
+    let promise: Promise<any> = hc.get(webAppUrl, headers);
+    promise.then(async (response) => {
+        let contents: string = await response.readBody();
+        if(response.message.statusCode === 200) {
             tl.debug("Azure web app is available.");
             var webAppAvailabilityTimeout = (availabilityTimeout && !(isNaN(Number(availabilityTimeout)))) ? Number(availabilityTimeout): defaultWebAppAvailabilityTimeoutInMS; 
             setTimeout(() => {
                 deferred.resolve("SUCCESS");
             }, webAppAvailabilityTimeout);
         } else {
-            tl.debug("Azure web app in wrong state. Action: testAzureWebAppAvailability, Response: " + JSON.stringify(response));
+            tl.debug("Azure web app in wrong state. Action: testAzureWebAppAvailability, Response: " + contents);
             deferred.reject("FAILED");
         }
     },

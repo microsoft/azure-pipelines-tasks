@@ -332,9 +332,7 @@ async function getFileContent(publishingProfile, physicalPath, fileName) {
     };
     var kuduGetFileUrl = "https://" + publishingProfile.publishUrl + "/api/vfs/" + physicalPath + "/" + fileName;
     tl.debug('Getting content of file: ' + fileName + ' using publishUrl: ' + kuduGetFileUrl);
-    let options: rm.IRequestOptions = {};
-    options.additionalHeaders = headers;
-    let promise: Promise<any> = hc.get(kuduGetFileUrl, options);
+    let promise: Promise<any> = hc.get(kuduGetFileUrl, headers);
     promise.then(async (response) => {
         let contents: string = await response.readBody();
         if(response.message.statusCode === 200) {

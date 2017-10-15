@@ -60,7 +60,7 @@ export async function installExtension(publishingProfile, extension: string) {
     console.log(tl.loc('InstallingSiteExtension', extension));
     let options: rm.IRequestOptions = {};
     options.additionalHeaders = headers;
-    let promise: Promise<any> = rc.replace(kuduPhysicalpathUrl, options);
+    let promise: Promise<any> = rc.replace(kuduPhysicalpathUrl, null, options);
     promise.then((response) => {
         if(response.statusCode === 200) {
             var responseBody = response.result;
