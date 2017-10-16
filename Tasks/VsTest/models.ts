@@ -47,6 +47,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     numberOfTestCasesPerSlice: number;
     batchingType: BatchingType;
     runningTimePerBatchInMs: number;
+    proceedAfterAbortedTestCase: boolean;
 }
 
 export interface DtaEnvironment {
