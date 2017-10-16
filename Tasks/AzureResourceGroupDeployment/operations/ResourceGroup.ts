@@ -287,17 +287,6 @@ export class ResourceGroup {
             }, (error) => {
                 return reject(tl.loc("FileFetchFailed", url, error));
             });
-            /*httpObj.get("GET", url, {}, (error, result, contents) => {
-                if (error) {
-                    return reject(tl.loc("FileFetchFailed", url, error));
-                }
-                if (result.statusCode === 200)
-                    resolve(contents);
-                else {
-                    var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
-                    return reject(tl.loc("FileFetchFailed", url, errorMessage));
-                }
-            });*/
         });
     }
 
