@@ -69,6 +69,7 @@ nock("http://example.com", {
 		reqheaders: {
         	"authorization": "Bearer accessToken",
         	"accept": "application/json",
+		"content-type": "application/json; charset=utf-8",
     		"user-agent": "TFS_useragent"
       	}
 	})
