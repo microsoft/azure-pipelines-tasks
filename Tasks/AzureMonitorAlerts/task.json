@@ -123,6 +123,7 @@
 		"AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
 		"AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
 		"UpdatedRule": "Updated rule : '%s'",
-		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s."
+		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
+		"SPNExpiredCheck": "Check if the SPN is valid and not expired."
 	}
 }

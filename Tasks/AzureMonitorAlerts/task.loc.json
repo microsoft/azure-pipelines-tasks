@@ -123,6 +123,7 @@
     "AlertRuleExists": "ms-resource:loc.messages.AlertRuleExists",
     "AlertRuleDoesNotExist": "ms-resource:loc.messages.AlertRuleDoesNotExist",
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
-    "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken"
+    "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
+    "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck"
   }
 }
