@@ -206,7 +206,13 @@ export class ResourceGroup {
         name = name.substr(0, 40);
         var timestamp = new Date(Date.now());
         var uniqueId = uuid().substr(0, 4);
-        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate(), timestamp.getHours(), timestamp.getMinutes(), timestamp.getSeconds(), uniqueId);
+        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
+            ("0" + timestamp.getMonth()).slice(-2),
+            ("0" + timestamp.getDate()).slice(-2),
+            ("0" + timestamp.getHours()).slice(-2),
+            ("0" + timestamp.getMinutes()).slice(-2),
+            ("0" + timestamp.getSeconds()).slice(-2),
+            uniqueId);
         var deploymentName = util.format("%s-%s", name, suffix);
         if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
             deploymentName = util.format("deployment-%s", suffix);
