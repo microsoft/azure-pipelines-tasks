@@ -278,7 +278,12 @@ export class ResourceGroup {
         return new Promise<string>((resolve, reject) => {
             hc.get(url, {}).then(async (response) => {
                 if(response.message.statusCode == 200) {
-                    let contents: string = await response.readBody();
+                    let contents: string = "";
+                    try {
+                        contents = await response.readBody();
+                    } catch (error) {
+                        reject(tl.loc("UnableToReadResponseBody", error));
+                    }
                     resolve(contents);
                 } else {
                     var errorMessage = response.message.statusCode.toString() + ": " + response.message.statusMessage;

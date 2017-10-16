@@ -401,6 +401,7 @@
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
     "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
-    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData"
+    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody"
   }
 }

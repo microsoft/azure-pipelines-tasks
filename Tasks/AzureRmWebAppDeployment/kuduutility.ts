@@ -334,7 +334,12 @@ async function getFileContent(publishingProfile, physicalPath, fileName) {
     tl.debug('Getting content of file: ' + fileName + ' using publishUrl: ' + kuduGetFileUrl);
     let promise: Promise<any> = hc.get(kuduGetFileUrl, headers);
     promise.then(async (response) => {
-        let contents: string = await response.readBody();
+        let contents: string = "";
+        try {
+            contents = await response.readBody();
+        } catch (error) {
+            defer.reject(tl.loc("UnableToReadResponseBody", error));
+        }
         if(response.message.statusCode === 200) {
             tl.debug('retrieved file content : ' + fileName);
             defer.resolve({

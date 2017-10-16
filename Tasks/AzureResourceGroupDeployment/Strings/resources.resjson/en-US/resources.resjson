@@ -165,5 +165,6 @@
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
   "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}"
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}",
+  "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s"
 }
