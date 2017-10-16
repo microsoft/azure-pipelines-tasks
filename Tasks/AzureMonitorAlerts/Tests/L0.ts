@@ -6,7 +6,10 @@ describe("AzureMonitorAlerts Suite", () => {
     it("successfully creates alert rules when alert rules are not already present in resource group", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AddAlertsSuccess.js"));
         tmr.run();
-
+	    
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
         assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, "should not have written to stderr");
         assert(tmr.succeeded, "task should have succeeded");
     	done();
@@ -15,7 +18,10 @@ describe("AzureMonitorAlerts Suite", () => {
     it("successfully updates alert rules when alert rules are present in resource group", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0UpdateAlertsSuccess.js"));
         tmr.run();
-
+	
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
         assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, "should not have written to stderr");
         assert(tmr.succeeded, "task should have succeeded");
     	done();
@@ -24,7 +30,10 @@ describe("AzureMonitorAlerts Suite", () => {
     it("fails if alert rule name is configured for some other resource", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AlertRuleNameConflictFail.js"));
         tmr.run();
-
+	
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
         assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, "should have written to stderr");
         let expectedError = "loc_mock_AlertRuleTargetResourceIdMismatchError Rule1 /subscriptions/sId/resourceGroups/testRg/providers/testResource.provider/type/testResourceName2";
         assert(tmr.stdErrContained(expectedError) || tmr.createdErrorIssue(expectedError), "should have thrown proper error message");
@@ -35,7 +44,10 @@ describe("AzureMonitorAlerts Suite", () => {
     it("fails if not able to fetch target resource details", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AlertRuleGetResourceFail.js"));
         tmr.run();
-
+	
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
         assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, "should have written to stderr");
         let expectedError = "Error: Failed request: (504)";
         assert(tmr.stdErrContained(expectedError) || tmr.createdErrorIssue(expectedError), "should have thrown proper error message");
@@ -46,8 +58,11 @@ describe("AzureMonitorAlerts Suite", () => {
     it("successfully updates rules with email notifications", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AlertRuleWithEmailSuccess.js"));
         tmr.run();
-
-		assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, "should not have written to stderr");
+	    
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
+	assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, "should not have written to stderr");
         assert(tmr.succeeded, "task should have succeeded");
     	done();
     });
@@ -55,8 +70,11 @@ describe("AzureMonitorAlerts Suite", () => {
     it("fails if PUT request to add alert rule fails", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AddAlertRuleFails.js"));
         tmr.run();
-
-		assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, "should have written to stderr");
+	
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
+	assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, "should have written to stderr");
         let expectedError = "Error: Failed request: (504)";
         assert(tmr.stdErrContained(expectedError) || tmr.createdErrorIssue(expectedError), "should have thrown proper error message");
         assert(tmr.failed, "task should have failed");
@@ -66,8 +84,11 @@ describe("AzureMonitorAlerts Suite", () => {
     it("successfully fetches access token", (done: MochaDone) => {
     	let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AccessTokenFetchSuccess.js"));
         tmr.run();
-
-		assert(tmr.stderr.length === 0 && tmr.errorIssues.length === 0, "should not have written to stderr");
+	
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
+	assert(tmr.stderr.length === 0 && tmr.errorIssues.length === 0, "should not have written to stderr");
         assert((tmr.stdout.match(/Requesting for Auth Token: https:\/\/login.windows.net\/tenantId\/oauth2\/token\//g) || []).length === 3, "should have made network call to fetch access token thrice");
         assert((tmr.stdout.match(/Returning authorization token from cache/g) || []).length === 1, "should have returned access token from cache once");
     	done();
@@ -76,7 +97,10 @@ describe("AzureMonitorAlerts Suite", () => {
     it("fails if task is not able to fetch access token", (done: MochaDone) => {
         let tmr : MockTestRunner = new MockTestRunner(path.join(__dirname, "L0AccessTokenFetchFailure.js"));
         tmr.run();
-
+	
+	// added for PR build failure 
+	console.log(tmr.stdout); 
+	console.log(tmr.stderr);
         assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, "should have written to stderr");
         let expectedError = "loc_mock_Couldnotfetchaccesstoken 401  loc_mock_SPNExpiredCheck";
         assert(tmr.stdErrContained(expectedError) || tmr.createdErrorIssue(expectedError), "should have thrown proper error message")
