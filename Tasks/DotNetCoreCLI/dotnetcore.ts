@@ -91,11 +91,10 @@ export class dotNetExe {
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
-        const enablePublishTestResults: string = tl.getInput('publishTestResults', false) || 'false';
-        this.extractOutputArgument();
+        const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
 
-        if (enablePublishTestResults && enablePublishTestResults === 'true') {
+        if (enablePublishTestResults && enablePublishTestResults === true) {
             this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
         }
 
@@ -120,7 +119,7 @@ export class dotNetExe {
                 failedProjects.push(projectFile);
             }
         }
-        if (enablePublishTestResults && enablePublishTestResults === 'true') {
+        if (enablePublishTestResults && enablePublishTestResults === true) {
             this.publishTestResults(resultsDirectory);
         }
         if (failedProjects.length > 0) {
