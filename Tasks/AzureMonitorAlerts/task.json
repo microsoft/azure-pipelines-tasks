@@ -74,7 +74,7 @@
 				"resizable": "true",
 				"rows": 5,
 				"editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-				"displayFormat": "{{#rules}}'{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{metric.unit}}}\n{{/rules}}"              
+				"displayFormat": "{{#rules}}{{{metric.displayValue}}} {{{thresholdCondition}}} {{{thresholdValue}}} {{{metric.unit}}}\n{{/rules}}"              
 			}
 		},
 		{

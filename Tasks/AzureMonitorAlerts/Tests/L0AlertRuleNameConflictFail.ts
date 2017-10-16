@@ -1,10 +1,9 @@
-import * as tmrm from "vsts-task-lib/mock-run";
-import * as tl from "vsts-task-lib";
 import * as path from "path";
 import * as mocks from "./L0Mocks";
+import { TaskMockRunner } from "vsts-task-lib/mock-run";
 var nock = require("nock");
 
-let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(path.join(__dirname, '..', 'azuremonitoralerts.js'));
+let tmr: TaskMockRunner = new TaskMockRunner(path.join(__dirname, '..', 'azuremonitoralerts.js'));
 
 tmr.setInput("ConnectedServiceName", "azureRMSpn");
 tmr.setInput("ResourceGroupName", "testRg");

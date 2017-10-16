@@ -51,7 +51,7 @@ export function getMetricRequestBody(ruleName: string, location: string, operato
 		tags: {"hidden-link:/subscriptions/sId/resourceGroups/testRg/providers/testResource.provider/type/testResourceName": "Resource"},
 		properties: {
 			name: ruleName,
-			description: `Updated via VSTS`,  // BUG change this
+			description: `Updated via TEST`,  
 			isEnabled: true,
 			condition: {
 				"odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
@@ -67,4 +67,13 @@ export function getMetricRequestBody(ruleName: string, location: string, operato
 			actions: []
 		}
 	}
+}
+
+export function getUtilityMock() {
+	var utility = require("../utility");	
+	utility.getDeploymentUri = () => {
+		return "TEST";
+	}
+
+	return utility;
 }
