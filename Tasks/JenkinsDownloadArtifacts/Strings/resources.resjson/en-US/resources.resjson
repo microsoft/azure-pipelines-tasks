@@ -122,5 +122,5 @@
   "loc.messages.UploadingItem": "Uploading {0}.",
   "loc.messages.FoundJobType": "Found job type %s",
   "loc.messages.CannotFindJobType": "Could not detect job type",
-  "loc.messages.InvalidJobName": "Invalid Job name %s"
+  "loc.messages.InvalidJobName": "Invalid job name %s"
 }

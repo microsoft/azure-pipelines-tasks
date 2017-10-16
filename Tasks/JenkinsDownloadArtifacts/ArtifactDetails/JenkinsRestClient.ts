@@ -34,10 +34,10 @@ export class JenkinsJobDetails {
     }
 
     public static GetJobUrlInfix(jenkinsJobName: string): string {
-        jenkinsJobName = jenkinsJobName.replace(/\\$/, '').replace(/^\\/, '');
+        jenkinsJobName = jenkinsJobName.replace(/\/$/, '').replace(/^\//, '');
         let result: string = "";
 
-        jenkinsJobName.split('\\').forEach((token: string) => {
+        jenkinsJobName.split('/').forEach((token: string) => {
             if (!!token && token.length > 0) {
                 result = `${result}/job/${token}`
             }

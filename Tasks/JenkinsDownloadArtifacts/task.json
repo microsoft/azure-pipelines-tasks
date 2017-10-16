@@ -212,7 +212,7 @@
         "endpointId": "$(serverEndpoint)",
         "target": "jobName",
         "dataSourceName": "Jobs",
-        "resultTemplate": "{{#recursiveSelect jobs 'parentPath=name'}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{parentPath}}{{name}}\", \"DisplayValue\" : \"{{parentPath}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}"
+        "resultTemplate": "{{#addField jobs 'parentPath' 'name' '/'}}{{#recursiveSelect jobs}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{name}}\", \"DisplayValue\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}{{/addField}}"
       },
       {
         "endpointId": "$(serverEndpoint)",
@@ -341,6 +341,6 @@
         "UploadingItem": "Uploading {0}.",
         "FoundJobType": "Found job type %s",
         "CannotFindJobType": "Could not detect job type",
-        "InvalidJobName": "Invalid Job name %s"
+        "InvalidJobName": "Invalid job name %s"
     }
 }
