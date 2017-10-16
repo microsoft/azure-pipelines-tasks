@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 4,
-        "Patch": 1
+        "Patch": 4
     },
     "demands": [
         "Cmd"
@@ -307,6 +307,7 @@
             "name": "configureDockerSettings",
             "type": "boolean",
             "label": "Configure Docker settings",
+            "defaultValue": "false",
             "helpMarkDown": "Configures the application with the specified Docker settings.",
             "groupname": "docker"
         },
@@ -329,7 +330,7 @@
             "name": "dockerRegistryEndpoint",
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
-            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
             "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
             "required": true,
             "groupname": "docker"
@@ -338,7 +339,7 @@
             "name": "azureSubscriptionEndpoint",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
-            "helpMarkDown": "Select an Azure subscription",
+            "helpMarkDown": "Select an Azure subscription.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
             "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
             "required": true,
             "groupname": "docker"

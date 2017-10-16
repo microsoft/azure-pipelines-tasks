@@ -8,9 +8,9 @@ import shell = require('shelljs');
 import Q = require('q');
 import request = require('request');
 
-import * as handlers from "item-level-downloader/Providers/Handlers";
-import * as providers from "item-level-downloader/Providers";
-import * as engine from "item-level-downloader/Engine";
+import * as handlers from "artifact-engine/Providers/Handlers"
+import * as providers from "artifact-engine/Providers"
+import * as engine from "artifact-engine/Engine"
 
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";

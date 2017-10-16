@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "azureps"
@@ -125,7 +125,7 @@
             "label": "Force upgrade",
             "defaultValue": "false",
             "visibleRule": "AllowUpgrade == true",
-            "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.", 
+            "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.",
             "required": false
         },
         {
