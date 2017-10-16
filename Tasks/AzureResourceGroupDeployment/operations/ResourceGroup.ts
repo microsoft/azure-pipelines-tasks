@@ -12,8 +12,9 @@ import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
-var hm = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
+var hm = require("typed-rest-client/HttpClient");
+var uuid = require("uuid");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
 var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
@@ -26,7 +27,6 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
 } : null;
 
 let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
-var uuid = require("uuid");
 
 function stripJsonComments(content) {
     if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
