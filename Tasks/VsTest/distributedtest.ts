@@ -30,7 +30,8 @@ export class DistributedTest {
 
     private publishCodeChangesIfRequired(): void {
         if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
-            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig.taskInstanceIdentifier); //todo: enable custom engine
+            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig.taskInstanceIdentifier);
+            //todo: enable custom engine
 
             if (code !== 0) {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
@@ -68,13 +69,13 @@ export class DistributedTest {
     }
 
     private async startDtaExecutionHost(agentId: any) {
+        this.testSourcesFile = this.createTestSourcesFile();
         const envVars: { [key: string]: string; } = process.env;
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentId', agentId);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentName', this.dtaTestConfig.dtaEnvironment.agentName);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
-        this.testSourcesFile = this.createTestSourcesFile();
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchTestSourcesFile', this.testSourcesFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
