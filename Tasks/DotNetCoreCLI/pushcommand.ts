@@ -12,6 +12,7 @@ import * as vsts from "vso-node-api/WebApi";
 import { IExecOptions } from "vsts-task-lib/toolrunner";
 import { IPackageSource } from "nuget-task-common/Authentication";
 import { NuGetConfigHelper2 } from "nuget-task-common/NuGetConfigHelper2";
+import * as filesListHelper from "nuget-task-common/FilesListHelper";
 
 export async function run(): Promise<void> {
     let buildIdentityDisplayName: string = null;
@@ -19,11 +20,7 @@ export async function run(): Promise<void> {
     try {
         // Get list of files to publish
         const searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
-        let findOptions: tl.FindOptions = <tl.FindOptions>{};
-        let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-        let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
-        const filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
-
+        const filesList = filesListHelper.createFoundFilesList(tl, searchPatternInput, true);
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("Error_PushNotARegularFile", packageFile));

@@ -296,7 +296,6 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-
     it('publish works with publishWebProjects option', (done: MochaDone) => {
 
         process.env["__projects__"] = "";
@@ -395,8 +394,23 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 0, 'should not have run dotnet');
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
         assert(tr.failed, 'should have fai;ed');
         assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
+        done();
+    });
+
+    it('pack logs a warning when one file is found and another file is not', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PackTests/oneProjectNotFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.stdOutContained('Found 1 files'), 'It should have successfully found one file');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
 
@@ -439,8 +453,23 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 0, 'should not have run dotnet');
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
+        done();
+    });
+
+    it('push logs a warning when one file is found and another file is not', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PushTests/oneProjectNotFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        tr.run();
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        assert(tr.stdOutContained('Found 1 files'), 'It should have successfully found one file');
         done();
     });
 });

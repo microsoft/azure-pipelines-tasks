@@ -107,6 +107,7 @@
   "loc.messages.Info_AvailableVersions": "The available versions are: %s",
   "loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
   "loc.messages.Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
+  "loc.messages.Info_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
   "loc.messages.Info_UsingToolPath": "Using tool path: %s",

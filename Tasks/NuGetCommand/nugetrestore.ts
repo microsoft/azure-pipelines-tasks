@@ -16,6 +16,7 @@ import * as vsom from 'vso-node-api/VsoClient';
 import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
+import * as filesListHelper from "nuget-task-common/FilesListHelper";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -38,22 +39,13 @@ export async function run(nuGetPath: string): Promise<void> {
 
         // Reading inputs
         let solutionPattern = tl.getPathInput("solution", true, false);
-        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
-        let filesList: string[] = [];
-        if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(solutionPattern);
-            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
-        }
-        else {
-            filesList = nutil.resolveFilterSpec(solutionPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
-        }
+        let filesList = filesListHelper.createFoundFilesList(tl, solutionPattern, null, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
         filesList.forEach(solutionFile => {
             if (!tl.stats(solutionFile).isFile()) {
                 throw new Error(tl.loc("NotARegularFile", solutionFile));
             }
         });
+
         let noCache = tl.getBoolInput("noCache");
         let verbosity = tl.getInput("verbosityRestore");
         let packagesDirectory = tl.getPathInput("packagesDirectory");

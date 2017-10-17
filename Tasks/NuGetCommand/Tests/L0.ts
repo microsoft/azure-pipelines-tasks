@@ -25,6 +25,19 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
+    it('restores single solution and does not find the file', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/fileNotFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('restore single solution with CredentialProvider', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -125,6 +138,20 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
+
+    it('restore logs a warning with multiple solutions when when one file is not found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/oneFileNotFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        assert(tr.stdOutContained('Found 1 files'), 'It should have successfully found one file');
+        done();
+    });
     
     it('restore single solution mono', (done: MochaDone) => {
         this.timeout(1000);
@@ -214,6 +241,32 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('VstsNuGetPush output here'), "should have VstsNuGetPush output");
         assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('push logs a warning when file is not found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PublishTests/fileNotFound.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('push logs a warning when one file is not found but one file is found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PublishTests/oneFileNotFound.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.stdOutContained('Found 1 files'), 'It should have successfully found one file');
+        assert(tr.succeeded, 'task should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -328,6 +381,32 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('pack logs a warning when file is not found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PackTests/fileNotFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('pack logs a warning when one file is not found but one file is found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PackTests/oneFileNotFound.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.warningIssues && tr.warningIssues.length, 'Should have thrown a warning in the stream');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        assert(tr.stdOutContained('Found 1 files'), 'It should have successfully found one file');
         done();
     });
 });
