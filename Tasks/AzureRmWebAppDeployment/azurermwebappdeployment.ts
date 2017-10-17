@@ -85,7 +85,6 @@ async function run() {
         }
         else {
             tl.debug("Performing the deployment of webapp.");
-
             if(isLinuxWebApp) {
                 webDeployPkg = linuxWebDeployPkg;
             }
@@ -292,6 +291,7 @@ async function updateWebAppConfigDetails(SPN, webAppName: string, resourceGroupN
                         "scmType": "VSTSRM"
                     }
                 });
+            
             await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
             await updateArmMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);

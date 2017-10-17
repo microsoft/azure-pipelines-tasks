@@ -1,71 +1,86 @@
 {
   "name": "azurerest-common",
   "version": "1.0.0",
-  "lockfileVersion": 1,
   "dependencies": {
     "balanced-match": {
-      "version": "https://registry.npmjs.org/balanced-match/-/balanced-match-0.4.2.tgz",
-      "integrity": "sha1-yz8+PHMtwPAe5wtAPzAuYddwmDg="
+      "version": "0.4.2",
+      "from": "balanced-match@https://registry.npmjs.org/balanced-match/-/balanced-match-0.4.2.tgz",
+      "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-0.4.2.tgz"
     },
     "brace-expansion": {
-      "version": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.6.tgz",
-      "integrity": "sha1-cZfX6qm4fmSDkOph/GbIRCdCDfk="
+      "version": "1.1.6",
+      "from": "brace-expansion@https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.6.tgz",
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.6.tgz"
     },
     "concat-map": {
-      "version": "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz",
-      "integrity": "sha1-2Klr13/Wjfd5OnMDajug1UBdR3s="
+      "version": "0.0.1",
+      "from": "concat-map@https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz",
+      "resolved": "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
     },
     "minimatch": {
-      "version": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.3.tgz",
-      "integrity": "sha1-Kk5AkLlrLbBqnX3wEFWmKnfJt3Q="
+      "version": "3.0.3",
+      "from": "minimatch@https://registry.npmjs.org/minimatch/-/minimatch-3.0.3.tgz",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.3.tgz"
     },
     "mockery": {
-      "version": "https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz",
-      "integrity": "sha1-9O3g2HUMHJcnwnLqLGBiniyaHE8="
+      "version": "1.7.0",
+      "from": "mockery@https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz",
+      "resolved": "https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz"
     },
     "node-uuid": {
-      "version": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz",
-      "integrity": "sha1-baWhdmjEs91ZYjvaEc9/pMH2Cm8="
+      "version": "1.4.7",
+      "from": "node-uuid@https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz",
+      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
     },
     "q": {
-      "version": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
-      "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
+      "version": "1.4.1",
+      "from": "q@https://registry.npmjs.org/q/-/q-1.4.1.tgz",
+      "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz"
     },
     "sax": {
-      "version": "https://registry.npmjs.org/sax/-/sax-1.2.1.tgz",
-      "integrity": "sha1-e45lYZCyKOgaZq6nSEgNgozS03o="
+      "version": "1.2.1",
+      "from": "sax@https://registry.npmjs.org/sax/-/sax-1.2.1.tgz",
+      "resolved": "https://registry.npmjs.org/sax/-/sax-1.2.1.tgz"
     },
     "semver": {
-      "version": "https://registry.npmjs.org/semver/-/semver-5.3.0.tgz",
-      "integrity": "sha1-myzl094C0XxgEq0yaqa00M9U+U8="
+      "version": "5.3.0",
+      "from": "semver@https://registry.npmjs.org/semver/-/semver-5.3.0.tgz",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.3.0.tgz"
     },
     "shelljs": {
-      "version": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
-      "integrity": "sha1-NZbmMHp4FUT1kfN9phg2DzHbV7E="
+      "version": "0.3.0",
+      "from": "shelljs@https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
+      "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz"
     },
     "tunnel": {
-      "version": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.4.tgz",
-      "integrity": "sha1-LTeFoVjBdMmhbcLARuxfxfF0IhM="
+      "version": "0.0.4",
+      "from": "tunnel@0.0.4",
+      "resolved": "https://registry.npmjs.org/tunnel/-/tunnel-0.0.4.tgz"
+    },
+    "typed-rest-client": {
+      "version": "0.12.0",
+      "from": "typed-rest-client@0.12.0",
+      "resolved": "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-0.12.0.tgz"
     },
     "underscore": {
-      "version": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz",
-      "integrity": "sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI="
-    },
-    "vso-node-api": {
-      "version": "https://registry.npmjs.org/vso-node-api/-/vso-node-api-6.0.1-preview.tgz",
-      "integrity": "sha1-RBprv5s8aNpiTbAeo1y6jwpMLKs="
+      "version": "1.8.3",
+      "from": "underscore@1.8.3",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
     },
     "vsts-task-lib": {
-      "version": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",
-      "integrity": "sha1-rfx4BRaPtJLVcD7eZIXOt4G2SrQ="
+      "version": "2.0.1-preview",
+      "from": "vsts-task-lib@https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",
+      "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz"
     },
     "xml2js": {
-      "version": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.13.tgz",
-      "integrity": "sha1-+EQ+B0Oeb/ktmVKPSbvTScyfMGs="
+      "version": "0.4.13",
+      "from": "xml2js@https://registry.npmjs.org/xml2js/-/xml2js-0.4.13.tgz",
+      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.13.tgz"
     },
     "xmlbuilder": {
-      "version": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-8.2.2.tgz",
-      "integrity": "sha1-aSSGc0ELS6QuGmE2VR0pIjNap3M="
+      "version": "8.2.2",
+      "from": "xmlbuilder@https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-8.2.2.tgz",
+      "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-8.2.2.tgz"
     }
   }
 }
