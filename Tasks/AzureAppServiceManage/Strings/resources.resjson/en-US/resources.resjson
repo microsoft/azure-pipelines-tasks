@@ -73,5 +73,6 @@
   "loc.messages.SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
   "loc.messages.UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
   "loc.messages.UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s",
-  "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s"
+  "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
+  "loc.messages.UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'"
 }

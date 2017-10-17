@@ -409,9 +409,8 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
         if(response.statusCode === 200) {
             deferred.resolve();
         } else {
-            let errorMessage = "Status Code : " + response.statusCode + "\n";
             tl.debug("Action: updateAzureRMWebAppConfigDetails, Response: " + JSON.stringify(response));
-            deferred.reject(errorMessage);
+            deferred.reject(tl.loc("UnableToUpdateWebAppConfigDetails", response.statusCode));
         }
     },
     (error) => {

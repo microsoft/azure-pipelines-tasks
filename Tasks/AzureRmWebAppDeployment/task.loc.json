@@ -685,6 +685,7 @@
     "UnableToGetAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToGetAzureRMWebAppMetadata",
     "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
     "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
-    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody"
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
   }
 }

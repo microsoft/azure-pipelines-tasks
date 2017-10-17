@@ -305,6 +305,7 @@
     "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights",
     "UnableToConfigureWebTest": "ms-resource:loc.messages.UnableToConfigureWebTest",
     "UnableToConfigureInstrumentationKeyForAppService": "ms-resource:loc.messages.UnableToConfigureInstrumentationKeyForAppService",
-    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody"
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
   }
 }
