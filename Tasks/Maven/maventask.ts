@@ -96,13 +96,13 @@ tl.debug('Maven executable: ' + mvnExec);
 
 // Set JAVA_HOME to the JDK version (default, 1.7, 1.8, etc.) or the path specified by the user
 var specifiedJavaHome: string = null;
+var javaTelemetryData = null;
 if (javaHomeSelection == 'JDKVersion') {
     // Set JAVA_HOME to the specified JDK version (default, 1.7, 1.8, etc.)
     tl.debug('Using the specified JDK version to find and set JAVA_HOME');
     var jdkVersion: string = tl.getInput('jdkVersion');
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
-    console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Maven]jdkVersion=' + jdkVersion);            
-
+    javaTelemetryData = { "jdkVersion": jdkVersion };
     if (jdkVersion != 'default') {
          specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
@@ -112,8 +112,9 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
-    console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Maven]jdkVersion=custom');                
+    javaTelemetryData = { "jdkVersion": "custom" };      
 }
+javacommons.publishJavaTelemetry('Maven', javaTelemetryData);
 
 // Set JAVA_HOME as determined above (if different than default)
 if (specifiedJavaHome) {

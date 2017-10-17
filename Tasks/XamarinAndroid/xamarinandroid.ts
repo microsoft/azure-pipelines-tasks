@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import msbuildHelpers = require('msbuildhelpers/msbuildhelpers');
+import javacommons = require('java-common/java-common');
 
 async function run() {
     try {
@@ -22,12 +23,13 @@ async function run() {
             jdkSelection = 'JDKVersion'; //fallback to JDKVersion for older version of tasks
         }
         let specifiedJavaHome = null;
+        let javaTelemetryData = null;
 
         if (jdkSelection === 'JDKVersion') {
             tl.debug('Using JDK version to find JDK path');
             let jdkVersion: string = tl.getInput('jdkVersion');
-            let jdkArchitecture: string = tl.getInput('jdkArchitecture');
-            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]jdkVersion=' + jdkVersion);                        
+            let jdkArchitecture: string = tl.getInput('jdkArchitecture'); 
+            javaTelemetryData = { "jdkVersion": jdkVersion };                       
 
             if (jdkVersion !== 'default') {
                 // jdkVersion should be in the form of 1.7, 1.8, or 1.10
@@ -44,8 +46,9 @@ async function run() {
             tl.debug('Using path from user input to find JDK');
             let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
             specifiedJavaHome = jdkUserInputPath;
-            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]jdkVersion=custom');                                    
+            javaTelemetryData = { "jdkVersion": "custom" };      
         }
+        javacommons.publishJavaTelemetry('XamarinAndroid', javaTelemetryData);
 
         //find build tool path to use
         let buildToolPath: string;

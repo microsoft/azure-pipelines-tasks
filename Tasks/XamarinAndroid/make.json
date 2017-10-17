@@ -8,12 +8,18 @@
             "module": "../Common/MSBuildHelpers",
             "type": "node",
             "compile": true
+        },
+        {
+            "module": "../Common/java-common",
+            "type": "node",
+            "compile": true
         }
     ],
     "rm": [
         {
             "items": [
-                "node_modules/msbuildhelpers/node_modules/vsts-task-lib"
+                "node_modules/msbuildhelpers/node_modules/vsts-task-lib",
+                "node_modules/java-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }

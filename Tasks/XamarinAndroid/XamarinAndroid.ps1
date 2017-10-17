@@ -43,7 +43,14 @@ try {
         $msBuildArguments = "$msBuildArguments /p:OutputPath=""$outputDir"""
     }
     
-    Write-Host "##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]jdkVersion=`"$jdkVersion`""
+    try {
+        Assert-VstsAgent -Minimum '2.120.0'
+        $javaTelemetryData = "{ `"jdkVersion`": $jdkVersion }"; 
+        Write-Host "##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]$javaTelemetryData"
+    } catch {
+        Write-Verbose 'Failed to publish java telemetry. Minimum agent version required is 2.120.0'; 
+    }
+
     if ($jdkVersion -and $jdkVersion -ne "default")
     {
         $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
