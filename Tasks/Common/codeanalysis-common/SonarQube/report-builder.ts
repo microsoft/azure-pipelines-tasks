@@ -142,7 +142,7 @@ export class SonarQubeReportBuilder {
                 subsections.push(failureSubsections.join('  \r\n').trim());
                 subsections.push('</table>');
 
-                let qualityGateDetailsSection: string = subsections.join('  \r\n').trim() + '\r\n\r\n';  // 2 carrige returns to prevent any malformed summary results
+                let qualityGateDetailsSection: string = subsections.join('  \r\n').trim() + '\r\n\r\n';  // 2 carriage returns to prevent any malformed summary results
                 return qualityGateDetailsSection;
             });
     }
