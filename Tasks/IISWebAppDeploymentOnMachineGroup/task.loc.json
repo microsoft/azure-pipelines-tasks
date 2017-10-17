@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 26
+    "Patch": 27
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -172,7 +172,6 @@
     "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
-    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",

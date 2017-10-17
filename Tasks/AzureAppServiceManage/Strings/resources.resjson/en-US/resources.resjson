@@ -25,6 +25,10 @@
   "loc.input.help.ExtensionsList": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect.",
   "loc.input.label.OutputVariable": "Output variable",
   "loc.input.help.OutputVariable": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2",
+  "loc.input.label.AppInsightsResourceGroupName": "Application Insights Resource Group Name",
+  "loc.input.help.AppInsightsResourceGroupName": "Enter or Select resource group to which Application Insights resources belongs.",
+  "loc.input.label.ApplicationInsightsResourceName": "Application Insights Resource Name",
+  "loc.input.help.ApplicationInsightsResourceName": "Enter or Select Application Insights resource to enable continuous montioring.",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
   "loc.messages.Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
   "loc.messages.Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
@@ -62,5 +66,11 @@
   "loc.messages.InstallingSiteExtension": "Installing site extension '%s' in Azure App Service.",
   "loc.messages.FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s, Error Message: %s",
   "loc.messages.UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id."
+  "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+  "loc.messages.UnableToGetAppInsightsResource": "Unable to get Application Insights resource with name : %s",
+  "loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for Application Insights resource : %s",
+  "loc.messages.FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
+  "loc.messages.SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
+  "loc.messages.UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
+  "loc.messages.UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s"
 }

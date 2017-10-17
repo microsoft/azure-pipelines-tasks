@@ -43,5 +43,6 @@
   "loc.messages.CurrentStatus": "Current Status: {0}",
   "loc.messages.DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
   "loc.messages.CheckingComposeFile": "Checking compose file",
-  "loc.messages.UsingPreviewAPI": "Using the preview APIs"
+  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
+  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
 }
