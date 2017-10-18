@@ -5,9 +5,10 @@
     "description": "Delay further execution of the workflow by a fixed time.",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
     "category": "Utility",
-    "visibility": [
-        "Release"
-    ],
+  "visibility": [
+    "Build",
+    "Release"
+  ],
     "author": "Microsoft Corporation",
     "runsOn": [
         "Server"
@@ -15,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "inputs": [
         {
