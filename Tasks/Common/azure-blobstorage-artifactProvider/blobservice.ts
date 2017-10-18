@@ -1,7 +1,7 @@
-import artifactProviders = require('item-level-downloader/Providers');
+import artifactProviders = require('artifact-engine/Providers');
 import azureBlobProvider = require('./azureBlobStorageProvider');
-import artifactProcessor = require('item-level-downloader/Engine');
-import models = require('item-level-downloader/Models');
+import artifactProcessor = require('artifact-engine/Engine');
+import models = require('artifact-engine/Models');
 import path = require('path');
 import util = require('util');
 

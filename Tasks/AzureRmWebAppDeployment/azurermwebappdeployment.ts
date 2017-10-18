@@ -85,7 +85,6 @@ async function run() {
         }
         else {
             tl.debug("Performing the deployment of webapp.");
-
             if(isLinuxWebApp) {
                 webDeployPkg = linuxWebDeployPkg;
             }
@@ -245,15 +244,28 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         }
         var physicalPath = "/site/wwwroot";
         var virtualPath = "/";
-        if(virtualApplication) {
-            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if(pathMappings[1] != null) {
-                virtualPath = pathMappings[0];
-                physicalPath = pathMappings[1];
-            } else {
-                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+        
+        if (webDeployPkg && webDeployPkg.toLowerCase().endsWith('.war')) {
+            tl.debug('WAR: webAppPackage = ' + webDeployPkg);
+            let warFile = path.basename(webDeployPkg.slice(0, webDeployPkg.length - '.war'.length));
+            let warExt = webDeployPkg.slice(webDeployPkg.length - '.war'.length)
+            tl.debug('WAR: warFile = ' + warFile);
+            warFile = warFile + ((virtualApplication) ? "/" + virtualApplication : "");
+            tl.debug('WAR: warFile = ' + warFile);
+            physicalPath = physicalPath + "/webapps/" + warFile;
+            await kuduUtility.ensurePhysicalPathExists(publishingProfile, physicalPath); 
+        } else {
+            if(virtualApplication) {
+                var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+                if(pathMappings[1] != null) {
+                    virtualPath = pathMappings[0];
+                    physicalPath = pathMappings[1];
+                } else {
+                    throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+                }
             }
         }
+
         await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, virtualPath, physicalPath, takeAppOfflineFlag);
         console.log(tl.loc('PackageDeploymentSuccess'));
     }
@@ -279,6 +291,7 @@ async function updateWebAppConfigDetails(SPN, webAppName: string, resourceGroupN
                         "scmType": "VSTSRM"
                     }
                 });
+            
             await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
 
             await updateArmMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
