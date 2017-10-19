@@ -70,12 +70,12 @@ async function doWork() {
             }
         }
         else {
-            const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
+            const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
                 "endpoint": {
                     "url": serverEndpointUrl
                 },
-                "definition": jobName,
+                "jobUrlInfix": jenkinsJobDetails.jobUrlInfix,
                 "multibranchPipelineUrlInfix": jenkinsJobDetails.multiBranchPipelineUrlInfix,
                 "version": jenkinsJobDetails.buildId
             };
