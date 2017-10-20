@@ -60,7 +60,6 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
-    vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     return vsTestConfiguration;
 }
 
@@ -193,6 +192,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
         throw error;
     }
+
+    testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
 }
 
 async function logWarningForWER(runUITests: boolean) {
