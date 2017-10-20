@@ -36,6 +36,7 @@ export interface TestConfigurations {
     otherConsoleOptions: string;
     taskInstanceIdentifier: string;
     runUITests: boolean;
+    ignoreTestFailures: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -60,7 +61,6 @@ export interface DtaEnvironment {
 export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
-    ignoreVstestFailure: string;
     responseFile: string;
     responseFileSupported: boolean;
 }
