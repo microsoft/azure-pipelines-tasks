@@ -49,6 +49,12 @@ export function getDistributedTestConfigurations() {
         dtaConfiguration.useVsTestConsole = 'false';
     }
 
+    dtaConfiguration.proceedAfterAbortedTestCase = false;
+    if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
+        dtaConfiguration.proceedAfterAbortedTestCase = true;
+    }
+    tl.debug('ProceedAfterAbortedTestCase is set to : ' + dtaConfiguration.proceedAfterAbortedTestCase);
+
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
