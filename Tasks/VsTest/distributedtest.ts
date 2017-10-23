@@ -148,20 +148,16 @@ export class DistributedTest {
                     batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
                     batchsize: this.dtaTestConfig.numberOfTestCasesPerSlice,
                     codeCoverageEnabled: this.dtaTestConfig.codeCoverageEnabled,
-                    customSlicingEnabled: utils.Helper.isNullOrUndefined(this.dtaTestConfig.customSlicingenabled) ? 'false' : 'true',
                     environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, 
                     numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
                     numberOfTestCasesPerSlice: this.dtaTestConfig.numberOfTestCasesPerSlice,
                     overridesTestRunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
-                    pathToCustomTestAdaptersSet: utils.Helper.isNullOrUndefined(this.dtaTestConfig.pathtoCustomTestAdapters) ? 'false' : 'true',
                     pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
                     runInIsolation: this.dtaTestConfig.runTestsInIsolation,
                     task: "VsTest",
                     testSelection: this.dtaTestConfig.testSelection,
                     usesMultiCoreParallel: this.dtaTestConfig.runInParallel,
                     usesTia: this.dtaTestConfig.tiaConfig.tiaEnabled,
-                    useVsTestConsole: this.dtaTestConfig.useVsTestConsole,
-                    videoCoverageEnabled: utils.Helper.isNullOrUndefined(this.dtaTestConfig.videoCoverageEnabled) ? 'false' : 'true',
                     vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
                 };
 
