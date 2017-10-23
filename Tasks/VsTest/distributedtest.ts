@@ -145,12 +145,31 @@ export class DistributedTest {
             throw new Error('Failed to start Modules/DTAExecutionHost.exe.');
         });
 
+        var consolidatedCiData = {
+                    agentFailure: false,
+                    batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
+                    batchSize: this.dtaTestConfig.numberOfTestCasesPerSlice,
+                    codeCoverageEnabled: this.dtaTestConfig.codeCoverageEnabled,
+                    environmentUri: this.dtaTestConfig.dtaEnvironment.environmentUri, 
+                    numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
+                    overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
+                    pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
+                    runTestsInIsolation: this.dtaTestConfig.runTestsInIsolation,
+                    task: "VsTest",
+                    testSelection: this.dtaTestConfig.testSelection,
+                    runInParallel: this.dtaTestConfig.runInParallel,
+                    tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
+                    vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
+                };
+
         proc.on('close', (code) => {
             if (code !== 0) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + code);
+                consolidatedCiData.agentFailure = true;
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
             }
+            ci.publishEvent(consolidatedCiData);
             this.cleanUpDtaExeHost();
         });
     }
