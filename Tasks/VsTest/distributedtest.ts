@@ -79,6 +79,8 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchTestSourcesFile', this.testSourcesFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProceedAfterAbortedTestCase',
+                                        this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
