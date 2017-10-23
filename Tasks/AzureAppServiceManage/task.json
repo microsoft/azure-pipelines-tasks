@@ -2,7 +2,7 @@
     "id": "f045e430-8704-11e6-968f-e717e6411619",
     "name": "AzureAppServiceManage",
     "friendlyName": "Azure App Service Manage",
-    "description": "Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
+    "description": "Start, Stop, Restart, Slot swap, Install site extensions or Enable Continuous Monitoring for an Azure App Service",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 19
+        "Patch": 20
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -36,7 +36,7 @@
             "type": "pickList",
             "label": "Action",
             "required": false,
-            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap or Install site extensions for an Azure App Service",
+            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap, Install site extensions or enable Continuous Monitoring for an Azure App Service",
             "defaultValue": "Swap Slots",
             "options": {
                 "Swap Slots": "Swap Slots",
@@ -45,8 +45,8 @@
                 "Restart Azure App Service": "Restart App Service",
                 "Install Extensions": "Install Extensions",
                 "Enable Continuous Monitoring": "Enable Continuous Monitoring",
-                "Start all continuous webjobs": "Start all continuous webjobs",
-                "Stop all continuous webjobs": "Stop all continuous webjobs"
+                "Start all continuous webjobs": "Start All Continuous Webjobs",
+                "Stop all continuous webjobs": "Stop All Continuous Webjobs"
             }
         },
         {
@@ -171,19 +171,19 @@
         {
             "name": "AppInsightsResourceGroupName",
             "type": "pickList",
-            "label": "Application Insights Resource Group Name",
+            "label": "Resource Group name for Application Insights",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
             "visibleRule": "Action == Enable Continuous Monitoring",
-            "helpMarkDown": "Enter or Select resource group to which Application Insights resources belongs."
+            "helpMarkDown": "Enter or Select resource group where your application insights resource is available"
         },
         {
             "name": "ApplicationInsightsResourceName",
             "type": "pickList",
-            "label": "Application Insights Resource Name",
+            "label": "Application Insights resource name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -194,7 +194,7 @@
                 "ManageButtonName": "New"
             },
             "visibleRule": "Action == Enable Continuous Monitoring",
-            "helpMarkDown": "Enter or Select Application Insights resource to enable continuous montioring."
+            "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
         }
     ],
     "dataSourceBindings": [

@@ -28,7 +28,7 @@ export class AuthorizationClient {
 	}
 
 	public async getBearerToken(): Promise<any> {
-		if(this._accessToken) {
+		if(this._accessToken) {		
 			let tokenExpiryTimeInUTCSeconds: number = parseInt(this._accessToken.expires_on);
 			let currentTimeInUTCSeconds: number = this._getCurrentTimeInUTCSeconds();
 			if(tokenExpiryTimeInUTCSeconds > currentTimeInUTCSeconds + 60) {
@@ -68,7 +68,12 @@ export class AuthorizationClient {
 						}
 					}
 					else {
-						deferred.reject(tl.loc('Couldnotfetchaccesstoken', response.message.statusCode, response.message.statusMessage, contents));
+						let errorMessage = tl.loc('Couldnotfetchaccesstoken', response.message.statusCode, response.message.statusMessage, contents);
+						if(response.message.statusCode === 401 || response.message.statusCode === 403) {
+							errorMessage += tl.loc("SPNExpiredCheck");
+						}
+
+						deferred.reject(errorMessage);
 					}
 				}
 				catch (error) {
