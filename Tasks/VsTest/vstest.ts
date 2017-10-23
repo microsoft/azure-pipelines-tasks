@@ -206,7 +206,7 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     tl.mkdirP(resultsDirectory);
 
     tl.cd(workingDirectory);
-    const ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === 'true';
+    const ignoreTestFailures = vstestConfig.ignoreTestFailures && vstestConfig.ignoreTestFailures.toLowerCase() === 'true';
 
     const execOptions: tr.IExecOptions = <any>{
         ignoreReturnCode: ignoreTestFailures,
