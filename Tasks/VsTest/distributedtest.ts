@@ -146,18 +146,17 @@ export class DistributedTest {
         var consolidatedCiData = {
                     agentFailure: false,
                     batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
-                    batchsize: this.dtaTestConfig.numberOfTestCasesPerSlice,
+                    batchSize: this.dtaTestConfig.numberOfTestCasesPerSlice,
                     codeCoverageEnabled: this.dtaTestConfig.codeCoverageEnabled,
-                    environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, 
+                    environmentUri: this.dtaTestConfig.dtaEnvironment.environmentUri, 
                     numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
-                    numberOfTestCasesPerSlice: this.dtaTestConfig.numberOfTestCasesPerSlice,
-                    overridesTestRunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
+                    overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
                     pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
-                    runInIsolation: this.dtaTestConfig.runTestsInIsolation,
+                    runTestsInIsolation: this.dtaTestConfig.runTestsInIsolation,
                     task: "VsTest",
                     testSelection: this.dtaTestConfig.testSelection,
-                    usesMultiCoreParallel: this.dtaTestConfig.runInParallel,
-                    usesTia: this.dtaTestConfig.tiaConfig.tiaEnabled,
+                    runInParallel: this.dtaTestConfig.runInParallel,
+                    tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
                     vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
                 };
 
