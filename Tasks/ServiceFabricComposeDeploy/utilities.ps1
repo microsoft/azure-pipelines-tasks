@@ -57,20 +57,106 @@ function Get-ServiceFabricComposeApplicationStatusHelper
 {
     Param (
         [Parameter(Mandatory=$True)]
-        [bool]
-        $UsePreviewAPI,
+        [string]
+        $ApiVersion,
 
         [Parameter(Mandatory=$True)]
         [HashTable]
         $GetStatusParameters
     )
 
-        if ($UsePreviewAPI)
-        {
-            return Get-ServiceFabricComposeApplicationStatusPaged @GetStatusParameters
+    switch ($ApiVersion) {
+        "255.255" {
+            $status = Get-ServiceFabricComposeApplicationStatusPaged @GetStatusParameters
+            if ($status)
+            {
+                return @{
+                    "Status" = $status.ComposeApplicationStatus
+                    "StatusDetails" = $status.StatusDetails
+                }
+            }
+            else
+            {
+                return $null
+            }
         }
-        else
-        {
-            return Get-ServiceFabricComposeApplicationStatus @GetStatusParameters
+        "2.7" {
+            $status = Get-ServiceFabricComposeApplicationStatus @GetStatusParameters
+            if ($status)
+            {
+                return @{
+                    "Status" = $status.ComposeApplicationStatus
+                    "StatusDetails" = $status.StatusDetails
+                }
+            }
+            else
+            {
+                return $null
+            }
         }
+        Default {
+            $status = Get-ServiceFabricComposeDeploymentStatus @GetStatusParameters
+            if ($status)
+            {
+                return @{
+                    "Status" = $status.ComposeDeploymentStatus
+                    "StatusDetails" = $status.StatusDetails
+                }
+            }
+            else
+            {
+                return $null
+            }
+        }
+    }
+}
+
+function Remove-ServiceFabricComposeApplicationHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $RemoveParameters
+    )
+
+    switch ($ApiVersion) {
+        "255.255" {
+            return Remove-ServiceFabricComposeApplication @RemoveParameters
+        }
+        "2.7" {
+            return Remove-ServiceFabricComposeApplication @RemoveParameters
+        }
+        Default {
+            return Remove-ServiceFabricComposeDeployment @RemoveParameters
+        }
+    }
+}
+
+function New-ServiceFabricComposeApplicationHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $DeployParameters
+    )
+
+    switch ($ApiVersion) {
+        "255.255" {
+            return New-ServiceFabricComposeApplication @DeployParameters
+        }
+        "2.7" {
+            return New-ServiceFabricComposeApplication @DeployParameters
+        }
+        Default {
+            return New-ServiceFabricComposeDeployment @DeployParameters
+        }
+    }
 }

@@ -43,14 +43,14 @@ Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName
 
 # Setup mock Registry for Service Fabric
 $SfRegistry = @{
-    "FabricSDKVersion" = "255.255.1.2"
+    "FabricSDKVersion" = "2.7.1.2"
 }
 Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric SDK\' -ErrorAction SilentlyContinue
 
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
-$serviceFabricComposeApplicationStatusPaged = @{
+$serviceFabricComposeApplicationStatus = @{
     "ApplicationName"        = $applicationName
     "ComposeApplicationStatus"    = "Created"
     "StatusDetails" = ""
@@ -60,14 +60,14 @@ $serviceFabricComposeApplicationStatusPaged = @{
 $removed = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
 $removed.Value = $false
 
-Register-Mock Get-ServiceFabricComposeApplicationStatusPaged {
+Register-Mock Get-ServiceFabricComposeApplicationStatus {
     if (($removed.Value -eq $true))
     {
         return $null;
     }
     else
     {
-        return $serviceFabricComposeApplicationStatusPaged
+        return $serviceFabricComposeApplicationStatus
     }
 } -ApplicationName: $applicationName
 
@@ -86,6 +86,6 @@ Register-Mock New-ServiceFabricComposeApplication {
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
-Assert-WasCalled Get-ServiceFabricComposeApplicationStatusPaged -Times 3
+Assert-WasCalled Get-ServiceFabricComposeApplicationStatus -Times 3
 Assert-WasCalled Remove-ServiceFabricComposeApplication -Times 1
 Assert-WasCalled New-ServiceFabricComposeApplication -Times 1

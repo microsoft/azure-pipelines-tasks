@@ -22,25 +22,68 @@ try {
     $removeTimeoutSec = Get-VstsInput -Name removeTimeoutSec
     $getStatusTimeoutSec = Get-VstsInput -Name getStatusTimeoutSec
 
-    $deployParameters = @{
-        'ApplicationName' = $applicationName
-        'Compose' = $composeFilePath
-    }
-    $removeParameters = @{
-        'Force' = $true
-    }
-    $getStatusParameters = @{
-        'ApplicationName' = $applicationName
-    }
-
-    $usePreviewApi = $false
-    $regKey = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -ErrorAction SilentlyContinue
+    $apiVersion = '2.8'
+    $regKey = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric SDK\' -ErrorAction SilentlyContinue
     if ($regKey)
     {
-        if ($regKey.FabricVersion.StartsWith('255.255'))
+        if ($regKey.FabricSDKVersion -match "^\d+\.\d+")
         {
-            $usePreviewApi = $true
-            Write-Verbose (Get-VstsLocString -Key UsingPreviewAPI)
+            $regExVersion = $matches[0]
+
+            switch ($regExVersion) {
+                '2.7' { $apiVersion = '2.7' }
+                '2.8' { $apiVersion = '2.8' }
+                '255.255' { $apiVersion = '255.255' }
+                Default {
+                    $sdkVersion = New-Object Version
+                    if ([Version]::TryParse($matches[0], [ref]$sdkVersion)) {
+                        $minVersion = New-Object -TypeName Version -ArgumentList '2.7'
+                        if ($sdkVersion -lt $minVersion) {
+                            Write-Error (Get-VstsLocString -Key UnsupportedAPIVersion -ArgumentList $regKey.FabricSDKVersion)
+                            return;
+                        }
+                    }
+                    else {
+                        Write-Error (Get-VstsLocString -Key UnsupportedAPIVersion -ArgumentList $regKey.FabricSDKVersion)
+                        return;
+                    }
+                }
+            }
+        }
+        else
+        {
+            Write-Error (Get-VstsLocString -Key UnsupportedAPIVersion -ArgumentList $regKey.FabricSDKVersion)
+            return;
+        }
+    }
+    Write-Verbose (Get-VstsLocString -Key UsingAPIVersion -ArgumentList $apiVersion)
+
+    if ($apiVersion -eq '2.8')
+    {
+        $deployParameters = @{
+            'DeploymentName' = $applicationName
+            'Compose' = $composeFilePath
+        }
+        $removeParameters = @{
+            'DeploymentName' = $applicationName
+            'Force' = $true
+        }
+        $getStatusParameters = @{
+            'DeploymentName' = $applicationName
+        }
+    }
+    else
+    {
+        $deployParameters = @{
+            'ApplicationName' = $applicationName
+            'Compose' = $composeFilePath
+        }
+        $removeParameters = @{
+            'ApplicationName' = $applicationName
+            'Force' = $true
+        }
+        $getStatusParameters = @{
+            'ApplicationName' = $applicationName
         }
     }
 
@@ -93,7 +136,7 @@ try {
             }
         }
 
-        if ($usePreviewApi)
+        if ($apiVersion -eq '255.255')
         {
             $deployParameters['RepositoryUserName'] = $username
             $deployParameters['RepositoryPassword'] = $password
@@ -120,32 +163,30 @@ try {
         $getStatusParameters['TimeoutSec'] = $getStatusTimeoutSec
     }
 
-    $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
+    $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
     if ($existingApplication -ne $null)
     {
         Write-Host (Get-VstsLocString -Key RemovingApplication -ArgumentList $applicationName)
-        $removeParameters['ApplicationName'] = $applicationName
-        Remove-ServiceFabricComposeApplication @removeParameters
 
+        Remove-ServiceFabricComposeApplicationHelper -ApiVersion $apiVersion -RemoveParameters $removeParameters
         do
         {
-            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.ComposeApplicationStatus)
+            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.Status)
             Start-Sleep -Seconds 3
-            $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
-
+            $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
         }
         while ($existingApplication -ne $null)
         Write-Host (Get-VstsLocString -Key ApplicationRemoved)
     }
 
     Write-Host (Get-VstsLocString -Key CreatingApplication)
-    New-ServiceFabricComposeApplication @deployParameters
+    New-ServiceFabricComposeApplicationHelper -ApiVersion $apiVersion -DeployParameters $deployParameters
 
     Write-Host (Get-VstsLocString -Key WaitingForDeploy)
-    $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
+    $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
     while (($newApplication -eq $null) -or `
-           ($newApplication.ComposeApplicationStatus -eq 'Provisioning') -or `
-           ($newApplication.ComposeApplicationStatus -eq 'Creating'))
+           ($newApplication.Status -eq 'Provisioning') -or `
+           ($newApplication.Status -eq 'Creating'))
     {
         if ($newApplication -eq $null)
         {
@@ -153,16 +194,16 @@ try {
         }
         else
         {
-            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
+            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.Status)
         }
         Start-Sleep -Seconds 3
-        $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -UsePreviewAPI $usePreviewAPI -GetStatusParameters $getStatusParameters
+        $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
     }
-    Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.ComposeApplicationStatus)
+    Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.Status)
 
-    if ($newApplication.ComposeApplicationStatus -ne 'Created')
+    if ($newApplication.Status -ne 'Created' -and $newApplication.Status -ne 'Ready')
     {
-        Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.ComposeApplicationStatus.ToString(), $newApplication.StatusDetails))
+        Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.Status.ToString(), $newApplication.StatusDetails))
     }
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
