@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 7
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -70,7 +70,7 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "500"
+        "maxLength": "4000"
       }
     },
     {

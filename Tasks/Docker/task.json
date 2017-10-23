@@ -13,10 +13,10 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 0
+        "Patch": 2
     },
     "demands": [],
-    "preview": "true",
+    "preview": "false",
     "groups": [
         {
             "name": "advanced",

@@ -3,13 +3,13 @@ import * as nuGetGetter from "nuget-task-common/NuGetToolGetter";
 import * as nutil from "nuget-task-common/Utility";
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import * as utility from './Common/utility';
+import * as utility from "nuget-task-common/PackUtilities";
 
 import { IExecOptions } from "vsts-task-lib/toolrunner";
 
 export async function run(): Promise<void> {
 
-    let searchPattern = tl.getPathInput("searchPatternPack", true);
+    let searchPatternInput = tl.getPathInput("searchPatternPack", true);
     let configuration = tl.getInput("configurationToPack");
     let versioningScheme = tl.getInput("versioningScheme");
     let versionEnvVar = tl.getInput("versionEnvVar");
@@ -38,7 +38,7 @@ export async function run(): Promise<void> {
             case "byPrereleaseNumber":
                 tl.debug(`Getting prerelease number`);
 
-                let nowUtcString = utility.getUtcDateString();
+                let nowUtcString = utility.getUtcDateString(new Date());
                 version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowUtcString}`;
                 break;
             case "byEnvVar":
@@ -84,17 +84,18 @@ export async function run(): Promise<void> {
 
         let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
-        if (!searchPattern) {
+        if (!searchPatternInput) {
             // Use empty string when no project file is specified to operate on the current directory
             filesList = [""];
         } else {
             if (!useLegacyFind) {
                 let findOptions: tl.FindOptions = <tl.FindOptions>{};
                 let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-                filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+                let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+                filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
             }
             else {
-                filesList = nutil.resolveFilterSpec(searchPattern);
+                filesList = nutil.resolveFilterSpec(searchPatternInput);
             }
         }
 

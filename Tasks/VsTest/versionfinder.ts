@@ -8,9 +8,8 @@ import * as utils from './helpers';
 import * as ci from './cieventlogger';
 
 const regedit = require('regedit');
-const xml2js = require('xml2js');
 
-export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
+export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     const vstestexeLocation = locateVSTestConsole(testConfig);
     const vstestLocationEscaped = vstestexeLocation.replace(/\\/g, '\\\\');
     const wmicTool = tl.tool('wmic');
@@ -55,14 +54,14 @@ export function getVsTestRunnerDetails(testConfig : models.TestConfigurations) {
             testConfig.vsTestVersionDetails = new version.Dev15VSTestVersion(vstestexeLocation, minorVersion, patchNumber);
             break;
         default:
-            testConfig.vsTestVersionDetails =  new version.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
+            testConfig.vsTestVersionDetails = new version.VSTestVersion(vstestexeLocation, majorVersion, minorVersion, patchNumber);
             break;
     }
 }
 
-function locateVSTestConsole(testConfig : models.TestConfigurations) : string {
+function locateVSTestConsole(testConfig: models.TestConfigurations): string {
     const vstestExeFolder = locateTestWindow(testConfig);
-    let vstestExePath : string = vstestExeFolder;
+    let vstestExePath: string = vstestExeFolder;
     if (vstestExeFolder) {
         vstestExePath = path.join(vstestExeFolder, 'vstest.console.exe');
     }

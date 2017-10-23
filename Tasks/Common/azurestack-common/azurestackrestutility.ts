@@ -2,11 +2,20 @@ var parseString = require('xml2js').parseString;
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
-import httpClient = require('vso-node-api/HttpClient');
-import restClient = require('vso-node-api/RestClient');
+import * as rm from "typed-rest-client/RestClient";
+import httpInterfaces = require("typed-rest-client/Interfaces");
 
-var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var restObj = new restClient.RestCallbackClient(httpObj);
+let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+    proxy: { 
+        proxyUrl: proxyUrl, 
+        proxyUsername: tl.getVariable("agent.proxyusername"), 
+        proxyPassword: tl.getVariable("agent.proxypassword"), 
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
+    } 
+} : null; 
+
+let rc = new rm.RestClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, null, requestOptions);
 
 var azureStackEnvironment = "AzureStack";
 var defaultAuthorityUrl = "https://login.windows.net/";
@@ -25,7 +34,9 @@ export async function initializeAzureRMEndpointData(connectedServiceName)
 
     if(endPoint["environment"] != null && endPoint["environment"].toLowerCase() == azureStackEnvironment.toLowerCase()) {
         if(!endPoint["envAuthUrl"] || !endPoint["activeDirectoryResourceId"]) {
-            endPoint =  await initializeAzureStackData({"url":endPoint["url"]});
+            endPoint =  await initializeAzureStackData(endPoint);
+            endPoint["envAuthUrl"] = endPoint['environmentAuthorityUrl'];
+            endPoint["activeDirectoryResourceId"] = endPoint['activeDirectoryServiceEndpointResourceId'];
             
             if(endPoint["envAuthUrl"] == null) {
                 throw tl.loc("UnableToFetchAuthorityURL");
@@ -51,17 +62,17 @@ export async function initializeAzureStackData(endpoint): Promise<any>
     };
      
     var azureStackDependencyDataUrl = endpoint.url + "/metadata/endpoints?api-version=2015-01-01"
-
-    httpObj.get('GET', azureStackDependencyDataUrl, headers, (error, response, body) => {
-        if (error) {
-            deferred.reject(error);
-        }
-        else if (response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            var authenticationData = obj.authentication;
+    let options: rm.IRequestOptions = {};
+    options.additionalHeaders = headers;
+    let promise: Promise<any> = rc.get(azureStackDependencyDataUrl, options);
+    promise.then((response) => {
+        if(response.statusCode === 200) {
+            let result = response.result;
+            var authenticationData = result.authentication;
             if(authenticationData) {
                 var loginEndpoint = authenticationData.loginEndpoint;
                 if(loginEndpoint) {
+                    loginEndpoint += (loginEndpoint.lastIndexOf("/") == loginEndpoint.length - 1) ? "" : "/";
                     endpoint['activeDirectoryAuthority'] = loginEndpoint;
                     endpoint['environmentAuthorityUrl'] = loginEndpoint;
                 }
@@ -74,16 +85,16 @@ export async function initializeAzureStackData(endpoint): Promise<any>
                 }
             }
             
-            if(obj.graphEndpoint) {
-                endpoint['graphUrl'] = obj.graphEndpoint;
+            if(result.graphEndpoint) {
+                endpoint['graphUrl'] = result.graphEndpoint;
             }
             
-            if(obj.galleryUrl) {
-                endpoint['galleryUrl'] = obj.galleryUrl;
+            if(result.galleryUrl) {
+                endpoint['galleryUrl'] = result.galleryUrl;
             }
             
-            if(obj.portalEndpoint) {
-                endpoint['portalEndpoint'] = obj.portalEndpoint;
+            if(result.portalEndpoint) {
+                endpoint['portalEndpoint'] = result.portalEndpoint;
             }
             
             var endpointUrl =  endpoint.url;
@@ -102,9 +113,13 @@ export async function initializeAzureStackData(endpoint): Promise<any>
             deferred.resolve(endpoint);
         }
         else {
-            tl.debug(body);
-            deferred.reject(tl.loc("FailedToFetchAzureStackDependencyData", response.statusMessage));
+            tl.debug("Action: initializeAzureStackData, Response: " + JSON.stringify(response));
+            deferred.reject(tl.loc("FailedToFetchAzureStackDependencyData", response.statusCode));
         }
+    },
+    (error) => {
+        deferred.reject(error);
     });
+
     return deferred.promise;
 }

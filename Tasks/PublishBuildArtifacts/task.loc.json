@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 120,
+    "Minor": 124,
     "Patch": 1
   },
   "demands": [],
@@ -41,8 +41,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
       "options": {
-        "Container": "Server",
-        "FilePath": "File share"
+        "Container": "Visual Studio Team Services/TFS",
+        "FilePath": "A file share"
       }
     },
     {

@@ -13,9 +13,27 @@
     },
     "findMatch": {
         "/some/*pattern": [
+            "some/path",
             "some/path/one",
             "some/path/two"
         ],
+        "/some/*pattern/path": [
+            "some/path"
+        ],
+        "/some/*pattern/one": [
+            "some/path/one"
+        ],
         "/other/*pattern": []
+    },
+    "stats": {
+        "some/path": {
+            "isFile": false
+        },
+        "some/path/one": {
+            "isFile": true
+        },
+        "some/path/two": {
+            "isFile": true
+        }
     }
 }

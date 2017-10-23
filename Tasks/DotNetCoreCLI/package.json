@@ -1,6 +1,6 @@
 {
     "name": "vsts-tasks-dotnetcoreexe",
-    "version": "2.0.6",
+    "version": "2.1.5",
     "description": "Dotnet core exe",
     "main": "dotnetcore.js",
     "scripts": {
@@ -17,9 +17,10 @@
     },
     "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
     "dependencies": {
-        "vsts-task-lib": "2.0.6",
-        "q": "^1.4.1",
         "archiver": "1.2.0",
-        "vso-node-api": "6.0.1-preview"
+        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common",
+        "q": "^1.4.1",
+        "vso-node-api": "6.0.1-preview",
+        "vsts-task-lib": "2.0.6"
     }
 }

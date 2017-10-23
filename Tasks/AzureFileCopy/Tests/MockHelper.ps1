@@ -384,6 +384,39 @@ function Get-AzureRMResourceGroupResourcesDetails
     return @{}
 }
 
+function Get-Endpoint
+{
+    param([string]$connectedServiceName)
+
+    return @{
+        "Data"=@{
+            "EnvironmentName"="AzureStack"
+        }
+    }
+}
+
+function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
+{
+    param([string]$resourceGroupName,
+          [object]$azureRMVMResources,
+          [string]$connectedServiceName)
+
+    if(-not [string]::IsNullOrEmpty($resourceGroupName))
+    {
+        if(-not $resourceGroups.ContainsKey($resourceGroupName))
+        {
+            throw "Resource group '$resourceGroupName' could not be found."
+        }
+
+        if($resourceGroupDeployments.ContainsKey($resourceGroupName))
+        {
+            return $resourceGroupDeployments[$resourceGroupName]
+        }
+    }
+
+    return @{}
+}
+
 function Generate-AzureStorageContainerSASToken
 {
     param([string]$containerName,
@@ -533,11 +566,6 @@ function Set-AzureMachineCustomScriptExtension
                     throw "Cannot validate argument on parameter 'Location'. The argument is null or empty."
                 }
 
-                if($fileUri.Count -eq 2)
-                {
-                    $extensions[0]["SubStatuses"][1]["Message"]="'.\winrmconf.cmd' is not recognized as an internal or external command,\noperable program or batch file."
-                    $response["Status"]="Succeeded"
-                }
                 elseif($run -eq $invalidCustomScriptName)
                 {
                     $extensions[0]["SubStatuses"][1]["Message"]="The argument '$invalidCustomScriptName' to the -File parameter does not exist. Provide the path to an existing '.ps1' file as an argument to the -File parameter."

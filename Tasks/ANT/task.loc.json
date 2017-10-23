@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 117,
-    "Patch": 1
+    "Minor": 125,
+    "Patch": 0
   },
   "demands": [
     "ant"
@@ -204,6 +204,7 @@
       "defaultValue": "x86",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",

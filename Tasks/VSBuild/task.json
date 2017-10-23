@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 120,
+        "Minor": 125,
         "Patch": 0
     },
     "demands": [
@@ -62,6 +62,7 @@
             "name": "platform",
             "type": "string",
             "label": "Platform",
+            "helpMarkDown": "Specify the platform you want to build such as Win32, x86, x64 or any cpu.",
             "defaultValue": "",
             "required": false
         },
@@ -69,6 +70,7 @@
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
+            "helpMarkDown": "Specify the configuration you want to build such as debug or release.",
             "defaultValue": "",
             "required": false
         },
@@ -76,6 +78,7 @@
             "name": "clean",
             "type": "boolean",
             "label": "Clean",
+            "helpMarkDown": "Set to False if you want to make this an incremental build.",
             "defaultValue": "false",
             "required": false
         },
