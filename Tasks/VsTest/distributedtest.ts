@@ -165,11 +165,10 @@ export class DistributedTest {
             if (code !== 0) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + code);
                 consolidatedCiData.agentFailure = true;
-                ci.publishEvent(consolidatedCiData);
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
-                ci.publishEvent(consolidatedCiData);
             }
+            ci.publishEvent(consolidatedCiData);
             this.cleanUpDtaExeHost();
         });
     }
