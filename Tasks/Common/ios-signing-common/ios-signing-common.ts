@@ -405,8 +405,12 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string) {
     //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –fingerprint
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
+    if (!p12Pwd) {
+        // if password is null or not defined, set it to empty
+        p12Pwd = '';
+    }
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-
+    
     let openssl2: ToolRunner = tl.tool(opensslPath);
     openssl2.arg(['x509', '-noout', '-fingerprint']);
     openssl1.pipeExecOutputToTool(openssl2);
@@ -431,8 +435,12 @@ export async function getP12CommonName(p12Path: string, p12Pwd: string) {
     //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –subject
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
+    if (!p12Pwd) {
+        // if password is null or not defined, set it to empty
+        p12Pwd = '';
+    }
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-
+    
     let openssl2: ToolRunner = tl.tool(opensslPath);
     openssl2.arg(['x509', '-noout', '-subject']);
     openssl1.pipeExecOutputToTool(openssl2);
