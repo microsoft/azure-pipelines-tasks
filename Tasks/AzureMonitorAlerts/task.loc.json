@@ -74,7 +74,7 @@
         "resizable": "true",
         "rows": 5,
         "editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-        "displayFormat": "{{#rules}}'{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{metric.unit}}}\n{{/rules}}"
+        "displayFormat": "{{#rules}}{{{metric.displayValue}}} {{{thresholdCondition}}} {{{thresholdValue}}} {{{metric.unit}}}\n{{/rules}}"
       }
     },
     {
@@ -123,6 +123,7 @@
     "AlertRuleExists": "ms-resource:loc.messages.AlertRuleExists",
     "AlertRuleDoesNotExist": "ms-resource:loc.messages.AlertRuleDoesNotExist",
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
-    "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken"
+    "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
+    "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck"
   }
 }

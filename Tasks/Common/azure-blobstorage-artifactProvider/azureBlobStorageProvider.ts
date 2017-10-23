@@ -1,8 +1,7 @@
 import path = require('path');
 import azureStorage = require('azure-storage');
 import fs = require('fs');
-import models = require('item-level-downloader/Models');
-import stream = require("stream");
+import models = require('artifact-engine/Models');
 import tl = require('vsts-task-lib/task');
 
 export class AzureBlobProvider implements models.IArtifactProvider {
@@ -14,7 +13,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
     }
 
-    public putArtifactItem(item: models.ArtifactItem, readStream: stream.Readable): Promise<models.ArtifactItem> {
+    public putArtifactItem(item: models.ArtifactItem, readStream: NodeJS.ReadableStream): Promise<models.ArtifactItem> {
         return new Promise(async (resolve, reject) => {
             await this._ensureContainerExistence();
 
@@ -56,9 +55,9 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         return this._getItems(this._container, artifactItem.path);
     }
 
-    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<stream.Readable> {
+    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
         return new Promise((resolve, reject) => {
-            var readStream: stream.Readable = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            var readStream: NodeJS.ReadableStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
             resolve(readStream);
         });
     }

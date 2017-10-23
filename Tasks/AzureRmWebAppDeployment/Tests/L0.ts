@@ -497,7 +497,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0RunPostDeploymentScript.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd') >= 0, 'should have uploaded file: kuduPostDeploymentScript.cmd');
         assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd') >= 0, 'should have uploaded file: mainCmdFile.cmd');
@@ -529,7 +528,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'WebAppAvailabilityFailureTest.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        assert(tr.stdout.search('Azure web app in wrong state, status code : 500') >=0, 'Failed while checking azure web app avilability.');
+        assert(tr.stdout.search('Azure web app in wrong state. Action: testAzureWebAppAvailability') >=0, 'Failed while checking azure web app avilability.');
         done();
     });
 

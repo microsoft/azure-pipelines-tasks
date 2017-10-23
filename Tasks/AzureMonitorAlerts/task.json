@@ -74,7 +74,7 @@
 				"resizable": "true",
 				"rows": 5,
 				"editorExtension": "ms.vss-services-azure.azure-monitor-alerts-view",
-				"displayFormat": "{{#rules}}'{{{metric.displayValue}}}' {{{thresholdCondition}}} {{{thresholdValue}}} {{{metric.unit}}}\n{{/rules}}"              
+				"displayFormat": "{{#rules}}{{{metric.displayValue}}} {{{thresholdCondition}}} {{{thresholdValue}}} {{{metric.unit}}}\n{{/rules}}"              
 			}
 		},
 		{
@@ -123,6 +123,7 @@
 		"AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
 		"AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
 		"UpdatedRule": "Updated rule : '%s'",
-		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s."
+		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
+		"SPNExpiredCheck": "Check if the SPN is valid and not expired."
 	}
 }

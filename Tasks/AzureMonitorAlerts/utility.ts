@@ -1,18 +1,21 @@
 import * as tl from "vsts-task-lib/task";
 
 export function getDeploymentUri(): string {
-	let buildUri: string = tl.getVariable("Build.BuildUri");
-	let releaseUri: string = tl.getVariable("Release.ReleaseWebUrl");
-	
-	if(!!buildUri) {
-		return buildUri;
-	}
-	
-	if(!!releaseUri) {
-		return releaseUri;
+	let buildUri = tl.getVariable("Build.BuildUri");
+	let releaseWebUrl = tl.getVariable("Release.ReleaseWebUrl");
+	let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri'); 
+    let teamProject = tl.getVariable('System.TeamProjectId');
+    let buildId = tl.getVariable('build.buildId');
+
+	if(!!releaseWebUrl) {
+		return releaseWebUrl;
 	}
 
-	return "VSTS";
+	if(!!buildUri) {
+		return `${collectionUrl}${teamProject}/_build?buildId=${buildId}&_a=summary`;
+	}
+		
+	return "";
 }
 
 export function getWindowSizeForMetricAlertRule(key: string): string {

@@ -24,5 +24,6 @@
   "loc.messages.AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
   "loc.messages.AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
   "loc.messages.UpdatedRule": "Updated rule : '%s'",
-  "loc.messages.Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s."
+  "loc.messages.Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
+  "loc.messages.SPNExpiredCheck": "Check if the SPN is valid and not expired."
 }

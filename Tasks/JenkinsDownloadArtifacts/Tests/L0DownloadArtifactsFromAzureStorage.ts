@@ -22,17 +22,17 @@ tr.setInput("itemPattern", "**");
 tr.setInput("downloadCommitsAndWorkItems", "false");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
-process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
-process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
-process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
+process.env['ENDPOINT_AUTH_PARAMETER_connection1_USERNAME'] = 'dummyusername';
+process.env['ENDPOINT_AUTH_PARAMETER_connection1_PASSWORD'] = 'dummypassword';
+process.env['ENDPOINT_DATA_ID1_ACCEPTUNTRUSTEDCERTS'] = 'true';
 
 process.env['ENDPOINT_URL_ARM1'] = 'http://url';
-process.env['ENDPOINT_AUTH_PARAMETER_connection1_serviceprincipalid'] = 'dummyid';
-process.env['ENDPOINT_AUTH_PARAMETER_connection1_serviceprincipalkey'] = 'dummykey';
-process.env['ENDPOINT_AUTH_PARAMETER_connection1_tenantid'] = 'dummyTenantid';
-process.env['ENDPOINT_DATA_ARM1_environmentAuthorityUrl'] = 'dummyurl';
-process.env['ENDPOINT_DATA_ARM1_activeDirectoryServiceEndpointResourceId'] = 'dummyResourceId';
-process.env['ENDPOINT_DATA_ARM1_subscriptionId'] = 'dummySubscriptionId';
+process.env['ENDPOINT_AUTH_PARAMETER_ARM1_SERVICEPRINCIPALID'] = 'dummyid';
+process.env['ENDPOINT_AUTH_PARAMETER_ARM1_SERVICEPRINCIPALKEY'] = 'dummykey';
+process.env['ENDPOINT_AUTH_PARAMETER_ARM1_TENANTID'] = 'dummyTenantid';
+process.env['ENDPOINT_DATA_ARM1_ENVIRONMENTAUTHORITYURL'] = 'dummyurl';
+process.env['ENDPOINT_DATA_ARM1_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID'] = 'dummyResourceId';
+process.env['ENDPOINT_DATA_ARM1_SUBSCRIPTIONID'] = 'dummySubscriptionId';
 
 tr.registerMock("azure-arm-rest/azure-arm-storage", {
     StorageManagementClient: function (A, B) {
@@ -48,8 +48,15 @@ tr.registerMock("azure-arm-rest/azure-arm-storage", {
                         id: "StorageAccountUrl"
                     }
                 },
-                listkeys: function (A, B, C) {
+                listKeys: function (A, B, C, D) {
                     return ["accesskey1", "accessKey2"];
+                },
+                listClassicAndRMAccounts: function(A) {
+                    return [
+                        {
+                            name : "storage1"
+                        }
+                    ];
                 }
             }
         }
