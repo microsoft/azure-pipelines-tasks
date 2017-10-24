@@ -8,7 +8,7 @@
         [ValidateNotNullOrEmpty()]
         [string]
         $PkgArtifactName,
-		
+
         [Parameter(Mandatory=$true)]
         [boolean]
         $OverwritePkgArtifact,
@@ -68,7 +68,7 @@
                 $artifactZipFile = Join-Path $agentTmpFolder "$PkgArtifactName.zip"
                 $artifactPath = Join-Path $agentTmpFolder $PkgArtifactName
 				$downloadArtifact = $true
-				
+
                 if (Test-Path $artifactPath)
                 {
 					if ($OverwritePkgArtifact -eq $true)
@@ -91,7 +91,7 @@
 				if ($downloadArtifact -eq $true)
 				{
 					Write-Host (Get-VstsLocString -Key DownloadingArtifact -ArgumentList $PkgArtifactName)
-					
+
 					# Download the artifact to the agent's temp folder and unzip it
 					Get-FileWithProgress $artifact.resource.downloadUrl $artifactZipFile $authHeader["Authorization"]
 
@@ -100,7 +100,7 @@
 					Add-Type -AssemblyName System.IO.Compression.FileSystem
 					[System.IO.Compression.ZipFile]::ExtractToDirectory("$artifactZipFile", "$agentTmpFolder")
 				}
-				
+
                 # return the temp path to the artifact
                 $artifactPath
             }
