@@ -31,7 +31,9 @@ async function run() {
             throw tl.loc('INVALID_P12');
         }
         tl.setTaskVariable('APPLE_CERTIFICATE_SHA1HASH', p12Hash);
-        tl.setVariable('SigningIdentity', p12CN);
+
+        // set the signing identity output variable.
+        tl.setVariable('signingIdentity', p12CN);
 
         // install the certificate in specified keychain, keychain is created if required
         let keychain: string = tl.getInput('keychain');
@@ -51,7 +53,9 @@ async function run() {
         tl.setTaskVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
 
         await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, true);
-        tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
+
+        // set the keychain output variable.
+        tl.setVariable('keychainPath', keychainPath);
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {

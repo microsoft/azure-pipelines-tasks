@@ -44,6 +44,9 @@ export function findDeveloperDir(xcodeVersion: string): string {
     return discoveredDeveloperDir;
 }
 
+/**
+ * Returns the first provisioning/signing style found in workspace's project files: "auto", "manual" or undefined if not found. 
+ */
 export async function getProvisioningStyle(workspace: string) : Promise<string> {
     let provisioningStyle: string;
 

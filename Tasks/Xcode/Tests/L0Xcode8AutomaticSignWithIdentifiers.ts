@@ -16,7 +16,7 @@ tr.setInput('scheme', 'testScheme');
 tr.setInput('xcodeVersion', 'default');
 tr.setInput('packageApp', 'true');
 tr.setInput('signStyle', 'auto');
-tr.setInput('iosSigningIdentity', 'testSignIdentity');
+tr.setInput('signingIdentity', 'testSignIdentity');
 tr.setInput('provProfileUuid', 'testUUID');
 tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');

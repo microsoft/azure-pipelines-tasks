@@ -1,8 +1,8 @@
 {
     "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
     "name": "Xcode",
-    "friendlyName": "Xcode Build",
-    "description": "Build an Xcode workspace on macOS",
+    "friendlyName": "Xcode",
+    "description": "Build, test or archive an Xcode workspace on macOS. Optionally package an app.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
     "category": "Build",
     "visibility": [
@@ -103,7 +103,7 @@
             "label": "Create App Package",
             "defaultValue": false,
             "required": true,
-            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section.",
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. Review additional inputs in the `Package Options` section.",
             "groupName": "package"
         },
         {
@@ -134,7 +134,7 @@
             "required": false,
             "groupName": "package",
             "options": {
-                "auto": "Auto",
+                "auto": "Automatic",
                 "plist": "Plist",
                 "specify": "Specify"
             },
@@ -197,7 +197,7 @@
             }
         },
         {
-            "name": "iosSigningIdentity",
+            "name": "signingIdentity",
             "type": "string",
             "label": "Signing Identity",
             "required": false,

@@ -16,7 +16,7 @@ tr.setInput('scheme', 'testScheme');
 tr.setInput('xcodeVersion', 'default');
 tr.setInput('packageApp', 'true');
 tr.setInput('signStyle', 'manual');
-tr.setInput('iosSigningIdentity', 'iPhone Developer: XcodeTask Tester (HE432Y3E2Q)');
+tr.setInput('signingIdentity', 'iPhone Developer: XcodeTask Tester (HE432Y3E2Q)');
 tr.setInput('provProfileUuid', 'testuuid');
 tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');

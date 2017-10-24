@@ -134,7 +134,7 @@
       "required": false,
       "groupName": "package",
       "options": {
-        "auto": "Auto",
+        "auto": "Automatic",
         "plist": "Plist",
         "specify": "Specify"
       },
@@ -197,11 +197,11 @@
       }
     },
     {
-      "name": "iosSigningIdentity",
+      "name": "signingIdentity",
       "type": "string",
-      "label": "ms-resource:loc.input.label.iosSigningIdentity",
+      "label": "ms-resource:loc.input.label.signingIdentity",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.iosSigningIdentity",
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "sign",
       "visibleRule": "signStyle = manual"
     },

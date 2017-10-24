@@ -134,7 +134,7 @@ async function run() {
         else if (signStyle === 'manual') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Manual';
 
-            let signIdentity: string = tl.getInput('iosSigningIdentity');
+            let signIdentity: string = tl.getInput('signingIdentity');
             if (signIdentity) {
                 xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
             }
