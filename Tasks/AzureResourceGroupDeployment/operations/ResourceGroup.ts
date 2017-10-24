@@ -12,6 +12,23 @@ import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
+import httpInterfaces = require("typed-rest-client/Interfaces");
+
+var hm = require("typed-rest-client/HttpClient");
+var uuid = require("uuid");
+
+let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
+    proxy: { 
+        proxyUrl: proxyUrl, 
+        proxyUsername: tl.getVariable("agent.proxyusername"), 
+        proxyPassword: tl.getVariable("agent.proxypassword"), 
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
+    } 
+} : {};
+
+let ignoreSslErrors: boolean = tl.getBoolInput("VSTS_ARM_REST_IGNORE_SSL_ERRORS", false);
+requestOptions.ignoreSslError = ignoreSslErrors;
 
 var uuid = require("uuid");
 var httpClient = require('vso-node-api/HttpClient');
