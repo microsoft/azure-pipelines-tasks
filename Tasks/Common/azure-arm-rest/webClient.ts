@@ -11,7 +11,11 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
         proxyPassword: tl.getVariable("agent.proxypassword"),
         proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
     }
-} : null;
+} : {};
+
+let ignoreSslErrors: boolean = tl.getBoolInput("ignoreSslErrors", false);
+requestOptions.ignoreSslError = ignoreSslErrors;
+
 var httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
 export class WebRequest {

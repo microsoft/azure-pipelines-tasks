@@ -13,6 +13,7 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
+
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
 
@@ -24,7 +25,10 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
         proxyPassword: tl.getVariable("agent.proxypassword"), 
         proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
     } 
-} : null;
+} : {};
+
+let ignoreSslErrors: boolean = tl.getBoolInput("ignoreSslErrors", false);
+requestOptions.ignoreSslError = ignoreSslErrors;
 
 let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
