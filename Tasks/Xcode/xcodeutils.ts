@@ -26,7 +26,7 @@ export function findDeveloperDir(xcodeVersion: string): string {
 
     // xcodeVersion should be in the form of "8" or "9".
     // envName for version 9.*.* would be "XCODE_9_DEVELOPER_DIR"
-    var envName = `XCODE_${xcodeVersion}_DEVELOPER_DIR`;
+    let envName = `XCODE_${xcodeVersion}_DEVELOPER_DIR`;
     let discoveredDeveloperDir = tl.getVariable(envName);
     if (!discoveredDeveloperDir) {
         discoveredDeveloperDir = fallbackDeveloperDirs[xcodeVersion];
@@ -45,10 +45,10 @@ export function findDeveloperDir(xcodeVersion: string): string {
 }
 
 export async function getProvisioningStyle(workspace: string) : Promise<string> {
-    var provisioningStyle: string;
+    let provisioningStyle: string;
 
     if (workspace) {
-        var pbxProjectPath = getPbxProjectPath(workspace);
+        let pbxProjectPath = getPbxProjectPath(workspace);
         tl.debug(`pbxProjectPath is ${pbxProjectPath}`);
 
         if (pbxProjectPath) {
@@ -62,7 +62,7 @@ export async function getProvisioningStyle(workspace: string) : Promise<string> 
 
 function getPbxProjectPath(workspace: string) {
     if (workspace && workspace.trim().toLowerCase().endsWith('.xcworkspace')) {
-        var pbxProjectPath: string = workspace.trim().toLowerCase().replace('.xcworkspace', '.pbxproj');
+        let pbxProjectPath: string = workspace.trim().toLowerCase().replace('.xcworkspace', '.pbxproj');
 
         if (pathExistsAsFile(pbxProjectPath)) {
             return pbxProjectPath;
@@ -78,12 +78,12 @@ function getProvisioningStyleFromPbxProject(pbxProjectPath) : Promise<string> {
         const rl = readline.createInterface({
             input: fs.createReadStream(pbxProjectPath)
         });
-        var firstProvisioningStyleFound = false;
-        var linesExamined = 0;
+        let firstProvisioningStyleFound = false;
+        let linesExamined = 0;
         rl.on('line', (line) => {
             if (!firstProvisioningStyleFound) {
                 linesExamined++;
-                var trimmedLine = line.trim();
+                let trimmedLine = line.trim();
                 if (trimmedLine === 'ProvisioningStyle = Automatic;') {
                     tl.debug(`first provisioning style line: ${line}`);
                     firstProvisioningStyleFound = true;
@@ -114,7 +114,7 @@ export function pathExistsAsFile(path: string) {
 }
 
 function agentSupportsTaskState() {
-    var agentSupportsTaskState = true;
+    let agentSupportsTaskState = true;
     try {
         tl.assertAgent('2.115.0');
     } catch (e) {
