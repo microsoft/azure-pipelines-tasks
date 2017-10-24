@@ -90,6 +90,7 @@
     "DownloadingSecretValue": "ms-resource:loc.messages.DownloadingSecretValue",
     "AccessDeniedError": "ms-resource:loc.messages.AccessDeniedError",
     "GetSecretValueFailed": "ms-resource:loc.messages.GetSecretValueFailed",
-    "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound"
+    "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound",
+    "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters"
   }
 }
