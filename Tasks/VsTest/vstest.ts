@@ -189,7 +189,8 @@ function getTestSelectorLocation(): string {
 }
 
 async function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Promise<number> {
-    const vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
+    const vstest = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
+    vstest.arg(vstestConfig.vsTestVersionDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
     // Adding the other console options here
@@ -213,7 +214,11 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
         // Keeping this code in case we want to change failOnStdErr
-        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false }),
+        env: {
+            'DTA.ExecutionMode' : 'vstestexecution',
+            'DTA.EnableConsoleLogs': 'true'
+        }
     };
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
     // Here we are returning the code as returned to us by vstest.console in case of complete run
