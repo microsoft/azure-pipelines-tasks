@@ -27,7 +27,7 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
     } 
 } : {};
 
-let ignoreSslErrors: boolean = tl.getBoolInput("ignoreSslErrors", false);
+let ignoreSslErrors: boolean = tl.getBoolInput("VSTS_ARM_REST_IGNORE_SSL_ERRORS", false);
 requestOptions.ignoreSslError = ignoreSslErrors;
 
 var uuid = require("uuid");
