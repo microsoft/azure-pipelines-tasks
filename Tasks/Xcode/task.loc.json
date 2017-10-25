@@ -10,9 +10,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 124,
-    "Patch": 1
+    "Major": 4,
+    "Minor": 125,
+    "Patch": 0
   },
   "demands": [
     "xcode"
@@ -27,7 +27,7 @@
     {
       "name": "package",
       "displayName": "ms-resource:loc.group.displayName.package",
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "name": "advanced",
@@ -75,12 +75,36 @@
       "helpMarkDown": "ms-resource:loc.input.help.scheme"
     },
     {
+      "name": "xcodeVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.xcodeVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeVersion",
+      "defaultValue": "default",
+      ".comment": "//If you're updating the options here, be sure to update the Xcode.json build template as well.",
+      "options": {
+        "8": "Xcode 8",
+        "9": "Xcode 9",
+        "default": "Default",
+        "specifyPath": "Specify path"
+      }
+    },
+    {
+      "name": "xcodeDeveloperDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcodeDeveloperDir",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeDeveloperDir",
+      "visibleRule": "xcodeVersion == specifyPath"
+    },
+    {
       "name": "packageApp",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.packageApp",
-      "defaultValue": true,
+      "defaultValue": false,
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageApp"
+      "helpMarkDown": "ms-resource:loc.input.help.packageApp",
+      "groupName": "package"
     },
     {
       "name": "archivePath",
@@ -89,7 +113,8 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.archivePath",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "exportPath",
@@ -98,7 +123,8 @@
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportPath",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "exportOptions",
@@ -108,11 +134,12 @@
       "required": false,
       "groupName": "package",
       "options": {
-        "auto": "Auto",
+        "auto": "Automatic",
         "plist": "Plist",
         "specify": "Specify"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.exportOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "exportMethod",
@@ -151,16 +178,41 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportArgs",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
-      "name": "xcode8AutomaticSigning",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.xcode8AutomaticSigning",
-      "defaultValue": false,
+      "name": "signStyle",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.signStyle",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcode8AutomaticSigning",
-      "groupName": "sign"
+      "groupName": "sign",
+      "defaultValue": "nosign",
+      "helpMarkDown": "ms-resource:loc.input.help.signStyle",
+      "options": {
+        "nosign": "Do not code sign",
+        "default": "Project defaults",
+        "manual": "Manual signing",
+        "auto": "Automatic signing"
+      }
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "sign",
+      "visibleRule": "signStyle = manual"
+    },
+    {
+      "name": "provProfileUuid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provProfileUuid",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
+      "groupName": "sign",
+      "visibleRule": "signStyle = manual"
     },
     {
       "name": "teamId",
@@ -170,94 +222,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.teamId",
       "groupName": "sign",
-      "visibleRule": "xcode8AutomaticSigning = true"
-    },
-    {
-      "name": "signMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.signMethod",
-      "required": false,
-      "groupName": "sign",
-      "defaultValue": "file",
-      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
-      "options": {
-        "file": "File Contents",
-        "id": "Identifiers"
-      }
-    },
-    {
-      "name": "iosSigningIdentity",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.iosSigningIdentity",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.iosSigningIdentity",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "unlockDefaultKeychain",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.unlockDefaultKeychain",
-      "defaultValue": false,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.unlockDefaultKeychain",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "defaultKeychainPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.defaultKeychainPassword",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.defaultKeychainPassword",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "provProfileUuid",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.provProfileUuid",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "p12",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.p12",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.p12",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "p12pwd",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.p12pwd",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.p12pwd",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "provProfile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.provProfile",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfile",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "removeProfile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.removeProfile",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.removeProfile",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
+      "visibleRule": "signStyle = auto"
     },
     {
       "name": "args",
@@ -283,14 +248,6 @@
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
-      "groupName": "advanced"
-    },
-    {
-      "name": "xcodeDeveloperDir",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.xcodeDeveloperDir",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcodeDeveloperDir",
       "groupName": "advanced"
     },
     {
@@ -340,6 +297,9 @@
     "ExportOptionsPlistInvalidFilePath": "ms-resource:loc.messages.ExportOptionsPlistInvalidFilePath",
     "SchemeRequiredForArchive": "ms-resource:loc.messages.SchemeRequiredForArchive",
     "WorkspaceOrProjectRequiredForArchive": "ms-resource:loc.messages.WorkspaceOrProjectRequiredForArchive",
-    "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist"
+    "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist",
+    "LocateXcodeBasedOnVersion": "ms-resource:loc.messages.LocateXcodeBasedOnVersion",
+    "FailedToLocateSpecifiedXcode": "ms-resource:loc.messages.FailedToLocateSpecifiedXcode",
+    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle"
   }
 }

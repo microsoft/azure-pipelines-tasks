@@ -13,16 +13,10 @@ tr.setInput('configuration', '$(Configuration)');
 tr.setInput('sdk', '$(SDK)');
 tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
 tr.setInput('scheme', 'testScheme');
+tr.setInput('xcodeVersion', 'default');
 tr.setInput('packageApp', 'true');
-tr.setInput('xcode8AutomaticSigning', 'true');
-tr.setInput('signMethod', 'id');
-tr.setInput('p12', '/user/build');
-tr.setInput('p12pwd', '');
-tr.setInput('provProfile', '/user/build');
-tr.setInput('removeProfile', 'false');
-tr.setInput('unlockDefaultKeychain', 'true');
-tr.setInput('defaultKeychainPassword', 'defaultKeychainPWD');
-tr.setInput('iosSigningIdentity', 'testSignIdentity');
+tr.setInput('signStyle', 'auto');
+tr.setInput('signingIdentity', 'testSignIdentity');
 tr.setInput('provProfileUuid', 'testUUID');
 tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
@@ -60,8 +54,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/users/test"
     },
     "exist": {
-        "/user/build/cert.p12": true,
-        "/user/build/testuuid.mobileprovision": true,
         "/user/build/_XcodeTaskExport_testScheme": false
     },
     "stats": {
@@ -85,19 +77,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Xcode 8.0"
         },
-        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch": {
+        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Automatic": {
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/usr/bin/security default-keychain": {
-            "code": 0,
-            "stdout": "/Users/test/Library/Keychains/login.keychain"
-        },
-        "/usr/bin/security unlock-keychain -p defaultKeychainPWD /Users/test/Library/Keychains/login.keychain": {
-            "code": 0,
-            "stdout": "default keychain unlocked"
-        },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme": {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme CODE_SIGN_STYLE=Automatic": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
