@@ -16,10 +16,15 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 1
+		"Patch": 2
 	},
 	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-	"groups": [],
+	"groups": [{
+			"name": "completionOptions",
+			"displayName": "ms-resource:loc.group.displayName.completionOptions",
+			"isExpanded": false
+		}
+	],
 	"inputs": [{
 			"name": "function",
 			"type": "string",
@@ -32,8 +37,25 @@
 			"type": "string",
 			"label": "ms-resource:loc.input.label.key,
 			"defaultValue": "",
-			"required": false,
+			"required": true,
 			"helpMarkDown": "ms-resource:loc.input.help.key"
+		}, {
+			"name": "method",
+			"type": "pickList",
+			"label": "ms-resource:loc.input.label.method",
+			"required": "true",
+			"defaultValue": "POST",
+			"options": {
+				"OPTIONS": "OPTIONS",
+				"GET": "GET",
+				"HEAD": "HEAD",
+				"POST": "POST",
+				"PUT": "PUT",
+				"DELETE": "DELETE",
+				"TRACE": "TRACE",
+				"PATCH": "PATCH"
+			},
+			"helpMarkDown": "ms-resource:loc.input.help.method"
 		}, {
 			"name": "headers",
 			"type": "multiLine",
@@ -47,6 +69,13 @@
 			},
 			"helpMarkDown": "ms-resource:loc.input.help.headers"
 		}, {
+			"name": "urlSuffix",
+			"type": "string",
+			"label": "ms-resource:loc.input.label.urlSuffix",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
+		}, {
 			"name": "body",
 			"type": "multiLine",
 			"label": "ms-resource:loc.input.label.body",
@@ -58,23 +87,23 @@
 				"maxLength": "2000"
 			}
 		}, {
-			"name": "executionMode",
+			"name": "completeBasedOn",
 			"type": "pickList",
-			"label": "ms-resource:loc.input.label.executionMode",
+			"label": "ms-resource:loc.input.label.completeBasedOn",
 			"defaultValue": "false",
 			"required": true,
-			"helpMarkDown": "ms-resource:loc.input.help.executionMode",
+			"helpMarkDown": "ms-resource:loc.input.help.completeBasedOn",
 			"options": {
-				"true": "Synchronous",
-				"false": "Asynchronous"
+				"true": "Callback",
+				"false": "ApiResponse"
 			}
 		}, {
-			"name": "parseExpression​",
+			"name": "successCriteria",
 			"type": "string",
-			"label": "ms-resource:loc.input.label.parseExpression​",
+			"label": "ms-resource:loc.input.label.successCriteria",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "ms-resource:loc.input.help.parseExpression​"
+			"helpMarkDown": "ms-resource:loc.input.help.successCriteria"
 		}
 	],
 
@@ -83,11 +112,11 @@
 			"Execute": {
 				"EndpointId": "",
 				"EndpointUrl": "$(function)?code=$(key)",
-				"Method": "POST",
+				"Method": "$(method)",
 				"Body": "$(body)",
 				"Headers": "$(headers)",
-				"WaitForCompletion": "$(executionMode)",
-				"Expression": "$(parseExpression​)"
+				"WaitForCompletion": "$(completeBasedOn)",
+				"Expression": "$(successCriteria)"
 			}
 		}
 	}
