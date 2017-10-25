@@ -35,7 +35,7 @@
 		}, {
 			"name": "key",
 			"type": "string",
-			"label": "ms-resource:loc.input.label.key,
+			"label": "ms-resource:loc.input.label.key",
 			"defaultValue": "",
 			"required": true,
 			"helpMarkDown": "ms-resource:loc.input.help.key"

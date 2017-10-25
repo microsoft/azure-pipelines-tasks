@@ -113,7 +113,7 @@
 				"Body": "$(body)",
 				"Headers": "$(headers)",
 				"WaitForCompletion": "$(completeBasedOn)",
-				"Expression": "$(successCriteria)",				
+				"Expression": "$(successCriteria)"
 			}
 		}
 	}
