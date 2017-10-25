@@ -12,8 +12,6 @@
   "loc.input.help.method" : "Select the http method with which the funtion should be invoked with.",
   "loc.input.label.headers": "Headers",
   "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.urlSuffix": "URL suffix string",
-  "loc.input.help.urlSuffix": "Suffix string to append to the function Url.",
   "loc.input.label.body": "Body",
   "loc.input.label.completeBasedOn": "Complete based on",
   "loc.input.help.completeBasedOn": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
