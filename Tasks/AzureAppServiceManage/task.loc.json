@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 16
+    "Patch": 20
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -43,7 +43,10 @@
         "Start Azure App Service": "Start App Service",
         "Stop Azure App Service": "Stop App Service",
         "Restart Azure App Service": "Restart App Service",
-        "Install Extensions": "Install Extensions"
+        "Install Extensions": "Install Extensions",
+        "Enable Continuous Monitoring": "Enable Continuous Monitoring",
+        "Start all continuous webjobs": "Start All Continuous Webjobs",
+        "Stop all continuous webjobs": "Stop All Continuous Webjobs"
       }
     },
     {
@@ -164,6 +167,34 @@
       "defaultValue": "",
       "visibleRule": "Action = Install Extensions",
       "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
+    },
+    {
+      "name": "AppInsightsResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppInsightsResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.AppInsightsResourceGroupName"
+    },
+    {
+      "name": "ApplicationInsightsResourceName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ApplicationInsightsResourceName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True",
+        "EnableManage": "True",
+        "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
+        "ManageIcon": "Add",
+        "ManageButtonName": "New"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
     }
   ],
   "dataSourceBindings": [
@@ -178,6 +209,19 @@
       "dataSourceName": "AzureRMWebAppResourceGroup",
       "parameters": {
         "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "AppInsightsResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "ApplicationInsightsResourceName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMApplicationInsightsResources",
+      "parameters": {
+        "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
       }
     },
     {
@@ -254,6 +298,14 @@
     "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
     "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
-    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory"
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "UnableToGetAppInsightsResource": "ms-resource:loc.messages.UnableToGetAppInsightsResource",
+    "UnableToIdentifyResourceGroupNameForAppInsightsResource": "ms-resource:loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource",
+    "FailedToConfigureAlwaysOnProperty": "ms-resource:loc.messages.FailedToConfigureAlwaysOnProperty",
+    "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights",
+    "UnableToConfigureWebTest": "ms-resource:loc.messages.UnableToConfigureWebTest",
+    "UnableToConfigureInstrumentationKeyForAppService": "ms-resource:loc.messages.UnableToConfigureInstrumentationKeyForAppService",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
   }
 }

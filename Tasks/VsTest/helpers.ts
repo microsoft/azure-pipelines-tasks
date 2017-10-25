@@ -62,8 +62,8 @@ export class Helper {
         return tl.exist(path) && tl.stats(path).isDirectory();
     }
 
-    public static publishEventToCi(areaCode : string, message: string, tracePoint: number, isUserError: boolean) {
-        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false};
+    public static publishEventToCi(areaCode: string, message: string, tracePoint: number, isUserError: boolean) {
+        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false };
         taskProps.areacode = areaCode;
         taskProps.result = message;
         taskProps.tracepoint = tracePoint;

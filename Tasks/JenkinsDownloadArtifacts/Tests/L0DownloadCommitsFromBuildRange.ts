@@ -22,7 +22,7 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
-tr.registerMock("item-level-downloader/Engine" , { 
+tr.registerMock("artifact-engine/Engine" , { 
     ArtifactEngine: function() {
         return { 
             processItems: function(A,B,C) {},
@@ -38,6 +38,10 @@ tr.registerMock("request", {
 
         if (urlObject.url.indexOf('allBuilds[number]') !== -1) {
             callback(0, {statusCode: 200}, '{"allBuilds":[{"number":22},{"number":21},{"number":20},{"number":18},{"number":15},{"number":14},{"number":13}]}');
+        }
+
+        if (urlObject.url === "http://url/job/myfreestyleproject//api/json") {
+            callback(0, {statusCode: 200}, '{}');
         }
 
         return {auth: function(A,B,C) {}}

@@ -6,21 +6,22 @@ import * as auth from 'nuget-task-common/Authentication'
 export class DotnetMockHelper {
     private defaultNugetVersion = '4.0.0';
     private defaultNugetVersionInfo = [4,0,0,0];
-    
+
     constructor(
-        private tmr: tmrm.TaskMockRunner) { 
+        private tmr: tmrm.TaskMockRunner) {
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
+        process.env['AGENT_TEMPDIRECTORY'] = "c:\\agent\\home\\temp";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
-        process.env['BUILD_BUILDID'] = "1";     
+        process.env['BUILD_BUILDID'] = "1";
     }
-    
+
     public setNugetVersionInputDefault() {
     }
-    
+
     public registerDefaultNugetVersionMock() {
         this.registerNugetVersionMock(this.defaultNugetVersion, this.defaultNugetVersionInfo);
         this.registerNugetToolGetterMock();
@@ -33,7 +34,7 @@ export class DotnetMockHelper {
             },
         } )
     }
-    
+
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
         this.registerMockWithMultiplePaths(['nuget-task-common/pe-parser', './pe-parser'], {
@@ -62,9 +63,12 @@ export class DotnetMockHelper {
             }
         })
     }
-    
+
     public registerNugetUtilityMock(projectFile: string[]) {
         this.tmr.registerMock('nuget-task-common/Utility', {
+            getPatternsArrayFromInput: function(input) {
+                return [`fromMockedUtility-${input}`];
+            },
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
@@ -110,13 +114,13 @@ export class DotnetMockHelper {
         this.tmr.registerMock('vso-node-api/WebApi', {
             getBearerHandler: function(token){
                 return {};
-            }, 
+            },
             WebApi: function(url, handler){
                 return {
                     getCoreApi: function() {
-                        return { 
+                        return {
                             vsoClient: {
-                                getVersioningData: function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) { 
+                                getVersioningData: function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) {
                                     return { requestUrl:"foobar" }
                                 }
                             }
@@ -126,7 +130,7 @@ export class DotnetMockHelper {
             }
         })
     }
-    
+
     public setAnswers(a) {
         a.osType["osType"] = "Windows_NT";
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;

@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 124,
+        "Minor": 125,
         "Patch": 0
     },
     "groups": [
@@ -51,6 +51,19 @@
             "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
             "properties": {
               "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "jenkinsJobType",
+            "type": "pickList",
+            "label": "Jenkins job type",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Jenkins job type, detected automatically.",
+            "visibleRule": "jobName = invalidjobName",
+            "properties": {
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
             }
         },
         {
@@ -124,7 +137,7 @@
             "label": "Commit and WorkItem FileName",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "downloadCommitsAndWorkItems == true",
+            "visibleRule": "downloadCommitsAndWorkItems == invalid",
             "groupName": "advanced",
             "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json"
         },
@@ -199,25 +212,36 @@
         "endpointId": "$(serverEndpoint)",
         "target": "jobName",
         "dataSourceName": "Jobs",
-        "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        "resultTemplate": "{{#addField jobs 'parentPath' 'name' '/'}}{{#recursiveSelect jobs}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{name}}\", \"DisplayValue\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}{{/addField}}"
+      },
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "jenkinsJobType",
+        "dataSourceName": "JenkinsJobType",
+        "parameters": {
+            "definition": "$(jobName)"
+        },
+        "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
       },
       {
         "endpointId": "$(serverEndpoint)",
         "target": "jenkinsBuildNumber",
-        "dataSourceName": "Builds",
+        "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
         "parameters": {
-            "definition": "$(jobName)"
+            "definition": "$(jobName)",
+            "jenkinsJobType": "$(jenkinsJobType)"
         },
-        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
         "endpointId": "$(serverEndpoint)",
         "target": "startJenkinsBuildNumber",
-        "dataSourceName": "Builds",
+        "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
         "parameters": {
-            "definition": "$(jobName)"
+            "definition": "$(jobName)",
+            "jenkinsJobType": "$(jenkinsJobType)"
         },
-        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
       },
       {
           "endpointId":"$(ConnectedServiceNameARM)",
@@ -234,7 +258,7 @@
     "messages": {
         "GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
         "GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
-        "CouldNotGetLastSuccessfuilBuildNumber": "Could not get last successful build number",
+        "CouldNotGetLastSuccessfulBuildNumber": "Getting last successful build number failed with an error: %s",
         "ServerCallFailed": "HTTP call to Jenkins server failed.",
         "ServerCallErrorCode": "HTTP response code: %d",
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
@@ -263,7 +287,10 @@
         "CannotFindBuilds": "Cannot find builds",
         "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
         "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
-        "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number is not valid.",
+        "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
+        "InvalidBuildId": "Received an invalid buildId %s",
+        "InvalidMultiBranchPipelineName": "Multibranch pipeline job's startBuild branch %s and endBuild branch %s are different. Commits and workitems will not be downloaded.",
+        "FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
         "ClientIdCannotBeEmpty": "ClientID is a required parameter.",
         "DomainCannotBeEmpty": "Domain is a required parameter.",
         "SecretCannotBeEmpty": "Secret is a required parameter.",
@@ -311,6 +338,9 @@
         "FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
         "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
         "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
-        "UploadingItem": "Uploading {0}."
+        "UploadingItem": "Uploading {0}.",
+        "FoundJobType": "Found job type %s",
+        "CannotFindJobType": "Could not detect job type",
+        "InvalidJobName": "Invalid job name %s"
     }
 }

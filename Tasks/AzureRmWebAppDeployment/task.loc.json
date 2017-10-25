@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 18
+    "Patch": 24
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -623,7 +623,6 @@
     "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
     "Trytodeploywebappagainwithrenamefileoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithrenamefileoptionselected",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
-    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
     "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
     "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
@@ -683,6 +682,10 @@
     "FailedToUpdateRuntimeStackAndStartupCommand": "ms-resource:loc.messages.FailedToUpdateRuntimeStackAndStartupCommand",
     "SuccessfullyUpdatedWebAppSettings": "ms-resource:loc.messages.SuccessfullyUpdatedWebAppSettings",
     "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails",
-    "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials"
+    "UnableToGetAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToGetAzureRMWebAppMetadata",
+    "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
+    "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
   }
 }

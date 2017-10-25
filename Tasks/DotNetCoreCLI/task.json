@@ -18,7 +18,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 8
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -115,6 +115,15 @@
             "visibleRule": "command = build || command = publish || command = run || command = test || command = custom",
             "required": false,
             "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
+        },
+        {
+            "name": "publishTestResults",
+            "type": "boolean",
+            "label": "Publish test results",
+            "defaultValue": "true",
+            "visibleRule": "command = test",
+            "required": false,
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments."
         },
         {
             "name": "zipAfterPublish",
@@ -233,7 +242,7 @@
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
-            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
             "required": true,
             "visibleRule": "command = push"
         },
