@@ -43,49 +43,49 @@ Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName
 
 # Setup mock Registry for Service Fabric
 $SfRegistry = @{
-    "FabricVersion" = "5.6.1.2"
+    "FabricSDKVersion" = "2.8.1.2"
 }
-Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -ErrorAction SilentlyContinue
+Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric SDK\' -ErrorAction SilentlyContinue
 
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
-$serviceFabricComposeApplicationStatus = @{
-    "ApplicationName"        = $applicationName
-    "ComposeApplicationStatus"    = "Created"
+$serviceFabricComposeDeploymentStatus = @{
+    "DeploymentName"        = $applicationName
+    "ComposeDeploymentStatus"    = "Created"
     "StatusDetails" = ""
 }
 
 # Need to store the bool in an object so the lambdas will share the reference
 $removed = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
-$removed.Value = $false
+$removed.Value = $true
 
-Register-Mock Get-ServiceFabricComposeApplicationStatus {
+Register-Mock Get-ServiceFabricComposeDeploymentStatus {
     if (($removed.Value -eq $true))
     {
         return $null;
     }
     else
     {
-        return $serviceFabricComposeApplicationStatus
+        return $serviceFabricComposeDeploymentStatus
     }
-} -ApplicationName: $applicationName
+} -DeploymentName: $applicationName
 
-Register-Mock Remove-ServiceFabricComposeApplication {
+Register-Mock Remove-ServiceFabricComposeDeployment {
     $removed.Value = $true
-} -Force: True -ApplicationName: $applicationName
+} -Force: True -DeploymentName: $applicationName
 
 Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
 
-Register-Mock New-ServiceFabricComposeApplication {
+Register-Mock New-ServiceFabricComposeDeployment {
     $removed.Value = $false
-} -- -Compose: $composeFilePath -ApplicationName: $applicationName
+} -- -DeploymentName: $applicationName -Compose: $composeFilePath
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
-Assert-WasCalled Get-ServiceFabricComposeApplicationStatus -Times 3
-Assert-WasCalled Remove-ServiceFabricComposeApplication -Times 1
-Assert-WasCalled New-ServiceFabricComposeApplication -Times 1
+Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 2
+Assert-WasCalled Remove-ServiceFabricComposeDeployment -Times 0
+Assert-WasCalled New-ServiceFabricComposeDeployment -Times 1

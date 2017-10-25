@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 5
+    "Minor": 2,
+    "Patch": 1
   },
   "demands": [
     "Cmd"
@@ -171,6 +171,7 @@
     "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
     "DeployFailed": "ms-resource:loc.messages.DeployFailed",
     "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile",
-    "UsingPreviewAPI": "ms-resource:loc.messages.UsingPreviewAPI"
+    "UnsupportedAPIVersion": "ms-resource:loc.messages.UnsupportedAPIVersion",
+    "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion"
   }
 }

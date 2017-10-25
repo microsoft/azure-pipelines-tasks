@@ -6,6 +6,7 @@ import * as models from './models';
 import * as utils from './helpers';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
+import { AreaCodes, ResultMessages } from './constants';
 const uuid = require('uuid');
 const regedit = require('regedit');
 
@@ -48,6 +49,12 @@ export function getDistributedTestConfigurations() {
         dtaConfiguration.useVsTestConsole = 'false';
     }
 
+    dtaConfiguration.proceedAfterAbortedTestCase = false;
+    if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
+        dtaConfiguration.proceedAfterAbortedTestCase = true;
+    }
+    tl.debug('ProceedAfterAbortedTestCase is set to : ' + dtaConfiguration.proceedAfterAbortedTestCase);
+
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
@@ -57,7 +64,8 @@ export function getvsTestConfigurations() {
     initTestConfigurations(vsTestConfiguration);
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
+    vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
     return vsTestConfiguration;
 }
 
@@ -66,32 +74,33 @@ function initDtaEnvironment(): models.DtaEnvironment {
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
-
-    //TODO : Consider build scenario
-    const releaseId = tl.getVariable('Release.ReleaseId');
-    const phaseId = tl.getVariable('Release.DeployPhaseId');
-    const projectName = tl.getVariable('System.TeamProject');
-    const taskInstanceId = getDtaInstanceId();
-    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
-    const dontDistribute = tl.getBoolInput('dontDistribute');
-
-    if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
-        if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
-            || dontDistribute) {
-            // If dontDistribute irrespective of whether is None or MultiAgent or MultiConfig, we will create one run per agent
-            // run creation depends of the environment Id
-            const jobId = tl.getVariable('System.JobId');
-            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
-        } else {
-            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
-        }
-    } else {
-        const buildId = tl.getVariable('Build.BuildId');
-        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/build/' + buildId + '/' + taskInstanceId;
-    }
-
+    dtaEnvironment.environmentUri = getEnvironmentUri();
     dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
     return dtaEnvironment;
+}
+
+function getEnvironmentUri(): string {
+    let environmentUri: string = '';
+
+    const buildId = tl.getVariable('Build.BuildId');
+    const releaseId = tl.getVariable('Release.ReleaseId');
+    const projectName = tl.getVariable('System.TeamProject');
+    const jobId = tl.getVariable('System.JobPositionInPhase');
+    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    const taskInstanceId = getDtaInstanceId();
+    const dontDistribute = tl.getBoolInput('dontDistribute');
+    const pipelineId = utils.Helper.isNullEmptyOrUndefined(releaseId) ? 'build'.concat(`/${buildId}`) : 'release'.concat(`/${releaseId}`);
+    const phaseId = utils.Helper.isNullEmptyOrUndefined(releaseId) ?
+    tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
+
+    if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
+        || dontDistribute) {
+        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
+    } else {
+        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
+    }
+
+    return environmentUri;
 }
 
 function getDtaInstanceId(): number {
@@ -112,19 +121,17 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     getTestSelectorBasedInputs(testConfiguration);
 
     testConfiguration.testDropLocation = tl.getInput('searchFolder');
-    if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation))
-    {
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.testDropLocation)) {
         testConfiguration.testDropLocation = path.resolve(testConfiguration.testDropLocation);
     }
 
     if (testConfiguration.testDropLocation && !utils.Helper.pathExistsAsDirectory(testConfiguration.testDropLocation)) {
         throw new Error(tl.loc('searchLocationNotDirectory', testConfiguration.testDropLocation));
     }
-    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));    
+    console.log(tl.loc('searchFolderInput', testConfiguration.testDropLocation));
 
     testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
-    if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile))
-    {
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.settingsFile)) {
         testConfiguration.settingsFile = path.resolve(testConfiguration.settingsFile);
     }
     console.log(tl.loc('runSettingsFileInput', testConfiguration.settingsFile));
@@ -142,8 +149,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.tiaConfig = getTiaConfiguration();
 
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    if (!utils.Helper.isNullOrWhitespace(testConfiguration.pathtoCustomTestAdapters))
-    {
+    if (!utils.Helper.isNullOrWhitespace(testConfiguration.pathtoCustomTestAdapters)) {
         testConfiguration.pathtoCustomTestAdapters = path.resolve(testConfiguration.pathtoCustomTestAdapters);
     }
     if (testConfiguration.pathtoCustomTestAdapters &&
@@ -186,10 +192,17 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.taskInstanceIdentifier = uuid.v1();
 
-    versionFinder.getVsTestRunnerDetails(testConfiguration);
+    try {
+        versionFinder.getVsTestRunnerDetails(testConfiguration);
+    } catch (error) {
+        utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
+        throw error;
+    }
+
+    testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
 }
 
-async function logWarningForWER(runUITests : boolean) {
+async function logWarningForWER(runUITests: boolean) {
     if (!runUITests) {
         return;
     }
@@ -205,15 +218,15 @@ async function logWarningForWER(runUITests : boolean) {
     }
 }
 
-function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean>  {
+function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
     const defer = Q.defer<boolean>();
     const regValue = 'DontShowUI';
     regedit.list(regPath).on('data', (entry) => {
-            if (entry && entry.data && entry.data.values &&
+        if (entry && entry.data && entry.data.values &&
             entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
-                defer.resolve(true);
-            }
-            defer.resolve(false);
+            defer.resolve(true);
+        }
+        defer.resolve(false);
     });
     return defer.promise;
 }
@@ -269,6 +282,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
     tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
     const useNewCollector = tl.getVariable('tia.useNewCollector');
     if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {

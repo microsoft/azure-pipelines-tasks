@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "azureps"
@@ -106,12 +106,11 @@
             "label": "Azure PowerShell Version",
             "defaultValue": "LatestVersion",
             "required": false,
-            "options":{
+            "options": {
                 "LatestVersion": "Latest installed version",
                 "OtherVersion": "Specify other version"
             },
             "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
-
         },
         {
             "name": "CustomTargetAzurePs",

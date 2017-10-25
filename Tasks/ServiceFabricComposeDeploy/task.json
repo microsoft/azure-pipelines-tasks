@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 5
+        "Minor": 2,
+        "Patch": 1
     },
     "demands": [
         "Cmd"
@@ -171,6 +171,7 @@
         "CurrentStatus": "Current Status: {0}",
         "DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
         "CheckingComposeFile": "Checking compose file",
-        "UsingPreviewAPI": "Using the preview APIs"
+        "UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
+        "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
     }
 }

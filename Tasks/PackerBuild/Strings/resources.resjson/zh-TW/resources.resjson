@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Build Machine Image (PREVIEW)",
+  "loc.friendlyName": "建置機器映像",
   "loc.helpMarkDown": "[更多資訊](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
   "loc.instanceNameFormat": "Build immutable image",

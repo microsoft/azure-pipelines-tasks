@@ -956,7 +956,7 @@ describe('VsTest Suite', function () {
             let webAppUrlValue = '';
             let webAppPasswordValue = '';
             let webAppUsername = '';
-            
+
             settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, overriddenParams)
                 .then(function (settingsXml: string) {
                     utils.Helper.getXmlContents(settingsXml)
@@ -1005,12 +1005,10 @@ describe('VsTest Suite', function () {
                             let i = 0;
                             parametersArray.forEach(function (parameter) {
                                 if (parameter.$.Name === 'webAppUrl') {
-                                    if(i === 0)
-                                    {
+                                    if (i === 0) {
                                         webAppUrlValue = parameter.$.Value;
                                     }
-                                    else if(i === 1)
-                                    {
+                                    else if (i === 1) {
                                         webAppUrlValue2 = parameter.$.Value
                                     }
                                     i++;
@@ -1066,9 +1064,9 @@ describe('VsTest Suite', function () {
                             parametersArray2.forEach(function (parameter) {
                                 if (parameter.$.Name === 'webAppUrl') {
                                     webAppUrlValue2 = parameter.$.Value;
-                                } 
+                                }
                             });
-                            
+
                             assert.equal(webAppUrlValue, 'testVal', 'testsettings properties must be overridden');
                             assert.equal(webAppPasswordValue, 'testPass', 'testsettings properties must be overridden');
                             assert.equal(webAppUsername, 'Admin', 'testsettings properties must not be overriden');
@@ -1156,7 +1154,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('searchFolder','E:\\source\\dir\\..');
+        tr.setInput('searchFolder', 'E:\\source\\dir\\..');
 
         tr.run()
             .then(() => {
@@ -1182,7 +1180,7 @@ describe('VsTest Suite', function () {
         tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
-        tr.setInput('searchFolder','E:\\source\\.\\dir');
+        tr.setInput('searchFolder', 'E:\\source\\.\\dir');
 
         tr.run()
             .then(() => {
