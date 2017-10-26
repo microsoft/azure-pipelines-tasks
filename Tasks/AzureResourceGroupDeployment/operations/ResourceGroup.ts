@@ -27,8 +27,8 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
     } 
 } : {};
 
-let ignoreSslErrors = tl.getVariable("ignoreSslErrors");
-requestOptions.ignoreSslError = ignoreSslErrors ? ignoreSslErrors.toLowerCase() == "true" : false;
+let ignoreSslErrors: string = tl.getVariable("VSTS_ARM_REST_IGNORE_SSL_ERRORS");
+requestOptions.ignoreSslError = ignoreSslErrors && ignoreSslErrors.toLowerCase() == "true";
 
 var uuid = require("uuid");
 var httpClient = require('vso-node-api/HttpClient');
