@@ -9,8 +9,6 @@
   "loc.input.help.method": "Select the http method with which the API should be invoked with.",
   "loc.input.label.headers": "Headers",
   "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
-  "loc.input.label.urlSuffix": "URL suffix string",
-  "loc.input.help.urlSuffix": "Suffix string to append to the function Url.",
   "loc.input.label.body": "Body",
   "loc.input.label.waitForCompletion": "Wait For Completion",
   "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."

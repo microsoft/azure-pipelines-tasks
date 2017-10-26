@@ -61,14 +61,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.headers"
     },
     {
-       "name": "urlSuffix",
-       "type": "string",
-       "label": "ms-resource:loc.input.label.urlSuffix",
-       "defaultValue": "",
-       "required": false,
-       "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
-    },
-    {
       "name": "body",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.body",
