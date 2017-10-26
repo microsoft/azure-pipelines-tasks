@@ -17,18 +17,18 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
 
-let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
-var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
-    proxy: { 
-        proxyUrl: proxyUrl, 
-        proxyUsername: tl.getVariable("agent.proxyusername"), 
-        proxyPassword: tl.getVariable("agent.proxypassword"), 
-        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
-    } 
+let proxyUrl: string = tl.getVariable("agent.proxyurl");
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
+    proxy: {
+        proxyUrl: proxyUrl,
+        proxyUsername: tl.getVariable("agent.proxyusername"),
+        proxyPassword: tl.getVariable("agent.proxypassword"),
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
+    }
 } : {};
 
 let ignoreSslErrors = tl.getVariable("ignoreSslErrors");
-requestOptions.ignoreSslError = ignoreSslErrors.toLowerCase() == "true";
+requestOptions.ignoreSslError = ignoreSslErrors ? ignoreSslErrors.toLowerCase() == "true" : false;
 
 let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
@@ -281,7 +281,7 @@ export class ResourceGroup {
     private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             hc.get(url, {}).then(async (response) => {
-                if(response.message.statusCode == 200) {
+                if (response.message.statusCode == 200) {
                     let contents: string = "";
                     try {
                         contents = await response.readBody();
