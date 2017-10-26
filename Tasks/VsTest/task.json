@@ -17,6 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
+        "Patch": 2
     },
     "demands": [
         "vstest"
