@@ -288,12 +288,12 @@
             "label": "Batch tests",
             "defaultValue": "basedOnTestCases",
             "required": false,
-            "helpMarkDown": "A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.",
+            "helpMarkDown": "A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><b>Based on number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><b>Based on test assemblies:</b> Tests from an assembly are batched together.",
             "groupName": "advancedExecutionOptions",
             "options": {
                 "basedOnTestCases": "Based on number of tests and agents",
                 "basedOnExecutionTime": "Based on past running time of tests",
-                "basedOnAssembly": "Based on assembly"
+                "basedOnAssembly": "Based on test assemblies"
             }
         },
         {

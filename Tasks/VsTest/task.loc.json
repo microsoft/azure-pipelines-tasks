@@ -293,7 +293,7 @@
       "options": {
         "basedOnTestCases": "Based on number of tests and agents",
         "basedOnExecutionTime": "Based on past running time of tests",
-        "basedOnAssembly": "Based on assembly"
+        "basedOnAssembly": "Based on test assemblies"
       }
     },
     {
