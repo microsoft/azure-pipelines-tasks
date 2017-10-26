@@ -89,7 +89,7 @@
 			"visibleRule": "method != GET && method != HEAD",
 			"helpMarkDown": "JSON formatted message body for the request."
 		}, {
-			"name": "completeBasedOn",
+			"name": "waitForCompletion",
 			"type": "pickList",
 			"label": "Complete based on",
 			"defaultValue": "false",
@@ -106,9 +106,9 @@
 			"label": "Success Criteria",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Criteria which defines when to pass the task.Example:  - eq(count(root['value']), 1), [More Information](https: //go.microsoft.com/fwlink/?linkid=842996)​",
+			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https: //go.microsoft.com/fwlink/?linkid=842996)​",
 			"groupName": "completionOptions",
-			"visibleRule": "completeBasedOn = false"
+			"visibleRule": "waitForCompletion = false"
 		}
 	],
 
@@ -120,7 +120,7 @@
 				"Method": "$(method)",
 				"Body": "$(body)",
 				"Headers": "$(headers)",
-				"WaitForCompletion": "$(completeBasedOn)",
+				"WaitForCompletion": "$(waitForCompletion)",
 				"Expression": "$(successCriteria)"
 			}
 		}

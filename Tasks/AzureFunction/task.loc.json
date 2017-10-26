@@ -89,12 +89,12 @@
 			"visibleRule": "method != GET && method != HEAD",
 			"helpMarkDown": "ms-resource:loc.input.help.body"
 		}, {
-			"name": "completeBasedOn",
+			"name": "waitForCompletion",
 			"type": "pickList",
-			"label": "ms-resource:loc.input.label.completeBasedOn",
+			"label": "ms-resource:loc.input.label.waitForCompletion",
 			"defaultValue": "false",
 			"required": true,
-			"helpMarkDown": "ms-resource:loc.input.help.completeBasedOn",
+			"helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
 			"options": {
 				"true": "Callback",
 				"false": "ApiResponse"
@@ -117,7 +117,7 @@
 				"Method": "$(method)",
 				"Body": "$(body)",
 				"Headers": "$(headers)",
-				"WaitForCompletion": "$(completeBasedOn)",
+				"WaitForCompletion": "$(waitForCompletion)",
 				"Expression": "$(successCriteria)"
 			}
 		}

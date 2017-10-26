@@ -16,8 +16,8 @@
   "loc.input.help.queryParameters": "Query parameters string append to the function Url. Should not start with with \"?\" and \"&\".",
   "loc.input.label.body": "Body",
   "loc.input.help.body": "JSON formatted message body for the request.",
-  "loc.input.label.completeBasedOn": "Complete based on",
-  "loc.input.help.completeBasedOn": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+  "loc.input.label.waitForCompletion": "Complete based on",
+  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
   "loc.input.label.successCriteria": "Success Expression​",
-  "loc.input.help.successCriteria": "Criteria which defines when to pass the task.Example:  - eq(count(root['value']), 1), [More Information](https: //go.microsoft.com/fwlink/?linkid=842996)."
+  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https: //go.microsoft.com/fwlink/?linkid=842996)"
 }
