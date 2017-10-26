@@ -27,8 +27,8 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
     } 
 } : {};
 
-let ignoreSslErrors: boolean = tl.getBoolInput("ignoreSslErrors", false);
-requestOptions.ignoreSslError = ignoreSslErrors;
+let ignoreSslErrors = tl.getVariable("ignoreSslErrors");
+requestOptions.ignoreSslError = ignoreSslErrors.toLowerCase() == "true";
 
 let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
