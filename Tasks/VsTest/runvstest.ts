@@ -49,6 +49,8 @@ function isDtaEngineRequired(): boolean {
         }
     } else if (batchType && batchType === 'basedOnExecutionTime') {
         return true;
+    } else if (batchType && batchType === 'basedOnAssembly') {
+        return true;
     }
 
     const testType = tl.getInput('testSelector');
