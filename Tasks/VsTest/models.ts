@@ -85,5 +85,6 @@ export interface TiaConfiguration {
 
 export enum BatchingType {
     TestCaseBased,
-    TestExecutionTimeBased
+    TestExecutionTimeBased,
+    AssemblyBased
 }

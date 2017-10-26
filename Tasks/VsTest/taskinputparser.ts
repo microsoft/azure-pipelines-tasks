@@ -355,6 +355,8 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
         } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
             dtaTestConfiguration.runningTimePerBatchInMs = 0;
         }
+    } else if (distributeOption && distributeOption === 'basedOnAssembly') {
+        dtaTestConfiguration.batchingType = models.BatchingType.AssemblyBased;
     }
     return 0;
 }
