@@ -69,6 +69,13 @@
 			},
 			"helpMarkDown": "ms-resource:loc.input.help.headers"
 		}, {
+			"name": "queryParameters",
+			"type": "string",
+			"label": "ms-resource:loc.input.label.queryParameters",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "ms-resource:loc.input.help.queryParameters"
+		}, {
 			"name": "body",
 			"type": "multiLine",
 			"label": "ms-resource:loc.input.label.body",
@@ -79,6 +86,8 @@
 				"rows": "3",
 				"maxLength": "2000"
 			}
+			"visibleRule": "method != GET && method != HEAD",
+			"helpMarkDown": "ms-resource:loc.input.help.body"
 		}, {
 			"name": "completeBasedOn",
 			"type": "pickList",
@@ -104,7 +113,7 @@
 		"HttpRequest": {
 			"Execute": {
 				"EndpointId": "",
-				"EndpointUrl": "$(function)?code=$(key)",
+				"EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
 				"Method": "$(method)",
 				"Body": "$(body)",
 				"Headers": "$(headers)",

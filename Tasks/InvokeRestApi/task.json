@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [],
@@ -60,6 +60,14 @@
       },
       "helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
     },
+	{
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "URL suffix string",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Suffix string to append to the function Url."
+	},
     {
       "name": "body",
       "type": "multiLine",
