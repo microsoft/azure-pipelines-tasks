@@ -13,8 +13,8 @@ var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
     }
 } : {};
 
-let ignoreSslErrors: boolean = tl.getBoolInput("VSTS_ARM_REST_IGNORE_SSL_ERRORS", false);
-requestOptions.ignoreSslError = ignoreSslErrors;
+let ignoreSslErrors = tl.getVariable("ignoreSslErrors");
+requestOptions.ignoreSslError = ignoreSslErrors ? ignoreSslErrors.toLowerCase() == "true" : false;
 
 var httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
