@@ -69,6 +69,9 @@
     },
     {
       "name": "solution",
+      "aliases": [
+        "restoreTarget"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**/*.sln",
@@ -78,6 +81,9 @@
     },
     {
       "name": "selectOrConfig",
+      "aliases": [
+        "feedsToUse"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.selectOrConfig",
       "defaultValue": "select",
@@ -91,6 +97,9 @@
     },
     {
       "name": "feedRestore",
+      "aliases": [
+        "vstsFeed"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedRestore",
       "defaultValue": "",
@@ -124,6 +133,9 @@
     },
     {
       "name": "externalEndpoints",
+      "aliases": [
+        "externalFeedCredentials"
+      ],
       "type": "connectedService:ExternalNuGetFeed",
       "label": "ms-resource:loc.input.label.externalEndpoints",
       "required": false,
@@ -146,6 +158,9 @@
     },
     {
       "name": "packagesDirectory",
+      "aliases": [
+        "restoreDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.packagesDirectory",
       "defaultValue": "",
@@ -169,6 +184,9 @@
     },
     {
       "name": "searchPatternPush",
+      "aliases": [
+        "pathToPackagesToPush"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPush",
       "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
@@ -190,6 +208,9 @@
     },
     {
       "name": "feedPublish",
+      "aliases": [
+        "publishVstsFeed"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedPublish",
       "defaultValue": "",
@@ -208,6 +229,9 @@
     },
     {
       "name": "externalEndpoint",
+      "aliases": [
+        "publishFeedCredentials"
+      ],
       "type": "connectedService:ExternalNuGetFeed",
       "label": "ms-resource:loc.input.label.externalEndpoint",
       "required": true,
@@ -230,6 +254,9 @@
     },
     {
       "name": "searchPatternPack",
+      "aliases": [
+        "pathToPackagesToPack"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPack",
       "defaultValue": "**/*.csproj",
@@ -239,6 +266,9 @@
     },
     {
       "name": "configurationToPack",
+      "aliases": [
+        "configuration"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.configurationToPack",
       "defaultValue": "$(BuildConfiguration)",
@@ -248,6 +278,9 @@
     },
     {
       "name": "outputDir",
+      "aliases": [
+        "packDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.outputDir",
       "defaultValue": "$(Build.ArtifactStagingDirectory)",
@@ -272,6 +305,9 @@
     },
     {
       "name": "includeReferencedProjects",
+      "aliases": [
+        "includeRefProjs"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeReferencedProjects",
       "defaultValue": "false",
@@ -291,6 +327,9 @@
     },
     {
       "name": "requestedMajorVersion",
+      "aliases": [
+        "majorVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.requestedMajorVersion",
       "defaultValue": "1",
@@ -301,6 +340,9 @@
     },
     {
       "name": "requestedMinorVersion",
+      "aliases": [
+        "minorVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.requestedMinorVersion",
       "defaultValue": "0",
@@ -311,6 +353,9 @@
     },
     {
       "name": "requestedPatchVersion",
+      "aliases": [
+        "patchVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.requestedPatchVersion",
       "defaultValue": "0",
