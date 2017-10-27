@@ -36,7 +36,7 @@
     {
         "name": "wheel",
         "type": "boolean",
-        "label": "Upload universal wheel",
+        "label": "Upload wheel",
         "defaultValue": "false",
         "required": false,
         "helpMarkDown": "Along with source distribution file, this will build and publish universal wheel (platform independent) of given Python package on PyPI, which will be named as {distribution}-{version}-py2.py3-none-any.whl"
