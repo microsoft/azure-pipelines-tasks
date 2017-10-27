@@ -145,6 +145,7 @@
         },
         {
             "name": "selectOrConfig",
+            "aliases": ["feedsToUse"],
             "type": "radio",
             "label": "Feeds to use",
             "defaultValue": "select",
@@ -158,6 +159,7 @@
         },
         {
             "name": "feedRestore",
+            "aliases": ["vstsFeed"],
             "type": "pickList",
             "label": "Use packages from this VSTS/TFS feed",
             "defaultValue": "",
@@ -191,6 +193,7 @@
         },
         {
             "name": "externalEndpoints",
+            "aliases": ["externalFeedCredentials"],
             "type": "connectedService:ExternalNuGetFeed",
             "label": "Credentials for feeds outside this account/collection",
             "required": false,
@@ -213,6 +216,7 @@
         },
         {
             "name": "packagesDirectory",
+            "aliases": ["restoreDirectory"],
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "",
@@ -239,6 +243,7 @@
         },
         {
             "name": "searchPatternPush",
+            "aliases": ["pathToPackagesToPush"],
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
@@ -260,6 +265,7 @@
         },
         {
             "name": "feedPublish",
+            "aliases": ["publishVstsFeed"],
             "type": "pickList",
             "label": "Target feed",
             "defaultValue": "",
@@ -269,6 +275,7 @@
         },
         {
             "name": "externalEndpoint",
+            "aliases": ["publishFeedCredentials"],
             "type": "connectedService:ExternalNuGetFeed",
             "label": "NuGet server",
             "required": true,
@@ -277,6 +284,7 @@
         },
         {
             "name": "searchPatternPack",
+            "aliases": ["pathToPackagesToPack"],
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
@@ -286,6 +294,7 @@
         },
         {
             "name": "configurationToPack",
+            "aliases": ["configuration"],
             "type": "string",
             "label": "Configuration to Package",
             "defaultValue": "$(BuildConfiguration)",
@@ -295,6 +304,7 @@
         },
         {
             "name": "outputDir",
+            "aliases": ["packDirectory"],
             "type": "filePath",
             "label": "Package Folder",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
@@ -338,6 +348,7 @@
         },
         {
             "name": "requestedMajorVersion",
+            "aliases": ["majorVersion"],
             "type": "string",
             "label": "Major",
             "defaultValue": "1",
@@ -348,6 +359,7 @@
         },
         {
             "name": "requestedMinorVersion",
+            "aliases": ["minorVersion"],
             "type": "string",
             "label": "Minor",
             "defaultValue": "0",
@@ -358,6 +370,7 @@
         },
         {
             "name": "requestedPatchVersion",
+            "aliases": ["patchVersion"],
             "type": "string",
             "label": "Patch",
             "defaultValue": "0",
