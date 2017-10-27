@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 120,
+        "Minor": 126,
         "Patch": 0
     },
     "demands": [
@@ -32,6 +32,7 @@
     "inputs": [
         {
             "name": "solution",
+            "aliases": [ "solutionFile" ],
             "type": "filePath",
             "label": "Solution",
             "defaultValue": "",
@@ -64,6 +65,7 @@
         },
         {
             "name": "forSimulator",
+            "aliases": [ "buildForSimulator" ],
             "type": "boolean",
             "label": "Build for iOS Simulator",
             "defaultValue": "false",
@@ -89,6 +91,7 @@
         },
         {
             "name": "cwd",
+            "aliases": [ "workingDirectory" ],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",
@@ -98,6 +101,7 @@
         },
         {
             "name": "buildTool",
+            "aliases": [ "buildToolOption" ],
             "type": "radio",
             "label": "Build Tool",
             "required": false,
@@ -110,6 +114,7 @@
         },
         {
             "name": "mdtoolLocation",
+            "aliases": [ "mdtoolFile" ],
             "type": "string",
             "label": "Build Tool Path",
             "defaultValue": "",
@@ -119,6 +124,7 @@
         },
         {
             "name": "signMethod",
+            "aliases": [ "signOption" ],
             "type": "radio",
             "label": "Override Using",
             "required": false,
@@ -132,6 +138,7 @@
         },
         {
             "name": "iosSigningIdentity",
+            "aliases": [ "signingIosIdentity" ],
             "type": "string",
             "label": "Signing Identity",
             "required": false,
@@ -141,6 +148,7 @@
         },
         {
             "name": "unlockDefaultKeychain",
+            "aliases": [ "signingUnlockDefaultKeychain" ],
             "type": "boolean",
             "label": "Unlock Default Keychain",
             "defaultValue": false,
@@ -151,6 +159,7 @@
         },
         {
             "name": "defaultKeychainPassword",
+            "aliases": [ "signingDefaultKeychainPassword" ],
             "type": "string",
             "label": "Default Keychain Password",
             "required": false,
@@ -160,6 +169,7 @@
         },
         {
             "name": "provProfileUuid",
+            "aliases": [ "signingProvProfileUuid" ],
             "type": "string",
             "label": "Provisioning Profile UUID",
             "required": false,
@@ -169,6 +179,7 @@
         },
         {
             "name": "p12",
+            "aliases": [ "signingP12File" ],
             "type": "filePath",
             "label": "P12 Certificate File",
             "required": false,
@@ -178,6 +189,7 @@
         },
         {
             "name": "p12pwd",
+            "aliases": [ "signingP12Password" ],
             "type": "string",
             "label": "P12 Password",
             "required": false,
@@ -187,6 +199,7 @@
         },
         {
             "name": "provProfile",
+            "aliases": [ "signingProvProfileFile" ],
             "type": "filePath",
             "label": "Provisioning Profile File",
             "required": false,
@@ -196,6 +209,7 @@
         },
         {
             "name": "removeProfile",
+            "aliases": [ "signingRemoveProfile" ],
             "type": "boolean",
             "label": "Remove Profile After Build",
             "defaultValue": false,

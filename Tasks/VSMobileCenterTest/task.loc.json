@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 123,
+    "Minor": 126,
     "Patch": 0
   },
   "groups": [
@@ -35,6 +35,9 @@
   "inputs": [
     {
       "name": "app",
+      "aliases": [
+        "appFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.app",
       "defaultValue": "",
@@ -43,6 +46,9 @@
     },
     {
       "name": "artifactsDir",
+      "aliases": [
+        "artifactsDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.artifactsDir",
       "defaultValue": "$(Build.ArtifactStagingDirectory)/MobileCenterTest",
@@ -51,6 +57,9 @@
     },
     {
       "name": "enablePrepare",
+      "aliases": [
+        "prepareTests"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enablePrepare",
       "defaultValue": true,
@@ -58,6 +67,9 @@
     },
     {
       "name": "framework",
+      "aliases": [
+        "frameworkOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.framework",
       "defaultValue": "appium",
@@ -74,6 +86,9 @@
     },
     {
       "name": "appiumBuildDir",
+      "aliases": [
+        "appiumBuildDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.appiumBuildDir",
       "defaultValue": "",
@@ -84,6 +99,9 @@
     },
     {
       "name": "espressoBuildDir",
+      "aliases": [
+        "espressoBuildDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.espressoBuildDir",
       "defaultValue": "",
@@ -94,6 +112,9 @@
     },
     {
       "name": "espressoTestApkPath",
+      "aliases": [
+        "espressoTestApkFile"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.espressoTestApkPath",
       "defaultValue": "",
@@ -104,6 +125,9 @@
     },
     {
       "name": "calabashProjectDir",
+      "aliases": [
+        "calabashProjectDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.calabashProjectDir",
       "defaultValue": "",
@@ -144,6 +168,9 @@
     },
     {
       "name": "uitestBuildDir",
+      "aliases": [
+        "uitestBuildDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestBuildDir",
       "defaultValue": "",
@@ -163,6 +190,9 @@
     },
     {
       "name": "uitestStorePass",
+      "aliases": [
+        "uitestStorePassword"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestStorePass",
       "defaultValue": "",
@@ -181,6 +211,9 @@
     },
     {
       "name": "uitestKeyPass",
+      "aliases": [
+        "uitestKeyPassword"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestKeyPass",
       "defaultValue": "",
@@ -190,6 +223,9 @@
     },
     {
       "name": "uitestToolsDir",
+      "aliases": [
+        "uitestToolsDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestToolsDir",
       "defaultValue": "",
@@ -210,6 +246,9 @@
     },
     {
       "name": "xcuitestBuildDir",
+      "aliases": [
+        "xcuitestBuildDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.xcuitestBuildDir",
       "defaultValue": "",
@@ -220,6 +259,9 @@
     },
     {
       "name": "xcuitestTestIpaPath",
+      "aliases": [
+        "xcuitestIpaFile"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.xcuitestTestIpaPath",
       "defaultValue": "",
@@ -230,6 +272,9 @@
     },
     {
       "name": "prepareOpts",
+      "aliases": [
+        "prepareOptions"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.prepareOpts",
       "required": false,
@@ -240,6 +285,9 @@
     },
     {
       "name": "enableRun",
+      "aliases": [
+        "runTests"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableRun",
       "defaultValue": true,
@@ -247,6 +295,9 @@
     },
     {
       "name": "credsType",
+      "aliases": [
+        "credentialsOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.credsType",
       "defaultValue": "serviceEndpoint",
@@ -321,6 +372,9 @@
     },
     {
       "name": "dsymDir",
+      "aliases": [
+        "dsymDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.dsymDir",
       "defaultValue": "",
@@ -331,6 +385,9 @@
     },
     {
       "name": "locale",
+      "aliases": [
+        "localeOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.locale",
       "defaultValue": "en_US",
@@ -364,6 +421,9 @@
     },
     {
       "name": "loginOpts",
+      "aliases": [
+        "loginOptions"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.loginOpts",
       "defaultValue": "",
@@ -374,6 +434,9 @@
     },
     {
       "name": "runOpts",
+      "aliases": [
+        "runOptions"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.runOpts",
       "required": false,
@@ -384,6 +447,9 @@
     },
     {
       "name": "async",
+      "aliases": [
+        "waitForResults"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.async",
       "defaultValue": false,
@@ -394,6 +460,9 @@
     },
     {
       "name": "cliLocationOverride",
+      "aliases": [
+        "cliFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cliLocationOverride",
       "groupName": "advanced",
@@ -402,6 +471,9 @@
     },
     {
       "name": "debug",
+      "aliases": [
+        "showDebugOutput"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.debug",
       "required": false,
