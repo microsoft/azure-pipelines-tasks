@@ -155,9 +155,10 @@ export class DistributedTest {
                     overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
                     pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
                     runTestsInIsolation: this.dtaTestConfig.runTestsInIsolation,
-                    task: "VsTest",
-                    testSelection: this.dtaTestConfig.testSelection,
                     runInParallel: this.dtaTestConfig.runInParallel,
+                    settingsType: this.dtaTestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : this.dtaTestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none',
+                    task: "VsTestDistributedFlow",
+                    testSelection: this.dtaTestConfig.testSelection,
                     tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
                     vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
                 };
