@@ -71,9 +71,7 @@ The feature is presently scoped to the following:
 	- **Based on past running time of tests:** This batching considers past running time to create batches of tests such that each batch has approximately equal running time.
 	- **Based on test assemblies:** Tests from an assembly are batched together.
 
-- **Path to Custom Test Adapters:** Path to the testadapter for the framework in which the specified tests are written. Provided directory and all subdirectories are checked for testadapters. If there is a packages folder in the sources directory, it is automatically searched for testadapters. As a result, any testadapter downloaded as a Nuget package will be used without any input. For example, ‘$(Build.SourcesDirectory)\Fabrikam\packages’
-
-- **Other console options:** Other options that can be provided to vstest.console.exe. For example, if you are using VSIX extensions, you can provide “/UseVsixExtensions:true”
+- **Do not distribute tests and replicate instead when multiple agents are used in the phase:** Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase. Each of the selected test(s) will be repeated on each agent. The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.
 
 #### Reporting Options
 Use the following options to report desired information for the test run that can be used when analyzing runs. 
