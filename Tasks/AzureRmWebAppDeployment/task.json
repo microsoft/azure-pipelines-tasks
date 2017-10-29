@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 24
+        "Patch": 27
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -25,13 +25,13 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linuxApp && WebAppKind != \"\""
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linuxApp && WebAppKind != \"\""
         },
         {
             "name": "output",
@@ -43,7 +43,7 @@
             "name": "ApplicationSettings",
             "displayName": "Application Settings",
             "isExpanded": true,
-            "visibleRule": "WebAppKind = applinux"
+            "visibleRule": "WebAppKind = linuxApp"
         }
     ],
     "inputs": [
@@ -70,13 +70,21 @@
             "name": "WebAppKind",
             "type": "pickList",
             "label": "Web app kind",
-            "defaultValue": "app",
+            "defaultValue": "webApp",
             "required": false,
-            "visibleRule": "WebAppName = invalidwebappname",
+            "options": {
+                "webApp": "Web App",
+                "functionApp": "Function App",
+                "logicApp": "Logic App",
+                "apiApp": "API App",
+                "mobileApp": "Mobile App",
+                "linuxApp": "Linux App"
+            },
             "properties": {
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
-            }
+            },
+            "helpMarkDown": "Select type of web app you want to deploy."
         },
         {
             "name": "DeployToSlotFlag",
@@ -86,23 +94,6 @@
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
             "visibleRule": "WebAppKind != \"\""
-        },
-        {
-            "name": "ImageSource",
-            "type": "pickList",
-            "label": "Image Source",
-            "defaultValue": "Registry",
-            "options": {
-                "Registry": "Container Registry",
-                "Builtin": "Built-in Image"
-            },
-            "required": false,
-            "properties": {
-                "EditableOptions": "false",
-                "PopulateDefaultValue": "true"
-            },
-            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
-            "visibleRule": "WebAppKind = applinux"
         },
         {
             "name": "ResourceGroupName",
@@ -127,6 +118,23 @@
             },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "DeployToSlotFlag = true"
+        },
+        {
+            "name": "ImageSource",
+            "type": "pickList",
+            "label": "Image Source",
+            "defaultValue": "Registry",
+            "options": {
+                "Registry": "Container Registry",
+                "Builtin": "Built-in Image"
+            },
+            "required": false,
+            "properties": {
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
+            },
+            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
+            "visibleRule": "WebAppKind = linuxApp"
         },
         {
             "name": "AzureContainerRegistry",
@@ -229,7 +237,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind = linuxApp && ImageSource  = Registry",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -238,7 +246,7 @@
             "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind = linuxApp && ImageSource  = Registry",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -247,7 +255,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind = linuxApp && ImageSource  = Registry",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
@@ -256,7 +264,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != linuxApp && WebAppKind != \"\"",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -265,7 +273,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != linuxApp &&  WebAppKind != \"\"",
             "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed archive file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -274,7 +282,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
+            "visibleRule": "WebAppKind = linuxApp &&  ImageSource = Builtin",
             "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed archive file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
@@ -300,7 +308,7 @@
                 "ruby|2.3": "Ruby 2.3"
             },
             "helpMarkDown": "Select the framework and version.",
-            "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
+            "visibleRule": "WebAppKind = linuxApp && ImageSource = Builtin"
         },
         {
             "name": "StartupCommand",
@@ -308,7 +316,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux",
+            "visibleRule": "WebAppKind = linuxApp",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -497,15 +505,6 @@
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             }
-        },
-        {
-            "target": "WebAppKind",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureAppKind",
-            "parameters": {
-                "WebAppName": "$(WebAppName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
         },
         {
             "target": "SlotName",
