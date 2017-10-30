@@ -285,7 +285,7 @@
         },
         {
             "name": "sqDbDetailsRequired",
-            "aliases": [ "sonarQubeSpecifyDb" ],
+            "aliases": [ "sonarQubeSpecifyDB" ],
             "type": "boolean",
             "label": "The SonarQube server version is lower than 5.2",
             "required": true,
@@ -296,7 +296,7 @@
         },
         {
             "name": "sqDbUrl",
-            "aliases": [ "sonarQubeDbUrl" ],
+            "aliases": [ "sonarQubeDBUrl" ],
             "type": "string",
             "label": "Db Connection String",
             "required": false,
@@ -306,7 +306,7 @@
         },
         {
             "name": "sqDbUsername",
-            "aliases": [ "sonarQubeDbUsername" ],
+            "aliases": [ "sonarQubeDBUsername" ],
             "type": "string",
             "label": "Db Username",
             "required": false,
@@ -316,7 +316,7 @@
         },
         {
             "name": "sqDbPassword",
-            "aliases": [ "sonarQubeDbPassword" ],
+            "aliases": [ "sonarQubeDBPassword" ],
             "type": "string",
             "label": "Db User Password",
             "required": false,
@@ -348,7 +348,7 @@
         },
         {
             "name": "checkstyleAnalysisEnabled",
-            "aliases": [ "checkstyleRunAnalysis" ],
+            "aliases": [ "checkStyleRunAnalysis" ],
             "type": "boolean",
             "label": "Run Checkstyle",
             "required": false,
@@ -358,7 +358,7 @@
         },
         {
             "name": "findbugsAnalysisEnabled",
-            "aliases": [ "findbugsRunAnalysis" ],
+            "aliases": [ "findBugsRunAnalysis" ],
             "type": "boolean",
             "label": "Run FindBugs",
             "required": false,

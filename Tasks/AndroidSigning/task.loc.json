@@ -78,7 +78,7 @@
     {
       "name": "keystoreAlias",
       "aliases": [
-        "jarsignKeystoreAlias"
+        "jarsignerKeystoreAlias"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keystoreAlias",
@@ -91,7 +91,7 @@
     {
       "name": "keyPass",
       "aliases": [
-        "jarsignKeyPassword"
+        "jarsignerKeystorePassword"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keyPass",

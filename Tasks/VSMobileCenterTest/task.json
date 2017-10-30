@@ -152,7 +152,7 @@
         },
         {
             "name":"uitestBuildDir",
-            "aliases": [ "uitestBuildDirectory" ],
+            "aliases": [ "uiTestBuildDirectory" ],
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
@@ -222,7 +222,7 @@
         },
         {
             "name":"xcuitestBuildDir",
-            "aliases": [ "xcuitestBuildDirectory" ],
+            "aliases": [ "xcUITestBuildDirectory" ],
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",

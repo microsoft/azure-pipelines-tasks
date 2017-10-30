@@ -169,7 +169,7 @@
         },
         {
             "name": "provProfileUuid",
-            "aliases": [ "signingProvProfileUuid" ],
+            "aliases": [ "signingProvisioningProfileUuid" ],
             "type": "string",
             "label": "Provisioning Profile UUID",
             "required": false,
@@ -199,7 +199,7 @@
         },
         {
             "name": "provProfile",
-            "aliases": [ "signingProvProfileFile" ],
+            "aliases": [ "signingProvisioningProfileFile" ],
             "type": "filePath",
             "label": "Provisioning Profile File",
             "required": false,

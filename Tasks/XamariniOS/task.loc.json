@@ -188,7 +188,7 @@
     {
       "name": "provProfileUuid",
       "aliases": [
-        "signingProvProfileUuid"
+        "signingProvisioningProfileUuid"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.provProfileUuid",
@@ -224,7 +224,7 @@
     {
       "name": "provProfile",
       "aliases": [
-        "signingProvProfileFile"
+        "signingProvisioningProfileFile"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.provProfile",

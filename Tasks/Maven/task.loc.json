@@ -360,7 +360,7 @@
     {
       "name": "sqDbDetailsRequired",
       "aliases": [
-        "sonarQubeSpecifyDb"
+        "sonarQubeSpecifyDB"
       ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
@@ -373,7 +373,7 @@
     {
       "name": "sqDbUrl",
       "aliases": [
-        "sonarQubeDbUrl"
+        "sonarQubeDBUrl"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqDbUrl",
@@ -385,7 +385,7 @@
     {
       "name": "sqDbUsername",
       "aliases": [
-        "sonarQubeDbUsername"
+        "sonarQubeDBUsername"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqDbUsername",
@@ -397,7 +397,7 @@
     {
       "name": "sqDbPassword",
       "aliases": [
-        "sonarQubePassword"
+        "sonarQubeDBPassword"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqDbPassword",
@@ -435,7 +435,7 @@
     {
       "name": "checkstyleAnalysisEnabled",
       "aliases": [
-        "checkstyleRunAnalysis"
+        "checkStyleRunAnalysis"
       ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
@@ -459,7 +459,7 @@
     {
       "name": "findbugsAnalysisEnabled",
       "aliases": [
-        "findbugsRunAnalysis"
+        "findBugsRunAnalysis"
       ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",

@@ -51,7 +51,7 @@
         },
         {
             "name": "keystoreFile",
-            "aliases": ["jarsignKeystoreFile"],
+            "aliases": ["jarsignerKeystoreFile"],
             "type": "secureFile",
             "label": "Keystore File",
             "defaultValue": "",
@@ -62,7 +62,7 @@
         },
         {
             "name": "keystorePass",
-            "aliases": ["jarsignKeystorePassword"],
+            "aliases": ["jarsignerKeystorePassword"],
             "type": "string",
             "label": "Keystore Password",
             "defaultValue": "",
@@ -73,7 +73,7 @@
         },
         {
             "name": "keystoreAlias",
-            "aliases": ["jarsignKeystoreAlias"],
+            "aliases": ["jarsignerKeystoreAlias"],
             "type": "string",
             "label": "Alias",
             "defaultValue": "",

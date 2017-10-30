@@ -169,7 +169,7 @@
     {
       "name": "uitestBuildDir",
       "aliases": [
-        "uitestBuildDirectory"
+        "uiTestBuildDirectory"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestBuildDir",
@@ -247,7 +247,7 @@
     {
       "name": "xcuitestBuildDir",
       "aliases": [
-        "xcuitestBuildDirectory"
+        "xcUITestBuildDirectory"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.xcuitestBuildDir",

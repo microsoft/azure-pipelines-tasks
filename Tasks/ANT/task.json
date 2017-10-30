@@ -44,7 +44,7 @@
     "inputs": [
         {
             "name": "antBuildFile",
-            "aliases": ["buildXml"],
+            "aliases": ["buildFile"],
             "type": "filePath",
             "label": "Ant build file",
             "defaultValue": "build.xml",
