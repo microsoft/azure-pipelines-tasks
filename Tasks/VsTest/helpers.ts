@@ -22,7 +22,9 @@ export class Constants {
 export class Helper {
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
-            tl.debug('Setting the process env var :' + name + ' to :' + value);
+            if (!name.includes('AccessToken')) {
+                tl.debug('Setting the process env var :' + name + ' to :' + value);
+            }
             envVars[name] = value;
         }
     }
