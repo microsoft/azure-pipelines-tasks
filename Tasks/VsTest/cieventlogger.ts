@@ -14,8 +14,10 @@ function getDefaultProps() {
 
 export function publishEvent(properties: { [key: string]: any }): void {
     try {
+        tl.assertAgent('2.125.0');
         tl.publishTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
+
     } catch (err) {
-        //ignore
+        tl.debug('Unable to publish telemetry due to lower agent version.');
     }
 }
