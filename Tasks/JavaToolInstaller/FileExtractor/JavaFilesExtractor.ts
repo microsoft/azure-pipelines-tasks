@@ -1,7 +1,6 @@
-import path = require('path');
 import taskLib = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
-import toolLib = require('vsts-task-tool-lib/tool');
+import path = require('path');
 
 export class JavaFilesExtractor {
     public destinationFolder: string;

@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 96
+    "Patch": 104
   },
   "preview": true,
   "satisfies": [
@@ -139,14 +139,6 @@
     "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
-    "ExtractDirFailedinFindFiles": "ms-resource:loc.messages.ExtractDirFailedinFindFiles",
-    "ExtractNotFileFailed": "ms-resource:loc.messages.ExtractNotFileFailed",
-    "ExtractNotAccessibleFile": "ms-resource:loc.messages.ExtractNotAccessibleFile",
-    "SearchInDir": "ms-resource:loc.messages.SearchInDir",
-    "SearchNonExistDir": "ms-resource:loc.messages.SearchNonExistDir",
-    "SearchNonDir": "ms-resource:loc.messages.SearchNonDir",
-    "NoSearchPatternPath": "ms-resource:loc.messages.NoSearchPatternPath",
-    "ResolveRelativePath": "ms-resource:loc.messages.ResolveRelativePath",
     "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
     "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
     "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",
@@ -158,7 +150,6 @@
     "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
     "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
-    "FoundFiles": "ms-resource:loc.messages.FoundFiles",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
