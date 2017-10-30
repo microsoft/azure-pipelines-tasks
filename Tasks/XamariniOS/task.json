@@ -138,7 +138,7 @@
         },
         {
             "name": "iosSigningIdentity",
-            "aliases": [ "signingIosIdentity" ],
+            "aliases": [ "signingIdentity" ],
             "type": "string",
             "label": "Signing Identity",
             "required": false,

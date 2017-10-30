@@ -151,7 +151,7 @@
     {
       "name": "iosSigningIdentity",
       "aliases": [
-        "signingIosIdentity"
+        "signingIdentity"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.iosSigningIdentity",
