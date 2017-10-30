@@ -3,7 +3,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 
-let taskPath = path.join(__dirname, '..', 'preinstallprovprofile.js');
+let taskPath = path.join(__dirname, '..', 'predownloadsecurefile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('secureFile', 'mySecureFileId');
