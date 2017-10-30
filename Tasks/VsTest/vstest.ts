@@ -67,7 +67,8 @@ export function startTest() {
             runTestsInIsolation: vstestConfig.runTestsInIsolation,
             task: 'VsTestConsoleFlow',
             runInParallel: vstestConfig.runInParallel,
-            //settingsType:  ! utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
+            result: 'Failed',
+            settingsType:  !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
             testSelection: vstestConfig.testSelection,
             tiaEnabled: vstestConfig.tiaConfig.tiaEnabled,
             vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber
@@ -79,6 +80,7 @@ export function startTest() {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
             }
             else {
+                consolidatedCiData.result = 'Succeeded';
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
             }
             ci.publishEvent(consolidatedCiData);
