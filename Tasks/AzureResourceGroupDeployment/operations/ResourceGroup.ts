@@ -12,7 +12,6 @@ import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
-import httpInterfaces = require("typed-rest-client/Interfaces");
 
 var uuid = require("uuid");
 var httpClient = require('vso-node-api/HttpClient');
