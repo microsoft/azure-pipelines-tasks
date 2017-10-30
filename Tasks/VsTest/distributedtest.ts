@@ -147,9 +147,11 @@ export class DistributedTest {
 
         var consolidatedCiData = {
                     agentFailure: false,
+                    agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
                     batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
                     batchSize: this.dtaTestConfig.numberOfTestCasesPerSlice,
                     codeCoverageEnabled: this.dtaTestConfig.codeCoverageEnabled,
+                    dontDistribute: tl.getBoolInput('dontDistribute'),
                     environmentUri: this.dtaTestConfig.dtaEnvironment.environmentUri, 
                     numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
                     overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
