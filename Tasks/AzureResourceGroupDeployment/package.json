@@ -2,6 +2,7 @@
   "name": "AzureResourceGroupDeployment",
   "main": "main.js",
   "dependencies": {
-    "vsts-task-lib" : "2.0.5"
+    "typed-rest-client": "0.12.0",
+    "vsts-task-lib": "2.0.5"
   }
 }
