@@ -1,2 +1,20 @@
 {
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "dest": "./FileExtractor/"
+            }
+        ]
+    },
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
+                "node_modules/azure-blobstorage-artifactProvider/node_modules/vsts-task-lib",
+                "node_modules/vsts-task-tool-lib/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }

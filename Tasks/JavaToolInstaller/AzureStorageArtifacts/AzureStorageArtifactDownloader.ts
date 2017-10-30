@@ -19,14 +19,17 @@ export class AzureStorageArtifactDownloader {
     this.commonVirtualPath = tl.getInput('commonVirtualPath', false);
   }
 
-  public async downloadArtifacts(downloadToPath: string): Promise<void> {
+  public async downloadArtifacts(downloadToPath: string, fileEnding: string): Promise<void> {
     console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
 
     let storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
 
     let blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
 
-    await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, tl.getInput('itemPattern', false) || "**");
+    var fileType = "*" + fileEnding;
+    await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
+    await sleepFor(250); //Wait for the file to be released before returning.
+    
   }
 
   private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
@@ -71,6 +74,12 @@ export class AzureStorageArtifactDownloader {
     let credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, false);
     return credentials;
   }
+}
+
+function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
+  return new Promise((resolve, reeject) => {
+      setTimeout(resolve, sleepDurationInMillisecondsSeconds);
+  });
 }
 
 interface StorageAccountInfo {

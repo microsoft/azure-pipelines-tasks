@@ -8,6 +8,7 @@ import { JavaFilesExtractor } from "./FileExtractor/JavaFilesExtractor";
 
 async function run() {
     try {
+        console.log("Why me?");
         let versionSpec = taskLib.getInput('versionSpec', true);
         await getJava(versionSpec);
     }
@@ -36,6 +37,20 @@ async function getJava(versionSpec: string) {
     let version: string = toolLib.evaluateVersions(localVersions, versionSpec);
     let fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSource', true));
     let fromLocalDirectory: boolean = ('LocalDirectory' == taskLib.getInput('jdkSource', true));
+    let localPathRoot: string = taskLib.getPathInput('destinationFolder', true);
+    let fileName: string;
+    let cleanDestinationFolder: boolean = taskLib.getBoolInput('cleanDestinationFolder', false);
+    let fileEnding: string;
+
+    console.log("Finished getting input variables");
+
+     // Clean the destination folder before downloading and extracting?
+     if (cleanDestinationFolder && taskLib.exist(this.destinationFolder)) {
+        console.log(taskLib.loc('CleanDestDir', this.destinationFolder));
+        taskLib.rmRF(this.destinationFolder);
+    }
+
+    console.log("About to start");
 
     if (version) {
         console.log(taskLib.loc("Info_ResolvedToolFromCache", version));
@@ -43,46 +58,68 @@ async function getJava(versionSpec: string) {
     else if (fromAzure) {
         try {
             taskLib.setResourcePath(path.join(__dirname, 'task.json'));
+            fileEnding = (taskLib.getInput('fileType', true) == 'compressedTar') ? ".tar.gz" : ("." + taskLib.getInput('fileType', true));
             
-            const serverEndpoint: string = taskLib.getInput('serverEndpoint', true);
-            const serverEndpointUrl: string = taskLib.getEndpointUrl(serverEndpoint, false);
+            await new AzureStorageArtifactDownloader().downloadArtifacts(localPathRoot, fileEnding);
 
-            const serverEndpointAuth: taskLib.EndpointAuthorization = taskLib.getEndpointAuthorization(serverEndpoint, false);
-            const username: string = serverEndpointAuth['parameters']['username'];
-            const password: string = serverEndpointAuth['parameters']['password'];
-
-            const localPathRoot: string = taskLib.getPathInput('destinationFolder', true);
-            const itemPattern: string = taskLib.getInput('itemPattern', true);
-            const strictSSL: boolean = ('true' !== taskLib.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
-
-            const cleanDestinationFolder: boolean = taskLib.getBoolInput('cleanDestinationFolder', false);
-
-            // Clean the destination folder before downloading and extracting?
-            if (cleanDestinationFolder && taskLib.exist(this.destinationFolder)) {
-                console.log(taskLib.loc('CleanDestDir', this.destinationFolder));
-                taskLib.rmRF(this.destinationFolder);
-            }
-
-            new AzureStorageArtifactDownloader().downloadArtifacts(localPathRoot);
+            var extractSource = buildFilePath(localPathRoot, fileEnding);
+            new JavaFilesExtractor().unzipJavaDownload(extractSource, fileEnding);
+            fileName = taskLib.getInput('commonVirtualPath', true).split("/").pop();
         } catch (err) {
             taskLib.debug(err.message);
-            taskLib._writeError(err);
+            taskLib.error(err.message);
             taskLib.setResult(taskLib.TaskResult.Failed, err.message);
         }
-
-        new JavaFilesExtractor().unzipJavaDownload();
     }
     else if (fromLocalDirectory) {
-        //TODO: Might want to add the logic in here, hmmm?
-        console.log("I'm in here. HaHaHa.");
-        console.log("destinationFolder is: " + taskLib.getPathInput('destinationFolder', true));
-        console.log("sourceFolder is: " + taskLib.getInput('fromLocalMachine', true));
-        new JavaFilesExtractor().unzipJavaDownload();
+        fileName = taskLib.getInput('jdkPath', true).split(/[\\\/]/).pop();
+        fileEnding = getFileEnding(fileName);
+        console.log("fileEnding is now: " + fileEnding);
+        new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkPath', true), fileEnding);
+        console.log("fileName is now: " + fileName);
+        fileName = fileName.replace(fileEnding, '');
+        console.log("fileName is now: " + fileName);
+        getJavaHomePath(taskLib.getInput('jdkPath', true));
     }
 
-    //console.log(taskLib.loc("Info_UsingVersion", version));
-    //let toolPath: string = toolLib.findLocalTool('Java', version);
+    var filePath = path.normalize(taskLib.getPathInput('destinationFolder', true, false).trim());
+    var toolPath = path.join(filePath, fileName);
+    console.log("JAVA_HOME is being set to: " + toolPath);
     //taskLib.setVariable('JAVA_HOME', toolPath);
+    taskLib.setVariable('KEJ_FOO', toolPath);
 } 
+
+function buildFilePath(localPathRoot: string, fileEnding: string): string {
+    const azureFileSource: string = taskLib.getInput('commonVirtualPath', true);
+    var fileName = azureFileSource.split("/").pop();
+    var extractSource = localPathRoot + "\\" + fileName + fileEnding;
+    console.log("Extracting JDK from: "+ extractSource);
+
+    return extractSource;
+}
+
+function getJavaHomePath(filePath: string): string {
+    var javaPath = path.normalize(taskLib.getPathInput('destinationFolder', true, false).trim());
+    var fileName = filePath.split("/").pop().split(".")[0];
+    javaPath = path.join(javaPath, fileName);
+
+    return javaPath;
+}
+
+function getFileEnding(file: string): string {
+    var fileEnding = "";
+
+    if(file.endsWith(".tar")) {
+        fileEnding = ".tar";
+    } else if(file.endsWith(".tar.gz")) {
+        fileEnding = ".tar.gz";
+    } else if(file.endsWith(".zip")) {
+        fileEnding = ".zip";
+    } else if(file.endsWith(".7z")) {
+        fileEnding = ".7z";
+    }
+
+    return fileEnding;
+}
  
 run();  

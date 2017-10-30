@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 23
+    "Patch": 96
   },
   "preview": true,
   "satisfies": [
@@ -49,12 +49,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.jdkSource"
     },
     {
-      "name": "fromLocalMachine",
+      "name": "jdkPath",
       "type": "filepath",
-      "label": "ms-resource:loc.input.label.fromLocalMachine",
-      "required": false,
+      "label": "ms-resource:loc.input.label.jdkPath",
+      "required": true,
       "visibleRule": "jdkSource == LocalDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.fromLocalMachine"
+      "helpMarkDown": "ms-resource:loc.input.help.jdkPath"
     },
     {
       "name": "ConnectedServiceNameARM",
@@ -87,18 +87,23 @@
       "name": "commonVirtualPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.commonVirtualPath",
-      "required": false,
+      "required": true,
       "visibleRule": "jdkSource == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.commonVirtualPath"
     },
     {
-      "name": "itemPattern",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.itemPattern",
-      "defaultValue": "*.zip",
+      "name": "fileType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fileType",
+      "options": {
+        "zip": ".zip",
+        "7z": ".7z",
+        "tar": ".tar",
+        "compressedTar": ".tar.gz"
+      },
       "required": true,
       "visibleRule": "jdkSource == AzureStorage",
-      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+      "helpMarkDown": "ms-resource:loc.input.help.fileType"
     },
     {
       "name": "destinationFolder",
@@ -131,6 +136,9 @@
     }
   },
   "messages": {
+    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
     "ExtractDirFailedinFindFiles": "ms-resource:loc.messages.ExtractDirFailedinFindFiles",
     "ExtractNotFileFailed": "ms-resource:loc.messages.ExtractNotFileFailed",
     "ExtractNotAccessibleFile": "ms-resource:loc.messages.ExtractNotAccessibleFile",

@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 23
+        "Patch": 96
     },
     "preview": true,
     "satisfies": ["Java"],
@@ -47,10 +47,10 @@
             "helpMarkDown": "Source for the compressed JDK."
         },
         {
-            "name": "fromLocalMachine",
+            "name": "jdkPath",
             "type": "filepath",
             "label": "JDK path",
-            "required": false,
+            "required": true,
             "visibleRule": "jdkSource == LocalDirectory",
             "helpMarkDown": "Path to where the compressed JDK is located. The path could be in your source repository or a local path on the agent."
         },
@@ -85,15 +85,20 @@
             "name": "commonVirtualPath",
             "type": "string",
             "label": "Common Virtual Path",
-            "required": false,
+            "required": true,
             "visibleRule": "jdkSource == AzureStorage",
             "helpMarkDown": "Path to the JDK inside the Azure storage container."
         },
         {
-            "name": "itemPattern",
-            "type": "string",
+            "name": "fileType",
+            "type": "pickList",
             "label": "Compressed file type",
-            "defaultValue": "*.zip",
+            "options": {
+                "zip": ".zip",
+                "7z": ".7z",
+                "tar": ".tar",
+                "compressedTar": ".tar.gz"
+            },
             "required": true,
             "visibleRule": "jdkSource == AzureStorage",
             "helpMarkDown": "Compression type of the JDK."
@@ -109,7 +114,7 @@
         {
             "name": "cleanDestinationFolder",
             "type": "boolean",
-            "label": "Clean destination folder before downloading and extracting the JDK.",
+            "label": "Clean destination folder",
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
@@ -129,6 +134,9 @@
         }
     },
     "messages": {
+        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure Blob Storage, Container Name: %s",
+        "SuccessFullyFetchedItemList": "Successfully fetched list of items",
+        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
         "ExtractDirFailedinFindFiles": "Specified archive: %s can not be extracted because it is a directory.",
         "ExtractNotFileFailed": "Specified archive: %s can not be extracted because it is not a file.",
         "ExtractNotAccessibleFile": "Specified archive: %s can not be extracted because it can not be accessed: %s",
