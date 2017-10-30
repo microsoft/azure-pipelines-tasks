@@ -111,6 +111,7 @@ export class DistributedTest {
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process
         // We are not using toolrunner here because it doesn't have option to ignore the IO stream, so directly using spawn
 
+        tl.debug('Total env vars set is ' + Object.keys(envVars).length);
         const proc = ps.spawn(path.join(__dirname, 'Modules/DTAExecutionHost.exe'), [], { env: envVars });
         this.dtaPid = proc.pid;
         tl.debug('Modules/DTAExecutionHost.exe is executing with the process id : ' + this.dtaPid);
