@@ -1,6 +1,5 @@
 import taskLib = require('vsts-task-lib/task');
 import toolLib = require('vsts-task-tool-lib/tool');
-import restm = require('typed-rest-client/RestClient');
 import path = require('path');
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
@@ -23,27 +22,27 @@ async function getJava(versionSpec: string) {
     let version: string = toolLib.evaluateVersions(localVersions, versionSpec);
     let fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSource', true));
     let fromLocalDirectory: boolean = ('LocalDirectory' == taskLib.getInput('jdkSource', true));
-    let localPathRoot: string = taskLib.getPathInput('destinationFolder', true);
+    let extractLocation: string = taskLib.getPathInput('destinationFolder', true);
     let fileName: string;
     let cleanDestinationFolder: boolean = taskLib.getBoolInput('cleanDestinationFolder', false);
     let fileEnding: string;
 
      // Clean the destination folder before downloading and extracting?
-     if (cleanDestinationFolder && taskLib.exist(this.destinationFolder)) {
-        console.log(taskLib.loc('CleanDestDir', this.destinationFolder));
-        taskLib.rmRF(this.destinationFolder);
+     if (cleanDestinationFolder && taskLib.exist(extractLocation)) {
+        console.log(taskLib.loc('CleanDestDir', extractLocation));
+        taskLib.rmRF(extractLocation);
     }
 
-    if (version) {
+    if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc("Info_ResolvedToolFromCache", version));
     }
-    else if (fromAzure) {
+    else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
         try {
             fileEnding = (taskLib.getInput('fileType', true) == 'compressedTar') ? ".tar.gz" : ("." + taskLib.getInput('fileType', true));
             
-            await new AzureStorageArtifactDownloader().downloadArtifacts(localPathRoot, fileEnding);
+            await new AzureStorageArtifactDownloader().downloadArtifacts(extractLocation, fileEnding);
 
-            var extractSource = buildFilePath(localPathRoot, fileEnding);
+            var extractSource = buildFilePath(extractLocation, fileEnding);
             new JavaFilesExtractor().unzipJavaDownload(extractSource, fileEnding);
             fileName = taskLib.getInput('commonVirtualPath', true).split(/[\\\/]/).pop();
         } catch (err) {
@@ -52,7 +51,7 @@ async function getJava(versionSpec: string) {
             taskLib.setResult(taskLib.TaskResult.Failed, err.message);
         }
     }
-    else if (fromLocalDirectory) {
+    else if (fromLocalDirectory) { //JDK is in a local directory. Extract to specified target directory.
         fileName = taskLib.getInput('jdkPath', true).split(/[\\\/]/).pop();
         fileEnding = getFileEnding(fileName);
         new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkPath', true), fileEnding);
@@ -63,8 +62,7 @@ async function getJava(versionSpec: string) {
     var filePath = path.normalize(taskLib.getPathInput('destinationFolder', true, false).trim());
     var toolPath = path.join(filePath, fileName);
     console.log("JAVA_HOME is being set to: " + toolPath);
-    //taskLib.setVariable('JAVA_HOME', toolPath);
-    taskLib.setVariable('KEJ_FOO', toolPath);
+    taskLib.setVariable('JAVA_HOME', toolPath);
 } 
 
 function buildFilePath(localPathRoot: string, fileEnding: string): string {

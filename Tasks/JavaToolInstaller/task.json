@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 104
+        "Patch": 0
     },
     "preview": true,
     "satisfies": ["Java"],
