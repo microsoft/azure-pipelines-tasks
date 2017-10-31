@@ -1,4 +1,4 @@
-﻿function Get-SqlPackageOnTargetMachine
+function Get-SqlPackageOnTargetMachine
 {
     try
     {
@@ -7,7 +7,7 @@
     }
     catch [System.Exception]
     {
-        Write-Verbose ("Failed to get Dac Framework (installed with SQL Server) location with exception: " + $_.Exception.Message)
+        Write-Verbose ("Failed to get Dac Framework (installed with SQL Server) location with exception: " + $_.Exception.Message) -Verbose
         $sqlVersionNumber = 0
     }
 
@@ -18,7 +18,7 @@
     }
     catch [System.Exception]
     {
-        Write-Verbose ("Failed to get Dac Framework (installed with DAC Framework) location with exception: " + $_.Exception.Message) -verbose
+        Write-Verbose ("Failed to get Dac Framework (installed with DAC Framework) location with exception: " + $_.Exception.Message) -Verbose
         $sqlMsiVersionNumber = 0
     }
 
@@ -29,7 +29,7 @@
     }
     catch [System.Exception]
     {
-        Write-Verbose ("Failed to get Dac Framework (installed with Visual Studio) location with exception: " + $_.Exception.Message)
+        Write-Verbose ("Failed to get Dac Framework (installed with Visual Studio) location with exception: " + $_.Exception.Message) -Verbose
         $vsVersionNumber = 0
     }
 
@@ -154,13 +154,13 @@ function Get-SqlPackageForSqlVersion([int] $majorVersion, [bool] $wow6432Node)
         return $null
     }
     
-    Write-Verbose "Sql Version Specific Root Dir for version $majorVersion as read from registry: $sqlInstallRootPath"    
+    Write-Verbose "Sql Version Specific Root Dir for version $majorVersion as read from registry: $sqlInstallRootPath" -Verbose    
         
     $DacInstallPath = [System.IO.Path]::Combine($sqlInstallRootPath, "Dac", "bin", "SqlPackage.exe")
 
     if (Test-Path $DacInstallPath)
     {
-        Write-Verbose "Dac Framework installed with SQL Version $majorVersion found at $DacInstallPath on machine $env:COMPUTERNAME"
+        Write-Verbose "Dac Framework installed with SQL Version $majorVersion found at $DacInstallPath on machine $env:COMPUTERNAME" -Verbose
         return $DacInstallPath
     }
     else
@@ -187,7 +187,7 @@ function Locate-HighestVersionSqlPackageWithSql()
     $keys = Get-Item $sqlRegKey | %{$_.GetSubKeyNames()} 
     $versions = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending
 
-    Write-Verbose "Sql Versions installed on machine $env:COMPUTERNAME as read from registry: $versions"        
+    Write-Verbose "Sql Versions installed on machine $env:COMPUTERNAME as read from registry: $versions" -Verbose        
 
     foreach ($majorVersion in $versions) 
     {
@@ -204,7 +204,7 @@ function Locate-HighestVersionSqlPackageWithSql()
         }
     }
 
-    Write-Verbose "Dac Framework (installed with SQL) not found on machine $env:COMPUTERNAME"      
+    Write-Verbose "Dac Framework (installed with SQL) not found on machine $env:COMPUTERNAME" -Verbose      
 
     return $null, 0
 }
@@ -246,7 +246,7 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
         
         if (Test-Path $DacInstallPath)
         {
-            Write-Verbose "Dac Framework installed with SQL Version $majorVersion found at $DacInstallPath on machine $env:COMPUTERNAME"
+            Write-Verbose "Dac Framework installed with SQL Version $majorVersion found at $DacInstallPath on machine $env:COMPUTERNAME" -Verbose
             return $DacInstallPath, $majorVersion
         }
     }
@@ -270,7 +270,7 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
 
 	if ((-not($dacVersion)) -and (-not($dacVersionX86)))
 	{
-	    Write-Verbose "Dac Framework (installed with DAC Framework) not found on machine $env:COMPUTERNAME"   
+	    Write-Verbose "Dac Framework (installed with DAC Framework) not found on machine $env:COMPUTERNAME" -Verbose   
 	    return $null, 0
 	}    
 
@@ -289,7 +289,7 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
 
 		if (Test-Path("$dacPath"))
 		{
-            Write-Verbose "Dac Framework (installed with DAC Framework Msi) found on machine $env:COMPUTERNAME at $dacPath"  
+            Write-Verbose "Dac Framework (installed with DAC Framework Msi) found on machine $env:COMPUTERNAME at $dacPath" -Verbose  
             return $dacPath, $majorVersion
 		}		
 	}
@@ -300,7 +300,7 @@ function Locate-HighestVersionSqlPackageWithDacMsi()
 
 		if (Test-Path($dacPath))
 		{
-            Write-Verbose "Dac Framework (installed with DAC Framework Msi) found on machine $env:COMPUTERNAME at $dacPath"  
+            Write-Verbose "Dac Framework (installed with DAC Framework Msi) found on machine $env:COMPUTERNAME at $dacPath" -Verbose  
             return $dacPath, $majorVersion
 		}		
 	}
@@ -341,7 +341,7 @@ function Locate-SqlPackageInVS([string] $version)
 
     if ($vsInstallDir)
     {
-        Write-Verbose "Visual Studio install location: $vsInstallDir" 
+        Write-Verbose "Visual Studio install location: $vsInstallDir" -Verbose
 
         $dacExtensionPath = [System.IO.Path]::Combine("Extensions", "Microsoft", "SQLDB", "DAC")
         $dacParentDir = [System.IO.Path]::Combine($vsInstallDir, $dacExtensionPath)
@@ -369,12 +369,12 @@ function Get-LatestVersionSqlPackageInDacDirectory([string] $dacParentDir)
 
             if(Test-Path $dacFullPath -pathtype leaf)
             {
-                Write-Verbose "Dac Framework installed with Visual Studio found at $dacFullPath on machine $env:COMPUTERNAME"
+                Write-Verbose "Dac Framework installed with Visual Studio found at $dacFullPath on machine $env:COMPUTERNAME" -Verbose
                 return $dacFullPath, $dacVersion
             }
             else
             {
-                Write-Verbose "Unable to find Dac framework installed with Visual Studio at $($dacVersionDir.FullName) on machine $env:COMPUTERNAME"
+                Write-Verbose "Unable to find Dac framework installed with Visual Studio at $($dacVersionDir.FullName) on machine $env:COMPUTERNAME" -Verbose
             }
         }
     }
@@ -403,14 +403,14 @@ function Locate-HighestVersionSqlPackageInVS()
 
     if (-not (Test-Path $vsRegKey))
     {
-        Write-Verbose "Visual Studio not found on machine $env:COMPUTERNAME"     
+        Write-Verbose "Visual Studio not found on machine $env:COMPUTERNAME" -Verbose     
         return $null, 0
     }
 
     $keys = Get-Item $vsRegKey | %{$_.GetSubKeyNames()} 
     $versions = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending 
 
-    Write-Verbose "Visual Studio versions found on machine $env:COMPUTERNAME as read from registry: $versions"        
+    Write-Verbose "Visual Studio versions found on machine $env:COMPUTERNAME as read from registry: $versions" -Verbose        
 
     foreach ($majorVersion in $versions)
     {
@@ -422,7 +422,7 @@ function Locate-HighestVersionSqlPackageInVS()
         }
     }
 
-    Write-Verbose "Dac Framework (installed with Visual Studio) not found on machine $env:COMPUTERNAME "     
+    Write-Verbose "Dac Framework (installed with Visual Studio) not found on machine $env:COMPUTERNAME " -Verbose
 
     return $null, 0
 }
@@ -437,15 +437,15 @@ function Get-VisualStudio_15_0 {
         #
         # Note, the capability is registered as VisualStudio_15.0, however the actual version
         # may be something like 15.2.
-        Write-Verbose "Getting latest Visual Studio 15 setup instance."
+        Write-Verbose "Getting latest Visual Studio 15 setup instance." -Verbose
         $output = New-Object System.Text.StringBuilder
         Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -latest -format json" -RequireExitCodeZero 2>&1 |
             ForEach-Object {
                 if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                    Write-Verbose "STDERR: $($_.Exception.Message)"
+                    Write-Verbose "STDERR: $($_.Exception.Message)" -Verbose
                 }
                 else {
-                    Write-Verbose $_
+                    Write-Verbose $_ -Verbose
                     $null = $output.AppendLine($_)
                 }
             }
@@ -456,15 +456,15 @@ function Get-VisualStudio_15_0 {
             #
             # Note, whereas VS 15.x version number is always 15.0.*, BuildTools does not follow the
             # the same scheme. It appears to follow the 15.<UPDATE_NUMBER>.* versioning scheme.
-            Write-Verbose "Getting latest BuildTools 15 setup instance."
+            Write-Verbose "Getting latest BuildTools 15 setup instance." -Verbose
             $output = New-Object System.Text.StringBuilder
             Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
                 ForEach-Object {
                     if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        Write-Verbose "STDERR: $($_.Exception.Message)"
+                        Write-Verbose "STDERR: $($_.Exception.Message)" -Verbose
                     }
                     else {
-                        Write-Verbose $_
+                        Write-Verbose $_ -Verbose
                         $null = $output.AppendLine($_)
                     }
                 }
@@ -472,7 +472,7 @@ function Get-VisualStudio_15_0 {
                 Select-Object -First 1
         }
     } catch {
-        Write-Verbose ($_ | Out-String)
+        Write-Verbose ($_ | Out-String) -Verbose
         $visualStudioInstallDir = $null
     }
     
