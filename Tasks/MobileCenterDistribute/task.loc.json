@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 123,
-    "Patch": 1
+    "Minor": 124,
+    "Patch": 0
   },
   "groups": [
     {
@@ -34,7 +34,7 @@
     },
     {
       "name": "appSlug",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.appSlug",
       "defaultValue": "",
       "required": true,
@@ -147,6 +147,14 @@
       "argumentFormat": ""
     }
   },
+  "dataSourceBindings": [
+    {
+      "target": "appSlug",
+      "endpointId": "$(serverEndpoint)",
+      "dataSourceName": "MobileCenterAppSlugs",
+      "resultTemplate": "{ \"Value\" : \"{{{owner.name}}}/{{{name}}}\", \"DisplayValue\" : \"{{{owner.name}}}/{{{name}}}\" }"
+    }
+  ],
   "messages": {
     "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
     "NoResponseFromServer": "ms-resource:loc.messages.NoResponseFromServer",
