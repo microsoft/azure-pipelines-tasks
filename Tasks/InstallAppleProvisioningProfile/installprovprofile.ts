@@ -12,13 +12,10 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        if (tl.getInput('provisioningProfileLocation') === 'secureFiles') {
-            // download decrypted contents
-            secureFileId = tl.getInput('provProfileSecureFile', true);
-            secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
-            let provProfilePath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
+        if (tl.getInput('provisioningProfileLocation') === 'sourceRepository') {
+            let provProfilePath: string = tl.getInput('provProfileSourceRepository', true);
 
-            if (tl.exist(provProfilePath)) {
+            if (tl.filePathSupplied('provProfileSourceRepository') && tl.exist(provProfilePath)) {
                 let UUID: string = await sign.getProvisioningProfileUUID(provProfilePath);
                 tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', UUID);
 
@@ -29,11 +26,6 @@ async function run() {
 
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
-    } finally {
-        // delete provisioning profile from temp location after installing
-        if (secureFileId && secureFileHelpers) {
-            secureFileHelpers.deleteSecureFile(secureFileId);
-        }
     }
 }
 
