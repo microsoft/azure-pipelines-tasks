@@ -21,6 +21,8 @@ async function run() {
 
                 // set the provisioning profile output variable.
                 tl.setVariable('provProfileUuid', UUID);
+            } else {
+                throw tl.loc('InputProvisioningProfileNotFound', provProfilePath);
             }
         }
 

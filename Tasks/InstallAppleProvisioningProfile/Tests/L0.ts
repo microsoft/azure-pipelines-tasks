@@ -43,6 +43,21 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
+    it('Install from source repository fails if provisioning profile is not found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0SourceRepositoryProfileNotFound.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        let expectedErr: string = "loc_mock_InputProvisioningProfileNotFound /build/source/doesnotexist.moblieprovision";
+        assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'Error message should have said: ' + expectedErr);
+        assert(tr.failed, 'task should have failed');
+
+        done();
+    });
+
     it('Remove profile during post execution', (done: MochaDone) => {
         this.timeout(1000);
 

@@ -88,5 +88,7 @@
       "argumentFormat": ""
     }
   },
-  "messages": {}
+  "messages": {
+    "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound"
+  }
 }
