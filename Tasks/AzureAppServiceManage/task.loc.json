@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 18
+    "Patch": 20
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -45,8 +45,8 @@
         "Restart Azure App Service": "Restart App Service",
         "Install Extensions": "Install Extensions",
         "Enable Continuous Monitoring": "Enable Continuous Monitoring",
-        "Start all continuous webjobs": "Start all continuous webjobs",
-        "Stop all continuous webjobs": "Stop all continuous webjobs"
+        "Start all continuous webjobs": "Start All Continuous Webjobs",
+        "Stop all continuous webjobs": "Stop All Continuous Webjobs"
       }
     },
     {
@@ -304,6 +304,8 @@
     "FailedToConfigureAlwaysOnProperty": "ms-resource:loc.messages.FailedToConfigureAlwaysOnProperty",
     "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights",
     "UnableToConfigureWebTest": "ms-resource:loc.messages.UnableToConfigureWebTest",
-    "UnableToConfigureInstrumentationKeyForAppService": "ms-resource:loc.messages.UnableToConfigureInstrumentationKeyForAppService"
+    "UnableToConfigureInstrumentationKeyForAppService": "ms-resource:loc.messages.UnableToConfigureInstrumentationKeyForAppService",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
   }
 }

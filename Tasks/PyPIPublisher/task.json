@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "PyPI Publisher",
@@ -32,6 +32,14 @@
       "label": "Python package path",
       "required": true,
       "helpMarkDown": "Python package directory to be published, where setup.py is present."
+    },
+    {
+        "name": "wheel",
+        "type": "boolean",
+        "label": "Upload wheel",
+        "defaultValue": "false",
+        "required": false,
+        "helpMarkDown": "If checked, then task will additionally build and publish universal wheel (platform independent) of this package. For more information regarding universal wheel [see here](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
     }
   ],
   "execution": {
