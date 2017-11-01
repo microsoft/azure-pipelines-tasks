@@ -12,16 +12,16 @@
     "minimumAgentVersion": "2.115.0",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 1,
-        "Patch": 6
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
     "preview": false,
     "satisfies": ["VsTest"],
     "demands": [],
-    "instanceNameFormat": "Use VsTest $(versionSpec)",
+    "instanceNameFormat": "Use VsTest $(testPlatformVersion)",
     "inputs": [{
-            "name": "versionSpec",
+            "name": "testPlatformVersion",
             "type": "string",
             "label": "Version",
             "defaultValue": "15.5.0-preview-20171012-09",

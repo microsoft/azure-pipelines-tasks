@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 13
   },
   "preview": false,
   "satisfies": [
@@ -24,12 +24,12 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "versionSpec",
+      "name": "testPlatformVersion",
       "type": "string",
-      "label": "ms-resource:loc.input.label.versionSpec",
+      "label": "ms-resource:loc.input.label.testPlatformVersion",
       "defaultValue": "15.5.0-preview-20171012-09",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatformVersion"
     }
   ],
   "execution": {
