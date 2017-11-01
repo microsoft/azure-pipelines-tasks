@@ -11,7 +11,6 @@ export class JavaFilesExtractor {
     public winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
     constructor() {
-        this.destinationFolder = path.normalize(taskLib.getPathInput('destinationFolder', true, false).trim());
         this.win = taskLib.osType().match(/^Win/);
         taskLib.debug('win: ' + this.win);
     }
@@ -71,17 +70,12 @@ export class JavaFilesExtractor {
         tr.exec();
     }
 
-    private failTask(message: string) {
-        taskLib.debug(message);
-        taskLib.setResult(taskLib.TaskResult.Failed, message);
-    }
-
     private extractFiles(file: string, fileEnding: string) {
         var stats = taskLib.stats(file);
         if (!stats) {
-            this.failTask(taskLib.loc('ExtractNonExistFile', file));
+            throw new Error(taskLib.loc("ExtractNonExistFile", file));
         } else if (stats.isDirectory()) {
-            this.failTask(taskLib.loc('ExtractDirFailed', file));
+            throw new Error(taskLib.loc('ExtractDirFailed', file));
         }
 
         if (this.win) {
@@ -125,24 +119,26 @@ export class JavaFilesExtractor {
         }
     }
 
-    public unzipJavaDownload(repoRoot: string, fileEnding: string) {
-        try {
-            // Create the destination folder if it doesn't exist
-            if (!taskLib.exist(this.destinationFolder)) {
-                console.log(taskLib.loc('CreateDestDir', this.destinationFolder));
-                taskLib.mkdirP(this.destinationFolder);
-            }
+    public unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): string {
+        this.destinationFolder = extractLocation;
+        let initialDirectoriesList: string[];
+        let finalDirectoriesList: string[];
 
-            var jdkFile = path.normalize(repoRoot);
-            var stats = taskLib.stats(jdkFile);
-            if (stats.isFile()) {
-                this.extractFiles(jdkFile, fileEnding);
-                taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
-            }
-        } catch (e) {
-            taskLib.debug(e.message);
-            taskLib.error(e.message);
-            taskLib.setResult(taskLib.TaskResult.Failed, e.message);
+        // Create the destination folder if it doesn't exist
+        if (!taskLib.exist(this.destinationFolder)) {
+            console.log(taskLib.loc('CreateDestDir', this.destinationFolder));
+            taskLib.mkdirP(this.destinationFolder);
+        }
+
+        initialDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
+
+        var jdkFile = path.normalize(repoRoot);
+        var stats = taskLib.stats(jdkFile);
+        if (stats.isFile()) {
+            this.extractFiles(jdkFile, fileEnding);
+            finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
+            taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
+            return finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
         }
     }
 

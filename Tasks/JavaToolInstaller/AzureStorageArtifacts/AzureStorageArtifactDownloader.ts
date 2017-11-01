@@ -13,23 +13,20 @@ export class AzureStorageArtifactDownloader {
 
 
   constructor() {
-    this.connectedService = tl.getInput('ConnectedServiceNameARM', true);
-    this.azureStorageAccountName = tl.getInput('storageAccountName', true);
-    this.containerName = tl.getInput('containerName', true);
-    this.commonVirtualPath = tl.getInput('commonVirtualPath', false);
+    this.connectedService = tl.getInput('azureResourceManagerEndpoint', true);
+    this.azureStorageAccountName = tl.getInput('azureStorageAccountName', true);
+    this.containerName = tl.getInput('azureContainerName', true);
+    this.commonVirtualPath = tl.getInput('azureCommonVirtualPath', false);
   }
 
-  public async downloadArtifacts(downloadToPath: string, fileEnding: string): Promise<void> {
+  public async downloadArtifacts(downloadToPath: string, fileType: string): Promise<void> {
     console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
 
     let storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
 
     let blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
 
-    var fileType = "*" + fileEnding;
     await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
-    await sleepFor(250); //Wait for the file to be released before returning.
-    
   }
 
   private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
@@ -74,12 +71,6 @@ export class AzureStorageArtifactDownloader {
     let credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, false);
     return credentials;
   }
-}
-
-function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
-  return new Promise((resolve, reeject) => {
-      setTimeout(resolve, sleepDurationInMillisecondsSeconds);
-  });
 }
 
 interface StorageAccountInfo {

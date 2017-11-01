@@ -18,14 +18,13 @@ async function run() {
 
 async function getJava(versionSpec: string) {
     toolLib.debug('Trying to get tool from local cache');
-    let localVersions: string[] = toolLib.findLocalToolVersions('Java');
-    let version: string = toolLib.evaluateVersions(localVersions, versionSpec);
-    let fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSource', true));
-    let fromLocalDirectory: boolean = ('LocalDirectory' == taskLib.getInput('jdkSource', true));
-    let extractLocation: string = taskLib.getPathInput('destinationFolder', true);
-    let fileName: string;
-    let cleanDestinationFolder: boolean = taskLib.getBoolInput('cleanDestinationFolder', false);
-    let fileEnding: string;
+    const localVersions: string[] = toolLib.findLocalToolVersions('Java');
+    const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
+    const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSource', true));
+    const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
+    const cleanDestinationFolder: boolean = taskLib.getBoolInput('cleanDestinationFolder', false);
+    let compressedFileExtension: string;
+    let jdkDirectory: string;
 
      // Clean the destination folder before downloading and extracting?
      if (cleanDestinationFolder && taskLib.exist(extractLocation)) {
@@ -38,48 +37,44 @@ async function getJava(versionSpec: string) {
     }
     else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
         try {
-            fileEnding = (taskLib.getInput('fileType', true) == 'compressedTar') ? ".tar.gz" : ("." + taskLib.getInput('fileType', true));
-            
-            await new AzureStorageArtifactDownloader().downloadArtifacts(extractLocation, fileEnding);
+            compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualPath', true));
+        
+            await new AzureStorageArtifactDownloader().downloadArtifacts(extractLocation, '*' + compressedFileExtension);
+            await sleepFor(250); //Wait for the file to be released before extracting it.
 
-            var extractSource = buildFilePath(extractLocation, fileEnding);
-            new JavaFilesExtractor().unzipJavaDownload(extractSource, fileEnding);
-            fileName = taskLib.getInput('commonVirtualPath', true).split(/[\\\/]/).pop();
+            let extractSource = buildFilePath(extractLocation, compressedFileExtension);
+            jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(extractSource, compressedFileExtension, extractLocation);
         } catch (err) {
-            taskLib.debug(err.message);
             taskLib.error(err.message);
             taskLib.setResult(taskLib.TaskResult.Failed, err.message);
         }
     }
-    else if (fromLocalDirectory) { //JDK is in a local directory. Extract to specified target directory.
-        fileName = taskLib.getInput('jdkPath', true).split(/[\\\/]/).pop();
-        fileEnding = getFileEnding(fileName);
-        new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkPath', true), fileEnding);
-        fileName = fileName.replace(fileEnding, '');
-        getJavaHomePath(taskLib.getInput('jdkPath', true));
+    else { //JDK is in a local directory. Extract to specified target directory.
+        try{
+            compressedFileExtension = getFileEnding(taskLib.getInput('jdkPath', true));
+            jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkPath', true), compressedFileExtension, extractLocation);
+        } catch (err) {
+            taskLib.error(err.message);
+            taskLib.setResult(taskLib.TaskResult.Failed, err.message);
+        }
     }
 
-    var filePath = path.normalize(taskLib.getPathInput('destinationFolder', true, false).trim());
-    var toolPath = path.join(filePath, fileName);
-    console.log("JAVA_HOME is being set to: " + toolPath);
-    taskLib.setVariable('JAVA_HOME', toolPath);
+    console.log("JAVA_HOME is being set to: " + jdkDirectory);
 } 
 
+function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
+    return new Promise((resolve, reeject) => {
+        setTimeout(resolve, sleepDurationInMillisecondsSeconds);
+    });
+}
+
 function buildFilePath(localPathRoot: string, fileEnding: string): string {
-    const azureFileSource: string = taskLib.getInput('commonVirtualPath', true);
+    const azureFileSource: string = taskLib.getInput('azureCommonVirtualPath', true);
     var fileName = azureFileSource.split(/[\\\/]/).pop();
-    var extractSource = localPathRoot + "\\" + fileName + fileEnding;
+    var extractSource = path.join(localPathRoot, fileName);
     console.log("Extracting JDK from: "+ extractSource);
 
     return extractSource;
-}
-
-function getJavaHomePath(filePath: string): string {
-    var javaPath = path.normalize(taskLib.getPathInput('destinationFolder', true, false).trim());
-    var fileName = filePath.split(/[\\\/]/).pop().split(".")[0];
-    javaPath = path.join(javaPath, fileName);
-
-    return javaPath;
 }
 
 function getFileEnding(file: string): string {

@@ -2,7 +2,7 @@
     "id": "C0E0B74F-0931-47C7-AC27-7C5A19456A36",
     "name": "JavaToolInstaller",
     "friendlyName": "Java Tool Installer",
-    "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and adds it to the PATH. Use this step to change the version of Java used in the Java steps.",
+    "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and adds it to the PATH. Use this task to change the version of Java used in Java tasks.",
     "helpMarkDown": "[More Information]()",
     "category": "Tool",
     "runsOn": [
@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
+        "Minor": 126,
         "Patch": 0
     },
     "preview": true,
@@ -21,7 +21,7 @@
     "groups": [
         {
             "name":"JavaInAzureGroup",
-            "displayName": "Download Java from Azure",
+            "displayName": "Download Java from an Azure blob",
             "isExpanded": true
         }
     ],
@@ -48,14 +48,14 @@
         },
         {
             "name": "jdkPath",
-            "type": "filepath",
+            "type": "filePath",
             "label": "JDK path",
             "required": true,
             "visibleRule": "jdkSource == LocalDirectory",
             "helpMarkDown": "Path to where the compressed JDK is located. The path could be in your source repository or a local path on the agent."
         },
         {
-            "name": "ConnectedServiceNameARM",
+            "name": "azureResourceManagerEndpoint",
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "required": true,
@@ -63,7 +63,7 @@
             "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK."
         },
         {
-            "name": "storageAccountName",
+            "name": "azureStorageAccountName",
             "type": "pickList",
             "label": "Storage Account Name",
             "required": true,
@@ -74,7 +74,7 @@
             "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the Storage account name in which the JDK is located."
         },
         {
-            "name": "containerName",
+            "name": "azureContainerName",
             "type": "string",
             "label": "Container Name",
             "required": true,
@@ -82,7 +82,7 @@
             "helpMarkDown": "Name of the container in the storage account in which the JDK is located."
         },
         {
-            "name": "commonVirtualPath",
+            "name": "azureCommonVirtualPath",
             "type": "string",
             "label": "Common Virtual Path",
             "required": true,
@@ -90,21 +90,7 @@
             "helpMarkDown": "Path to the JDK inside the Azure storage container."
         },
         {
-            "name": "fileType",
-            "type": "pickList",
-            "label": "Compressed file type",
-            "options": {
-                "zip": ".zip",
-                "7z": ".7z",
-                "tar": ".tar",
-                "compressedTar": ".tar.gz"
-            },
-            "required": true,
-            "visibleRule": "jdkSource == AzureStorage",
-            "helpMarkDown": "Compression type of the JDK."
-        },
-        {
-            "name": "destinationFolder",
+            "name": "jdkDestinationDirectory",
             "type": "filePath",
             "label": "Destination folder",
             "defaultValue": "",

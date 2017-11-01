@@ -9,10 +9,10 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput("versionSpec", "8.1");
 tr.setInput("jdkSource", "Azure Storage")
 tr.setInput("artifactProvider", "azureStorage");
-tr.setInput("ConnectedServiceNameARM", "ARM1");
-tr.setInput("storageAccountName", "storage1");
-tr.setInput("containerName", "container1");
-tr.setInput("commonVirtualPath", "");
+tr.setInput("azureResourceManagerEndpoint", "ARM1");
+tr.setInput("azureStorageAccountName", "storage1");
+tr.setInput("azureContainerName", "container1");
+tr.setInput("azureCommonVirtualPath", "");
 tr.setInput("fileType", ".tar.gz");
 tr.setInput("destinationFolder", "javaJDK");
 tr.setInput("cleanDestinationFolder", "false");
