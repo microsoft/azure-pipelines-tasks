@@ -25,13 +25,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linuxApp && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linuxApp && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "output",
@@ -43,7 +43,7 @@
       "name": "ApplicationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
       "isExpanded": true,
-      "visibleRule": "WebAppKind = linuxApp"
+      "visibleRule": "WebAppKind = applinux"
     }
   ],
   "inputs": [
@@ -70,15 +70,15 @@
       "name": "WebAppKind",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
-      "defaultValue": "webApp",
+      "defaultValue": "app",
       "required": false,
       "options": {
-        "webApp": "Web App",
-        "functionApp": "Function App",
-        "logicApp": "Logic App",
-        "apiApp": "API App",
-        "mobileApp": "Mobile App",
-        "linuxApp": "Linux App"
+        "app": "Web App",
+        "functionapp": "Function App",
+        "logicapp": "Logic App",
+        "api": "API App",
+        "mobileapp": "Mobile App",
+        "applinux": "Linux App"
       },
       "properties": {
         "EditableOptions": "false",
@@ -134,7 +134,7 @@
         "PopulateDefaultValue": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
-      "visibleRule": "WebAppKind = linuxApp"
+      "visibleRule": "WebAppKind = applinux"
     },
     {
       "name": "AzureContainerRegistry",
@@ -237,7 +237,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = linuxApp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -246,7 +246,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = linuxApp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -255,7 +255,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = linuxApp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -264,7 +264,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != linuxApp && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -273,7 +273,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != linuxApp &&  WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -282,7 +282,7 @@
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = linuxApp &&  ImageSource = Builtin",
+      "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
       "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
     },
     {
@@ -308,7 +308,7 @@
         "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind = linuxApp && ImageSource = Builtin"
+      "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
     },
     {
       "name": "StartupCommand",
@@ -316,7 +316,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = linuxApp",
+      "visibleRule": "WebAppKind = applinux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
