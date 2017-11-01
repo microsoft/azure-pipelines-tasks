@@ -21,3 +21,7 @@ export module ResultMessages {
     export const EXECUTEVSTESTRETURNED = 'executeVstest returned ';
     export const TESTRUNUPDATIONFAILED = 'testRunupdation failed';
 }
+
+export module VsTestToolsInstaller {
+    export const PathToVsTestToolVariable = 'VsTestToolsInstallerInstalledToolLocation';
+}

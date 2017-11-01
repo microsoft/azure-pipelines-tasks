@@ -9,7 +9,7 @@ import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
-import { AreaCodes, ResultMessages } from './constants';
+import { AreaCodes, ResultMessages, CoreProfilerPathVariables } from './constants';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 let os = require('os');
 let regedit = require('regedit');
@@ -231,8 +231,15 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
         // Keeping this code in case we want to change failOnStdErr
-        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false }),
     };
+
+    if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)
+    execOptions.env = {
+        'COR_PROFILER_PATH_32': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation,
+        'COR_PROFILER_PATH_64': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation
+        }
+    
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
     // Here we are returning the code as returned to us by vstest.console in case of complete run
     // In case of a failure 1 indicates error to our calling function

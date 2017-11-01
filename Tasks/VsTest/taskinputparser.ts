@@ -4,6 +4,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
 import * as utils from './helpers';
+import * as constants from './constants';
 import * as os from 'os';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
@@ -195,11 +196,37 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     try {
         versionFinder.getVsTestRunnerDetails(testConfiguration);
     } catch (error) {
-        utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
-        throw error;
+
+        // Execute all this only when above value is not null.
+        // 1) Check if Vs 2017 is selected or latest is selected. Then use Tools installer.
+        // 2) If VS 2014 is installed and latest is selected use tools installer.
+        // 3) If VS 2017 is installed and then prefer VS on the box.
+        testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
+
+        // if Tools installer is not there throw.
+        if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
+            publishErrorCIandThrow(error);
+        }
+
+        // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
+        testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
+        testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
+
+        try {
+            versionFinder.getVsTestRunnerDetails(testConfiguration);
+        } catch (error) {
+            publishErrorCIandThrow(error);
+        }
+
+        testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
     }
 
     testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
+}
+
+function publishErrorCIandThrow(error: any) {
+    utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
+    throw error;
 }
 
 async function logWarningForWER(runUITests: boolean) {
@@ -317,6 +344,37 @@ function getTiaConfiguration(): models.TiaConfiguration {
     }
 
     return tiaConfiguration;
+}
+
+function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
+    const toolsInstallerConfiguration = {} as models.ToolsInstallerConfiguration;
+    toolsInstallerConfiguration.vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
+
+    // get path to vstest.console.exe
+    var matches = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\vstest.console.exe");
+    if (matches && matches.length !== 0) {
+        toolsInstallerConfiguration.vsTestConsolePathFromPackageLocation = matches[0];
+    } else {
+        // TODO: throw
+    }
+
+    // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
+    var amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+    if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+        toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
+    } else {
+        // TODO: warning
+    }
+
+    // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
+    var x86ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+    if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
+        toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = x86ProfilerProxy[0];
+    } else {
+        // TODO: warning
+    }
+
+    return toolsInstallerConfiguration;
 }
 
 function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurations) {
