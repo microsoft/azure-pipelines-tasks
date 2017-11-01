@@ -37,6 +37,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/build/source/myprovisioningprofile.moblieprovision": true
     },
+    "stats": {
+        "/build/source/myprovisioningprofile.moblieprovision": {
+            "isFile": true
+        }
+    },
     "exec": {
         "/usr/bin/security cms -D -i /build/source/myprovisioningprofile.moblieprovision": {
             "code": 0,

@@ -15,7 +15,7 @@ async function run() {
         if (tl.getInput('provisioningProfileLocation') === 'sourceRepository') {
             let provProfilePath: string = tl.getInput('provProfileSourceRepository', true);
 
-            if (tl.filePathSupplied('provProfileSourceRepository') && tl.exist(provProfilePath)) {
+            if (tl.filePathSupplied('provProfileSourceRepository') && tl.exist(provProfilePath) && tl.stats(provProfilePath).isFile()) {
                 let UUID: string = await sign.getProvisioningProfileUUID(provProfilePath);
                 tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', UUID);
 
