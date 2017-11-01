@@ -1,11 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/nuget-task-common",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "rm": [
         {
             "items": [
@@ -13,5 +6,13 @@
             ],
             "options": "-Rf"
         }
-    ]
+    ],
+    "externals": {
+        "files": [
+            {
+                "url": "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe",
+                "dest": "nuget.exe"
+            }
+        ]
+    }
 }
