@@ -197,6 +197,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         versionFinder.getVsTestRunnerDetails(testConfiguration);
     } catch (error) {
 
+        tl.debug("No VS installed on the box. Trying VsTest installed by tools installer.");
+
         // Execute all this only when above value is not null.
         // 1) Check if Vs 2017 is selected or latest is selected. Then use Tools installer.
         // 2) If VS 2014 is installed and latest is selected use tools installer.
@@ -348,6 +350,8 @@ function getTiaConfiguration(): models.TiaConfiguration {
 
 function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
     const toolsInstallerConfiguration = {} as models.ToolsInstallerConfiguration;
+    
+    tl.debug("Path to VsTest from tools installer: " + tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable));
     toolsInstallerConfiguration.vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
 
     // get path to vstest.console.exe
