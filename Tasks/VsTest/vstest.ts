@@ -9,7 +9,7 @@ import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
 import * as testselectorinvoker from './testselectorinvoker';
-import { AreaCodes, ResultMessages, CoreProfilerPathVariables } from './constants';
+import { AreaCodes, ResultMessages } from './constants';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 let os = require('os');
 let regedit = require('regedit');
