@@ -26,12 +26,34 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
+      "name": "provisioningProfileLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.provisioningProfileLocation",
+      "defaultValue": "secureFiles",
+      "required": true,
+      "options": {
+        "secureFiles": "Secure Files",
+        "sourceRepository": "Source Repository"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileLocation"
+    },
+    {
       "name": "provProfileSecureFile",
       "type": "secureFile",
       "label": "ms-resource:loc.input.label.provProfileSecureFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfileSecureFile"
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSecureFile",
+      "visibleRule": "provisioningProfileLocation == secureFiles"
+    },
+    {
+      "name": "provProfileSourceRepository",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.provProfileSourceRepository",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSourceRepository",
+      "visibleRule": "provisioningProfileLocation == sourceRepository"
     },
     {
       "name": "removeProfile",
@@ -54,11 +76,19 @@
       "argumentFormat": ""
     }
   },
+  "execution": {
+    "Node": {
+      "target": "installprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
   "postjobexecution": {
     "Node": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }
   },
-  "messages": {}
+  "messages": {
+    "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound"
+  }
 }
