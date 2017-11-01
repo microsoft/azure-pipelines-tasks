@@ -2,8 +2,8 @@
   "loc.friendlyName": "Visual Studio Test Platform Installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
   "loc.description": "Acquires a specific version of Visual Studio Test Platform from the internet or the tools cache. Satisfies the VsTest demand and can be used for running tests and collecting diagnostic data using Visual Studio Test Task.",
-  "loc.instanceNameFormat": "Use VsTest $(versionSpec)",
-  "loc.input.label.versionSpec": "Version",
-  "loc.input.help.versionSpec": "A version that specifies the Visual Studio Test Platform Installer version to make available on the path.",
+  "loc.instanceNameFormat": "Use VsTest $(testPlatformVersion)",
+  "loc.input.label.testPlatformVersion": "Version",
+  "loc.input.help.testPlatformVersion": "A version that specifies the Visual Studio Test Platform Installer version to make available on the path.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key."
 }

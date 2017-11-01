@@ -48,7 +48,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, checkForLatest
     }
 
     // Set the task variable so that the VsTest task can consume this path
-    tl.setTaskVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
+    tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
     tl.debug('Set task variable VsTestToolsInstallerInstalledToolLocation value to ' + toolPath);
 }
 
