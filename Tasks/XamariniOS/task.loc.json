@@ -135,7 +135,7 @@
     {
       "name": "signMethod",
       "aliases": [
-        "signOption"
+        "signingOption"
       ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.signMethod",
@@ -188,7 +188,7 @@
     {
       "name": "provProfileUuid",
       "aliases": [
-        "signingProvisioningProfileUuid"
+        "signingProvisioningProfileID"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.provProfileUuid",

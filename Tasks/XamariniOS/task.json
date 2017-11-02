@@ -124,7 +124,7 @@
         },
         {
             "name": "signMethod",
-            "aliases": [ "signOption" ],
+            "aliases": [ "signingOption" ],
             "type": "radio",
             "label": "Override Using",
             "required": false,
@@ -169,7 +169,7 @@
         },
         {
             "name": "provProfileUuid",
-            "aliases": [ "signingProvisioningProfileUuid" ],
+            "aliases": [ "signingProvisioningProfileID" ],
             "type": "string",
             "label": "Provisioning Profile UUID",
             "required": false,
