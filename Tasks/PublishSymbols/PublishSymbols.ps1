@@ -130,15 +130,40 @@ try {
 
         Write-Host "Symbol Request Name = $RequestName"
 
-        [string]$SymbolServiceUri = (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require) -replace ".visualstudio.com",".artifacts.visualstudio.com"
-        $SymbolServiceUri = $SymbolServiceUri.TrimEnd('/')
+        [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
+        [string]$PersonalAccessToken = $env:ARTIFACTSERVICES_SYMBOL_PAT # ArtifactServices.Symbol.PAT avoids trace by not using Get-VstsTaskVariable
+        [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
 
-        $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
-        [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
+        if ($asAccountName) {
+            if ( -not ($PersonalAccessToken -or $UseAad) ) {
+                throw "If AccountName is specified, then either PAT or UseAad needs to be present"
+            }
 
-        if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
-            throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+            [string]$SymbolServiceUri = "https://" + [System.Web.HttpUtility]::UrlEncode($asAccountName) + ".artifacts.visualstudio.com"
         }
+        else {
+            if ( $PersonalAccessToken -or $UseAad ) {
+                throw "If PAT or UseAad is specified, then AccountName needs to be present"
+            }
+
+            [string]$SymbolServiceUri = (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require)
+
+            if (-not $SymbolServiceUri.Contains(".visualstudio.com")) {
+                $SymbolServiceUri = $SymbolServiceUri.Replace(".vsts.me",".artifacts.vsts.me") # Handle Devfabric scenario
+            }
+            else {
+                $SymbolServiceUri = $SymbolServiceUri.Replace(".visualstudio.com",".artifacts.visualstudio.com")
+            }
+
+            $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
+            [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
+
+            if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
+                throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+            }
+        }
+
+        [string]$SymbolServiceUri = $SymbolServiceUri.TrimEnd('/')
 
         [string]$tmpFileName = [IO.Path]::GetTempFileName()
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
