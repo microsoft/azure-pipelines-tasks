@@ -4,7 +4,6 @@ import taskLib = require('vsts-task-lib/task');
 import toolLib = require('vsts-task-tool-lib/tool');
 
 import azureStorageDownloader = require("azure-storage-artifact-downloader/AzureStorageArtifactDownloader");
-//import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { JavaFilesExtractor } from "./FileExtractor/JavaFilesExtractor";
 taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -48,7 +47,6 @@ async function getJava(versionSpec: string) {
         try {
             compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualPath', true));
         
-            //await new AzureStorageArtifactDownloader().downloadArtifacts(extractLocation, '*' + compressedFileExtension);
             let azureDownloader = new azureStorageDownloader.AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true), taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), taskLib.getInput('azureCommonVirtualPath', false));
             await azureDownloader.downloadArtifacts(extractLocation, '*' + compressedFileExtension);
             await sleepFor(250); //Wait for the file to be released before extracting it.
