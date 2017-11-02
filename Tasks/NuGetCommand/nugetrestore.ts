@@ -1,7 +1,7 @@
 import * as tl from "vsts-task-lib/task";
 import * as path from "path";
 import * as Q  from "q";
-import {IExecOptions} from "vsts-task-lib/toolrunner";
+import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
 
 import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
@@ -60,7 +60,7 @@ export async function run(nuGetPath: string): Promise<void> {
         if (!tl.filePathSupplied("packagesDirectory")) {
             packagesDirectory = null;
         }
-        
+
         const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
 
         // Discovering NuGet quirks based on the version
@@ -71,7 +71,7 @@ export async function run(nuGetPath: string): Promise<void> {
         // is unconditionally displayed
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
-        
+
         // Setting up auth-related variables
         tl.debug('Setting up auth');
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -104,7 +104,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 nuGetConfigPath = undefined;
             }
         }
-        
+
         // If there was no nuGetConfigPath, NuGetConfigHelper will create a temp one
         let nuGetConfigHelper = new NuGetConfigHelper2(
                     nuGetPath,
@@ -112,9 +112,9 @@ export async function run(nuGetPath: string): Promise<void> {
                     authInfo,
                     environmentSettings,
                     null);
-        
+
         let credCleanup = () => { return; };
-        
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
@@ -174,7 +174,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 authInfo);
 
             for (const solutionFile of filesList) {
-                await restorePackagesAsync(solutionFile, restoreOptions);
+                restorePackages(solutionFile, restoreOptions);
             }
         } finally {
             credCleanup();
@@ -192,7 +192,7 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.Promise<number> {
+function restorePackages(solutionFile: string, options: RestoreOptions): IExecSyncResult {
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, options.authInfo);
 
     nugetTool.arg("restore");
@@ -218,6 +218,6 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
         nugetTool.arg("-ConfigFile");
         nugetTool.arg(options.configFile);
     }
-    
-    return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
+
+    return nugetTool.execSync({ cwd: path.dirname(solutionFile) } as IExecOptions);
 }
