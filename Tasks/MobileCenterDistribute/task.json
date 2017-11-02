@@ -103,7 +103,7 @@
         },
         {
             "name": "packParentFolder",
-            "aliases": [ "symbolsPackParentDirectory" ],
+            "aliases": [ "symbolsIncludeParentDirectory" ],
             "type": "boolean",
             "label": "Include All Items in Parent Folder",
             "groupName": "symbols",

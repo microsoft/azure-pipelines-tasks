@@ -48,7 +48,7 @@
     {
       "name": "wrapperScript",
       "aliases": [
-        "gradlewPath"
+        "gradleWrapperFile"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.wrapperScript",

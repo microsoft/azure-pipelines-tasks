@@ -52,7 +52,7 @@
     {
       "name": "keystoreFile",
       "aliases": [
-        "jarsignKeystoreFile"
+        "jarsignerKeystoreFile"
       ],
       "type": "secureFile",
       "label": "ms-resource:loc.input.label.keystoreFile",
@@ -65,7 +65,7 @@
     {
       "name": "keystorePass",
       "aliases": [
-        "jarsignKeystorePassword"
+        "jarsignerKeystorePassword"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keystorePass",
@@ -91,7 +91,7 @@
     {
       "name": "keyPass",
       "aliases": [
-        "jarsignerKeystorePassword"
+        "jarsignerKeyPassword"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keyPass",
@@ -103,9 +103,6 @@
     },
     {
       "name": "jarsignerArguments",
-      "aliases": [
-        "jarsignArguments"
-      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.jarsignerArguments",
       "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
