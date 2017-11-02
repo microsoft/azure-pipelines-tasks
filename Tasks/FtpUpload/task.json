@@ -79,7 +79,7 @@
             "name": "rootFolder",
             "aliases": [ "rootDirectory" ],
             "type": "filePath",
-            "label": "Source folder",
+            "label": "Root folder",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The source folder to upload files from."
