@@ -2,13 +2,13 @@
      "externals": {
          "archivePackages": [
             {
-                "url": "https://testexecution.blob.core.windows.net/testplatformdeployment/4314891/TestPlatform.Deployment.zip",
+                "url": "https://testexecution.blob.core.windows.net/testplatformdeployment/4334139/TestPlatform.Deployment.zip",
                 "dest": "./"
             }
         ],
         "files": [
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/4314891/TestExecution.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/4334139/TestExecution.zip",
                 "dest": "./TestExecution.zip"
             }
         ],
