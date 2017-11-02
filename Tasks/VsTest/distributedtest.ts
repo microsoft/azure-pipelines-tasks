@@ -148,17 +148,20 @@ export class DistributedTest {
 
         var consolidatedCiData = {
                     agentFailure: false,
+                    agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
                     batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
                     batchSize: this.dtaTestConfig.numberOfTestCasesPerSlice,
                     codeCoverageEnabled: this.dtaTestConfig.codeCoverageEnabled,
+                    dontDistribute: tl.getBoolInput('dontDistribute'),
                     environmentUri: this.dtaTestConfig.dtaEnvironment.environmentUri, 
                     numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
                     overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
                     pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
                     runTestsInIsolation: this.dtaTestConfig.runTestsInIsolation,
-                    task: "VsTest",
-                    testSelection: this.dtaTestConfig.testSelection,
                     runInParallel: this.dtaTestConfig.runInParallel,
+                    settingsType: !utils.Helper.isNullOrUndefined(this.dtaTestConfig.settingsFile) ? this.dtaTestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : this.dtaTestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none' : 'none',
+                    task: "VsTestDistributedFlow",
+                    testSelection: this.dtaTestConfig.testSelection,
                     tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
                     vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
                 };

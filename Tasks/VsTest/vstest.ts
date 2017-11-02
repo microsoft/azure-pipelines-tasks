@@ -60,14 +60,32 @@ export function startTest() {
             return;
         }
 
+        var consolidatedCiData = {
+            agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
+            codeCoverageEnabled: vstestConfig.codeCoverageEnabled,
+            overrideTestrunParameters: vstestConfig.overrideTestrunParameters,
+            pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
+            runTestsInIsolation: vstestConfig.runTestsInIsolation,
+            task: 'VsTestConsoleFlow',
+            runInParallel: vstestConfig.runInParallel,
+            result: 'Failed',
+            settingsType:  !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
+            testSelection: vstestConfig.testSelection,
+            tiaEnabled: vstestConfig.tiaConfig.tiaEnabled,
+            vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber
+        };
+
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
             if (taskResult == tl.TaskResult.Failed) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
             }
             else {
+                consolidatedCiData.result = 'Succeeded';
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
             }
+            ci.publishEvent(consolidatedCiData);
+
         }).catch(function (err) {
             uploadVstestDiagFile();
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002, false);

@@ -3,11 +3,11 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 
-let taskPath = path.join(__dirname, '..', 'preinstallprovprofile.js');
+let taskPath = path.join(__dirname, '..', 'installprovprofile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('provisioningProfileLocation', 'secureFiles');
-tr.setInput('provProfileSecureFile', 'mySecureFileId');
+tr.setInput('provisioningProfileLocation', 'sourceRepository');
+tr.setInput('provProfileSourceRepository', '/build/source/myprovisioningprofile.moblieprovision');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
@@ -35,10 +35,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/cp": true
     },
     "exist": {
-        "/build/temp/mySecureFileId.filename": true
+        "/build/source/myprovisioningprofile.moblieprovision": true
+    },
+    "stats": {
+        "/build/source/myprovisioningprofile.moblieprovision": {
+            "isFile": true
+        }
     },
     "exec": {
-        "/usr/bin/security cms -D -i /build/temp/mySecureFileId.filename": {
+        "/usr/bin/security cms -D -i /build/source/myprovisioningprofile.moblieprovision": {
             "code": 0,
             "stdout": "prov profile details here"
         },
@@ -46,7 +51,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "testuuid"
         },
-        "/bin/cp -f /build/temp/mySecureFileId.filename /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
+        "/bin/cp -f /build/source/myprovisioningprofile.moblieprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "provisioning profile copied"
         },

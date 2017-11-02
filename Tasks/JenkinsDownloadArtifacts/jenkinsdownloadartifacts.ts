@@ -44,10 +44,8 @@ async function doWork() {
 
         const serverEndpoint: string = tl.getInput('serverEndpoint', true);
         const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
-
-        const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
-        const username: string = serverEndpointAuth['parameters']['username'];
-        const password: string = serverEndpointAuth['parameters']['password'];
+        const username: string = tl.getEndpointAuthorizationParameter(serverEndpoint, 'username', false);
+        const password: string = tl.getEndpointAuthorizationParameter(serverEndpoint, 'password', false);
 
         const jobName: string = tl.getInput('jobName', true);
         const localPathRoot: string = tl.getPathInput('saveTo', true);
