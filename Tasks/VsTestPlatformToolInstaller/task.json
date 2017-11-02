@@ -20,13 +20,27 @@
     "satisfies": ["VsTest"],
     "demands": [],
     "instanceNameFormat": "Use VsTest $(testPlatformVersion)",
-    "inputs": [{
+    "inputs": [
+        {
+        "name": "versionSelector",
+        "type": "pickList",
+        "label": "Version",
+        "defaultValue": "latestStable",
+        "required": true,
+        "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
+        "options": {
+            "latestStable": "Latest Stable",
+            "latestPreRelease": "Latest Pre-Release",
+            "specificVersion": "Specific Version"
+            }
+        },
+        {
             "name": "testPlatformVersion",
             "type": "string",
             "label": "Version",
-            "defaultValue": "15.5.0-preview-20171012-09",
             "required": true,
-            "helpMarkDown": "A version that specifies the Visual Studio Test Platform Installer version to make available on the path."
+            "helpMarkDown": "Specify the version of Visual Studio Test Platform to install on the agent.",
+            "visibleRule": "versionSelector = specificVersion"
         }
     ],
     "execution": {
@@ -38,6 +52,8 @@
     "messages": {
       "StartingInstaller": "Starting VsTest platform tools installer task.",
       "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
-      "OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent."
+      "OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent.",
+      "CouldNotFindLatestPreReleaseVersion": "Could not find the latest pre-release version of the package %s",
+      "CouldNotFindLatestStableVersion": "Could not find the latest stable version of the package %s"
     }
 }

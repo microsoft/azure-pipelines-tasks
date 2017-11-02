@@ -24,12 +24,25 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
+      "name": "versionSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionSelector",
+      "defaultValue": "latestStable",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.versionSelector",
+      "options": {
+        "latestStable": "Latest Stable",
+        "latestPreRelease": "Latest Pre-Release",
+        "specificVersion": "Specific Version"
+      }
+    },
+    {
       "name": "testPlatformVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.testPlatformVersion",
-      "defaultValue": "15.5.0-preview-20171012-09",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testPlatformVersion"
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatformVersion",
+      "visibleRule": "versionSelector = specificVersion"
     }
   ],
   "execution": {
@@ -41,6 +54,8 @@
   "messages": {
     "StartingInstaller": "ms-resource:loc.messages.StartingInstaller",
     "ProvideExplicitVersion": "ms-resource:loc.messages.ProvideExplicitVersion",
-    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported"
+    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported",
+    "CouldNotFindLatestPreReleaseVersion": "ms-resource:loc.messages.CouldNotFindLatestPreReleaseVersion",
+    "CouldNotFindLatestStableVersion": "ms-resource:loc.messages.CouldNotFindLatestStableVersion"
   }
 }
