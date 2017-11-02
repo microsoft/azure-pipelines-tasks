@@ -172,7 +172,7 @@
         },
         {
             "name":"uitestStorePass",
-            "aliases": [ "uitestStorePassword" ],
+            "aliases": [ "uiTestStorePassword" ],
             "type":"string",
             "label":"Store Password",
             "defaultValue":"",
@@ -191,7 +191,7 @@
         },
         {
             "name":"uitestKeyPass",
-            "aliases": [ "uitestKeyPassword" ],
+            "aliases": [ "uiTestKeyPassword" ],
             "type":"string",
             "label":"Key Password",
             "defaultValue":"",
@@ -201,7 +201,7 @@
         },
         {
             "name":"uitestToolsDir",
-            "aliases": [ "uitestToolsDirectory" ],
+            "aliases": [ "uiTestToolsDirectory" ],
             "type":"string",
             "label":"Test Tools Directory",
             "defaultValue":"",
@@ -233,7 +233,7 @@
         },
         {
             "name":"xcuitestTestIpaPath",
-            "aliases": [ "xcuitestIpaFile" ],
+            "aliases": [ "xcUITestIpaFile" ],
             "type":"string",
             "label":"Test IPA Path",
             "defaultValue":"",
@@ -405,7 +405,7 @@
         },
         {
             "name": "async",
-            "aliases": [ "waitForResults" ],
+            "aliases": [ "skipWaitingForResults" ],
             "type": "boolean",
             "label": "Do not wait for test result",
             "defaultValue": false,

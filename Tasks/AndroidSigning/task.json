@@ -84,7 +84,7 @@
         },
         {
             "name": "keyPass",
-            "aliases": ["jarsignKeyPassword"],
+            "aliases": ["jarsignerKeyPassword"],
             "type": "string",
             "label": "Key Password",
             "defaultValue": "",
@@ -95,7 +95,6 @@
         },
         {
             "name": "jarsignerArguments",
-            "aliases": ["jarsignArguments"],
             "type": "string",
             "label": "Jarsigner Arguments",
             "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",

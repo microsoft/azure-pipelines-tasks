@@ -47,7 +47,7 @@
     "inputs": [
         {
             "name": "wrapperScript",
-            "aliases": [ "gradlewPath" ],
+            "aliases": [ "gradleWrapperFile" ],
             "type": "filePath",
             "label": "Gradle Wrapper",
             "defaultValue": "gradlew",

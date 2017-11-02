@@ -191,7 +191,7 @@
     {
       "name": "uitestStorePass",
       "aliases": [
-        "uitestStorePassword"
+        "uiTestStorePassword"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestStorePass",
@@ -212,7 +212,7 @@
     {
       "name": "uitestKeyPass",
       "aliases": [
-        "uitestKeyPassword"
+        "uiTestKeyPassword"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestKeyPass",
@@ -224,7 +224,7 @@
     {
       "name": "uitestToolsDir",
       "aliases": [
-        "uitestToolsDirectory"
+        "uiTestToolsDirectory"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.uitestToolsDir",
@@ -260,7 +260,7 @@
     {
       "name": "xcuitestTestIpaPath",
       "aliases": [
-        "xcuitestIpaFile"
+        "xcUITestIpaFile"
       ],
       "type": "string",
       "label": "ms-resource:loc.input.label.xcuitestTestIpaPath",
@@ -448,7 +448,7 @@
     {
       "name": "async",
       "aliases": [
-        "waitForResults"
+        "skipWaitingForResults"
       ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.async",
