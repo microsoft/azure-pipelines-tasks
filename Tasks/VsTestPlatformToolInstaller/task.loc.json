@@ -9,11 +9,11 @@
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.103.0",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "preview": false,
@@ -27,7 +27,7 @@
       "name": "testPlatformVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.testPlatformVersion",
-      "defaultValue": "15.6.0-preview-20171027-08",
+      "defaultValue": "15.5.0-preview-20171012-09",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testPlatformVersion"
     }
@@ -39,6 +39,8 @@
     }
   },
   "messages": {
-    "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported"
+    "StartingInstaller": "ms-resource:loc.messages.StartingInstaller",
+    "ProvideExplicitVersion": "ms-resource:loc.messages.ProvideExplicitVersion",
+    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported"
   }
 }

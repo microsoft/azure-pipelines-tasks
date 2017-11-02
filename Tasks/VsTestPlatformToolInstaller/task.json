@@ -9,11 +9,11 @@
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.103.0",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
+        "Minor": 0,
         "Patch": 0
     },
     "preview": false,
@@ -36,6 +36,8 @@
         }
     },
     "messages": {
-        "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key."
+      "StartingInstaller": "Starting VsTest platform tools installer task.",
+      "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
+      "OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent."
     }
 }

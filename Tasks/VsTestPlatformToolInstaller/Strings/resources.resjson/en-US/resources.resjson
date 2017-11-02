@@ -5,5 +5,7 @@
   "loc.instanceNameFormat": "Use VsTest $(testPlatformVersion)",
   "loc.input.label.testPlatformVersion": "Version",
   "loc.input.help.testPlatformVersion": "A version that specifies the Visual Studio Test Platform Installer version to make available on the path.",
-  "loc.messages.Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key."
+  "loc.messages.StartingInstaller": "Starting VsTest platform tools installer task.",
+  "loc.messages.ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
+  "loc.messages.OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent."
 }
