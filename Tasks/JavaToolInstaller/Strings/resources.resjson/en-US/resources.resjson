@@ -38,5 +38,6 @@
   "loc.messages.ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
   "loc.messages.CleanDestDir": "Cleaning destination folder before extraction: %s",
   "loc.messages.CreateDestDir": "Creating destination folder: %s",
-  "loc.messages.SucceedMsg": "Successfully extracted all files."
+  "loc.messages.SucceedMsg": "Successfully extracted all files.",
+  "loc.messages.SetJavaHome": "JAVA_HOME is being set to: %s"
 }

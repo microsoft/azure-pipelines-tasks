@@ -138,6 +138,7 @@
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
-    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
+    "SetJavaHome": "ms-resource:loc.messages.SetJavaHome"
   }
 }

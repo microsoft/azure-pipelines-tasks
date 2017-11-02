@@ -1,8 +1,10 @@
+import fs = require('fs');
+import path = require('path');
 import taskLib = require('vsts-task-lib/task');
 import toolLib = require('vsts-task-tool-lib/tool');
-import path = require('path');
 
-import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
+import azureStorageDownloader = require("azure-storage-artifact-downloader/AzureStorageArtifactDownloader");
+//import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { JavaFilesExtractor } from "./FileExtractor/JavaFilesExtractor";
 taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -17,19 +19,26 @@ async function run() {
 }
 
 async function getJava(versionSpec: string) {
-    toolLib.debug('Trying to get tool from local cache');
-    const localVersions: string[] = toolLib.findLocalToolVersions('Java');
-    const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSource', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestinationFolder: boolean = taskLib.getBoolInput('cleanDestinationFolder', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
 
+    toolLib.debug('Trying to get tool from local cache first');
+    const localVersions: string[] = toolLib.findLocalToolVersions('Java');
+    const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
+
      // Clean the destination folder before downloading and extracting?
-     if (cleanDestinationFolder && taskLib.exist(extractLocation)) {
+     if (cleanDestinationFolder && taskLib.exist(extractLocation) && taskLib.stats(extractLocation).isDirectory) {
         console.log(taskLib.loc('CleanDestDir', extractLocation));
-        taskLib.rmRF(extractLocation);
+
+        // delete the contents of the destination directory but leave the directory in place
+        fs.readdirSync(extractLocation)
+        .forEach((item: string) => {
+            let itemPath = path.join(extractLocation, item);
+            taskLib.rmRF(itemPath);
+        });
     }
 
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
@@ -39,7 +48,9 @@ async function getJava(versionSpec: string) {
         try {
             compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualPath', true));
         
-            await new AzureStorageArtifactDownloader().downloadArtifacts(extractLocation, '*' + compressedFileExtension);
+            //await new AzureStorageArtifactDownloader().downloadArtifacts(extractLocation, '*' + compressedFileExtension);
+            let azureDownloader = new azureStorageDownloader.AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true), taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), taskLib.getInput('azureCommonVirtualPath', false));
+            await azureDownloader.downloadArtifacts(extractLocation, '*' + compressedFileExtension);
             await sleepFor(250); //Wait for the file to be released before extracting it.
 
             let extractSource = buildFilePath(extractLocation, compressedFileExtension);
@@ -59,7 +70,8 @@ async function getJava(versionSpec: string) {
         }
     }
 
-    console.log("JAVA_HOME is being set to: " + jdkDirectory);
+    console.log(taskLib.loc("SetJavaHome", jdkDirectory));
+    //taskLib.setVariable('JAVA_HOME', jdkDirectory);
 } 
 
 function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {

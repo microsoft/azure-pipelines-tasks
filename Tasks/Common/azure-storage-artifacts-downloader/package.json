@@ -1,0 +1,21 @@
+{
+  "name": "azure-storage-artifact-downloader",
+  "version": "0.126.0",
+  "description": "Common service to download blobs from azure storage",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "q": "1.4.1",
+    "item-level-downloader": "1.0.17",
+    "azure-storage": "2.2.1",
+    "vsts-task-lib": "2.0.5"
+  }
+}

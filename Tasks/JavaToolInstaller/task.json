@@ -136,6 +136,7 @@
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
         "CreateDestDir": "Creating destination folder: %s",
-        "SucceedMsg": "Successfully extracted all files."
+        "SucceedMsg": "Successfully extracted all files.",
+        "SetJavaHome": "JAVA_HOME is being set to: %s"
     }
 }
