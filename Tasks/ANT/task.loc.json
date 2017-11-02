@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 125,
+    "Minor": 126,
     "Patch": 0
   },
   "demands": [
@@ -44,6 +44,9 @@
   "inputs": [
     {
       "name": "antBuildFile",
+      "aliases": [
+        "buildFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.antBuildFile",
       "defaultValue": "build.xml",
@@ -97,6 +100,9 @@
     },
     {
       "name": "codeCoverageTool",
+      "aliases": [
+        "codeCoverageToolOptions"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
@@ -111,6 +117,9 @@
     },
     {
       "name": "classFilesDirectories",
+      "aliases": [
+        "codeCoverageClassFilesDirectories"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilesDirectories",
       "defaultValue": ".",
@@ -121,6 +130,9 @@
     },
     {
       "name": "classFilter",
+      "aliases": [
+        "codeCoverageClassFilter"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilter",
       "defaultValue": "",
@@ -131,6 +143,9 @@
     },
     {
       "name": "srcDirectories",
+      "aliases": [
+        "codeCoverageSourceDirectories"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.srcDirectories",
       "defaultValue": "",
@@ -141,6 +156,9 @@
     },
     {
       "name": "failIfCoverageEmpty",
+      "aliases": [
+        "codeCoverageFailIfEmpty"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
       "defaultValue": "false",
@@ -151,6 +169,9 @@
     },
     {
       "name": "antHomeUserInputPath",
+      "aliases": [
+        "antHomeDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.antHomeUserInputPath",
       "required": false,
@@ -160,6 +181,9 @@
     },
     {
       "name": "javaHomeSelection",
+      "aliases": [
+        "javaHomeOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.javaHomeSelection",
       "required": true,
@@ -173,6 +197,9 @@
     },
     {
       "name": "jdkVersion",
+      "aliases": [
+        "jdkVersionOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
@@ -189,6 +216,9 @@
     },
     {
       "name": "jdkUserInputPath",
+      "aliases": [
+        "jdkUserInputDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.jdkUserInputPath",
       "required": true,
@@ -199,6 +229,9 @@
     },
     {
       "name": "jdkArchitecture",
+      "aliases": [
+        "jdkArchitectureOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
       "defaultValue": "x86",
