@@ -3,7 +3,7 @@
     "name": "InstallAppleProvisioningProfile",
     "friendlyName": "Install Apple Provisioning Profile",
     "description": "Install an Apple provisioning profile required to build on a macOS agent",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 125,
+        "Minor": 126,
         "Patch": 0
     },
     "runsOn": [
@@ -26,12 +26,34 @@
     "instanceNameFormat": "Install an Apple provisioning profile",
     "inputs": [
         {
+            "name": "provisioningProfileLocation",
+            "type": "pickList",
+            "label": "Provisioning Profile Location",
+            "defaultValue": "secureFiles",
+            "required": true,
+            "options": {
+                "secureFiles": "Secure Files",
+                "sourceRepository": "Source Repository"
+            },
+            "helpMarkDown": "Select the location of the provisioning profile to install. The provisioning profile can be uploaded to `Secure Files` or stored in your source repository or a local path on the agent."
+        },
+        {
             "name": "provProfileSecureFile",
             "type": "secureFile",
             "label": "Provisioning Profile",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent."
+            "helpMarkDown": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
+            "visibleRule": "provisioningProfileLocation == secureFiles"
+        },
+        {
+            "name": "provProfileSourceRepository",
+            "type": "filePath",
+            "label": "Provisioning Profile",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the provisioning profile from the source repository or specify the local path to a provisioning profile on the macOS agent.",
+            "visibleRule": "provisioningProfileLocation == sourceRepository"
         },
         {
             "name": "removeProfile",
@@ -54,6 +76,12 @@
             "argumentFormat": ""
         }
     },
+    "execution": {
+        "Node": {
+            "target": "installprovprofile.js",
+            "argumentFormat": ""
+        }
+    },
     "postjobexecution": {
         "Node": {
             "target": "postinstallprovprofile.js",
@@ -61,6 +89,7 @@
         }
     },
     "messages": {
+        "InputProvisioningProfileNotFound": "Provisioning profile to be installed was not found at %s. Specify the full file path to a provisioning profile."
     }
 }
     
