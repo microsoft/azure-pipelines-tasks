@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 123,
-    "Patch": 1
+    "Minor": 125,
+    "Patch": 0
   },
   "groups": [
     {
@@ -42,6 +42,9 @@
     },
     {
       "name": "app",
+      "aliases": [
+        "appFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.app",
       "defaultValue": "",
@@ -50,6 +53,9 @@
     },
     {
       "name": "symbolsType",
+      "aliases": [
+        "symbolsOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.symbolsType",
       "required": false,
@@ -70,6 +76,9 @@
     },
     {
       "name": "pdbPath",
+      "aliases": [
+        "symbolsPdbFiles"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.pdbPath",
       "defaultValue": "**/*.pdb",
@@ -80,6 +89,9 @@
     },
     {
       "name": "dsymPath",
+      "aliases": [
+        "symbolsDsymFiles"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.dsymPath",
       "groupName": "symbols",
@@ -89,6 +101,9 @@
     },
     {
       "name": "mappingTxtPath",
+      "aliases": [
+        "symbolsMappingTxtFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.mappingTxtPath",
       "groupName": "symbols",
@@ -98,6 +113,9 @@
     },
     {
       "name": "packParentFolder",
+      "aliases": [
+        "symbolsPackParentDirectory"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.packParentFolder",
       "groupName": "symbols",
@@ -106,6 +124,9 @@
     },
     {
       "name": "releaseNotesSelection",
+      "aliases": [
+        "releaseNotesOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.releaseNotesSelection",
       "required": true,

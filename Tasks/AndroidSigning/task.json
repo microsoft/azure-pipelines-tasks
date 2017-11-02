@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 124,
+        "Minor": 125,
         "Patch": 0
     },
     "demands": [
@@ -51,6 +51,7 @@
         },
         {
             "name": "keystoreFile",
+            "aliases": ["jarsignerKeystoreFile"],
             "type": "secureFile",
             "label": "Keystore File",
             "defaultValue": "",
@@ -61,6 +62,7 @@
         },
         {
             "name": "keystorePass",
+            "aliases": ["jarsignerKeystorePassword"],
             "type": "string",
             "label": "Keystore Password",
             "defaultValue": "",
@@ -71,6 +73,7 @@
         },
         {
             "name": "keystoreAlias",
+            "aliases": ["jarsignerKeystoreAlias"],
             "type": "string",
             "label": "Alias",
             "defaultValue": "",
@@ -81,6 +84,7 @@
         },
         {
             "name": "keyPass",
+            "aliases": ["jarsignKeyPassword"],
             "type": "string",
             "label": "Key Password",
             "defaultValue": "",
@@ -91,6 +95,7 @@
         },
         {
             "name": "jarsignerArguments",
+            "aliases": ["jarsignArguments"],
             "type": "string",
             "label": "Jarsigner Arguments",
             "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
@@ -110,6 +115,7 @@
         },
         {
             "name": "zipalignLocation",
+            "aliases": ["zipalignFile"],
             "type": "string",
             "label": "Zipalign Location",
             "defaultValue": "",
