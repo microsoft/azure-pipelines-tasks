@@ -12,7 +12,7 @@ import * as handlers from "item-level-downloader/Providers/Handlers";
 import * as providers from "item-level-downloader/Providers";
 import * as engine from "item-level-downloader/Engine";
 
-import azureStorageDownloader = require("azure-storage-artifact-downloader/AzureStorageArtifactDownloader");
+import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
@@ -62,7 +62,7 @@ async function doWork() {
             var artifactProvider = tl.getInput('artifactProvider');
             switch (artifactProvider.toLowerCase()) {
                 case "azurestorage":
-                    let azureDownloader = new azureStorageDownloader.AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true), 
+                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true), 
                         tl.getInput('storageAccountName', true), tl.getInput('containerName', true), tl.getInput('commonVirtualPath', false));
                     azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
                     break;

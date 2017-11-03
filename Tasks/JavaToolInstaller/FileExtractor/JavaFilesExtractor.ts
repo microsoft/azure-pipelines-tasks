@@ -123,9 +123,10 @@ export class JavaFilesExtractor {
     private unpackJars(fsPath, javaBinPath) {
         if (fs.existsSync(fsPath)) {
             if (fs.lstatSync(fsPath).isDirectory()) {
+                let self = this;
                 fs.readdirSync(fsPath).forEach(function(file,index){
                     const curPath = path.join(fsPath, file);
-                    this.unpackJars(curPath, javaBinPath);
+                    self.unpackJars(curPath, javaBinPath);
                 });
             } else if (path.extname(fsPath).toLowerCase() === '.pack') {
                 // Unpack the pack file synchonously

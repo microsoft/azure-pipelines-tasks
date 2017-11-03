@@ -1,12 +1,6 @@
 {
     "common": [
         {
-            "module": "../Common/azure-storage-artifacts-downloader",
-            "type": "node",
-            "dest": "./",
-            "compile": true
-        },
-        {
             "module": "../Common/azure-arm-rest",
             "type": "node",
             "dest": "./",
@@ -22,7 +16,6 @@
     "rm": [
         {
             "items": [
-                "node_modules/azure-storage-artifact-downloader/node_modules/vsts-task-lib",
                 "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
                 "node_modules/azure-blobstorage-artifactProvider/node_modules/vsts-task-lib"
             ],
