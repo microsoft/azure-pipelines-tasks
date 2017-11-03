@@ -2,7 +2,7 @@
     "id": "C0E0B74F-0931-47C7-AC27-7C5A19456A36",
     "name": "JavaToolInstaller",
     "friendlyName": "Java Tool Installer",
-    "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and adds it to the PATH. Use this task to change the version of Java used in Java tasks.",
+    "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
     "helpMarkDown": "[More Information]()",
     "category": "Tool",
     "runsOn": [
@@ -40,8 +40,8 @@
             "type": "pickList",
             "label": "JDK Arch type",
             "options": {
-                "x64": "x64",
-                "x86": "x86"
+                "x64": "X64",
+                "x86": "X86"
             },
             "required": true,
             "helpMarkDown": "The bit version of the JDK."
@@ -147,7 +147,11 @@
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
         "CreateDestDir": "Creating destination folder: %s",
+        "RetrievingJdkFromAzure": "Retrieving the JDK from Azure blob storage.",
+        "RetrievingJdkFromLocalPath": "Retrieving the JDK from local path.",
         "SucceedMsg": "Successfully extracted all files.",
-        "SetJavaHome": "JAVA_HOME is being set to: %s"
+        "SetJavaHome": "JAVA_HOME is being set to: %s",
+        "SetExtendedJavaHome": "%s is being set to: %s",
+        "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension."
     }
 }

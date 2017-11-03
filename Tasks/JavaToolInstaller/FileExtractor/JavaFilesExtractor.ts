@@ -1,6 +1,6 @@
+import path = require('path');
 import taskLib = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
-import path = require('path');
 
 export class JavaFilesExtractor {
     public destinationFolder: string;
@@ -19,7 +19,7 @@ export class JavaFilesExtractor {
         if (this.win) {
             return this.winSevenZipLocation;
         } else {
-            if (typeof this.xpSevenZipLocation == "undefined") {
+            if (typeof this.xpSevenZipLocation === "undefined") {
                 this.xpSevenZipLocation = taskLib.which('7z', true);
             }
             return this.xpSevenZipLocation;
@@ -28,24 +28,23 @@ export class JavaFilesExtractor {
 
     private async unzipExtract(file, destinationFolder) {
         console.log(taskLib.loc('UnzipExtractFile', file));
-        if (process.platform == 'win32') {
+        if (process.platform === 'win32') {
             // build the powershell command
-            let escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
-            let escapedDest = destinationFolder.replace(/'/g, "''").replace(/"|\n|\r/g, '');
-            let command: string = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
+            const escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
+            const escapedDest = destinationFolder.replace(/'/g, "''").replace(/"|\n|\r/g, '');
+            const command: string = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
     
             // change the console output code page to UTF-8.
-            let chcpPath = path.join(process.env.windir, "system32", "chcp.com");
+            const chcpPath = path.join(process.env.windir, "system32", "chcp.com");
             await taskLib.exec(chcpPath, '65001');
     
             // run powershell
-            let powershell: tr.ToolRunner = taskLib.tool('powershell')
+            const powershell: tr.ToolRunner = taskLib.tool('powershell')
                 .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
                 .arg(command);
             await powershell.exec();
-        }
-        else {
-            let unzip: tr.ToolRunner = taskLib.tool('unzip')
+        } else {
+            const unzip: tr.ToolRunner = taskLib.tool('unzip')
                 .arg(file);
             await unzip.exec(<tr.IExecOptions>{ cwd: destinationFolder });
         }
@@ -53,11 +52,11 @@ export class JavaFilesExtractor {
 
     private async sevenZipExtract(file, destinationFolder) {
         console.log(taskLib.loc('SevenZipExtractFile', file));
-        var sevenZip = taskLib.tool(this.getSevenZipLocation());
+        const sevenZip = taskLib.tool(this.getSevenZipLocation());
         sevenZip.arg('x');
         sevenZip.arg('-o' + destinationFolder);
         sevenZip.arg(file);
-        var execResult = sevenZip.execSync();
+        const execResult = sevenZip.execSync();
         if (execResult.code != taskLib.TaskResult.Succeeded) {
             taskLib.debug('execResult: ' + JSON.stringify(execResult));
         }
@@ -65,27 +64,27 @@ export class JavaFilesExtractor {
 
     private async tarExtract(file, destinationFolder) {
         console.log(taskLib.loc('TarExtractFile', file));
-        let tr: tr.ToolRunner = taskLib.tool('tar');
+        const tr: tr.ToolRunner = taskLib.tool('tar');
         tr.arg(['xzC', destinationFolder, '-f', file]);
         tr.exec();
     }
 
     private extractFiles(file: string, fileEnding: string) {
-        var stats = taskLib.stats(file);
+        const stats = taskLib.stats(file);
         if (!stats) {
-            throw new Error(taskLib.loc("ExtractNonExistFile", file));
+            throw new Error(taskLib.loc('ExtractNonExistFile', file));
         } else if (stats.isDirectory()) {
             throw new Error(taskLib.loc('ExtractDirFailed', file));
         }
 
         if (this.win) {
-            if (".tar" == fileEnding) { // a simple tar
+            if ('.tar' === fileEnding) { // a simple tar
                     this.sevenZipExtract(file, this.destinationFolder);
-            } else if (".tar.gz" == fileEnding) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
+            } else if ('.tar.gz' === fileEnding) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
                     // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
-                    var shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
+                    const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
                     // e.g. 'destinationFolder/_test.tar.gz_'
-                    var tempFolder = path.normalize(this.destinationFolder + path.sep + '_' + shortFileName + '_');
+                    const tempFolder = path.normalize(this.destinationFolder + path.sep + '_' + shortFileName + '_');
                     console.log(taskLib.loc('CreateTempDir', tempFolder, file));
 
                     // 0 create temp folder
@@ -94,7 +93,7 @@ export class JavaFilesExtractor {
                     // 1 extract compressed tar
                     this.sevenZipExtract(file, tempFolder);
                     console.log(taskLib.loc('TempDir', tempFolder));
-                    var tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
+                    const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
                     console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
                        
                     // 2 expand extracted tar
@@ -103,15 +102,15 @@ export class JavaFilesExtractor {
                     // 3 cleanup temp folder
                     console.log(taskLib.loc('RemoveTempDir', tempFolder));
                     taskLib.rmRF(tempFolder);
-            } else if (".zip" == fileEnding) {
+            } else if ('.zip' === fileEnding) {
                 this.unzipExtract(file, this.destinationFolder);
             } else { // use sevenZip
                 this.sevenZipExtract(file, this.destinationFolder);
             }
         } else { // not windows
-            if (".tar" == fileEnding || ".tar.gz" == fileEnding) {
+            if ('.tar' === fileEnding || '.tar.gz' === fileEnding) {
                 this.tarExtract(file, this.destinationFolder);
-            } else if (".zip" == fileEnding) {
+            } else if ('.zip' === fileEnding) {
                 this.unzipExtract(file, this.destinationFolder);
             } else { // fall through and use sevenZip
                 this.sevenZipExtract(file, this.destinationFolder);
@@ -132,8 +131,8 @@ export class JavaFilesExtractor {
 
         initialDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
 
-        var jdkFile = path.normalize(repoRoot);
-        var stats = taskLib.stats(jdkFile);
+        const jdkFile = path.normalize(repoRoot);
+        const stats = taskLib.stats(jdkFile);
         if (stats.isFile()) {
             this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());

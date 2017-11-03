@@ -1,11 +1,13 @@
 {
   "loc.friendlyName": "Java Tool Installer",
   "loc.helpMarkDown": "[More Information]()",
-  "loc.description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and adds it to the PATH. Use this task to change the version of Java used in Java tasks.",
+  "loc.description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
   "loc.instanceNameFormat": "Use Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Download Java from an Azure blob",
   "loc.input.label.versionSpec": "JDK Version",
   "loc.input.help.versionSpec": "A number that specifies the JDK version to make available on the path.",
+  "loc.input.label.jdkArch": "JDK Arch type",
+  "loc.input.help.jdkArch": "The bit version of the JDK.",
   "loc.input.label.jdkSource": "JDK source",
   "loc.input.help.jdkSource": "Source for the compressed JDK.",
   "loc.input.label.jdkPath": "JDK path",
@@ -38,6 +40,10 @@
   "loc.messages.ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
   "loc.messages.CleanDestDir": "Cleaning destination folder before extraction: %s",
   "loc.messages.CreateDestDir": "Creating destination folder: %s",
+  "loc.messages.RetrievingJdkFromAzure": "Retrieving the JDK from Azure blob storage.",
+  "loc.messages.RetrievingJdkFromLocalPath": "Retrieving the JDK from local path.",
   "loc.messages.SucceedMsg": "Successfully extracted all files.",
-  "loc.messages.SetJavaHome": "JAVA_HOME is being set to: %s"
+  "loc.messages.SetJavaHome": "JAVA_HOME is being set to: %s",
+  "loc.messages.SetExtendedJavaHome": "%s is being set to: %s",
+  "loc.messages.UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension."
 }

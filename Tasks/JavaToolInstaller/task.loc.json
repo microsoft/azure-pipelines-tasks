@@ -33,9 +33,20 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "1.8.0",
+      "defaultValue": "1.8",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "jdkArch",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArch",
+      "options": {
+        "x64": "X64",
+        "x86": "X86"
+      },
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.jdkArch"
     },
     {
       "name": "jdkSource",
@@ -138,7 +149,11 @@
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
+    "RetrievingJdkFromAzure": "ms-resource:loc.messages.RetrievingJdkFromAzure",
+    "RetrievingJdkFromLocalPath": "ms-resource:loc.messages.RetrievingJdkFromLocalPath",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
-    "SetJavaHome": "ms-resource:loc.messages.SetJavaHome"
+    "SetJavaHome": "ms-resource:loc.messages.SetJavaHome",
+    "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome",
+    "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension"
   }
 }
