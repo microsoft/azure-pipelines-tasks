@@ -68,8 +68,10 @@ async function getJava(versionSpec: string) {
         }
     }
 
+    let extendedJavaHome = 'JAVA_HOME_' + versionSpec + '_' + taskLib.getInput('jdkArch', true);
     console.log(taskLib.loc("SetJavaHome", jdkDirectory));
-    //taskLib.setVariable('JAVA_HOME', jdkDirectory);
+    taskLib.setVariable('JAVA_HOME', jdkDirectory);
+    taskLib.setVariable(extendedJavaHome, jdkDirectory);
 } 
 
 function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
@@ -82,7 +84,7 @@ function buildFilePath(localPathRoot: string, fileEnding: string): string {
     const azureFileSource: string = taskLib.getInput('azureCommonVirtualPath', true);
     var fileName = azureFileSource.split(/[\\\/]/).pop();
     var extractSource = path.join(localPathRoot, fileName);
-    console.log("Extracting JDK from: "+ extractSource);
+    console.debug("Extracting JDK from: "+ extractSource);
 
     return extractSource;
 }

@@ -31,9 +31,20 @@
             "name": "versionSpec",
             "type": "string",
             "label": "JDK Version",
-            "defaultValue": "1.8.0",
+            "defaultValue": "1.8",
             "required": true,
             "helpMarkDown": "A number that specifies the JDK version to make available on the path."
+        },
+        {
+            "name": "jdkArch",
+            "type": "pickList",
+            "label": "JDK Arch type",
+            "options": {
+                "x64": "x64",
+                "x86": "x86"
+            },
+            "required": true,
+            "helpMarkDown": "The bit version of the JDK."
         },
         {
             "name": "jdkSource",
