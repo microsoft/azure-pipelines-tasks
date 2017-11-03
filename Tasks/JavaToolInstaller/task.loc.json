@@ -38,41 +38,41 @@
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
-      "name": "jdkArch",
+      "name": "jdkArchitectureOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.jdkArch",
+      "label": "ms-resource:loc.input.label.jdkArchitectureOption",
       "options": {
         "x64": "X64",
         "x86": "X86"
       },
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jdkArch"
+      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitectureOption"
     },
     {
-      "name": "jdkSource",
+      "name": "jdkSourceOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.jdkSource",
+      "label": "ms-resource:loc.input.label.jdkSourceOption",
       "required": true,
       "options": {
         "AzureStorage": "Azure Storage",
         "LocalDirectory": "Local Directory"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.jdkSource"
+      "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
     },
     {
-      "name": "jdkPath",
+      "name": "jdkFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jdkPath",
+      "label": "ms-resource:loc.input.label.jdkFile",
       "required": true,
-      "visibleRule": "jdkSource == LocalDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.jdkPath"
+      "visibleRule": "jdkSourceOption == LocalDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkFile"
     },
     {
       "name": "azureResourceManagerEndpoint",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureResourceManagerEndpoint",
       "required": true,
-      "visibleRule": "jdkSource == AzureStorage",
+      "visibleRule": "jdkSourceOption == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureResourceManagerEndpoint"
     },
     {
@@ -83,7 +83,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "jdkSource == AzureStorage",
+      "visibleRule": "jdkSourceOption == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccountName"
     },
     {
@@ -91,16 +91,16 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.azureContainerName",
       "required": true,
-      "visibleRule": "jdkSource == AzureStorage",
+      "visibleRule": "jdkSourceOption == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerName"
     },
     {
-      "name": "azureCommonVirtualPath",
+      "name": "azureCommonVirtualFile",
       "type": "string",
-      "label": "ms-resource:loc.input.label.azureCommonVirtualPath",
+      "label": "ms-resource:loc.input.label.azureCommonVirtualFile",
       "required": true,
-      "visibleRule": "jdkSource == AzureStorage",
-      "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualPath"
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFile"
     },
     {
       "name": "jdkDestinationDirectory",
@@ -111,12 +111,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
     },
     {
-      "name": "cleanDestinationFolder",
+      "name": "cleanDestinationDirectory",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.cleanDestinationFolder",
+      "label": "ms-resource:loc.input.label.cleanDestinationDirectory",
       "required": true,
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
     }
   ],
   "dataSourceBindings": [

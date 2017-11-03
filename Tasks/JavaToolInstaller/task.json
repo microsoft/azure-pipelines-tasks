@@ -36,7 +36,7 @@
             "helpMarkDown": "A number that specifies the JDK version to make available on the path."
         },
         {
-            "name": "jdkArch",
+            "name": "jdkArchitectureOption",
             "type": "pickList",
             "label": "JDK Arch type",
             "options": {
@@ -47,7 +47,7 @@
             "helpMarkDown": "The bit version of the JDK."
         },
         {
-            "name": "jdkSource",
+            "name": "jdkSourceOption",
             "type": "pickList",
             "label": "JDK source",
             "required": true,
@@ -58,11 +58,11 @@
             "helpMarkDown": "Source for the compressed JDK."
         },
         {
-            "name": "jdkPath",
+            "name": "jdkFile",
             "type": "filePath",
-            "label": "JDK path",
+            "label": "JDK file",
             "required": true,
-            "visibleRule": "jdkSource == LocalDirectory",
+            "visibleRule": "jdkSourceOption == LocalDirectory",
             "helpMarkDown": "Path to where the compressed JDK is located. The path could be in your source repository or a local path on the agent."
         },
         {
@@ -70,7 +70,7 @@
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "required": true,
-            "visibleRule": "jdkSource == AzureStorage",
+            "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK."
         },
         {
@@ -81,7 +81,7 @@
             "properties": {
                 "EditableOptions":"True"
             },
-            "visibleRule": "jdkSource == AzureStorage",
+            "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the Storage account name in which the JDK is located."
         },
         {
@@ -89,29 +89,29 @@
             "type": "string",
             "label": "Container Name",
             "required": true,
-            "visibleRule": "jdkSource == AzureStorage",
+            "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Name of the container in the storage account in which the JDK is located."
         },
         {
-            "name": "azureCommonVirtualPath",
+            "name": "azureCommonVirtualFile",
             "type": "string",
             "label": "Common Virtual Path",
             "required": true,
-            "visibleRule": "jdkSource == AzureStorage",
+            "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Path to the JDK inside the Azure storage container."
         },
         {
             "name": "jdkDestinationDirectory",
             "type": "filePath",
-            "label": "Destination folder",
+            "label": "Destination directory",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Destination folder into which JDK should be extracted."
+            "helpMarkDown": "Destination directory into which JDK should be extracted."
         },
         {
-            "name": "cleanDestinationFolder",
+            "name": "cleanDestinationDirectory",
             "type": "boolean",
-            "label": "Clean destination folder",
+            "label": "Clean destination directory",
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."

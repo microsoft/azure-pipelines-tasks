@@ -1,3 +1,4 @@
+import fs = require('fs');
 import path = require('path');
 import taskLib = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
@@ -118,10 +119,30 @@ export class JavaFilesExtractor {
         }
     }
 
+    // This method recursively finds all .pack files under fsPath and unpacks them with the unpack200 tool
+    private unpackJars(fsPath, javaBinPath) {
+        if (fs.existsSync(fsPath)) {
+            if (fs.lstatSync(fsPath).isDirectory()) {
+                fs.readdirSync(fsPath).forEach(function(file,index){
+                    const curPath = path.join(fsPath, file);
+                    this.unpackJars(curPath, javaBinPath);
+                });
+            } else if (path.extname(fsPath).toLowerCase() === '.pack') {
+                // Unpack the pack file synchonously
+                const p = path.parse(fsPath);
+                const toolName = process.platform.match(/^win/i) ? 'unpack200.exe' : 'unpack200'; 
+                const args = process.platform.match(/^win/i) ? '-r -v -l ""' : '';            
+                const name = path.join(p.dir, p.name);
+                taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`); 
+            }
+        }    
+    }
+
     public unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): string {
         this.destinationFolder = extractLocation;
         let initialDirectoriesList: string[];
         let finalDirectoriesList: string[];
+        let jdkDirectory: string;
 
         // Create the destination folder if it doesn't exist
         if (!taskLib.exist(this.destinationFolder)) {
@@ -137,7 +158,9 @@ export class JavaFilesExtractor {
             this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
-            return finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
+            jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
+            this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
+            return jdkDirectory;
         }
     }
 
