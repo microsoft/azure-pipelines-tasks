@@ -14,6 +14,8 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
     before((done) => {
         process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
+        process.env['ENDPOINT_AUTH_PARAMETER_ID1_USERNAME'] = 'uname';
+        process.env['ENDPOINT_AUTH_PARAMETER_ID1_PASSWORD'] = 'pword';
         process.env['ENDPOINT_URL_ID1'] = 'bogusURL';
 
         done();

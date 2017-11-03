@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 125,
-    "Patch": 2
+    "Minor": 126,
+    "Patch": 0
   },
   "demands": [
     "AndroidSDK",
@@ -35,6 +35,9 @@
   "inputs": [
     {
       "name": "project",
+      "aliases": [
+        "projectFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.project",
       "defaultValue": "**/*.csproj",
@@ -51,6 +54,9 @@
     },
     {
       "name": "outputDir",
+      "aliases": [
+        "outputDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.outputDir",
       "defaultValue": "",
@@ -82,6 +88,9 @@
     },
     {
       "name": "msbuildLocationMethod",
+      "aliases": [
+        "msbuildLocationOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.msbuildLocationMethod",
       "required": false,
@@ -94,6 +103,9 @@
     },
     {
       "name": "msbuildVersion",
+      "aliases": [
+        "msbuildVersionOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.msbuildVersion",
       "required": false,
@@ -111,6 +123,9 @@
     },
     {
       "name": "msbuildLocation",
+      "aliases": [
+        "msbuildFile"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.msbuildLocation",
       "defaultValue": "",
@@ -121,6 +136,9 @@
     },
     {
       "name": "msbuildArchitecture",
+      "aliases": [
+        "msbuildArchitectureOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.msbuildArchitecture",
       "defaultValue": "x86",
@@ -144,6 +162,9 @@
     },
     {
       "name": "jdkSelection",
+      "aliases": [
+        "jdkOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.jdkSelection",
       "required": true,
@@ -157,6 +178,9 @@
     },
     {
       "name": "jdkVersion",
+      "aliases": [
+        "jdkVersionOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
@@ -173,6 +197,9 @@
     },
     {
       "name": "jdkUserInputPath",
+      "aliases": [
+        "jdkDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.jdkUserInputPath",
       "required": true,
@@ -183,6 +210,9 @@
     },
     {
       "name": "jdkArchitecture",
+      "aliases": [
+        "jdkArchitectureOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
       "defaultValue": "x64",

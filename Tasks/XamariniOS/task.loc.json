@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 120,
+    "Minor": 126,
     "Patch": 0
   },
   "demands": [
@@ -32,6 +32,9 @@
   "inputs": [
     {
       "name": "solution",
+      "aliases": [
+        "solutionFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "",
@@ -64,6 +67,9 @@
     },
     {
       "name": "forSimulator",
+      "aliases": [
+        "buildForSimulator"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.forSimulator",
       "defaultValue": "false",
@@ -89,6 +95,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
@@ -98,6 +107,9 @@
     },
     {
       "name": "buildTool",
+      "aliases": [
+        "buildToolOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.buildTool",
       "required": false,
@@ -110,6 +122,9 @@
     },
     {
       "name": "mdtoolLocation",
+      "aliases": [
+        "mdtoolFile"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.mdtoolLocation",
       "defaultValue": "",
@@ -119,6 +134,9 @@
     },
     {
       "name": "signMethod",
+      "aliases": [
+        "signingOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.signMethod",
       "required": false,
@@ -132,6 +150,9 @@
     },
     {
       "name": "iosSigningIdentity",
+      "aliases": [
+        "signingIdentity"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.iosSigningIdentity",
       "required": false,
@@ -141,6 +162,9 @@
     },
     {
       "name": "unlockDefaultKeychain",
+      "aliases": [
+        "signingUnlockDefaultKeychain"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.unlockDefaultKeychain",
       "defaultValue": false,
@@ -151,6 +175,9 @@
     },
     {
       "name": "defaultKeychainPassword",
+      "aliases": [
+        "signingDefaultKeychainPassword"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.defaultKeychainPassword",
       "required": false,
@@ -160,6 +187,9 @@
     },
     {
       "name": "provProfileUuid",
+      "aliases": [
+        "signingProvisioningProfileID"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.provProfileUuid",
       "required": false,
@@ -169,6 +199,9 @@
     },
     {
       "name": "p12",
+      "aliases": [
+        "signingP12File"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.p12",
       "required": false,
@@ -178,6 +211,9 @@
     },
     {
       "name": "p12pwd",
+      "aliases": [
+        "signingP12Password"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.p12pwd",
       "required": false,
@@ -187,6 +223,9 @@
     },
     {
       "name": "provProfile",
+      "aliases": [
+        "signingProvisioningProfileFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.provProfile",
       "required": false,
@@ -196,6 +235,9 @@
     },
     {
       "name": "removeProfile",
+      "aliases": [
+        "signingRemoveProfile"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.removeProfile",
       "defaultValue": false,
