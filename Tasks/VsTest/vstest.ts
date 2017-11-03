@@ -142,7 +142,12 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     if (vstestConfig.codeCoverageEnabled) {
-        argsArray.push('/EnableCodeCoverage');
+        if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse) {
+            // TODO: add in settings file
+            //
+        } else {
+            argsArray.push('/EnableCodeCoverage');
+        }
     }
     if (vstestConfig.runTestsInIsolation) {
         argsArray.push('/InIsolation');
