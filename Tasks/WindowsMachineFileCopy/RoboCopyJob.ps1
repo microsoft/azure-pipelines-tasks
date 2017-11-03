@@ -5,8 +5,12 @@ param (
     [string]$targetPath,
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
-    [string]$additionalArguments
+    [string]$additionalArguments,
+    [string]$scriptRoot
     )
+
+    Import-Module "$scriptRoot\ps_modules\VstsTaskSdk\VstsTaskSdk.psm1" 
+    Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
     Write-Verbose "Entering script RobocopyJob.ps1"
     Write-Verbose "fqdn = $fqdn"
