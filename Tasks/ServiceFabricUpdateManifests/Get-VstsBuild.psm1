@@ -64,7 +64,7 @@
             }
             elseif ($artifact.resource.type -eq "container") # The artifact is in a hosted server and must be downloaded into a temp folder
             {
-                $agentTmpFolder = Join-Path $env:Temp $build.buildNumber
+                $agentTmpFolder = Join-Path $ENV:AGENT_TEMPDIRECTORY $build.buildNumber
                 $artifactZipFile = Join-Path $agentTmpFolder "$PkgArtifactName.zip"
                 $artifactPath = Join-Path $agentTmpFolder $PkgArtifactName
                 $downloadArtifact = $true
