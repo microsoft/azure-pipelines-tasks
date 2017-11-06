@@ -80,29 +80,29 @@ export class JavaFilesExtractor {
 
         if (this.win) {
             if ('.tar' === fileEnding) { // a simple tar
-                    this.sevenZipExtract(file, this.destinationFolder);
+                this.sevenZipExtract(file, this.destinationFolder);
             } else if ('.tar.gz' === fileEnding) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
-                    // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
-                    const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
-                    // e.g. 'destinationFolder/_test.tar.gz_'
-                    const tempFolder = path.normalize(this.destinationFolder + path.sep + '_' + shortFileName + '_');
-                    console.log(taskLib.loc('CreateTempDir', tempFolder, file));
+                // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
+                const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
+                // e.g. 'destinationFolder/_test.tar.gz_'
+                const tempFolder = path.normalize(this.destinationFolder + path.sep + '_' + shortFileName + '_');
+                console.log(taskLib.loc('CreateTempDir', tempFolder, file));
 
-                    // 0 create temp folder
-                    taskLib.mkdirP(tempFolder);
+                // 0 create temp folder
+                taskLib.mkdirP(tempFolder);
 
-                    // 1 extract compressed tar
-                    this.sevenZipExtract(file, tempFolder);
-                    console.log(taskLib.loc('TempDir', tempFolder));
-                    const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
-                    console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
-                       
-                    // 2 expand extracted tar
-                    this.sevenZipExtract(tempTar, this.destinationFolder);
+                // 1 extract compressed tar
+                this.sevenZipExtract(file, tempFolder);
+                console.log(taskLib.loc('TempDir', tempFolder));
+                const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
+                console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
+                    
+                // 2 expand extracted tar
+                this.sevenZipExtract(tempTar, this.destinationFolder);
 
-                    // 3 cleanup temp folder
-                    console.log(taskLib.loc('RemoveTempDir', tempFolder));
-                    taskLib.rmRF(tempFolder);
+                // 3 cleanup temp folder
+                console.log(taskLib.loc('RemoveTempDir', tempFolder));
+                taskLib.rmRF(tempFolder);
             } else if ('.zip' === fileEnding) {
                 this.unzipExtract(file, this.destinationFolder);
             } else { // use sevenZip
