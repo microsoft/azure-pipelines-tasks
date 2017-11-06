@@ -177,7 +177,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             console.log('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
-        if (testConfiguration.vsTestVersion.toLowerCase() !== 'toolsinstaller') {
+        if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug("Trying VsTest installed by tools installer.");
 
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
