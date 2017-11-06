@@ -19,6 +19,9 @@
         },
         "C:\\Windows\\system32\\chcp.com 65001": {
             "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
         }
     },
     "rmRF": {

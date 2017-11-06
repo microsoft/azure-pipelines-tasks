@@ -112,7 +112,7 @@ node make.js testLegacy
 For a specific task
 
 ```bash
-node make.js testLegacy --task XCode
+node make.js testLegacy --task Xcode
 ```
 
 ## Package
