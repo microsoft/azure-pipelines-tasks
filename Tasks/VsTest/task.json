@@ -65,7 +65,7 @@
             "name": "testAssemblyVer2",
             "type": "multiLine",
             "label": "Test assemblies",
-            "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
+            "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
             "required": true,
             "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
             "groupName": "testSelection",
