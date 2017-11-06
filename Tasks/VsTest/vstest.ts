@@ -143,8 +143,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
 
     if (vstestConfig.codeCoverageEnabled) {
         if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse) {
-            // TODO: add in settings file
-            //
+            // Fix settings file for code coverage in this flow
         } else {
             argsArray.push('/EnableCodeCoverage');
         }

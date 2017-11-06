@@ -217,11 +217,7 @@ function updateSettingsWithParameters(result: any, overrideParametersString: str
             const key = parameter.$.Name || parameter.$.name;
             if (overrideParameters[key] && overrideParameters[key].value) {
                 tl.debug('Overriding value for parameter : ' + key);
-                if (parameter.$.Value) {
-                    parameter.$.Value = overrideParameters[key].value;
-                } else {
-                    parameter.$.value = overrideParameters[key].value;
-                }
+                parameter.$.Value = overrideParameters[key].value;
             }
         });
     }

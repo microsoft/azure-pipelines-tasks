@@ -200,6 +200,7 @@
       "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
+        "toolsInstaller": "Installed by Tools Installer",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015"
       }
@@ -490,6 +491,9 @@
     "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
     "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
-    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
+    "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
+    "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
+    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError"
   }
 }

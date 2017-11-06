@@ -193,42 +193,33 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.taskInstanceIdentifier = uuid.v1();
 
-    try {
-        versionFinder.getVsTestRunnerDetails(testConfiguration);
-    } catch (error) {
+    // Tools installer flow
+    if(testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && testConfiguration.vsTestVersion === 'toolsInstaller') {
+        tl.debug("Trying VsTest installed by tools installer.");
 
-        tl.debug("No VS installed on the box. Trying VsTest installed by tools installer.");
-
-        // Execute all this only when above value is not null.
-        // 1) Check if Vs 2017 is selected or latest is selected. Then use Tools installer.
-        // 2) If VS 2014 is installed and latest is selected use tools installer.
-        // 3) If VS 2017 is installed and then prefer VS on the box.
         testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
 
         // if Tools installer is not there throw.
         if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
-            publishErrorCIandThrow(error);
+            utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
+            throw new Error(tl.loc('ToolsInstallerInstallationError'));
         }
 
         // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
         testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
         testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
 
-        try {
-            versionFinder.getVsTestRunnerDetails(testConfiguration);
-        } catch (error) {
-            publishErrorCIandThrow(error);
-        }
-
         testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
     }
 
-    testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
-}
+    try {
+        versionFinder.getVsTestRunnerDetails(testConfiguration);
+    } catch (error) {
+        utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
+        throw error;
+    }
 
-function publishErrorCIandThrow(error: any) {
-    utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
-    throw error;
+    testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
 }
 
 async function logWarningForWER(runUITests: boolean) {
@@ -359,7 +350,7 @@ function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
     if (matches && matches.length !== 0) {
         toolsInstallerConfiguration.vsTestConsolePathFromPackageLocation = matches[0];
     } else {
-        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1039, false);
+        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1041, false);
         throw new Error(tl.loc('toolsInstallerPathNotSet'));
     }
 
@@ -368,7 +359,7 @@ function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
     if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
         toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
     } else {
-        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1039, false);
+        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
         tl.warning(tl.loc('testImpactAndCCWontWork'));
     }
 
@@ -377,7 +368,7 @@ function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
     if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
         toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = x86ProfilerProxy[0];
     } else {
-        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1039, false);
+        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
         tl.warning(tl.loc('testImpactAndCCWontWork'));
     }
 
