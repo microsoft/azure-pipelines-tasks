@@ -177,7 +177,24 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             console.log('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
-        if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+        if (testConfiguration.vsTestVersion.toLowerCase() !== 'toolsinstaller') {
+            tl.debug("Trying VsTest installed by tools installer.");
+
+            testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
+
+            // if Tools installer is not there throw.
+            if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
+                utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
+                throw new Error(tl.loc('ToolsInstallerInstallationError'));
+            }
+
+            // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
+            testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
+            testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
+
+            testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
+        }
+        else if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
             && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
         }
@@ -192,25 +209,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
 
     testConfiguration.taskInstanceIdentifier = uuid.v1();
-
-    // Tools installer flow
-    if(testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && testConfiguration.vsTestVersion === 'toolsInstaller') {
-        tl.debug("Trying VsTest installed by tools installer.");
-
-        testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
-
-        // if Tools installer is not there throw.
-        if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
-            utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
-            throw new Error(tl.loc('ToolsInstallerInstallationError'));
-        }
-
-        // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
-        testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
-        testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
-
-        testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
-    }
 
     try {
         versionFinder.getVsTestRunnerDetails(testConfiguration);

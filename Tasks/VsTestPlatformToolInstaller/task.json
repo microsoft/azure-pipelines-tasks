@@ -19,7 +19,7 @@
     "preview": false,
     "satisfies": ["VsTest"],
     "demands": [],
-    "instanceNameFormat": "Use VsTest $(testPlatformVersion)",
+    "instanceNameFormat": "Use VsTest",
     "inputs": [
         {
         "name": "versionSelector",
@@ -37,7 +37,7 @@
         {
             "name": "testPlatformVersion",
             "type": "string",
-            "label": "Version",
+            "label": "Test Platform Version",
             "required": true,
             "helpMarkDown": "Specify the version of Visual Studio Test Platform to install on the agent.",
             "visibleRule": "versionSelector = specificVersion"
