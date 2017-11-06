@@ -250,8 +250,14 @@ export class DistributedTest {
         utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
-        // In the phases world we will distribute based on number of agents
-        utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
+        
+        if(this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'false');
+        }
+        else {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
+        }
+        
         utils.Helper.setEnvironmentVariableToString(envVars, 'maxagentphaseslicing', this.dtaTestConfig.numberOfAgentsInPhase.toString());
         tl.debug("Type of batching" + this.dtaTestConfig.batchingType);
         const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);
