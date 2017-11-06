@@ -47,6 +47,7 @@
         "InstallAppleProvisioningProfile",
         "InstallSSHKey",
         "InvokeRestApi",
+        "JavaToolInstaller",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
         "Kubernetes",
