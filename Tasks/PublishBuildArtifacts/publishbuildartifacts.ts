@@ -1,5 +1,4 @@
 import os = require('os');
-import fs = require('fs');
 import path = require('path');
 var process = require('process');
 import tl = require('vsts-task-lib/task');
@@ -97,10 +96,10 @@ async function run() {
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
                 let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
-                if (fs.statSync(pathtoPublish).isFile()) {
+                if (tl.stats(pathtoPublish).isFile()) {
                     let parentFolder = path.dirname(pathtoPublish);
                     let file = path.basename(pathtoPublish);
-                    command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -File "${file}"`
+                    command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -File '${file}'`
                 }
 
                 let powershell = new tr.ToolRunner('powershell.exe');
