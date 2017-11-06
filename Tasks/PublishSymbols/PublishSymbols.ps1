@@ -131,11 +131,22 @@ try {
         Write-Host "Symbol Request Name = $RequestName"
 
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
-        [string]$PersonalAccessToken = $env:ARTIFACTSERVICES_SYMBOL_PAT # ArtifactServices.Symbol.PAT avoids trace by not using Get-VstsTaskVariable
+        [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
         [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
 
-        if ($asAccountName) {
-            if ( -not ($PersonalAccessToken -or $UseAad) ) {
+        if ( $asAccountName ) {
+            if ( $PersonalAccessToken ) {
+                if ( $UseAad ) {
+                    throw "If AccountName is specified, then only one of PAT or UseAad should be present"
+                }
+
+                $variableInfo = Get-VstsTaskVariableInfo | Where-Object { $_.Name -eq "ArtifactServices.Symbol.PAT" }
+
+                if ($variableInfo -and -not $variableInfo.Secret) {
+                    throw "The PAT needs to be specified as a secret"
+                }
+            }
+            elseif ( -not $UseAad ) {
                 throw "If AccountName is specified, then either PAT or UseAad needs to be present"
             }
 
