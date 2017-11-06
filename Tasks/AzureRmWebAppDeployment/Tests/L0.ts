@@ -6,11 +6,21 @@ var ltx = require('ltx');
 import fs = require('fs');
 
 describe('AzureRmWebAppDeployment Suite', function() {
+    var jsonPath = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1JsonVarSub', 'tempFolder');
      before((done) => {
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), '-f', false);
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), '-f', false);
         tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), '-f', false);
+
+        // JSON Var substitution
+        
+        if(!tl.exist(jsonPath)) {
+            tl.mkdirP(jsonPath);
+        }
+
+        tl.cp(path.join(jsonPath, '..', 'appsettings.json'), path.join(jsonPath, 'appsettings.json'), '-f', false);
+        tl.cp(path.join(jsonPath, '..', 'appsettings_with_comments.json'), path.join(jsonPath, 'appsettings_with_comments.json'), '-f', false);
         done();
     });
     after(function() {
@@ -18,6 +28,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), true);
+        // tl.rmRF(path.join(jsonPath, 'appsettings.json'), true);
+        // tl.rmRF(path.join(jsonPath, 'appsettings_with_comments.json'), true);
     });
 
     if(tl.osType().match(/^Win/)) {
@@ -458,6 +470,17 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON variables with dot character validation error');
         assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('runs successfully with JSOn variable substitution with comments', (done: MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1JsonVarSubWithComments.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        console.log(tr);
+        console.log(tr.stdout);
+        assert(true);
         done();
     });
 

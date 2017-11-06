@@ -64,8 +64,69 @@ export function substituteJsonVariable(jsonObject, envObject) {
     }
 }
 
+function  stripJsonComments(content: string): string {
+    if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
+        return content;
+    }
+
+    var currentChar;
+    var nextChar;
+    var prevChar;
+    var insideQuotes = false;
+    var contentWithoutComments = '';
+    var insideComment = 0;
+    var singlelineComment = 1;
+    var multilineComment = 2;
+
+    for (var i = 0; i < content.length; i++) {
+        currentChar = content[i];
+        nextChar = i + 1 < content.length ? content[i + 1] : "";
+
+        if (insideComment) {
+            var update = false;
+            if (insideComment == singlelineComment && (currentChar + nextChar === '\r\n' || currentChar === '\n')) {
+                i--;
+                insideComment = 0;
+                continue;
+            }
+
+            if (insideComment == multilineComment && currentChar + nextChar === '*/') {
+                i++;
+                insideComment = 0;
+                continue;
+            }
+
+        } else {
+            prevChar = i - 1 >= 0 ? content[i - 1] : "";
+
+            if (currentChar == '"' && prevChar != '\\') {
+                insideQuotes = !insideQuotes
+            }
+
+            if (!insideQuotes) {
+                if (currentChar + nextChar === '//') {
+                    insideComment = singlelineComment;
+                    i++;
+                }
+
+                if (currentChar + nextChar === '/*') {
+                    insideComment = multilineComment;
+                    i++;
+                }
+            }
+        }
+
+        if (!insideComment) {
+            contentWithoutComments += content[i];
+        }
+    }
+
+    return contentWithoutComments;
+}
+
 export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
     var envVarObject = createEnvTree(tl.getVariables());
+    console.log(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
         tl.debug('JSON variable substitution for ' + jsonSubFile);
         var matchFiles = utility.findfiles(path.join(absolutePath, jsonSubFile));
@@ -80,6 +141,9 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
                 fileContent = fileContent.slice(1);
             }
             try {
+                tl.debug('Stripping JSON Comments : ' + file);
+                fileContent = stripJsonComments(fileContent);
+                tl.debug('Parsing JSON from file: ' + file);
                 var jsonObject = JSON.parse(fileContent);
             }
             catch(exception) {
