@@ -69,6 +69,12 @@
   "loc.input.help.configuration": "Build configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.publishRunAttachments": "Upload test attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing run level attachments.",
+  "loc.input.label.rerunFailedTests": "Re-run failed tests",
+  "loc.input.help.rerunFailedTests": "abcabcabc",
+  "loc.input.label.rerunFailedThreshold": "Do not trigger a re-run if failure rate exceeds",
+  "loc.input.help.rerunFailedThreshold": "abcabcabc",
+  "loc.input.label.rerunMaxAttempts": "Maximum # of attempts",
+  "loc.input.help.rerunMaxAttempts": "abcabcabc",
   "loc.messages.VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
   "loc.messages.VstestFailedReturnCode": "VsTest task failed.",
   "loc.messages.VstestPassedReturnCode": "VsTest task succeeded.",
@@ -141,5 +147,10 @@
   "loc.messages.invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
   "loc.messages.minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
   "loc.messages.RunTimePerBatch": "Run time per batch(sec) : %s",
-  "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
+  "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
+  "loc.messages.rerunFailedTests": "Re-run failed tests: %s",
+  "loc.messages.rerunFailedThreshold": "Re-run failed tests threshold: %s",
+  "loc.messages.invalidRerunFailedThreshold": "Invalid re-run failed tests threshold.",
+  "loc.messages.rerunMaxAttempts": "Re-run maximum attempts: %s",
+  "loc.messages.invalidRerunMaxAttempts": "Invalid re-run maximum attempts."
 }

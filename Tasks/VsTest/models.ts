@@ -37,6 +37,9 @@ export interface TestConfigurations {
     taskInstanceIdentifier: string;
     runUITests: boolean;
     ignoreTestFailures: string;
+    rerunFailedTests: boolean;
+    rerunFailedThreshold: number;
+    rerunMaxAttempts: number;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {

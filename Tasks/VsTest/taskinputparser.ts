@@ -169,6 +169,28 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
 
+    // Rerun information
+    //TODO close the experience/UI text
+    testConfiguration.rerunFailedTests = tl.getBoolInput('rerunFailedTests');
+    console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
+    if (testConfiguration.rerunFailedTests) {
+        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
+
+        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0) {
+            testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
+            console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+        } else {
+            tl.warning(tl.loc('invalidRerunFailedThreshold'));
+        }
+        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0) {
+            testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
+            console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
+        } else {
+            tl.warning(tl.loc('invalidRerunMaxAttempts'));
+        }
+    }
+
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
     if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');

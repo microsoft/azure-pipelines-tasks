@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 2,
-        "Patch": 3
+        "Minor": 3,
+        "Patch": 0
     },
     "demands": [
         "vstest"
@@ -387,6 +387,35 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "rerunFailedTests",
+            "type": "boolean",
+            "label": "Re-run failed tests",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "abcabcabc",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "rerunFailedThreshold",
+            "type": "string",
+            "label": "Do not trigger a re-run if failure rate exceeds",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "abcabcabc",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true"
+        },
+        {
+            "name": "rerunMaxAttempts",
+            "type": "string",
+            "label": "Maximum # of attempts",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "abcabcabc",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true"
         }
     ],
     "sourceDefinitions": [
@@ -490,6 +519,11 @@
         "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
         "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
         "RunTimePerBatch": "Run time per batch(sec) : %s",
-        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
+        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
+        "rerunFailedTests": "Re-run failed tests: %s",
+        "rerunFailedThreshold": "Re-run failed tests threshold: %s",
+        "invalidRerunFailedThreshold": "Invalid re-run failed tests threshold.",
+        "rerunMaxAttempts": "Re-run maximum attempts: %s",
+        "invalidRerunMaxAttempts": "Invalid re-run maximum attempts."
     }
 }
