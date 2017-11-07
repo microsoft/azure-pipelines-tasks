@@ -36,5 +36,6 @@
   "loc.messages.DownloadingSecretValue": "Downloading secret value for: %s.",
   "loc.messages.AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. Set these secret permissions in Azure portal",
   "loc.messages.GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
-  "loc.messages.ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault"
+  "loc.messages.ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault",
+  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Cannot find the secret with name: %s. Secret name must be a string 1-127 characters in length containing only 0-9, a-z, A-Z, and -"
 }

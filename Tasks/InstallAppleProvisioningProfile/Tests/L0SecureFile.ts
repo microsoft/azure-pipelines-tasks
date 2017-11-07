@@ -6,6 +6,7 @@ import fs = require('fs');
 let taskPath = path.join(__dirname, '..', 'preinstallprovprofile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tr.setInput('provisioningProfileLocation', 'secureFiles');
 tr.setInput('provProfileSecureFile', 'mySecureFileId');
 
 process.env['AGENT_VERSION'] = '2.116.0';
