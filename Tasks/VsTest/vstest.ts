@@ -235,7 +235,8 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         errStream: new outStream.StringErrorWritable({ decodeStrings: false }),
         env: {
             'DTA.ExecutionMode' : 'vstestexecution',
-            'DTA.EnableConsoleLogs': 'true'
+            'DTA.EnableConsoleLogs': 'true',
+            'DTA.VsTest.TestResultDirectory': resultsDirectory
         }
     };
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
