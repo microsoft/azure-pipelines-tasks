@@ -94,5 +94,6 @@ export interface ToolsInstallerConfiguration {
 
 export enum BatchingType {
     TestCaseBased,
-    TestExecutionTimeBased
+    TestExecutionTimeBased,
+    AssemblyBased
 }

@@ -15,7 +15,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 1,
     "Patch": 2
   },
   "inputs": [
@@ -25,6 +25,9 @@
       "label": "ms-resource:loc.input.label.delayForMinutes",
       "defaultValue": "0",
       "required": true,
+      "properties": {
+        "isVariableOrNonNegativeNumber": "true"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.delayForMinutes"
     }
   ],

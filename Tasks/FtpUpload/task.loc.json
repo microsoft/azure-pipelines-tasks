@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 123,
+    "Minor": 126,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -31,6 +31,9 @@
   "inputs": [
     {
       "name": "credsType",
+      "aliases": [
+        "credentialsOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.credsType",
       "defaultValue": "serviceEndpoint",
@@ -76,6 +79,9 @@
     },
     {
       "name": "rootFolder",
+      "aliases": [
+        "rootDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.rootFolder",
       "defaultValue": "",
@@ -96,6 +102,9 @@
     },
     {
       "name": "remotePath",
+      "aliases": [
+        "remoteDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.remotePath",
       "defaultValue": "/upload/$(Build.BuildId)/",

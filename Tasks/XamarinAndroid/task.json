@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 125,
-        "Patch": 2
+        "Minor": 126,
+        "Patch": 0
     },
     "demands": [
         "AndroidSDK",
@@ -35,6 +35,7 @@
     "inputs": [
         {
             "name": "project",
+            "aliases": [ "projectFile" ],
             "type": "filePath",
             "label": "Project",
             "defaultValue": "**/*.csproj",
@@ -51,6 +52,7 @@
         },
         {
             "name": "outputDir",
+            "aliases": [ "outputDirectory" ],
             "type": "string",
             "label": "Output Directory",
             "defaultValue": "",
@@ -82,6 +84,7 @@
         },
         {
             "name": "msbuildLocationMethod",
+            "aliases": [ "msbuildLocationOption" ],
             "type": "radio",
             "label": "MSBuild",
             "required": false,
@@ -94,6 +97,7 @@
         },
         {
             "name": "msbuildVersion",
+            "aliases": [ "msbuildVersionOption" ],
             "type": "pickList",
             "label": "MSBuild Version",
             "required": false,
@@ -111,6 +115,7 @@
         },
         {
             "name": "msbuildLocation",
+            "aliases": [ "msbuildFile" ],
             "type": "string",
             "label": "MSBuild Location",
             "defaultValue": "",
@@ -121,6 +126,7 @@
         },
         {
             "name": "msbuildArchitecture",
+            "aliases": [ "msbuildArchitectureOption" ],
             "type": "pickList",
             "label": "MSBuild Architecture",
             "defaultValue": "x86",
@@ -144,6 +150,7 @@
         },
         {
             "name": "jdkSelection",
+            "aliases": [ "jdkOption" ],
             "type": "radio",
             "label": "Select JDK to use for the build",
             "required": true,
@@ -157,6 +164,7 @@
         },
         {
             "name": "jdkVersion",
+            "aliases": [ "jdkVersionOption" ],
             "type": "pickList",
             "label": "JDK Version",
             "required": false,
@@ -173,6 +181,7 @@
         },
         {
             "name": "jdkUserInputPath",
+            "aliases": [ "jdkDirectory" ],
             "type": "string",
             "label": "JDK Path",
             "required": true,
@@ -183,6 +192,7 @@
         },
         {
             "name": "jdkArchitecture",
+            "aliases": [ "jdkArchitectureOption" ],
             "type": "pickList",
             "label": "JDK Architecture",
             "defaultValue": "x64",
