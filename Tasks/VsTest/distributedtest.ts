@@ -85,12 +85,11 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
 
-        //  if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)
-    //execOptions.env = {
-      //  'COR_PROFILER_PATH_32': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation,
-        //'COR_PROFILER_PATH_64': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation
-        //}
-
+        if(this.dtaTestConfig.toolsInstallerConfig && this.dtaTestConfig.toolsInstallerConfig.isToolsInstallerInUse) {
+            utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_32', this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation);
+            utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_64', this.dtaTestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ForcePlatformV2', 'true');
+        }
 
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
