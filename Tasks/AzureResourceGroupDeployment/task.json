@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 11
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -401,6 +401,7 @@
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}"
+        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}",
+        "UnableToReadResponseBody": "Unable to read response body. Error: %s"
     }
 }

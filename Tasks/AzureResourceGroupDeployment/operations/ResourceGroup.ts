@@ -12,10 +12,25 @@ import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
+import httpInterfaces = require("typed-rest-client/Interfaces");
 
+var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
-var httpClient = require('vso-node-api/HttpClient');
-var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
+
+let proxyUrl: string = tl.getVariable("agent.proxyurl");
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
+    proxy: {
+        proxyUrl: proxyUrl,
+        proxyUsername: tl.getVariable("agent.proxyusername"),
+        proxyPassword: tl.getVariable("agent.proxypassword"),
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
+    }
+} : {};
+
+let ignoreSslErrors: string = tl.getVariable("VSTS_ARM_REST_IGNORE_SSL_ERRORS");
+requestOptions.ignoreSslError = ignoreSslErrors && ignoreSslErrors.toLowerCase() == "true";
+
+let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
 function stripJsonComments(content) {
     if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
@@ -271,16 +286,21 @@ export class ResourceGroup {
 
     private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            httpObj.get("GET", url, {}, (error, result, contents) => {
-                if (error) {
-                    return reject(tl.loc("FileFetchFailed", url, error));
-                }
-                if (result.statusCode === 200)
+            hc.get(url, {}).then(async (response) => {
+                if (response.message.statusCode == 200) {
+                    let contents: string = "";
+                    try {
+                        contents = await response.readBody();
+                    } catch (error) {
+                        reject(tl.loc("UnableToReadResponseBody", error));
+                    }
                     resolve(contents);
-                else {
-                    var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
+                } else {
+                    var errorMessage = response.message.statusCode.toString() + ": " + response.message.statusMessage;
                     return reject(tl.loc("FileFetchFailed", url, errorMessage));
                 }
+            }, (error) => {
+                return reject(tl.loc("FileFetchFailed", url, error));
             });
         });
     }

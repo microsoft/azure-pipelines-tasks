@@ -1,8 +1,8 @@
 {
     "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
     "name": "Xcode",
-    "friendlyName": "Xcode Build",
-    "description": "Build an Xcode workspace on macOS",
+    "friendlyName": "Xcode",
+    "description": "Build, test or archive an Xcode workspace on macOS. Optionally package an app.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
     "category": "Build",
     "visibility": [
@@ -10,9 +10,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 3,
-        "Minor": 124,
-        "Patch": 1
+        "Major": 4,
+        "Minor": 125,
+        "Patch": 0
     },
     "demands": [
         "xcode"
@@ -27,7 +27,7 @@
         {
             "name": "package",
             "displayName": "Package Options",
-            "isExpanded": false
+            "isExpanded": true
         },
         {
             "name": "advanced",
@@ -42,7 +42,7 @@
             "label": "Actions",
             "defaultValue": "build",
             "required": true,
-            "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: `build clean` would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
+            "helpMarkDown": "Space delimited list of actions.  Valid options are build, clean, test, analyze, and archive.  For example: `clean build` would do a clean build.  See [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)"
         },
         {
             "name": "configuration",
@@ -75,12 +75,36 @@
             "helpMarkDown": "Optional scheme name in Xcode. *Must be a shared scheme* (shared checkbox under managed schemes in Xcode). **Required if Workspace is specified.**"
         },
         {
+            "name": "xcodeVersion",
+            "type": "pickList",
+            "label": "Xcode version",
+            "required": false,
+            "helpMarkDown": "The target version of Xcode. Version numbers (e.g. `Xcode 9`) rely on environment variables set on the agent machine (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`).",
+            "defaultValue": "default",
+            ".comment": "//If you're updating the options here, be sure to update the Xcode.json build template as well.",
+            "options": {
+                "default": "Default",
+                "8": "Xcode 8",
+                "9": "Xcode 9",
+                "specifyPath": "Specify path"
+            }
+        },
+        {
+            "name": "xcodeDeveloperDir",
+            "type": "string",
+            "label": "Xcode Developer Path",
+            "required": false,
+            "helpMarkDown": "Optional path to Xcode Developer folder if not the system default. For use when multiple versions of Xcode are installed on a system. Ex: /Applications/Xcode 7.app/Contents/Developer",
+            "visibleRule": "xcodeVersion == specifyPath"
+        },
+        {
             "name": "packageApp",
             "type": "boolean",
             "label": "Create App Package",
-            "defaultValue": true,
+            "defaultValue": false,
             "required": true,
-            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section."
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. Review additional inputs in the `Package Options` section.",
+            "groupName": "package"
         },
         {
             "name": "archivePath",
@@ -89,7 +113,8 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify a directory where created archives should be placed.",
-            "groupName": "package"
+            "groupName": "package",
+            "visibleRule": "packageApp == true"
         },
         {
             "name": "exportPath",
@@ -98,7 +123,8 @@
             "defaultValue": "output/$(SDK)/$(Configuration)",
             "required": false,
             "helpMarkDown": "Optionally specify the destination for the product exported from the archive.",
-            "groupName": "package"
+            "groupName": "package",
+            "visibleRule": "packageApp == true"
         },
         {
             "name": "exportOptions",
@@ -108,11 +134,12 @@
             "required": false,
             "groupName": "package",
             "options": {
-                "auto": "Auto",
+                "auto": "Automatic",
                 "plist": "Plist",
                 "specify": "Specify"
             },
-            "helpMarkDown": "Pick a way to pass in Export Options when exporting the archive."
+            "helpMarkDown": "Pick a way to pass in Export Options when exporting the archive.",
+            "visibleRule": "packageApp == true"
         },
         {
             "name": "exportMethod",
@@ -151,67 +178,32 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Additional command line arguments that should be used to export.",
-            "groupName": "package"
+            "groupName": "package",
+            "visibleRule": "packageApp == true"
         },
         {
-            "name": "xcode8AutomaticSigning",
-            "type": "boolean",
-            "label": "Automatic Signing",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Select this if you have an Xcode 8 or Xcode 9 project configured for Automatic Signing.",
-            "groupName": "sign"
-        },
-        {
-            "name": "teamId",
-            "type": "string",
-            "label": "Team ID",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Specify the 10 digit developer Team ID. This is required if you are a member of multiple development teams.",
-            "groupName": "sign",
-            "visibleRule": "xcode8AutomaticSigning = true"
-        },
-        {
-            "name": "signMethod",
-            "type": "radio",
-            "label": "Override Using",
+            "name": "signStyle",
+            "type": "pickList",
+            "label": "Signing style",
             "required": false,
             "groupName": "sign",
-            "defaultValue": "file",
-            "helpMarkDown": "If the build should use a signing or provisioning method that is different than the default, choose that method here. Choose 'File Contents' to use a P12 certificate and provisioning profile. Choose 'Identifiers' to retrieve signing settings from the default Keychain and pre-installed profiles. Leave the corresponding fields blank if you do not wish to override default build settings.",
+            "defaultValue": "nosign",
+            "helpMarkDown": "The signing style. Use `Do not code sign` to disable signing. Use `Project defaults` to use the project's signing configuration only. Use `Manual signing` to force manual signing and optionally specify a signing identity and provisioning profile. Use `Automatic signing` to force automatic signing and optionally specify a development Team Id. If your project requires signing, use the \"Install Apple...\" tasks to install certificates and provisioning profiles prior to build.",
             "options": {
-                "file": "File Contents",
-                "id": "Identifiers"
+                "nosign": "Do not code sign",
+                "default": "Project defaults",
+                "manual": "Manual signing",
+                "auto": "Automatic signing"
             }
         },
         {
-            "name": "iosSigningIdentity",
+            "name": "signingIdentity",
             "type": "string",
             "label": "Signing Identity",
             "required": false,
-            "helpMarkDown": "Optional signing identity override that should be used to sign the build. Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
+            "helpMarkDown": "Optional signing identity override that should be used to sign the build. Defaults to Xcode Project setting. You may need to unlock the default keychain if you use this option.",
             "groupName": "sign",
-            "visibleRule": "signMethod = id"
-        },
-        {
-            "name": "unlockDefaultKeychain",
-            "type": "boolean",
-            "label": "Unlock Default Keychain",
-            "defaultValue": false,
-            "required": true,
-            "helpMarkDown": "Resolve \"User interaction is not allowed\" errors by unlocking the default keychain.",
-            "groupName": "sign",
-            "visibleRule": "signMethod = id"
-        },
-        {
-            "name": "defaultKeychainPassword",
-            "type": "string",
-            "label": "Default Keychain Password",
-            "required": false,
-            "helpMarkDown": "Password to unlock the default keychain when this option is set.",
-            "groupName": "sign",
-            "visibleRule": "signMethod = id"
+            "visibleRule": "signStyle = manual"
         },
         {
             "name": "provProfileUuid",
@@ -220,44 +212,17 @@
             "required": false,
             "helpMarkDown": "Optional UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
             "groupName": "sign",
-            "visibleRule": "signMethod = id"
+            "visibleRule": "signStyle = manual"
         },
         {
-            "name": "p12",
-            "type": "filePath",
-            "label": "P12 Certificate File",
-            "required": false,
-            "helpMarkDown": "Optional relative path to a PKCS12 formatted p12 certificate file containing a signing certificate to be used for this build.",
-            "groupName": "sign",
-            "visibleRule": "signMethod = file"
-        },
-        {
-            "name": "p12pwd",
+            "name": "teamId",
             "type": "string",
-            "label": "P12 Password",
+            "label": "Team ID",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Password to P12 Certificate File if specified. Use a Build Variable to encrypt.",
+            "helpMarkDown": "Specify the 10 digit development Team ID. This is required if you are a member of multiple development teams.",
             "groupName": "sign",
-            "visibleRule": "signMethod = file"
-        },
-        {
-            "name": "provProfile",
-            "type": "filePath",
-            "label": "Provisioning Profile File",
-            "required": false,
-            "helpMarkDown": "Optional relative path to file containing provisioning profile override to be used for this build. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
-            "groupName": "sign",
-            "visibleRule": "signMethod = file"
-        },
-        {
-            "name": "removeProfile",
-            "type": "boolean",
-            "label": "Remove Profile After Build",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
-            "groupName": "sign",
-            "visibleRule": "signMethod = file"
+            "visibleRule": "signStyle = auto"
         },
         {
             "name": "args",
@@ -283,14 +248,6 @@
             "defaultValue": "output/$(SDK)/$(Configuration)",
             "required": true,
             "helpMarkDown": "Relative path where build output (binaries) will be placed.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "xcodeDeveloperDir",
-            "type": "string",
-            "label": "Xcode Developer Path",
-            "required": false,
-            "helpMarkDown": "Optional path to Xcode Developer folder if not the system default. For use when multiple versions of Xcode are installed on a system. Ex: /Applications/Xcode 7.app/Contents/Developer",
             "groupName": "advanced"
         },
         {
@@ -340,6 +297,9 @@
         "ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file.",
         "SchemeRequiredForArchive": "Scheme needs to be specified to generate the package with xcodebuild archive and export.",
         "WorkspaceOrProjectRequiredForArchive": "Workspace or Project path needs to be specified to generate the package with xcodebuild archive and export.",
-        "FailedToGenerateExportOptionsPlist": "Failed to automatically generate an Export Options Plist to export an IPA. Please specify an Export Options Plist in the Package Options."
+        "FailedToGenerateExportOptionsPlist": "Failed to automatically generate an Export Options Plist to export an IPA. Please specify an Export Options Plist in the Package Options.",
+        "LocateXcodeBasedOnVersion": "Locate the developer path for Xcode %s",
+        "FailedToLocateSpecifiedXcode": "Unable to resolve the developer path for Xcode %s. Set the %s environment variable on the agent machine, or set `Xcode version` to `Default` or `Custom`.",
+        "CantDetermineProvisioningStyle": "Provisioning style not found in a pbxProject file. Defaulting to automatic signing. If the project uses manual signing, auto export may fail. `Export Options` can be set to `Specify` or `Plist` as a workaround."
     }
 }

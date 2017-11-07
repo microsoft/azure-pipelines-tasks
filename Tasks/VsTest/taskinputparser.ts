@@ -49,6 +49,12 @@ export function getDistributedTestConfigurations() {
         dtaConfiguration.useVsTestConsole = 'false';
     }
 
+    dtaConfiguration.proceedAfterAbortedTestCase = false;
+    if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
+        dtaConfiguration.proceedAfterAbortedTestCase = true;
+    }
+    tl.debug('ProceedAfterAbortedTestCase is set to : ' + dtaConfiguration.proceedAfterAbortedTestCase);
+
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
@@ -60,7 +66,6 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
-    vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     return vsTestConfiguration;
 }
 
@@ -69,32 +74,33 @@ function initDtaEnvironment(): models.DtaEnvironment {
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
-
-    //TODO : Consider build scenario
-    const releaseId = tl.getVariable('Release.ReleaseId');
-    const phaseId = tl.getVariable('Release.DeployPhaseId');
-    const projectName = tl.getVariable('System.TeamProject');
-    const taskInstanceId = getDtaInstanceId();
-    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
-    const dontDistribute = tl.getBoolInput('dontDistribute');
-
-    if (!utils.Helper.isNullEmptyOrUndefined(releaseId)) {
-        if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
-            || dontDistribute) {
-            // If dontDistribute irrespective of whether is None or MultiAgent or MultiConfig, we will create one run per agent
-            // run creation depends of the environment Id
-            const jobId = tl.getVariable('System.JobId');
-            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
-        } else {
-            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
-        }
-    } else {
-        const buildId = tl.getVariable('Build.BuildId');
-        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/build/' + buildId + '/' + taskInstanceId;
-    }
-
+    dtaEnvironment.environmentUri = getEnvironmentUri();
     dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
     return dtaEnvironment;
+}
+
+function getEnvironmentUri(): string {
+    let environmentUri: string = '';
+
+    const buildId = tl.getVariable('Build.BuildId');
+    const releaseId = tl.getVariable('Release.ReleaseId');
+    const projectName = tl.getVariable('System.TeamProject');
+    const jobId = tl.getVariable('System.JobPositionInPhase');
+    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    const taskInstanceId = getDtaInstanceId();
+    const dontDistribute = tl.getBoolInput('dontDistribute');
+    const pipelineId = utils.Helper.isNullEmptyOrUndefined(releaseId) ? 'build'.concat(`/${buildId}`) : 'release'.concat(`/${releaseId}`);
+    const phaseId = utils.Helper.isNullEmptyOrUndefined(releaseId) ?
+    tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
+
+    if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
+        || dontDistribute) {
+        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
+    } else {
+        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
+    }
+
+    return environmentUri;
 }
 
 function getDtaInstanceId(): number {
@@ -192,6 +198,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
         throw error;
     }
+
+    testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
 }
 
 async function logWarningForWER(runUITests: boolean) {
@@ -347,6 +355,8 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
         } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
             dtaTestConfiguration.runningTimePerBatchInMs = 0;
         }
+    } else if (distributeOption && distributeOption === 'basedOnAssembly') {
+        dtaTestConfiguration.batchingType = models.BatchingType.AssemblyBased;
     }
     return 0;
 }

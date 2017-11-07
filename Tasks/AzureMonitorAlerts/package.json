@@ -2,7 +2,7 @@
   "name": "vsts-tasks-azuremonitoralerts",
   "version": "0.0.1",
   "description": "Azure monitor alerts",
-  "main": "AzureMonitorAlerts.js",
+  "main": "azuremonitoralerts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

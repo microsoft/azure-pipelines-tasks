@@ -10,6 +10,6 @@
   "dependencies": {
     "request": "2.74.0",
     "vsts-task-lib": "0.9.20",
-    "item-level-downloader": "1.0.17"
+    "artifact-engine": "0.1.0"
   }
 }

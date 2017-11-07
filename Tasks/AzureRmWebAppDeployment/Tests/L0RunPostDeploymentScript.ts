@@ -6,17 +6,58 @@ mockery.enable({
     warnOnUnregistered: false
 });
 
-mockery.registerMock('vso-node-api/HttpClient', {
-    HttpCallbackClient: function () {
+mockery.registerMock('typed-rest-client/HttpClient', {
+    HttpClient: function() {
         return {
-            send: function (verb, url) {
-                if (verb == 'POST' && url == 'https://mytestappKuduUrl/api/command') {
+            get: function(url, headers) {
+                url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
+                var getUrlMap = {
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt': 'stdout content',
+                   'https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt': 'sterr content',
+                   'https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt': '0'
+               };
+
+               if(getUrlMap[url]) {
+                  console.log('GET:' + url);
+                  return {
+                    then: function(handler) {
+                        handler({
+                            message: {
+                                statusCode: 200,
+                                statusMessage: "Success"
+                            },
+                            readBody: function() {
+                                return getUrlMap[url];
+                            }
+                        });
+                    }  
+                  }; 
+               }
+               throw Error('Unknown verb or URL - GET');
+            },
+            del: function(url, headers) {
+                url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
+
+                var deleteUrlArray = [
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd'
+                ];
+
+                if (deleteUrlArray.indexOf(url) != -1) {
+                    console.log("DELETED:" + url);
+                    return;
+                }
+
+                throw Error('Unknown verb or URL - GET');
+            },
+            post: function(url, data, headers) {
+                if (url == 'https://mytestappKuduUrl/api/command') {
                     console.log('POST:https://mytestappKuduUrl/api/command');
                     return;
                 }
                 throw Error('Unknown verb or URL - SEND');
             },
-            sendStream: function (verb, url) {
+            sendStream: function(verb, url) {
                 url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
                 var urlArray = [
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
@@ -29,29 +70,75 @@ mockery.registerMock('vso-node-api/HttpClient', {
                     return;
                 }
                 throw Error('Unknown verb or URL - sendStream');
-            },
-            get: function(verb, url) {
+            }
+        }
+    }
+});
+
+mockery.registerMock('typed-rest-client/RestClient', {
+    RestClient: function() {
+        return {
+            get: function(url, options) {
                 url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
+                var getUrlMap = {
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt': 'stdout content',
+                   'https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt': 'sterr content',
+                   'https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt': '0'
+               };
+
+               if(getUrlMap[url]) {
+                  console.log('GET:' + url);
+                  return getUrlMap[url];
+               }
+
+               throw Error('Unknown verb or URL - GET');
+            },
+            del: function(url, options) {
+                url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
+
                 var deleteUrlArray = [
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd'
                 ];
-                var getUrlMap = {
-                     'https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt': 'stdout content',
-                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt': 'sterr content',
-                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt': '0'
-                };
-                if (verb == 'DELETE' && deleteUrlArray.indexOf(url) != -1) {
+
+                if (deleteUrlArray.indexOf(url) != -1) {
                     console.log("DELETED:" + url);
-                    return;
+                    return {
+                        then: function() {
+                        }
+                    };
                 }
-                if(verb == 'GET' && getUrlMap[url]) {
-                    console.log('GET:' + url);
-                    return getUrlMap[url];
-                }
+
                 throw Error('Unknown verb or URL - GET');
+            },
+            create: function(url, resources, options) {
+                if (url == 'https://mytestappKuduUrl/api/command') {
+                    console.log('POST:https://mytestappKuduUrl/api/command');
+                    return {
+                        then: function() {
+                        }
+                    };
+                }
+                throw Error('Unknown verb or URL - SEND');
+            },
+            uploadStream: function(verb, url) {
+                url = url.substring(0, url.lastIndexOf('_')) + path.extname(url);
+                var urlArray = [
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.cmd',
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.cmd',
+                    'https://mytestappKuduUrl/api/vfs/site/wwwroot/delete_log_file.cmd'
+                ];
+
+                if(verb == 'PUT' && urlArray.indexOf(url) != -1) {
+                    console.log('PUT:' + url);
+                    return {
+                        then: function() {
+                        }
+                    };
+                }
+                throw Error('Unknown verb or URL - sendStream');
             }
-        };
+        }
     }
 });
 
@@ -59,7 +146,10 @@ mockery.registerMock('vsts-task-lib/task', {
     exist: function() {
         return true;
     },
-    getVariable: function() {
+    getVariable: function(variable) {
+        if(variable == "agent.proxyurl") {
+            return null;
+        }
         return 'workingDirectory';
     },
     debug: function(message) {
@@ -81,8 +171,11 @@ mockery.registerMock('q', {
         return {
             promise: {
                 'content': '0'
+            },
+            resolve: function(result) {
+                return result;
             }
-        }
+        };
     }
 });
 

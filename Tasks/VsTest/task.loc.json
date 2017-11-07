@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 18
+    "Minor": 2,
+    "Patch": 3
   },
   "demands": [
     "vstest"
@@ -65,7 +65,7 @@
       "name": "testAssemblyVer2",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssemblyVer2",
-      "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
+      "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "testSelection",
@@ -292,7 +292,8 @@
       "groupName": "advancedExecutionOptions",
       "options": {
         "basedOnTestCases": "Based on number of tests and agents",
-        "basedOnExecutionTime": "Based on past running time of tests"
+        "basedOnExecutionTime": "Based on past running time of tests",
+        "basedOnAssembly": "Based on test assemblies"
       }
     },
     {

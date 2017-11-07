@@ -8,12 +8,12 @@ import shell = require('shelljs');
 import Q = require('q');
 import request = require('request');
 
-import * as handlers from "item-level-downloader/Providers/Handlers";
-import * as providers from "item-level-downloader/Providers";
-import * as engine from "item-level-downloader/Engine";
+import * as handlers from "artifact-engine/Providers/Handlers"
+import * as providers from "artifact-engine/Providers"
+import * as engine from "artifact-engine/Engine"
 
-import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
+import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
@@ -44,10 +44,8 @@ async function doWork() {
 
         const serverEndpoint: string = tl.getInput('serverEndpoint', true);
         const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
-
-        const serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
-        const username: string = serverEndpointAuth['parameters']['username'];
-        const password: string = serverEndpointAuth['parameters']['password'];
+        const username: string = tl.getEndpointAuthorizationParameter(serverEndpoint, 'username', false);
+        const password: string = tl.getEndpointAuthorizationParameter(serverEndpoint, 'password', false);
 
         const jobName: string = tl.getInput('jobName', true);
         const localPathRoot: string = tl.getPathInput('saveTo', true);
@@ -62,7 +60,9 @@ async function doWork() {
             var artifactProvider = tl.getInput('artifactProvider');
             switch (artifactProvider.toLowerCase()) {
                 case "azurestorage":
-                    new AzureStorageArtifactDownloader().downloadArtifacts(localPathRoot);
+                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true), 
+                        tl.getInput('storageAccountName', true), tl.getInput('containerName', true), tl.getInput('commonVirtualPath', false));
+                    azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
                     break;
 
                 default:
@@ -70,12 +70,12 @@ async function doWork() {
             }
         }
         else {
-            const artifactQueryUrl: string = `${serverEndpointUrl}/job/${jobName}${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
+            const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
                 "endpoint": {
                     "url": serverEndpointUrl
                 },
-                "definition": jobName,
+                "jobUrlInfix": jenkinsJobDetails.jobUrlInfix,
                 "multibranchPipelineUrlInfix": jenkinsJobDetails.multiBranchPipelineUrlInfix,
                 "version": jenkinsJobDetails.buildId
             };

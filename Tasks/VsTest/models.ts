@@ -36,6 +36,7 @@ export interface TestConfigurations {
     otherConsoleOptions: string;
     taskInstanceIdentifier: string;
     runUITests: boolean;
+    ignoreTestFailures: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -47,6 +48,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     numberOfTestCasesPerSlice: number;
     batchingType: BatchingType;
     runningTimePerBatchInMs: number;
+    proceedAfterAbortedTestCase: boolean;
 }
 
 export interface DtaEnvironment {
@@ -60,7 +62,6 @@ export interface DtaEnvironment {
 export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
-    ignoreVstestFailure: string;
     responseFile: string;
     responseFileSupported: boolean;
 }
@@ -84,5 +85,6 @@ export interface TiaConfiguration {
 
 export enum BatchingType {
     TestCaseBased,
-    TestExecutionTimeBased
+    TestExecutionTimeBased,
+    AssemblyBased
 }

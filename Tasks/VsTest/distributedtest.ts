@@ -30,7 +30,8 @@ export class DistributedTest {
 
     private publishCodeChangesIfRequired(): void {
         if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
-            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig.taskInstanceIdentifier); //todo: enable custom engine
+            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig.taskInstanceIdentifier);
+            //todo: enable custom engine
 
             if (code !== 0) {
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
@@ -68,16 +69,19 @@ export class DistributedTest {
     }
 
     private async startDtaExecutionHost(agentId: any) {
+        this.testSourcesFile = this.createTestSourcesFile();
         const envVars: { [key: string]: string; } = process.env;
+        tl.debug('Total env vars before setting DTA specific vars is :' + Object.keys(envVars).length);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentId', agentId);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentName', this.dtaTestConfig.dtaEnvironment.agentName);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
-        this.testSourcesFile = this.createTestSourcesFile();
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchTestSourcesFile', this.testSourcesFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProceedAfterAbortedTestCase',
+                                        this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
@@ -107,7 +111,7 @@ export class DistributedTest {
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process
         // We are not using toolrunner here because it doesn't have option to ignore the IO stream, so directly using spawn
-
+        tl.debug('Total env vars set is ' + Object.keys(envVars).length);
         const proc = ps.spawn(path.join(__dirname, 'Modules/DTAExecutionHost.exe'), [], { env: envVars });
         this.dtaPid = proc.pid;
         tl.debug('Modules/DTAExecutionHost.exe is executing with the process id : ' + this.dtaPid);
@@ -142,12 +146,34 @@ export class DistributedTest {
             throw new Error('Failed to start Modules/DTAExecutionHost.exe.');
         });
 
+        var consolidatedCiData = {
+                    agentFailure: false,
+                    agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
+                    batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
+                    batchSize: this.dtaTestConfig.numberOfTestCasesPerSlice,
+                    codeCoverageEnabled: this.dtaTestConfig.codeCoverageEnabled,
+                    dontDistribute: tl.getBoolInput('dontDistribute'),
+                    environmentUri: this.dtaTestConfig.dtaEnvironment.environmentUri, 
+                    numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
+                    overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
+                    pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
+                    runTestsInIsolation: this.dtaTestConfig.runTestsInIsolation,
+                    runInParallel: this.dtaTestConfig.runInParallel,
+                    settingsType: !utils.Helper.isNullOrUndefined(this.dtaTestConfig.settingsFile) ? this.dtaTestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : this.dtaTestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none' : 'none',
+                    task: "VsTestDistributedFlow",
+                    testSelection: this.dtaTestConfig.testSelection,
+                    tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
+                    vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
+                };
+
         proc.on('close', (code) => {
             if (code !== 0) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + code);
+                consolidatedCiData.agentFailure = true;
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
             }
+            ci.publishEvent(consolidatedCiData);
             this.cleanUpDtaExeHost();
         });
     }
@@ -220,11 +246,18 @@ export class DistributedTest {
         if (!utils.Helper.isNullOrUndefined(this.dtaTestConfig.testSuites)) {
             utils.Helper.addToProcessEnvVars(envVars, 'testsuites', this.dtaTestConfig.testSuites.join(','));
         }
+        utils.Helper.setEnvironmentVariableToString(envVars, 'ignoretestfailures', this.dtaTestConfig.ignoreTestFailures);
         utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
-        // In the phases world we will distribute based on number of agents
-        utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
+        
+        if(this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'false');
+        }
+        else {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
+        }
+        
         utils.Helper.setEnvironmentVariableToString(envVars, 'maxagentphaseslicing', this.dtaTestConfig.numberOfAgentsInPhase.toString());
         tl.debug("Type of batching" + this.dtaTestConfig.batchingType);
         const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);

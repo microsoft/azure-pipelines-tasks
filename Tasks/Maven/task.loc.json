@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 124,
+    "Minor": 126,
     "Patch": 0
   },
   "demands": [
@@ -49,6 +49,9 @@
   "inputs": [
     {
       "name": "mavenPOMFile",
+      "aliases": [
+        "mavenPomFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.mavenPOMFile",
       "defaultValue": "pom.xml",
@@ -100,6 +103,9 @@
     },
     {
       "name": "codeCoverageTool",
+      "aliases": [
+        "codeCoverageToolOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
@@ -114,6 +120,9 @@
     },
     {
       "name": "classFilter",
+      "aliases": [
+        "codeCoverageClassFilter"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilter",
       "defaultValue": "",
@@ -124,6 +133,9 @@
     },
     {
       "name": "classFilesDirectories",
+      "aliases": [
+        "codeCoverageClassFilesDirectories"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilesDirectories",
       "required": false,
@@ -133,6 +145,9 @@
     },
     {
       "name": "srcDirectories",
+      "aliases": [
+        "codeCoverageSourceDirectories"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.srcDirectories",
       "defaultValue": "",
@@ -143,6 +158,9 @@
     },
     {
       "name": "failIfCoverageEmpty",
+      "aliases": [
+        "codeCoverageFailIfEmpty"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
       "defaultValue": "false",
@@ -153,6 +171,9 @@
     },
     {
       "name": "javaHomeSelection",
+      "aliases": [
+        "javaHomeOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.javaHomeSelection",
       "required": true,
@@ -166,6 +187,9 @@
     },
     {
       "name": "jdkVersion",
+      "aliases": [
+        "jdkVersionOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
@@ -182,6 +206,9 @@
     },
     {
       "name": "jdkUserInputPath",
+      "aliases": [
+        "jdkDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.jdkUserInputPath",
       "required": true,
@@ -192,6 +219,9 @@
     },
     {
       "name": "jdkArchitecture",
+      "aliases": [
+        "jdkArchitectureOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
       "defaultValue": "x86",
@@ -206,6 +236,9 @@
     },
     {
       "name": "mavenVersionSelection",
+      "aliases": [
+        "mavenVersionOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.mavenVersionSelection",
       "defaultValue": "Default",
@@ -219,6 +252,9 @@
     },
     {
       "name": "mavenPath",
+      "aliases": [
+        "mavenDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.mavenPath",
       "required": true,
@@ -239,6 +275,9 @@
     },
     {
       "name": "mavenOpts",
+      "aliases": [
+        "mavenOptions"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.mavenOpts",
       "required": false,
@@ -248,6 +287,9 @@
     },
     {
       "name": "mavenFeedAuthenticate",
+      "aliases": [
+        "mavenAuthenticateFeed"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.mavenFeedAuthenticate",
       "required": true,
@@ -257,6 +299,9 @@
     },
     {
       "name": "sqAnalysisEnabled",
+      "aliases": [
+        "sonarQubeRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
       "required": true,
@@ -266,6 +311,9 @@
     },
     {
       "name": "sqConnectedServiceName",
+      "aliases": [
+        "sonarQubeServiceEndpoint"
+      ],
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.sqConnectedServiceName",
       "required": true,
@@ -275,6 +323,9 @@
     },
     {
       "name": "sqProjectName",
+      "aliases": [
+        "sonarQubeProjectName"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqProjectName",
       "required": false,
@@ -284,6 +335,9 @@
     },
     {
       "name": "sqProjectKey",
+      "aliases": [
+        "sonarQubeProjectKey"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqProjectKey",
       "required": false,
@@ -293,6 +347,9 @@
     },
     {
       "name": "sqProjectVersion",
+      "aliases": [
+        "sonarQubeProjectVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqProjectVersion",
       "required": false,
@@ -302,6 +359,9 @@
     },
     {
       "name": "sqDbDetailsRequired",
+      "aliases": [
+        "sonarQubeSpecifyDB"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
       "required": true,
@@ -312,6 +372,9 @@
     },
     {
       "name": "sqDbUrl",
+      "aliases": [
+        "sonarQubeDBUrl"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqDbUrl",
       "required": false,
@@ -321,6 +384,9 @@
     },
     {
       "name": "sqDbUsername",
+      "aliases": [
+        "sonarQubeDBUsername"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqDbUsername",
       "required": false,
@@ -330,6 +396,9 @@
     },
     {
       "name": "sqDbPassword",
+      "aliases": [
+        "sonarQubeDBPassword"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.sqDbPassword",
       "required": false,
@@ -339,6 +408,9 @@
     },
     {
       "name": "sqAnalysisIncludeFullReport",
+      "aliases": [
+        "sonarQubeIncludeFullReport"
+      ],
       "type": "boolean",
       "defaultValue": "true",
       "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
@@ -349,6 +421,9 @@
     },
     {
       "name": "sqAnalysisBreakBuildIfQualityGateFailed",
+      "aliases": [
+        "sonarQubeFailWhenQualityGateFails"
+      ],
       "type": "boolean",
       "defaultValue": "",
       "label": "ms-resource:loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed",
@@ -359,6 +434,9 @@
     },
     {
       "name": "checkstyleAnalysisEnabled",
+      "aliases": [
+        "checkStyleRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
       "required": false,
@@ -368,6 +446,9 @@
     },
     {
       "name": "pmdAnalysisEnabled",
+      "aliases": [
+        "pmdRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
       "required": false,
@@ -377,6 +458,9 @@
     },
     {
       "name": "findbugsAnalysisEnabled",
+      "aliases": [
+        "findBugsRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
       "required": false,

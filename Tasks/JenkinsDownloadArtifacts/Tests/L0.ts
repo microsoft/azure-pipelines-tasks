@@ -14,6 +14,8 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
     before((done) => {
         process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
+        process.env['ENDPOINT_AUTH_PARAMETER_ID1_USERNAME'] = 'uname';
+        process.env['ENDPOINT_AUTH_PARAMETER_ID1_PASSWORD'] = 'pword';
         process.env['ENDPOINT_URL_ID1'] = 'bogusURL';
 
         done();
@@ -388,6 +390,28 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             let downloadCommitsApi: string = "tree=builds[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{2,4}";
             assert(tr.stdout.indexOf(downloadCommitsApi) === -1 , "Should not try to download the commits");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Should have the correct url if the job is under folder', (done) => {
+        const tp: string = path.join(__dirname, 'L0FolderJobShouldHaveCorrectUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            let expectedMessage: string = "Found Jenkins job details jobName:folder1/folder2/testmultibranchproject, jobType:org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject, buildId:20, IsMultiBranchPipeline:true, MultiBranchPipelineName:master";
+            assert(tr.stdout.indexOf(expectedMessage) != -1, "Should correctly find the Latest job is inside a folder");
+
+            let buildIndexApi: string = "http://url/job/folder1/job/folder2/job/testmultibranchproject//job/master/20/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]";
+            assert(tr.stdout.indexOf(buildIndexApi) != -1, "Url for folder job should be correct");
 
             done();
         } catch(err) {
