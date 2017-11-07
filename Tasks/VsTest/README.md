@@ -66,7 +66,6 @@ The feature is presently scoped to the following:
 
 #### Advanced Execution Options
 
-- **Batch tests:** Choose what type of batching to use to group tests. A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.
 	- **Based on number of tests and agents:** Simple batching based on the number of tests and agents participating in the test run.
 	- **Based on past running time of tests:** This batching considers past running time to create batches of tests such that each batch has approximately equal running time.
 	- **Based on test assemblies:** Tests from an assembly are batched together.
