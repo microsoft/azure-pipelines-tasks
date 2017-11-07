@@ -71,14 +71,14 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
       "defaultValue": "app",
-      "required": false,
+      "required": true,
       "options": {
         "app": "Web App",
+        "applinux": "Linux Web App",
         "functionapp": "Function App",
         "logicapp": "Logic App",
         "api": "API App",
-        "mobileapp": "Mobile App",
-        "applinux": "Linux App"
+        "mobileapp": "Mobile App"
       },
       "properties": {
         "EditableOptions": "false",

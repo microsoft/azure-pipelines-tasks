@@ -71,20 +71,20 @@
             "type": "pickList",
             "label": "App Type",
             "defaultValue": "app",
-            "required": false,
+            "required": true,
             "options": {
                 "app": "Web App",
+                "applinux": "Linux Web App",
                 "functionapp": "Function App",
                 "logicapp": "Logic App",
                 "api": "API App",
-                "mobileapp": "Mobile App",
-                "applinux": "Linux App"
+                "mobileapp": "Mobile App"
             },
             "properties": {
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
             },
-            "helpMarkDown": "Select type of web app you want to deploy."
+            "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
         },
         {
             "name": "DeployToSlotFlag",
@@ -133,7 +133,7 @@
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
             },
-            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
+            "helpMarkDown": "App Service on Linux offers two different options to publish your application <br/> Custom image deployment or App deployment with a built-in platform image. [Learn More](https://go.microsoft.com/fwlink/?linkid=862490)", 
             "visibleRule": "WebAppKind = applinux"
         },
         {
