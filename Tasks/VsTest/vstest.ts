@@ -104,7 +104,7 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
+async function getVstestArguments(settingsFile: string, tiaEnabled: boolean): Promise<string[]> {
     const argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
         let testAssemblyPath = testAssembly;
@@ -124,6 +124,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             tl.debug('Ignoring TestCaseFilter because Test Impact is enabled');
         }
     }
+
     if (settingsFile) {
         if (utils.Helper.pathExistsAsFile(settingsFile)) {
             argsArray.push('/Settings:' + settingsFile);
@@ -142,12 +143,11 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     if (vstestConfig.codeCoverageEnabled) {
-        if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse) {
-            // Fix settings file for code coverage in this flow
-        } else {
+        if(!(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)) {
             argsArray.push('/EnableCodeCoverage');
         }
     }
+
     if (vstestConfig.runTestsInIsolation) {
         argsArray.push('/InIsolation');
     }
@@ -170,7 +170,6 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     return argsArray;
-
 }
 
 function isDebugEnabled(): boolean {
@@ -428,7 +427,7 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
             else {
                 // Response file indicates that only few tests were impacted E.g.: "/Tests:MyNamespace.MyClass.TestMethod1"
                 try {
-                    updateResponseFile(getVstestArguments(settingsFile, true), true);
+                    updateResponseFile(await getVstestArguments(settingsFile, true), true);
                 }
                 catch (err) {
                     utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
@@ -455,7 +454,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
         vstestArgs = ['@' + updatedFile];
     }
     else {
-        vstestArgs = getVstestArguments(settingsFile, false);
+        vstestArgs = await getVstestArguments(settingsFile, false);
     }
 
     try {
@@ -479,7 +478,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
 async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
     try {
-        updateResponseFile(getVstestArguments(settingsFile, false), false);
+        updateResponseFile(await getVstestArguments(settingsFile, false), false);
     }
     catch (err) {
         utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
@@ -538,7 +537,7 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
     }
 
     try {
-        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false);
+        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false, vstestConfig.codeCoverageEnabled && vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse);
         return vsTestCall(newSettingsFile, vsVersion);
     }
     catch (err) {

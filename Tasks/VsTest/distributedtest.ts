@@ -83,6 +83,14 @@ export class DistributedTest {
                                         this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
+
+        //  if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)
+    //execOptions.env = {
+      //  'COR_PROFILER_PATH_32': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation,
+        //'COR_PROFILER_PATH_64': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation
+        //}
+
+
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
@@ -224,7 +232,7 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true);
+                this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true, this.dtaTestConfig.codeCoverageEnabled && this.dtaTestConfig.toolsInstallerConfig && this.dtaTestConfig.toolsInstallerConfig.isToolsInstallerInUse);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {
@@ -246,7 +254,7 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'testsuites', this.dtaTestConfig.testSuites.join(','));
         }
         utils.Helper.setEnvironmentVariableToString(envVars, 'ignoretestfailures', this.dtaTestConfig.ignoreTestFailures);
-        utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
+        //TODO: utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
         // In the phases world we will distribute based on number of agents
