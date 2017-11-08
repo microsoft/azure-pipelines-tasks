@@ -38,69 +38,7 @@ const runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettin
 const runSettingsForTIAOn = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><TestImpact enabled=\"true\"></TestImpact><BaseLineRunId value=\"{0}\"></BaseLineRunId></RunConfiguration></RunSettings>';
 
 const codeCoverageFriendlyName = 'Code Coverage';
-const codeCoverageTemplate = `<DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">  
-    <Configuration>
-        <CodeCoverage>  
-        <ModulePaths>  
-            <Include>  
-            <ModulePath>.*\.dll$</ModulePath>  
-            <ModulePath>.*\.exe$</ModulePath>  
-            </Include>  
-            <Exclude>  
-            <ModulePath>.*CPPUnitTestFramework.*</ModulePath>  
-            </Exclude>  
-        </ModulePaths>  
-        <Functions>  
-            <Exclude>  
-            <Function>^Fabrikam\.UnitTest\..*</Function>           
-            <Function>^std::.*</Function>  
-            <Function>^ATL::.*</Function>  
-            <Function>.*::__GetTestMethodInfo.*</Function>  
-            <Function>^Microsoft::VisualStudio::CppCodeCoverageFramework::.*</Function>  
-            <Function>^Microsoft::VisualStudio::CppUnitTestFramework::.*</Function>  
-            </Exclude>  
-        </Functions>  
-        <Attributes>  
-            <Exclude>  
-            <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>  
-            <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute>  
-            <Attribute>^System\.Runtime\.CompilerServices.CompilerGeneratedAttribute$</Attribute>  
-            <Attribute>^System\.CodeDom\.Compiler.GeneratedCodeAttribute$</Attribute>  
-            <Attribute>^System\.Diagnostics\.CodeAnalysis.ExcludeFromCodeCoverageAttribute$</Attribute>  
-            </Exclude>  
-        </Attributes>  
-        <Sources>  
-            <Exclude>  
-            <Source>.*\\atlmfc\\.*</Source>  
-            <Source>.*\\vctools\\.*</Source>  
-            <Source>.*\\public\\sdk\\.*</Source>  
-            <Source>.*\\microsoft sdks\\.*</Source>  
-            <Source>.*\\vc\\include\\.*</Source>  
-            </Exclude>  
-        </Sources>  
-        <CompanyNames>  
-            <Exclude>  
-            <CompanyName>.*microsoft.*</CompanyName>  
-            </Exclude>  
-        </CompanyNames>   
-        <PublicKeyTokens>   
-            <Exclude>  
-            <PublicKeyToken>^B77A5C561934E089$</PublicKeyToken>  
-            <PublicKeyToken>^B03F5F7F11D50A3A$</PublicKeyToken>  
-            <PublicKeyToken>^31BF3856AD364E35$</PublicKeyToken>  
-            <PublicKeyToken>^89845DCD8080CC91$</PublicKeyToken>  
-            <PublicKeyToken>^71E9BCE111E9429C$</PublicKeyToken>  
-            <PublicKeyToken>^8F50407C4E9E73B6$</PublicKeyToken>  
-            <PublicKeyToken>^E361AF139669C375$</PublicKeyToken>  
-            </Exclude>  
-        </PublicKeyTokens>  
-        <UseVerifiableInstrumentation>False</UseVerifiableInstrumentation>  
-        <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses>  
-        <CollectFromChildProcesses>True</CollectFromChildProcesses>  
-        <CollectAspDotNet>False</CollectAspDotNet>  
-        </CodeCoverage>  
-    </Configuration>  
-    </DataCollector>`;
+const codeCoverageTemplate = `<DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"> <Configuration><CodeCoverage> <ModulePaths> <Include> <ModulePath>.*\.dll$</ModulePath> <ModulePath>.*\.exe$</ModulePath> </Include> <Exclude> <ModulePath>.*CPPUnitTestFramework.*</ModulePath> </Exclude> </ModulePaths> <Functions> <Exclude> <Function>^Fabrikam\.UnitTest\..*</Function> <Function>^std::.*</Function> <Function>^ATL::.*</Function> <Function>.*::__GetTestMethodInfo.*</Function> <Function>^Microsoft::VisualStudio::CppCodeCoverageFramework::.*</Function> <Function>^Microsoft::VisualStudio::CppUnitTestFramework::.*</Function> </Exclude> </Functions> <Attributes> <Exclude> <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute> <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute> <Attribute>^System\.Runtime\.CompilerServices.CompilerGeneratedAttribute$</Attribute> <Attribute>^System\.CodeDom\.Compiler.GeneratedCodeAttribute$</Attribute> <Attribute>^System\.Diagnostics\.CodeAnalysis.ExcludeFromCodeCoverageAttribute$</Attribute> </Exclude> </Attributes> <Sources> <Exclude> <Source>.*\\atlmfc\\.*</Source> <Source>.*\\vctools\\.*</Source> <Source>.*\\public\\sdk\\.*</Source> <Source>.*\\microsoft sdks\\.*</Source> <Source>.*\\vc\\include\\.*</Source> </Exclude> </Sources> <CompanyNames> <Exclude> <CompanyName>.*microsoft.*</CompanyName> </Exclude> </CompanyNames> <PublicKeyTokens> <Exclude> <PublicKeyToken>^B77A5C561934E089$</PublicKeyToken> <PublicKeyToken>^B03F5F7F11D50A3A$</PublicKeyToken> <PublicKeyToken>^31BF3856AD364E35$</PublicKeyToken> <PublicKeyToken>^89845DCD8080CC91$</PublicKeyToken> <PublicKeyToken>^71E9BCE111E9429C$</PublicKeyToken> <PublicKeyToken>^8F50407C4E9E73B6$</PublicKeyToken> <PublicKeyToken>^E361AF139669C375$</PublicKeyToken> </Exclude> </PublicKeyTokens> <UseVerifiableInstrumentation>False</UseVerifiableInstrumentation> <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses> <CollectFromChildProcesses>True</CollectFromChildProcesses> <CollectAspDotNet>False</CollectAspDotNet> </CodeCoverage> </Configuration> </DataCollector>`; 
 
 const testSettingsTemplate = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
     <TestSettings name=\"testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25\" id=\"5d76a195-1e43-4b90-a6ce-4ec3de87ed25\" xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\">
@@ -222,12 +160,12 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             result = updateTestSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
         } else if (settingsExt === runSettingsExtension) {
             tl.debug('Enabling Test Impact collector by editing given runsettings.')
-            result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode, settingsFile);
+            result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
         } else {
             tl.debug('Enabling test impact data collection by creating new runsettings.')
             settingsExt = runSettingsExtension;
             result = await CreateSettings(runSettingsTemplate);
-            result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode, settingsFile);
+            result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
         }
     }
 
@@ -261,12 +199,12 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             tl.warning('Code coverage not supported with testsettings file when using tools installer.');
         } else if (settingsExt === runSettingsExtension) {
             tl.debug('Adding code coverage settings details to runsettings file.');
-            updateSettingsWithCodeCoverageDetails(result, codeCoverageNode);
+            updateSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile);
         } else {
             tl.debug('Enabling code coverage by creating new run settings.');
             settingsExt = runSettingsExtension;
             result = await CreateSettings(runSettingsTemplate);
-            result = updateSettingsWithCodeCoverageDetails(result, codeCoverageNode)
+            result = updateSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile)
         }
     }
 
@@ -282,7 +220,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     return defer.promise;
 }
 
-function updateSettingsWithCodeCoverageDetails(result: any, codeCoverageNode: any) {
+function updateSettingsWithCodeCoverageDetails(result: any, codeCoverageNode: any, settingsFile: string) {
     if (!result.RunSettings) {
         tl.debug('Updating runsettings file from RunSettings node');
         result.RunSettings = { DataCollectionRunSettings: { DataCollectors: codeCoverageNode } };
@@ -303,7 +241,11 @@ function updateSettingsWithCodeCoverageDetails(result: any, codeCoverageNode: an
                 dataCollectorArray.push(codeCoverageNode.DataCollector);
             }
             else {
-
+                try {
+                    setUseVerifiableInstrumentationToFalse(dataCollectorArray);
+                } catch (error) {
+                    throw new Error(tl.loc('InvalidSettingsFile', settingsFile));
+                }
             }
         }
     }
@@ -333,7 +275,11 @@ function updateSettingsWithParameters(result: any, overrideParametersString: str
             const key = parameter.$.Name || parameter.$.name;
             if (overrideParameters[key] && overrideParameters[key].value) {
                 tl.debug('Overriding value for parameter : ' + key);
-                parameter.$.Value = overrideParameters[key].value;
+                if (parameter.$.Value) {
+                    parameter.$.Value = overrideParameters[key].value;		
+                } else {		
+                    parameter.$.value = overrideParameters[key].value;		
+                }
             }
         });
     }
@@ -341,7 +287,7 @@ function updateSettingsWithParameters(result: any, overrideParametersString: str
     return result;
 }
 
-function updateRunSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd, settingsFile: string) {
+function updateRunSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {
     if (!result.RunSettings) {
         tl.debug('Updating runsettings file from RunSettings node');
         result.RunSettings = { DataCollectionRunSettings: { DataCollectors: dataCollectorNodeToAdd } };
@@ -360,13 +306,6 @@ function updateRunSettingsWithDataCollector(result: any, dataCollectorFriendlyNa
             if (!isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName)) {
                 tl.debug('Updating runsettings file, adding a DataCollector node');
                 dataCollectorArray.push(dataCollectorNodeToAdd.DataCollector);
-            }
-            else {
-                try {
-                    setUseVerifiableInstrumentationToFalse(dataCollectorArray);
-                } catch (error) {
-                    throw new Error(tl.loc('InvalidSettingsFile', settingsFile));
-                }
             }
         }
     }
