@@ -12,7 +12,7 @@
   "version": {
     "Major": 4,
     "Minor": 125,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "xcode"
@@ -49,7 +49,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "$(Configuration)",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration"
     },
     {
       "name": "sdk",
@@ -81,7 +82,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xcodeVersion",
       "defaultValue": "default",
-      ".comment": "//If you're updating the options here, be sure to update the Xcode.json build template as well.",
+      ".comment": "//If you update the options here, be sure to update the Xcode.json build template as well.",
       "options": {
         "8": "Xcode 8",
         "9": "Xcode 9",
