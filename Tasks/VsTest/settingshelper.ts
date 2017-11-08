@@ -199,12 +199,12 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             tl.warning('Code coverage not supported with testsettings file when using tools installer.');
         } else if (settingsExt === runSettingsExtension) {
             tl.debug('Adding code coverage settings details to runsettings file.');
-            updateSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile);
+            updateRunSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile);
         } else {
             tl.debug('Enabling code coverage by creating new run settings.');
             settingsExt = runSettingsExtension;
             result = await CreateSettings(runSettingsTemplate);
-            result = updateSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile)
+            result = updateRunSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile)
         }
     }
 
@@ -220,7 +220,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     return defer.promise;
 }
 
-function updateSettingsWithCodeCoverageDetails(result: any, codeCoverageNode: any, settingsFile: string) {
+function updateRunSettingsWithCodeCoverageDetails(result: any, codeCoverageNode: any, settingsFile: string) {
     if (!result.RunSettings) {
         tl.debug('Updating runsettings file from RunSettings node');
         result.RunSettings = { DataCollectionRunSettings: { DataCollectors: codeCoverageNode } };
@@ -329,6 +329,7 @@ function setUseVerifiableInstrumentationToFalse(dataCollectorArray: any) {
         if (node.$.friendlyName && node.$.friendlyName.toUpperCase() === codeCoverageFriendlyName.toUpperCase()) {
             if (node.Configuration.CodeCoverage.UseVerifiableInstrumentation) {
                 node.Configuration.CodeCoverage.UseVerifiableInstrumentation = false;
+                console.log(tl.loc('OverrideUseVerifiableInstrumentation'));
             }
             else {
                 node.Configuration.CodeCoverage = { UseVerifiableInstrumentation: false };

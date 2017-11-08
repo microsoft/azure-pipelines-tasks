@@ -495,6 +495,7 @@
     "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
     "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
     "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
-    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError"
+    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
+    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation"
   }
 }

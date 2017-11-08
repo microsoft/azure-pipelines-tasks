@@ -104,7 +104,7 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-async function getVstestArguments(settingsFile: string, tiaEnabled: boolean): Promise<string[]> {
+function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
     const argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
         let testAssemblyPath = testAssembly;
@@ -234,14 +234,14 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
         // Keeping this code in case we want to change failOnStdErr
-        errStream: new outStream.StringErrorWritable({ decodeStrings: false }),
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
     };
 
     if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)
     execOptions.env = {
         'COR_PROFILER_PATH_32': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation,
-        'COR_PROFILER_PATH_64': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation
-        }
+        'COR_PROFILER_PATH_64': vstestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation
+    }
     
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
     // Here we are returning the code as returned to us by vstest.console in case of complete run
@@ -427,7 +427,7 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
             else {
                 // Response file indicates that only few tests were impacted E.g.: "/Tests:MyNamespace.MyClass.TestMethod1"
                 try {
-                    updateResponseFile(await getVstestArguments(settingsFile, true), true);
+                    updateResponseFile(getVstestArguments(settingsFile, true), true);
                 }
                 catch (err) {
                     utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
@@ -454,7 +454,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
         vstestArgs = ['@' + updatedFile];
     }
     else {
-        vstestArgs = await getVstestArguments(settingsFile, false);
+        vstestArgs = getVstestArguments(settingsFile, false);
     }
 
     try {
@@ -478,7 +478,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
 async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
     try {
-        updateResponseFile(await getVstestArguments(settingsFile, false), false);
+        updateResponseFile(getVstestArguments(settingsFile, false), false);
     }
     catch (err) {
         utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
