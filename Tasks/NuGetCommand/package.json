@@ -1,6 +1,6 @@
 {
     "name": "nugetcommand",
-    "version": "2.0.14",
+    "version": "2.0.15",
     "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
     "main": "nugetcommandmain.js",
     "scripts": {
