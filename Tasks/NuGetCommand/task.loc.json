@@ -70,7 +70,7 @@
     {
       "name": "solution",
       "aliases": [
-        "restoreTarget"
+        "restoreSolution"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
@@ -185,7 +185,7 @@
     {
       "name": "searchPatternPush",
       "aliases": [
-        "pathToPackagesToPush"
+        "packagesToPush"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPush",
@@ -255,7 +255,7 @@
     {
       "name": "searchPatternPack",
       "aliases": [
-        "pathToPackagesToPack"
+        "packagesToPack"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPack",
@@ -279,7 +279,7 @@
     {
       "name": "outputDir",
       "aliases": [
-        "packDirectory"
+        "packDestination"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.outputDir",
@@ -305,9 +305,6 @@
     },
     {
       "name": "includeReferencedProjects",
-      "aliases": [
-        "includeRefProjs"
-      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeReferencedProjects",
       "defaultValue": "false",

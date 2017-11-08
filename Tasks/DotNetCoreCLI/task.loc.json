@@ -254,7 +254,7 @@
     {
       "name": "searchPatternPush",
       "aliases": [
-        "pathToPackagesToPush"
+        "packagesToPush"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPush",
@@ -301,7 +301,7 @@
     {
       "name": "searchPatternPack",
       "aliases": [
-        "pathToPackagesToPack"
+        "packagesToPack"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPack",

@@ -68,7 +68,7 @@
 
         {
             "name": "solution",
-            "aliases": ["restoreTarget"],
+            "aliases": ["restoreSolution"],
             "type": "filePath",
             "label": "Path to solution, packages.config, or project.json",
             "defaultValue": "**/*.sln",
@@ -174,7 +174,7 @@
 
         {
             "name": "searchPatternPush",
-            "aliases": ["pathToPackagesToPush"],
+            "aliases": ["packagesToPush"],
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
@@ -239,7 +239,7 @@
 
         {
             "name": "searchPatternPack",
-            "aliases": ["pathToPackagesToPack"],
+            "aliases": ["packagesToPack"],
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
@@ -259,7 +259,7 @@
         },
         {
             "name": "outputDir",
-            "aliases": ["packDirectory"],
+            "aliases": ["packDestination"],
             "type": "filePath",
             "label": "Package folder",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
@@ -284,7 +284,6 @@
         },
         {
             "name": "includeReferencedProjects",
-            "aliases": ["includeRefProjs"],
             "type": "boolean",
             "label": "Include referenced projects",
             "defaultValue": "false",
