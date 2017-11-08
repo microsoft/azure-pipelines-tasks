@@ -16,7 +16,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "preview": false,
+  "preview": true,
   "satisfies": [
     "VsTest"
   ],
@@ -27,7 +27,7 @@
       "name": "versionSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.versionSelector",
-      "defaultValue": "latestStable",
+      "defaultValue": "latestPreRelease",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSelector",
       "options": {
@@ -54,8 +54,12 @@
   "messages": {
     "StartingInstaller": "ms-resource:loc.messages.StartingInstaller",
     "ProvideExplicitVersion": "ms-resource:loc.messages.ProvideExplicitVersion",
+    "NoPackageFoundInCache": "ms-resource:loc.messages.NoPackageFoundInCache",
     "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported",
-    "CouldNotFindLatestPreReleaseVersion": "ms-resource:loc.messages.CouldNotFindLatestPreReleaseVersion",
-    "CouldNotFindLatestStableVersion": "ms-resource:loc.messages.CouldNotFindLatestStableVersion"
+    "FailedToListAvailableVersions": "ms-resource:loc.messages.FailedToListAvailableVersions",
+    "FailedToListAvailablePackagesFromNuget": "ms-resource:loc.messages.FailedToListAvailablePackagesFromNuget",
+    "FailedToAcquireTestPlatform": "ms-resource:loc.messages.FailedToAcquireTestPlatform",
+    "InstallationSuccessful": "ms-resource:loc.messages.InstallationSuccessful",
+    "TestPlatformDownloadFailed": "ms-resource:loc.messages.TestPlatformDownloadFailed"
   }
 }

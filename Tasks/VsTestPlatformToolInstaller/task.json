@@ -16,16 +16,16 @@
         "Minor": 0,
         "Patch": 0
     },
-    "preview": false,
+    "preview": true,
     "satisfies": ["VsTest"],
     "demands": [],
-    "instanceNameFormat": "Use VsTest",
+    "instanceNameFormat": "VsTest Platform Installer",
     "inputs": [
         {
         "name": "versionSelector",
         "type": "pickList",
         "label": "Version",
-        "defaultValue": "latestStable",
+        "defaultValue": "latestPreRelease",
         "required": true,
         "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
         "options": {
@@ -52,8 +52,12 @@
     "messages": {
       "StartingInstaller": "Starting VsTest platform tools installer task.",
       "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
+      "NoPackageFoundInCache": "Failed to find any version of test platform package in the cache.",
       "OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent.",
-      "CouldNotFindLatestPreReleaseVersion": "Could not find the latest pre-release version of the package %s",
-      "CouldNotFindLatestStableVersion": "Could not find the latest stable version of the package %s"
+      "FailedToListAvailableVersions": "Failed to list available versions of the Microsoft.Testplatform package.",
+      "FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest cached test platform package.",
+      "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please refer to the logs for additional information.",
+      "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
+      "TestPlatformDownloadFailed": "Failed to download version %s of the test platform. Looking in the cache for the latest available version."
     }
 }

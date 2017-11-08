@@ -24,6 +24,8 @@ async function startInstaller() {
         // Read inputs
         let versionSelectorInput = taskLib.getInput('versionSelector', true);
         let testPlatformVersion = taskLib.getInput('testPlatformVersion', false); 
+
+        //TODO: Add an input for cleaning up the tool cache?
         
         // Get the required version of the platform and make necessary preparation to allow its consumption down the phase 
         await getVsTestPlatformTool(testPlatformVersion, versionSelectorInput);
@@ -36,35 +38,51 @@ async function startInstaller() {
 async function getVsTestPlatformTool(testPlatformVersion: string, versionSelectorInput: string) {
     // Should point to the location where the VsTest platform tool will be
     let toolPath: string;
+    let includePreRelease: boolean;
 
-    if (versionSelectorInput == 'latestStable') {
-        testPlatformVersion = getLatestPackageVersionNumber(false);
-
-        if(testPlatformVersion == null) {
-            throw new Error(tl.loc('CouldNotFindLatestStableVersion', packageName));
-        }
-
-        tl.debug(`Found the latest stable version to be ${testPlatformVersion}`);
+    if (versionSelectorInput.toLowerCase() === 'lateststable') {
+        includePreRelease = false;
     } 
     else if(versionSelectorInput == 'latestPreRelease') {
-        testPlatformVersion = getLatestPackageVersionNumber(true);
+        includePreRelease = true;
+    }
 
-        if(testPlatformVersion == null) {
-            throw new Error(tl.loc('CouldNotFindLatestPreReleaseVersion', packageName));
+    if(versionSelectorInput.toLowerCase() != 'specificversion' || !testPlatformVersion) {
+        try {
+            testPlatformVersion = getLatestPackageVersionNumber(includePreRelease);
+            tl.debug(`Found the latest version to be ${testPlatformVersion}`);
+            if(testPlatformVersion == null) {
+                throw new Error(tl.loc('FailedToListAvailableVersions'));
+            }
+        } catch(error) {
+            // Failed to list available versions, look for the latest version available in the cache
+            tl.warning(tl.loc('FailedToListAvailablePackagesFromNuget'));
+            tl.debug('Looking for latest available version in cache');
+            testPlatformVersion = 'x';
         }
-
-        tl.debug(`Found the latest pre-release version to be ${testPlatformVersion}`);
     }
 
     // Check cache for the specified version
-    tl.debug(`Looking for ${testPlatformVersion} in the tools cache.`);
+    tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
 
-    if (!toolPath) {
+    if (!toolPath && testPlatformVersion && testPlatformVersion != 'x') {
         tl.debug(`Could not find ${packageName}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
         if (toolLib.isExplicitVersion(testPlatformVersion)) {
             // Download the required version and cache it
-            toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion);
+            try {
+                toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion);
+            } catch(error) {
+                // Download failed, look for the latest version available in the cache
+                tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
+                testPlatformVersion = 'x';
+                toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
+                if(!toolPath) {
+                    // No version found in cache, fail the task
+                    tl.warning(tl.loc('NoPackageFoundInCache'));
+                    throw new Error(tl.loc('FailedToAcquireTestPlatform'));
+                }
+            }
         }
         else {
             throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
@@ -73,6 +91,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
 
     // Set the task variable so that the VsTest task can consume this path
     tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
+    console.log(tl.loc('InstallationSuccessful', toolPath));
     tl.debug('Set variable VsTestToolsInstallerInstalledToolLocation value to ' + toolPath);
 }
 
