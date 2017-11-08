@@ -23,6 +23,10 @@
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/4.0.0.2283/NuGet.zip",
                 "dest": "./NuGet/4.0.0/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/4.1.0/NuGet.zip",
+                "dest": "./NuGet/4.1.0/"
             }
         ]
     }
