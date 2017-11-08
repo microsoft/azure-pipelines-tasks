@@ -2,7 +2,7 @@
     "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
     "name": "Xcode",
     "friendlyName": "Xcode",
-    "description": "Build, test or archive an Xcode workspace on macOS. Optionally package an app.",
+    "description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
     "category": "Build",
     "visibility": [
@@ -42,7 +42,7 @@
             "label": "Actions",
             "defaultValue": "build",
             "required": true,
-            "helpMarkDown": "Enter a space-delimited list of actions. Valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example: `clean build` would run a clean build. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)."
+            "helpMarkDown": "Enter a space-delimited list of actions. Valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)."
         },
         {
             "name": "configuration",
@@ -66,7 +66,7 @@
             "label": "Workspace or project path",
             "defaultValue": "**/*.xcodeproj/*.xcworkspace",
             "required": false,
-            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example: `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`."
+            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`."
         },
         {
             "name": "scheme",
@@ -189,7 +189,7 @@
             "required": false,
             "groupName": "sign",
             "defaultValue": "nosign",
-            "helpMarkDown": "Choose the method of signing the build. Select `Do not code sign` to disable signing. Select `Project defaults` to use only the project's signing configuration. Select `Manual signing` to force manual signing and optionally specify a signing identity and provisioning profile. Select `Automatic signing` to force automatic signing and optionally specify a development Team ID. If your project requires signing, use the \"Install Apple...\" tasks to install certificates and provisioning profiles prior to the Xcode build.",
+            "helpMarkDown": "Choose the method of signing the build. Select `Do not code sign` to disable signing. Select `Project defaults` to use only the project's signing configuration. Select `Manual signing` to force manual signing and optionally specify a signing identity and provisioning profile. Select `Automatic signing` to force automatic signing and optionally specify a development team ID. If your project requires signing, use the \"Install Apple...\" tasks to install certificates and provisioning profiles prior to the Xcode build.",
             "options": {
                 "nosign": "Do not code sign",
                 "default": "Project defaults",
@@ -230,7 +230,7 @@
             "type": "string",
             "label": "Arguments",
             "required": false,
-            "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace and scheme.",
+            "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
             "groupName": "advanced"
         },
         {
@@ -239,7 +239,7 @@
             "label": "Working directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository is used.",
+            "helpMarkDown": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
             "groupName": "advanced"
         },
         {
@@ -248,7 +248,7 @@
             "label": "Output directory",
             "defaultValue": "output/$(SDK)/$(Configuration)",
             "required": true,
-            "helpMarkDown": "Enter a path relative to the working directory where build output (binaries) will be placed.",
+            "helpMarkDown": "Enter a path relative to the working directory where build output (binaries) will be placed. The default value includes variables. When are used, make sure to specify values on the **Variables** tab.",
             "groupName": "advanced"
         },
         {
@@ -257,7 +257,7 @@
             "label": "Use xcpretty",
             "required": false,
             "defaultValue": false,
-            "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output and generate JUnit test results. Enabling this requires xcpretty to be installed on the agent machine. It is preinstalled on VSTS hosted build agents. See [xcpretty on GitHub](https://github.com/supermarin/xcpretty) for details.",
+            "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output and generate JUnit test results. Enabling this requires xcpretty to be installed on the agent machine. It is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
             "groupName": "advanced"
         },
         {
@@ -267,7 +267,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Specify whether to publish JUnit test results to VSTS/TFS."
+            "helpMarkDown": "If xcpretty is enabled (above), specify whether to publish JUnit test results to VSTS/TFS."
         }
     ],
     "execution": {
