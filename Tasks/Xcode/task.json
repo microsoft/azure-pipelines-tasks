@@ -66,7 +66,7 @@
             "label": "Workspace or project path",
             "defaultValue": "**/*.xcodeproj/*.xcworkspace",
             "required": false,
-            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example: `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`. Do not specify a value if you use the `-target` argument under **Advanced** > **Arguments** (below)."
+            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example: `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`."
         },
         {
             "name": "scheme",
