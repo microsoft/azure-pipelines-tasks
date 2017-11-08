@@ -204,8 +204,7 @@ function Publish-UpgradedServiceFabricApplication
 
         ## Check upgrade status
         $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
-        if ($upgradeStatus.UpgradeState -eq "RollingBackInProgress" -or $upgradeStatus.UpgradeState -eq "RollingForwardInProgress" -or $upgradeStatus.UpgradeState -eq "RollingForwardPending")
-        {
+        if ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted"){
             $errMsg = (Get-VstsLocString -Key SFSDK_UpgradeInProgressError -ArgumentList $ApplicationName)
             throw $errMsg
         }
