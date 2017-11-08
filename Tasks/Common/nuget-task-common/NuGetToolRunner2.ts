@@ -98,13 +98,35 @@ export class NuGetToolRunner2 extends ToolRunner {
     public execSync(options?: IExecOptions): IExecSyncResult {
         options = options || <IExecOptions>{};
         options.env = prepareNuGetExeEnvironment(options.env || process.env, this.settings, this.authInfo);
-        return super.execSync(options);
+        let execResult = super.execSync(options);
+        if (execResult.code !== 0) {
+            this._logExecResults(execResult.code, execResult.stderr);
+        }
+        return execResult;
     }
 
     public exec(options?: IExecOptions): Q.Promise<number> {
         options = options || <IExecOptions>{};
         options.env = prepareNuGetExeEnvironment(options.env || process.env, this.settings, this.authInfo);
         return super.exec(options);
+    }
+
+
+    private _logExecResults(exitCode: number, stderr: string){
+        try{
+            console.log("##vso[telemetry.publish area=Packaging;feature=NuGetCommand]%s",
+            JSON.stringify({
+                'SYSTEM_JOBID': tl.getVariable('SYSTEM_JOBID'),
+                'SYSTEM_PLANID': tl.getVariable('SYSTEM_PLANID'),
+                'SYSTEM_COLLECTIONID': tl.getVariable('SYSTEM_COLLECTIONID'),
+                'command': tl.getInput("command"),
+                'arguments': tl.getInput("arguments"),
+                'exitCode': exitCode,
+                'stderr': (stderr) ? stderr.substr(0, 1024) : null
+            }));
+        }catch(err) {
+            tl.debug(`Unable to log telemetry. Err:( ${err} )`);
+        }
     }
 }
 
@@ -152,7 +174,7 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
 
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
-    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
+    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the
     // hosted environment detection logic
     const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider");
     if (credentialProviderOverrideFlag === "true") {
@@ -183,7 +205,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
 
 export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialConfig to "true" to force allowing config-based credential flow, "false"
-    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the 
+    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the
     // hosted environment detection logic
     const credentialConfigOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialConfig");
     if (credentialConfigOverrideFlag === "true") {

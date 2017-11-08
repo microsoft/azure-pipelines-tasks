@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
+import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
@@ -206,8 +207,7 @@ export async function run(nuGetPath: string): Promise<void> {
                     environmentSettings);
 
                 for (const packageFile of filesList) {
-
-                    await publishPackageNuGetAsync(packageFile, publishOptions, authInfo);
+                    publishPackageNuGet(packageFile, publishOptions, authInfo);
                 }
             }
 
@@ -228,7 +228,7 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function publishPackageNuGetAsync(packageFile: string, options: PublishOptions, authInfo: auth.NuGetExtendedAuthInfo): Q.Promise<number> {
+function publishPackageNuGet(packageFile: string, options: PublishOptions, authInfo: auth.NuGetExtendedAuthInfo): IExecSyncResult {
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
     nugetTool.arg("push");
 
@@ -250,7 +250,7 @@ function publishPackageNuGetAsync(packageFile: string, options: PublishOptions, 
         nugetTool.arg(options.verbosity);
     }
 
-    return nugetTool.exec();
+    return nugetTool.execSync();
 }
 
 async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IVstsNuGetPushOptions) {

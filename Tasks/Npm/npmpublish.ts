@@ -32,7 +32,7 @@ export async function run(command?: string): Promise<void> {
     let npm = new NpmToolRunner(workingDir, npmrc, true);
     npm.line('publish');
 
-    await npm.exec();
+    npm.execSync();
 
     tl.rmRF(npmrc);
     tl.rmRF(util.getTempPath());

@@ -1,10 +1,17 @@
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'vsts-task-lib/mock-answer';
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 import * as mtr from 'vsts-task-lib/mock-toolrunner';
 
+
 export class NpmMockHelper extends TaskMockRunner {
+    public static WorkingDir: string = 'C:\\mock\\workingDir'
+    public static NpmDebugLogFile: string = 'npm-debug.log';
+    public static NpmDebugLogKey: string = 'NPM_DEBUG_LOG';
+    public static NpmCacheDir: string = 'C:\\mock\\cache';
+    public static NpmRandomLogFile: string = "someRandomNpm-debug.log";
     private static NpmCmdPath: string = 'c:\\mock\\location\\npm';
     private static NpmCachePath: string = 'c:\\mock\\location\\npm_cache';
     private static AgentBuildDirectory: string = 'c:\\mock\\agent\\work\\build';
@@ -39,12 +46,12 @@ export class NpmMockHelper extends TaskMockRunner {
             'SYSTEMVSSCONNECTION',
             NpmMockHelper.CollectionUrl,
             {
-                parameters: { AccessToken: 'token'},
+                parameters: { AccessToken: 'token' },
                 scheme: 'OAuth'
             }
         );
 
-        this.mockNpmCommand('config get cache', { code: 0, stdout: NpmMockHelper.NpmCachePath} as TaskLibAnswerExecResult);
+        this.mockNpmCommand('config get cache', { code: 0, stdout: NpmMockHelper.NpmCachePath } as TaskLibAnswerExecResult);
         this._mockNpmConfigList();
         this._setToolPath('npm', NpmMockHelper.NpmCmdPath);
         // mock temp npm path
@@ -53,6 +60,8 @@ export class NpmMockHelper extends TaskMockRunner {
         this.answers.rmRF[tempNpmPath] = { success: true };
         const tempNpmrcPath = path.join(tempNpmPath, `${NpmMockHelper.BuildBuildId}.npmrc`);
         this.answers.rmRF[tempNpmrcPath] = { success: true };
+        this._createNpmDebugLogFile(NpmMockHelper.WorkingDir, NpmMockHelper.NpmDebugLogFile);
+        this._createNpmDebugLogFile(NpmMockHelper.NpmCacheDir, NpmMockHelper.NpmRandomLogFile);
     }
 
     public run(noMockTask?: boolean): void {
@@ -79,12 +88,12 @@ export class NpmMockHelper extends TaskMockRunner {
 
     public RegisterLocationServiceMocks() {
         this.registerMock('vso-node-api/WebApi', {
-            getBearerHandler: function(token){
+            getBearerHandler: function (token) {
                 return {};
             },
-            WebApi: function(url, handler){
+            WebApi: function (url, handler) {
                 return {
-                    getCoreApi: function() {
+                    getCoreApi: function () {
                         return {
                             vsoClient: {
                                 getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
@@ -116,11 +125,13 @@ export class NpmMockHelper extends TaskMockRunner {
     private _mockNpmConfigList() {
         this.mockNpmCommand(`config list`, {
             code: 0,
-            stdout: '; cli configs'} as TaskLibAnswerExecResult);
+            stdout: '; cli configs'
+        } as TaskLibAnswerExecResult);
 
         this.mockNpmCommand(`config list -l`, {
             code: 0,
-            stdout: '; debug cli configs'} as TaskLibAnswerExecResult);
+            stdout: '; debug cli configs'
+        } as TaskLibAnswerExecResult);
     }
 
     private _registerMockToolRunner() {
@@ -130,6 +141,30 @@ export class NpmMockHelper extends TaskMockRunner {
 
     private _mockGetFeedRegistryUrl(feedId: string): string {
         return NpmMockHelper.CollectionUrl + '/_packaging/' + feedId + '/npm/registry/';
+    }
+
+    private _createNpmDebugLogFile(dirpath, filename) {
+        fs.stat(dirpath, (err) => {
+            if (err) {
+                fs.mkdir(dirpath, (err) => {
+                    if (err) {
+                        console.log("Unable to create %s. Err: (%s)",
+                        dirpath,
+                            err);
+                        throw err;
+                    }
+                });
+            }
+            fs.writeFile(path.join(dirpath, filename),
+                NpmMockHelper.NpmDebugLogKey, (err) => {
+                    if (err) {
+                        console.log("Unable to create %s. Err: (%s)",
+                            filename,
+                            err);
+                        throw err;
+                    }
+                });
+        });
     }
 }
 

@@ -3,3 +3,4 @@
 /// <reference path="globals/q/index.d.ts" />
 /// <reference path="modules/ini/index.d.ts" />
 /// <reference path="modules/mockery/index.d.ts" />
+/// <reference path="modules/semver/index.d.ts" />
