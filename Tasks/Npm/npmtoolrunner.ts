@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { format, parse, Url } from 'url';
 import * as Q from 'q';
+import semver = require('semver');
 
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
@@ -58,6 +59,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         const execResult = super.execSync(options);
         this._restoreProjectNpmrc();
         if (execResult.code !== 0) {
+            this._logExecResults(execResult.code, execResult.stderr);
             this._printDebugLogSync(this._getDebugLogPath(options));
             throw new Error(tl.loc('NpmFailed', execResult.code));
         }
@@ -160,6 +162,28 @@ export class NpmToolRunner extends tr.ToolRunner {
         if (this.overrideProjectNpmrc) {
             tl.debug(tl.loc('RestoringProjectNpmrc'));
             util.restoreFile(this.projectNpmrc());
+        }
+    }
+
+    private _logExecResults(exitCode: number, stderr: string){
+        try {
+            let agentVersion = tl.getVariable('Agent.Version');
+            if (semver.gte(agentVersion, '2.120.0')) {
+                console.log("##vso[telemetry.publish area=Packaging;feature=Npm]%s",
+                    JSON.stringify({
+                        'SYSTEM_JOBID': tl.getVariable('SYSTEM_JOBID'),
+                        'SYSTEM_PLANID': tl.getVariable('SYSTEM_PLANID'),
+                        'SYSTEM_COLLECTIONID': tl.getVariable('SYSTEM_COLLECTIONID'),
+                        'command': tl.getVariable(NpmTaskInput.Command),
+                        'arguments': tl.getVariable(NpmTaskInput.CustomCommand),
+                        'exitCode': exitCode,
+                        'stderr': (stderr) ? stderr.substr(0, 1024) : null
+                    }));
+            } else {
+                tl.debug(`Agent version of ( ${agentVersion} ) does not meet minimum reqiurements for telemetry`);
+            }
+        } catch (err) {
+            tl.debug(`Unable to log telemetry. Err:( ${err} )`);
         }
     }
 }

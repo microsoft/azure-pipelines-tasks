@@ -1,25 +1,26 @@
 {
-    "name": "nugetcommand",
-    "version": "2.0.14",
-    "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
-    "main": "nugetcommandmain.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Microsoft/vsts-tasks.git"
-    },
-    "author": "Microsoft Corporation",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/Microsoft/vsts-tasks/issues"
-    },
-    "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
-    "dependencies": {
-        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common",
-        "vso-node-api": "6.0.1-preview",
-        "vsts-task-lib": "2.0.6",
-        "xmlreader": "^0.2.3"
-    }
+  "name": "nugetcommand",
+  "version": "2.0.15",
+  "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
+  "main": "nugetcommandmain.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common",
+    "semver": "^5.4.1",
+    "vso-node-api": "6.0.1-preview",
+    "vsts-task-lib": "2.0.6",
+    "xmlreader": "^0.2.3"
+  }
 }

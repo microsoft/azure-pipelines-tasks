@@ -5,6 +5,7 @@ import * as path from "path";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as packUtils from "nuget-task-common/PackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
 class PackOptions implements INuGetCommandOptions {
     constructor(
@@ -37,7 +38,7 @@ export async function run(nuGetPath: string): Promise<void> {
     let createSymbolsPackage = tl.getBoolInput("includeSymbols");
     let outputDir = undefined;
 
-    try 
+    try
     {
         // If outputDir is not provided then the root working directory is set by default.
         // By requiring it, it will throw an error if it is not provided and we can set it to undefined.
@@ -98,7 +99,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 {
                     tl.warning(tl.loc("Warning_MoreThanOneVersionInBuildNumber"))
                 }
-                
+
                 version = versionMatches[0];
                 break;
         }
@@ -155,7 +156,7 @@ export async function run(nuGetPath: string): Promise<void> {
             environmentSettings);
 
         for (const file of filesList) {
-            await packAsync(file, packOptions);
+            pack(file, packOptions);
         }
     } catch (err) {
         tl.error(err);
@@ -163,7 +164,7 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function packAsync(file: string, options: PackOptions): Q.Promise<number> {
+function pack(file: string, options: PackOptions): IExecSyncResult {
     console.log(tl.loc("Info_AttemptingToPackFile") + file);
 
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, undefined);
@@ -198,5 +199,5 @@ function packAsync(file: string, options: PackOptions): Q.Promise<number> {
         nugetTool.arg(options.verbosity);
     }
 
-    return nugetTool.exec();
+    return nugetTool.execSync();
 }

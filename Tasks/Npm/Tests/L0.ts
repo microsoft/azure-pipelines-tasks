@@ -31,7 +31,7 @@ describe('Npm Task', function () {
     // npm failure dumps log
     it('npm failure dumps debug log from npm cache', (done: MochaDone) => {
         this.timeout(1000);
-        const debugLog = 'NPM_DEBUG_LOG';
+        const debugLog = NpmMockHelper.NpmDebugLogKey;
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir.js');
         let tr = new ttm.MockTestRunner(tp);
@@ -46,7 +46,7 @@ describe('Npm Task', function () {
 
     it('npm failure dumps debug log from working directory', (done: MochaDone) => {
         this.timeout(1000);
-        const debugLog = 'NPM_DEBUG_LOG';
+        const debugLog = NpmMockHelper.NpmDebugLogKey;
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-workingDir.js');
         let tr = new ttm.MockTestRunner(tp);

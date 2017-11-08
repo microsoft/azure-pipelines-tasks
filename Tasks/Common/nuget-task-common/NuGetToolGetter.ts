@@ -22,14 +22,19 @@ enum NuGetReleaseStage
 
 const NUGET_TOOL_NAME: string = 'NuGet';
 const NUGET_EXE_FILENAME: string = 'nuget.exe';
-const NUGET_VERSION_4_0_0: string = '4.0.0';
 
+export const FORCE_NUGET_4_0_0: string  = 'FORCE_NUGET_4_0_0';
+export const NUGET_VERSION_4_0_0: string = '4.0.0';
+export const NUGET_VERSION_4_0_0_PATH_SUFFIX: string = 'NuGet/4.0.0/';
+export const NUGET_EXE_TOOL_PATH_ENV_VARR: string = 'NuGetExeToolPath';
+export const DEFAULT_NUGET_VERSION: string = '4.1.0';
+export const DEFAULT_NUGET_PATH_SUFFIX: string = 'NuGet/4.1.0/';
 export const NUGET_EXE_TOOL_PATH_ENV_VAR: string = 'NuGetExeToolPath';
 
 export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNuGetToPath?: boolean): Promise<string> {
     if (toolLib.isExplicitVersion(versionSpec)) {
         // Check latest doesn't make sense when explicit version
-        checkLatest = false; 
+        checkLatest = false;
         taskLib.debug('Exact match expected on version: ' + versionSpec);
     }
     else {
@@ -65,7 +70,7 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
 
         if (!versionInfo.url)
         {
-            taskLib.error(taskLib.loc("Error_NoUrlWasFoundWhichMatches", version)); 
+            taskLib.error(taskLib.loc("Error_NoUrlWasFoundWhichMatches", version));
             throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", NUGET_TOOL_NAME));
         }
 
@@ -94,12 +99,20 @@ export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNu
     return fullNuGetPath;
 }
 
-export async function cacheBundledNuGet_4_0_0() {
-    if (!toolLib.findLocalTool(NUGET_TOOL_NAME, NUGET_VERSION_4_0_0)) {   
-        taskLib.debug('Placing bundled NuGet.exe 4.0.0 in tool lib cache');
-        
-        let bundledNuGet4Location: string = getBundledNuGet_4_0_0_Location();
-        toolLib.cacheFile(bundledNuGet4Location, NUGET_EXE_FILENAME, NUGET_TOOL_NAME, NUGET_VERSION_4_0_0);
+export async function cacheBundledNuGet() {
+    let cachedVersionToUse = DEFAULT_NUGET_VERSION;
+    let nugetPathSuffix = DEFAULT_NUGET_PATH_SUFFIX;
+    if (taskLib.getVariable(FORCE_NUGET_4_0_0) &&
+        taskLib.getVariable(FORCE_NUGET_4_0_0).toLowerCase() === "true"){
+        cachedVersionToUse = DEFAULT_NUGET_VERSION;
+        nugetPathSuffix = NUGET_VERSION_4_0_0_PATH_SUFFIX;
+    }
+
+    if (!toolLib.findLocalTool(NUGET_TOOL_NAME, cachedVersionToUse)) {
+        taskLib.debug(`Placing bundled NuGet.exe ${cachedVersionToUse} in tool lib cache`);
+
+        let bundledNuGet4Location: string = getBundledNuGet_Location([nugetPathSuffix]);
+        toolLib.cacheFile(bundledNuGet4Location, NUGET_EXE_FILENAME, NUGET_TOOL_NAME, cachedVersionToUse);
     }
 }
 
@@ -115,10 +128,10 @@ function GetRestClientOptions(): restm.IRequestOptions
 
 async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVersionInfo> {
     taskLib.debug('Querying versions list');
-        
+
     let versionsUrl = 'https://dist.nuget.org/tools.json';
     let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller');
-    
+
     let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(versionsUrl, GetRestClientOptions())).result;
     // x.stage is the string representation of the enum, NuGetReleaseStage.Value = number, NuGetReleaseStage[NuGetReleaseStage.Value] = string, NuGetReleaseStage[x.stage] = number
     let releasedVersions: INuGetVersionInfo[] = nugetVersions.filter(x => x.stage.toString() !== NuGetReleaseStage[NuGetReleaseStage.EarlyAccessPreview]);
@@ -127,7 +140,7 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     let version: string = toolLib.evaluateVersions(versionStringsFromDist, versionSpec);
     if (!version)
     {
-        taskLib.error(taskLib.loc("Error_NoVersionWasFoundWhichMatches", versionSpec)); 
+        taskLib.error(taskLib.loc("Error_NoVersionWasFoundWhichMatches", versionSpec));
         taskLib.error(taskLib.loc("Info_AvailableVersions", releasedVersions.map(x => x.version).join("; ")));
         throw new Error(taskLib.loc("Error_NuGetToolInstallerFailer", NUGET_TOOL_NAME));
     }
@@ -137,9 +150,7 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
 
 
 
-function getBundledNuGet_4_0_0_Location(): string {
-    const nugetPaths: string[] = ['NuGet/4.0.0/'];
-
+function getBundledNuGet_Location(nugetPaths: string[]): string {
     let taskNodeModulesPath: string = path.dirname(__dirname);
     let taskRootPath: string = path.dirname(taskNodeModulesPath);
     const toolPath = commandHelper.locateTool("NuGet",

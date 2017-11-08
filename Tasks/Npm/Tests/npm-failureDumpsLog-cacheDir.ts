@@ -11,15 +11,15 @@ let tmr = new NpmMockHelper(taskPath);
 
 tmr.setInput(NpmTaskInput.Command, NpmCommand.Custom);
 tmr.setInput(NpmTaskInput.CustomCommand, 'custom');
-tmr.setInput(NpmTaskInput.WorkingDir, 'C:\\mock\\cache');
+tmr.setInput(NpmTaskInput.WorkingDir, NpmMockHelper.NpmCacheDir);
 tmr.mockNpmCommand('custom', {
     code: -1,
     stdout: 'some npm failure'
 } as TaskLibAnswerExecResult);
-tmr.answers.exist['C:\\mock\\cache\\npm-debug.log'] = false;
+tmr.answers.exist[path.join(NpmMockHelper.WorkingDir, NpmMockHelper.NpmDebugLogFile)] = false;
 tmr.answers["stats"] = {"C:\\mock\\cache": {"isDirectory":true}};
 tmr.answers.findMatch['*-debug.log'] = [
-    'C:\\mock\cache\\_logs\\someRandomNpm-debug.log'
+    path.join(NpmMockHelper.NpmCacheDir, NpmMockHelper.NpmRandomLogFile)
 ];
 let mockFs = require('fs');
 tmr.registerMock('fs', mockFs);
