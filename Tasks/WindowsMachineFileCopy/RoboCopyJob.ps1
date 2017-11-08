@@ -197,15 +197,13 @@ param (
 
     try
     {
-        if($isFileCopy -and $doCleanUp -and (Test-Path -path $destinationNetworkPath -pathtype container))
+        if($doCleanUp -and (Test-Path -path $destinationNetworkPath -pathtype container))
         {
-            Get-ChildItem -Path $destinationNetworkPath -Recurse -force | Remove-Item -force -recurse;
-            $output = Remove-Item -path $destinationNetworkPath -force -recurse 2>&1
-            $err = $output | ?{$_.gettype().Name -eq "ErrorRecord"}
-            if($err)
-            {
-                Write-Verbose -Verbose "Error occurred while deleting the destination folder: $err"
-            }
+            $cleanupArgument = "/NOCOPY /PURGE" 
+            $guid = [GUID]::NewGuid()
+            $tempDirectory = "$destinationNetworkPath\temp$guid" 
+            New-Item -ItemType Directory -Force -Path $tempDirectory         
+            Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
         }
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
