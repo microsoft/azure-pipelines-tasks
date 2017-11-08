@@ -161,6 +161,11 @@
        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
     }
 
+    if($ApplicationName -eq '')
+    {
+        Write-Error (Get-VstsLocString -Key InvalidApplicationName -ArgumentList $ApplicationName)
+    }
+
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
     {
