@@ -158,7 +158,7 @@
             "label": "Team ID",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "(Optional) Enter the 10-digit team ID from the Apple Developer Portal to use during export.",
+            "helpMarkDown": "(Optional) Enter the 10-character team ID from the Apple Developer Portal to use during export.",
             "groupName": "package",
             "visibleRule": "exportOptions == specify"
         },
@@ -221,7 +221,7 @@
             "label": "Team ID",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "(Optional, unless you are a member of multiple development teams.) Specify the 10-digit development team ID.",
+            "helpMarkDown": "(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.",
             "groupName": "sign",
             "visibleRule": "signStyle = auto"
         },
