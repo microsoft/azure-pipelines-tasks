@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "vstest"
@@ -484,7 +484,7 @@
         "testRunIdInput": "Test run Id : '%s'",
         "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
         "noTestSourcesFound": "No test sources found matching the given filter '%s'",
-        "DontShowWERUIDisabledWarning": "Windows Error Reporting DontShowUI not set, if the windows error dialog pops-up in the middle of UI test execution than the test will hang",
+        "DontShowWERUIDisabledWarning": "In the LocalMachine(HKLM) registry, Windows Error Reporting related property 'DontShowUI' is set to 0. If the windows error dialog pops-up in the middle of UI test execution due to any crash then the test will hang. Either remove the property 'DontShowUI' under 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting' or set it to 1.",
         "noVstestConsole": "Tests will not be executed with vstest console. Install Visual Studio 2017 RC or above to run tests via vstest console.",
         "numberOfTestCasesPerSlice": "Number of test cases per batch : %s",
         "invalidTestBatchSize": "Invalid batch size provided: %s",
