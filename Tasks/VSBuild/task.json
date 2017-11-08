@@ -64,7 +64,8 @@
             "label": "Platform",
             "helpMarkDown": "Specify the platform you want to build such as Win32, x86, x64 or any cpu.",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Specify the platform you want to build. Examples: Win32, x86, x64 or Any CPU"
         },
         {
             "name": "configuration",
@@ -72,7 +73,8 @@
             "label": "Configuration",
             "helpMarkDown": "Specify the configuration you want to build such as debug or release.",
             "defaultValue": "",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Specify the configuration you want to build. Examples: Debug or Release"
         },
         {
             "name": "clean",
@@ -80,7 +82,8 @@
             "label": "Clean",
             "helpMarkDown": "Set to False if you want to make this an incremental build.",
             "defaultValue": "false",
-            "required": false
+            "required": false,
+            "helpMarkDown": "Uncheck if you want to make this an incremental build. Check to make this a full build. Incremental builds might reduce your build time, especially if your codebase is large. The unchecked option has no practical effect unless you also set Clean repository in the Get Sources task to false."
         },
         {
             "name": "maximumCpuCount",
