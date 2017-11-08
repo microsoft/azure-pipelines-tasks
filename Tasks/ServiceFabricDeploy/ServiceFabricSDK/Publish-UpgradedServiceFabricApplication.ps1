@@ -345,6 +345,8 @@ function Publish-UpgradedServiceFabricApplication
             }
         }
 
+        $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+
         if($upgradeStatus.UpgradeState -eq "RollingForwardCompleted")
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UpgradeSuccess)
