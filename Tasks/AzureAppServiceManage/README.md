@@ -6,7 +6,7 @@ The Azure App Service Management task is used to Start/Stop/Restart App Service,
 
 ## Contact Information
 
-Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
 
 ## Pre-requisites for the task
 
