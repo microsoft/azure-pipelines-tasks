@@ -73,7 +73,7 @@
             "type": "string",
             "label": "Scheme",
             "required": false,
-            "helpMarkDown": "(Optional, unless you specify a **Workspace Path** above.) Enter the scheme name defined in Xcode. It must be a shared scheme, with its **Shared** checkbox enabled under **Managed Schemes** in Xcode."
+            "helpMarkDown": "(Optional, unless you specify a **Workspace or project path** above.) Enter the scheme name defined in Xcode. It must be a shared scheme, with its **Shared** checkbox enabled under **Managed Schemes** in Xcode."
         },
         {
             "name": "xcodeVersion",
@@ -104,7 +104,7 @@
             "label": "Create app package",
             "defaultValue": false,
             "required": true,
-            "helpMarkDown": "Indicate whether an IPA app package file should be generated as a part of the build. Review additional controls in the **Package options** section (below).",
+            "helpMarkDown": "Indicate whether an IPA app package file should be generated as a part of the build.",
             "groupName": "package"
         },
         {
@@ -267,7 +267,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "If xcpretty is enabled (above), specify whether to publish JUnit test results to VSTS/TFS."
+            "helpMarkDown": "If xcpretty is enabled above, specify whether to publish JUnit test results to VSTS/TFS."
         }
     ],
     "execution": {
