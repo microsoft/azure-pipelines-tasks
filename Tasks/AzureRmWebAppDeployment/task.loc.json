@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 27
+    "Patch": 28
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -685,6 +685,9 @@
     "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
     "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
-    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
+    "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
   }
 }
