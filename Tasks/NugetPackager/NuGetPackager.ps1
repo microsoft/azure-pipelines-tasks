@@ -10,7 +10,8 @@ param(
     [string]$configurationToPack,
     [string]$buildProperties,
     [string]$nuGetAdditionalArgs,
-    [string]$nuGetPath
+    [string]$nuGetPath,
+    [string]$basePath
 )
 
 Write-Verbose "Entering script $MyInvocation.MyCommand.Name"
@@ -224,6 +225,12 @@ try
         {
             $argsPack = ($argsPack + " -version $NewVersion")
         }
+        
+        if($basePath)
+        {
+            $argsPack = ($argsPack + " -BasePath `"$basePath`"");
+        }
+        
         if($nuGetAdditionalArgs)
         {
             $argsPack = ($argsPack + " " + $nuGetAdditionalArgs);
