@@ -66,7 +66,7 @@
   ],
   "outputVariables": [
     {
-      "name": "provProfileUuid",
+      "name": "provisioningProfileUuid",
       "description": "The resolved UUID for the selected provisioning profile."
     }
   ],
