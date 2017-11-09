@@ -242,6 +242,14 @@ export class DistributedTest {
             tl.debug(error);
         }
 
+        if (utils.Helper.pathExistsAsFile(settingsFile)) {
+            tl.debug('Final runsettings file being used:');
+            utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
+                tl.debug('Running VsTest with settings : ');
+                utils.Helper.printMultiLineLog(settings, (logLine) => { console.log('##vso[task.debug]' + logLine); });
+            });
+        }
+
         utils.Helper.addToProcessEnvVars(envVars, 'testcasefilter', this.dtaTestConfig.testcaseFilter);
         utils.Helper.addToProcessEnvVars(envVars, 'runsettings', settingsFile);
         utils.Helper.addToProcessEnvVars(envVars, 'testdroplocation', this.dtaTestConfig.testDropLocation);
@@ -300,6 +308,7 @@ export class DistributedTest {
             }
         }
     }
+
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
     private testSourcesFile: string;
