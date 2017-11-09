@@ -69,7 +69,6 @@
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
-        "PublishSymbols",
         "PublishTestResults",
         "PublishToAzureServiceBus",
         "PyPIPublisher",
