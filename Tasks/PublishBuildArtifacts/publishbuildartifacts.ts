@@ -52,14 +52,14 @@ async function run() {
         let artifactName: string = tl.getInput('ArtifactName', true);
         let artifactType: string = tl.getInput('ArtifactType', true);
 
-       
+
         let hostType = tl.getVariable('system.hostType');
         if ((hostType && hostType.toUpperCase() != 'BUILD') && (artifactType.toUpperCase() !== "FILEPATH")) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
             return;
         }
 
-        
+
         artifactType = artifactType.toLowerCase();
         let data = {
             artifacttype: artifactType,
@@ -96,6 +96,11 @@ async function run() {
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
                 let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
+                if (tl.stats(pathtoPublish).isFile()) {
+                    let parentFolder = path.dirname(pathtoPublish);
+                    let file = path.basename(pathtoPublish);
+                    command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -File '${file}'`
+                }
 
                 let powershell = new tr.ToolRunner('powershell.exe');
                 powershell.arg('-NoLogo');
