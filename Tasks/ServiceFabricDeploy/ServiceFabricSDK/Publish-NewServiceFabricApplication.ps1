@@ -163,7 +163,7 @@
 
     if(!$ApplicationName)
     {
-        Write-Error (Get-VstsLocString -Key InvalidApplicationName -ArgumentList $ApplicationName)
+        Write-Error (Get-VstsLocString -Key EmptyApplicationName)
     }
 
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
