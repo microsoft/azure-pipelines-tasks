@@ -208,22 +208,19 @@ async function logWarningForWER(runUITests: boolean) {
     }
 
     const regPathHKLM = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
-    const regPathHKCU = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+    const toShowDontShowUIWarning = await showDontShowUIWarning(regPathHKLM);
 
-    const isEnabledInHKCU = await isDontShowUIRegKeySet(regPathHKCU);
-    const isEnabledInHKLM = await isDontShowUIRegKeySet(regPathHKLM);
-
-    if (!isEnabledInHKCU && !isEnabledInHKLM) {
+    if (toShowDontShowUIWarning) {
         tl.warning(tl.loc('DontShowWERUIDisabledWarning'));
     }
 }
 
-function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
+function showDontShowUIWarning(regPath: string): Q.Promise<boolean> {
     const defer = Q.defer<boolean>();
     const regValue = 'DontShowUI';
     regedit.list(regPath).on('data', (entry) => {
         if (entry && entry.data && entry.data.values &&
-            entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
+            entry.data.values[regValue] && (entry.data.values[regValue].value === 0)) {
             defer.resolve(true);
         }
         defer.resolve(false);
