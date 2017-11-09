@@ -345,7 +345,7 @@ function Publish-UpgradedServiceFabricApplication
             }
         }
 
-        $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+        $upgradeStatus = & $upgradeStatusFetcher
 
         if($upgradeStatus.UpgradeState -eq "RollingForwardCompleted")
         {
