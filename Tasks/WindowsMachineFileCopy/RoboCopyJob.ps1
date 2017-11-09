@@ -114,21 +114,14 @@ param (
 
     function Get-RoboCopyParameters(
         [string]$additionalArguments,
-        [switch]$fileCopy,
-        [switch]$clean)
+        [switch]$fileCopy
+        )
     {
         $robocopyParameters = "/COPY:DAT"
 
         if(-not $fileCopy.IsPresent)
         {
-            if($clean.IsPresent)
-            {
-                $robocopyParameters += " /MIR"
-            }
-            else
-            {
-                $robocopyParameters += " /E"
-            }
+            $robocopyParameters += " /E"
         }       
         
         if (-not [string]::IsNullOrWhiteSpace($additionalArguments))
@@ -197,16 +190,17 @@ param (
 
     try
     {
-        if($doCleanUp -and (Test-Path -path $destinationNetworkPath -pathtype container))
+        if($doCleanUp)
         {
             $cleanupArgument = "/NOCOPY /PURGE" 
             $guid = [GUID]::NewGuid()
-            $tempDirectory = "$destinationNetworkPath\temp$guid" 
+            $tempDirectory = "$scriptRoot\temp$guid" 
             New-Item -ItemType Directory -Force -Path $tempDirectory         
             Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+            Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
         }
 
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
+        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
         $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
         Invoke-Expression $command        
