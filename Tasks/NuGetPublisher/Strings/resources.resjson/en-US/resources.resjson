@@ -12,7 +12,7 @@
   "loc.input.label.feedName": "Internal Feed URL",
   "loc.input.help.feedName": "The URL of a NuGet feed hosted in this account.",
   "loc.input.label.nuGetAdditionalArgs": "NuGet Arguments",
-  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe push. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-push-command).",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe push. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-push).",
   "loc.input.label.verbosity": "Verbosity",
   "loc.input.help.verbosity": "NuGet's verbosity level",
   "loc.input.label.nuGetVersion": "NuGet Version",
