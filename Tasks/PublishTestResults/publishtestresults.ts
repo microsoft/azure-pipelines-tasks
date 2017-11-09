@@ -1,10 +1,6 @@
-import * as featuremanagementapim from 'vso-node-api/FeatureManagementApi';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import * as webapim from 'vso-node-api/WebApi';
+import * as path from 'path';
 
 const testRunner = tl.getInput('testRunner', true);
 const testResultsFiles: string[] = tl.getDelimitedInput('testResultsFiles', '\n', true);
@@ -32,11 +28,10 @@ if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
     tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
 }
 else {
-    tl.debug('OS type: ' + tl.osType());    
-    
-    var PublishTaskFF = tl.getVariable('PublishTaskFF');
+    tl.debug('OS type: ' + tl.osType());
+
     // For windows platform, publish results using TestResultsPublisher.exe
-    if (tl.osType() === 'Windows_NT' && PublishTaskFF === "true") {
+    if (tl.osType() === 'Windows_NT') {
         publishResultsThroughExe();
     }
     else {
@@ -54,8 +49,7 @@ function publishResultsThroughExe(): void {
     let envVars: { [key: string]: string; } = getEnvironmentVariables();
     let args: string[] = getArguments();
     testResultsPublisherTool.arg(args);
-
-    testResultsPublisherTool.execSync(<tr.IExecSyncOptions>{ env: envVars }).stdout;
+    let TestResultsPublisherExecutionResult = testResultsPublisherTool.execSync(<tr.IExecSyncOptions>{ env: envVars }).stdout;
 }
 
 function getTestResultsPublisherLocation(): string {
@@ -63,66 +57,39 @@ function getTestResultsPublisherLocation(): string {
 }
 
 function getArguments(): string[] {
-    let responseFilePath = createResponseFile();
-    // Adding '@' because this is a response file argument
-    let args = ['@' + responseFilePath];
-    return args;
-
-}
-
-function createResponseFile(): string {
-    let responseFilePath: string = path.join(__dirname, 'tempResponseFile.txt');
-
-    // Adding quotes around matching file names
-    matchingTestResultsFiles.forEach(function (matchingFileName, i) {
-        matchingTestResultsFiles[i] = modifyMatchingFileName(matchingFileName);
-    });
-
-    // Preparing File content
-    let fileContent: string = os.EOL + matchingTestResultsFiles.join(os.EOL);
-
-    // Writing matching file names in the response file
-    fs.writeFileSync(responseFilePath, fileContent);
-
-    return responseFilePath;
-}
-
-function modifyMatchingFileName(matchingFileName: string): string {
-    // We need to add quotes around the file name because the file name can contain spaces.
-    // The quotes will be handled by response file reader.
-    return '\"' + matchingFileName + '\"';
+    return matchingTestResultsFiles;
 }
 
 function getEnvironmentVariables(): { [key: string]: string; } {
     let envVars: { [key: string]: string; } = {};
 
-    addToProcessEnvVars(envVars, 'collectionurl', tl.getVariable('System.TeamFoundationCollectionUri'));
-    addToProcessEnvVars(envVars, 'accesstoken', tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
+    addToProcessEnvVars(envVars, 'collectionUrl', tl.getVariable('System.TeamFoundationCollectionUri'));
+    addToProcessEnvVars(envVars, 'accessToken', tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
 
-    addToProcessEnvVars(envVars, 'testrunner', testRunner);
-    addToProcessEnvVars(envVars, 'mergeresults', mergeResults);
+    addToProcessEnvVars(envVars, 'testRunner', testRunner);
+    addToProcessEnvVars(envVars, 'mergeResults', mergeResults);
     addToProcessEnvVars(envVars, 'platform', platform);
     addToProcessEnvVars(envVars, 'config', config);
-    addToProcessEnvVars(envVars, 'publishrunattachments', publishRunAttachments);
-    addToProcessEnvVars(envVars, 'testruntitle', testRunTitle);
-    addToProcessEnvVars(envVars, 'publishrunattachments', publishRunAttachments);
-    addToProcessEnvVars(envVars, 'projectname', tl.getVariable('System.TeamProject'));
+    addToProcessEnvVars(envVars, 'publishRunAttachments', publishRunAttachments);
+    addToProcessEnvVars(envVars, 'testRunTitle', testRunTitle);
+    addToProcessEnvVars(envVars, 'publishRunAttachments', publishRunAttachments);
+    addToProcessEnvVars(envVars, 'projectName', tl.getVariable('System.TeamProject'));
     addToProcessEnvVars(envVars, 'owner', tl.getVariable('Build.RequestedFor'));
-    addToProcessEnvVars(envVars, 'buildid', tl.getVariable('Build.BuildId'));
-    addToProcessEnvVars(envVars, 'builduri', tl.getVariable('Build.BuildUri'));
-    addToProcessEnvVars(envVars, 'releaseuri', tl.getVariable('Release.ReleaseUri'));
-    addToProcessEnvVars(envVars, 'releaseenvironmenturi', tl.getVariable('Release.ReleaseEnvironmentUri'));
+    addToProcessEnvVars(envVars, 'buildId', tl.getVariable('Build.BuildId'));
+    addToProcessEnvVars(envVars, 'buildUri', tl.getVariable('Build.BuildUri'));
+    addToProcessEnvVars(envVars, 'releaseUri', tl.getVariable('Release.ReleaseUri'));
+    addToProcessEnvVars(envVars, 'releaseEnvironmentUri', tl.getVariable('Release.ReleaseEnvironmentUri'));
 
     return envVars;
 }
 
 function addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string): void {
-    if (!isNullEmptyOrUndefined(value)) {
+    if (!isNullEmptyOrUndefinedddd(value)) {
         envVars[name] = value;
     }
 }
 
-function isNullEmptyOrUndefined(obj): boolean {
+function isNullEmptyOrUndefinedddd(obj): boolean {
     return obj === null || obj === '' || obj === undefined;
 }
 
