@@ -171,6 +171,11 @@ function Publish-UpgradedServiceFabricApplication
        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
     }
 
+    if(!$ApplicationName)
+    {
+        Write-Error (Get-VstsLocString -Key EmptyApplicationName -ArgumentList $ApplicationName)
+    }    
+
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
     {
