@@ -162,7 +162,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     if (isDebugEnabled()) {
-        if (vstestConfig.vsTestVersionDetails != null && (vstestConfig.vsTestVersionDetails.vstestDiagSupported() 
+        if (vstestConfig.vsTestVersionDetails !== null && (vstestConfig.vsTestVersionDetails.vstestDiagSupported() 
             || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {

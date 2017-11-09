@@ -256,7 +256,11 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'testsuites', this.dtaTestConfig.testSuites.join(','));
         }
         utils.Helper.setEnvironmentVariableToString(envVars, 'ignoretestfailures', this.dtaTestConfig.ignoreTestFailures);
-        //TODO: utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
+        
+        if(!utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
+        }
+
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
         

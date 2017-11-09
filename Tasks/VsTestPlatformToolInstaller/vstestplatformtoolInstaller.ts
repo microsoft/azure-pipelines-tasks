@@ -11,7 +11,7 @@ let packageName = 'Microsoft.TestPlatform';
 let packageSource = 'https://api.nuget.org/v3/index.json'
 
 async function startInstaller() {
-    if (osPlat != 'win32') {
+    if (osPlat !== 'win32') {
         throw new Error(tl.loc('OnlyWindowsOsSupported'));
     }
 
@@ -44,15 +44,15 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
         console.log(tl.loc('LookingForLatestStableVersion'));
         includePreRelease = false;
     } 
-    else if(versionSelectorInput == 'latestPreRelease') {
+    else if(versionSelectorInput === 'latestPreRelease') {
         console.log(tl.loc('LookingForLatestPreReleaseVersion'));
         includePreRelease = true;
     }
 
-    if(versionSelectorInput.toLowerCase() != 'specificversion' || !testPlatformVersion) {
+    if(versionSelectorInput.toLowerCase() !== 'specificversion' || !testPlatformVersion) {
         try {
             testPlatformVersion = getLatestPackageVersionNumber(includePreRelease);
-            if(testPlatformVersion == null) {
+            if(testPlatformVersion === null) {
                 tl.warning(tl.loc('RequiredVersionNotListed'));
                 tl.debug('Looking for latest available version in cache.');
                 testPlatformVersion = 'x';
@@ -72,8 +72,8 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
 
-    if ((!toolPath || toolPath == 'undefined')) {
-        if(testPlatformVersion && testPlatformVersion != 'x') {
+    if ((!toolPath || toolPath === 'undefined')) {
+        if(testPlatformVersion && testPlatformVersion !== 'x') {
             tl.debug(`Could not find ${packageName}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
             if (toolLib.isExplicitVersion(testPlatformVersion)) {
                 // Download the required version and cache it
@@ -84,7 +84,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
                     tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
                     testPlatformVersion = 'x';
                     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
-                    if(!toolPath || toolPath == 'undefined') {
+                    if(!toolPath || toolPath === 'undefined') {
                         // No version found in cache, fail the task
                         tl.warning(tl.loc('NoPackageFoundInCache'));
                         throw new Error(tl.loc('FailedToAcquireTestPlatform'));
@@ -109,7 +109,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
 function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
 
-    if(includePreRelease == true) {
+    if(includePreRelease === true) {
         nugetTool.line('list ' + packageName + ' -PreRelease' + ' -Source ' + packageSource);
     }
     else {
@@ -124,7 +124,7 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
 
     // nuget returns latest vesions of all packages that match the given name, we need to filter out the exact package we need from this list
     listOfPackages.forEach(nugetPackage => {
-        if(nugetPackage.split(' ')[0] == packageName) {
+        if(nugetPackage.split(' ')[0] === packageName) {
             version = nugetPackage.split(' ')[1];
             return;
         }
