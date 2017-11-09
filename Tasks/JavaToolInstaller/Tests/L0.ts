@@ -7,7 +7,7 @@ import fs = require('fs');
 import * as ttm from 'vsts-task-lib/mock-test';
 
 describe('JavaToolInstaller L0 Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     it('should fail when JavaToolInstaller is run with no azure server endpoint', (done) => {
         const testPath: string = path.join(__dirname, 'L0FailsIfNoAzureEndpointSet.js');
