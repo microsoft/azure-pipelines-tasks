@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
+    "Minor": 13,
     "Patch": 0
   },
   "preview": true,
@@ -31,7 +31,6 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSelector",
       "options": {
-        "latestStable": "Latest Stable",
         "latestPreRelease": "Latest Pre-Release",
         "specificVersion": "Specific Version"
       }
@@ -56,10 +55,12 @@
     "ProvideExplicitVersion": "ms-resource:loc.messages.ProvideExplicitVersion",
     "NoPackageFoundInCache": "ms-resource:loc.messages.NoPackageFoundInCache",
     "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported",
-    "FailedToListAvailableVersions": "ms-resource:loc.messages.FailedToListAvailableVersions",
+    "RequiredVersionNotListed": "ms-resource:loc.messages.RequiredVersionNotListed",
     "FailedToListAvailablePackagesFromNuget": "ms-resource:loc.messages.FailedToListAvailablePackagesFromNuget",
     "FailedToAcquireTestPlatform": "ms-resource:loc.messages.FailedToAcquireTestPlatform",
     "InstallationSuccessful": "ms-resource:loc.messages.InstallationSuccessful",
-    "TestPlatformDownloadFailed": "ms-resource:loc.messages.TestPlatformDownloadFailed"
+    "TestPlatformDownloadFailed": "ms-resource:loc.messages.TestPlatformDownloadFailed",
+    "LookingForLatestStableVersion": "ms-resource:loc.messages.LookingForLatestStableVersion",
+    "LookingForLatestPreReleaseVersion": "ms-resource:loc.messages.LookingForLatestPreReleaseVersion"
   }
 }

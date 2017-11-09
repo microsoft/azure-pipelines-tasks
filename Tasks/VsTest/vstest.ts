@@ -143,7 +143,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     if (vstestConfig.codeCoverageEnabled) {
-        if(!(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)) {
+        if(!utils.Helper.isToolsInstallerFlow(vstestConfig)) {
             argsArray.push('/EnableCodeCoverage');
         }
     }
@@ -162,7 +162,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     if (isDebugEnabled()) {
-        if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.vstestDiagSupported()) {
+        if (vstestConfig.vsTestVersionDetails != null && (vstestConfig.vsTestVersionDetails.vstestDiagSupported() 
+            || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
@@ -237,7 +238,7 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         errStream: new outStream.StringErrorWritable({ decodeStrings: false })
     };
 
-    if(vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse)
+    if(utils.Helper.isToolsInstallerFlow(vstestConfig))
     execOptions.env = {
         'COR_PROFILER_PATH_32': vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation,
         'COR_PROFILER_PATH_64': vstestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation
@@ -505,10 +506,12 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
     try {
         const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
         if (disableTIA !== undefined && disableTIA.toLowerCase() === 'true') {
+            tl.debug('Disabling tia.');
             tiaConfig.tiaEnabled = false;
         }
 
-        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null || !vstestConfig.vsTestVersionDetails.isTestImpactSupported())) {
+        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null
+             || (!vstestConfig.vsTestVersionDetails.isTestImpactSupported() && !(utils.Helper.isToolsInstallerFlow(vstestConfig))))) {
             tl.warning(tl.loc('VstestTIANotSupported'));
             tiaConfig.tiaEnabled = false;
         }
@@ -537,7 +540,8 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
     }
 
     try {
-        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false, vstestConfig.codeCoverageEnabled && vstestConfig.toolsInstallerConfig && vstestConfig.toolsInstallerConfig.isToolsInstallerInUse);
+        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig,
+             vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false, vstestConfig.codeCoverageEnabled && utils.Helper.isToolsInstallerFlow(vstestConfig));
         return vsTestCall(newSettingsFile, vsVersion);
     }
     catch (err) {
