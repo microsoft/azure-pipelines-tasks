@@ -56,6 +56,11 @@ async function run() {
 
         // set the keychain output variable.
         tl.setVariable('keychainPath', keychainPath);
+
+        // Set the legacy variables that doesn't use the task's refName, unlike our output variables.
+        // If there are multiple InstallAppleCertificate tasks, the last one wins.
+        tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', p12CN);
+        tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
