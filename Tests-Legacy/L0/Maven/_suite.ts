@@ -265,7 +265,7 @@ function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: s
 }
 
 describe('Maven Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         Q.longStackSupport = true;
