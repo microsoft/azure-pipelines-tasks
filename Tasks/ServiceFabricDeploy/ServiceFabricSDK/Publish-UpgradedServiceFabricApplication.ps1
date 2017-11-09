@@ -209,8 +209,6 @@ function Publish-UpgradedServiceFabricApplication
             $errMsg = (Get-VstsLocString -Key SFSDK_UpgradeInProgressError -ArgumentList $ApplicationName)
             throw $errMsg
         }
-        $upgradeStatus = "##########"
-        Write-Host $upgradeStatus
 
         $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
