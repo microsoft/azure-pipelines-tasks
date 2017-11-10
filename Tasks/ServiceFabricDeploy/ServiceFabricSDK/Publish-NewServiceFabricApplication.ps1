@@ -161,6 +161,11 @@
        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
     }
 
+    if(!$ApplicationName)
+    {
+        Write-Error (Get-VstsLocString -Key EmptyApplicationName)
+    }
+
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
     {

@@ -386,6 +386,7 @@
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
     "FoundPath": "ms-resource:loc.messages.FoundPath",
     "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
+    "EmptyApplicationName": "ms-resource:loc.messages.EmptyApplicationName",
     "ServiceEndpointUpgradeWarning": "ms-resource:loc.messages.ServiceEndpointUpgradeWarning",
     "OverrideApplicationParameterFile": "ms-resource:loc.messages.OverrideApplicationParameterFile",
     "OverrideUpgradeSettings": "ms-resource:loc.messages.OverrideUpgradeSettings",
