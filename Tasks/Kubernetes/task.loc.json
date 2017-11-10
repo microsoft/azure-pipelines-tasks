@@ -13,19 +13,24 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "preview": "false",
   "groups": [
     {
-      "name": "registry",
-      "displayName": "ms-resource:loc.group.displayName.registry",
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
       "isExpanded": true
     },
     {
-      "name": "commands",
-      "displayName": "ms-resource:loc.group.displayName.commands",
+      "name": "registry",
+      "displayName": "ms-resource:loc.group.displayName.registry",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
     },
     {
@@ -40,6 +45,60 @@
       "type": "connectedService:kubernetes",
       "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint"
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "apply",
+      "required": true,
+      "options": {
+        "apply": "apply",
+        "create": "create",
+        "delete": "delete",
+        "exec": "exec",
+        "expose": "expose",
+        "get": "get",
+        "logs": "logs",
+        "run": "run",
+        "set": "set",
+        "top": "top"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "groupName": "commands",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useConfigurationFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useConfigurationFile",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
+      "groupName": "commands"
+    },
+    {
+      "name": "configuration",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "visibleRule": "useConfigurationFile = true",
+      "groupName": "commands"
+    },
+    {
+      "name": "arguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "groupName": "commands"
     },
     {
       "name": "containerRegistryType",
@@ -98,57 +157,46 @@
       "groupName": "registry"
     },
     {
-      "name": "command",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.command",
-      "defaultValue": "apply",
-      "required": true,
+      "name": "versionOrLocation",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionOrLocation",
+      "defaultValue": "version",
+      "required": "true",
       "options": {
-        "apply": "apply",
-        "create": "create",
-        "delete": "delete",
-        "exec": "exec",
-        "expose": "expose",
-        "get": "get",
-        "logs": "logs",
-        "run": "run",
-        "set": "set",
-        "top": "top"
+        "version": "Version",
+        "location": "Specify Location"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.command",
-      "groupName": "commands",
-      "properties": {
-        "EditableOptions": "True"
-      }
+      "groupName": "advanced"
     },
     {
-      "name": "useConfigurationFile",
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "defaultValue": "1.7",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "required": "false",
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = version"
+    },
+    {
+      "name": "checkLatest",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.useConfigurationFile",
+      "label": "ms-resource:loc.input.label.checkLatest",
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
-      "groupName": "commands"
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = version"
     },
     {
-      "name": "configuration",
+      "name": "specifyLocation",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.configuration",
+      "label": "ms-resource:loc.input.label.specifyLocation",
       "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.configuration",
-      "visibleRule": "useConfigurationFile = true",
-      "groupName": "commands"
-    },
-    {
-      "name": "arguments",
-      "type": "multiLine",
-      "properties": {
-        "resizable": "true",
-        "rows": "2"
-      },
-      "label": "ms-resource:loc.input.label.arguments",
-      "helpMarkDown": "ms-resource:loc.input.help.arguments",
-      "groupName": "commands"
+      "helpMarkDown": "ms-resource:loc.input.help.specifyLocation",
+      "required": "false",
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = location"
     },
     {
       "name": "cwd",
@@ -156,7 +204,7 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
-      "groupName": "commands"
+      "groupName": "advanced"
     },
     {
       "name": "outputFormat",
