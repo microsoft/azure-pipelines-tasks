@@ -37,6 +37,7 @@ export interface TestConfigurations {
     taskInstanceIdentifier: string;
     runUITests: boolean;
     ignoreTestFailures: string;
+    toolsInstallerConfig: ToolsInstallerConfiguration;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -81,6 +82,14 @@ export interface TiaConfiguration {
     useTestCaseFilterInResponseFile: string;
     userMapFile: string;
     disableEnablingDataCollector: boolean;
+}
+
+export interface ToolsInstallerConfiguration {
+    vsTestPackageLocation: string; // root of the package downloaded by Tools installer
+    vsTestConsolePathFromPackageLocation: string; // path to vstest.console.exe
+    x86ProfilerProxyDLLLocation: string;
+    x64ProfilerProxyDLLLocation: string;
+    isToolsInstallerInUse: boolean;
 }
 
 export enum BatchingType {

@@ -37,6 +37,9 @@ const runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettin
 // TIA on for DTA Run
 const runSettingsForTIAOn = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><TestImpact enabled=\"true\"></TestImpact><BaseLineRunId value=\"{0}\"></BaseLineRunId></RunConfiguration></RunSettings>';
 
+const codeCoverageFriendlyName = 'Code Coverage';
+const codeCoverageTemplate = '<DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"> <Configuration><CodeCoverage> <ModulePaths> <Include> <ModulePath>.*\.dll$</ModulePath> <ModulePath>.*\.exe$</ModulePath> </Include> <Exclude> <ModulePath>.*CPPUnitTestFramework.*</ModulePath> </Exclude> </ModulePaths> <Functions> <Exclude> <Function>^Fabrikam\.UnitTest\..*</Function> <Function>^std::.*</Function> <Function>^ATL::.*</Function> <Function>.*::__GetTestMethodInfo.*</Function> <Function>^Microsoft::VisualStudio::CppCodeCoverageFramework::.*</Function> <Function>^Microsoft::VisualStudio::CppUnitTestFramework::.*</Function> </Exclude> </Functions> <Attributes> <Exclude> <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute> <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute> <Attribute>^System\.Runtime\.CompilerServices.CompilerGeneratedAttribute$</Attribute> <Attribute>^System\.CodeDom\.Compiler.GeneratedCodeAttribute$</Attribute> <Attribute>^System\.Diagnostics\.CodeAnalysis.ExcludeFromCodeCoverageAttribute$</Attribute> </Exclude> </Attributes> <Sources> <Exclude> <Source>.*\\atlmfc\\.*</Source> <Source>.*\\vctools\\.*</Source> <Source>.*\\public\\sdk\\.*</Source> <Source>.*\\microsoft sdks\\.*</Source> <Source>.*\\vc\\include\\.*</Source> </Exclude> </Sources> <CompanyNames> <Exclude> <CompanyName>.*microsoft.*</CompanyName> </Exclude> </CompanyNames> <PublicKeyTokens> <Exclude> <PublicKeyToken>^B77A5C561934E089$</PublicKeyToken> <PublicKeyToken>^B03F5F7F11D50A3A$</PublicKeyToken> <PublicKeyToken>^31BF3856AD364E35$</PublicKeyToken> <PublicKeyToken>^89845DCD8080CC91$</PublicKeyToken> <PublicKeyToken>^71E9BCE111E9429C$</PublicKeyToken> <PublicKeyToken>^8F50407C4E9E73B6$</PublicKeyToken> <PublicKeyToken>^E361AF139669C375$</PublicKeyToken> </Exclude> </PublicKeyTokens> <UseVerifiableInstrumentation>False</UseVerifiableInstrumentation> <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses> <CollectFromChildProcesses>True</CollectFromChildProcesses> <CollectAspDotNet>False</CollectAspDotNet> </CodeCoverage> </Configuration> </DataCollector>';
+
 const testSettingsTemplate = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
     <TestSettings name=\"testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25\" id=\"5d76a195-1e43-4b90-a6ce-4ec3de87ed25\" xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\">
     <Execution>
@@ -47,19 +50,13 @@ const testSettingsTemplate = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
     </Execution>
     </TestSettings>`;
 
-const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?>
-    <RunSettings>
-    <DataCollectionRunSettings>
-    <DataCollectors>
-    </DataCollectors>
-    </DataCollectionRunSettings>
-    </RunSettings>`;
+const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?> <RunSettings> <DataCollectionRunSettings> <DataCollectors> </DataCollectors> </DataCollectionRunSettings> </RunSettings>`;
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean): Promise<string> {
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean, codeCoverageToolsInstallerFlow: boolean): Promise<string> {
     const defer = Q.defer<string>();
     let result: any;
 
-    if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString) {
+    if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString && !codeCoverageToolsInstallerFlow) {
         defer.resolve(settingsFile);
         return defer.promise;
     }
@@ -182,6 +179,31 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         }
     }
 
+    if (codeCoverageToolsInstallerFlow) {
+        let codeCoverageNode = null;
+        tl.debug('Code coverage enabled in tools installer flow.');
+        parser.parseString(codeCoverageTemplate, function (err, data) {
+            if (err) {
+                defer.reject(err);
+            }
+            codeCoverageNode = data;
+        });
+
+        if (settingsExt === testSettingsExtension) {
+            tl.warning('Code coverage not supported with testsettings file when using tools installer.');
+        } else if (settingsExt === runSettingsExtension) {
+            tl.debug('Adding code coverage settings details to runsettings file.');
+            updateRunSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile);
+            tl.debug('Successfully added code coverage settings detasil to runsettings file.');
+        } else {
+            tl.debug('Enabling code coverage by creating new run settings.');
+            settingsExt = runSettingsExtension;
+            result = await CreateSettings(runSettingsTemplate);
+            result = updateRunSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile)
+            tl.debug('Successfully added code coverage settings detasil to runsettings file.');
+        }
+    } 
+
     if (result) {
         utils.Helper.writeXmlFile(result, settingsFile, settingsExt)
             .then(function (filename) {
@@ -192,6 +214,41 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         defer.resolve(settingsFile);
     }
     return defer.promise;
+}
+
+function updateRunSettingsWithCodeCoverageDetails(result: any, codeCoverageNode: any, settingsFile: string) {
+    if (!result.RunSettings) {
+        tl.debug('Updating runsettings file from RunSettings node');
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: codeCoverageNode } };
+    } else if (!result.RunSettings.DataCollectionRunSettings) {
+        tl.debug('Updating runsettings file from DataCollectionSettings node');
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: codeCoverageNode };
+    } else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
+        tl.debug('Updating runsettings file from DataCollectors node');
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: codeCoverageNode };
+    } else {
+        var dataCollectorArray;
+        if(!utils.Helper.isNullEmptyOrUndefined(result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0])) {
+            dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
+        }
+        if (!dataCollectorArray) {
+            tl.debug('Updating runsettings file from DataCollector node');
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: codeCoverageNode };
+        } else {
+            if (!isDataCollectorPresent(dataCollectorArray, codeCoverageFriendlyName)) {
+                tl.debug('Updating runsettings file, adding a DataCollector node');
+                dataCollectorArray.push(codeCoverageNode.DataCollector);
+            }
+            else {
+                try {
+                    setUseVerifiableInstrumentationToFalse(dataCollectorArray);
+                } catch (error) {
+                    throw new Error(tl.loc('InvalidSettingsFile', settingsFile));
+                }
+            }
+        }
+    }
+    return result;
 }
 
 function updateSettingsWithParameters(result: any, overrideParametersString: string) {
@@ -218,9 +275,9 @@ function updateSettingsWithParameters(result: any, overrideParametersString: str
             if (overrideParameters[key] && overrideParameters[key].value) {
                 tl.debug('Overriding value for parameter : ' + key);
                 if (parameter.$.Value) {
-                    parameter.$.Value = overrideParameters[key].value;
-                } else {
-                    parameter.$.value = overrideParameters[key].value;
+                    parameter.$.Value = overrideParameters[key].value;		
+                } else {		
+                    parameter.$.value = overrideParameters[key].value;		
                 }
             }
         });
@@ -264,6 +321,20 @@ function isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName: s
         }
     }
     return found;
+}
+
+function setUseVerifiableInstrumentationToFalse(dataCollectorArray: any) {
+    for (const node of dataCollectorArray) {
+        if (node.$.friendlyName && node.$.friendlyName.toUpperCase() === codeCoverageFriendlyName.toUpperCase()) {
+            if (node.Configuration.CodeCoverage.UseVerifiableInstrumentation) {
+                node.Configuration.CodeCoverage.UseVerifiableInstrumentation = false;
+                console.log(tl.loc('OverrideUseVerifiableInstrumentation'));
+            }
+            else {
+                node.Configuration.CodeCoverage = { UseVerifiableInstrumentation: false };
+            }
+        }
+    }
 }
 
 function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {

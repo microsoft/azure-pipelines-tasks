@@ -13,11 +13,16 @@ export module AreaCodes {
     export const TESTRUNUPDATIONFAILED = 'TestRunUpdationFailed';
     export const UPLOADTESTRESULTS = 'UploadTestResults';
     export const RUNVSTEST = 'RunVsTest';
-    export const SPECIFIEDVSVERSIONNOTFOUND = 'SpecifiedVsVersionNotFound'
+    export const SPECIFIEDVSVERSIONNOTFOUND = 'SpecifiedVsVersionNotFound';
+    export const TOOLSINSTALLERCACHENOTFOUND = 'ToolsInstallerCacheNotFound';
 }
 
 export module ResultMessages {
     export const UPLOADTESTRESULTSRETURNED = 'uploadTestResults returned ';
     export const EXECUTEVSTESTRETURNED = 'executeVstest returned ';
     export const TESTRUNUPDATIONFAILED = 'testRunupdation failed';
+}
+
+export module VsTestToolsInstaller {
+    export const PathToVsTestToolVariable = 'VsTestToolsInstallerInstalledToolLocation';
 }
