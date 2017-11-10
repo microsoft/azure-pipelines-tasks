@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 125,
-        "Patch": 1
+        "Minor": 126,
+        "Patch": 3
     },
     "demands": [
         "xcode"
@@ -301,6 +301,10 @@
         "FailedToGenerateExportOptionsPlist": "Failed to automatically generate an `Export options` plist file to export an IPA. Please specify an `Export options` plist file in `Package options`.",
         "LocateXcodeBasedOnVersion": "Locating the developer path for Xcode `%s`",
         "FailedToLocateSpecifiedXcode": "Unable to resolve the developer path for Xcode `%s`. Set the `%s` environment variable on the agent machine, or set `Xcode version` to `Default` or `Specify path`.",
-        "CantDetermineProvisioningStyle": "The provisioning style was not found in a pbxProject file. Automatic signing will be used. If the project uses manual signing, auto-export may fail. As a workaround, `Export options` can be set to `Plist` or `Specify`."
+        "CantDetermineProvisioningStyle": "The provisioning style was not found in a pbxProject file. Automatic signing will be used. If the project uses manual signing, auto-export may fail. As a workaround, `Export options` can be set to `Plist` or `Specify`.",
+        "MultipleSchemesFound": "The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.",
+        "NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
+        "SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
+        "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme."
     }
 }
