@@ -12,7 +12,7 @@
   "version": {
     "Major": 4,
     "Minor": 126,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "xcode"
@@ -27,6 +27,11 @@
     {
       "name": "package",
       "displayName": "ms-resource:loc.group.displayName.package",
+      "isExpanded": true
+    },
+    {
+      "name": "devices",
+      "displayName": "ms-resource:loc.group.displayName.devices",
       "isExpanded": true
     },
     {
@@ -226,6 +231,55 @@
       "visibleRule": "signStyle = auto"
     },
     {
+      "name": "platform",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.platform",
+      "defaultValue": "default",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.platform",
+      "groupName": "devices",
+      "options": {
+        "default": "default",
+        "iOS": "iOS and watchOS",
+        "tvOS": "tvOS",
+        "macOS": "macOS"
+      }
+    },
+    {
+      "name": "destinationType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.destinationType",
+      "defaultValue": "simulators",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationType",
+      "groupName": "devices",
+      "visibleRule": "platform != default && platform != macOS",
+      "options": {
+        "simulators": "Simulators",
+        "devices": "Connected Devices"
+      }
+    },
+    {
+      "name": "simulators",
+      "label": "ms-resource:loc.input.label.simulators",
+      "type": "string",
+      "defaultValue": "iPhone 6s, iPhone X",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.simulators",
+      "visibleRule": "platform != default && platform != macOS && destinationType == simulators"
+    },
+    {
+      "name": "devices",
+      "label": "ms-resource:loc.input.label.devices",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.devices",
+      "visibleRule": "platform != default && platform != macOS && destinationType == devices"
+    },
+    {
       "name": "args",
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
@@ -305,6 +359,7 @@
     "MultipleSchemesFound": "ms-resource:loc.messages.MultipleSchemesFound",
     "NoSchemeFound": "ms-resource:loc.messages.NoSchemeFound",
     "SchemeSelected": "ms-resource:loc.messages.SchemeSelected",
-    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme"
+    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme",
+    "OSSpecifierNotSupported": "ms-resource:loc.messages.OSSpecifierNotSupported"
   }
 }

@@ -46,6 +46,52 @@ export function findDeveloperDir(xcodeVersion: string): string {
     return discoveredDeveloperDir;
 }
 
+export function buildDestinationArgs(platform: string, devices: string[], targetingSimulators: boolean): string[] {
+    let destinations: string[] = [];
+
+    devices.forEach((device: string) => {
+        device = device.trim();
+
+        let destination;
+        if (device) {
+            if (targetingSimulators) {
+                destination = `platform=${platform} Simulator`;
+            }
+            else {
+                destination = `platform=${platform}`;
+            }
+
+            let matches = device.match(/([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})/);
+            if (matches) {
+                destination += `,id=${matches[0]}`;
+            }
+            else {
+                // First check for both name and OS version number being supplied. Examples: "iPhone 6s (9.3)" or "iPhone X (latest)".
+                // We could skip this regex for real devices, but it is probably better to warn the user than to have them wonder why
+                // we're not parsing the OS version.
+                matches = device.match(/(.*)\(([0-9.]+|latest)\)/);
+                if (matches) {
+                    if (!targetingSimulators) {
+                        tl.warning(tl.loc('OSSpecifierNotSupported'));
+                    }
+                    destination += `,name=${matches[1].trim()}`;
+                    destination += `,OS=${matches[2]}`;
+                }
+                else {
+                    destination += `,name=${device}`;
+                }
+            }
+        }
+
+        if (destination) {
+            tl.debug(`Constructed destination: ${destination}`);
+            destinations.push(destination);
+        }
+    });
+
+    return destinations;
+}
+
 /**
  * Queries the schemes in a workspace.
  * @param xcbuild xcodebuild path

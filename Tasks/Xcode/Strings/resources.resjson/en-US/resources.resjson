@@ -5,6 +5,7 @@
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Signing & provisioning",
   "loc.group.displayName.package": "Package options",
+  "loc.group.displayName.devices": "Devices & simulators",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.actions": "Actions",
   "loc.input.help.actions": "Enter a space-delimited list of actions. Valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
@@ -44,6 +45,14 @@
   "loc.input.help.provProfileUuid": "(Optional) Enter the UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
   "loc.input.label.teamId": "Team ID",
   "loc.input.help.teamId": "(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.",
+  "loc.input.label.platform": "Destination platform",
+  "loc.input.help.platform": "Select the destination device's platform. If you need an option not listed below, use `Arguments` to pass the -destination argument.",
+  "loc.input.label.destinationType": "Destination type",
+  "loc.input.help.destinationType": "Choose the destination type. Devices must be connected to the Mac performing the build via a cable or network connection. See `Devices and Simulators` in Xcode.",
+  "loc.input.label.simulators": "Simulators",
+  "loc.input.help.simulators": "Comma separated list of simulators. For example, `iPad Air 2, iPhone X` (iOS and watchOS) or `Apple TV, Apple TV 4K` (tvOS). A target OS version can be specified in parentheses (`iPhone X (11.1)`).",
+  "loc.input.label.devices": "Devices",
+  "loc.input.help.devices": "Comma separated list of devices by UUID or name. For example, `Chidi’s iPad`",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
   "loc.input.label.cwd": "Working directory",
@@ -76,5 +85,6 @@
   "loc.messages.MultipleSchemesFound": "The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.",
   "loc.messages.NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
   "loc.messages.SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
-  "loc.messages.FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme."
+  "loc.messages.FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
+  "loc.messages.OSSpecifierNotSupported": "The OS specifier is not supported for devices, only simulators. Remove the OS version number and supply only the device name or UUID."
 }

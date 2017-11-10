@@ -12,7 +12,7 @@
     "version": {
         "Major": 4,
         "Minor": 126,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "xcode"
@@ -27,6 +27,11 @@
         {
             "name": "package",
             "displayName": "Package options",
+            "isExpanded": true
+        },
+        {
+            "name": "devices",
+            "displayName": "Devices & simulators",
             "isExpanded": true
         },
         {
@@ -226,6 +231,55 @@
             "visibleRule": "signStyle = auto"
         },
         {
+            "name": "platform",
+            "type": "picklist",
+            "label": "Destination platform",
+            "defaultValue": "default",
+            "required": false,
+            "helpMarkDown": "Select the destination device's platform. If you need an option not listed below, use `Arguments` to pass the -destination argument.",
+            "groupName": "devices",
+            "options": {
+                "default": "default",
+                "iOS": "iOS and watchOS",
+                "tvOS": "tvOS",
+                "macOS": "macOS"
+            }
+        },
+        {
+            "name": "destinationType",
+            "type": "radio",
+            "label": "Destination type",
+            "defaultValue": "simulators",
+            "required": false,
+            "helpMarkDown": "Choose the destination type. Devices must be connected to the Mac performing the build via a cable or network connection. See `Devices and Simulators` in Xcode.",
+            "groupName": "devices",
+            "visibleRule": "platform != default && platform != macOS",
+            "options": {
+                "simulators": "Simulators",
+                "devices": "Connected Devices"
+            }
+        },
+        {
+            "name": "simulators",
+            "label": "Simulators",
+            "type": "string",
+            "defaultValue": "iPhone 6s, iPhone X",
+            "required": false,
+            "groupName": "devices",
+            "helpMarkDown": "Comma separated list of simulators. For example, `iPad Air 2, iPhone X` (iOS and watchOS) or `Apple TV, Apple TV 4K` (tvOS). A target OS version can be specified in parentheses (`iPhone X (11.1)`).",
+            "visibleRule": "platform != default && platform != macOS && destinationType == simulators"
+        },
+        {
+            "name": "devices",
+            "label": "Devices",
+            "type": "string",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "devices",
+            "helpMarkDown": "Comma separated list of devices by UUID or name. For example, `Chidi’s iPad`",
+            "visibleRule": "platform != default && platform != macOS && destinationType == devices"
+        },
+        {
             "name": "args",
             "type": "string",
             "label": "Arguments",
@@ -305,6 +359,7 @@
         "MultipleSchemesFound": "The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.",
         "NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
         "SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
-        "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme."
+        "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
+        "OSSpecifierNotSupported": "The OS specifier is not supported for devices, only simulators. Remove the OS version number and supply only the device name or UUID."
     }
 }
