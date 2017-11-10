@@ -98,6 +98,16 @@ param (
         return $text.Substring(0, $pos) + $replace + $text.Substring($pos + $search.Length);
     }
 
+    function Clean-Target
+    {
+        $cleanupArgument = "/NOCOPY /PURGE" 
+        $guid = [GUID]::NewGuid()
+        $tempDirectory = "$scriptRoot\temp$guid" 
+        New-Item -ItemType Directory -Force -Path $tempDirectory         
+        Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+        Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
+    }
+
     function Get-DestinationNetworkPath(
         [string]$targetPath,
         [string]$machineShare
@@ -117,7 +127,7 @@ param (
         [switch]$fileCopy
         )
     {
-        $robocopyParameters = "/COPY:DAT"
+        $robocopyParameters = "/COPY:DAT "
 
         if(-not $fileCopy.IsPresent)
         {
@@ -192,12 +202,7 @@ param (
     {
         if($doCleanUp)
         {
-            $cleanupArgument = "/NOCOPY /PURGE" 
-            $guid = [GUID]::NewGuid()
-            $tempDirectory = "$scriptRoot\temp$guid" 
-            New-Item -ItemType Directory -Force -Path $tempDirectory         
-            Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
-            Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
+           Clean-Target
         }
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
