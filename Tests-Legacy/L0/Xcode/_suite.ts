@@ -31,7 +31,7 @@ describe('Xcode Suite', function() {
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
+        tr.setInput('scheme', 'myscheme');
         tr.setInput('packageApp', 'false');
         tr.setInput('signStyle', 'default');
         tr.setInput('signingIdentity', '');
@@ -47,7 +47,7 @@ describe('Xcode Suite', function() {
         .then(() => {
             assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
             assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-                    '-workspace /user/build/fun.xcodeproj/project.xcworkspace build ' +
+                    '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme build ' +
                     'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
                     'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
                     'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
@@ -113,7 +113,7 @@ describe('Xcode Suite', function() {
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
+        tr.setInput('scheme', 'myscheme');
         tr.setInput('packageApp', 'false');
         tr.setInput('signStyle', 'default');
         tr.setInput('signingIdentity', '');
@@ -131,7 +131,7 @@ describe('Xcode Suite', function() {
                 assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
 
                 assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace test ' +
+                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test ' +
                         'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
                         'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
                         'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
@@ -161,7 +161,7 @@ describe('Xcode Suite', function() {
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
+        tr.setInput('scheme', 'myscheme');
         tr.setInput('packageApp', 'false');
         tr.setInput('signStyle', 'default');
         tr.setInput('signingIdentity', '');
@@ -179,7 +179,7 @@ describe('Xcode Suite', function() {
                 assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
 
                 assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace test ' +
+                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test ' +
                         'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
                         'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
                         'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +

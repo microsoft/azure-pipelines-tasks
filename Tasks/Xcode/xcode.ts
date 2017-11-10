@@ -61,9 +61,32 @@ async function run() {
             isProject = true;
         }
 
+        let scheme: string = tl.getInput('scheme', false);
+
+        // If we have a workspace argument but no scheme, see if there's
+        // single shared scheme we can use.
+        if (!scheme && !isProject && ws && tl.filePathSupplied('xcWorkspacePath')) {
+            try {
+                let schemes: string[] = await utils.getWorkspaceSchemes(tool, ws);
+
+                if (schemes.length > 1) {
+                    tl.warning(tl.loc('MultipleSchemesFound'));
+                }
+                else if (schemes.length === 0) {
+                    tl.warning(tl.loc('NoSchemeFound'));
+                }
+                else {
+                    scheme = schemes[0];
+                    console.log(tl.loc('SchemeSelected', scheme));
+                }
+            }
+            catch (err) {
+                tl.warning(tl.loc('FailedToFindScheme'));
+            }
+        }
+
         let sdk: string = tl.getInput('sdk', false);
         let configuration: string = tl.getInput('configuration', false);
-        let scheme: string = tl.getInput('scheme', false);
         let useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
         let actions: string[] = tl.getDelimitedInput('actions', ' ', true);
         let packageApp: boolean = tl.getBoolInput('packageApp', true);
@@ -152,7 +175,7 @@ async function run() {
                 xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;
             }
         }
-        
+
         xcb.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
         xcb.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
         xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
@@ -240,8 +263,8 @@ async function run() {
             }
             xcodeArchive.arg(['-archivePath', archivePath]);
             xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
-            xcodeArchive.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);            
-            xcodeArchive.argIf(xcode_codeSignStyle, xcode_codeSignStyle);            
+            xcodeArchive.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
+            xcodeArchive.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
             xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
             xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
             xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
