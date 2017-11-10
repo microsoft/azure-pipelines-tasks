@@ -63,6 +63,10 @@ function isDtaEngineRequired(): boolean {
     tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
     if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine') {
+        const dontDistribute = tl.getBoolInput('dontDistribute');
+        if(dontDistribute){
+            return false;
+        }
         return true;
     }
 
