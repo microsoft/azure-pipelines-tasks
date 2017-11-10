@@ -365,9 +365,6 @@ function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
             utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
             tl.warning(tl.loc('testImpactAndCCWontWork'));
         }
-
-        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
-        tl.warning(tl.loc('testImpactAndCCWontWork'));
     }
 
     // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
