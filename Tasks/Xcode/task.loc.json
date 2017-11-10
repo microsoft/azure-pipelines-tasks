@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 125,
-    "Patch": 1
+    "Minor": 126,
+    "Patch": 3
   },
   "demands": [
     "xcode"
@@ -301,6 +301,10 @@
     "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist",
     "LocateXcodeBasedOnVersion": "ms-resource:loc.messages.LocateXcodeBasedOnVersion",
     "FailedToLocateSpecifiedXcode": "ms-resource:loc.messages.FailedToLocateSpecifiedXcode",
-    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle"
+    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle",
+    "MultipleSchemesFound": "ms-resource:loc.messages.MultipleSchemesFound",
+    "NoSchemeFound": "ms-resource:loc.messages.NoSchemeFound",
+    "SchemeSelected": "ms-resource:loc.messages.SchemeSelected",
+    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme"
   }
 }
