@@ -86,23 +86,25 @@ async function run() {
         }
 
         let destinations: string[];
-        let platform: string = tl.getInput('platform', false);
+
+        // To be yaml friendly, we'll let you skip destinationPlatformOption and supply destinationPlatform, custom or not.
+        let platform: string = tl.getInput('destinationPlatform', false) || tl.getInput('destinationPlatformOption', false);
         if (platform === 'macOS') {
             destinations = ['platform=macOS'];
         }
         else if (platform && platform !== 'default') {
-            // To be yaml friendly, destinationType is optional and we default to simulators.
-            let destinationType: string = tl.getInput('destinationType', false);
+            // To be yaml friendly, destinationTypeOption is optional and we default to simulators.
+            let destinationType: string = tl.getInput('destinationTypeOption', false);
+            let targetingSimulators: boolean = destinationType !== 'devices';
 
             let devices: string[];
-            let targetingSimulators: boolean;
-            if (destinationType !== 'devices') {
-                devices = tl.getDelimitedInput('simulators', ',');
-                targetingSimulators = true;
+            if (targetingSimulators) {
+                // Only one simulator for now.
+                devices = [ tl.getInput('destinationSimulators') ];
             }
             else {
-                devices = tl.getDelimitedInput('devices', ',');
-                targetingSimulators = false;
+                // Only one device for now.
+                devices = [ tl.getInput('destinationDevices') ];
             }
 
             destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
