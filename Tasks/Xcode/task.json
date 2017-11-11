@@ -12,7 +12,7 @@
     "version": {
         "Major": 4,
         "Minor": 126,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "xcode"
@@ -286,7 +286,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "devices",
-            "helpMarkDown": "A device name or UUID. Primarily used for UI testing. For example, `Chidi’s iPad` or ``.",
+            "helpMarkDown": "A device name. Primarily used for UI testing. For example, `Chidi’s iPad`.",
             "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
         },
         {
