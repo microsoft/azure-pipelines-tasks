@@ -57,6 +57,10 @@ export class Helper {
         return input;
     }
 
+    public static isToolsInstallerFlow(config: any) {
+        return config.toolsInstallerConfig && config.toolsInstallerConfig.isToolsInstallerInUse;
+    }
+
     public static pathExistsAsFile(path: string) {
         return tl.exist(path) && tl.stats(path).isFile();
     }
