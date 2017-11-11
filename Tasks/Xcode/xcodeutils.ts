@@ -61,13 +61,8 @@ export function buildDestinationArgs(platform: string, devices: string[], target
                 destination = `platform=${platform}`;
             }
 
-            let matches = device.match(/([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})/i);
-            if (matches) {
-                destination += `,id=${device}`;
-            }
-            else {
-                destination += `,name=${device}`;
-            }
+            // The device name may be followed by additional key-value pairs. Example: "iPhone X,OS=11.1"
+            destination += `,name=${device}`;
 
             tl.debug(`Constructed destination: ${destination}`);
             destinations.push(destination);
