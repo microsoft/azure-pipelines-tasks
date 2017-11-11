@@ -12,7 +12,7 @@
   "version": {
     "Major": 4,
     "Minor": 126,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "xcode"
@@ -27,6 +27,11 @@
     {
       "name": "package",
       "displayName": "ms-resource:loc.group.displayName.package",
+      "isExpanded": true
+    },
+    {
+      "name": "devices",
+      "displayName": "ms-resource:loc.group.displayName.devices",
       "isExpanded": true
     },
     {
@@ -224,6 +229,65 @@
       "helpMarkDown": "ms-resource:loc.input.help.teamId",
       "groupName": "sign",
       "visibleRule": "signStyle = auto"
+    },
+    {
+      "name": "destinationPlatformOption",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.destinationPlatformOption",
+      "defaultValue": "default",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatformOption",
+      "groupName": "devices",
+      "options": {
+        "default": "Default",
+        "iOS": "iOS and watchOS",
+        "tvOS": "tvOS",
+        "macOS": "macOS",
+        "custom": "Custom"
+      }
+    },
+    {
+      "name": "destinationPlatform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.destinationPlatform",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatform",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption == custom"
+    },
+    {
+      "name": "destinationTypeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.destinationTypeOption",
+      "defaultValue": "simulators",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationTypeOption",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+      "options": {
+        "simulators": "Simulators",
+        "devices": "Connected Devices"
+      }
+    },
+    {
+      "name": "destinationSimulators",
+      "label": "ms-resource:loc.input.label.destinationSimulators",
+      "type": "string",
+      "defaultValue": "iPhone 7",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationSimulators",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
+    },
+    {
+      "name": "destinationDevices",
+      "label": "ms-resource:loc.input.label.destinationDevices",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDevices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
     },
     {
       "name": "args",

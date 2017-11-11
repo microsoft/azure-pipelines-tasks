@@ -85,6 +85,31 @@ async function run() {
             }
         }
 
+        let destinations: string[];
+
+        // To be yaml friendly, we'll let you skip destinationPlatformOption and supply destinationPlatform, custom or not.
+        let platform: string = tl.getInput('destinationPlatform', false) || tl.getInput('destinationPlatformOption', false);
+        if (platform === 'macOS') {
+            destinations = ['platform=macOS'];
+        }
+        else if (platform && platform !== 'default') {
+            // To be yaml friendly, destinationTypeOption is optional and we default to simulators.
+            let destinationType: string = tl.getInput('destinationTypeOption', false);
+            let targetingSimulators: boolean = destinationType !== 'devices';
+
+            let devices: string[];
+            if (targetingSimulators) {
+                // Only one simulator for now.
+                devices = [ tl.getInput('destinationSimulators') ];
+            }
+            else {
+                // Only one device for now.
+                devices = [ tl.getInput('destinationDevices') ];
+            }
+
+            destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
+        }
+
         let sdk: string = tl.getInput('sdk', false);
         let configuration: string = tl.getInput('configuration', false);
         let useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
@@ -125,6 +150,12 @@ async function run() {
             xcb.arg(ws);
         }
         xcb.argIf(scheme, ['-scheme', scheme]);
+        // Add a -destination argument for each device and simulator.
+        if (destinations) {
+            destinations.forEach(destination => {
+                xcb.arg(['-destination', destination]);
+            });
+        }
         xcb.arg(actions);
         if (actions.toString().indexOf('archive') < 0) {
             // redirect build output if archive action is not passed

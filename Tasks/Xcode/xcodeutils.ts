@@ -46,6 +46,37 @@ export function findDeveloperDir(xcodeVersion: string): string {
     return discoveredDeveloperDir;
 }
 
+export function buildDestinationArgs(platform: string, devices: string[], targetingSimulators: boolean): string[] {
+    let destinations: string[] = [];
+
+    devices.forEach((device: string) => {
+        device = device.trim();
+
+        let destination;
+        if (device) {
+            if (targetingSimulators) {
+                destination = `platform=${platform} Simulator`;
+            }
+            else {
+                destination = `platform=${platform}`;
+            }
+
+            let matches = device.match(/([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})/i);
+            if (matches) {
+                destination += `,id=${device}`;
+            }
+            else {
+                destination += `,name=${device}`;
+            }
+
+            tl.debug(`Constructed destination: ${destination}`);
+            destinations.push(destination);
+        }
+    });
+
+    return destinations;
+}
+
 /**
  * Queries the schemes in a workspace.
  * @param xcbuild xcodebuild path
