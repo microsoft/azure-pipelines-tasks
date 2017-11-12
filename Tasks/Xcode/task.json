@@ -12,7 +12,7 @@
     "version": {
         "Major": 4,
         "Minor": 126,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "xcode"
@@ -188,7 +188,7 @@
             "visibleRule": "packageApp == true"
         },
         {
-            "name": "signStyle",
+            "name": "signingOption",
             "type": "pickList",
             "label": "Signing style",
             "required": false,
@@ -209,16 +209,16 @@
             "required": false,
             "helpMarkDown": "(Optional) Enter a signing identity override with which to sign the build. This may require unlocking the default keychain on the agent machine. If no value is entered, the Xcode project's setting will be used.",
             "groupName": "sign",
-            "visibleRule": "signStyle = manual"
+            "visibleRule": "signingOption = manual"
         },
         {
-            "name": "provProfileUuid",
+            "name": "provisioningProfileUuid",
             "type": "string",
             "label": "Provisioning profile UUID",
             "required": false,
             "helpMarkDown": "(Optional) Enter the UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
             "groupName": "sign",
-            "visibleRule": "signStyle = manual"
+            "visibleRule": "signingOption = manual"
         },
         {
             "name": "teamId",
@@ -228,7 +228,7 @@
             "required": false,
             "helpMarkDown": "(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.",
             "groupName": "sign",
-            "visibleRule": "signStyle = auto"
+            "visibleRule": "signingOption = auto"
         },
         {
             "name": "destinationPlatformOption",
