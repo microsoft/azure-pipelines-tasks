@@ -172,7 +172,7 @@ async function run() {
         //--------------------------------------------------------
         // iOS signing and provisioning
         //--------------------------------------------------------
-        let signStyle: string = tl.getInput('signStyle', true);
+        let signingOption: string = tl.getInput('signingOption', true);
         let keychainToDelete: string;
         let profileToDelete: string;
         let xcode_codeSigningAllowed: string;
@@ -182,10 +182,10 @@ async function run() {
         let xcode_provProfile: string;
         let xcode_devTeam: string;
 
-        if (signStyle === 'nosign') {
+        if (signingOption === 'nosign') {
             xcode_codeSigningAllowed = 'CODE_SIGNING_ALLOWED=NO';
         }
-        else if (signStyle === 'manual') {
+        else if (signingOption === 'manual') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Manual';
 
             let signIdentity: string = tl.getInput('signingIdentity');
@@ -193,12 +193,12 @@ async function run() {
                 xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
             }
 
-            let provProfileUUID: string = tl.getInput('provProfileUuid');
+            let provProfileUUID: string = tl.getInput('provisioningProfileUuid');
             if (provProfileUUID) {
                 xcode_provProfile = 'PROVISIONING_PROFILE=' + provProfileUUID;
             }
         }
-        else if (signStyle === 'auto') {
+        else if (signingOption === 'auto') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
 
             let teamId: string = tl.getInput('teamId');
@@ -354,18 +354,18 @@ async function run() {
                     }
 
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
-                        let signStyleForExport = signStyle;
+                        let signingOptionForExport = signingOption;
 
                         // If we're using the project defaults, scan the pbxProject file for the type of signing being used.
-                        if (signStyleForExport === 'default') {
-                            signStyleForExport = await utils.getProvisioningStyle(ws);
+                        if (signingOptionForExport === 'default') {
+                            signingOptionForExport = await utils.getProvisioningStyle(ws);
 
-                            if (!signStyleForExport) {
+                            if (!signingOptionForExport) {
                                 tl.warning(tl.loc('CantDetermineProvisioningStyle'));
                             }
                         }
 
-                        if (signStyleForExport === 'manual') {
+                        if (signingOptionForExport === 'manual') {
                             // Xcode 9 manual signing, set code sign style = manual
                             tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
 

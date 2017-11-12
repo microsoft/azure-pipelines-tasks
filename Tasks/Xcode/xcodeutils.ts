@@ -8,7 +8,7 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 // Using the environment variable for resolution is preferable to these hardcoded paths.
 const fallbackDeveloperDirs = {
     "8": "/Applications/Xcode_8.3.3.app/Contents/Developer",
-    "9": "/Applications/Xcode_9.app/Contents/Developer"
+    "9": "/Applications/Xcode_9.1.app/Contents/Developer"
 };
 
 export function setTaskState(variableName: string, variableValue: string) {
