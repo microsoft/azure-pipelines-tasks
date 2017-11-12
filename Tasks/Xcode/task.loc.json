@@ -12,7 +12,7 @@
   "version": {
     "Major": 4,
     "Minor": 126,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "xcode"
@@ -188,13 +188,13 @@
       "visibleRule": "packageApp == true"
     },
     {
-      "name": "signStyle",
+      "name": "signingOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.signStyle",
+      "label": "ms-resource:loc.input.label.signingOption",
       "required": false,
       "groupName": "sign",
       "defaultValue": "nosign",
-      "helpMarkDown": "ms-resource:loc.input.help.signStyle",
+      "helpMarkDown": "ms-resource:loc.input.help.signingOption",
       "options": {
         "nosign": "Do not code sign",
         "default": "Project defaults",
@@ -209,16 +209,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "sign",
-      "visibleRule": "signStyle = manual"
+      "visibleRule": "signingOption = manual"
     },
     {
-      "name": "provProfileUuid",
+      "name": "provisioningProfileUuid",
       "type": "string",
-      "label": "ms-resource:loc.input.label.provProfileUuid",
+      "label": "ms-resource:loc.input.label.provisioningProfileUuid",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileUuid",
       "groupName": "sign",
-      "visibleRule": "signStyle = manual"
+      "visibleRule": "signingOption = manual"
     },
     {
       "name": "teamId",
@@ -228,7 +228,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.teamId",
       "groupName": "sign",
-      "visibleRule": "signStyle = auto"
+      "visibleRule": "signingOption = auto"
     },
     {
       "name": "destinationPlatformOption",
