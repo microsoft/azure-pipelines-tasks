@@ -2,6 +2,7 @@
     "tasks": [
         "AndroidSigning",
         "ANT",
+        "AppCenterDistribute",
         "ArchiveFiles",
         "AzureAppServiceManage",
         "AzureCLI",
@@ -53,7 +54,6 @@
         "Kubernetes",
         "ManualIntervention",
         "Maven",
-        "MobileCenterDistribute",
         "MSBuild",
         "NodeTool",
         "Npm",

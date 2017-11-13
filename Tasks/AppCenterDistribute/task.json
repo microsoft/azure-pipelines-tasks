@@ -1,11 +1,10 @@
 {
     "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
-    "name": "MobileCenterDistribute",
-    "friendlyName": "Mobile Center Distribute",
-    "description": "Distribute mobile app builds to testers and users via Mobile Center",
-    "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
+    "name": "AppCenterDistribute",
+    "friendlyName": "App Center Distribute",
+    "description": "Distribute app builds to testers and users via App Center",
+    "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://intercom.help/mobile-center/).",
     "category": "Deploy",
-    "preview": true,
     "visibility": [
         "Build",
         "Release"
@@ -14,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 126,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -27,10 +26,10 @@
         {
             "name": "serverEndpoint",
             "type": "connectedService:vsmobilecenter",
-            "label": "Mobile Center Connection",
+            "label": "App Center Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your Visual Studio Mobile Center connection. To create one, click the Manage link and create a new service endpoint."
+            "helpMarkDown": "Select the service endpoint for your Visual Studio App Center connection. To create one, click the Manage link and create a new service endpoint."
         },
         {
             "name": "appSlug",
@@ -147,10 +146,10 @@
             "required": false
         }
     ],
-    "instanceNameFormat": "Deploy $(app) to Visual Studio Mobile Center",
+    "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
     "execution": {
         "Node": {
-            "target": "mobilecenterdistribute.js",
+            "target": "appcenterdistribute.js",
             "argumentFormat": ""
         }
     },
@@ -158,8 +157,8 @@
         "CannotDecodeEndpoint": "Could not decode the endpoint.",
         "NoResponseFromServer": "No response from server.",
         "FailedToUploadFile": "Failed to complete file upload.",
-        "NoApiTokenFound": "No API token found on Visual Studio Mobile Center connection.",
-        "Succeeded": "Visual Studio Mobile Center Upload Task succeeded",
+        "NoApiTokenFound": "No API token found on Visual Studio App Center connection.",
+        "Succeeded": "Visual Studio App Center Upload Task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",

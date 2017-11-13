@@ -9,7 +9,7 @@ var Stats = require('fs').Stats
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
+let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
