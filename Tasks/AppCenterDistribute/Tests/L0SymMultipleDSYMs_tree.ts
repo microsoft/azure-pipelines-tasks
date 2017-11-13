@@ -9,7 +9,7 @@ var Stats = require('fs').Stats
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
+let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
@@ -17,8 +17,8 @@ tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
-tmr.setInput('symbolsType', 'UWP');
-tmr.setInput('pdbPath', 'a/**/*.pdb');
+tmr.setInput('symbolsType', 'Apple');
+tmr.setInput('dsymPath', 'a/**/(x|y).dsym');
 
 /*
   dSyms folder structure:
@@ -29,9 +29,18 @@ tmr.setInput('pdbPath', 'a/**/*.pdb');
       c
         d
           f.txt
-        y.pdb
-        x.pdb
-        z.pdb
+        f.txt
+        x.dsym
+          x1.txt
+          x2.txt
+      d
+        f.txt
+        e
+          f.txt
+          f
+            f.txt
+            y.dsym
+              y1.txt
 */
 
 //prepare upload
@@ -70,7 +79,7 @@ nock('https://example.test')
 //begin symbol upload
 nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/symbol_uploads', {
-        symbol_type: 'UWP'
+        symbol_type: 'Apple'
     })
     .reply(201, {
         symbol_upload_id: 100,
@@ -104,15 +113,22 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'a/b/c/f.txt': true,
         'a/b/c/d': true,
         'a/b/c/d/f.txt': true,
-        'a/b/c/x.pdb': true,
-        'a/b/c/y.pdb': true,
-        'a/b/c/z.pdb': true
+        'a/b/c/x.dsym': true,
+        'a/b/c/x.dsym/x1.txt': true,
+        'a/b/c/x.dsym/x2.txt': true,
+        'a/b/d/f.txt': true,
+        'a/b/d': true,
+        'a/b/d/e': true,
+        'a/b/d/e/f.txt': true,
+        'a/b/d/e/f': true,
+        'a/b/d/e/f/f.txt': true,
+        'a/b/d/e/f/y.dsym': true,
+        'a/b/d/e/f/y.dsym/y1.txt': true
     },
     'findMatch' : {
-        'a/**/*.pdb': [
-            'a/b/c/x.pdb',
-            'a/b/c/y.pdb',
-            'a/b/c/z.pdb'
+        'a/**/(x|y).dsym': [
+            'a/b/c/x.dsym',
+            'a/b/d/e/f/y.dsym'
         ],
         '/test/path/to/my.ipa': [
             '/test/path/to/my.ipa'
@@ -153,14 +169,34 @@ fs.readdirSync = (folder: string) => {
         ]
     } else if (folder === 'a/b/c') {
         files = [
+            'f.txt',
             'd',
-            'x.pdb',
-            'y.pdb',
-            'z.pdb'
+            'x.dsym',
+            'y.dsym'
+        ]
+    } else if (folder === 'a/b/c/x.dsym') {
+        files = [
+            'x1.txt',
+            'x2.txt'
         ]
     } else if (folder === 'a/b/c/d') {
         files = [
-            'f.txt'
+            'f.txt',
+            'e'
+        ]
+    } else if (folder === 'a/b/c/d/e') {
+        files = [
+            'f.txt',
+            'f'
+        ]
+    } else if (folder === 'a/b/d/e/f') {
+        files = [
+            'f.txt',
+            'y.dsym'
+        ]
+    } else if (folder === 'a/b/d/e/f/y.dsym') {
+        files = [
+            'y1.txt'
         ]
     }
 
@@ -171,7 +207,7 @@ fs.statSync = (s: string) => {
     let stat = new Stats;
 
     stat.isFile = () => {
-        if (s.endsWith('.txt') || s.endsWith('.pdb')) {
+        if (s.endsWith('.txt')) {
             return true;
         } else {
             return false;
@@ -179,7 +215,7 @@ fs.statSync = (s: string) => {
     }
 
     stat.isDirectory = () => {
-        if (s.endsWith('.txt') || s.endsWith('.pdb')) {
+        if (s.endsWith('.txt')) {
             return false;
         } else {
             return true;
