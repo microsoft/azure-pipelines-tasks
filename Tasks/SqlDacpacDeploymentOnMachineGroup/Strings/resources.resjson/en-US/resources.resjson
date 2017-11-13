@@ -12,7 +12,7 @@
   "loc.input.label.ExecuteInTransaction": "Execute within a transaction",
   "loc.input.help.ExecuteInTransaction": "Executes SQL script(s) within a transaction",
   "loc.input.label.ExclusiveLock": "Acquire an exclusive app lock while executing script(s)",
-  "loc.input.help.ExclusiveLock": "Acquire an exclusive app lock while executing script(s)",
+  "loc.input.help.ExclusiveLock": "Acquires an exclusive app lock while executing script(s)",
   "loc.input.label.AppLockName": "App lock name",
   "loc.input.help.AppLockName": "App lock name",
   "loc.input.label.InlineSql": "Inline Sql",
