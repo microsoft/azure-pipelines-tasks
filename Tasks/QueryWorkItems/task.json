@@ -16,10 +16,16 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "instanceNameFormat": "Query Work Items",
-  "groups": [],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "queryId",
@@ -35,6 +41,9 @@
       "label": "Maximum Threshold",
       "defaultValue": "0",
       "required": "true",
+      "properties": {
+          "isNonNegativeNumber": "true"
+      },
       "helpMarkDown": "The maximum number of matching workitems from the query."
     },
     {
@@ -43,6 +52,10 @@
       "label": "Minimum Threshold",
       "defaultValue": "0",
       "required": "true",
+      "properties": {
+        "isNonNegativeNumber": "true"
+      },
+      "groupName": "advanced",
       "helpMarkDown": "The minimum number of matching workitems from the query."
     }
   ],

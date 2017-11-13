@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "runsOn": [
         "Agent",
@@ -68,6 +68,7 @@
 
         {
             "name": "solution",
+            "aliases": ["restoreSolution"],
             "type": "filePath",
             "label": "Path to solution, packages.config, or project.json",
             "defaultValue": "**/*.sln",
@@ -77,6 +78,7 @@
         },
         {
             "name": "selectOrConfig",
+            "aliases": ["feedsToUse"],
             "type": "radio",
             "label": "Feeds to use",
             "defaultValue": "select",
@@ -90,6 +92,7 @@
         },
         {
             "name": "feedRestore",
+            "aliases": ["vstsFeed"],
             "type": "pickList",
             "label": "Use packages from this VSTS/TFS feed",
             "defaultValue": "",
@@ -123,6 +126,7 @@
         },
         {
             "name": "externalEndpoints",
+            "aliases": ["externalFeedCredentials"],
             "type": "connectedService:ExternalNuGetFeed",
             "label": "Credentials for feeds outside this account/collection",
             "required": false,
@@ -145,6 +149,7 @@
         },
         {
             "name": "packagesDirectory",
+            "aliases": ["restoreDirectory"],
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "",
@@ -169,6 +174,7 @@
 
         {
             "name": "searchPatternPush",
+            "aliases": ["packagesToPush"],
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
@@ -190,6 +196,7 @@
         },
         {
             "name": "feedPublish",
+            "aliases": ["publishVstsFeed"],
             "type": "pickList",
             "label": "Target feed",
             "defaultValue": "",
@@ -208,6 +215,7 @@
         },
         {
             "name": "externalEndpoint",
+            "aliases": ["publishFeedCredentials"],
             "type": "connectedService:ExternalNuGetFeed",
             "label": "NuGet server",
             "required": true,
@@ -231,6 +239,7 @@
 
         {
             "name": "searchPatternPack",
+            "aliases": ["packagesToPack"],
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
@@ -240,6 +249,7 @@
         },
         {
             "name": "configurationToPack",
+            "aliases": ["configuration"],
             "type": "string",
             "label": "Configuration to package",
             "defaultValue": "$(BuildConfiguration)",
@@ -249,6 +259,7 @@
         },
         {
             "name": "outputDir",
+            "aliases": ["packDestination"],
             "type": "filePath",
             "label": "Package folder",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
@@ -276,7 +287,7 @@
             "type": "boolean",
             "label": "Include referenced projects",
             "defaultValue": "false",
-            "helpMarkDown": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.nuget.org/consume/command-line-reference#pack-command) at NuGet.org.",
+            "helpMarkDown": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
             "groupName": "packOptions",
             "visibleRule": "versioningScheme = off"
         },
@@ -292,6 +303,7 @@
         },
         {
             "name": "requestedMajorVersion",
+            "aliases": ["majorVersion"],
             "type": "string",
             "label": "Major",
             "defaultValue": "1",
@@ -302,6 +314,7 @@
         },
         {
             "name": "requestedMinorVersion",
+            "aliases": ["minorVersion"],
             "type": "string",
             "label": "Minor",
             "defaultValue": "0",
@@ -312,6 +325,7 @@
         },
         {
             "name": "requestedPatchVersion",
+            "aliases": ["patchVersion"],
             "type": "string",
             "label": "Patch",
             "defaultValue": "0",

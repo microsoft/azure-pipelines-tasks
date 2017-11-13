@@ -20,7 +20,11 @@ async function run() {
                 tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', UUID);
 
                 // set the provisioning profile output variable.
-                tl.setVariable('provProfileUuid', UUID);
+                tl.setVariable('provisioningProfileUuid', UUID);
+
+                // Set the legacy variable that doesn't use the task's refName, unlike our output variables.
+                // If there are multiple InstallAppleCertificate tasks, the last one wins.
+                tl.setVariable('APPLE_PROV_PROFILE_UUID', UUID);                
             } else {
                 throw tl.loc('InputProvisioningProfileNotFound', provProfilePath);
             }

@@ -13,20 +13,25 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [],
     "preview": "false",
     "groups": [
         {
-            "name": "registry",
-            "displayName": "Container Registry Details",
+            "name": "commands",
+            "displayName": "Commands",
             "isExpanded": true
         },
         {
-            "name": "commands",
-            "displayName": "Commands",
+            "name": "registry",
+            "displayName": "Container Registry Details",
             "isExpanded": false
+        }, 
+        {
+            "name": "advanced",
+			"displayName": "Advanced",
+			"isExpanded": false
         },
         {
             "name": "output",
@@ -40,6 +45,60 @@
             "type": "connectedService:kubernetes",
             "label": "Kubernetes Service Connection",
             "helpMarkDown": "Select a Kubernetes service connection."
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "apply",
+            "required": true,
+            "options": {
+                "apply": "apply",
+                "create": "create",
+                "delete": "delete",
+                "exec": "exec",
+                "expose": "expose",
+                "get": "get",
+                "logs": "logs",
+                "run": "run",
+                "set": "set",
+                "top": "top"
+            },
+            "helpMarkDown": "Select a kubectl command.",
+            "groupName": "commands",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "useConfigurationFile",
+            "type": "boolean",
+            "label": "Use Configuration files",
+            "defaultValue": "false",
+            "helpMarkDown": "Use Kubernetes configuration file or folder with the command.",
+            "groupName": "commands"
+        },
+        {
+            "name": "configuration",
+            "type": "filePath",
+            "label": "Configuration File",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
+            "visibleRule": "useConfigurationFile = true",
+            "groupName": "commands"
+        },
+        {
+            "name": "arguments",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2",
+				"editorExtension": "ms.vss-services-azure.parameters-grid"
+            },
+            "label": "Arguments",
+            "helpMarkDown": "Command arguments.",
+            "groupName": "commands"
         },
         {
             "name": "containerRegistryType",
@@ -98,57 +157,46 @@
             "groupName": "registry"
         },
         {
-            "name": "command",
-            "type": "pickList",
-            "label": "Command",
-            "defaultValue": "apply",
-            "required": true,
+            "name": "versionOrLocation",
+            "type": "radio",
+            "label": "Kubectl",
+            "defaultValue": "version",
+            "required": "true",
             "options": {
-                "apply": "apply",
-                "create": "create",
-                "delete": "delete",
-                "exec": "exec",
-                "expose": "expose",
-                "get": "get",
-                "logs": "logs",
-                "run": "run",
-                "set": "set",
-                "top": "top"
+                "version": "Version",
+                "location": "Specify Location"
             },
-            "helpMarkDown": "Select a kubectl command.",
-            "groupName": "commands",
-            "properties": {
-                "EditableOptions": "True"
-            }
+            "groupName": "advanced"
         },
         {
-            "name": "useConfigurationFile",
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version Spec",
+            "defaultValue": "1.7",
+            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7, 1.x, 4.x, 6.10.0, >=6.10.0",
+            "required": "false",
+            "groupName": "advanced",
+            "visibleRule": "versionOrLocation = version"
+        },
+        {
+            "name": "checkLatest",
             "type": "boolean",
-            "label": "Use Configuration files",
+            "label": "Check for Latest Version",
             "defaultValue": "false",
-            "helpMarkDown": "Use Kubernetes configuration file or folder with the command.",
-            "groupName": "commands"
+			"helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
+            "required": false,
+			"groupName": "advanced",
+			"visibleRule": "versionOrLocation = version"
         },
         {
-            "name": "configuration",
+            "name": "specifyLocation",
             "type": "filePath",
-            "label": "Configuration File",
+            "label": "Path to Kubectl",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-            "visibleRule": "useConfigurationFile = true",
-            "groupName": "commands"
-        },
-        {
-            "name": "arguments",
-            "type": "multiLine",
-            "properties": {
-                "resizable": "true",
-                "rows": "2"
-            },
-            "label": "Arguments",
-            "helpMarkDown": "Command arguments.",
-            "groupName": "commands"
+            "helpMarkDown": "Path to the kubectl version to use",
+            "required": "false",
+            "groupName": "advanced",
+            "visibleRule": "versionOrLocation = location"
         },
         {
             "name": "cwd",
@@ -156,7 +204,7 @@
             "label": "Working directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "helpMarkDown": "Working directory for the Kubectl command.",
-            "groupName": "commands"
+            "groupName": "advanced"
         },
         {
             "name": "outputFormat",
