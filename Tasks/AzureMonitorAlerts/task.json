@@ -85,18 +85,18 @@
 			"helpMarkDown": "Send email notification to everyone who has access to this resource group.",
 			"groupName": "NotifyViaEmail"
 		},
-    {
-      "name": "NotifyEmails",
-      "type": "string",
-      "label": "Additional administrator emails",
-      "required": false,
-      "helpMarkDown": "Add additional email addresses separated by semicolons(;) if you want to send email notification to additional people (whether or not you checked the \"subscription owners...\" box).",
-      "groupName": "NotifyViaEmail",
-      "validation": {
-        "expression": "isMatch(value, '^\\s*((\\S+@\\S+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
-        "message": "Enter valid email addresses separated by semicolons"
-      }
-    }
+	    {
+			"name": "NotifyEmails",
+			"type": "string",
+			"label": "Additional administrator emails",
+			"required": false,
+			"helpMarkDown": "Add additional email addresses separated by semicolons(;) if you want to send email notification to additional people (whether or not you checked the \"subscription owners...\" box).",
+			"groupName": "NotifyViaEmail",
+			"validation": {
+				"expression": "isMatch(value, '^\\s*((\\S+@\\S+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
+				"message": "Enter valid email addresses separated by semicolons"
+			}
+	    }
 	],
 	"execution": {
 		"Node": {
