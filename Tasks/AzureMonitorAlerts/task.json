@@ -125,8 +125,8 @@
 		"AlertRuleCheck": "Checking if alert rule '%s' exists in the resource group '%s'.",
 		"AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with id '%s'. Please select a different alert rule name.",
 		"AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
-    "AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
-    "CreatedRule":  "Created rule : '%s'",
+		"AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
+		"CreatedRule":  "Created rule : '%s'",
 		"UpdatedRule": "Updated rule : '%s'",
 		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
 		"SPNExpiredCheck": "Check if the SPN is valid and not expired."
