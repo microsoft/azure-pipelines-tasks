@@ -8,6 +8,10 @@ describe("AzureMonitorAlerts Suite", () => {
         tmr.run();
 
         assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, "should not have written to stderr");
+        let expectedOutput = "loc_mock_CreatedRule Rule1";
+        assert(tmr.stdOutContained(expectedOutput), "should have logged proper message");
+        expectedOutput = "loc_mock_CreatedRule Rule2";
+        assert(tmr.stdOutContained(expectedOutput), "should have logged proper message");
         assert(tmr.succeeded, "task should have succeeded");
     	done();
     });
@@ -17,6 +21,10 @@ describe("AzureMonitorAlerts Suite", () => {
         tmr.run();
 
         assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, "should not have written to stderr");
+        let expectedOutput = "loc_mock_UpdatedRule Rule1";
+        assert(tmr.stdOutContained(expectedOutput), "should have logged proper message");
+        expectedOutput = "loc_mock_UpdatedRule Rule2";
+        assert(tmr.stdOutContained(expectedOutput), "should have logged proper message");
         assert(tmr.succeeded, "task should have succeeded");
     	done();
     });
