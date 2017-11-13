@@ -162,6 +162,18 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "StorageAccountResourceGroup",
+            "type": "string",
+            "label": "Resource Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Resource Group for storage account",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "EditableOptions": "True"
+            }
         }
     ],
     "dataSourceBindings": [

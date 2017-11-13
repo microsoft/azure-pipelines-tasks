@@ -16,6 +16,7 @@ try{
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
+    $StorageAccountResourceGroup = Get-VstsInput -Name StorageAccountResourceGroup
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
@@ -61,7 +62,7 @@ try{
         $azureService = Invoke-Expression -Command $azureService
     }
 
-    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
+    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap $StorageAccountResourceGroup
 
     $label = $DeploymentLabel
 
