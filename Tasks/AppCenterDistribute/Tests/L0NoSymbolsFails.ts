@@ -7,38 +7,35 @@ var Readable = require('stream').Readable
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
+let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/*.ipa');
+tmr.setInput('app', '/test/path/to/one.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
+tmr.setInput('symbolsType', 'Apple');
+tmr.setInput('dsymPath', '/test/path/to/symbols.dSYM');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath" : {
-        "/test/path/to/one.ipa": true,
-        "/test/path/to/two.ipa": true
-    },
-    "findMatch" : {
-        "/test/path/to/*.ipa": [
-            "/test/path/to/one.ipa",
-            "/test/path/to/two.ipa"
+    "findMatch": {
+        "/test/path/to/one.ipa": [
+            "/test/path/to/one.ipa"
+        ],
+        "/test/path/to/symbols.dSYM": [
+            "/test/path/to/symbols.dSYM"
         ]
+    },
+    "checkPath" : {
+        "/test/path/to/one.ipa": true
+    },
+    "exist": {
+        "/test/path/to/symbols.dSYM": false
     }
 };
 tmr.setAnswers(a);
-
-tmr.registerMock('./utils.js', {
-    resolveSinglePath: function(s, b1, b2) {
-       throw new Error("Matched multiple files"); 
-    },
-    checkAndFixFilePath: function(p, name) {
-        return p;
-    }
-});
 
 tmr.run();
 
