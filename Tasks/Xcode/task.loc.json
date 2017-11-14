@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 125,
-    "Patch": 1
+    "Minor": 126,
+    "Patch": 6
   },
   "demands": [
     "xcode"
@@ -27,6 +27,11 @@
     {
       "name": "package",
       "displayName": "ms-resource:loc.group.displayName.package",
+      "isExpanded": true
+    },
+    {
+      "name": "devices",
+      "displayName": "ms-resource:loc.group.displayName.devices",
       "isExpanded": true
     },
     {
@@ -183,13 +188,13 @@
       "visibleRule": "packageApp == true"
     },
     {
-      "name": "signStyle",
+      "name": "signingOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.signStyle",
+      "label": "ms-resource:loc.input.label.signingOption",
       "required": false,
       "groupName": "sign",
       "defaultValue": "nosign",
-      "helpMarkDown": "ms-resource:loc.input.help.signStyle",
+      "helpMarkDown": "ms-resource:loc.input.help.signingOption",
       "options": {
         "nosign": "Do not code sign",
         "default": "Project defaults",
@@ -204,16 +209,16 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "sign",
-      "visibleRule": "signStyle = manual"
+      "visibleRule": "signingOption = manual"
     },
     {
-      "name": "provProfileUuid",
+      "name": "provisioningProfileUuid",
       "type": "string",
-      "label": "ms-resource:loc.input.label.provProfileUuid",
+      "label": "ms-resource:loc.input.label.provisioningProfileUuid",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileUuid",
       "groupName": "sign",
-      "visibleRule": "signStyle = manual"
+      "visibleRule": "signingOption = manual"
     },
     {
       "name": "teamId",
@@ -223,7 +228,66 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.teamId",
       "groupName": "sign",
-      "visibleRule": "signStyle = auto"
+      "visibleRule": "signingOption = auto"
+    },
+    {
+      "name": "destinationPlatformOption",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.destinationPlatformOption",
+      "defaultValue": "default",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatformOption",
+      "groupName": "devices",
+      "options": {
+        "default": "Default",
+        "iOS": "iOS and watchOS",
+        "tvOS": "tvOS",
+        "macOS": "macOS",
+        "custom": "Custom"
+      }
+    },
+    {
+      "name": "destinationPlatform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.destinationPlatform",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatform",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption == custom"
+    },
+    {
+      "name": "destinationTypeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.destinationTypeOption",
+      "defaultValue": "simulators",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationTypeOption",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+      "options": {
+        "simulators": "Simulators",
+        "devices": "Connected Devices"
+      }
+    },
+    {
+      "name": "destinationSimulators",
+      "label": "ms-resource:loc.input.label.destinationSimulators",
+      "type": "string",
+      "defaultValue": "iPhone 7",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationSimulators",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
+    },
+    {
+      "name": "destinationDevices",
+      "label": "ms-resource:loc.input.label.destinationDevices",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDevices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
     },
     {
       "name": "args",
@@ -301,6 +365,10 @@
     "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist",
     "LocateXcodeBasedOnVersion": "ms-resource:loc.messages.LocateXcodeBasedOnVersion",
     "FailedToLocateSpecifiedXcode": "ms-resource:loc.messages.FailedToLocateSpecifiedXcode",
-    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle"
+    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle",
+    "MultipleSchemesFound": "ms-resource:loc.messages.MultipleSchemesFound",
+    "NoSchemeFound": "ms-resource:loc.messages.NoSchemeFound",
+    "SchemeSelected": "ms-resource:loc.messages.SchemeSelected",
+    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme"
   }
 }

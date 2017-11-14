@@ -8,7 +8,7 @@ import path = require('path');
 import fs = require('fs');
 
 describe('General Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         // init here
@@ -20,7 +20,7 @@ describe('General Suite', function () {
     });
 
     it('Find invalid task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // get a list of all _build/task folders
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -56,7 +56,7 @@ describe('General Suite', function () {
     })
 
     it('Find nested task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Path to the _build/Tasks folder.
         var tasksFolder = path.resolve(__dirname, '../Tasks');
@@ -86,7 +86,7 @@ describe('General Suite', function () {
     })
 
     it('Find .js with uppercase', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 		
         // Path to the _build/Tasks folder.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -129,7 +129,7 @@ describe('General Suite', function () {
     })
 
     it('Find unsupported demands', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         var supportedDemands: string[] = ['AndroidSDK',
             'ant',
@@ -202,7 +202,7 @@ describe('General Suite', function () {
     })
 
     it('Find unsupported runsOn', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
         var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server'];
 
         supportedRunsOn.forEach(runsOn => {
@@ -245,7 +245,7 @@ describe('General Suite', function () {
     })
 
     it('Find invalid server Task', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Path to the _build/Tasks folder.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -316,7 +316,7 @@ describe('General Suite', function () {
     })
 
     it('Find invalid message key in task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // get all task.json and module.json paths under _build/Tasks.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -368,7 +368,7 @@ describe('General Suite', function () {
     })
 
     it('Find missing string in .ts', (done: MochaDone) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // search the source dir for all _build/Tasks and module folders.
         let tasksPath = path.resolve(__dirname, '../Tasks');
@@ -491,7 +491,7 @@ describe('General Suite', function () {
     })
 
     it('Find missing string in .ps1/.psm1', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Push all _build/Tasks folders onto the stack.
         var folders: string[] = [];

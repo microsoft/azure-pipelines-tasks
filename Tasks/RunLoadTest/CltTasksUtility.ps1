@@ -220,7 +220,7 @@ function ValidateFiles($inputName, $loadtestDrop, $fileName, $testSettings)
     }
     else
     {
-        ErrorMessage "LoadTest file $inputName is not present in the test drop."
+        ErrorMessage "LoadTest file '$fileName' is not present in the test drop."
     }
 }
 

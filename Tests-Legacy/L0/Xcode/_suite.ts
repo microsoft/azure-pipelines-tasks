@@ -13,7 +13,7 @@ function setResponseFile(name: string) {
 }
 
 describe('Xcode Suite', function() {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         // init here
@@ -31,11 +31,11 @@ describe('Xcode Suite', function() {
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
+        tr.setInput('scheme', 'myscheme');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'default');
+        tr.setInput('signingOption', 'default');
         tr.setInput('signingIdentity', '');
-        tr.setInput('provProfileUuid', '');
+        tr.setInput('provisioningProfileUuid', '');
         tr.setInput('args', '');
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -47,7 +47,7 @@ describe('Xcode Suite', function() {
         .then(() => {
             assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
             assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-                    '-workspace /user/build/fun.xcodeproj/project.xcworkspace build ' +
+                    '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme build ' +
                     'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
                     'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
                     'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
@@ -74,9 +74,9 @@ describe('Xcode Suite', function() {
         tr.setInput('xcWorkspacePath', '/user/build');
         tr.setInput('scheme', '');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'default');
+        tr.setInput('signingOption', 'default');
         tr.setInput('signingIdentity', '');
-        tr.setInput('provProfileUuid', '');
+        tr.setInput('provisioningProfileUuid', '');
         tr.setInput('args', '-project test.xcodeproj');
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -113,11 +113,11 @@ describe('Xcode Suite', function() {
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
+        tr.setInput('scheme', 'myscheme');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'default');
+        tr.setInput('signingOption', 'default');
         tr.setInput('signingIdentity', '');
-        tr.setInput('provProfileUuid', '');
+        tr.setInput('provisioningProfileUuid', '');
         tr.setInput('args', '');
         tr.setInput('cwd', '/user/build');
         tr.setInput('xcodeVersion', 'default');
@@ -131,7 +131,7 @@ describe('Xcode Suite', function() {
                 assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
 
                 assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace test ' +
+                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test ' +
                         'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
                         'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
                         'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
@@ -161,11 +161,11 @@ describe('Xcode Suite', function() {
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
-        tr.setInput('scheme', '');
+        tr.setInput('scheme', 'myscheme');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'default');
+        tr.setInput('signingOption', 'default');
         tr.setInput('signingIdentity', '');
-        tr.setInput('provProfileUuid', '');
+        tr.setInput('provisioningProfileUuid', '');
         tr.setInput('args', '');
         tr.setInput('cwd', '/user/build');
         tr.setInput('xcodeVersion', 'default');
@@ -179,7 +179,7 @@ describe('Xcode Suite', function() {
                 assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
 
                 assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace test ' +
+                        '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test ' +
                         'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
                         'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
                         'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
@@ -218,9 +218,9 @@ describe('Xcode Suite', function() {
             tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
             tr.setInput('scheme', 'fun');
             tr.setInput('packageApp', 'false');
-            tr.setInput('signStyle', 'manual');
+            tr.setInput('signingOption', 'manual');
             tr.setInput('signingIdentity', 'iPhone Developer: XcodeTask Tester (HE432Y3E2Q)');
-            tr.setInput('provProfileUuid', 'testuuid');
+            tr.setInput('provisioningProfileUuid', 'testuuid');
             tr.setInput('args', '');
             tr.setInput('cwd', '/user/build');
             tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -259,9 +259,9 @@ describe('Xcode Suite', function() {
             tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
             tr.setInput('scheme', 'fun');
             tr.setInput('packageApp', 'false');
-            tr.setInput('signStyle', 'manual');
+            tr.setInput('signingOption', 'manual');
             tr.setInput('signingIdentity', 'iPhone Developer: XcodeTask Tester (HE432Y3E2Q)');
-            tr.setInput('provProfileUuid', '');
+            tr.setInput('provisioningProfileUuid', '');
             tr.setInput('args', '');
             tr.setInput('cwd', '/user/build');
             tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -295,9 +295,9 @@ describe('Xcode Suite', function() {
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
         tr.setInput('scheme', 'fun');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'manual');
+        tr.setInput('signingOption', 'manual');
         tr.setInput('signingIdentity', '');
-        tr.setInput('provProfileUuid', 'testuuid');
+        tr.setInput('provisioningProfileUuid', 'testuuid');
         tr.setInput('args', '');
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -331,9 +331,9 @@ describe('Xcode Suite', function() {
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
         tr.setInput('scheme', 'fun');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'manual');
+        tr.setInput('signingOption', 'manual');
         tr.setInput('signingIdentity', 'testSignIdentity');
-        tr.setInput('provProfileUuid', 'testUUID');
+        tr.setInput('provisioningProfileUuid', 'testUUID');
         tr.setInput('args', '');
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -366,9 +366,9 @@ describe('Xcode Suite', function() {
      tr.setInput('xcWorkspacePath', '/user/build');
      tr.setInput('scheme', '');
      tr.setInput('packageApp', 'false');
-     tr.setInput('signStyle', 'default');
+     tr.setInput('signingOption', 'default');
      tr.setInput('signingIdentity', '');
-     tr.setInput('provProfileUuid', '');
+     tr.setInput('provisioningProfileUuid', '');
      tr.setInput('args', '');
      tr.setInput('cwd', '/user/build');
      tr.setInput('outputPattern', '');
@@ -412,9 +412,9 @@ describe('Xcode Suite', function() {
         tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
         tr.setInput('scheme', 'fun');
         tr.setInput('packageApp', 'false');
-        tr.setInput('signStyle', 'default');
+        tr.setInput('signingOption', 'default');
         tr.setInput('signingIdentity', '');
-        tr.setInput('provProfileUuid', '');
+        tr.setInput('provisioningProfileUuid', '');
         tr.setInput('args', '-exportArchive -exportPath /user/build/output/iphone/release');
         tr.setInput('cwd', '/user/build');
         tr.setInput('outputPattern', 'output/iphone/release');
