@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -110,5 +110,9 @@
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
+    "ErrorTestResultsPublisher": "ms-resource:loc.messages.ErrorTestResultsPublisher"
   }
 }

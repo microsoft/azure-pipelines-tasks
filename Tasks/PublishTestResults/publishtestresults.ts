@@ -29,7 +29,7 @@ if (isNullOrWhitespace(searchFolder)) {
 
 let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
 if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-    tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
+    tl.warning(tl.loc('NoMatchingFilesFound', testResultsFiles));
 }
 else {
     tl.debug('OS type: ' + tl.osType());
@@ -58,12 +58,12 @@ async function publishResultsThroughExe() {
     try {
         await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars });
     } catch (err) {
-        tl.warning("Error while executing TestResultsPublisher: " + err);
+        tl.warning(tl.loc("ErrorTestResultsPublisher", err));
     }
 }
 
 function getTestResultsPublisherLocation(): string {
-    return path.join(__dirname, 'TestResultsPublisher.exe');
+    return path.join(__dirname, 'modules/TestResultsPublisher.exe');
 }
 
 function getArguments(): string[] {

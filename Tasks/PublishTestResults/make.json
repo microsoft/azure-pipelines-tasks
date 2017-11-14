@@ -1,9 +1,9 @@
 {
   "externals": {
-    "files": [
+    "archivePackages": [
       {
-        "url": "https://testingpublish.blob.core.windows.net/publishcontainer/v1.0.7/TestResultsPublisher.exe",
-        "dest": "./TestResultsPublisher.exe"
+        "url": "https://publishtestresults.blob.core.windows.net/publishtestresults/4401851/PublishTestResults.zip",
+        "dest": "./"
       }
     ]
   }

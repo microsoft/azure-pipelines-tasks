@@ -20,5 +20,7 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration for which the tests were run.",
   "loc.input.label.publishRunAttachments": "Upload test results files",
-  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments. If selected, test result files will be uploaded and attached to test run"
+  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments. If selected, test result files will be uploaded and attached to test run",
+  "loc.messages.NoMatchingFilesFound": "No test result files matching '%s' were found.",
+  "loc.messages.ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s."
 }

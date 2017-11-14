@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -105,10 +105,14 @@
         }
     ],
     "instanceNameFormat": "Publish Test Results $(testResultsFiles)",
-    "execution": {
-        "Node": {
-            "target": "publishtestresults.js",
-            "argumentFormat": ""
-        }
+  "execution": {
+    "Node": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
     }
+  },
+  "messages": {
+    "NoMatchingFilesFound": "No test result files matching '%s' were found.",
+    "ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s."
+  }
 }
