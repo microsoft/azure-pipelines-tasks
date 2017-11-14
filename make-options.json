@@ -87,6 +87,7 @@
         "SSH",
         "VSBuild",
         "VsTest",
+        "VsTestPlatformToolInstaller",
         "VSMobileCenterTest",
         "WindowsMachineFileCopy",
         "XamarinAndroid",
