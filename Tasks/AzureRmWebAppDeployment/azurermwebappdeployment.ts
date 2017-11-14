@@ -202,8 +202,14 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
 
-    // Add release annotation for App Services which has an Application Insights resource configured to it.
-    await addReleaseAnnotation(endPoint, webAppName, webAppSettings, isDeploymentSuccess);
+    try {
+    	// Add release annotation for App Services which has an Application Insights resource configured to it.
+    	await addReleaseAnnotation(endPoint, webAppName, webAppSettings, isDeploymentSuccess);
+    }
+    catch (error) {
+    	// let the task silently continue if adding release annotation fails
+    	console.log(tl.loc("FailedAddingReleaseAnnotation", error));
+    }
 
     if(publishingProfile != null) {
         var customMessage = {
@@ -386,16 +392,10 @@ async function addReleaseAnnotation(SPN, webAppName: string, webAppSettings: any
     if (!!appInsightsInstrumentationKey) {
         let appInsightsResource = await azureRESTUtility.getApplicationInsightsResources(SPN, null, `InstrumentationKey eq '${appInsightsInstrumentationKey}'`);
         if (appInsightsResource && appInsightsResource.length > 0) {
-            try {
-                console.log(tl.loc("AddingReleaseAnnotation", appInsightsResource[0].name));
-                let releaseAnnotationResponse = await azureRESTUtility.addReleaseAnnotation(SPN, appInsightsResource[0].id, isDeploymentSuccess);
-                tl.debug(JSON.stringify(releaseAnnotationResponse, null, 2));
-                console.log(tl.loc("SuccessfullyAddedReleaseAnnotation", appInsightsResource[0].name));
-            }
-            catch (error) {
-                // let the task silently continue if adding release annotation fails
-                console.log(tl.loc("FailedAddingReleaseAnnotation", error));
-            }
+			console.log(tl.loc("AddingReleaseAnnotation", appInsightsResource[0].name));
+			let releaseAnnotationResponse = await azureRESTUtility.addReleaseAnnotation(SPN, appInsightsResource[0].id, isDeploymentSuccess);
+			tl.debug(JSON.stringify(releaseAnnotationResponse, null, 2));
+			console.log(tl.loc("SuccessfullyAddedReleaseAnnotation", appInsightsResource[0].name));
         }
         else {
             tl.debug(`Unable to find Application Insights resource with Instrumentation key ${appInsightsInstrumentationKey}. Skipping adding release annotation.`);
