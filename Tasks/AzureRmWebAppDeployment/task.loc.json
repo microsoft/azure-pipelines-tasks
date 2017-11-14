@@ -56,17 +56,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "WebAppName",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppName",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
-    },
-    {
       "name": "WebAppKind",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
@@ -85,6 +74,17 @@
         "PopulateDefaultValue": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
       "name": "DeployToSlotFlag",
@@ -496,7 +496,10 @@
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNames"
+      "dataSourceName": "AzureRMWebAppNamesByType",
+      "parameters": {
+        "WebAppKind": "$(WebAppKind)"
+      }
     },
     {
       "target": "ResourceGroupName",
