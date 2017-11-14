@@ -142,10 +142,10 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             if (tiaConfig.useNewCollector) {
                 testImpactCollectorNode[0].DataCollector[0].$.codebase = getTraceCollectorUri(vsVersion.majorVersion);
             }
+            
             testImpactCollectorNode[0].DataCollector[0].Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
-            if (getTIALevel(tiaConfig) === 'file') {
-                testImpactCollectorNode[0].DataCollector[0].Configuration[0].LogFilePath = 'true';
-            }
+            testImpactCollectorNode[0].DataCollector[0].Configuration[0].LogFilePath = 'true';
+
             if (tiaConfig.context === 'CD') {
                 testImpactCollectorNode[0].DataCollector[0].Configuration[0].RootPath = '';
             } else {
