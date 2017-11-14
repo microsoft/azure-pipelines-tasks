@@ -31,16 +31,7 @@ try
     # Mock file access not under test
     Register-Mock Assert-VstsPath
 
-    # V2 agent, UseDbgLkg default to true
-    Register-Mock Get-VstsTaskVariable { "$($env:TEMP)\V2Agent" } -- -Name Agent.HomeDirectory -Require
-    $env:PublishSymbols_Debug = "true"
-    $env:PublishSymbols_UseDbgLkg = $null
-    Assert-AreEqual -Expected "$taskRoot\dbghelp.dll" -Actual (Get-DbghelpPath)
-    Assert-AreEqual -Expected "$taskRoot\pdbstr.exe" -Actual (Get-PdbstrPath)
-    Assert-AreEqual -Expected "$taskRoot\symstore.exe" -Actual (Get-SymStorePath)
-    Unregister-Mock Get-VstsTaskVariable
-
-    # V2 agent, UseDbgLkg explicitly true
+    # V2 agent, UseDbgLkg true
     Register-Mock Get-VstsTaskVariable { "$($env:TEMP)\V2Agent" } -- -Name Agent.HomeDirectory -Require
     $env:PublishSymbols_Debug = "true"
     $env:PublishSymbols_UseDbgLkg = "true"
@@ -49,10 +40,10 @@ try
     Assert-AreEqual -Expected "$taskRoot\symstore.exe" -Actual (Get-SymStorePath)
     Unregister-Mock Get-VstsTaskVariable
 
-    # V2 agent, UseDbgLkg explicitly false (opt-out)
+    # V2 agent, UseDbgLkg false
     Register-Mock Get-VstsTaskVariable { "$($env:TEMP)\V2Agent" } -- -Name Agent.HomeDirectory -Require
     $env:PublishSymbols_Debug = "true"
-    $env:PublishSymbols_UseDbgLkg = "false"
+    $env:PublishSymbols_UseDbgLkg = $null
     Assert-AreEqual -Expected "$($env:TEMP)\V2Agent\externals\symstore\dbghelp.dll" -Actual (Get-DbghelpPath)
     Assert-AreEqual -Expected "$($env:TEMP)\V2Agent\externals\pdbstr\pdbstr.exe" -Actual (Get-PdbstrPath)
     Assert-AreEqual -Expected "$($env:TEMP)\V2Agent\externals\symstore\symstore.exe" -Actual (Get-SymStorePath)
@@ -67,10 +58,10 @@ try
     Assert-AreEqual -Expected "$taskRoot\symstore.exe" -Actual (Get-SymStorePath)
     Unregister-Mock Get-VstsTaskVariable
     
-    # V1 agent, UseDbgLkg explicitly false
+    # V1 agent, UseDbgLkg false
     Register-Mock Get-VstsTaskVariable { "$($env:TEMP)\V1Agent" } -- -Name Agent.HomeDirectory -Require
     $env:PublishSymbols_Debug = "true"
-    $env:PublishSymbols_UseDbgLkg = "false"
+    $env:PublishSymbols_UseDbgLkg = $null
     Assert-AreEqual -Expected "$($env:TEMP)\V1Agent\Agent\Worker\Tools\Symstore\dbghelp.dll" -Actual (Get-DbghelpPath)
     Assert-AreEqual -Expected "$($env:TEMP)\V1Agent\Agent\Worker\Tools\Pdbstr\pdbstr.exe" -Actual (Get-PdbstrPath)
     Assert-AreEqual -Expected "$($env:TEMP)\V1Agent\Agent\Worker\Tools\Symstore\symstore.exe" -Actual (Get-SymStorePath)
