@@ -1,0 +1,134 @@
+{
+  "id": "95F6D50A-5158-4A83-89EB-39AA19584AD5",
+  "name": "ServiceFabricDiffPackage",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "upgrade",
+      "displayName": "ms-resource:loc.group.displayName.upgrade",
+      "isExpanded": false
+    },
+    {
+      "name": "docker",
+      "displayName": "ms-resource:loc.group.displayName.docker",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "applicationPackagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.applicationPackagePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationPackagePath"
+    },
+    {
+      "name": "diffPackagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.diffPackagePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.diffPackagePath"
+    },
+    {
+      "name": "serviceConnectionName",
+      "type": "connectedService:servicefabric",
+      "label": "ms-resource:loc.input.label.serviceConnectionName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceConnectionName"
+    },
+    {
+      "name": "publishProfilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.publishProfilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishProfilePath"
+    },
+    {
+      "name": "applicationParameterPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.applicationParameterPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "DiffPackage.ps1"
+    }
+  },
+  "messages": {
+    "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
+    "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
+    "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
+    "FoundPath": "ms-resource:loc.messages.FoundPath",
+    "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
+    "ServiceEndpointUpgradeWarning": "ms-resource:loc.messages.ServiceEndpointUpgradeWarning",
+    "OverrideApplicationParameterFile": "ms-resource:loc.messages.OverrideApplicationParameterFile",
+    "OverrideUpgradeSettings": "ms-resource:loc.messages.OverrideUpgradeSettings",
+    "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
+    "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
+    "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
+    "UnsupportedDockerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedDockerRegistryAuthScheme",
+    "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
+    "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
+    "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
+    "SFSDK_UnableToReadAppTypeAndVersion": "ms-resource:loc.messages.SFSDK_UnableToReadAppTypeAndVersion",
+    "SFSDK_AppAlreadyExistsError": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsError",
+    "SFSDK_AppAlreadyExistsInfo": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsInfo",
+    "SFSDK_UnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_UnregisteringExistingAppType",
+    "SFSDK_UnableToUnregisterAppType": "ms-resource:loc.messages.SFSDK_UnableToUnregisterAppType",
+    "SFSDK_CopyingAppToImageStore": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStore",
+    "SFSDK_CopyingAppToImageStoreFailed": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStoreFailed",
+    "SFSDK_RegisterAppType": "ms-resource:loc.messages.SFSDK_RegisterAppType",
+    "SFSDK_RegisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_RegisterAppTypeFailed",
+    "SFSDK_RemoveAppPackage": "ms-resource:loc.messages.SFSDK_RemoveAppPackage",
+    "SFSDK_CreateApplication": "ms-resource:loc.messages.SFSDK_CreateApplication",
+    "SFSDK_CreateApplicationFailed": "ms-resource:loc.messages.SFSDK_CreateApplicationFailed",
+    "SFSDK_CreateApplicationSuccess": "ms-resource:loc.messages.SFSDK_CreateApplicationSuccess",
+    "SFSDK_AppDoesNotExist": "ms-resource:loc.messages.SFSDK_AppDoesNotExist",
+    "SFSDK_AppTypeMismatch": "ms-resource:loc.messages.SFSDK_AppTypeMismatch",
+    "SFSDK_UpgradeInProgressError": "ms-resource:loc.messages.SFSDK_UpgradeInProgressError",
+    "SFSDK_StartAppUpgrade": "ms-resource:loc.messages.SFSDK_StartAppUpgrade",
+    "SFSDK_UnregisterAppTypeOnUpgradeFailure": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure",
+    "SFSDK_WaitingForUpgrade": "ms-resource:loc.messages.SFSDK_WaitingForUpgrade",
+    "SFSDK_UnregisterUnusedVersions": "ms-resource:loc.messages.SFSDK_UnregisterUnusedVersions",
+    "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
+    "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
+    "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
+    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
+    "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
+    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
+    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning"
+  }
+}
