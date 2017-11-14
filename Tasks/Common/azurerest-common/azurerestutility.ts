@@ -87,10 +87,9 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
                 tl.debug("Action: updateDeploymentStatus, Response: " + JSON.stringify(response));
                 deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
             }
-        },
-            (error) => {
-                deferred.reject(error);
-            });
+        }, (error) => {
+            deferred.reject(error);
+        });
     }
     else {
         deferred.reject(tl.loc('WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite'));
@@ -127,10 +126,9 @@ export function getAllContinuousWebJobs(publishingProfile): Q.Promise<any> {
                 tl.debug("Action: getAllContinuousWebJobs, Response: " + JSON.stringify(response));
                 deferred.reject(tl.loc("UnableToFetchContinuousWebJobs"));
             }
-        },
-            (error) => {
-                deferred.reject(error);
-            });
+        }, (error) => {    
+            deferred.reject(error);
+        });
     }
     else {
         deferred.reject(tl.loc('UnableToFetchContinuousWebJobs'));
@@ -159,10 +157,9 @@ export function startContinuousWebJob(publishingProfile, continuousWebJobName): 
                 tl.debug("Action: startContinuousWebJob, Response: " + JSON.stringify(response));
                 deferred.reject(tl.loc("UnableToStartContinuousWebJob", continuousWebJobName));
             }
-        },
-            (error) => {
-                deferred.reject(error);
-            });
+        }, (error) => {
+            deferred.reject(error);
+        });
     }
     else {
         deferred.reject(tl.loc('UnableToStartContinuousWebJob', continuousWebJobName));
@@ -191,10 +188,9 @@ export function stopContinuousWebJob(publishingProfile, continuousWebJobName): Q
                 tl.debug("Action: stopContinuousWebJob, Response: " + JSON.stringify(response));
                 deferred.reject(tl.loc("UnableToStopContinuousWebJob", continuousWebJobName));
             }
-        },
-            (error) => {
-                deferred.reject(error);
-            });
+        }, (error) => {
+            deferred.reject(error);
+        });
     }
     else {
         deferred.reject(tl.loc('UnableToStopContinuousWebJob', continuousWebJobName));
@@ -249,10 +245,9 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
             tl.error(response.message.statusMessage);
             deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp', webAppName, response.message.statusCode, response.message.statusMessage));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -314,10 +309,9 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
         } else {
             deferred.reject(tl.loc('CouldnotfetchaccesstokenforAzureStatusCode', response.message.statusCode, response.message.statusMessage));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -348,10 +342,9 @@ async function getAzureRMResourceID(endpoint, resourceName: string, url: string,
             tl.debug("Action: getAzureRMResourceID, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc('UnabletoretrieveWebAppID', resourceName, response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -386,10 +379,9 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
             tl.debug("Action: getAzureRMWebAppConfigDetails, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {    
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -417,10 +409,9 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
             tl.debug("Action: updateAzureRMWebAppConfigDetails, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("UnableToUpdateWebAppConfigDetails", response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -447,10 +438,9 @@ export async function getWebAppAppSettings(endpoint, webAppName: string, resourc
             tl.debug("Action: getWebAppAppSettings, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -477,10 +467,9 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
             tl.debug("Action: updateWebAppAppSettings, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc('Unabletoupdatewebappsettings', response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -497,10 +486,9 @@ async function getOperationStatus(SPN, url: string) {
     let promise: Promise<IRestResponse<any>> = restClient.get(url, options);
     promise.then((response) => {
         deferred.resolve(response);
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -574,10 +562,9 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
             tl.debug("Slot swap operation failed. Operation Response: " + contents);
             deferred.reject(response.message.statusMessage);
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -606,10 +593,9 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
             tl.debug("Action: startAppService, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("FailedtoStartAppService", webAppNameWithSlot, response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -638,10 +624,9 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
             tl.debug("Action: stopAppService, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("FailedtoStopAppService", webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -674,10 +659,9 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
             tl.debug("Action: restartAppService, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("FailedtoRestartAppService", webAppNameWithSlot, response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -706,10 +690,9 @@ export async function getAzureContainerRegistryCredentials(endpoint, azureContai
             deferred.reject(tl.loc('Unabletoretrieveazureregistrycredentials', response.statusCode));
 
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -731,11 +714,10 @@ export async function testAzureWebAppAvailability(webAppUrl, availabilityTimeout
             tl.debug("Azure web app in wrong state. Action: testAzureWebAppAvailability, Response: " + contents);
             deferred.reject("FAILED");
         }
-    },
-        (error) => {
-            tl.debug("Failed to check availability of azure web app, error : " + error);
-            deferred.reject(error);
-        });
+    }, (error) => {
+        tl.debug("Failed to check availability of azure web app, error : " + error);
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -764,10 +746,9 @@ export async function getAppServiceDetails(endpoint, resourceGroupName: string, 
             tl.debug("Action: getAppServiceDetails, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("FailedToFetchAppServiceState", webAppNameWithSlot, response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -800,10 +781,9 @@ export async function getAzureRMWebAppMetadata(
             tl.debug("Action: getAzureRMWebAppMetadata, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("UnableToGetAzureRMWebAppMetadata", response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -839,10 +819,9 @@ export async function updateAzureRMWebAppMetadata(
             tl.debug("Action: updateAzureRMWebAppMetadata, Response: " + JSON.stringify(response));
             deferred.reject(tl.loc("UnableToUpdateAzureRMWebAppMetadata", response.statusCode));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
     return deferred.promise;
 }
 
@@ -870,10 +849,9 @@ export async function getApplicationInsightsResources(endpoint, appInsightsResou
         } else {
             tl.debug("Action: getApplicationInsightsResources, Response: " + JSON.stringify(response));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -901,10 +879,9 @@ export async function updateApplicationInsightsResource(endpoint, appInsightsRes
             tl.debug("Action: updateApplicationInsightsResource, Response: " + JSON.stringify(response));
             deferred.reject(new Error(response.statusCode.toString()));
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -938,10 +915,9 @@ export async function getAppInsightsWebTests(endpoint, appInsightsResourceGroupN
             tl.debug("Action: getAppInsightsWebTests, Response: " + JSON.stringify(response));
             deferred.reject(response.statusCode);
         }
-    },
-        (error) => {
-            deferred.reject(error);
-        });
+    }, (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
@@ -1012,9 +988,9 @@ export async function createAppInsightsWebTest(endpoint, appInsightsResourceGrou
             deferred.reject(response.statusCode);
         }
     },
-        (error) => {
-            deferred.reject(error);
-        });
+    (error) => {
+        deferred.reject(error);
+    });
 
     return deferred.promise;
 }
