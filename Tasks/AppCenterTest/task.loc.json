@@ -1,11 +1,10 @@
 {
   "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
-  "name": "VSMobileCenterTest",
+  "name": "AppCenterTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
-  "preview": true,
   "visibility": [
     "Build"
   ],
@@ -13,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 126,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -51,7 +50,7 @@
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.artifactsDir",
-      "defaultValue": "$(Build.ArtifactStagingDirectory)/MobileCenterTest",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/AppCenterTest",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.artifactsDir"
     },
@@ -306,7 +305,7 @@
       "groupName": "run",
       "helpMarkDown": "ms-resource:loc.input.help.credsType",
       "options": {
-        "serviceEndpoint": "Mobile Center Connection",
+        "serviceEndpoint": "App Center Connection",
         "inputs": "Credentials"
       }
     },
@@ -467,7 +466,8 @@
       "label": "ms-resource:loc.input.label.cliLocationOverride",
       "groupName": "advanced",
       "defaultValue": "",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cliLocationOverride"
     },
     {
       "name": "debug",
@@ -485,14 +485,14 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "vsmobilecentertest.js",
+      "target": "appcentertest.js",
       "argumentFormat": ""
     }
   },
   "messages": {
     "Succeeded": "ms-resource:loc.messages.Succeeded",
     "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
-    "CannotLocateMobileCenterCLI": "ms-resource:loc.messages.CannotLocateMobileCenterCLI",
+    "CannotLocateAppCenterCLI": "ms-resource:loc.messages.CannotLocateAppCenterCLI",
     "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles"
   }

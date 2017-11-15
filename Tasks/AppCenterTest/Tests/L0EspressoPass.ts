@@ -3,52 +3,44 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'vsmobilecentertest.js');
+let taskPath = path.join(__dirname, '..', 'appcentertest.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('enablePrepare', 'false');
+tmr.setInput('enablePrepare', 'true');
 tmr.setInput('enableRun', 'true');
-tmr.setInput('credsType', 'inputs');
-tmr.setInput('username', 'MyUsername');
-tmr.setInput('password', 'MyPassword');
+tmr.setInput('credsType', 'serviceEndpoint');
+tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
 tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('devices', '1234abcd');
 tmr.setInput('series', 'master');
 tmr.setInput('dsymDir', '/path/to/dsym');
-tmr.setInput('locale', 'user');
-tmr.setInput('userDefinedLocale', 'nc_US');
+tmr.setInput('locale', 'nl_NL');
 tmr.setInput('artifactsDir', '/path/to/artifactsDir');
-tmr.setInput('framework', 'uitest');
-tmr.setInput('uitestBuildDir', '/path/to/uitest_build_dir');
-tmr.setInput('prepareOpts', '--myopts');
-tmr.setInput('cliLocationOverride', '/path/to/mobile-center');
+tmr.setInput('framework', 'espresso');
+tmr.setInput('espressoBuildDir', '/path/to/espresso_build_dir');
+tmr.setInput('espressoTestApkPath', '/path/to/espresso_test_apk');
+tmr.setInput('debug', 'true');
+tmr.setInput('cliLocationOverride', '/path/to/appcenter');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/test/path/to/my.ipa": true,
-        "/path/to/mobile-center": true
+        "/path/to/espresso_test_apk": true,
+        "/path/to/appcenter": true
     },
     "exec" : {
-        "/path/to/mobile-center login -u MyUsername -p MyPassword --quiet" : {
+        "/path/to/appcenter test prepare espresso --artifacts-dir /path/to/artifactsDir --build-dir /path/to/espresso_build_dir --test-apk-path /path/to/espresso_test_apk --debug --quiet": {
             "code": 0,
             "stdout": "success",
             "stderr": ""
         },
-        "/path/to/mobile-center logout --quiet" : {
+        "/path/to/appcenter test run manifest --manifest-path /path/to/artifactsDir/manifest.json --app-path /test/path/to/my.ipa --app testuser/testapp --devices 1234abcd --test-series master --dsym-dir /path/to/dsym --locale nl_NL --debug --quiet --token mytoken123": {
             "code": 0,
             "stdout": "success",
-            "stderr": ""
-        },
-        "/path/to/mobile-center test run manifest --manifest-path /path/to/artifactsDir/manifest.json --app-path /test/path/to/my.ipa --app testuser/testapp --devices 1234abcd --test-series master --dsym-dir /path/to/dsym --locale nc_US --quiet": {
-            "code": 128,
-            "stdout": "failed",
             "stderr": ""
         }
-    },
-    "exist": {
-        "/path/to/mobile-center": true
     }
 };
 tmr.setAnswers(a);
