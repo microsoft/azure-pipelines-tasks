@@ -63,22 +63,27 @@ function getCliPath(): string {
         return userDefinedPath;
     }
 
-    let systemPath = tl.which('mobile-center', false);
+    let systemPath = tl.which('appcenter', false);
     if (systemPath) {
         return systemPath;
     }
 
-    // On Windows (Hosted Agent) we attempt to use the bundled mobile-center cli as user doesn't have any
-    // chance to install the CLI themselves.  On Mac the bundled mobile-center does not work due to some
+    let oldCliSystemPath = tl.which('mobile-center', false);
+    if (oldCliSystemPath) {
+        return oldCliSystemPath;
+    }
+
+    // On Windows (Hosted Agent) we attempt to use the bundled appcenter cli as user doesn't have any
+    // chance to install the CLI themselves.  On Mac the bundled appcenter does not work due to some
     // path issues.
     let isWindows = os.type().match(/^Win/);
     if (isWindows) {
-        let cliPath = path.join(__dirname, "node_modules", ".bin", "mobile-center.cmd");
+        let cliPath = path.join(__dirname, "node_modules", ".bin", "appcenter.cmd");
         return cliPath;
     }
 
     // Failed to locate CLI
-    throw new Error(tl.loc('CannotLocateMobileCenterCLI'));;
+    throw new Error(tl.loc('CannotLocateAppCenterCLI'));;
 }
 
 function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifactsDir: string): ToolRunner {
@@ -233,7 +238,7 @@ async function run() {
     let testRunId: string = null;
 
     try {
-        tl.checkPath(cliPath, "mobile-center");
+        tl.checkPath(cliPath, "CLI for Visual Studio App Center");
 
         let debug: boolean = tl.getBoolInput('debug', false);
         let prepareTests: boolean = tl.getBoolInput('enablePrepare', false);
