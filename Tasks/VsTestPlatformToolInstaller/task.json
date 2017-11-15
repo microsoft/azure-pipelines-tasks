@@ -14,9 +14,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 3
     },
-    "preview": true,
+    "preview": true,    
     "satisfies": ["VsTest"],
     "demands": [],
     "instanceNameFormat": "VsTest Platform Installer",
@@ -44,7 +44,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "vstestplatformtoolInstaller.js",
+            "target": "vstestplatformtoolinstaller.js",
             "argumentFormat": ""
         }
     },
