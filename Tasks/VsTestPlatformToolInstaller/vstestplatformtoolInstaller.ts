@@ -5,25 +5,33 @@ import * as restm from 'typed-rest-client/RestClient';
 import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
 import * as os from 'os';
 import * as path from 'path';
+import * as ci from './cieventlogger';
+let perf = require('performance-now');
 
+let executionStartTime = perf();
 let osPlat: string = os.platform();
 let packageName = 'Microsoft.TestPlatform';
 let packageSource = 'https://api.nuget.org/v3/index.json'
 
 async function startInstaller() {
+    tl.setResourcePath(path.join(__dirname, 'task.json'));
+    ci.publishEvent('Start', { OS: osPlat, isSupportedOS: (osPlat === 'win32').toString(), startTime: executionStartTime } );
+
     if (osPlat !== 'win32') {
-        throw new Error(tl.loc('OnlyWindowsOsSupported'));
+        // Fail the task if os is not windows
+        taskLib.setResult(taskLib.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+        return;
     }
 
     try {
-        tl.setResourcePath(path.join(__dirname, 'task.json'));
-
         console.log(tl.loc('StartingInstaller'));
         console.log('==============================================================================');
 
         // Read inputs
         let versionSelectorInput = taskLib.getInput('versionSelector', true);
-        let testPlatformVersion = taskLib.getInput('testPlatformVersion', false); 
+        let testPlatformVersion = taskLib.getInput('testPlatformVersion', false);
+
+        ci.publishEvent('Options', { versionSelectorInput: versionSelectorInput, testPlatformVersion: testPlatformVersion } );
 
         //TODO: Add an input for cleaning up the tool cache?
         
@@ -31,8 +39,11 @@ async function startInstaller() {
         await getVsTestPlatformTool(testPlatformVersion, versionSelectorInput);
     }
     catch (error) {
+        ci.publishEvent('Completed', { isSetupSuccessful: 'false', error: error.message } );
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
+
+    ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: executionStartTime, endTime: perf() } );
 }
 
 async function getVsTestPlatformTool(testPlatformVersion: string, versionSelectorInput: string) {
@@ -55,24 +66,29 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
             if(testPlatformVersion === null) {
                 tl.warning(tl.loc('RequiredVersionNotListed'));
                 tl.debug('Looking for latest available version in cache.');
+                ci.publishEvent('RequestedVersionNotListed', { action: 'getLatestAvailableInCache' } );
                 testPlatformVersion = 'x';
             }
             else {
                 tl.debug(`Found the latest version to be ${testPlatformVersion}`);
+                ci.publishEvent('RequestedVersionListed', { action: 'lookInCacheForListedVersion', version: testPlatformVersion } );
             }
         } catch(error) {
             // Failed to list available versions, look for the latest version available in the cache
             tl.warning(tl.loc('FailedToListAvailablePackagesFromNuget'));
             tl.debug('Looking for latest available version in cache.');
+            ci.publishEvent('RequestedVersionListFailed', { action: 'getLatestAvailableInCache', error: error } );
             testPlatformVersion = 'x';
         }
     }
 
     // Check cache for the specified version
     tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
+    var cacheLookupStartTime = perf();
     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
+    ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'false', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
 
-    if ((!toolPath || toolPath === 'undefined')) {
+    if (!toolPath || toolPath === 'undefined') {
         if(testPlatformVersion && testPlatformVersion !== 'x') {
             tl.debug(`Could not find ${packageName}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
             if (toolLib.isExplicitVersion(testPlatformVersion)) {
@@ -82,8 +98,11 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
                 } catch(error) {
                     // Download failed, look for the latest version available in the cache
                     tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
+                    ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
                     testPlatformVersion = 'x';
+                    cacheLookupStartTime = perf();
                     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
+                    ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'true', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
                     if(!toolPath || toolPath === 'undefined') {
                         // No version found in cache, fail the task
                         tl.warning(tl.loc('NoPackageFoundInCache'));
@@ -92,6 +111,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
                 }
             }
             else {
+                ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
                 throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
             }
         } else {
@@ -118,8 +138,12 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
 
     let options= <IExecOptions>{};
     options.silent = true;
+
+    var startTime = perf();
     var result = nugetTool.execSync(options);
-    var listOfPackages = result.stdout.split('\n');
+    ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
+
+    var listOfPackages = result.stdout.split('\r\n');
     var version: string;
 
     // nuget returns latest vesions of all packages that match the given name, we need to filter out the exact package we need from this list
@@ -147,13 +171,18 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath);
     
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
+    var startTime = perf();
     await nugetTool.exec();
+    ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
     // Install into the local tool cache
     let toolRoot = path.join(downloadPath, packageName + '.' + testPlatformVersion);
 
     tl.debug(`Caching the downloaded folder ${toolRoot}.`);
-    return await toolLib.cacheDir(toolRoot, 'VsTest', testPlatformVersion);
+    startTime = perf();
+    var toolPath = await toolLib.cacheDir(toolRoot, 'VsTest', testPlatformVersion);
+    ci.publishEvent('CacheDownloadedPackage', { startTime: startTime, endTime: perf() } );
+    return toolPath;
 }
 
 // Execution start
