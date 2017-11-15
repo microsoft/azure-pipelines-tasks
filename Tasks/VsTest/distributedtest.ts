@@ -84,7 +84,7 @@ export class DistributedTest {
                                         this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
-        utils.Helper.addToProcessEnvVars(envVars, 'TESTCASE_ACCESSTOKEN', tl.getVariable('TESTCASE_ACCESSTOKEN'));
+        utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
 
         if(utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
             utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_32', this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation);
