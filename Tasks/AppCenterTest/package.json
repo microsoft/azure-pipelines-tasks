@@ -1,5 +1,5 @@
 {
-  "name": "vsts-tasks-vsappcentertest",
+  "name": "vsts-tasks-appcentertest",
   "version": "1.0.0",
   "description": "Visual Studio App Center Test Task",
   "main": "appcentertest.js",
@@ -18,7 +18,7 @@
   "homepage": "https://github.com/microsoft/vsts-tasks",
   "dependencies": {
     "glob": "^7.0.6",
-    "appcenter-cli": "^1.0.2",
+    "appcenter-cli": "1.0.2",
     "vso-node-api": "^6.2.2-preview",
     "vsts-task-lib": "2.0.5"
   }

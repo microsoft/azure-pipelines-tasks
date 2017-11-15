@@ -70,7 +70,7 @@
   "loc.input.label.async": "Do not wait for test result",
   "loc.input.help.async": "Execute command asynchronously, exit when tests are uploaded, without waiting for test results.",
   "loc.input.label.cliLocationOverride": "appcenter CLI Location",
-  "loc.input.help.cliLocationOverride": "Path to appcenter CLI or mobile-center CLI on the build or release agent.",
+  "loc.input.help.cliLocationOverride": "Path to appcenter CLI on the build or release agent.",
   "loc.input.label.debug": "Enable Debug Output",
   "loc.input.help.debug": "Add --debug to appcenter cli.",
   "loc.messages.Succeeded": "Visual Studio App Center Test task succeeded.",
