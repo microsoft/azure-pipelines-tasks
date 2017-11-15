@@ -93,7 +93,7 @@
 			"helpMarkDown": "Add additional email addresses separated by semicolons(;) if you want to send email notification to additional people (whether or not you checked the \"subscription owners...\" box).",
 			"groupName": "NotifyViaEmail",
 			"validation": {
-				"expression": "isMatch(value, '^\\s*((\\S+@\\S+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
+				"expression": "isMatch(value, '^\\s*(([^;\\s]+@[^;\\s]+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
 				"message": "Enter valid email addresses separated by semicolons"
 			}
 		}

@@ -93,7 +93,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.NotifyEmails",
       "groupName": "NotifyViaEmail",
       "validation": {
-        "expression": "isMatch(value, '^\\s*((\\S+@\\S+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
+        "expression": "isMatch(value, '^\\s*(([^;\\s]+@[^;\\s]+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
         "message": "Enter valid email addresses separated by semicolons"
       }
     }
