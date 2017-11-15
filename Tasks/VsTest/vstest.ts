@@ -165,8 +165,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         }
     }
 
-    return argsArray;
 
+    return argsArray;
 }
 
 function isDebugEnabled(): boolean {
@@ -207,7 +207,8 @@ function getTestSelectorLocation(): string {
 }
 
 async function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Promise<number> {
-    const vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
+    const vstest = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
+    vstest.arg(vstestConfig.vsTestVersionDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
     // Adding the other console options here
@@ -226,7 +227,31 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     tl.cd(workingDirectory);
     const ignoreTestFailures = vstestConfig.ignoreTestFailures && vstestConfig.ignoreTestFailures.toLowerCase() === 'true';
 
+    const envVars: { [key: string]: string; } = process.env;
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestResultDirectory', resultsDirectory);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Configuration', vstestConfig.buildConfig);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Platform', vstestConfig.buildPlatform);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Runname', vstestConfig.testRunTitle);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ExecutionMode', 'vstestexecution');
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', tl.getVariable('System.TeamFoundationCollectionUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken']);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProjectName', tl.getVariable('System.TeamProject'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Owner', 'VsTest');
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildId', tl.getVariable('Build.BuildId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildUri', tl.getVariable('Build.BuildUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseUri', tl.getVariable('Release.ReleaseUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseEnvironmentUri', tl.getVariable('Release.EnvironmentUri'));
+
+    if(vstestConfig.rerunFailedTests){
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.Sup.ResponseFile', vstestConfig.responseFile); //Fix it
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
+    }
+
     const execOptions: tr.IExecOptions = <any>{
+        env: envVars,
         ignoreReturnCode: ignoreTestFailures,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
@@ -441,6 +466,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
     let testselector = new testselectorinvoker.TestSelectorInvoker();
 
     if (isResponseFileRun) {
+        vstestConfig.responseFile = updatedFile;
         vstestArgs = ['@' + updatedFile];
     }
     else {
