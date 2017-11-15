@@ -3,7 +3,7 @@
     "name": "AppCenterTest",
     "friendlyName": "App Center Test",
     "description": "Test app packages with Visual Studio App Center.",
-    "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://intercom.help/mobile-center/).",
+    "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
     "category": "Test",
     "visibility": [
         "Build"
@@ -292,7 +292,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Visit https://mobile.azure.com/settings/profile to get your username.",
+            "helpMarkDown": "Visit https://appcenter.ms/settings/profile to get your username.",
             "visibleRule": "enableRun = true && credsType = inputs"
         },
         {
@@ -302,7 +302,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Visit https://mobile.azure.com/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
+            "helpMarkDown": "Visit https://appcenter.ms/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
             "visibleRule": "enableRun = true && credsType = inputs"
         },
         {
@@ -313,7 +313,7 @@
             "visibleRule": "enableRun = true",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}."
+            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://appcenter.ms/apps, and the resulting url is in the format of https://appcenter.ms/users/{username}/apps/{app_identifier}."
         },
         {
             "name": "devices",
