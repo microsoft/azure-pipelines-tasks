@@ -53,14 +53,16 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
 
     if (versionSelectorInput.toLowerCase() === 'lateststable') {
         console.log(tl.loc('LookingForLatestStableVersion'));
+        testPlatformVersion = null;
         includePreRelease = false;
     } 
-    else if(versionSelectorInput === 'latestPreRelease') {
+    else if(versionSelectorInput.toLowerCase() === 'latestprerelease') {
         console.log(tl.loc('LookingForLatestPreReleaseVersion'));
+        testPlatformVersion = null;
         includePreRelease = true;
     }
 
-    if(versionSelectorInput.toLowerCase() !== 'specificversion' || !testPlatformVersion) {
+    if(versionSelectorInput.toLowerCase() !== 'specificversion') {
         try {
             testPlatformVersion = getLatestPackageVersionNumber(includePreRelease);
             if(testPlatformVersion === null) {
@@ -146,7 +148,7 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     if (result.code !== 0) {
         throw new Error('Listing packages failed. Nuget.exe returned ' + result.code);
     }
-    else if (!(result.stderr === null && result.stderr === undefined && result.stderr === '')) {
+    else if (!(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
         tl.warning(result.stderr);
         throw new Error('Listing packages failed.');
     }
@@ -176,7 +178,7 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     }
     // use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
     downloadPath = path.join(downloadPath, 'VsTest'); 
-    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache');
+    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload');
     
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     var startTime = perf();
