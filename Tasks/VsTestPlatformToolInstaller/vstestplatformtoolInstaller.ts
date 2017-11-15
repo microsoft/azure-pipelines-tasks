@@ -143,6 +143,14 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     var result = nugetTool.execSync(options);
     ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
 
+    if (result.code !== 0) {
+        throw new Error('Listing packages failed. Nuget.exe returned ' + result.code);
+    }
+    else if (result.stderr != null || result.stderr != undefined || result.stderr != '') {
+        tl.warning(result.stderr);
+        throw new Error('Listing packages failed.');
+    }
+
     var listOfPackages = result.stdout.split('\r\n');
     var version: string;
 
@@ -172,7 +180,8 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     var startTime = perf();
-    await nugetTool.exec();
+    nugetTool.exec();
+
     ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
     // Install into the local tool cache
