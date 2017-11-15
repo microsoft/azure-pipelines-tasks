@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 
-describe('MobileCenterDistribute L0 Suite', function () {
+describe('AppCenterDistribute L0 Suite', function () {
     before(() => {
         //Enable this for output
         //process.env['TASK_TEST_TRACE'] = 1; 
