@@ -21,6 +21,8 @@
   "loc.input.help.compareType": "The build for comparison.",
   "loc.input.label.buildNumber": "Build Number",
   "loc.input.help.buildNumber": "The build number for comparison.",
+  "loc.input.label.overwriteExistingPkgArtifact": "Overwrite Existing Package Artifact",
+  "loc.input.help.overwriteExistingPkgArtifact": "Always download a new copy of the artifact. Otherwise use an existing copy, if present.",
   "loc.input.label.imageDigestsPath": "Image Digests Path",
   "loc.input.help.imageDigestsPath": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'.",
   "loc.messages.ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",

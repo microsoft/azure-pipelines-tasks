@@ -85,6 +85,13 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         utils.Helper.addToProcessEnvVars(envVars, 'TESTCASE_ACCESSTOKEN', tl.getVariable('TESTCASE_ACCESSTOKEN'));
+
+        if(utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
+            utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_32', this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation);
+            utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_64', this.dtaTestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ForcePlatformV2', 'true');
+        }
+
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
@@ -226,12 +233,22 @@ export class DistributedTest {
         try {
             settingsFile = await settingsHelper.updateSettingsFileAsRequired
                 (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true);
+                this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true, 
+                this.dtaTestConfig.codeCoverageEnabled && utils.Helper.isToolsInstallerFlow(this.dtaTestConfig));
+                
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
         } catch (error) {
             tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
             tl.debug(error);
+        }
+
+        if (utils.Helper.pathExistsAsFile(settingsFile)) {
+            tl.debug('Final runsettings file being used:');
+            utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
+                tl.debug('Running VsTest with settings : ');
+                utils.Helper.printMultiLineLog(settings, (logLine) => { console.log('##vso[task.debug]' + logLine); });
+            });
         }
 
         utils.Helper.addToProcessEnvVars(envVars, 'testcasefilter', this.dtaTestConfig.testcaseFilter);
@@ -248,7 +265,11 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'testsuites', this.dtaTestConfig.testSuites.join(','));
         }
         utils.Helper.setEnvironmentVariableToString(envVars, 'ignoretestfailures', this.dtaTestConfig.ignoreTestFailures);
-        utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
+        
+        if(!utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
+            utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
+        }
+
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
         
@@ -288,6 +309,7 @@ export class DistributedTest {
             }
         }
     }
+
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
     private testSourcesFile: string;

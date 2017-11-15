@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 24
+        "Patch": 27
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -69,14 +69,22 @@
         {
             "name": "WebAppKind",
             "type": "pickList",
-            "label": "Web app kind",
+            "label": "App Type",
             "defaultValue": "app",
-            "required": false,
-            "visibleRule": "WebAppName = invalidwebappname",
+            "required": true,
+            "options": {
+                "app": "Web App",
+                "applinux": "Linux Web App",
+                "functionapp": "Function App",
+                "logicapp": "Logic App",
+                "api": "API App",
+                "mobileapp": "Mobile App"
+            },
             "properties": {
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
-            }
+            },
+            "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
         },
         {
             "name": "DeployToSlotFlag",
@@ -86,23 +94,6 @@
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
             "visibleRule": "WebAppKind != \"\""
-        },
-        {
-            "name": "ImageSource",
-            "type": "pickList",
-            "label": "Image Source",
-            "defaultValue": "Registry",
-            "options": {
-                "Registry": "Container Registry",
-                "Builtin": "Built-in Image"
-            },
-            "required": false,
-            "properties": {
-                "EditableOptions": "false",
-                "PopulateDefaultValue": "true"
-            },
-            "helpMarkDown": "Select the option to choose the source of the image for your web-app.",
-            "visibleRule": "WebAppKind = applinux"
         },
         {
             "name": "ResourceGroupName",
@@ -127,6 +118,23 @@
             },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "DeployToSlotFlag = true"
+        },
+        {
+            "name": "ImageSource",
+            "type": "pickList",
+            "label": "Image Source",
+            "defaultValue": "Registry",
+            "options": {
+                "Registry": "Container Registry",
+                "Builtin": "Built-in Image"
+            },
+            "required": false,
+            "properties": {
+                "EditableOptions": "false",
+                "PopulateDefaultValue": "true"
+            },
+            "helpMarkDown": "App Service on Linux offers two different options to publish your application <br/> Custom image deployment or App deployment with a built-in platform image. [Learn More](https://go.microsoft.com/fwlink/?linkid=862490)", 
+            "visibleRule": "WebAppKind = applinux"
         },
         {
             "name": "AzureContainerRegistry",
@@ -454,7 +462,7 @@
             "required": false,
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_LOCKED_FILES=1 in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
             "name": "XmlTransformation",
@@ -497,15 +505,6 @@
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             }
-        },
-        {
-            "target": "WebAppKind",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureAppKind",
-            "parameters": {
-                "WebAppName": "$(WebAppName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
         },
         {
             "target": "SlotName",

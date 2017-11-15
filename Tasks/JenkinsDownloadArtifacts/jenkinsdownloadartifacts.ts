@@ -12,8 +12,8 @@ import * as handlers from "artifact-engine/Providers/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
 
-import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
+import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
@@ -60,7 +60,9 @@ async function doWork() {
             var artifactProvider = tl.getInput('artifactProvider');
             switch (artifactProvider.toLowerCase()) {
                 case "azurestorage":
-                    new AzureStorageArtifactDownloader().downloadArtifacts(localPathRoot);
+                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true), 
+                        tl.getInput('storageAccountName', true), tl.getInput('containerName', true), tl.getInput('commonVirtualPath', false));
+                    azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
                     break;
 
                 default:
