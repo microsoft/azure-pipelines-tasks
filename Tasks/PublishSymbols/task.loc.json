@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -65,7 +65,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.SymbolServerType",
       "options": {
         " ": "Select one",
-        "TeamServices": "Team Services",
+        "TeamServices": "Symbol Server in this account/collection (requires Package Management)",
         "FileShare": "File share"
       },
       "visibleRule": "PublishSymbols = true"
