@@ -180,8 +180,7 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     var startTime = perf();
-    nugetTool.exec();
-
+    await nugetTool.exec();
     ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
     // Install into the local tool cache
