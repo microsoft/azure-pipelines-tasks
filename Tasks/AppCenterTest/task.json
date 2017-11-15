@@ -10,9 +10,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 126,
-        "Patch": 1
+        "Patch": 0
     },
     "groups": [
         {
@@ -421,7 +421,7 @@
             "groupName": "advanced",
             "defaultValue": "",
             "required": false ,
-            "helpMarkDown": "Path to appcenter CLI or mobile-center CLI on the build or release agent."
+            "helpMarkDown": "Path to appcenter CLI on the build or release agent."
         },        
         {
             "name": "debug",

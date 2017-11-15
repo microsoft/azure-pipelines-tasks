@@ -68,11 +68,6 @@ function getCliPath(): string {
         return systemPath;
     }
 
-    let oldCliSystemPath = tl.which('mobile-center', false);
-    if (oldCliSystemPath) {
-        return oldCliSystemPath;
-    }
-
     // On Windows (Hosted Agent) we attempt to use the bundled appcenter cli as user doesn't have any
     // chance to install the CLI themselves.  On Mac the bundled appcenter does not work due to some
     // path issues.
