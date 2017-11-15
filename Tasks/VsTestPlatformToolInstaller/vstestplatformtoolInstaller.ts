@@ -146,7 +146,7 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     if (result.code !== 0) {
         throw new Error('Listing packages failed. Nuget.exe returned ' + result.code);
     }
-    else if (result.stderr != null || result.stderr != undefined || result.stderr != '') {
+    else if (!(result.stderr === null && result.stderr === undefined && result.stderr === '')) {
         tl.warning(result.stderr);
         throw new Error('Listing packages failed.');
     }
