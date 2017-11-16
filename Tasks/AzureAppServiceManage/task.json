@@ -25,6 +25,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
+	    "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
