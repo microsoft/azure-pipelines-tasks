@@ -6,6 +6,7 @@ import * as models from './models';
 import * as utils from './helpers';
 import * as constants from './constants';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 const uuid = require('uuid');
@@ -179,15 +180,18 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         }
         if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug("Trying VsTest installed by tools installer.");
-
+            ci.publishEvent( { subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) } );
+            
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
 
             // if Tools installer is not there throw.
             if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
+                ci.publishEvent( { subFeature: 'ToolsInstallerInstallationError' } );
                 utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
                 throw new Error(tl.loc('ToolsInstallerInstallationError'));
             }
 
+            ci.publishEvent( { subFeature: 'ToolsInstallerInstallationSuccessful' } );
             // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
             testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;

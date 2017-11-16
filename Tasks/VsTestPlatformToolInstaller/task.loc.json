@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 3
   },
   "preview": true,
   "satisfies": [
@@ -46,7 +46,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "vstestplatformtoolInstaller.js",
+      "target": "vstestplatformtoolinstaller.js",
       "argumentFormat": ""
     }
   },

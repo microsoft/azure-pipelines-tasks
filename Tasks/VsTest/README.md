@@ -71,6 +71,8 @@ The feature is presently scoped to the following:
 	- **Based on past running time of tests:** This batching considers past running time to create batches of tests such that each batch has approximately equal running time.
 	- **Based on test assemblies:** Tests from an assembly are batched together.
 
+	Learn more about batching options [here](https://aka.ms/vstestbatchingoptions)
+
 - **Do not distribute tests and replicate instead when multiple agents are used in the phase:** Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase. Each of the selected test(s) will be repeated on each agent. The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.
 
 #### Reporting Options

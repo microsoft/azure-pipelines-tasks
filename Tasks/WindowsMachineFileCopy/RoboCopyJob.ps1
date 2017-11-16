@@ -98,6 +98,16 @@ param (
         return $text.Substring(0, $pos) + $replace + $text.Substring($pos + $search.Length);
     }
 
+    function Clean-Target
+    {
+        $cleanupArgument = "/NOCOPY /PURGE" 
+        $guid = [GUID]::NewGuid()
+        $tempDirectory = "$scriptRoot\temp$guid" 
+        New-Item -ItemType Directory -Force -Path $tempDirectory         
+        Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+        Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
+    }
+
     function Get-DestinationNetworkPath(
         [string]$targetPath,
         [string]$machineShare
@@ -114,21 +124,14 @@ param (
 
     function Get-RoboCopyParameters(
         [string]$additionalArguments,
-        [switch]$fileCopy,
-        [switch]$clean)
+        [switch]$fileCopy
+        )
     {
-        $robocopyParameters = "/COPY:DAT"
+        $robocopyParameters = "/COPY:DAT "
 
         if(-not $fileCopy.IsPresent)
         {
-            if($clean.IsPresent)
-            {
-                $robocopyParameters += " /MIR"
-            }
-            else
-            {
-                $robocopyParameters += " /E"
-            }
+            $robocopyParameters += " /E"
         }       
         
         if (-not [string]::IsNullOrWhiteSpace($additionalArguments))
@@ -197,18 +200,12 @@ param (
 
     try
     {
-        if($isFileCopy -and $doCleanUp -and (Test-Path -path $destinationNetworkPath -pathtype container))
+        if($doCleanUp)
         {
-            Get-ChildItem -Path $destinationNetworkPath -Recurse -force | Remove-Item -force -recurse;
-            $output = Remove-Item -path $destinationNetworkPath -force -recurse 2>&1
-            $err = $output | ?{$_.gettype().Name -eq "ErrorRecord"}
-            if($err)
-            {
-                Write-Verbose -Verbose "Error occurred while deleting the destination folder: $err"
-            }
+           Clean-Target
         }
 
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
+        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
         $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
         Invoke-Expression $command        

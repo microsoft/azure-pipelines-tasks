@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -91,7 +91,11 @@
       "label": "ms-resource:loc.input.label.NotifyEmails",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.NotifyEmails",
-      "groupName": "NotifyViaEmail"
+      "groupName": "NotifyViaEmail",
+      "validation": {
+        "expression": "isMatch(value, '^\\s*(([^;\\s]+@[^;\\s]+\\.[^;\\s]+)(\\s*;\\s*|\\s*$))*$','IgnoreCase')",
+        "message": "Enter valid email addresses separated by semicolons"
+      }
     }
   ],
   "execution": {
@@ -122,6 +126,7 @@
     "AlertRuleTargetResourceIdMismatchError": "ms-resource:loc.messages.AlertRuleTargetResourceIdMismatchError",
     "AlertRuleExists": "ms-resource:loc.messages.AlertRuleExists",
     "AlertRuleDoesNotExist": "ms-resource:loc.messages.AlertRuleDoesNotExist",
+    "CreatedRule": "ms-resource:loc.messages.CreatedRule",
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
     "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
     "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck"

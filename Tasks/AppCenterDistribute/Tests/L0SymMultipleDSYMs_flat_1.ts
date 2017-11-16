@@ -9,7 +9,7 @@ var Stats = require('fs').Stats
 
 var nock = require('nock');
 
-let taskPath = path.join(__dirname, '..', 'mobilecenterdistribute.js');
+let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
@@ -18,7 +18,7 @@ tmr.setInput('app', '/test/path/to/my.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'Apple');
-tmr.setInput('dsymPath', 'a/**/*.dsym');
+tmr.setInput('dsymPath', 'a/b/c/(x|y).dsym');
 
 /*
   dSyms folder structure:
@@ -33,6 +33,8 @@ tmr.setInput('dsymPath', 'a/**/*.dsym');
         x.dsym
           x1.txt
           x2.txt
+        y.dsym
+          y1.txt
 */
 
 //prepare upload
@@ -107,11 +109,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'a/b/c/d/f.txt': true,
         'a/b/c/x.dsym': true,
         'a/b/c/x.dsym/x1.txt': true,
-        'a/b/c/x.dsym/x2.txt': true
+        'a/b/c/x.dsym/x2.txt': true,
+        'a/b/c/y.dsym': true,
+        'a/b/c/y.dsym/y1.txt': true
     },
     'findMatch' : {
-        'a/**/*.dsym': [
-            'a/b/c/x.dsym'
+        'a/b/c/(x|y).dsym': [
+            'a/b/c/x.dsym',
+            'a/b/c/y.dsym'
         ],
         '/test/path/to/my.ipa': [
             '/test/path/to/my.ipa'
@@ -147,23 +152,27 @@ fs.readdirSync = (folder: string) => {
     } else if (folder === 'a/b') {
         files = [
             'f.txt',
-            'c',
-            'd'
+            'c'
         ]
     } else if (folder === 'a/b/c') {
         files = [
             'f.txt',
             'd',
-            'x.dsym'
+            'x.dsym',
+            'y.dsym'
+        ]
+    } else if (folder === 'a/b/c/d') {
+        files = [
+            'f.txt'
         ]
     } else if (folder === 'a/b/c/x.dsym') {
         files = [
             'x1.txt',
             'x2.txt'
         ]
-    } else if (folder === 'a/b/c/d') {
+    } else if (folder === 'a/b/c/y.dsym') {
         files = [
-            'f.txt'
+            'y1.txt'
         ]
     }
 
