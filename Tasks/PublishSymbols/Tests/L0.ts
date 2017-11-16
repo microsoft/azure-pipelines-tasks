@@ -90,7 +90,6 @@ describe('PublishSymbols Suite', function () {
         it('(Invoke-IndexSources) warns if no symbols files', (done) => {
             psr.run(path.join(__dirname, 'Invoke-IndexSources.WarnsIfNoSymbolsFiles.ps1'), done);
         })
-        // Commenting it out to unblock ci
         // it('(Invoke-IndexSources) warns if tmp contains space', (done) => {
         //     psr.run(path.join(__dirname, 'Invoke-IndexSources.WarnsIfTmpContainsSpace.ps1'), done);
         // })
@@ -127,6 +126,7 @@ describe('PublishSymbols Suite', function () {
         it('(New-TfsGitSrcSrvIniContent) formats content', (done) => {
             psr.run(path.join(__dirname, 'New-TfsGitSrcSrvIniContent.FormatsContent.ps1'), done);
         })
+        // Commenting it out to unblock ci
         // it('(New-TfvcSrcSrvIniContent) formats content', (done) => {
         //     psr.run(path.join(__dirname, 'New-TfvcSrcSrvIniContent.FormatsContent.ps1'), done);
         // })
