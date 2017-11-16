@@ -12,18 +12,25 @@ async function isPublishThroughExeFeatureFlagEnabled(): Promise<boolean> {
 
     let token: string = tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false);
 
-    let authHandler = vsts.getPersonalAccessTokenHandler(token);
-    let connection = new vsts.WebApi(collectionUrl, authHandler);
+    try {
+        let authHandler = vsts.getPersonalAccessTokenHandler(token);
+        let connection = new vsts.WebApi(collectionUrl, authHandler);
 
-    if (typeof connection["getFeatureAvailabilityApi"] === 'function') {
-        let vstsFeatureAvailability = connection["getFeatureAvailabilityApi"]();
+        if (typeof connection["getFeatureAvailabilityApi"] === 'function') {
+            let vstsFeatureAvailability = connection["getFeatureAvailabilityApi"]();
 
-        let featureFlag = await vstsFeatureAvailability.getFeatureFlagByName("TestManagement.PublishTestResultsTask.UseTestResultsPublisherExe");
-        if (featureFlag && featureFlag.effectiveState === "On") {
-            return true;
+            let featureFlag = await vstsFeatureAvailability.getFeatureFlagByName("TestManagement.PublishTestResultsTask.UseTestResultsPublisherExe");
+            if (featureFlag) {
+                tl.debug("Feature flag effective state: " + featureFlag.effectiveState);
+                if (featureFlag.effectiveState === "On") {
+                    return true;
+                }
+            }
         }
     }
-    
+    catch (err) {
+        tl.debug("Error while fetching Feature flag value: " + err);
+    }
     return false;
 }
 

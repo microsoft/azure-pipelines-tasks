@@ -47,7 +47,7 @@ export class TestResultsPublisher {
         let responseFilePath: string = path.join(__dirname, 'tempResponseFile.txt');
 
         // Adding quotes around matching file names
-        this.matchingTestResultsFiles = this.modifyMatchingFileName(this.matchingTestResultsFiles);
+        this.modifyMatchingFileName();
         
         // Preparing File content
         let fileContent: string = os.EOL + this.matchingTestResultsFiles.join(os.EOL);
@@ -58,13 +58,12 @@ export class TestResultsPublisher {
         return responseFilePath;
     }
 
-    private modifyMatchingFileName(matchingTestResultsFiles: string[]): string[] {
-        for (let i = 0; i < matchingTestResultsFiles.length; i++) {
+    private modifyMatchingFileName(): void {
+        for (let i = 0; i < this.matchingTestResultsFiles.length; i++) {
             // We need to add quotes around the file name because the file name can contain spaces.
             // The quotes will be handled by response file reader.
-            matchingTestResultsFiles[i] = '\"' + matchingTestResultsFiles[i] + '\"';
+            this.matchingTestResultsFiles[i] = '\"' + this.matchingTestResultsFiles[i] + '\"';
         }
-        return matchingTestResultsFiles;
     }
 
     private getEnvironmentVariables(): { [key: string]: string; } {
