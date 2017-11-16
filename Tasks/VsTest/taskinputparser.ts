@@ -191,7 +191,6 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
                 throw new Error(tl.loc('ToolsInstallerInstallationError'));
             }
 
-            ci.publishEvent( { subFeature: 'ToolsInstallerInstallationSuccessful' } );
             // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
             testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
