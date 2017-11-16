@@ -186,12 +186,10 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
             // if Tools installer is not there throw.
             if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
-                ci.publishEvent( { subFeature: 'ToolsInstallerInstallationError' } );
                 utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
                 throw new Error(tl.loc('ToolsInstallerInstallationError'));
             }
 
-            ci.publishEvent( { subFeature: 'ToolsInstallerInstallationSuccessful' } );
             // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
             testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
