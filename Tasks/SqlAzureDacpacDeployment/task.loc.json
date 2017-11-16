@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 24
+    "Patch": 25
   },
   "demands": [
     "sqlpackage"
@@ -42,6 +42,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
@@ -54,6 +57,9 @@
     },
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -63,6 +69,9 @@
     },
     {
       "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "defaultValue": "",

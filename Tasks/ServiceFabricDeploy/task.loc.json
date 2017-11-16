@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 4,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "Cmd"
@@ -328,6 +328,9 @@
     },
     {
       "name": "dockerRegistryEndpoint",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
@@ -337,6 +340,9 @@
     },
     {
       "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",

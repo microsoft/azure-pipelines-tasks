@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -33,6 +33,9 @@
   "inputs": [
     {
       "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "required": true,
@@ -75,6 +78,9 @@
     },
     {
       "name": "args",
+      "aliases": [
+        "arguments"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
       "defaultValue": "",
@@ -86,6 +92,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",

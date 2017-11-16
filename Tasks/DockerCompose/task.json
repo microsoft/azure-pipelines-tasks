@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "preview": "false",
@@ -46,6 +46,7 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
@@ -182,6 +183,7 @@
         },
         {
             "name": "workDir",
+            "aliases": ["workingDirectory"],
             "type": "string",
             "label": "Working Directory",
             "visibleRule": "action = Run a specific service",

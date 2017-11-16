@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "azureps"
@@ -26,6 +26,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",
+            "aliases": ["azureConnectionType"],
             "type": "pickList",
             "label": "Azure Connection Type",
             "required": false,
@@ -38,6 +39,7 @@
         },
         {
             "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:Azure",
             "label": "Azure Classic Subscription",
             "defaultValue": "",
@@ -47,6 +49,7 @@
         },
         {
             "name": "ConnectedServiceNameARM",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -102,6 +105,7 @@
         },
         {
             "name": "TargetAzurePs",
+            "aliases": ["azurePowerShellVersion"],
             "type": "pickList",
             "label": "Azure PowerShell Version",
             "defaultValue": "LatestVersion",
@@ -114,6 +118,7 @@
         },
         {
             "name": "CustomTargetAzurePs",
+            "aliases": ["preferredAzurePowerShellVersion"],
             "type": "string",
             "label": "Preferred Azure PowerShell Version",
             "defaultValue": "",

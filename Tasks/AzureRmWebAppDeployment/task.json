@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 27
+        "Patch": 28
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -49,6 +49,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -68,6 +69,7 @@
         },
         {
             "name": "WebAppKind",
+            "aliases": ["appType"],
             "type": "pickList",
             "label": "App Type",
             "defaultValue": "app",
@@ -200,6 +202,7 @@
         },
         {
             "name": "RegistryConnectedServiceName",
+            "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
             "label": "Registry Connection",
             "required": true,
@@ -278,6 +281,7 @@
         },
         {
             "name": "BuiltinLinuxPackage",
+            "aliases": ["packageForLinux"],
             "type": "filePath",
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -466,6 +470,7 @@
         },
         {
             "name": "XmlTransformation",
+            "aliases": ["enableXmlTransform"],
             "type": "boolean",
             "label": "XML transformation",
             "required": false,
@@ -475,6 +480,7 @@
         },
         {
             "name": "XmlVariableSubstitution",
+            "aliases": ["enableXmlVariableSubstitution"],
             "type": "boolean",
             "label": "XML variable substitution",
             "required": false,

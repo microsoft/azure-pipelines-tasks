@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "Cmd"
@@ -25,6 +25,7 @@
     "inputs": [
         {
             "name": "serviceConnectionName",
+            "aliases": ["clusterConnection"],
             "type": "connectedService:servicefabric",
             "label": "Cluster Connection",
             "defaultValue": "",

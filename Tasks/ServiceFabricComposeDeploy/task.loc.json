@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "Cmd"
@@ -38,6 +38,9 @@
   "inputs": [
     {
       "name": "serviceConnectionName",
+      "aliases": [
+        "clusterConnection"
+      ],
       "type": "connectedService:serviceFabric",
       "label": "ms-resource:loc.input.label.serviceConnectionName",
       "defaultValue": "",
@@ -77,6 +80,9 @@
     },
     {
       "name": "dockerRegistryEndpointName",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerRegistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpointName",
       "required": false,
@@ -86,6 +92,9 @@
     },
     {
       "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",

@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -40,6 +40,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -182,6 +183,7 @@
         },
         {
             "name": "deploymentGroupEndpoint",
+            "aliases": ["teamServicesConnection"],
             "type": "connectedService:ExternalTfs",
             "label": "TFS/VSTS endpoint",
             "groupName": "AdvancedDeploymentOptions",
@@ -194,6 +196,7 @@
         },
         {
             "name": "project",
+            "aliases": ["teamProject"],
             "type": "pickList",
             "label": "Team project",
             "groupName": "AdvancedDeploymentOptions",

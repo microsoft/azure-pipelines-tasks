@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 20
+        "Patch": 21
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -25,7 +25,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-	    "aliases": ["azureSubscription"],
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",

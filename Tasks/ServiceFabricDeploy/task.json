@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 4,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "Cmd"
@@ -328,6 +328,7 @@
         },
         {
             "name": "dockerRegistryEndpoint",
+            "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
@@ -337,6 +338,7 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",

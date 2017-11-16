@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 104
+    "Patch": 105
   },
   "demands": [
     "azureps"
@@ -37,6 +37,9 @@
     },
     {
       "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
@@ -49,6 +52,9 @@
     },
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -58,6 +64,9 @@
     },
     {
       "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "defaultValue": "",
@@ -91,6 +100,9 @@
     },
     {
       "name": "StorageAccountRM",
+      "aliases": [
+        "storageAccount"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccountRM",
       "defaultValue": "",
@@ -121,6 +133,9 @@
     },
     {
       "name": "EnvironmentName",
+      "aliases": [
+        "cloudService"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
@@ -133,6 +148,9 @@
     },
     {
       "name": "EnvironmentNameRM",
+      "aliases": [
+        "resourceGroup"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.EnvironmentNameRM",
       "defaultValue": "",

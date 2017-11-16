@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "preview": "false",
@@ -39,6 +39,7 @@
         },
         {
             "name": "dockerRegistryEndpoint",
+            "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
@@ -46,6 +47,7 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",

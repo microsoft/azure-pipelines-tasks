@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "azureps"
@@ -32,6 +32,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -89,6 +92,9 @@
     },
     {
       "name": "Slot",
+      "aliases": [
+        "slotName"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.Slot",
       "defaultValue": "Production",

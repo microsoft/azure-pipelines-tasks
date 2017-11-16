@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 27
+    "Patch": 28
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -49,6 +49,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -68,6 +71,9 @@
     },
     {
       "name": "WebAppKind",
+      "aliases": [
+        "appType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
       "defaultValue": "app",
@@ -200,6 +206,9 @@
     },
     {
       "name": "RegistryConnectedServiceName",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.RegistryConnectedServiceName",
       "required": true,
@@ -278,6 +287,9 @@
     },
     {
       "name": "BuiltinLinuxPackage",
+      "aliases": [
+        "packageForLinux"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -466,6 +478,9 @@
     },
     {
       "name": "XmlTransformation",
+      "aliases": [
+        "enableXmlTransform"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlTransformation",
       "required": false,
@@ -475,6 +490,9 @@
     },
     {
       "name": "XmlVariableSubstitution",
+      "aliases": [
+        "enableXmlVariableSubstitution"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
       "required": false,
