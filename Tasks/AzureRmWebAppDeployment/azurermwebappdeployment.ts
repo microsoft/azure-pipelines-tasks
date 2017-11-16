@@ -392,10 +392,10 @@ async function addReleaseAnnotation(SPN, webAppName: string, webAppSettings: any
     if (!!appInsightsInstrumentationKey) {
         let appInsightsResource = await azureRESTUtility.getApplicationInsightsResources(SPN, null, `InstrumentationKey eq '${appInsightsInstrumentationKey}'`);
         if (appInsightsResource && appInsightsResource.length > 0) {
-			console.log(tl.loc("AddingReleaseAnnotation", appInsightsResource[0].name));
-			let releaseAnnotationResponse = await azureRESTUtility.addReleaseAnnotation(SPN, appInsightsResource[0].id, isDeploymentSuccess);
-			tl.debug(JSON.stringify(releaseAnnotationResponse, null, 2));
-			console.log(tl.loc("SuccessfullyAddedReleaseAnnotation", appInsightsResource[0].name));
+            console.log(tl.loc("AddingReleaseAnnotation", appInsightsResource[0].name));
+            let releaseAnnotationResponse = await azureRESTUtility.addReleaseAnnotation(SPN, appInsightsResource[0].id, isDeploymentSuccess);
+            tl.debug(JSON.stringify(releaseAnnotationResponse, null, 2));
+            console.log(tl.loc("SuccessfullyAddedReleaseAnnotation", appInsightsResource[0].name));
         }
         else {
             tl.debug(`Unable to find Application Insights resource with Instrumentation key ${appInsightsInstrumentationKey}. Skipping adding release annotation.`);

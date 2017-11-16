@@ -1018,7 +1018,17 @@ export async function addReleaseAnnotation(endpoint, appInsightsResourceId: stri
         "Deployment Uri": Utils.getDeploymentUri()
     };
 
-    let annotationName = tl.getVariable("Release.ReleaseName") || `${tl.getVariable("Build.DefinitionName")} - ${tl.getVariable("Build.BuildNumber")}`;
+    let annotationName = "Release Annotation";
+    let releaseUri = tl.getVariable("Release.ReleaseUri");
+    let buildUri = tl.getVariable("Build.BuildUri");
+
+    if (!!releaseUri) {
+        annotationName = `${tl.getVariable("Release.DefinitionName")} - ${tl.getVariable("Release.ReleaseName")}`;
+    }
+    else if (!!buildUri) {
+        annotationName = `${tl.getVariable("Build.DefinitionName")} - ${tl.getVariable("Build.BuildNumber")}`;
+    }
+ 
     let releaseAnnotation = {
         "AnnotationName": annotationName,
         "Category": "Text",
@@ -1033,7 +1043,7 @@ export async function addReleaseAnnotation(endpoint, appInsightsResourceId: stri
         .then((response) => {
             if (response.statusCode === 200) {
                 deferred.resolve(response.result);
-            }
+            } 
             else {
                 deferred.reject(JSON.stringify(response, null, 2));
             }
