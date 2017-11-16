@@ -23,6 +23,7 @@
   "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with id '%s'. Please select a different alert rule name.",
   "loc.messages.AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
   "loc.messages.AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
+  "loc.messages.CreatedRule": "Created rule : '%s'",
   "loc.messages.UpdatedRule": "Updated rule : '%s'",
   "loc.messages.Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Check if the SPN is valid and not expired."
