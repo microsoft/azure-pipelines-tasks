@@ -81,6 +81,7 @@ describe('PublishSymbols Suite', function () {
         it('(Get-ValidValue) returns within range', (done) => {
             psr.run(path.join(__dirname, 'Get-ValidValue.ReturnsWithinRange.ps1'), done);
         })
+        // Commenting out to unblock CI
         // it('(Invoke-IndexSources) multiple files', (done) => {
         //     psr.run(path.join(__dirname, 'Invoke-IndexSources.MultipleFiles.ps1'), done);
         // })
