@@ -11,12 +11,13 @@
     "Release"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "version": {
     "Major": 1,
     "Minor": 4,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "Cmd"
