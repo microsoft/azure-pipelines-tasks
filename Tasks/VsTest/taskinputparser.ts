@@ -6,6 +6,7 @@ import * as models from './models';
 import * as utils from './helpers';
 import * as constants from './constants';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 const uuid = require('uuid');
@@ -179,7 +180,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         }
         if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug("Trying VsTest installed by tools installer.");
-
+            ci.publishEvent( { subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) } );
+            
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
 
             // if Tools installer is not there throw.

@@ -170,6 +170,7 @@ export class DistributedTest {
                     task: "VsTestDistributedFlow",
                     testSelection: this.dtaTestConfig.testSelection,
                     tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
+                    toolsInstallerFlow: utils.Helper.isToolsInstallerFlow(this.dtaTestConfig),
                     vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
                 };
 
