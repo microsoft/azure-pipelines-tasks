@@ -84,7 +84,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
+            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
         {
             "name": "DeployToSlotFlag",
