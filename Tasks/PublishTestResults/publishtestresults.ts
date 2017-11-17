@@ -43,6 +43,8 @@ function isNullOrWhitespace(input: any) {
 
 async function run() {
     try {
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
+
         const testRunner = tl.getInput('testRunner', true);
         const testResultsFiles: string[] = tl.getDelimitedInput('testResultsFiles', '\n', true);
         const mergeResults = tl.getInput('mergeTestResults');
@@ -70,15 +72,20 @@ async function run() {
         }
         else {
             let osType = tl.osType();
-            let isPublishResultsThroughExeEnabled: boolean = await isPublishThroughExeFeatureFlagEnabled();
+            // Enable this when Feature availability APIs are available.
+            // let isPublishResultsThroughExeEnabled: boolean = await isPublishThroughExeFeatureFlagEnabled();
 
             tl.debug('OS type: ' + osType);
-            tl.debug('Is Publish test results through exe enabled: ' + isPublishResultsThroughExeEnabled);
 
-            if (osType === 'Windows_NT' && isPublishResultsThroughExeEnabled) {
+            if (osType === 'Windows_NT') {
                 let testResultsPublisher = new publishExe.TestResultsPublisher(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
+                let exitCode = await testResultsPublisher.publishResultsThroughExe();
+                tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
-                testResultsPublisher.publishResultsThroughExe();
+                if (exitCode == 1) {
+                    let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+                    tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+                }                
             }
             else {
                 let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);

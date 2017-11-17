@@ -8,8 +8,8 @@ import * as vsts from 'vso-node-api';
 export class TestResultsPublisher {
     constructor(matchingTestResultsFiles: string[], mergeResults: string, platform: string, config: string,
         testRunTitle: string, publishRunAttachments: string, testRunner: string) {
-
-        this.matchingTestResultsFiles = matchingTestResultsFiles;
+        
+        this.matchingTestResultsFiles = matchingTestResultsFiles.slice(0);
         this.mergeResults = mergeResults;
         this.platform = platform;
         this.config = config;
@@ -18,17 +18,15 @@ export class TestResultsPublisher {
         this.testRunner = testRunner;
     }
 
-    public async publishResultsThroughExe() {
+    public async publishResultsThroughExe(): Promise<number> {
         let testResultsPublisherTool: tr.ToolRunner = tl.tool(this.getTestResultsPublisherLocation());
         let envVars: { [key: string]: string; } = this.getEnvironmentVariables();
         let args: string[] = this.getArguments();
         testResultsPublisherTool.arg(args);
+        
+        let exitCode = await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars, ignoreReturnCode: true });
 
-        try {
-            await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars });
-        } catch (err) {
-            tl.warning(tl.loc("ErrorTestResultsPublisher", err));
-        }
+        return exitCode;
     }
 
     private getTestResultsPublisherLocation(): string {
