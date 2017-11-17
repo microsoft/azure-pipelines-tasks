@@ -82,7 +82,7 @@ async function run() {
                 let exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
-                if (exitCode == 1) {
+                if (exitCode === 20000) {
                     let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
                     tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
                 }                
