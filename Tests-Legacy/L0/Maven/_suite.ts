@@ -292,7 +292,7 @@ describe('Maven Suite', function () {
         tr.setInput('checkstyleAnalysisEnabled', 'false');
         tr.setInput('pmdAnalysisEnabled', 'false');
         tr.setInput('findbugsAnalysisEnabled', 'false');
-        tr.setInput('mavenFeedAuthenticate', 'true');        
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -868,6 +868,44 @@ describe('Maven Suite', function () {
                 done();
             })
             .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('run maven with feed authentication uploads a maven info summary', (done) => {
+        setResponseFile('response.json');
+
+        var tr = setupDefaultMavenTaskRunner();
+        tr.setInput('mavenFeedAuthenticate', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.indexOf('##vso[task.debug][Maven] Uploading build maven info from /tmp/.mavenInfo/MavenInfo-') >= 0,
+                    'should have uploaded a MavenInfo file');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                done(err);
+            });
+    })
+
+    it('run maven without feed authentication does not upload a maven info summary', (done) => {
+        setResponseFile('response.json');
+
+        var tr = setupDefaultMavenTaskRunner();
+        tr.setInput('mavenFeedAuthenticate', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.indexOf('##vso[task.debug][Maven] Uploading build maven info from /tmp/.mavenInfo/MavenInfo-') < 0,
+                    'should not have uploaded a MavenInfo file');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
                 done(err);
             });
     })

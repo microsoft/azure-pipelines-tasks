@@ -53,23 +53,26 @@ async function doWork() {
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
 
         let jenkinsClient: JenkinsRestClient = new JenkinsRestClient();
-        let jenkinsJobDetails: JenkinsJobDetails = await jenkinsClient.GetJobDetails();
-        console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+        let jenkinsJobDetails: JenkinsJobDetails;
 
         if (tl.getBoolInput('propagatedArtifacts') == true) {
             var artifactProvider = tl.getInput('artifactProvider');
             switch (artifactProvider.toLowerCase()) {
                 case "azurestorage":
-                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true), 
-                        tl.getInput('storageAccountName', true), tl.getInput('containerName', true), tl.getInput('commonVirtualPath', false));
-                    azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
+                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true),
+                        tl.getInput('storageAccountName', true), 
+                        tl.getInput('containerName', true), 
+                        tl.getInput('commonVirtualPath', false));
+                        await azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
                     break;
-
                 default:
                     throw Error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
             }
         }
         else {
+            jenkinsJobDetails = await jenkinsClient.GetJobDetails();
+            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
                 "endpoint": {
@@ -88,10 +91,19 @@ async function doWork() {
 
         let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
         if (downloadCommitsAndWorkItems) {
+            if (tl.getBoolInput('propagatedArtifacts') == true) {
+                try {
+                    jenkinsJobDetails = await jenkinsClient.GetJobDetails();
+                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                }
+                catch (error) {
+                    tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));
+                }
+            }
+
             new ArtifactDetailsDownloader()
                 .DownloadCommitsAndWorkItems(jenkinsJobDetails)
-                .then(
-                () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
+                .then(() => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
                 (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
         }
 
