@@ -1,0 +1,206 @@
+{
+    "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+    "name": "AzureFileCopy",
+    "friendlyName": "Azure File Copy",
+    "description": "Copy files to Azure blob or VM(s)",
+    "helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.119.1",
+    "groups": [
+        {
+            "name": "output",
+            "displayName": "Output",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription to target for copying the files."
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "ToAzureBlob": "Copy files to Azure Blob",
+                "ToAzureVMs": "Azure files to Azure VMs",
+                "FromAzureBlob": "Copy files from Azure Blob"
+            },
+            "helpMarkDown": "Select the action."
+        },
+        {
+            "name": "SourcePath",
+            "type": "filePath",
+            "label": "Source",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file.",
+            "visibleRule": "Action = ToAzureBlob || Action = ToAzureVMs"
+        },
+        {
+            "name": "StorageAccount",
+            "type": "pickList",
+            "label": "Storage Account",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a pre-existing storage account. It is also used as an intermediary for copying files to Azure VMs",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ContainerName",
+            "type": "string",
+            "label": "Container Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the Container for uploading the files to, or downloading the files from. While uploading, default is to create a container automatically.",
+            "visibleRule": "Action = ToAzureBlob || Action = FromAzureBlob"
+        },
+        {
+            "name": "BlobPrefix",
+            "type": "string",
+            "label": "Blob Prefix",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only.",
+            "visibleRule": "Action = ToAzureBlob || Action = FromAzureBlob"
+        },
+        {
+            "name": "CloudService",
+            "type": "pickList",
+            "label": "Cloud Service",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the target Cloud Service for copying files to.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "ResourceGroup",
+            "type": "pickList",
+            "label": "Resource Group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the target Resource Group for copying files to.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "ResourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,
+            "defaultValue": "machineNames",
+            "options": {
+                "machineNames": "Machine Names",
+                "tags": "Tags"
+            },
+            "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.",
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "MachineNamesOrTags",
+            "type": "string",
+            "label": "Filter Criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a list of VMs host name like ffweb, ffdb, or tags like Role:DB, Web; OS:Win8.1. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon). If multiple tags are provided, then the task will run in all the VMs with the specified tags. The default is to run the task in all the VMs.",
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "TargetPath",
+            "type": "string",
+            "label": "Destination Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "CleanTargetBeforeCopy",
+            "type": "boolean",
+            "label": "Clean Target",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Setting it to true will clean-up the destination folder before copying the files.",
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "DestinationPath",
+            "type": "filePath",
+            "label": "Destination",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Absolute path of the destination folder(?How to restrict it to folder?).",
+            "visibleRule": "Action = FromAzureBlob"
+        },
+        {
+            "name": "OutputStorageUri",
+            "type": "string",
+            "label": "Storage Container URI",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable for the storage container URI that the files were copied to with this task.  Valid only when the selected destination is Azure Blob."
+        },
+        {
+            "name": "OutputStorageContainerSasToken",
+            "type": "string",
+            "label": "Storage Container SAS Token",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Provide a name for the variable for the storage container SAS Token used to access the files copied to with this task.  Valid only when the selected destination is Azure Blob."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "StorageAccount",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRMandClassic"
+        },
+        {
+            "target": "CloudService",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureHostedServiceNames"
+        },
+        {
+            "target": "ResourceGroup",
+            "endpointId": "$(ConnectedServiceNameARM)",
+            "dataSourceName": "AzureVirtualMachinesV2Id",
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+        }
+    ],
+    "instanceNameFormat": "$(Action) File Copy",
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "AFCX_FetchingTaskInputParametersFailed": "Task failed while fetcing input parameters. Error: %s"
+    }
+}
