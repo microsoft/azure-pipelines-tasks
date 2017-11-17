@@ -243,9 +243,12 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseUri', tl.getVariable('Release.ReleaseUri'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseEnvironmentUri', tl.getVariable('Release.EnvironmentUri'));
 
-    if(vstestConfig.rerunFailedTests){
+    if (!vstestConfig.responseFileSupported && vstestConfig.rerunFailedTests) {
+        tl.warning(tl.loc("rerunNotSupported"));
+        vstestConfig.rerunFailedTests = false;
+    }
+    if (vstestConfig.rerunFailedTests) {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.Sup.ResponseFile', vstestConfig.responseFile); //Fix it
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
     }
@@ -461,7 +464,7 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
     }
 }
 
-async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile: string, uploadResults: boolean): Promise<tl.TaskResult> {
+async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile: string, uploadTiaResults: boolean): Promise<tl.TaskResult> {
     var vstestArgs;
     let testselector = new testselectorinvoker.TestSelectorInvoker();
 
@@ -476,10 +479,10 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
     try {
         var vscode = await executeVstest(settingsFile, vsVersion, vstestArgs, !isResponseFileRun);
         let updateTestResultsOutputCode: number;
-        if (uploadResults) {
+        if (uploadTiaResults) {
             updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, resultsDirectory);
         }
-        if (vscode !== 0 || (uploadResults && updateTestResultsOutputCode !== 0)) {
+        if (vscode !== 0 || (uploadTiaResults && updateTestResultsOutputCode !== 0)) {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
             return tl.TaskResult.Failed;
         }
@@ -500,21 +503,19 @@ async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersi
         utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
         tl.error(err);
         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', vstestConfig.responseFile));
-        return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function () {
-            return publishTestResults(resultsDirectory);
-        });
+        return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false);
     }
 
-    return runVsTestAndUploadResults(settingsFile, vsVersion, vstestConfig.responseFileSupported, vstestConfig.responseFile, false).then(function (runResult) {
-        let publishResult = publishTestResults(resultsDirectory);
-        if (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) {
+    return runVsTestAndUploadResults(settingsFile, vsVersion, vstestConfig.responseFileSupported, vstestConfig.responseFile, false)
+        .then(function (runResult) {
+            if (runResult === tl.TaskResult.Failed) {
+                return tl.TaskResult.Failed;
+            }
+            return tl.TaskResult.Succeeded;
+        }).catch(function (err) {
+            tl.error(err);
             return tl.TaskResult.Failed;
-        }
-        return tl.TaskResult.Succeeded;
-    }).catch(function (err) {
-        tl.error(err);
-        return tl.TaskResult.Failed;
-    });
+        });
 }
 
 async function invokeVSTest(): Promise<tl.TaskResult> {

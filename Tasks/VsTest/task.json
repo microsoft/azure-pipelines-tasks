@@ -394,16 +394,16 @@
             "label": "Re-run failed tests",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "abcabcabc",
+            "helpMarkDown": "Selecting this option will re-run any failed tests until they pass or the maximum # of attempts is reached.",
             "groupName": "executionOptions"
         },
         {
             "name": "rerunFailedThreshold",
             "type": "string",
             "label": "Do not trigger a re-run if failure rate exceeds",
-            "defaultValue": "",
+            "defaultValue": "10",
             "required": false,
-            "helpMarkDown": "abcabcabc",
+            "helpMarkDown": "Use this option to avoid re-running tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures or # of failed tests as a threshold.",
             "groupName": "executionOptions",
             "visibleRule": "rerunFailedTests = true"
         },
@@ -411,9 +411,9 @@
             "name": "rerunMaxAttempts",
             "type": "string",
             "label": "Maximum # of attempts",
-            "defaultValue": "",
+            "defaultValue": "3",
             "required": false,
-            "helpMarkDown": "abcabcabc",
+            "helpMarkDown": "Specify the maximum # of times a failed test should be re-tried. If a test passes before the maximum # of attempts is reached, it will not be re-run further.",
             "groupName": "executionOptions",
             "visibleRule": "rerunFailedTests = true"
         }
@@ -522,8 +522,9 @@
         "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
         "rerunFailedTests": "Re-run failed tests: %s",
         "rerunFailedThreshold": "Re-run failed tests threshold: %s",
-        "invalidRerunFailedThreshold": "Invalid re-run failed tests threshold.",
-        "rerunMaxAttempts": "Re-run maximum attempts: %s",
-        "invalidRerunMaxAttempts": "Invalid re-run maximum attempts."
+        "invalidRerunFailedThreshold": "Invalid re-run failed tests threshold, defaulting to 10%",
+        "rerunMaxAttempts": "Re-run maximum attempts: %s, defaulting to 3",
+        "invalidRerunMaxAttempts": "Invalid re-run maximum attempts.",
+        "rerunNotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 to re-run failed tests."
     }
 }

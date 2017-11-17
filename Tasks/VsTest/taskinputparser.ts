@@ -173,11 +173,15 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     //TODO close the experience/UI text
     testConfiguration.rerunFailedTests = tl.getBoolInput('rerunFailedTests');
     console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
+
     if (testConfiguration.rerunFailedTests) {
+        testConfiguration.rerunFailedThreshold = 10;
+        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+
         const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
         const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
 
-        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0) {
+        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold < 100) {
             testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
             console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
         } else {
