@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 2,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -34,7 +34,7 @@
       "name": "AdvancedDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
       "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group || action = Configure deployment options for virtual machine"
     }
   ],
   "inputs": [
@@ -57,7 +57,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "Create Or Update Resource Group": "Create or update resource group",
-        "Select Resource Group": "Select resource group",
+        "Configure deployment options for virtual machine": "Configure deployment options for virtual machine",
         "Start": "Start virtual machines",
         "Stop": "Stop virtual machines",
         "StopWithDeallocate": "Stop and deallocate virtual machines",

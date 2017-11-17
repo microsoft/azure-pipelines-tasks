@@ -15,7 +15,7 @@ function run(): Promise<void> {
                 return resourceGroupOperationsController.createOrUpdateResourceGroup();
             case "DeleteRG":
                 return resourceGroupOperationsController.deleteResourceGroup();
-            case "Select Resource Group":
+            case "Configure deployment options for vitual machine":
                 return resourceGroupOperationsController.selectResourceGroup();
             case "Start":
             case "Stop":
