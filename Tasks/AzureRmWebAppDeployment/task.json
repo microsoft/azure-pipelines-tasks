@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 27
+        "Patch": 28
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -56,17 +56,6 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
-            "name": "WebAppName",
-            "type": "pickList",
-            "label": "App Service name",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
-        },
-        {
             "name": "WebAppKind",
             "type": "pickList",
             "label": "App Type",
@@ -85,6 +74,17 @@
                 "PopulateDefaultValue": "true"
             },
             "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
+        },
+        {
+            "name": "WebAppName",
+            "type": "pickList",
+            "label": "App Service name",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
         {
             "name": "DeployToSlotFlag",
@@ -496,7 +496,10 @@
         {
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppNames"
+            "dataSourceName": "AzureRMWebAppNamesByType",
+            "parameters": {
+                "WebAppKind": "$(WebAppKind)"
+            }
         },
         {
             "target": "ResourceGroupName",
