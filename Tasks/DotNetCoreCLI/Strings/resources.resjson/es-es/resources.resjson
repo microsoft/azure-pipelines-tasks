@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "Nivel de detalle",
   "loc.input.help.verbosityRestore": "Especifica la cantidad de detalles que se muestran en la salida.",
   "loc.input.label.searchPatternPush": "Ruta de acceso a los paquetes NuGet que deben publicarse",
-  "loc.input.help.searchPatternPush": "Patrón de coincidencia o ruta de acceso a los archivos nupkg que se van a cargar. Se pueden separar varios patrones con punto y coma.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "Ubicación de la fuente de destino",
   "loc.input.label.feedPublish": "Fuente de destino",
   "loc.input.help.feedPublish": "Seleccione una fuente hospedada en esta cuenta. Debe tener Administración de paquetes instalado y con licencia para poder seleccionar una fuente aquí.",

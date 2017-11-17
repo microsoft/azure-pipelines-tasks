@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "Livello di dettaglio",
   "loc.input.help.verbosityRestore": "Specifica il livello di dettagli visualizzati nell'output.",
   "loc.input.label.searchPatternPush": "Percorso dei pacchetti NuGet da pubblicare",
-  "loc.input.help.searchPatternPush": "Criteri da soddisfare o percorso dei file nupkg da caricare. Per separare più criteri, è possibile usare un punto e virgola.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "Percorso del feed di destinazione",
   "loc.input.label.feedPublish": "Feed di destinazione",
   "loc.input.help.feedPublish": "Selezionare un feed ospitato in questo account. Per selezionare un feed qui, è necessario che sia installata con licenza l'estensione Gestione pacchetti.",

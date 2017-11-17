@@ -40,7 +40,7 @@
   "loc.input.label.verbosityRestore": "Уровень детализации",
   "loc.input.help.verbosityRestore": "Определяет, насколько подробными будут выходные данные.",
   "loc.input.label.searchPatternPush": "Путь к публикуемым пакетам NuGet",
-  "loc.input.help.searchPatternPush": "Шаблон для сопоставления или путь к отправляемым NUPKG-файлам. Несколько шаблонов могут разделяться точкой с запятой.",
+  "loc.input.help.searchPatternPush": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
   "loc.input.label.nuGetFeedType": "Расположение целевого веб-канала",
   "loc.input.label.feedPublish": "Целевой веб-канал",
   "loc.input.help.feedPublish": "Выберите веб-канал, размещенный в этой учетной записи. Для выбора веб-канала должен быть установлен и лицензирован компонент \"Управление пакетами\".",
