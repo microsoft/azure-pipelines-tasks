@@ -289,6 +289,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "currentWorkingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
