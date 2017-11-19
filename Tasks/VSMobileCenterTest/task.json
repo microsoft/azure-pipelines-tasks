@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 123,
+        "Minor": 125,
         "Patch": 0
     },
     "groups": [
@@ -35,6 +35,7 @@
     "inputs": [
         {
             "name": "app",
+            "aliases": [ "appFile" ],
             "type": "filePath",
             "label": "Binary Application File Path",
             "defaultValue": "",
@@ -43,6 +44,7 @@
         },
         {
             "name":"artifactsDir",
+            "aliases": [ "artifactsDirectory" ],
             "type":"filePath",
             "label":"Artifacts Directory",
             "defaultValue":"$(Build.ArtifactStagingDirectory)/MobileCenterTest",
@@ -51,6 +53,7 @@
         },
         {
             "name": "enablePrepare",
+            "aliases": [ "prepareTests" ],
             "type": "boolean",
             "label": "Prepare Tests",
             "defaultValue": true,
@@ -58,6 +61,7 @@
         },
         {
             "name": "framework",
+            "aliases": [ "frameworkOption" ],
             "type": "pickList",
             "label": "Test Framework",
             "defaultValue": "appium",
@@ -74,6 +78,7 @@
         },
         {
             "name":"appiumBuildDir",
+            "aliases": [ "appiumBuildDirectory" ],
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
@@ -84,6 +89,7 @@
         },
         {
             "name":"espressoBuildDir",
+            "aliases": [ "espressoBuildDirectory" ],
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
@@ -94,6 +100,7 @@
         },
         {
             "name":"espressoTestApkPath",
+            "aliases": [ "espressoTestApkFile" ],
             "type":"string",
             "label":"Test APK Path",
             "defaultValue":"",
@@ -104,6 +111,7 @@
         },
         {
             "name":"calabashProjectDir",
+            "aliases": [ "calabashProjectDirectory" ],
             "type":"string",
             "label":"Project Directory",
             "defaultValue":"",
@@ -144,6 +152,7 @@
         },
         {
             "name":"uitestBuildDir",
+            "aliases": [ "uiTestBuildDirectory" ],
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
@@ -163,6 +172,7 @@
         },
         {
             "name":"uitestStorePass",
+            "aliases": [ "uiTestStorePassword" ],
             "type":"string",
             "label":"Store Password",
             "defaultValue":"",
@@ -181,6 +191,7 @@
         },
         {
             "name":"uitestKeyPass",
+            "aliases": [ "uiTestKeyPassword" ],
             "type":"string",
             "label":"Key Password",
             "defaultValue":"",
@@ -190,6 +201,7 @@
         },
         {
             "name":"uitestToolsDir",
+            "aliases": [ "uiTestToolsDirectory" ],
             "type":"string",
             "label":"Test Tools Directory",
             "defaultValue":"",
@@ -210,6 +222,7 @@
         },
         {
             "name":"xcuitestBuildDir",
+            "aliases": [ "xcUITestBuildDirectory" ],
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
@@ -220,6 +233,7 @@
         },
         {
             "name":"xcuitestTestIpaPath",
+            "aliases": [ "xcUITestIpaFile" ],
             "type":"string",
             "label":"Test IPA Path",
             "defaultValue":"",
@@ -230,6 +244,7 @@
         },
         {
             "name": "prepareOpts",
+            "aliases": [ "prepareOptions" ],
             "type": "string",
             "label": "Additional Options",
             "required": false,
@@ -240,6 +255,7 @@
         },
         {
             "name": "enableRun",
+            "aliases": [ "runTests" ],
             "type": "boolean",
             "label": "Run Tests",
             "defaultValue": true,
@@ -247,6 +263,7 @@
         },
         {
             "name": "credsType",
+            "aliases": [ "credentialsOption" ],
             "type": "pickList",
             "label": "Authentication Method",
             "defaultValue": "serviceEndpoint",
@@ -321,6 +338,7 @@
         },
         {
             "name": "dsymDir",
+            "aliases": [ "dsymDirectory" ],
             "type": "string",
             "label": "dSYM Directory",
             "defaultValue": "",
@@ -331,6 +349,7 @@
         },
         {
             "name": "locale",
+            "aliases": [ "localeOption" ],
             "type": "pickList",
             "label": "System Language",
             "defaultValue": "en_US",
@@ -364,6 +383,7 @@
         },
         {
             "name": "loginOpts",
+            "aliases": [ "loginOptions" ],
             "type": "string",
             "label": "Addtional Options for Login",
             "defaultValue": "",
@@ -374,6 +394,7 @@
         },
         {
             "name": "runOpts",
+            "aliases": [ "runOptions" ],
             "type": "string",
             "label": "Additional Options for Run",
             "required": false,
@@ -384,6 +405,7 @@
         },
         {
             "name": "async",
+            "aliases": [ "skipWaitingForResults" ],
             "type": "boolean",
             "label": "Do not wait for test result",
             "defaultValue": false,
@@ -394,6 +416,7 @@
         },
         {
             "name": "cliLocationOverride",
+            "aliases": [ "cliFile" ],
             "type": "filePath",
             "label": "mobile-center CLI Location",
             "groupName": "advanced",
@@ -402,6 +425,7 @@
         },        
         {
             "name": "debug",
+            "aliases": [ "showDebugOutput" ],
             "type": "boolean",
             "label": "Enable Debug Output",
             "required": false,

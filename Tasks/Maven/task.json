@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 125,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "maven"
@@ -49,6 +49,7 @@
     "inputs": [
         {
             "name": "mavenPOMFile",
+            "aliases": [ "mavenPomFile" ],
             "type": "filePath",
             "label": "Maven POM file",
             "defaultValue": "pom.xml",
@@ -100,6 +101,7 @@
         },
         {
             "name": "codeCoverageTool",
+            "aliases": [ "codeCoverageToolOption" ],
             "type": "pickList",
             "label": "Code Coverage Tool",
             "required": false,
@@ -114,6 +116,7 @@
         },
         {
             "name": "classFilter",
+            "aliases": [ "codeCoverageClassFilter" ],
             "type": "string",
             "label": "Class Inclusion/Exclusion Filters",
             "defaultValue": "",
@@ -124,6 +127,7 @@
         },
         {
             "name": "classFilesDirectories",
+            "aliases": [ "codeCoverageClassFilesDirectories" ],
             "type": "string",
             "label": "Class Files Directories",
             "required": false,
@@ -133,6 +137,7 @@
         },
         {
             "name": "srcDirectories",
+            "aliases": [ "codeCoverageSourceDirectories" ],
             "type": "string",
             "label": "Source Files Directories",
             "defaultValue": "",
@@ -143,6 +148,7 @@
         },
         {
             "name": "failIfCoverageEmpty",
+            "aliases": [ "codeCoverageFailIfEmpty" ],
             "type": "boolean",
             "label": "Fail When Code Coverage Results Are Missing",
             "defaultValue": "false",
@@ -153,6 +159,7 @@
         },
         {
             "name": "javaHomeSelection",
+            "aliases": [ "javaHomeOption" ],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -166,6 +173,7 @@
         },
         {
             "name": "jdkVersion",
+            "aliases": [ "jdkVersionOption" ],
             "type": "pickList",
             "label": "JDK Version",
             "required": false,
@@ -182,6 +190,7 @@
         },
         {
             "name": "jdkUserInputPath",
+            "aliases": [ "jdkDirectory" ],
             "type": "string",
             "label": "JDK Path",
             "required": true,
@@ -192,6 +201,7 @@
         },
         {
             "name": "jdkArchitecture",
+            "aliases": [ "jdkArchitectureOption" ],
             "type": "pickList",
             "label": "JDK Architecture",
             "defaultValue": "x86",
@@ -206,6 +216,7 @@
         },
         {
             "name": "mavenVersionSelection",
+            "aliases": [ "mavenVersionOption" ],
             "type": "radio",
             "label": "Maven Version",
             "defaultValue": "Default",
@@ -219,6 +230,7 @@
         },
         {
             "name": "mavenPath",
+            "aliases": [ "mavenDirectory" ],
             "type": "string",
             "label": "Maven Path",
             "required": true,
@@ -239,6 +251,7 @@
         },
         {
             "name": "mavenOpts",
+            "aliases": [ "mavenOptions" ],
             "type": "string",
             "label": "Set MAVEN_OPTS to",
             "required": false,
@@ -248,6 +261,7 @@
         },
         {
             "name": "mavenFeedAuthenticate",
+            "aliases": [ "mavenAuthenticateFeed" ],
             "type": "boolean",
             "label": "Authenticate built-in Maven feeds",
             "required": true,
@@ -257,6 +271,7 @@
         },
         {
             "name": "sqAnalysisEnabled",
+            "aliases": [ "sonarQubeRunAnalysis" ],
             "type": "boolean",
             "label": "Run SonarQube Analysis",
             "required": true,
@@ -266,6 +281,7 @@
         },
         {
             "name": "sqConnectedServiceName",
+            "aliases": [ "sonarQubeServiceEndpoint" ],
             "type": "connectedService:Generic",
             "label": "SonarQube Endpoint",
             "required": true,
@@ -275,6 +291,7 @@
         },
         {
             "name": "sqProjectName",
+            "aliases": [ "sonarQubeProjectName" ],
             "type": "string",
             "label": "SonarQube Project Name",
             "required": false,
@@ -284,6 +301,7 @@
         },
         {
             "name": "sqProjectKey",
+            "aliases": [ "sonarQubeProjectKey" ],
             "type": "string",
             "label": "SonarQube Project Key",
             "required": false,
@@ -293,6 +311,7 @@
         },
         {
             "name": "sqProjectVersion",
+            "aliases": [ "sonarQubeProjectVersion" ],
             "type": "string",
             "label": "SonarQube Project Version",
             "required": false,
@@ -302,6 +321,7 @@
         },
         {
             "name": "sqDbDetailsRequired",
+            "aliases": [ "sonarQubeSpecifyDB" ],
             "type": "boolean",
             "label": "The SonarQube server version is lower than 5.2",
             "required": true,
@@ -312,6 +332,7 @@
         },
         {
             "name": "sqDbUrl",
+            "aliases": [ "sonarQubeDBUrl" ],
             "type": "string",
             "label": "Db Connection String",
             "required": false,
@@ -321,6 +342,7 @@
         },
         {
             "name": "sqDbUsername",
+            "aliases": [ "sonarQubeDBUsername" ],
             "type": "string",
             "label": "Db Username",
             "required": false,
@@ -330,6 +352,7 @@
         },
         {
             "name": "sqDbPassword",
+            "aliases": [ "sonarQubeDBPassword" ],
             "type": "string",
             "label": "Db User Password",
             "required": false,
@@ -339,6 +362,7 @@
         },
         {
             "name": "sqAnalysisIncludeFullReport",
+            "aliases": [ "sonarQubeIncludeFullReport" ],
             "type": "boolean",
             "defaultValue": "true",
             "label": "Include full analysis report in the build summary (SQ 5.3+)",
@@ -349,6 +373,7 @@
         },
         {
             "name": "sqAnalysisBreakBuildIfQualityGateFailed",
+            "aliases": [ "sonarQubeFailWhenQualityGateFails" ],
             "type": "boolean",
             "defaultValue": "",
             "label": "Fail the build on quality gate failure (SQ 5.3+)",
@@ -359,6 +384,7 @@
         },
         {
             "name": "checkstyleAnalysisEnabled",
+            "aliases": [ "checkStyleRunAnalysis" ],
             "type": "boolean",
             "label": "Run Checkstyle",
             "required": false,
@@ -368,6 +394,7 @@
         },
         {
             "name": "pmdAnalysisEnabled",
+            "aliases": [ "pmdRunAnalysis" ],
             "type": "boolean",
             "label": "Run PMD",
             "required": false,
@@ -377,6 +404,7 @@
         },
         {
             "name": "findbugsAnalysisEnabled",
+            "aliases": [ "findBugsRunAnalysis" ],
             "type": "boolean",
             "label": "Run FindBugs",
             "required": false,

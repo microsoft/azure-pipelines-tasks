@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 124,
+    "Minor": 125,
     "Patch": 0
   },
   "demands": [
@@ -51,6 +51,9 @@
     },
     {
       "name": "keystoreFile",
+      "aliases": [
+        "jarsignerKeystoreFile"
+      ],
       "type": "secureFile",
       "label": "ms-resource:loc.input.label.keystoreFile",
       "defaultValue": "",
@@ -61,6 +64,9 @@
     },
     {
       "name": "keystorePass",
+      "aliases": [
+        "jarsignerKeystorePassword"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keystorePass",
       "defaultValue": "",
@@ -71,6 +77,9 @@
     },
     {
       "name": "keystoreAlias",
+      "aliases": [
+        "jarsignerKeystoreAlias"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keystoreAlias",
       "defaultValue": "",
@@ -81,6 +90,9 @@
     },
     {
       "name": "keyPass",
+      "aliases": [
+        "jarsignerKeyPassword"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.keyPass",
       "defaultValue": "",
@@ -110,6 +122,9 @@
     },
     {
       "name": "zipalignLocation",
+      "aliases": [
+        "zipalignFile"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.zipalignLocation",
       "defaultValue": "",
