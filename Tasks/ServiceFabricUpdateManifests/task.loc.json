@@ -10,7 +10,8 @@
     "Build"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "demands": [
     "Cmd"
