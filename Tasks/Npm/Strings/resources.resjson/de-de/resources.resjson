@@ -42,7 +42,7 @@
   "loc.messages.UsingRegistry": "Registrierung wird verwendet: %s",
   "loc.messages.AddingAuthRegistry": "Authentifizierung für die Registrierung wird hinzugefügt: %s",
   "loc.messages.FoundLocalRegistries": "%d Registrierungen in diesem Konto/dieser Sammlung gefunden",
-  "loc.messages.ForcePackagingUrl": "Das Verpacken der Sammlungs-URL wird erzwungen für: %s",
+  "loc.messages.ForcePackagingUrl": "Packaging collection url forced to: %s",
   "loc.messages.DebugLogNotFound": "Im Cache oder Arbeitsverzeichnis wurde kein Debugprotokoll gefunden",
   "loc.messages.NpmFailed": "Npm-Fehler mit Rückgabecode: %s",
   "loc.messages.FoundNpmDebugLog": "npm-Debugprotokoll gefunden. Stellen Sie sicher, dass der Pfad mit dem Pfad in der npm-Ausgabe übereinstimmt: %s",
