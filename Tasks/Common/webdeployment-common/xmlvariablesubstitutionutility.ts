@@ -113,7 +113,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     var replacableTokenValues = {};
     var isSubstitutionApplied: boolean = false;
     for(var tag of tags) {
-        var nodes = ltxdomutility.getElementsByTagName(tag); 
+        var nodes = xmlDocument.getChildren(tag); 
         if(nodes.length == 0) {
             tl.debug("Unable to find node with tag '" + tag + "' in provided xml file.");
             continue;
@@ -159,12 +159,13 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
 
 function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues): boolean {
     var isSubstitutionApplied: boolean = false;
-    var sections = ltxdomutility.getChildElementsByTagName(xmlNode, "section");
-    for(var section of sections) {
+    var sections = xmlNode.getChildren("section");
+    for(var section of sections) {        
         if(varUtility.isObject(section)) {
             var sectionName = section.attr('name');
             if(!varUtility.isEmpty(sectionName)) {
-                var customSectionNodes = ltxdomutility.getElementsByTagName(sectionName);
+                tl.debug("Processing substitution for xml section node : " + sectionName);
+                var customSectionNodes = xmlDocument.getChildren(sectionName);
                 if( customSectionNodes.length != 0) {
                     var customNode = customSectionNodes[0];
                     isSubstitutionApplied = updateXmlNodeAttribute(customNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
@@ -189,11 +190,11 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
         var attributeName = (attributeName === "key") ? "value" : attributeName;
         if(variableMap[attributeNameValue]) {
             var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
-            tl.debug('Updating value for key=' + attributeNameValue + 'with token_value: ' + ConfigFileAppSettingsTokenName);
+            tl.debug('Updating value for key=' + attributeNameValue + ' with token_value: ' + ConfigFileAppSettingsTokenName);
             xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
             replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
             isSubstitutionApplied = true;
-        }
+        }        
     }
     var children = xmlDomNode.children;
     for(var childNode of children) {
