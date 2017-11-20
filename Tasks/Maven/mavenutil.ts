@@ -17,6 +17,7 @@ import * as vsts from "vso-node-api/WebApi";
 let stripbom = require('strip-bom');
 let base64 = require('base-64');
 let utf8 = require('utf8');
+let uuidV4 = require("uuid/v4");
 
 const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
 const ApiVersion = "3.0-preview.1";
@@ -215,16 +216,16 @@ function collectFeedRepositories(pomContents:string): Q.Promise<any> {
                 if (project && project.repositories) {
                     for (let r of project.repositories) {
                         r = r instanceof Array ? r[0] : r;
-                        if (r.repository) { 
+                        if (r.repository) {
                             for (let repo of r.repository) {
                                 repo = repo instanceof Array ? repo[0] : repo;
                                 let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                                if (url && (url.toLowerCase().includes(collectionHostname) || 
+                                if (url && (url.toLowerCase().includes(collectionHostname) ||
                                             url.toLowerCase().includes(packageHostname))) {
                                 tl.debug('using credentials for url: ' + url);
                                 repos.push({
-                                    id: (repo.id && repo.id instanceof Array) 
-                                        ? repo.id[0] 
+                                    id: (repo.id && repo.id instanceof Array)
+                                        ? repo.id[0]
                                         : repo.id
                                     });
                                 }
@@ -291,9 +292,10 @@ export function getExecOptions(): tr.IExecOptions {
     };
 }
 
-export function publishMavenInfo(mavenInfo:string) {
-    let stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
-    let infoFilePath: string = path.join(stagingDir, 'MavenInfo.md');
+export function publishMavenInfo(mavenInfo: string) {
+    const stagingDir: string = path.join(os.tmpdir(), '.mavenInfo');
+    const randomString: string = uuidV4();
+    const infoFilePath: string = path.join(stagingDir, 'MavenInfo-' + randomString + '.md');
     if (!tl.exist(stagingDir)) {
         tl.mkdirP(stagingDir);
     }

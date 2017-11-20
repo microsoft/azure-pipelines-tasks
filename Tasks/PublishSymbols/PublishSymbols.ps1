@@ -29,6 +29,7 @@ try {
     }
 
     [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Require
+    [bool]$DetailedLog = Get-VstsInput -Name 'DetailedLog' -AsBool
     
     if ($SymbolServerType -eq "FileShare") {
         # Get common inputs.
@@ -154,7 +155,7 @@ try {
         [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
         Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530
+        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName

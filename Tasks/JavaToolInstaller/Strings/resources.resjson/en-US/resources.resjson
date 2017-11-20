@@ -6,7 +6,7 @@
   "loc.group.displayName.JavaInAzureGroup": "Download Java from an Azure blob",
   "loc.input.label.versionSpec": "JDK Version",
   "loc.input.help.versionSpec": "A number that specifies the JDK version to make available on the path.",
-  "loc.input.label.jdkArchitectureOption": "JDK Arch type",
+  "loc.input.label.jdkArchitectureOption": "JDK Architecture",
   "loc.input.help.jdkArchitectureOption": "The bit version of the JDK.",
   "loc.input.label.jdkSourceOption": "JDK source",
   "loc.input.help.jdkSourceOption": "Source for the compressed JDK.",

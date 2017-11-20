@@ -18,8 +18,13 @@ async function main(): Promise<void> {
     try {
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR) || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath){
-            nuGetGetter.cacheBundledNuGet_4_0_0();
-            nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+            let cachedVersionToUse = nuGetGetter.DEFAULT_NUGET_VERSION;
+            nuGetGetter.cacheBundledNuGet();
+            if (tl.getVariable(nuGetGetter.FORCE_NUGET_4_0_0) &&
+                tl.getVariable(nuGetGetter.FORCE_NUGET_4_0_0).toLowerCase() === "true") {
+                cachedVersionToUse = nuGetGetter.NUGET_VERSION_4_0_0;
+            }
+            nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
         }
     }
     catch (error) {

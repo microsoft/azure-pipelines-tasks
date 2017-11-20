@@ -30,6 +30,12 @@ Use the following options to select tests and control how the tests are run
 
 - **Run in Parallel:** If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.
 
+- **VSTest version:** Choose which version of Visual Studio (vstest.console.exe) to run tests with. 
+
+- **Path to Custom Test Adapters:** Path to the testadapter for the framework in which the specified tests are written. Provided directory and all subdirectories are checked for testadapters. If there is a packages folder in the sources directory, it is automatically searched for testadapters. As a result, any testadapter downloaded as a Nuget package will be used without any input. For example, ‘$(Build.SourcesDirectory)\Fabrikam\packages’
+
+- **Other console options:** Other options that can be provided to vstest.console.exe. For example, if you are using VSIX extensions, you can provide “/UseVsixExtensions:true”
+
 #### Test Impact Analysis 
 
 - **Run Only Impacted Tests:** If set, then only the relevant set of managed automated tests that need to be run to validate a given code change will be run. 
@@ -60,11 +66,14 @@ The feature is presently scoped to the following:
 
 #### Advanced Execution Options
 
-- **VSTest version:** Choose which version of Visual Studio (vstest.console.exe) to run tests with. 
+- **Batch tests:** A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel. Choose one of the below mentioned options for batching.
+	- **Based on number of tests and agents:** Simple batching based on the number of tests and agents participating in the test run.
+	- **Based on past running time of tests:** This batching considers past running time to create batches of tests such that each batch has approximately equal running time.
+	- **Based on test assemblies:** Tests from an assembly are batched together.
 
-- **Path to Custom Test Adapters:** Path to the testadapter for the framework in which the specified tests are written. Provided directory and all subdirectories are checked for testadapters. If there is a packages folder in the sources directory, it is automatically searched for testadapters. As a result, any testadapter downloaded as a Nuget package will be used without any input. For example, ‘$(Build.SourcesDirectory)\Fabrikam\packages’
+	Learn more about batching options [here](https://aka.ms/vstestbatchingoptions)
 
-- **Other console options:** Other options that can be provided to vstest.console.exe. For example, if you are using VSIX extensions, you can provide “/UseVsixExtensions:true”
+- **Do not distribute tests and replicate instead when multiple agents are used in the phase:** Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase. Each of the selected test(s) will be repeated on each agent. The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.
 
 #### Reporting Options
 Use the following options to report desired information for the test run that can be used when analyzing runs. 

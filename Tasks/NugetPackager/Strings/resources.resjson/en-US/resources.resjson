@@ -10,7 +10,7 @@
   "loc.input.label.outputdir": "Package Folder",
   "loc.input.help.outputdir": "Folder where packages will be created. If empty, packages will be created alongside the csproj or nuspec file.",
   "loc.input.label.includeReferencedProjects": "Include referenced projects",
-  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.nuget.org/consume/command-line-reference#pack-command) at NuGet.org.",
+  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.versionByBuild": "Automatic package versioning",
   "loc.input.help.versionByBuild": "Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
   "loc.input.label.versionEnvVar": "Environment variable",
@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "Additional build properties",
   "loc.input.help.buildProperties": "Semicolon delimited list of properties used to build the package.",
   "loc.input.label.nuGetAdditionalArgs": "NuGet Arguments",
-  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe"
 }

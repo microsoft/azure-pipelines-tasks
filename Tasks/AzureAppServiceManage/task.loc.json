@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 20
+    "Patch": 22
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -306,6 +306,10 @@
     "UnableToConfigureWebTest": "ms-resource:loc.messages.UnableToConfigureWebTest",
     "UnableToConfigureInstrumentationKeyForAppService": "ms-resource:loc.messages.UnableToConfigureInstrumentationKeyForAppService",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
-    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
+    "UnableToFetchContinuousWebJobs": "ms-resource:loc.messages.UnableToFetchContinuousWebJobs",
+    "UnableToStartContinuousWebJob": "ms-resource:loc.messages.UnableToStartContinuousWebJob",
+    "UnableToStopContinuousWebJob": "ms-resource:loc.messages.UnableToStopContinuousWebJob"
   }
 }

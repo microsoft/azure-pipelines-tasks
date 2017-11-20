@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 2,
-    "Patch": 3
+    "Patch": 10
   },
   "demands": [
     "vstest"
@@ -201,7 +201,8 @@
       "options": {
         "latest": "Latest",
         "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015"
+        "14.0": "Visual Studio 2015",
+        "toolsInstaller": "Installed by Tools Installer"
       }
     },
     {
@@ -491,6 +492,10 @@
     "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
     "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
-    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
+    "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
+    "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
+    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
+    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation"
   }
 }

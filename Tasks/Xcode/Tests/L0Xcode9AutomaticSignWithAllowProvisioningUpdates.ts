@@ -15,7 +15,7 @@ tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
 tr.setInput('scheme', 'testScheme');
 tr.setInput('xcodeVersion', 'default');
 tr.setInput('packageApp', 'true');
-tr.setInput('signStyle', 'auto');
+tr.setInput('signingOption', 'auto');
 tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
