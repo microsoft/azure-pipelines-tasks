@@ -46,6 +46,12 @@ $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
 $containerName = $containerName.Trim().ToLower()
 
+# Normalize admin username
+if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
+{
+    $adminUserName = ".\" + $adminUserName 
+}
+
 # azcopy location on automation agent
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
