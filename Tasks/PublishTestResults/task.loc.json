@@ -110,5 +110,8 @@
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "mergeFiles": "ms-resource:loc.messages.mergeFiles"
   }
 }
