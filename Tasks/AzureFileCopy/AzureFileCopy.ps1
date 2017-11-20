@@ -49,7 +49,7 @@ $containerName = $containerName.Trim().ToLower()
 # Normalize admin username
 if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
 {
-    $adminUserName = ".\" + $adminUserName 
+    $vmsAdminUserName = ".\" + $vmsAdminUserName 
 }
 
 # azcopy location on automation agent
