@@ -1,5 +1,7 @@
 import * as tl from 'vsts-task-lib/task';
 
+const MERGE_THRESHOLD = 100;
+
 const testRunner = tl.getInput('testRunner', true);
 const testResultsFiles: string[] = tl.getDelimitedInput('testResultsFiles', '\n', true);
 const mergeResults = tl.getInput('mergeTestResults');
@@ -21,12 +23,15 @@ if (isNullOrWhitespace(searchFolder)) {
     searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
 }
 
-let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+const matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+const forceMerge = matchingTestResultsFiles && matchingTestResultsFiles.length > MERGE_THRESHOLD;
+tl.debug(`forceMerge is set to ${forceMerge} based on the the number of Test Results files.`);
+
 if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
     tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
 } else {
-    let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-    tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+    const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+    tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
 }
 
 tl.setResult(tl.TaskResult.Succeeded, '');
