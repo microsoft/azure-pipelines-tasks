@@ -7,7 +7,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
-        //Process working directory
+        // Process working directory
         var cwd = tl.getInput('cwd') || tl.getVariable('System.DefaultWorkingDirectory');
         tl.cd(cwd);
 
