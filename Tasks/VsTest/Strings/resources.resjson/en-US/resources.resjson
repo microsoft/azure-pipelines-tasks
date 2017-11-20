@@ -70,11 +70,11 @@
   "loc.input.label.publishRunAttachments": "Upload test attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing run level attachments.",
   "loc.input.label.rerunFailedTests": "Re-run failed tests",
-  "loc.input.help.rerunFailedTests": "abcabcabc",
+  "loc.input.help.rerunFailedTests": "Selecting this option will re-run any failed tests until they pass or the maximum # of attempts is reached.",
   "loc.input.label.rerunFailedThreshold": "Do not trigger a re-run if failure rate exceeds",
-  "loc.input.help.rerunFailedThreshold": "abcabcabc",
+  "loc.input.help.rerunFailedThreshold": "Use this option to avoid re-running tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures or # of failed tests as a threshold.",
   "loc.input.label.rerunMaxAttempts": "Maximum # of attempts",
-  "loc.input.help.rerunMaxAttempts": "abcabcabc",
+  "loc.input.help.rerunMaxAttempts": "Specify the maximum # of times a failed test should be re-tried. If a test passes before the maximum # of attempts is reached, it will not be re-run further.",
   "loc.messages.VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
   "loc.messages.VstestFailedReturnCode": "VsTest task failed.",
   "loc.messages.VstestPassedReturnCode": "VsTest task succeeded.",
@@ -150,7 +150,8 @@
   "loc.messages.searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
   "loc.messages.rerunFailedTests": "Re-run failed tests: %s",
   "loc.messages.rerunFailedThreshold": "Re-run failed tests threshold: %s",
-  "loc.messages.invalidRerunFailedThreshold": "Invalid re-run failed tests threshold.",
-  "loc.messages.rerunMaxAttempts": "Re-run maximum attempts: %s",
-  "loc.messages.invalidRerunMaxAttempts": "Invalid re-run maximum attempts."
+  "loc.messages.invalidRerunFailedThreshold": "Invalid re-run failed tests threshold, defaulting to 10%",
+  "loc.messages.rerunMaxAttempts": "Re-run maximum attempts: %s, defaulting to 3",
+  "loc.messages.invalidRerunMaxAttempts": "Invalid re-run maximum attempts.",
+  "loc.messages.rerunNotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 to re-run failed tests."
 }

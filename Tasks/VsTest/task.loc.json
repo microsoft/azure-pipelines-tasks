@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 3,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -401,7 +401,7 @@
       "name": "rerunFailedThreshold",
       "type": "string",
       "label": "ms-resource:loc.input.label.rerunFailedThreshold",
-      "defaultValue": "",
+      "defaultValue": "10",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.rerunFailedThreshold",
       "groupName": "executionOptions",
@@ -411,7 +411,7 @@
       "name": "rerunMaxAttempts",
       "type": "string",
       "label": "ms-resource:loc.input.label.rerunMaxAttempts",
-      "defaultValue": "",
+      "defaultValue": "3",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.rerunMaxAttempts",
       "groupName": "executionOptions",
@@ -524,6 +524,7 @@
     "rerunFailedThreshold": "ms-resource:loc.messages.rerunFailedThreshold",
     "invalidRerunFailedThreshold": "ms-resource:loc.messages.invalidRerunFailedThreshold",
     "rerunMaxAttempts": "ms-resource:loc.messages.rerunMaxAttempts",
-    "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts"
+    "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts",
+    "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported"
   }
 }
