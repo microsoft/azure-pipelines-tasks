@@ -1,4 +1,8 @@
+import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
+
+const MERGE_THRESHOLD = 100;
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 const testRunner = tl.getInput('testRunner', true);
 const testResultsFiles: string[] = tl.getDelimitedInput('testResultsFiles', '\n', true);
@@ -21,12 +25,17 @@ if (isNullOrWhitespace(searchFolder)) {
     searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
 }
 
-let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+const matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+const forceMerge = matchingTestResultsFiles && matchingTestResultsFiles.length > MERGE_THRESHOLD;
+if (forceMerge) {
+    tl.warning(tl.loc('mergeFiles', MERGE_THRESHOLD));
+}
+
 if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
     tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
 } else {
-    let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-    tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+    const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+    tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
 }
 
 tl.setResult(tl.TaskResult.Succeeded, '');
