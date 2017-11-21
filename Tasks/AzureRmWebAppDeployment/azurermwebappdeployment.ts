@@ -387,7 +387,7 @@ async function updateAppSetting(SPN, webAppName: string, resourceGroupName: stri
 }
 
 async function addReleaseAnnotation(SPN, webAppName: string, webAppSettings: any, isDeploymentSuccess: boolean) {
-    let appInsightsInstrumentationKey: string = webAppSettings.properties[azureRESTUtility.appInsightsInstrumentationKeyAppSetting];
+    let appInsightsInstrumentationKey: string = webAppSettings.properties && webAppSettings.properties[azureRESTUtility.appInsightsInstrumentationKeyAppSetting];
 
     if (!!appInsightsInstrumentationKey) {
         let appInsightsResource = await azureRESTUtility.getApplicationInsightsResources(SPN, null, `InstrumentationKey eq '${appInsightsInstrumentationKey}'`);
