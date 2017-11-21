@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 10
     },
     "demands": [
         "vstest"
@@ -195,13 +195,14 @@
             "label": "Test platform version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
+            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
             "options": {
                 "latest": "Latest",
                 "15.0": "Visual Studio 2017",
-                "14.0": "Visual Studio 2015"
+                "14.0": "Visual Studio 2015",
+                "toolsInstaller":"Installed by Tools Installer"
             }
         },
         {
@@ -491,6 +492,10 @@
         "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
         "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
         "RunTimePerBatch": "Run time per batch(sec) : %s",
-        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
+        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
+        "toolsInstallerPathNotSet": "VsTest Test Platform folder was not found in cache.",
+        "testImpactAndCCWontWork": "Test Impact (Run only Impacted tests) and Code Coverage data collector will not work.",
+        "ToolsInstallerInstallationError": "The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller",
+        "OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file."
     }
 }

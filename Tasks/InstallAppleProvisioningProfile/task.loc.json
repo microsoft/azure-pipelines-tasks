@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 126,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -66,7 +66,7 @@
   ],
   "outputVariables": [
     {
-      "name": "provProfileUuid",
+      "name": "provisioningProfileUuid",
       "description": "The resolved UUID for the selected provisioning profile."
     }
   ],

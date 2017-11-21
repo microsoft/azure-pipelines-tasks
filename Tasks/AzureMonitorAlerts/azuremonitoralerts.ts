@@ -39,7 +39,13 @@ async function addOrUpdateAlertRules(endpoint, resourceGroupName: string, resour
 		
 		console.log(tl.loc("ProcessingRule", rule.alertName));
 		let responseObject = await azureRmRestClient.addOrUpdateAzureMetricAlertRule(resourceGroupName, resourceId, rule, notifyServiceOwners, notifyEmails);
-		console.log(tl.loc("UpdatedRule", rule.alertName));
+		if (responseObject.statusCode === 201) {
+			console.log(tl.loc("CreatedRule", rule.alertName));
+		}
+		else {
+			console.log(tl.loc("UpdatedRule", rule.alertName));
+		}
+
 		tl.debug(JSON.stringify(responseObject, null, 2));
 	}
 }

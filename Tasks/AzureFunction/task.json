@@ -106,7 +106,7 @@
 			"label": "Success Criteria",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https: //go.microsoft.com/fwlink/?linkid=842996)​",
+			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
 			"groupName": "completionOptions",
 			"visibleRule": "waitForCompletion = false"
 		}
