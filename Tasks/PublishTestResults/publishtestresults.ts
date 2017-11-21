@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
+import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -26,17 +27,24 @@ if (isNullOrWhitespace(searchFolder)) {
 }
 
 const matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
-const forceMerge = matchingTestResultsFiles && matchingTestResultsFiles.length > MERGE_THRESHOLD;
+const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
+
+const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
 if (forceMerge) {
     tl.warning(tl.loc('mergeFiles', MERGE_THRESHOLD));
 }
 
-if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
+if (testResultsFilesCount === 0) {
     tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
 } else {
     const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
     tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
 }
+
+publishEvent({
+    'mergeResultsUserPreference': mergeResults,
+    'testResultsFilesCount': testResultsFilesCount
+});
 
 tl.setResult(tl.TaskResult.Succeeded, '');
 
