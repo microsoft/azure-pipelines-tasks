@@ -129,4 +129,46 @@ describe('Publish Test Results Suite', function () {
                 done(err);
             });
     });
+
+    it('Publish test results when number of Test Results files is greater than threshold', (done) => {
+        setResponseFile('response.json');
+
+        const tr = new trm.TaskRunner('PublishTestResults');
+        tr.setInput('testResultsFiles', '**\\n-files*.xml');
+        tr.setInput('testRunner', 'Junit');
+        tr.setInput('mergeTestResults', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/##vso\[results.publish type=Junit;mergeResults=true/) >= 0, 'mergeResults should be set to true');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
+
+    it('Publish test results when number of Test Results files is less than threshold', (done) => {
+        setResponseFile('response.json');
+
+        const tr = new trm.TaskRunner('PublishTestResults');
+        tr.setInput('testResultsFiles', '**\\TEST-*.xml');
+        tr.setInput('testRunner', 'Junit');
+        tr.setInput('mergeTestResults', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/##vso\[results.publish type=Junit;mergeResults=false/) >= 0, 'should not override mergeResults');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    });
 });
