@@ -8,7 +8,8 @@ function getDefaultProps() {
         releaseuri: tl.getVariable('Release.ReleaseUri'),
         releaseid: tl.getVariable('Release.ReleaseId'),
         builduri: tl.getVariable('Build.BuildUri'),
-        buildid: tl.getVariable('Build.Buildid')
+        buildid: tl.getVariable('Build.Buildid'),
+        osType: tl.osType()
     };
 }
 
