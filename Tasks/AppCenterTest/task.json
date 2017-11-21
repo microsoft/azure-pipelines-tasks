@@ -1,19 +1,18 @@
 {
     "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
-    "name": "VSMobileCenterTest",
-    "friendlyName": "Mobile Center Test",
-    "description": "Test mobile app packages with Visual Studio Mobile Center.",
-    "helpMarkDown": "For help with this task, visit the Visual Studio Mobile Center [support site](https://intercom.help/mobile-center/).",
+    "name": "AppCenterTest",
+    "friendlyName": "App Center Test",
+    "description": "Test app packages with Visual Studio App Center.",
+    "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
     "category": "Test",
-    "preview": true,
     "visibility": [
         "Build"
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 126,
-        "Patch": 1
+        "Patch": 0
     },
     "groups": [
         {
@@ -47,7 +46,7 @@
             "aliases": [ "artifactsDirectory" ],
             "type":"filePath",
             "label":"Artifacts Directory",
-            "defaultValue":"$(Build.ArtifactStagingDirectory)/MobileCenterTest",
+            "defaultValue":"$(Build.ArtifactStagingDirectory)/AppCenterTest",
             "required": true,
             "helpMarkDown":"Where to place the artifacts produced by the prepare step and used by the run step. This directory will be created if it does not exist."
         },
@@ -250,7 +249,7 @@
             "required": false,
             "defaultValue": "",
             "visibleRule": "enablePrepare = true",
-            "helpMarkDown": "Additional arguments passed to mobile-center test prepare step.",
+            "helpMarkDown": "Additional arguments passed to appcenter test prepare step.",
             "groupName": "prepare"
         },
         {
@@ -270,40 +269,40 @@
             "visibleRule": "enableRun = true",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Use Mobile Center service endpoint connection or enter credentials to connect to Visual Studio Mobile Center.",
+            "helpMarkDown": "Use App Center service endpoint connection or enter credentials to connect to Visual Studio App Center.",
             "options": {
-                "serviceEndpoint": "Mobile Center Connection",
+                "serviceEndpoint": "App Center Connection",
                 "inputs": "Credentials"
             }
         },
         {
             "name": "serverEndpoint",
             "type": "connectedService:vsmobilecenter",
-            "label": "Mobile Center Connection",
+            "label": "App Center Connection",
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Select the service endpoint for your Visual Studio Mobile Center connection. To create one, click the Manage link and create a new service endpoint.",
+            "helpMarkDown": "Select the service endpoint for your Visual Studio App Center connection. To create one, click the Manage link and create a new service endpoint.",
             "visibleRule": "enableRun = true && credsType = serviceEndpoint"
         },
         {
             "name": "username",
             "type": "string",
-            "label": "Mobile Center Username",
+            "label": "App Center Username",
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Visit https://mobile.azure.com/settings/profile to get your username.",
+            "helpMarkDown": "Visit https://appcenter.ms/settings/profile to get your username.",
             "visibleRule": "enableRun = true && credsType = inputs"
         },
         {
             "name": "password",
             "type": "string",
-            "label": "Mobile Center Password",
+            "label": "App Center Password",
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Visit https://mobile.azure.com/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
+            "helpMarkDown": "Visit https://appcenter.ms/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
             "visibleRule": "enableRun = true && credsType = inputs"
         },
         {
@@ -314,7 +313,7 @@
             "visibleRule": "enableRun = true",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}."
+            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://appcenter.ms/apps, and the resulting url is in the format of https://appcenter.ms/users/{username}/apps/{app_identifier}."
         },
         {
             "name": "devices",
@@ -324,7 +323,7 @@
             "required": true,
             "groupName": "run",
             "defaultValue": "",
-            "helpMarkDown": "String to identify what devices this test will run against.  Copy and paste this string when you define a new test run from Mobile Center Test beacon."
+            "helpMarkDown": "String to identify what devices this test will run against.  Copy and paste this string when you define a new test run from App Center Test beacon."
         },
         {
             "name": "series",
@@ -389,7 +388,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "run",
-            "helpMarkDown": "Additional arguments passed to mobile-center login step.",
+            "helpMarkDown": "Additional arguments passed to appcenter login step.",
             "visibleRule": "enableRun = true && credsType = inputs"
         },
         {
@@ -401,7 +400,7 @@
             "defaultValue": "",
             "visibleRule": "enableRun = true",
             "groupName": "run",
-            "helpMarkDown": "Additional arguments passed to mobile-center test run."
+            "helpMarkDown": "Additional arguments passed to appcenter test run."
         },
         {
             "name": "async",
@@ -418,10 +417,11 @@
             "name": "cliLocationOverride",
             "aliases": [ "cliFile" ],
             "type": "filePath",
-            "label": "mobile-center CLI Location",
+            "label": "appcenter CLI Location",
             "groupName": "advanced",
             "defaultValue": "",
-            "required": false 
+            "required": false ,
+            "helpMarkDown": "Path to appcenter CLI on the build or release agent."
         },        
         {
             "name": "debug",
@@ -431,20 +431,20 @@
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Add --debug to mobile-center cli."
+            "helpMarkDown": "Add --debug to appcenter cli."
         }
     ],
-    "instanceNameFormat": "Test $(app) with Visual Studio Mobile Center",
+    "instanceNameFormat": "Test $(app) with Visual Studio App Center",
     "execution": {
         "Node": {
-            "target": "vsmobilecentertest.js",
+            "target": "appcentertest.js",
             "argumentFormat": ""
         }
     },
     "messages": {
-        "Succeeded": "Visual Studio Mobile Center Test task succeeded.",
+        "Succeeded": "Visual Studio App Center Test task succeeded.",
         "CannotDecodeEndpoint": "Could not decode the endpoint.",
-        "CannotLocateMobileCenterCLI": "Could not find mobile-center cli, install mobile-center-cli from npm first.",
+        "CannotLocateAppCenterCLI": "Could not find appcenter cli, install appcenter-cli from npm first.",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s."
     }
