@@ -6,6 +6,8 @@ This repo contains the tasks that are provided out-of-the-box with Visual Studio
 
 This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See **Writing Tasks** below.
 
+Some of these features are available only on Visual Studio Team Services and not yet available on-premises. Some features are available on-premises if you have upgraded to the latest version of TFS.
+
 ## Status
 |   | Build & Test |
 |---|:-----:|
