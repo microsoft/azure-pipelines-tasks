@@ -58,6 +58,10 @@ export interface DtaEnvironment {
     environmentUri: string;
     dtaHostLogFilePath: string;
     agentName: string;
+    proxyUrl: string;
+    proxyUserName: string;
+    proxyPassword: string;
+    proxyBypassHosts: string;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {

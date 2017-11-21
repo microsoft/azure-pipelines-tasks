@@ -78,6 +78,11 @@ function initDtaEnvironment(): models.DtaEnvironment {
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     dtaEnvironment.environmentUri = getEnvironmentUri();
     dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+    dtaEnvironment.proxyUrl = tl.getVariable("agent.proxyurl");
+    dtaEnvironment.proxyUserName = tl.getVariable("agent.proxyusername");
+    dtaEnvironment.proxyPassword = tl.getVariable("agent.proxypassword");
+    dtaEnvironment.proxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
+
     return dtaEnvironment;
 }
 

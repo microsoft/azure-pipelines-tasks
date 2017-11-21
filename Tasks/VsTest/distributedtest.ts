@@ -99,6 +99,14 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.CustomTestAdapters', this.dtaTestConfig.pathtoCustomTestAdapters);
         }
 
+        // Set proxy settings to environment if provided
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.dtaEnvironment.proxyUrl))
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.dtaEnvironment.proxyUrl);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.dtaEnvironment.proxyUserName);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.dtaEnvironment.proxyPassword);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyBypassHosts', this.dtaTestConfig.dtaEnvironment.proxyBypassHosts);
+        }
         // If we are setting the path version is not needed
         const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetails.vstestExeLocation);
         tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
@@ -293,6 +301,14 @@ export class DistributedTest {
                 this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
         }
 
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.dtaEnvironment.proxyUrl))
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.dtaEnvironment.proxyUrl);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.dtaEnvironment.proxyUserName);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.dtaEnvironment.proxyPassword);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyBypassHosts', this.dtaTestConfig.dtaEnvironment.proxyBypassHosts);
+        }
+        
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });
         await this.cleanUp(settingsFile);
         tl.debug('Run Distributed Test finished');
