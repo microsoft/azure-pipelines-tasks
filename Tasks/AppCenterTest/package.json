@@ -1,8 +1,8 @@
 {
-  "name": "vsts-tasks-vsmobilecentertest",
+  "name": "vsts-tasks-appcentertest",
   "version": "1.0.0",
-  "description": "Visual Studio Mobile Center Test Task",
-  "main": "vsmobilecentertest.js",
+  "description": "Visual Studio App Center Test Task",
+  "main": "appcentertest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +18,7 @@
   "homepage": "https://github.com/microsoft/vsts-tasks",
   "dependencies": {
     "glob": "^7.0.6",
-    "mobile-center-cli": "0.9.1",
+    "appcenter-cli": "1.0.2",
     "vso-node-api": "^6.2.2-preview",
     "vsts-task-lib": "2.0.5"
   }
