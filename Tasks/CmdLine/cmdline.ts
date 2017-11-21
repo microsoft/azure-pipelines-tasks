@@ -22,8 +22,14 @@ async function run() {
         let filePath = path.join(tempDirectory, uuidV4() + '.sh');
         await fs.writeFileSync(
             filePath,
-            script, // Don't add a BOM. It causes the script to fail on some operating systems (verified on Ubuntu 14).
+            script, // Don't add a BOM. It causes the script to fail on some operating systems (e.g. on Ubuntu 14).
             { encoding: 'utf8' });
+
+        // Print one-liner scripts.
+        if (script.indexOf('\n') < 0 && script.toUpperCase().indexOf('##VSO[') < 0) {
+            console.log(tl.loc('ScriptContents'));
+            console.log(script);
+        }
 
         // Create the tool runner.
         let bash = tl.tool(tl.which('bash', true))
