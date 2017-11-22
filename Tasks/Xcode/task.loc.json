@@ -12,7 +12,7 @@
   "version": {
     "Major": 4,
     "Minor": 126,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [
     "xcode"
@@ -265,8 +265,8 @@
       "groupName": "devices",
       "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
       "options": {
-        "simulators": "Simulators",
-        "devices": "Connected Devices"
+        "simulators": "Simulator",
+        "devices": "Connected Device"
       }
     },
     {
