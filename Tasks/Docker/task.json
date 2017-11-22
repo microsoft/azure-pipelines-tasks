@@ -199,6 +199,18 @@
             "helpMarkDown": "Volumes to mount from the host. Specify each host-dir:container-dir on a new line."
         },
         {
+            "name": "devices",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Devices",
+            "visibleRule": "action = Run an image",
+            "helpMarkDown": "Devices to map from the host. Specify each device-file:device-file on a new line.",
+            "groupName": "advanced"
+        },
+        {
             "name": "envVars",
             "type": "multiLine",
             "properties": {
@@ -237,6 +249,15 @@
             "defaultValue": "true",
             "visibleRule": "action = Run an image",
             "helpMarkDown": "Run the Docker container in the background."
+        },
+        {
+            "name": "privileged",
+            "type": "boolean",
+            "label": "Privileged",
+            "defaultValue": "false",
+            "visibleRule": "action = Run an image",
+            "helpMarkDown": "Give the container privileges on the host.",
+            "groupName": "advanced"
         },
         {
             "name": "restartPolicy",
