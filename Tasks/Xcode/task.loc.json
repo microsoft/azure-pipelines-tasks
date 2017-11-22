@@ -69,7 +69,7 @@
       "name": "xcWorkspacePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.xcWorkspacePath",
-      "defaultValue": "**/*.xcodeproj/*.xcworkspace",
+      "defaultValue": "**/*.xcodeproj/project.xcworkspace",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
     },
