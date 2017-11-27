@@ -200,24 +200,29 @@ function updateResponseFile(argsArray: string[], tiaMode: boolean): void {
     else {
         fs.appendFileSync(vstestConfig.responseFile, vsTestArgsString);
     }
+    fs.appendFileSync(vstestConfig.responseSupplementryFile, vsTestArgsString);
 }
 
 function getTestSelectorLocation(): string {
     return path.join(__dirname, 'TestSelector/TestSelector.exe');
 }
 
-async function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Promise<number> {
-    const vstest = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
-    vstest.arg(vstestConfig.vsTestVersionDetails.vstestExeLocation);
-    addVstestArgs(argsArray, vstest);
+function createVstestArgsFile(argsArray: string[], otherConsoleOptions: string){
+    let vsTestArgs: string = argsArray.join(' ');
 
-    // Adding the other console options here
-    //   => Because it should be added as ".line" inorder to pass multiple parameters
-    //   => Parsing will be taken care by .line
-    // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
-    if (addOtherConsoleOptions && !utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
-        vstest.line(vstestConfig.otherConsoleOptions);
+    if (!utils.Helper.isNullEmptyOrUndefined(otherConsoleOptions)) {
+        vsTestArgs = vsTestArgs + ' ' + otherConsoleOptions;
     }
+
+    try{
+        fs.writeFileSync(vstestConfig.vstestArgsFile, vsTestArgs);
+    } catch (error){
+        throw new Error(tl.loc('failedToCreateVstestArgsFile', error)); // todo: loc
+    }
+}
+
+async function executeVstest(parallelRunSettingsFile: string, vsVersion: number): Promise<number> {
+    const dta = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
 
     //Re-calculate the results directory based on final runsettings and clean up again if required.
     resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
@@ -228,6 +233,7 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     const ignoreTestFailures = vstestConfig.ignoreTestFailures && vstestConfig.ignoreTestFailures.toLowerCase() === 'true';
 
     const envVars: { [key: string]: string; } = process.env;
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestConsole', vstestConfig.vsTestVersionDetails.vstestExeLocation);
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestResultDirectory', resultsDirectory);
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.Configuration', vstestConfig.buildConfig);
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.Platform', vstestConfig.buildPlatform);
@@ -242,13 +248,23 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildUri', tl.getVariable('Build.BuildUri'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseUri', tl.getVariable('Release.ReleaseUri'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseEnvironmentUri', tl.getVariable('Release.EnvironmentUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseSupplementryFile', vstestConfig.responseSupplementryFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestArgsFile', vstestConfig.vstestArgsFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.IsResponseFileRun', vstestConfig.isResponseFileRun.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.PublishTestResultsInTiaMode', vstestConfig.publishTestResultsInTiaMode.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestSelector', path.join(__dirname, 'TestSelector/TestSelector.exe'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaContext', vstestConfig.tiaConfig.context);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseId', tl.getVariable('Release.ReleaseId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaRunIdFile', vstestConfig.tiaConfig.runIdFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestTaskInstanceIdentifier', vstestConfig.taskInstanceIdentifier);
 
     if (!vstestConfig.responseFileSupported && vstestConfig.rerunFailedTests) {
         tl.warning(tl.loc("rerunNotSupported"));
         vstestConfig.rerunFailedTests = false;
     }
     if (vstestConfig.rerunFailedTests) {
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
     }
@@ -265,7 +281,7 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     // Here we are returning the code as returned to us by vstest.console in case of complete run
     // In case of a failure 1 indicates error to our calling function
     try {
-        var code = await vstest.exec(execOptions);
+        var code = await dta.exec(execOptions);
         cleanUp(parallelRunSettingsFile);
         if (ignoreTestFailures) {
             return 0; // ignore failures.
@@ -470,19 +486,20 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
     if (isResponseFileRun) {
         vstestConfig.responseFile = updatedFile;
-        vstestArgs = ['@' + updatedFile];
+        vstestConfig.isResponseFileRun = true;
     }
     else {
         vstestArgs = getVstestArguments(settingsFile, false);
+        createVstestArgsFile(vstestArgs, vstestConfig.otherConsoleOptions);
     }
 
     try {
-        var vscode = await executeVstest(settingsFile, vsVersion, vstestArgs, !isResponseFileRun);
+        var vscode = await executeVstest(settingsFile, vsVersion);
         let updateTestResultsOutputCode: number;
         if (uploadTiaResults) {
-            updateTestResultsOutputCode = testselector.uploadTestResults(tiaConfig, vstestConfig, resultsDirectory);
+            vstestConfig.publishTestResultsInTiaMode = true;
         }
-        if (vscode !== 0 || (uploadTiaResults && updateTestResultsOutputCode !== 0)) {
+        if (vscode !== 0) {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
             return tl.TaskResult.Failed;
         }
