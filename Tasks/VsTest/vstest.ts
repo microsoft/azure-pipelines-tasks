@@ -207,19 +207,27 @@ function getTestSelectorLocation(): string {
 }
 
 async function executeVstest(parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Promise<number> {
+    // TODO: think of more logical place to add this. may be where we are populatin testassemblies
+    // TODO: As we are creating this file, remember to clean this up on finish. 
+    var testSourcesFile = createTestSourcesFile();
     const vstest = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
+    // TODO: pass vstest exe location also as env var.
     vstest.arg(vstestConfig.vsTestVersionDetails.vstestExeLocation);
+    // TODO: we will not pass any args because we are calling proxy layer DTAExecutionEngine. Its a security risk to do so. So passing everything as env var.
     addVstestArgs(argsArray, vstest);
 
     // Adding the other console options here
     //   => Because it should be added as ".line" inorder to pass multiple parameters
     //   => Parsing will be taken care by .line
     // https://github.com/Microsoft/vsts-task-lib/blob/master/node/docs/vsts-task-lib.md#toolrunnerToolRunnerline
+
+    // TODO: Pass console options as env vars and not args
     if (addOtherConsoleOptions && !utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
         vstest.line(vstestConfig.otherConsoleOptions);
     }
 
     //Re-calculate the results directory based on final runsettings and clean up again if required.
+    // TODO: remove ka logic in dta layer
     resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
     tl.rmRF(resultsDirectory);
     tl.mkdirP(resultsDirectory);
@@ -228,7 +236,7 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     const ignoreTestFailures = vstestConfig.ignoreTestFailures && vstestConfig.ignoreTestFailures.toLowerCase() === 'true';
 
     const envVars: { [key: string]: string; } = process.env;
-    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestResultDirectory', resultsDirectory);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestResultsDirectory', resultsDirectory);
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.Configuration', vstestConfig.buildConfig);
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.Platform', vstestConfig.buildPlatform);
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.Runname', vstestConfig.testRunTitle);
@@ -239,16 +247,84 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProjectName', tl.getVariable('System.TeamProject'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.Owner', 'VsTest');
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildId', tl.getVariable('Build.BuildId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildDefinitionId', tl.getVariable('System.DefinitionId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseId', tl.getVariable('Release.ReleaseId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseDefinitionId', tl.getVariable('release.DefinitionId'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildUri', tl.getVariable('Build.BuildUri'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseUri', tl.getVariable('Release.ReleaseUri'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseEnvironmentUri', tl.getVariable('Release.EnvironmentUri'));
+
+
+    // TEMP Note: all env vars for moving vstest console to dta engine
+    // dont pick from vstestConfig.settingsFile as settingsFile is updated later based on some vars. Eventually, we have to move logic of creating settingsFile also at DTA layer.
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.SettingsFile', parallelRunSettingsFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestConsole', vstestConfig.vsTestVersionDetails.vstestExeLocation);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFileSupported', vstestConfig.responseFileSupported.toString());
+    // TODO: currently we are creating the empty response file here and thus need this env var to pass the file name. Move empty file creation logic to DTA and remove this env var.
+    var isResponseFileRun = !addOtherConsoleOptions;
+    if (isResponseFileRun) {
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
+    }
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaEnabled', tiaConfig.tiaEnabled.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaResponseFile', tiaConfig.responseFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestDropLocation', vstestConfig.testDropLocation);
+    // TODO ****: udpate all test assmeblies in a file and set the file path here.
+    // TODO: move the logic of mini match also in DTA layer. Do it later.
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestSourcesFile', testSourcesFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestcaseFilter', vstestConfig.testcaseFilter);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.CodeCoverageEnabled', vstestConfig.codeCoverageEnabled.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.RunTestsInIsolation', vstestConfig.runTestsInIsolation.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.PathtoCustomTestAdapters', vstestConfig.pathtoCustomTestAdapters);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.OtherConsoleOptions', vstestConfig.otherConsoleOptions);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.IsTestAdapterPresent', isTestAdapterPresent(vstestConfig.testDropLocation).toString());
+    // TODO: too many brackets
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaFileLevel', (!(tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE')).toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaIsPrFlow', (tiaConfig.isPrFlow && tiaConfig.isPrFlow.toUpperCase() === 'TRUE').toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestSelector', path.join(__dirname, 'TestSelector/TestSelector.exe'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaContext', tiaConfig.context);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamProject', tl.getVariable('System.TeamProject'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaRebaseLimit', tiaConfig.tiaRebaseLimit);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaBaseLineFile', tiaConfig.baseLineBuildIdFile);
+    let pathFilters: string;
+    if (typeof tiaConfig.tiaFilterPaths !== 'undefined') {
+        pathFilters = tiaConfig.tiaFilterPaths.trim();
+    }
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaFilterPaths', pathFilters);
+    let testCaseFilterFile = "";
+    if (tiaConfig.userMapFile) {
+        testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    }
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaUserMapFile', tiaConfig.userMapFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaUserMapBasedTestCaseFilterFile', testCaseFilterFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TaskInstanceIdentifier', vstestConfig.taskInstanceIdentifier);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaRunIdFile', tiaConfig.runIdFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaUseTestCaseFilterInResponseFile', tiaConfig.useTestCaseFilterInResponseFile);
+
+
+    if (isDebugEnabled()) {
+        if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.vstestDiagSupported()) {
+            // TODO: Like this, do everywhere check. Or ask if we should do this thing also at DTA layer.
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestDiagFile', vstestConfig.vstestDiagFile);
+        } else {
+            tl.warning(tl.loc('VstestDiagNotSupported'));
+        }
+    }
+
+    let tiaSourcesDirectory: string;
+    if (typeof tiaConfig.sourcesDir !== 'undefined') {
+        tiaSourcesDirectory = tiaConfig.sourcesDir.trim();
+    } else {
+        tiaSourcesDirectory = '';
+    }
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaSourceDirectory', tiaSourcesDirectory);
 
     if (!vstestConfig.responseFileSupported && vstestConfig.rerunFailedTests) {
         tl.warning(tl.loc("rerunNotSupported"));
         vstestConfig.rerunFailedTests = false;
     }
     if (vstestConfig.rerunFailedTests) {
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.Sup.ResponseFile', vstestConfig.responseFile); //Fix it
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
     }
@@ -265,6 +341,7 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
     // Here we are returning the code as returned to us by vstest.console in case of complete run
     // In case of a failure 1 indicates error to our calling function
     try {
+        // TODO: check what is better ps.spawn vs exec.
         var code = await vstest.exec(execOptions);
         cleanUp(parallelRunSettingsFile);
         if (ignoreTestFailures) {
@@ -284,6 +361,168 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
             tl.error(err);
             return 1;
         }
+    }
+}
+
+async function runVStestV2(parallelRunSettingsFile: string, vsVersion: number): Promise<number> {
+    const envVars: { [key: string]: string; } = process.env;
+    
+    // TODO: Add this var in vstestconfig.
+    var testSourcesFile = createTestSourcesFile();
+    var isTestAdapterPresentBool = isTestAdapterPresent(vstestConfig.testDropLocation);
+    
+    resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
+    tl.rmRF(resultsDirectory);
+    tl.mkdirP(resultsDirectory);
+    tl.cd(workingDirectory);
+    
+    //*****************
+    // Run specific properties.
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken']);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildDefinitionId', tl.getVariable('System.DefinitionId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildId', tl.getVariable('Build.BuildId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.BuildUri', tl.getVariable('Build.BuildUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Configuration', vstestConfig.buildConfig);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ExecutionMode', 'vstestexecution');
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Owner', 'VsTest');
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Platform', vstestConfig.buildPlatform);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProjectName', tl.getVariable('System.TeamProject'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseDefinitionId', tl.getVariable('release.DefinitionId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseEnvironmentUri', tl.getVariable('Release.EnvironmentUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseId', tl.getVariable('Release.ReleaseId'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ReleaseUri', tl.getVariable('Release.ReleaseUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.Runname', vstestConfig.testRunTitle);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', tl.getVariable('System.TeamFoundationCollectionUri'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamProject', tl.getVariable('System.TeamProject'));
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TaskInstanceIdentifier', vstestConfig.taskInstanceIdentifier);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestDropLocation', vstestConfig.testDropLocation);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.VsVersion', vsVersion.toString());
+    
+    // vstest console properties
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.PrivateVstest14Console', path.join(__dirname, 'TestSelector/14.0/vstest.console.exe'));
+    if (isDebugEnabled()) {
+        if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.vstestDiagSupported()) {
+            // TODO: Like this, do everywhere check. Or ask if we should do this thing also at DTA layer.
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestDiagFile', vstestConfig.vstestDiagFile);
+        } else {
+            tl.warning(tl.loc('VstestDiagNotSupported'));
+        }
+    }
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestConsole', vstestConfig.vsTestVersionDetails.vstestExeLocation);
+    
+    // Test specific properties.
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.CodeCoverageEnabled', vstestConfig.codeCoverageEnabled.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.OtherConsoleOptions', vstestConfig.otherConsoleOptions);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.IsTestAdapterPresent', isTestAdapterPresentBool.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.PathtoCustomTestAdapters', vstestConfig.pathtoCustomTestAdapters);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFile', vstestConfig.responseFile);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.ResponseFileSupported', vstestConfig.responseFileSupported.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.RunTestsInIsolation', vstestConfig.runTestsInIsolation.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.SettingsFile', parallelRunSettingsFile); // dont pick from vstestConfig.settingsFile as settingsFile is updated later based on some vars. Eventually, we have to move logic of creating settingsFile also at DTA layer.
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestCaseFilter', vstestConfig.testcaseFilter);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaEnabled', tiaConfig.tiaEnabled.toString());
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestResultsDirectory', resultsDirectory);
+    utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestSourcesFile', testSourcesFile);
+
+    // tia specific properties.
+    if (tiaConfig.tiaEnabled){
+        let pathFilters: string;
+        if (typeof tiaConfig.tiaFilterPaths !== 'undefined') {
+            pathFilters = tiaConfig.tiaFilterPaths.trim();
+        }
+        let testCaseFilterFile = "";
+        if (tiaConfig.userMapFile) {
+            testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+        }
+        let tiaSourcesDirectory: string;
+        if (typeof tiaConfig.sourcesDir !== 'undefined') {
+            tiaSourcesDirectory = tiaConfig.sourcesDir.trim();
+        } else {
+            tiaSourcesDirectory = '';
+        }
+
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestSelector', path.join(__dirname, 'TestSelector/TestSelector.exe'));
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaBaseLineFile', tiaConfig.baseLineBuildIdFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaContext', tiaConfig.context);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaFileLevel', (!(tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE')).toString());
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaFilterPaths', pathFilters);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaIsPrFlow', (tiaConfig.isPrFlow && tiaConfig.isPrFlow.toUpperCase() === 'TRUE').toString());
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaRebaseLimit', tiaConfig.tiaRebaseLimit);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaResponseFile', tiaConfig.responseFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaRunIdFile', tiaConfig.runIdFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaSourceDirectory', tiaSourcesDirectory);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaUserMapFile', tiaConfig.userMapFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaUserMapBasedTestCaseFilterFile', testCaseFilterFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TiaUseTestCaseFilterInResponseFile', tiaConfig.useTestCaseFilterInResponseFile);    
+    }
+    
+    // Re-run specific properties.
+    if(vstestConfig.rerunFailedTests){
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.Sup.ResponseFile', vstestConfig.responseFile); //Fix it
+    }
+
+    // TODO: we should use ignoreTestFailures in dta side only.
+    const ignoreTestFailures = vstestConfig.ignoreTestFailures && vstestConfig.ignoreTestFailures.toLowerCase() === 'true';    
+    const dta = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
+    const execOptions: tr.IExecOptions = <any>{
+        env: envVars,
+        ignoreReturnCode: ignoreTestFailures,
+        failOnStdErr: false,
+        // In effect this will not be called as failOnStdErr is false
+        // Keeping this code in case we want to change failOnStdErr
+        errStream: new outStream.StringErrorWritable({ decodeStrings: false })
+    };
+    
+    try {
+        // TODO: check what is better ps.spawn vs exec.
+        var code = await dta.exec(execOptions);
+        cleanUp(parallelRunSettingsFile);
+        if (ignoreTestFailures) {
+            return 0; // ignore failures.
+        } else {
+            return code;
+        }
+    }
+    catch (err) {
+        cleanUp(parallelRunSettingsFile);
+        tl.warning(tl.loc('dtaInvokeFailed'));
+        if (ignoreTestFailures) {
+            tl.warning(err);
+            return 0;
+        } else {
+            // TODO: change area code to dtainvoke
+            utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, err.message, 1005, true);
+            tl.error(err);
+            return 1;
+        }
+    }
+}
+
+// TODO: add clean up code also.
+// TODO: localization.
+function createTestSourcesFile(): string {
+    // Modify test sources to their full path.
+    for (let i = 0; i < testAssemblyFiles.length; i++) {
+        let testAssembly = testAssemblyFiles[i];
+        if (utils.Constants.systemDefaultWorkingDirectory && !utils.Helper.pathExistsAsFile(testAssembly)) {
+            const expandedPath = path.join(utils.Constants.systemDefaultWorkingDirectory, testAssembly);
+            if (utils.Helper.pathExistsAsFile(expandedPath)) {
+                testAssemblyFiles[i] = expandedPath;
+            }
+        }
+    }
+
+    // Write test sources in file.
+    try {
+        const testSourcesFile = path.join(os.tmpdir(), 'testSources_' + uuid.v1() + '.src');
+        fs.writeFileSync(testSourcesFile, testAssemblyFiles.join(os.EOL));
+        return testSourcesFile;
+    } catch (error) {
+        throw new Error(tl.loc('testSourcesFilteringFailed', error));
     }
 }
 
@@ -564,8 +803,9 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
 }
 
 async function vsTestCall(newSettingsFile, vsVersion): Promise<tl.TaskResult> {
-    return runVStest(newSettingsFile, vsVersion).then(function (code) {
+    return runVStestV2(newSettingsFile, vsVersion).then(function (code) {
         if (code !== 0) {
+            // TODO: changes ci message and area path as now we are invoking dta.
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, 'RunVStest returned ' + code, 1036, false);
             return tl.TaskResult.Failed;
         }

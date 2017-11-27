@@ -306,6 +306,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
+    // TODO: move file creation also in DTA layer.
     tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
