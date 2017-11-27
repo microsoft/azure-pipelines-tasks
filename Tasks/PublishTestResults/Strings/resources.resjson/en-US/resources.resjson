@@ -12,7 +12,7 @@
   "loc.input.label.searchFolder": "Search folder",
   "loc.input.help.searchFolder": "Folder to search for the test result files. Defaults to $(System.DefaultWorkingDirectory).",
   "loc.input.label.mergeTestResults": "Merge test results",
-  "loc.input.help.mergeTestResults": "To merge results from all test results files to one test run in VSTS/TFS, check this option. To create a test run for each test results file, uncheck this option.",
+  "loc.input.help.mergeTestResults": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option.",
   "loc.input.label.testRunTitle": "Test run title",
   "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
   "loc.input.label.platform": "Platform",
@@ -20,5 +20,6 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration for which the tests were run.",
   "loc.input.label.publishRunAttachments": "Upload test results files",
-  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments. If selected, test result files will be uploaded and attached to test run"
+  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments. If selected, test result files will be uploaded and attached to test run",
+  "loc.messages.mergeFiles": "Number of results files is greater than %d. Therefore merging all files to publish results against a single test run."
 }
