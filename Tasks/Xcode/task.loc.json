@@ -12,7 +12,7 @@
   "version": {
     "Major": 4,
     "Minor": 126,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [
     "xcode"
@@ -69,7 +69,7 @@
       "name": "xcWorkspacePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.xcWorkspacePath",
-      "defaultValue": "**/*.xcodeproj/*.xcworkspace",
+      "defaultValue": "**/*.xcodeproj/project.xcworkspace",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
     },
@@ -265,8 +265,8 @@
       "groupName": "devices",
       "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
       "options": {
-        "simulators": "Simulators",
-        "devices": "Connected Devices"
+        "simulators": "Simulator",
+        "devices": "Connected Device"
       }
     },
     {

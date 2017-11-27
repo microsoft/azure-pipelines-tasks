@@ -12,7 +12,7 @@
     "version": {
         "Major": 4,
         "Minor": 126,
-        "Patch": 6
+        "Patch": 7
     },
     "demands": [
         "xcode"
@@ -69,16 +69,16 @@
             "name": "xcWorkspacePath",
             "type": "filePath",
             "label": "Workspace or project path",
-            "defaultValue": "**/*.xcodeproj/*.xcworkspace",
+            "defaultValue": "**/*.xcodeproj/project.xcworkspace",
             "required": false,
-            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`."
+            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`."
         },
         {
             "name": "scheme",
             "type": "string",
             "label": "Scheme",
             "required": false,
-            "helpMarkDown": "(Optional, unless you specify a **Workspace or project path** above.) Enter the scheme name defined in Xcode. It must be a shared scheme, with its **Shared** checkbox enabled under **Managed Schemes** in Xcode."
+            "helpMarkDown": "(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used."
         },
         {
             "name": "xcodeVersion",
@@ -236,7 +236,7 @@
             "label": "Destination platform",
             "defaultValue": "default",
             "required": false,
-            "helpMarkDown": "Select the destination device's platform. Primarily used for UI testing when the generic build device isn't valid.",
+            "helpMarkDown": "Select the destination device's platform to be used for UI testing when the generic build device isn't valid. Choose `Custom` to specify a platform not included in this list. When `Default` is selected, no simulators nor devices will be targeted.",
             "groupName": "devices",
             "options": {
                 "default": "Default",
@@ -251,7 +251,7 @@
             "type": "string",
             "label": "Custom destination platform",
             "required": false,
-            "helpMarkDown": "Specify the destination device's platform. Primarily used for UI testing when the generic build device isn't valid.",
+            "helpMarkDown": "Enter a destination device's platform to be used for UI testing when the generic build device isn't valid.",
             "groupName": "devices",
             "visibleRule": "destinationPlatformOption == custom"
         },
@@ -261,32 +261,32 @@
             "label": "Destination type",
             "defaultValue": "simulators",
             "required": false,
-            "helpMarkDown": "Choose the destination type. Primarily used for UI testing. Devices must be connected to the Mac performing the build via a cable or network connection. See `Devices and Simulators` in Xcode.",
+            "helpMarkDown": "Choose the destination type to be used for UI testing. Devices must be connected to the Mac performing the build via a cable or network connection. See <strong>Devices and Simulators</strong> in Xcode.",
             "groupName": "devices",
             "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
             "options": {
-                "simulators": "Simulators",
-                "devices": "Connected Devices"
+                "simulators": "Simulator",
+                "devices": "Connected Device"
             }
         },
         {
             "name": "destinationSimulators",
-            "label": "Simulators",
+            "label": "Simulator",
             "type": "string",
             "defaultValue": "iPhone 7",
             "required": false,
             "groupName": "devices",
-            "helpMarkDown": "An Xcode simulator name. Primarily used for UI testing. For example, `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified with OS=versionNumber (`iPhone X,OS=11.1`).",
+            "helpMarkDown": "Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS Preview</strong> agent can be [found here](https://docs.microsoft.com/en-us/mobile-center/build/software).",
             "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
         },
         {
             "name": "destinationDevices",
-            "label": "Devices",
+            "label": "Device",
             "type": "string",
             "defaultValue": "",
             "required": false,
             "groupName": "devices",
-            "helpMarkDown": "A device name. Primarily used for UI testing. For example, `Chidi’s iPad`.",
+            "helpMarkDown": "Enter the name of the device to be used for UI testing, such as `Raisa's iPad`.",
             "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
         },
         {
