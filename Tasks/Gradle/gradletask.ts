@@ -90,9 +90,8 @@ function isMultiModuleProject(wrapperScript: string): boolean {
     return false;
 }
 
-
 async function publishCodeCoverage(isCodeCoverageOpted: boolean, failIfCoverageEmpty: boolean,
-                             codeCoverageTool: string, summaryFile: string, reportDirectory: string) {
+                                   codeCoverageTool: string, summaryFile: string, reportDirectory: string) {
     if (isCodeCoverageOpted) {
         tl.debug('publishCodeCoverage');
         if (failIfCoverageEmpty && await ccUtil.isCodeCoverageFileEmpty(summaryFile, codeCoverageTool)) {
@@ -157,10 +156,10 @@ function setJavaHome(javaHomeSelection: string): void {
 }
 
 function getExecOptions(): IExecOptions {
-    var env = process.env;
+    const env = process.env;
     env[accessTokenEnvSetting] = systemToken.getSystemAccessToken();
     return <IExecOptions> {
-        env: env,
+        env: env
     };
 }
 

@@ -36,6 +36,7 @@ var fail = util.fail;
 var ensureExists = util.ensureExists;
 var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
+var lintNodeTask = util.lintNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
@@ -218,6 +219,7 @@ target.build = function() {
         // build Node task
         if (shouldBuildNode) {
             buildNodeTask(taskPath, outDir);
+            lintNodeTask(taskPath, outDir);
         }
 
         // copy default resources and any additional resources defined in the task's make.json

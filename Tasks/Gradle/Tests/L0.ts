@@ -106,8 +106,8 @@ describe('Gradle L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
-        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
-        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
+        process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = '{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}';
+        process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = 'https://example.visualstudio.com/defaultcollection';
         done();
     });
 
@@ -959,7 +959,7 @@ describe('Gradle L0 Suite', function () {
         try {
             createTemporaryFolders();
 
-            let testStgDir: string = path.join(__dirname, '_temp');
+            //let testStgDir: string = path.join(__dirname, '_temp');
 
             tr.run();
 
@@ -986,7 +986,7 @@ describe('Gradle L0 Suite', function () {
         try {
             createTemporaryFolders();
 
-            let testStgDir: string = path.join(__dirname, '_temp');
+            //let testStgDir: string = path.join(__dirname, '_temp');
 
             tr.run();
 
