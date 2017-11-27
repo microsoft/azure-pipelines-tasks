@@ -1,6 +1,6 @@
 {
   "name": "vsts-decrypt-task",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "VSTS Decrypt Task",
   "main": "decrypt.js",
   "scripts": {
