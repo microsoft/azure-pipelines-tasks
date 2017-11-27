@@ -20,7 +20,7 @@ export class LtxDomUtility  {
         return this.xmlDom;
     }
 
-    public readHeader(xmlContent) {
+    private readHeader(xmlContent) {
         var index = xmlContent.indexOf('\n');
         if(index > -1) {
             var firstLine = xmlContent.substring(0,index).trim();
@@ -37,7 +37,7 @@ export class LtxDomUtility  {
     /**
      * Define method to create a lookup for DOM 
      */
-    public buildLookUpTable(node) {
+    private buildLookUpTable(node) {
         if(node){
             var nodeName = node.name;
             if(nodeName){
