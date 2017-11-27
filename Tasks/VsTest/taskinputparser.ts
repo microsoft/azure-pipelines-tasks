@@ -62,6 +62,8 @@ export function getDistributedTestConfigurations() {
 export function getvsTestConfigurations() {
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
+    vsTestConfiguration.isResponseFileRun = false;
+    vsTestConfiguration.publishTestResultsInTiaMode = false;
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
