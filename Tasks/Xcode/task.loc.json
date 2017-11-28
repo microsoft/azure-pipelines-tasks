@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 126,
-    "Patch": 7
+    "Minor": 127,
+    "Patch": 0
   },
   "demands": [
     "xcode"
@@ -310,8 +310,7 @@
       "name": "outputPattern",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputPattern",
-      "defaultValue": "output/$(SDK)/$(Configuration)",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
       "groupName": "advanced"
     },
@@ -369,6 +368,7 @@
     "MultipleSchemesFound": "ms-resource:loc.messages.MultipleSchemesFound",
     "NoSchemeFound": "ms-resource:loc.messages.NoSchemeFound",
     "SchemeSelected": "ms-resource:loc.messages.SchemeSelected",
-    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme"
+    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme",
+    "OutputDirectoryIgnored": "ms-resource:loc.messages.OutputDirectoryIgnored"
   }
 }
