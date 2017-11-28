@@ -18,7 +18,7 @@ import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsR
 
 var packagejson = require('./package.json');
 
-const area: string = 'jenkinsdownloadartifacts';
+const area: string = 'JenkinsDownloadArtifacts';
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
