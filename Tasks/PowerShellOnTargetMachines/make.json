@@ -8,7 +8,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M126.2/DeploymentUtilities.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M127.2/DeploymentUtilities.zip",
                 "dest": "./"
             }
         ],
