@@ -79,14 +79,14 @@ $appPoolPassword = Get-VstsInput -Name "AppPoolPassword"
 # Additional appcmd inputs 
 $appCmdCommands = Get-VstsInput -Name "AppCmdCommands"
 
-if($enableIIS -eq "true")
-{
-    import-module servermanager
-    add-windowsfeature web-server -includeallsubfeature
-}
-
 try {
     
+    if($enableIIS -eq "true")
+    {
+        Import-Module servermanager
+        Add-WindowsFeature web-server -includeallsubfeature
+    }
+
     $iisDeploymentType = Get-VstsInput -Name "IISDeploymentType"
 
     switch ($iisDeploymentType)
