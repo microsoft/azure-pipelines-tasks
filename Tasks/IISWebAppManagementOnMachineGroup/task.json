@@ -82,7 +82,7 @@
             "label": "Enable IIS",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "Select the option to enable IIS."
+            "helpMarkDown": "Check this if you want to install IIS on the machine."
         },
         {
             "name": "IISDeploymentType",

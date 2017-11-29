@@ -83,6 +83,7 @@ try {
     
     if($enableIIS -eq "true")
     {
+        Write-Host "Installing IIS. This may take few minutes."
         Import-Module servermanager
         Add-WindowsFeature web-server -includeallsubfeature
     }
