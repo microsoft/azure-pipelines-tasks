@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 18
     },
     "runsOn": [
         "Agent",
@@ -437,7 +437,7 @@
         "PackagesFailedToPublish": "Packages failed to publish",
         "UnknownFeedType": "Unknown feed type '%s'",
         "Error_NoSourceSpecifiedForPush": "No source was specified for push",
-        "Error_UnexpectedErrorVstsNuGetPush": "An unexpected error occurred while trying to push the package with VstsNuGetPush.exe.",
+        "Error_UnexpectedErrorVstsNuGetPush": "An unexpected error occurred while trying to push the package with VstsNuGetPush.exe. Exit code(%s) and error(%s)",
         "Warning_FallBackToNuGet": "VstsNuGetPush.exe was not found, falling back to NuGet.exe.",
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
         "Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
@@ -445,7 +445,6 @@
         "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
         "Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
         "Error_CommandNotRecognized": "The command %s was not recognized.",
-
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
         "Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",
@@ -471,6 +470,7 @@
         "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
+        "Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)"
     }
 }
