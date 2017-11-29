@@ -8,8 +8,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 121,
-        "Patch": 1
+        "Minor": 127,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -32,7 +32,7 @@
             "label": "Files",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders."
+            "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders."
         },
         {
             "name": "authType",

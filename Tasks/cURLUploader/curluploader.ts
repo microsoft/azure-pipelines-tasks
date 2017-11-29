@@ -86,6 +86,8 @@ async function run() {
             // Now we get a list of all files under this root
             var allFiles = tl.find(findPathRoot);
 
+            // IMPORTANT: The backslash character is a valid character in linux style directory and file names. However, as
+            // this is a file pattern not a file path we are converting all backslashes to forward slashes.
             filesPattern = filesPattern.replace(/\\/g, '/');
 
             // Now matching the pattern against all files
