@@ -9,6 +9,7 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 # Get all inputs 
 
 # Website related inputs 
+$deployIIS = Get-VstsInput -Name "DeployIIS"
 $actionIISWebsite = Get-VstsInput -Name "ActionIISWebsite"
 $websiteName = Get-VstsInput -Name "WebsiteName" 
 $startStopWebsiteName = Get-VstsInput -Name "StartStopWebsiteName"
@@ -77,6 +78,12 @@ $appPoolPassword = Get-VstsInput -Name "AppPoolPassword"
 
 # Additional appcmd inputs 
 $appCmdCommands = Get-VstsInput -Name "AppCmdCommands"
+
+if($deployIIS -eq "true")
+{
+    import-module servermanager
+    add-windowsfeature web-server -includeallsubfeature
+}
 
 try {
     

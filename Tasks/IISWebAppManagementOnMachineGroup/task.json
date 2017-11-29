@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "2.111.0",
     "instanceNameFormat": "Manage $(IISDeploymentType)",
@@ -76,6 +76,14 @@
         }
     ],
     "inputs": [
+        {
+            "name": "DeployIIS",
+            "type": "boolean",
+            "label": "Deploy IIS",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to install IIS."
+        },
         {
             "name": "IISDeploymentType",
             "type": "pickList",
