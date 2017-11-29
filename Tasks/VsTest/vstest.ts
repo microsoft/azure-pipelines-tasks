@@ -104,7 +104,7 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(vstestConfig.testDropLocation, vstestConfig.sourceFilter);
 }
 
-function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
+function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): string[] {
     const argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
         let testAssemblyPath = testAssembly;
@@ -117,12 +117,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         }
         argsArray.push(testAssemblyPath);
     });
-    if (vstestConfig.testcaseFilter) {
-        if (!tiaEnabled) {
-            argsArray.push('/TestCaseFilter:' + vstestConfig.testcaseFilter);
-        } else {
-            tl.debug('Ignoring TestCaseFilter because Test Impact is enabled');
-        }
+    if (vstestConfig.testcaseFilter && addTestCaseFilter) {
+        argsArray.push('/TestCaseFilter:' + vstestConfig.testcaseFilter);
     }
     if (settingsFile) {
         if (utils.Helper.pathExistsAsFile(settingsFile)) {
@@ -184,23 +180,31 @@ function addVstestArgs(argsArray: string[], vstest: any) {
     });
 }
 
-function updateResponseFile(argsArray: string[], tiaMode: boolean): void {
-    argsArray.forEach(function (arr, i) {
-        argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
-    });
+function updateResponseFile(argsArray: string[], responseFile: string): boolean {
 
-    let vsTestArgsString: string = os.EOL + argsArray.join(os.EOL);
-    if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
-        vsTestArgsString = vsTestArgsString + os.EOL + vstestConfig.otherConsoleOptions;
+    if (!vstestConfig.responseFileSupported) {
+        return false;
     }
 
-    if (tiaMode) {
-        fs.appendFileSync(tiaConfig.responseFile, vsTestArgsString);
+    try {
+        argsArray.forEach(function (arr, i) {
+            argsArray[i] = utils.Helper.modifyVsTestConsoleArgsForResponseFile(arr);
+        });
+
+        let vsTestArgsString: string = os.EOL + argsArray.join(os.EOL);
+        if (!utils.Helper.isNullEmptyOrUndefined(vstestConfig.otherConsoleOptions)) {
+            vsTestArgsString = vsTestArgsString + os.EOL + vstestConfig.otherConsoleOptions;
+        }
+
+        fs.appendFileSync(responseFile, vsTestArgsString);
     }
-    else {
-        fs.appendFileSync(vstestConfig.responseFile, vsTestArgsString);
+    catch (err) {
+        utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
+        tl.error(err);
+        tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+        return false;
     }
-    fs.appendFileSync(vstestConfig.responseSupplementryFile, vsTestArgsString);
+    return true;
 }
 
 function getTestSelectorLocation(): string {
@@ -260,10 +264,6 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number)
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
     utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestTaskInstanceIdentifier', vstestConfig.taskInstanceIdentifier);
 
-    if (!vstestConfig.responseFileSupported && vstestConfig.rerunFailedTests) {
-        tl.warning(tl.loc("rerunNotSupported"));
-        vstestConfig.rerunFailedTests = false;
-    }
     if (vstestConfig.rerunFailedTests) {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
@@ -439,13 +439,19 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
             utils.Helper.publishEventToCi(AreaCodes.GENERATERESPONSEFILE, err.message, 1024, false);
             tl.error(err);
             tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
-            return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
+            let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, true), vstestConfig.responseFile);
+            return updateResponseFileSuccess ?
+                runVsTestAndUploadResults(settingsFile, vsVersion, true, vstestConfig.responseFile, true) :
+                runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
         }
 
         if (isEmptyResponseFile(tiaConfig.responseFile)) {
             // Empty response file indicates some issue. We run all tests here.
             tl.debug('Empty response file detected. All tests will be executed.');
-            return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
+            let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, true), vstestConfig.responseFile);
+            return updateResponseFileSuccess ?
+                runVsTestAndUploadResults(settingsFile, vsVersion, true, vstestConfig.responseFile, true) :
+                runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
         }
         else {
             if (responseContainsNoTests(tiaConfig.responseFile)) {
@@ -459,18 +465,12 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
                 return tl.TaskResult.Succeeded;
             }
             else {
-                // Response file indicates that only few tests were impacted E.g.: "/Tests:MyNamespace.MyClass.TestMethod1"
-                try {
-                    updateResponseFile(getVstestArguments(settingsFile, true), true);
-                }
-                catch (err) {
-                    utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
-                    tl.error(err);
-                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', tiaConfig.responseFile));
-                    return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
-                }
+                let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, false), tiaConfig.responseFile);
+                if (updateResponseFileSuccess && vstestConfig.testcaseFilter) tl.debug('Ignoring TestCaseFilter because Test Impact is enabled');
 
-                return runVsTestAndUploadResults(settingsFile, vsVersion, true, tiaConfig.responseFile, true);
+                return updateResponseFileSuccess ?
+                    runVsTestAndUploadResults(settingsFile, vsVersion, true, tiaConfig.responseFile, true) :
+                    runVsTestAndUploadResults(settingsFile, vsVersion, false, '', true);
             }
         }
     }
@@ -480,17 +480,23 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
     }
 }
 
-async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedFile: string, uploadTiaResults: boolean): Promise<tl.TaskResult> {
+async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number, isResponseFileRun: boolean, updatedResponseFile: string, uploadTiaResults: boolean): Promise<tl.TaskResult> {
     var vstestArgs;
     let testselector = new testselectorinvoker.TestSelectorInvoker();
 
     if (isResponseFileRun) {
-        vstestConfig.responseFile = updatedFile;
+        vstestConfig.responseFile = updatedResponseFile;
         vstestConfig.isResponseFileRun = true;
     }
     else {
-        vstestArgs = getVstestArguments(settingsFile, false);
+        vstestArgs = getVstestArguments(settingsFile, true);
         createVstestArgsFile(vstestArgs, vstestConfig.otherConsoleOptions);
+    }
+
+    let updateResponseSupplementryFileSuccess = isResponseFileRun && updateResponseFile(getVstestArguments(settingsFile, false), vstestConfig.responseSupplementryFile);
+    if (!updateResponseSupplementryFileSuccess){
+        tl.warning(tl.loc("rerunNotSupported"));
+        vstestConfig.rerunFailedTests = false;
     }
 
     try {
@@ -513,26 +519,21 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 }
 
 async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
-    try {
-        updateResponseFile(getVstestArguments(settingsFile, false), false);
-    }
-    catch (err) {
-        utils.Helper.publishEventToCi(AreaCodes.UPDATERESPONSEFILE, err.message, 1017, false);
-        tl.error(err);
-        tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', vstestConfig.responseFile));
+    let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, true), vstestConfig.responseFile);
+    if (!updateResponseFileSuccess){
         return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false);
     }
 
-    return runVsTestAndUploadResults(settingsFile, vsVersion, vstestConfig.responseFileSupported, vstestConfig.responseFile, false)
-        .then(function (runResult) {
-            if (runResult === tl.TaskResult.Failed) {
-                return tl.TaskResult.Failed;
-            }
-            return tl.TaskResult.Succeeded;
-        }).catch(function (err) {
-            tl.error(err);
+    return runVsTestAndUploadResults(settingsFile, vsVersion, true, vstestConfig.responseFile, false)
+    .then(function (runResult) {
+        if (runResult === tl.TaskResult.Failed) {
             return tl.TaskResult.Failed;
-        });
+        }
+        return tl.TaskResult.Succeeded;
+    }).catch(function (err) {
+        tl.error(err);
+        return tl.TaskResult.Failed;
+    });
 }
 
 async function invokeVSTest(): Promise<tl.TaskResult> {
