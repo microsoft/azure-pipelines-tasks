@@ -40,7 +40,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
-        process.env[shared.TestEnvVars.imageName] = 'test/Test:2';
+        process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
