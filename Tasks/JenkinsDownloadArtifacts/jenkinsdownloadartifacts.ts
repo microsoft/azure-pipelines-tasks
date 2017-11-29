@@ -150,7 +150,7 @@ async function doWork() {
     } catch (err) {
         tl.debug(err.message);
         tl._writeError(err);
-        publishEvent('reliability', { issueType: 'error', errorMessage: err });
+        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
