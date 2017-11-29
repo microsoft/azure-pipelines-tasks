@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("action", "Configure deployment options for vitual machine");
+tr.setInput("action", "Select Resource Group");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("resourceGroupName", "AzureRM");
 tr.setInput("outputVariable", process.env["outputVariable"]);

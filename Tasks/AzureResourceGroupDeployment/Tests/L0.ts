@@ -246,7 +246,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Successfully added Team Services Agent Extension on VM - Select RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Configure deployment options for virtual machine";
+        process.env["action"] = "Select Resource Group";
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithDGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -530,7 +530,7 @@ describe('Azure Resource Group Deployment', function () {
             delete process.env.ENDPOINT_DATA_AzureRM_ENVIRONMENT
         }
     });
-    it('Configure deployment options for vitual machine failed on empty output Variable', (done) => {
+    it('Select Resource Group failed on empty output Variable', (done) => {
         let tp = path.join(__dirname, 'selectResourceGroup.js');
         process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);

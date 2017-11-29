@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 14
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -34,7 +34,7 @@
             "name": "AdvancedDeploymentOptions",
             "displayName": "Advanced deployment options for virtual machines",
             "isExpanded": true,
-            "visibleRule": "action = Create Or Update Resource Group || action = Configure deployment options for virtual machine"
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         }
     ],
     "inputs": [
@@ -57,7 +57,7 @@
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
                 "Create Or Update Resource Group": "Create or update resource group",
-                "Configure deployment options for virtual machine": "Configure deployment options for virtual machine",
+                "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
                 "StopWithDeallocate": "Stop and deallocate virtual machines",
