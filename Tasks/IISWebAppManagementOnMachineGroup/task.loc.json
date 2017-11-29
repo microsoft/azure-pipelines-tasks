@@ -77,12 +77,12 @@
   ],
   "inputs": [
     {
-      "name": "DeployIIS",
+      "name": "EnableIIS",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployIIS",
+      "label": "ms-resource:loc.input.label.EnableIIS",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.DeployIIS"
+      "helpMarkDown": "ms-resource:loc.input.help.EnableIIS"
     },
     {
       "name": "IISDeploymentType",

@@ -77,9 +77,9 @@
     ],
     "inputs": [
         {
-            "name": "DeployIIS",
+            "name": "EnableIIS",
             "type": "boolean",
-            "label": "Deploy IIS",
+            "label": "Enable IIS",
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "Select the option to install IIS."
