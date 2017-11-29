@@ -40,6 +40,14 @@ export default class DockerComposeConnection extends ContainerConnection {
             process.env["DOCKER_HOST"] = this.hostUrl;
             process.env["DOCKER_TLS_VERIFY"] = 1;
             process.env["DOCKER_CERT_PATH"] = this.certsDir;
+        } else {
+            let dockerTlsVerify = process.env["DOCKER_TLS_VERIFY"];
+            if (dockerTlsVerify !== null && dockerTlsVerify !== "0") {
+                let dockerCertPath = process.env["DOCKER_CERT_PATH"];
+                if (dockerCertPath == null || dockerCertPath.length == 0) {
+                    throw new Error("No host is specified, DOCKER_TLS_VERIFY is set but DOCKER_CERT_PATH is not.");
+                }
+            }
         }
 
         tl.getDelimitedInput("dockerComposeFileArgs", "\n").forEach(envVar => {
