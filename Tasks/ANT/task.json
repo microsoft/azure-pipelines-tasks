@@ -232,7 +232,7 @@
     },
     "messages": {
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please ensure specified JDK version is installed on the agent or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
         "DiscontinueAntCodeCoverage": "We are discontinuing the support of automated Code Coverage report generation for Ant projects. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md for more details.",
         "NoCodeCoverage": "No code coverage results were found to publish."
    }

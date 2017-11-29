@@ -1,6 +1,6 @@
 {
   "messages": {
     "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-    "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please ensure specified JDK version is installed on the agent or use the JavaToolInstaller task to install the desired JDK. Refer to https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer for more details."
+    "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please ensure specified JDK version is installed on the agent or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK."
   }
 }
