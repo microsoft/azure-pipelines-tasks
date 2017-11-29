@@ -108,7 +108,7 @@ async function main(): Promise<void> {
             }
 
             artifacts.push(artifact);
-            itemPattern = artifactName + '/**';
+            itemPattern = '**';
         }
         else {
             var buildArtifacts = await buildApi.getArtifacts(buildId, projectId).catch((reason) => {
@@ -187,7 +187,7 @@ async function main(): Promise<void> {
 
 main()
     .then((result) => tl.setResult(tl.TaskResult.Succeeded, ""))
-    .catch((error) => {
-        publishEvent('reliability', { issueType: 'error', errorMessage: error });
-        tl.setResult(tl.TaskResult.Failed, error);
+    .catch((err) => {
+        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+        tl.setResult(tl.TaskResult.Failed, err);
     });
