@@ -100,12 +100,12 @@ export class DistributedTest {
         }
 
         // Set proxy settings to environment if provided
-        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.dtaEnvironment.proxyUrl))
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyUrl))
         {
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.dtaEnvironment.proxyUrl);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.dtaEnvironment.proxyUserName);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.dtaEnvironment.proxyPassword);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyBypassHosts', this.dtaTestConfig.dtaEnvironment.proxyBypassHosts);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.proxyUrl);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.proxyUserName);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.proxyPassword);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyBypassHosts', this.dtaTestConfig.proxyBypassHosts);
         }
         // If we are setting the path version is not needed
         const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetails.vstestExeLocation);
@@ -301,12 +301,12 @@ export class DistributedTest {
                 this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
         }
 
-        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.dtaEnvironment.proxyUrl))
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyUrl))
         {
-            utils.Helper.addToProcessEnvVars(envVars, 'proxyurl', this.dtaTestConfig.dtaEnvironment.proxyUrl);
-            utils.Helper.addToProcessEnvVars(envVars, 'proxyusername', this.dtaTestConfig.dtaEnvironment.proxyUserName);
-            utils.Helper.addToProcessEnvVars(envVars, 'proxypassword', this.dtaTestConfig.dtaEnvironment.proxyPassword);
-            utils.Helper.addToProcessEnvVars(envVars, 'proxybypasslist', this.dtaTestConfig.dtaEnvironment.proxyBypassHosts);
+            utils.Helper.addToProcessEnvVars(envVars, 'proxyurl', this.dtaTestConfig.proxyUrl);
+            utils.Helper.addToProcessEnvVars(envVars, 'proxyusername', this.dtaTestConfig.proxyUserName);
+            utils.Helper.addToProcessEnvVars(envVars, 'proxypassword', this.dtaTestConfig.proxyPassword);
+            utils.Helper.addToProcessEnvVars(envVars, 'proxybypasslist', this.dtaTestConfig.proxyBypassHosts);
         }
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });

@@ -77,12 +77,7 @@ function initDtaEnvironment(): models.DtaEnvironment {
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     dtaEnvironment.environmentUri = getEnvironmentUri();
-    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
-    dtaEnvironment.proxyUrl = tl.getVariable("agent.proxyurl");
-    dtaEnvironment.proxyUserName = tl.getVariable("agent.proxyusername");
-    dtaEnvironment.proxyPassword = tl.getVariable("agent.proxypassword");
-    dtaEnvironment.proxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-
+    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log'); 
     return dtaEnvironment;
 }
 
@@ -227,6 +222,12 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
 
     testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
+
+    // Get proxy details
+    testConfiguration.proxyUrl = tl.getVariable("agent.proxyurl");
+    testConfiguration.proxyUserName = tl.getVariable("agent.proxyusername");
+    testConfiguration.proxyPassword = tl.getVariable("agent.proxypassword");
+    testConfiguration.proxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
 }
 
 async function logWarningForWER(runUITests: boolean) {
@@ -311,6 +312,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
+    
     const useNewCollector = tl.getVariable('tia.useNewCollector');
     if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
         tiaConfiguration.useNewCollector = true;

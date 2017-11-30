@@ -38,6 +38,12 @@ export interface TestConfigurations {
     runUITests: boolean;
     ignoreTestFailures: string;
     toolsInstallerConfig: ToolsInstallerConfiguration;
+
+    // Proxy properties
+    proxyUrl: string;
+    proxyUserName: string;
+    proxyPassword: string;
+    proxyBypassHosts: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -58,10 +64,6 @@ export interface DtaEnvironment {
     environmentUri: string;
     dtaHostLogFilePath: string;
     agentName: string;
-    proxyUrl: string;
-    proxyUserName: string;
-    proxyPassword: string;
-    proxyBypassHosts: string;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
@@ -85,7 +87,7 @@ export interface TiaConfiguration {
     context: string;
     useTestCaseFilterInResponseFile: string;
     userMapFile: string;
-    disableEnablingDataCollector: boolean;
+    disableEnablingDataCollector: boolean;    
 }
 
 export interface ToolsInstallerConfiguration {

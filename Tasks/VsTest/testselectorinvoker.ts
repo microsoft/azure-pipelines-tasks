@@ -7,7 +7,7 @@ import { Helper } from './helpers'
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, vstestConfig : models.VsTestConfigurations, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
@@ -76,6 +76,10 @@ export class TestSelectorInvoker {
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
+                'proxyurl' : vstestConfig.proxyUrl,
+                'proxyusername' : vstestConfig.proxyUserName,
+                'proxypassword' : vstestConfig.proxyPassword,
+                'proxybypasslist' : vstestConfig.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
@@ -167,6 +171,10 @@ export class TestSelectorInvoker {
                 'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
                 'testCaseFilterOutputFile': testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
                 'isCustomEngineEnabled': String(!Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
+                'proxyurl' : vstestConfig.proxyUrl,
+                'proxyusername' : vstestConfig.proxyUserName,
+                'proxypassword' : vstestConfig.proxyPassword,
+                'proxybypasslist' : vstestConfig.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
@@ -225,6 +233,10 @@ export class TestSelectorInvoker {
                 'resultfile': resultFile,
                 'runidfile': tiaConfig.runIdFile,
                 'context': tiaConfig.context,
+                'proxyurl' : vstestConfig.proxyUrl,
+                'proxyusername' : vstestConfig.proxyUserName,
+                'proxypassword' : vstestConfig.proxyPassword,
+                'proxybypasslist' : vstestConfig.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
