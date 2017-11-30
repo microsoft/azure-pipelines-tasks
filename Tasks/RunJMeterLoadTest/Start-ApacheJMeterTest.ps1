@@ -17,9 +17,7 @@ $LoadTest,
 [String] [Parameter(Mandatory = $true)]
 $agentCount,
 [String] [Parameter(Mandatory = $true)]
-$runDuration,
-[String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-$machineType
+$runDuration
 )
 
 #Set the userAgent appropriately based on whether the task is running as part of a ci or cd
@@ -107,6 +105,9 @@ Write-Output "VSO Account URL is : $VSOAccountUrl"
 $headers = InitializeRestHeaders
 $CltAccountUrl = ComposeAccountUrl $VSOAccountUrl $headers
 $TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+# Only auto provisioned agents supported.
+$machineType="0"
 
 Write-Output "TFS account Url = $TFSAccountUrl" -Verbose
 Write-Output "CLT account Url = $CltAccountUrl" -Verbose
