@@ -195,7 +195,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	}
 	
 	
-	$summary = ('<span class="bowtie-icon {3}" role="img" aria-label="{5}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage, $thresholdImageLabel)
+	$summary = ('<span class="bowtie-icon {3}" role="img" aria-label="{5}" />   {4}<br/><a href="{1}" target="_blank">Test Run: {0}</a> using {2}.' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage, $thresholdImageLabel)
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
 	UploadSummaryMdReport $summaryFile
 }
