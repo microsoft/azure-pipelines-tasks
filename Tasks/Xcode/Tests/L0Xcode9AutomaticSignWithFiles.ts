@@ -13,17 +13,11 @@ tr.setInput('configuration', '$(Configuration)');
 tr.setInput('sdk', '$(SDK)');
 tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
 tr.setInput('scheme', 'testScheme');
+tr.setInput('xcodeVersion', 'default');
 tr.setInput('packageApp', 'true');
-tr.setInput('xcode8AutomaticSigning', 'true');
-tr.setInput('signMethod', 'file');
-tr.setInput('p12', '/user/build/cert.p12');
-tr.setInput('p12pwd', 'p12password');
-tr.setInput('provProfile', '/user/build/testuuid.mobileprovision');
-tr.setInput('removeProfile', 'false');
-tr.setInput('unlockDefaultKeychain', 'false');
-tr.setInput('defaultKeychainPassword', '');
-tr.setInput('iosSigningIdentity', '');
-tr.setInput('provProfileUuid', '');
+tr.setInput('signingOption', 'auto');
+tr.setInput('signingIdentity', '');
+tr.setInput('provisioningProfileUuid', '');
 tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
@@ -60,8 +54,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/users/test"
     },
     "exist": {
-        "/user/build/cert.p12": true,
-        "/user/build/testuuid.mobileprovision": true,
         "/user/build/_XcodeTaskExport_testScheme": false
     },
     "stats": {
@@ -85,11 +77,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Xcode 9.0"
         },
-        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain": {
+        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Automatic": {
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain": {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme CODE_SIGN_STYLE=Automatic": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
@@ -105,30 +97,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "plist add output here"
         },
-        "/usr/bin/security create-keychain -p _xcodetask_TmpKeychain_Pwd#1 /user/build/_xcodetasktmp.keychain": {
-            "code": 0,
-            "stdout": "temporary keychain created"
-        },
-        "/usr/bin/security set-keychain-settings -lut 7200 /user/build/_xcodetasktmp.keychain": {
-            "code": 0,
-            "stdout": "set-keychain-settings on temporary keychain output"
-        },
-        "/usr/bin/security unlock-keychain -p _xcodetask_TmpKeychain_Pwd#1 /user/build/_xcodetasktmp.keychain": {
-            "code": 0,
-            "stdout": "temporary keychain unlocked"
-        },
-        "/usr/bin/security import /user/build/cert.p12 -P p12password -A -t cert -f pkcs12 -k /user/build/_xcodetasktmp.keychain": {
-            "code": 0,
-            "stdout": "p12 imported into temporary keychain"
-        },
-        "/usr/bin/security find-identity -v -p codesigning /user/build/_xcodetasktmp.keychain": {
-            "code": 0,
-            "stdout": "1) 5229BFC905F473E52FAD51208174528106966930 \"iPhone Developer: XcodeTask Tester (HE432Y3E2Q)\"\n 1 valid identities found"
-        },
-        "/usr/bin/security cms -D -i /user/build/testuuid.mobileprovision": {
-            "code": 0,
-            "stdout": "prov profile details here"
-        },
         "/usr/libexec/PlistBuddy -c Print UUID _xcodetasktmp.plist": {
             "code": 0,
             "stdout": "testuuid"
@@ -136,18 +104,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/rm -f _xcodetasktmp.plist": {
             "code": 0,
             "stdout": "delete output here"
-        },
-        "/usr/bin/security list-keychain -d user": {
-            "code": 0,
-            "stdout": "/User/test/Library/Keychains/login.keychain \n /user/build/_xcodetasktmp.keychain"
-        },
-        "/usr/bin/security list-keychain -d user -s /user/build/_xcodetasktmp.keychain /User/test/Library/Keychains/login.keychain /user/build/_xcodetasktmp.keychain": {
-            "code": 0,
-            "stdout": "list-keychain output here"
-        },
-        "/bin/cp -f /user/build/testuuid.mobileprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
-            "code": 0,
-            "stdout": "provisioning profile copied"
         }
     }
 };

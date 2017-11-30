@@ -6,8 +6,11 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Target,
 
-	[Parameter(Mandatory = $true)]
-    [int]$ParallelCount)
+    [Parameter(Mandatory = $true)]
+    [int]$ParallelCount,
+
+    [Parameter(Mandatory = $false)]
+    [string]$File)
 
 # This script translates the output from robocopy into UTF8. Node has limited
 # built-in support for encodings.
@@ -35,11 +38,16 @@ $writer = New-Object System.IO.StreamWriter($stdout, $utf8)
 # All subsequent output must be written using [System.Console]::WriteLine(). In
 # PowerShell 4, Write-Host and Out-Default do not consider the updated stream writer.
 
+if (!$File) {
+    $File = "*";
+}
+
 # Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" *")
-} else {
-    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 `"$Source`" `"$Target`" *")
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
+}
+else {
+    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
 }
 
 # The $OutputEncoding variable instructs PowerShell how to interpret the output
@@ -66,25 +74,26 @@ $OutputEncoding = [System.Text.Encoding]::Default
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target * 2>&1 |
+    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
         ForEach-Object {
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                [System.Console]::WriteLine($_.Exception.Message)
-            }
-            else {
-                [System.Console]::WriteLine($_)
-            }
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            [System.Console]::WriteLine($_.Exception.Message)
         }
-} else {
-    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target * 2>&1 |
+        else {
+            [System.Console]::WriteLine($_)
+        }
+    }
+}
+else {
+    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
         ForEach-Object {
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                [System.Console]::WriteLine($_.Exception.Message)
-            }
-            else {
-                [System.Console]::WriteLine($_)
-            }
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            [System.Console]::WriteLine($_.Exception.Message)
         }
+        else {
+            [System.Console]::WriteLine($_)
+        }
+    }
 }
 
 [System.Console]::WriteLine("##[debug]robocopy exit code '$LASTEXITCODE'")

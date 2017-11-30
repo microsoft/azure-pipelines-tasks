@@ -41,7 +41,10 @@ param(
     [string] $ExpirationInDays,
 
     [Parameter(Mandatory=$false)]
-    [string] $PersonalAccessToken
+    [string] $PersonalAccessToken,
+
+    [Parameter(Mandatory=$false)]
+    [bool] $DetailedLog
 )
 
 # -----------------------------------------------------------------------------
@@ -139,7 +142,8 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
 {
     $exe = "$assemblyPath\symbol.exe"
-    $arguments += " --tracelevel verbose"
+    $traceLevel = if ($DetailedLog) { "verbose" } else { "info" }
+    $arguments += " --tracelevel $traceLevel"
 
     Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
 
@@ -165,7 +169,13 @@ function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLoc
     # Check latest package version.
     $availableVersion = Get-SymbolClientVersion $symbolServiceUri
 
-    $symbolPathRoot = Join-Path $env:APPDATA "VSOSymbolClient"
+    $agent = Get-VstsTaskVariable -Name 'agent.version'
+    if (!$agent -or (([version]'2.115.0').CompareTo([version]$agent) -ge 1)) {
+        $symbolPathRoot = Join-Path $env:APPDATA "VSOSymbolClient"        
+    }
+    else {
+        $symbolPathRoot = Join-Path (Get-VstsTaskVariable -Name 'Agent.ToolsDirectory') "VSOSymbolClient"
+    }
     $clientPath = Join-Path $symbolPathRoot $availableVersion
     $completeMarkerFile = Join-Path $clientPath "symbol.app.buildtask.complete"
     $symbolClientZip = Join-Path $clientPath "symbol.app.buildtask.zip"

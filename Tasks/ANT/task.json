@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 124,
+        "Minor": 126,
         "Patch": 0
     },
     "demands": [
@@ -44,6 +44,7 @@
     "inputs": [
         {
             "name": "antBuildFile",
+            "aliases": ["buildFile"],
             "type": "filePath",
             "label": "Ant build file",
             "defaultValue": "build.xml",
@@ -97,6 +98,7 @@
         },
         {
             "name": "codeCoverageTool",
+            "aliases": ["codeCoverageToolOptions"],
             "type": "pickList",
             "label": "Code Coverage Tool",
             "required": false,
@@ -111,6 +113,7 @@
         },
         {
             "name": "classFilesDirectories",
+            "aliases": ["codeCoverageClassFilesDirectories"],
             "type": "string",
             "label": "Class Files Directories",
             "defaultValue": ".",
@@ -121,6 +124,7 @@
         },
         {
             "name": "classFilter",
+            "aliases": ["codeCoverageClassFilter"],
             "type": "string",
             "label": "Class Inclusion/Exclusion Filters",
             "defaultValue": "",
@@ -131,6 +135,7 @@
         },
         {
             "name": "srcDirectories",
+            "aliases": ["codeCoverageSourceDirectories"],
             "type": "string",
             "label": "Source Files Directories",
             "defaultValue": "",
@@ -141,6 +146,7 @@
         },
         {
             "name": "failIfCoverageEmpty",
+            "aliases": ["codeCoverageFailIfEmpty"],
             "type": "boolean",
             "label": "Fail When Code Coverage Results Are Missing",
             "defaultValue": "false",
@@ -151,6 +157,7 @@
         },
         {
             "name": "antHomeUserInputPath",
+            "aliases": ["antHomeDirectory"],
             "type": "string",
             "label": "Set ANT_HOME Path",
             "required": false,
@@ -160,6 +167,7 @@
         },
         {
             "name": "javaHomeSelection",
+            "aliases": ["javaHomeOption"],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -173,6 +181,7 @@
         },
         {
             "name": "jdkVersion",
+            "aliases": ["jdkVersionOption"],
             "type": "pickList",
             "label": "JDK Version",
             "required": false,
@@ -189,6 +198,7 @@
         },
         {
             "name": "jdkUserInputPath",
+            "aliases": ["jdkUserInputDirectory"],
             "type": "string",
             "label": "JDK Path",
             "required": true,
@@ -199,6 +209,7 @@
         },
         {
             "name": "jdkArchitecture",
+            "aliases": ["jdkArchitectureOption"],
             "type": "pickList",
             "label": "JDK Architecture",
             "defaultValue": "x86",

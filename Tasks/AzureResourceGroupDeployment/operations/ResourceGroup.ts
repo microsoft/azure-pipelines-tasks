@@ -13,20 +13,24 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
+
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
 
-let proxyUrl: string = tl.getVariable("agent.proxyurl"); 
-var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? { 
-    proxy: { 
-        proxyUrl: proxyUrl, 
-        proxyUsername: tl.getVariable("agent.proxyusername"), 
-        proxyPassword: tl.getVariable("agent.proxypassword"), 
-        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
-    } 
-} : null;
+let proxyUrl: string = tl.getVariable("agent.proxyurl");
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
+    proxy: {
+        proxyUrl: proxyUrl,
+        proxyUsername: tl.getVariable("agent.proxyusername"),
+        proxyPassword: tl.getVariable("agent.proxypassword"),
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
+    }
+} : {};
 
-let hc = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
+let ignoreSslErrors: string = tl.getVariable("VSTS_ARM_REST_IGNORE_SSL_ERRORS");
+requestOptions.ignoreSslError = ignoreSslErrors && ignoreSslErrors.toLowerCase() == "true";
+
+let httpClient = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
 
 function stripJsonComments(content) {
     if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
@@ -86,6 +90,10 @@ function stripJsonComments(content) {
     }
 
     return contentWithoutComments;
+}
+
+function formatNumber(num: number): string {
+    return ("0" + num).slice(-2);
 }
 
 class Deployment {
@@ -217,7 +225,13 @@ export class ResourceGroup {
         name = name.substr(0, 40);
         var timestamp = new Date(Date.now());
         var uniqueId = uuid().substr(0, 4);
-        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate(), timestamp.getHours(), timestamp.getMinutes(), timestamp.getSeconds(), uniqueId);
+        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
+            formatNumber(timestamp.getMonth()),
+            formatNumber(timestamp.getDate()),
+            formatNumber(timestamp.getHours()),
+            formatNumber(timestamp.getMinutes()),
+            formatNumber(timestamp.getSeconds()),
+            uniqueId);
         var deploymentName = util.format("%s-%s", name, suffix);
         if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
             deploymentName = util.format("deployment-%s", suffix);
@@ -276,8 +290,8 @@ export class ResourceGroup {
 
     private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            hc.get(url, {}).then(async (response) => {
-                if(response.message.statusCode == 200) {
+            httpClient.get(url, {}).then(async (response) => {
+                if (response.message.statusCode == 200) {
                     let contents: string = "";
                     try {
                         contents = await response.readBody();

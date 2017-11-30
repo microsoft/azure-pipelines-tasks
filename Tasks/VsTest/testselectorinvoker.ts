@@ -77,7 +77,9 @@ export class TestSelectorInvoker {
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-                'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier
+                'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
+                'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT')
             },
             silent: null,
             outStream: null,
@@ -166,7 +168,9 @@ export class TestSelectorInvoker {
                 'testCaseFilterOutputFile': testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
                 'isCustomEngineEnabled': String(!Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-                'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
+                'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
+                'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT')
             },
             silent: null,
             outStream: null,
@@ -222,7 +226,9 @@ export class TestSelectorInvoker {
                 'runidfile': tiaConfig.runIdFile,
                 'context': tiaConfig.context,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-                'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier
+                'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
+                'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT')
             },
             silent: null,
             outStream: null,

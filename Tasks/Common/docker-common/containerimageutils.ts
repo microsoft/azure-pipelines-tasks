@@ -17,26 +17,16 @@ export function imageNameWithoutTag(imageName: string): string {
         endIndex = imageName.indexOf("/");
     }
     endIndex = imageName.indexOf(":", endIndex);
-    return endIndex < 0 ? imageName : imageName.substr(0, endIndex);
+    return generateValidImageName(endIndex < 0 ? imageName : imageName.substr(0, endIndex));
 }
 
 export function getImageName(): string {
     var imageName = tl.getInput("imageName", true);
-    return changeDefaultImageNameToLowerCase(imageName);
+    return generateValidImageName(imageName);
 }
 
-export function changeDefaultImageNameToLowerCase(imageName: string): string {
-    if (imageName === getDefaultImage()) {
-        imageName = imageName.toLowerCase();
-        imageName = imageName.replace(/ /g,"");
-    }
-
+export function generateValidImageName(imageName: string): string {
+    imageName = imageName.toLowerCase();
+    imageName = imageName.replace(/ /g,"");
     return imageName;
-}
-
-function getDefaultImage() : string {
-    var repositoryName = tl.getVariable('build.repository.name');
-    var buildId = tl.getVariable('build.buildId');
-
-    return repositoryName + ":" + buildId;
 }

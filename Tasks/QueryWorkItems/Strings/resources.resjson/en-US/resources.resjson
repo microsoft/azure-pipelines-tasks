@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "loc.description": "Executes a work item query and checks for the number of items returned.",
   "loc.instanceNameFormat": "Query Work Items",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.queryId": "Query",
   "loc.input.help.queryId": "Select a saved work query to execute.",
   "loc.input.label.maxThreshold": "Maximum Threshold",

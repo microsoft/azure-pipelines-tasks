@@ -16,10 +16,15 @@ async function main(): Promise<void> {
     tl.debug('Getting NuGet');
     let nuGetPath: string = undefined;
     try {
-        nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR] || process.env[NUGET_EXE_CUSTOM_LOCATION];
+        nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR) || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath){
-            nuGetGetter.cacheBundledNuGet_4_0_0();
-            nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+            let cachedVersionToUse = nuGetGetter.DEFAULT_NUGET_VERSION;
+            nuGetGetter.cacheBundledNuGet();
+            if (tl.getVariable(nuGetGetter.FORCE_NUGET_4_0_0) &&
+                tl.getVariable(nuGetGetter.FORCE_NUGET_4_0_0).toLowerCase() === "true") {
+                cachedVersionToUse = nuGetGetter.NUGET_VERSION_4_0_0;
+            }
+            nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
         }
     }
     catch (error) {
