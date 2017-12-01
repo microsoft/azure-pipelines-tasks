@@ -466,7 +466,7 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
             }
             else {
                 let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, false), tiaConfig.responseFile);
-                if (updateResponseFileSuccess && vstestConfig.testcaseFilter) tl.debug('Ignoring TestCaseFilter because Test Impact is enabled');
+                if (updateResponseFileSuccess && vstestConfig.testcaseFilter) tl.debug('Ignoring TestCaseFilter in response file because Test Impact is enabled');
 
                 return updateResponseFileSuccess ?
                     runVsTestAndUploadResults(settingsFile, vsVersion, true, tiaConfig.responseFile, true) :
@@ -492,6 +492,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
         vstestArgs = getVstestArguments(settingsFile, true);
         createVstestArgsFile(vstestArgs, vstestConfig.otherConsoleOptions);
     }
+    vstestConfig.publishTestResultsInTiaMode = uploadTiaResults;
 
     let updateResponseSupplementryFileSuccess = isResponseFileRun && updateResponseFile(getVstestArguments(settingsFile, false), vstestConfig.responseSupplementryFile);
     if (!updateResponseSupplementryFileSuccess){
@@ -502,9 +503,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
     try {
         var vscode = await executeVstest(settingsFile, vsVersion);
         let updateTestResultsOutputCode: number;
-        if (uploadTiaResults) {
-            vstestConfig.publishTestResultsInTiaMode = true;
-        }
+
         if (vscode !== 0) {
             utils.Helper.publishEventToCi(AreaCodes.EXECUTEVSTEST, ResultMessages.EXECUTEVSTESTRETURNED + vscode, 1010, false);
             return tl.TaskResult.Failed;
