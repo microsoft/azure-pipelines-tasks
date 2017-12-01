@@ -69,7 +69,7 @@ describe('ArchiveFiles Suite', function () {
             setResponseFile('archiveFilesWin.json');
 
             var tr = new trm.TaskRunner('ArchiveFiles', true, true);
-            tr.setInput('rootFolder', 'testRootFolder');
+            tr.setInput('rootFolderOrFile', 'testRootFolder');
             tr.setInput('includeRootFolder', 'true');
             tr.setInput('archiveType', test.type);
             tr.setInput('archiveFile', test.file);
@@ -98,7 +98,7 @@ describe('ArchiveFiles Suite', function () {
             setResponseFile('archiveFilesWin.json');
 
             var tr = new trm.TaskRunner('ArchiveFiles', true, true);
-            tr.setInput('rootFolder', 'testRootFolder');
+            tr.setInput('rootFolderOrFile', 'testRootFolder');
             tr.setInput('includeRootFolder', 'false');
             tr.setInput('archiveType', test.type);
             tr.setInput('archiveFile', test.file);
@@ -129,7 +129,7 @@ describe('ArchiveFiles Suite', function () {
             setResponseFile('archiveFilesLinux.json');
 
             var tr = new trm.TaskRunner('ArchiveFiles', true, true);
-            tr.setInput('rootFolder', 'testRootFolder');
+            tr.setInput('rootFolderOrFile', 'testRootFolder');
             tr.setInput('includeRootFolder', 'true');
             tr.setInput('archiveType', test.type);
             tr.setInput('archiveFile', test.file);
@@ -150,7 +150,7 @@ describe('ArchiveFiles Suite', function () {
             setResponseFile('archiveFilesLinux.json');
 
             var tr = new trm.TaskRunner('ArchiveFiles', true, true);
-            tr.setInput('rootFolder', 'testRootFolder');
+            tr.setInput('rootFolderOrFile', 'testRootFolder');
             tr.setInput('includeRootFolder', 'false');
             tr.setInput('archiveType', test.type);
             tr.setInput('archiveFile', test.file);

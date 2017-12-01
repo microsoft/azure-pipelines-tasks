@@ -3,7 +3,7 @@ import tl = require('vsts-task-lib/task');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
-var rootFolder: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolder', true, false).trim()));
+var rootFolderOrFile: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolderOrFile', true, false).trim()));
 var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
@@ -34,9 +34,9 @@ function getSevenZipLocation(): string {
 
 function findFiles(): string[] {
     if (includeRootFolder) {
-        return [path.basename(rootFolder)];
+        return [path.basename(rootFolderOrFile)];
     } else {
-        var fullPaths: string[] = tl.ls('-A', [rootFolder]);
+        var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
         var baseNames: string[] = [];
         for (var i = 0; i < fullPaths.length; i++) {
             baseNames[i] = path.basename(fullPaths[i]);
@@ -59,15 +59,15 @@ function makeAbsolute(normalizedPath: string): string {
 function getOptions() {
     var dirName: string;
     if (includeRootFolder) {
-        dirName = path.dirname(rootFolder);
+        dirName = path.dirname(rootFolderOrFile);
         tl.debug("cwd (include root folder)= " + dirName);
         return { cwd: dirName };
     } else {
-        var stats: tl.FsStats = tl.stats(rootFolder);
+        var stats: tl.FsStats = tl.stats(rootFolderOrFile);
         if (stats.isFile()) {
-            dirName = path.dirname(rootFolder);
+            dirName = path.dirname(rootFolderOrFile);
         } else {
-            dirName = rootFolder;
+            dirName = rootFolderOrFile;
         }
         tl.debug("cwd (exclude root folder)= " + dirName);
         return { cwd: dirName };
