@@ -518,14 +518,14 @@ async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersi
     let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, true), vstestConfig.responseFile);
     if (!updateResponseFileSuccess){
         return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function () {
-            if (vstestConfig.rerunFailedTests) return publishTestResults(resultsDirectory);
+            if (!vstestConfig.rerunFailedTests) return publishTestResults(resultsDirectory);
         });
     }
 
     return runVsTestAndUploadResults(settingsFile, vsVersion, true, vstestConfig.responseFile, false)
     .then(function (runResult) {
         let publishResult = tl.TaskResult.Succeeded;
-        if (vstestConfig.rerunFailedTests) publishResult = publishTestResults(resultsDirectory);
+        if (!vstestConfig.rerunFailedTests) publishResult = publishTestResults(resultsDirectory);
         if (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) {
             return tl.TaskResult.Failed;
         }
