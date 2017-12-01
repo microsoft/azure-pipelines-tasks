@@ -10,7 +10,7 @@ Write-Host "Stopping collector"
 # Upload the performance monitor data.
 Write-Host "Uploading performance monitor data"
 $blgFile = Get-ChildItem -LiteralPath $PSScriptRoot\.. -Filter *.blg | Select-Object -Last 1 -ExpandProperty FullName
-Write-Host "##vso[artifact.upload containerfolder=perfmon;artifactname=perfmon]$blgFile"
+Write-Host "##vso[artifact.upload containerfolder=perfmon;artifactname=diagnostics]$blgFile"
 
 # Upload the event logs
 $logNames = @(
@@ -29,5 +29,5 @@ foreach ($logName in $logNames) {
 
     # Upload the log
     Write-Host "Uploading $logName event log"
-    Write-Host "##vso[artifact.upload containerfolder=event-logs;artifactname=event-logs]$filePath"
+    Write-Host "##vso[artifact.upload containerfolder=event-logs;artifactname=diagnostics]$filePath"
 }
