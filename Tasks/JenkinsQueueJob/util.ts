@@ -133,7 +133,8 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
                 tl.debug(err);
                 defer.resolve(null);
             } else {
-                defer.reject(err);
+                const error = { message: tl.loc('JenkinsJobQueueUriInvalid', JSON.stringify(err)) };
+                defer.reject(error);
             }
         } else if (httpResponse.statusCode !== 200) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job progress tracking failed to read job queue'));
