@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 126,
+    "Minor": 128,
     "Patch": 0
   },
   "demands": [
@@ -209,6 +209,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.9": "JDK 9",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
