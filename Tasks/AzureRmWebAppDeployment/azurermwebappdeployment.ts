@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 import * as ParameterParser from './parameterparser'
+import { AzureAppService } from  'azure-arm-rest/azure-app-service';
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
@@ -53,13 +54,23 @@ async function run() {
         var linuxWebDeployPkg = "";
 
         var isBuiltinLinuxWebApp: boolean = imageSource && imageSource.indexOf("Builtin") >=0;
+        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
+        var appService: AzureAppService = new AzureAppService(endPoint, webAppName, resourceGroupName, slotName);
+
+        console.log("Finding RG Name");
+        console.log(await appService.getResourceGroupName());
+        console.log(await appService.getAppDetails());
+        console.log(await appService.getPublishingProfile());
+        var appService1: AzureAppService = new AzureAppService(endPoint, "vincalinux", resourceGroupName, slotName);
+        
+        console.log("Finding RG Name");
+        console.log(await appService1.getAppDetails());
+        console.log(await appService1.getAppDetails());
 
         if (isLinuxWebApp && isBuiltinLinuxWebApp) {
             linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
             runtimeStack = tl.getInput('RuntimeStack', true);
         }
-
-        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
 
         if(deployToSlotFlag) {
             if (slotName.toLowerCase() === "production") {
@@ -72,6 +83,7 @@ async function run() {
 
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
