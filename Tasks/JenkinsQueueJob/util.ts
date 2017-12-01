@@ -133,7 +133,7 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
             if (err.code == 'ECONNRESET') {
                 defer.resolve(null);
             } else {
-                const error = { message: tl.loc('JenkinsJobQueueUriInvalid', JSON.stringify(err)) };
+                const error = { message: tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)) };
                 defer.reject(error);
             }
         } else if (httpResponse.statusCode !== 200) {

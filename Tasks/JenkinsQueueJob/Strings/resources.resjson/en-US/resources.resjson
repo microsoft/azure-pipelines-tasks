@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Jenkins pipeline failed",
   "loc.messages.JenkinsJobFailed": "Jenkins job failed",
   "loc.messages.JenkinsJobFailedtoQueue": "Jenkins job failed to queue",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached.  Verify the 'Jenkins URL' is configured correctly in your Jenkins instance.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly in your Jenkins instance.  Error details: %s"
 }
