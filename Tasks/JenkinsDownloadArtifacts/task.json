@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 126,
-        "Patch": 2
+        "Minor": 127,
+        "Patch": 0
     },
     "groups": [
         {
@@ -336,7 +336,7 @@
         "FailedToCreateBlob": "Failed to create blob {0}. Error: {1}",
         "FailedToCreateContainer": "Failed to create container {0}. Error: {1}",
         "FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
-        "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
+        "SuccessFullyFetchedItemList": "Successfully fetched the list of items in the container",
         "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
         "UploadingItem": "Uploading {0}.",
         "FoundJobType": "Found job type %s",

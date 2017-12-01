@@ -6,7 +6,7 @@ const taskPath = path.join(__dirname, '..', 'javatoolinstaller.js');
 const srcPath = 'source/foo.zip';
 const destDir = '/destDir';
 const tr: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
-tr.setInput("versionSpec", "8.1");
+tr.setInput("javaVersion", "8.1");
 tr.setInput("jdkSource", "Local Directory")
 tr.setInput("jdkPath", srcPath);
 //tr.setInput('destinationFolder', 'dirName');

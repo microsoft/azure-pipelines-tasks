@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -198,7 +198,7 @@
         "UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
         "UploadingToStorageBlobsFailed": "Failed to upload custom scripts to azure blob storage. Error: %s.",
         "DestinationBlobContainer": "Files will be uploaded to container url: %s.",
-        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+        "StorageAccountDoesNotExist": "Failed to get the Azure storage account with name %s.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
         "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
         "ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
@@ -209,7 +209,7 @@
         "FailedToCreateBlob": "Failed to create blob %s. Error: %s.",
         "FailedToCreateContainer": "Failed to create container %s. Error: %s.",
         "FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
-        "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
+        "SuccessFullyFetchedItemList": "Successfully fetched the list of items in the container",
         "UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
         "UploadingItem": "Uploading %s."
     }

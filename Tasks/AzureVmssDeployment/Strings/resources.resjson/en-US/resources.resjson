@@ -59,7 +59,7 @@
   "loc.messages.UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
   "loc.messages.UploadingToStorageBlobsFailed": "Failed to upload custom scripts to azure blob storage. Error: %s.",
   "loc.messages.DestinationBlobContainer": "Files will be uploaded to container url: %s.",
-  "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+  "loc.messages.StorageAccountDoesNotExist": "Failed to get the Azure storage account with name %s.",
   "loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url cannot be empty.",
   "loc.messages.StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
   "loc.messages.ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
@@ -70,7 +70,7 @@
   "loc.messages.FailedToCreateBlob": "Failed to create blob %s. Error: %s.",
   "loc.messages.FailedToCreateContainer": "Failed to create container %s. Error: %s.",
   "loc.messages.FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
-  "loc.messages.SuccessFullyFetchedItemList": "Successfully fetcted list of items",
+  "loc.messages.SuccessFullyFetchedItemList": "Successfully fetched the list of items in the container",
   "loc.messages.UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
   "loc.messages.UploadingItem": "Uploading %s."
 }

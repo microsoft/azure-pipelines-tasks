@@ -9,24 +9,24 @@ taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function run() {
     try {
-        let versionSpec = taskLib.getInput('versionSpec', true);
-        await getJava(versionSpec);
+        let javaVersion = taskLib.getInput('javaVersion', true);
+        await getJava(javaVersion);
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     } 
 }
 
-async function getJava(versionSpec: string) {
-    const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
-    const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
+async function getJava(javaVersion: string) {
+    const fromAzure: boolean = ('azureBlobStorage' == taskLib.getInput('javaArchiveLocationOption', true));
+    const extractLocation: string = taskLib.getPathInput('javaDestinationDirectory', true);
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
     let compressedFileExtension: string;
     let jdkDirectory: string;
 
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Java');
-    const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
+    const version: string = toolLib.evaluateVersions(localVersions, javaVersion);
 
      // Clean the destination folder before downloading and extracting?
      if (cleanDestinationDirectory && taskLib.exist(extractLocation) && taskLib.stats(extractLocation).isDirectory) {
@@ -44,10 +44,10 @@ async function getJava(versionSpec: string) {
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
         console.log(taskLib.loc('RetrievingJdkFromAzure', version));
-        compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualFile', true));
+        compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualFilePath', true));
     
         const azureDownloader = new AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true), 
-            taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), taskLib.getInput('azureCommonVirtualFile', false));
+            taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), taskLib.getInput('azureCommonVirtualFilePath', false));
         await azureDownloader.downloadArtifacts(extractLocation, '*' + compressedFileExtension);
         await sleepFor(250); //Wait for the file to be released before extracting it.
 
@@ -55,11 +55,11 @@ async function getJava(versionSpec: string) {
         jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(extractSource, compressedFileExtension, extractLocation);
     } else { //JDK is in a local directory. Extract to specified target directory.
         console.log(taskLib.loc('RetrievingJdkFromLocalPath', version));
-        compressedFileExtension = getFileEnding(taskLib.getInput('jdkFile', true));
-        jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkFile', true), compressedFileExtension, extractLocation);
+        compressedFileExtension = getFileEnding(taskLib.getInput('javaArchiveFilePath', true));
+        jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('javaArchiveFilePath', true), compressedFileExtension, extractLocation);
     }
 
-    let extendedJavaHome = 'JAVA_HOME_' + versionSpec + '_' + taskLib.getInput('jdkArchitectureOption', true);
+    let extendedJavaHome = 'JAVA_HOME_' + javaVersion + '_' + taskLib.getInput('javaArchitectureOption', true);
     console.log(taskLib.loc('SetJavaHome', jdkDirectory));
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable('JAVA_HOME', jdkDirectory);
@@ -73,7 +73,7 @@ function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
 }
 
 function buildFilePath(localPathRoot: string, fileEnding: string): string {
-    const azureFileSource: string = taskLib.getInput('azureCommonVirtualFile', true);
+    const azureFileSource: string = taskLib.getInput('azureCommonVirtualFilePath', true);
     const fileName = azureFileSource.split(/[\\\/]/).pop();
     const extractSource = path.join(localPathRoot, fileName);
 

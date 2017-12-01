@@ -6,9 +6,9 @@ import mockTask = require('vsts-task-lib/mock-task');
 const taskPath = path.join(__dirname, '..', 'javatoolinstaller.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("versionSpec", "8.1");
+tr.setInput("javaVersion", "8.1");
 tr.setInput("jdkSource", "Azure Storage")
-tr.setInput("artifactProvider", "azureStorage");
+tr.setInput("artifactProvider", "azureBlobStorage");
 tr.setInput("azureResourceManagerEndpoint", "ARM1");
 tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");

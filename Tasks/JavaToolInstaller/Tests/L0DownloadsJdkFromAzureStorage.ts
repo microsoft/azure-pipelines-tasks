@@ -6,14 +6,14 @@ import mockTask = require('vsts-task-lib/mock-task');
 const taskPath = path.join(__dirname, '..', 'javatoolinstaller.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("versionSpec", "8.1");
-tr.setInput("jdkSourceOption", "AzureStorage")
-tr.setInput("jdkArchitectureOption", "x64");
+tr.setInput("javaVersion", "8.1");
+tr.setInput("javaArchiveLocationOption", "azureBlobStorage")
+tr.setInput("javaArchitectureOption", "x64");
 tr.setInput("azureResourceManagerEndpoint", "ARM1");
 tr.setInput("azureStorageAccountName", "storage1");
 tr.setInput("azureContainerName", "container1");
-tr.setInput("azureCommonVirtualFile", "");
-tr.setInput("jdkDestinationDirectory", "javaJDK");
+tr.setInput("azureCommonVirtualFilePath", "");
+tr.setInput("javaDestinationDirectory", "javaJDK");
 tr.setInput("cleanDestinationDirectory", "false");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';

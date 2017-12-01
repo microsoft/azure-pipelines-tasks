@@ -153,10 +153,10 @@ export class JavaFilesExtractor {
 
         initialDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
 
-        const jdkFile = path.normalize(repoRoot);
-        const stats = taskLib.stats(jdkFile);
+        const javaArchiveFilePath = path.normalize(repoRoot);
+        const stats = taskLib.stats(javaArchiveFilePath);
         if (stats.isFile()) {
-            this.extractFiles(jdkFile, fileEnding);
+            this.extractFiles(javaArchiveFilePath, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
             jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];

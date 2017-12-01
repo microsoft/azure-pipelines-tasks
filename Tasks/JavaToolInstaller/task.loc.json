@@ -11,9 +11,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 126,
-    "Patch": 1
+    "Major": 1,
+    "Minor": 127,
+    "Patch": 0
   },
   "preview": true,
   "satisfies": [
@@ -30,49 +30,49 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "versionSpec",
+      "name": "javaVersion",
       "type": "string",
-      "label": "ms-resource:loc.input.label.versionSpec",
+      "label": "ms-resource:loc.input.label.javaVersion",
       "defaultValue": "1.8",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+      "helpMarkDown": "ms-resource:loc.input.help.javaVersion"
     },
     {
-      "name": "jdkArchitectureOption",
+      "name": "javaArchitectureOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.jdkArchitectureOption",
+      "label": "ms-resource:loc.input.label.javaArchitectureOption",
       "options": {
-        "x64": "X64",
-        "x86": "X86"
+        "x64": "x64",
+        "x86": "x86"
       },
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitectureOption"
+      "helpMarkDown": "ms-resource:loc.input.help.javaArchitectureOption"
     },
     {
-      "name": "jdkSourceOption",
+      "name": "javaArchiveLocationOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.jdkSourceOption",
+      "label": "ms-resource:loc.input.label.javaArchiveLocationOption",
       "required": true,
       "options": {
-        "AzureStorage": "Azure Storage",
-        "LocalDirectory": "Local Directory"
+        "azureBlobStorage": "Azure Blob storage",
+        "filePath": "File path"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
+      "helpMarkDown": "ms-resource:loc.input.help.javaArchiveLocationOption"
     },
     {
-      "name": "jdkFile",
+      "name": "javaArchiveFilePath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jdkFile",
+      "label": "ms-resource:loc.input.label.javaArchiveFilePath",
       "required": true,
-      "visibleRule": "jdkSourceOption == LocalDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.jdkFile"
+      "visibleRule": "javaArchiveLocationOption == filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.javaArchiveFilePath"
     },
     {
       "name": "azureResourceManagerEndpoint",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureResourceManagerEndpoint",
       "required": true,
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "javaArchiveLocationOption == azureBlobStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureResourceManagerEndpoint"
     },
     {
@@ -83,7 +83,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "javaArchiveLocationOption == azureBlobStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccountName"
     },
     {
@@ -91,24 +91,24 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.azureContainerName",
       "required": true,
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "javaArchiveLocationOption == azureBlobStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerName"
     },
     {
-      "name": "azureCommonVirtualFile",
+      "name": "azureCommonVirtualFilePath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.azureCommonVirtualFile",
+      "label": "ms-resource:loc.input.label.azureCommonVirtualFilePath",
       "required": true,
-      "visibleRule": "jdkSourceOption == AzureStorage",
-      "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFile"
+      "visibleRule": "javaArchiveLocationOption == azureBlobStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFilePath"
     },
     {
-      "name": "jdkDestinationDirectory",
+      "name": "javaDestinationDirectory",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
+      "label": "ms-resource:loc.input.label.javaDestinationDirectory",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
+      "helpMarkDown": "ms-resource:loc.input.help.javaDestinationDirectory"
     },
     {
       "name": "cleanDestinationDirectory",
@@ -122,7 +122,7 @@
   "dataSourceBindings": [
     {
       "endpointId": "$(ConnectedServiceNameARM)",
-      "target": "storageAccountName",
+      "target": "azureStorageAccountName",
       "dataSourceName": "AzureStorageAccountRMandClassic"
     }
   ],
