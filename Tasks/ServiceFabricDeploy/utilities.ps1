@@ -165,3 +165,44 @@ function Get-VstsUpgradeParameters
 
     return $parameters
 }
+
+function Copy-DiffPackage
+{
+	param (
+		[array] $clusterPackages,
+		[array] $localPackages,
+		[string] $localParentPkgPath,
+		[string] $diffParentPkgPath
+	)
+
+	$clusterPackagesByName = @{}
+
+	foreach ($clusterPackage in $clusterPackages)
+	{
+		$clusterPackagesByName[$clusterPackage.Name] = $clusterPackage
+	}
+
+	$isCopied = $False
+	foreach ($localPackage in $localPackages)
+	{
+		$clusterPackage = $clusterPackagesByName[$localPackage.Name]
+
+		# If cluster package exists and the version is the same to the local package version, do not add the local package to Diff Package
+		if ($clusterPackage.Version -eq $localPackage.Version)
+		{
+			continue
+		}
+
+		Write-Host "clusterPackage" $clusterPackage.OuterXml
+		Write-Host "localPackage" $localPackage.OuterXml
+
+		$localPkgPath = Join-Path $localParentPkgPath $localPackage.Name
+		$diffPkgPath = Join-Path $diffParentPkgPath $localPackage.Name
+		Write-Host "Copying" $localPkgPath "to" $diffPkgPath
+		Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localPkgPath, $diffPkgPath))
+		# Copy the package on this level to diff package which is considered to be Leaf
+		Copy-Item $localPkgPath $diffPkgPath -Recurse
+		$isCopied = $True
+	}
+	return $isCopied
+}
