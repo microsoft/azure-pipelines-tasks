@@ -227,7 +227,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.proxyUrl = tl.getVariable("agent.proxyurl");
     testConfiguration.proxyUserName = tl.getVariable("agent.proxyusername");
     testConfiguration.proxyPassword = tl.getVariable("agent.proxypassword");
-    testConfiguration.proxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
+    testConfiguration.proxyBypassHosts = tl.getVariable("agent.proxybypasslist");
 }
 
 async function logWarningForWER(runUITests: boolean) {
