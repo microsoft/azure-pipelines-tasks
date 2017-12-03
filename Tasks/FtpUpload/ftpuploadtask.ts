@@ -128,8 +128,16 @@ function doWork() {
         }
     })
 
+    let verboseSnippet: string[] = [];
+    let debugLogger:any = function(message) {
+        verboseSnippet.push(message);
+        if (verboseSnippet.length >= 5) {
+            verboseSnippet.shift();
+        }
+        tl.debug(message);
+    };
     function failTask(message: string): void {
-        let fullMessage: string = 'FTP upload failed: ' + message;
+        let fullMessage: string = `FTP upload failed: "${message}". FTP log: "${verboseSnippet}".`;
         if (ftpHelper.progressTracking) {
             fullMessage += ftpHelper.progressTracking.getFailureStatusMessage();
         }
@@ -150,7 +158,7 @@ function doWork() {
     }
 
     console.log(tl.loc('ConnectPort', hostName, port));
-    ftpClient.connect({ 'host': hostName, 'port': port, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure, 'secureOptions': secureOptions });
+    ftpClient.connect({ 'host': hostName, 'port': port, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure, 'secureOptions': secureOptions, 'debug': debugLogger });
 }
 
 doWork();

@@ -13,7 +13,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 126,
+        "Minor": 128,
         "Patch": 0
     },
     "groups": [
@@ -126,6 +126,7 @@
         "JenkinsJobQueued": "Jenkins job queued",
         "JenkinsPipelineFailed": "Jenkins pipeline failed",
         "JenkinsJobFailed": "Jenkins job failed",
-        "JenkinsJobFailedtoQueue": "Jenkins job failed to queue"
+        "JenkinsJobFailedtoQueue": "Jenkins job failed to queue",
+        "JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly in your Jenkins instance.  Error details: %s"
     }
 }
