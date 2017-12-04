@@ -10,7 +10,7 @@ function setResponseFile(name: string) {
 }
 
 describe('XamarinAndroid Suite', function () {
-	this.timeout(20000);
+	this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
 	before((done) => {
 		// init here
@@ -249,7 +249,7 @@ describe('XamarinAndroid Suite', function () {
 				assert(tr.resultWasSet, 'task should have set a result');
 				assert(tr.stderr.length > 0, 'should have written to stderr');
 				assert(tr.failed, 'task should have failed');
-				assert(tr.stdout.indexOf('Failed to find specified JDK version') >= 0, 'JAVA_HOME set?');
+				assert(tr.stdout.indexOf('Failed to find the specified JDK version') >= 0, 'JAVA_HOME set?');
 				done();
 			})
 			.fail((err) => {

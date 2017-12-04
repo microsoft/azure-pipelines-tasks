@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 126,
-    "Patch": 0
+    "Minor": 127,
+    "Patch": 1
   },
   "demands": [
     "AndroidSDK",
@@ -190,6 +190,7 @@
       "visibleRule": "jdkSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.9": "JDK 9",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"

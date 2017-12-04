@@ -34,8 +34,12 @@ async function run() {
         let workingDir: string = tl.getPathInput('cwd');
         tl.cd(workingDir);
 
-        let outPath: string = tl.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
-        tl.mkdirP(outPath);
+        let outPath: string;
+        let outputPattern: string = tl.getInput('outputPattern', false);
+        if (outputPattern) {
+            outPath = tl.resolve(workingDir, outputPattern); //use posix implementation to resolve paths to prevent unit test failures on Windows
+            tl.mkdirP(outPath);
+        }
 
         //--------------------------------------------------------
         // Xcode args
@@ -61,9 +65,57 @@ async function run() {
             isProject = true;
         }
 
+        let scheme: string = tl.getInput('scheme', false);
+
+        // If we have a workspace argument but no scheme, see if there's
+        // single shared scheme we can use.
+        if (!scheme && !isProject && ws && tl.filePathSupplied('xcWorkspacePath')) {
+            try {
+                let schemes: string[] = await utils.getWorkspaceSchemes(tool, ws);
+
+                if (schemes.length > 1) {
+                    tl.warning(tl.loc('MultipleSchemesFound'));
+                }
+                else if (schemes.length === 0) {
+                    tl.warning(tl.loc('NoSchemeFound'));
+                }
+                else {
+                    scheme = schemes[0];
+                    console.log(tl.loc('SchemeSelected', scheme));
+                }
+            }
+            catch (err) {
+                tl.warning(tl.loc('FailedToFindScheme'));
+            }
+        }
+
+        let destinations: string[];
+
+        // To be yaml friendly, we'll let you skip destinationPlatformOption and supply destinationPlatform, custom or not.
+        let platform: string = tl.getInput('destinationPlatform', false) || tl.getInput('destinationPlatformOption', false);
+        if (platform === 'macOS') {
+            destinations = ['platform=macOS'];
+        }
+        else if (platform && platform !== 'default') {
+            // To be yaml friendly, destinationTypeOption is optional and we default to simulators.
+            let destinationType: string = tl.getInput('destinationTypeOption', false);
+            let targetingSimulators: boolean = destinationType !== 'devices';
+
+            let devices: string[];
+            if (targetingSimulators) {
+                // Only one simulator for now.
+                devices = [ tl.getInput('destinationSimulators') ];
+            }
+            else {
+                // Only one device for now.
+                devices = [ tl.getInput('destinationDevices') ];
+            }
+
+            destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
+        }
+
         let sdk: string = tl.getInput('sdk', false);
         let configuration: string = tl.getInput('configuration', false);
-        let scheme: string = tl.getInput('scheme', false);
         let useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
         let actions: string[] = tl.getDelimitedInput('actions', ' ', true);
         let packageApp: boolean = tl.getBoolInput('packageApp', true);
@@ -102,14 +154,25 @@ async function run() {
             xcb.arg(ws);
         }
         xcb.argIf(scheme, ['-scheme', scheme]);
+        // Add a -destination argument for each device and simulator.
+        if (destinations) {
+            destinations.forEach(destination => {
+                xcb.arg(['-destination', destination]);
+            });
+        }
         xcb.arg(actions);
-        if (actions.toString().indexOf('archive') < 0) {
-            // redirect build output if archive action is not passed
-            // xcodebuild archive produces an invalid archive if output is redirected
-            xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
-            xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
-            xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
-            xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
+        if (outPath) {
+            if (actions.toString().indexOf('archive') < 0) {
+                // redirect build output if archive action is not passed
+                // xcodebuild archive produces an invalid archive if output is redirected
+                xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
+                xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
+                xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
+                xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
+            }
+            else {
+                tl.warning(tl.loc('OutputDirectoryIgnored', 'archive'));
+            }
         }
         if (args) {
             xcb.line(args);
@@ -118,7 +181,7 @@ async function run() {
         //--------------------------------------------------------
         // iOS signing and provisioning
         //--------------------------------------------------------
-        let signStyle: string = tl.getInput('signStyle', true);
+        let signingOption: string = tl.getInput('signingOption', true);
         let keychainToDelete: string;
         let profileToDelete: string;
         let xcode_codeSigningAllowed: string;
@@ -128,10 +191,10 @@ async function run() {
         let xcode_provProfile: string;
         let xcode_devTeam: string;
 
-        if (signStyle === 'nosign') {
+        if (signingOption === 'nosign') {
             xcode_codeSigningAllowed = 'CODE_SIGNING_ALLOWED=NO';
         }
-        else if (signStyle === 'manual') {
+        else if (signingOption === 'manual') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Manual';
 
             let signIdentity: string = tl.getInput('signingIdentity');
@@ -139,12 +202,12 @@ async function run() {
                 xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
             }
 
-            let provProfileUUID: string = tl.getInput('provProfileUuid');
+            let provProfileUUID: string = tl.getInput('provisioningProfileUuid');
             if (provProfileUUID) {
                 xcode_provProfile = 'PROVISIONING_PROFILE=' + provProfileUUID;
             }
         }
-        else if (signStyle === 'auto') {
+        else if (signingOption === 'auto') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
 
             let teamId: string = tl.getInput('teamId');
@@ -152,7 +215,7 @@ async function run() {
                 xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;
             }
         }
-        
+
         xcb.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
         xcb.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
         xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
@@ -240,8 +303,8 @@ async function run() {
             }
             xcodeArchive.arg(['-archivePath', archivePath]);
             xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
-            xcodeArchive.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);            
-            xcodeArchive.argIf(xcode_codeSignStyle, xcode_codeSignStyle);            
+            xcodeArchive.argIf(xcode_codeSigningAllowed, xcode_codeSigningAllowed);
+            xcodeArchive.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
             xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
             xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
             xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
@@ -300,18 +363,18 @@ async function run() {
                     }
 
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
-                        let signStyleForExport = signStyle;
+                        let signingOptionForExport = signingOption;
 
                         // If we're using the project defaults, scan the pbxProject file for the type of signing being used.
-                        if (signStyleForExport === 'default') {
-                            signStyleForExport = await utils.getProvisioningStyle(ws);
+                        if (signingOptionForExport === 'default') {
+                            signingOptionForExport = await utils.getProvisioningStyle(ws);
 
-                            if (!signStyleForExport) {
+                            if (!signingOptionForExport) {
                                 tl.warning(tl.loc('CantDetermineProvisioningStyle'));
                             }
                         }
 
-                        if (signStyleForExport === 'manual') {
+                        if (signingOptionForExport === 'manual') {
                             // Xcode 9 manual signing, set code sign style = manual
                             tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
 

@@ -265,7 +265,7 @@ function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: s
 }
 
 describe('Maven Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         Q.longStackSupport = true;
@@ -292,7 +292,7 @@ describe('Maven Suite', function () {
         tr.setInput('checkstyleAnalysisEnabled', 'false');
         tr.setInput('pmdAnalysisEnabled', 'false');
         tr.setInput('findbugsAnalysisEnabled', 'false');
-        tr.setInput('mavenFeedAuthenticate', 'true');        
+        tr.setInput('mavenFeedAuthenticate', 'true');
 
         tr.run()
             .then(() => {
@@ -872,6 +872,44 @@ describe('Maven Suite', function () {
             });
     })
 
+    it('run maven with feed authentication uploads a maven info summary', (done) => {
+        setResponseFile('response.json');
+
+        var tr = setupDefaultMavenTaskRunner();
+        tr.setInput('mavenFeedAuthenticate', 'true');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.indexOf('##vso[task.debug][Maven] Uploading build maven info from /tmp/.mavenInfo/MavenInfo-') >= 0,
+                    'should have uploaded a MavenInfo file');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                done(err);
+            });
+    })
+
+    it('run maven without feed authentication does not upload a maven info summary', (done) => {
+        setResponseFile('response.json');
+
+        var tr = setupDefaultMavenTaskRunner();
+        tr.setInput('mavenFeedAuthenticate', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.indexOf('##vso[task.debug][Maven] Uploading build maven info from /tmp/.mavenInfo/MavenInfo-') < 0,
+                    'should not have uploaded a MavenInfo file');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                done(err);
+            });
+    })
+
     it('fails if missing testResultsFiles input', (done) => {
         setResponseFile('response.json');
 
@@ -983,7 +1021,7 @@ describe('Maven Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stdout.indexOf('Failed to find specified JDK version') >= 0, 'JAVA_HOME set?');
+                assert(tr.stdout.indexOf('Failed to find the specified JDK version') >= 0, 'JAVA_HOME set?');
                 done();
             })
             .fail((err) => {

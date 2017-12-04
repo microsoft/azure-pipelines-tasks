@@ -1,0 +1,64 @@
+{
+    "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
+    "name": "VisualStudioTestPlatformInstaller",
+    "friendlyName": "Visual Studio Test Platform Installer",
+    "description": "Acquires the test platform from nuget.org or the tools cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
+    "helpMarkDown": "Acquires the <a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">test platform from nuget.org</a> or the tools cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the ‘Visual Studio Test’ task.",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.103.0",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 4
+    },
+    "preview": true,
+    "satisfies": ["VsTest"],
+    "demands": [],
+    "instanceNameFormat": "VsTest Platform Installer",
+    "inputs": [
+        {
+        "name": "versionSelector",
+        "type": "pickList",
+        "label": "Version",
+        "defaultValue": "latestPreRelease",
+        "required": true,
+        "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
+        "options": {
+            "latestPreRelease": "Latest Pre-Release",
+            "specificVersion": "Specific Version"
+            }
+        },
+        {
+            "name": "testPlatformVersion",
+            "type": "string",
+            "label": "Test Platform Version",
+            "required": true,
+            "helpMarkDown": "Specify the version of Visual Studio Test Platform to install on the agent. Available versions can be viewed on <a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">nuget</a>.",
+            "visibleRule": "versionSelector = specificVersion"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "vstestplatformtoolinstaller.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+      "StartingInstaller": "Starting VsTest platform tools installer task.",
+      "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
+      "NoPackageFoundInCache": "Failed to find any version of the test platform package in the cache.",
+      "OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent.",
+      "RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest version cached.",
+      "FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest version cached.",
+      "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please refer to the logs for additional information.",
+      "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
+      "TestPlatformDownloadFailed": "Failed to download version %s of the test platform. Looking in the cache for the latest available version.",
+      "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
+      "LookingForLatestPreReleaseVersion" : "Looking for the latest pre-release version of the Microsoft.Testplatform."
+    }
+}

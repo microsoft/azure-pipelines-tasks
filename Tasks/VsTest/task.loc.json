@@ -65,7 +65,7 @@
       "name": "testAssemblyVer2",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssemblyVer2",
-      "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
+      "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "testSelection",
@@ -201,7 +201,8 @@
       "options": {
         "latest": "Latest",
         "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015"
+        "14.0": "Visual Studio 2015",
+        "toolsInstaller": "Installed by Tools Installer"
       }
     },
     {
@@ -292,7 +293,8 @@
       "groupName": "advancedExecutionOptions",
       "options": {
         "basedOnTestCases": "Based on number of tests and agents",
-        "basedOnExecutionTime": "Based on past running time of tests"
+        "basedOnExecutionTime": "Based on past running time of tests",
+        "basedOnAssembly": "Based on test assemblies"
       }
     },
     {
@@ -525,6 +527,10 @@
     "invalidRerunFailedThreshold": "ms-resource:loc.messages.invalidRerunFailedThreshold",
     "rerunMaxAttempts": "ms-resource:loc.messages.rerunMaxAttempts",
     "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts",
-    "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported"
+    "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported",
+    "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
+    "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
+    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
+    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation"
   }
 }

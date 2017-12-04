@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 20
+        "Patch": 22
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -306,6 +306,10 @@
         "UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
         "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s",
         "UnableToReadResponseBody": "Unable to read response body. Error: %s",
-        "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'"
+        "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
+        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
+        "UnableToFetchContinuousWebJobs": "Unable to fetch continuous web jobs",
+        "UnableToStartContinuousWebJob": "Unable to start continuous web job",
+        "UnableToStopContinuousWebJob":  "Unable to stop continuous web job"
     }
 }

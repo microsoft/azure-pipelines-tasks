@@ -120,6 +120,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     if (vstestConfig.testcaseFilter && addTestCaseFilter) {
         argsArray.push('/TestCaseFilter:' + vstestConfig.testcaseFilter);
     }
+
     if (settingsFile) {
         if (utils.Helper.pathExistsAsFile(settingsFile)) {
             argsArray.push('/Settings:' + settingsFile);
@@ -138,8 +139,11 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     }
 
     if (vstestConfig.codeCoverageEnabled) {
-        argsArray.push('/EnableCodeCoverage');
+        if(!utils.Helper.isToolsInstallerFlow(vstestConfig)) {
+            argsArray.push('/EnableCodeCoverage');
+        }
     }
+
     if (vstestConfig.runTestsInIsolation) {
         argsArray.push('/InIsolation');
     }
@@ -154,13 +158,13 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     }
 
     if (isDebugEnabled()) {
-        if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.vstestDiagSupported()) {
+        if (vstestConfig.vsTestVersionDetails !== null && (vstestConfig.vsTestVersionDetails.vstestDiagSupported()
+            || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
         }
     }
-
 
     return argsArray;
 }
@@ -264,14 +268,21 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         }
     }
 
+    utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
+    if (utils.Helper.isToolsInstallerFlow(vstestConfig)) {
+        utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_32', vstestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation);
+        utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_64', vstestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation);
+    }
+
     const execOptions: tr.IExecOptions = <any>{
-        env: envVars,
         ignoreReturnCode: ignoreTestFailures,
+        env: envVars,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
         // Keeping this code in case we want to change failOnStdErr
         errStream: new outStream.StringErrorWritable({ decodeStrings: false })
     };
+
     // The error codes return below are not the same as tl.TaskResult which follows a different convention.
     // Here we are returning the code as returned to us by vstest.console in case of complete run
     // In case of a failure 1 indicates error to our calling function
@@ -547,10 +558,12 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
     try {
         const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
         if (disableTIA !== undefined && disableTIA.toLowerCase() === 'true') {
+            tl.debug('Disabling tia.');
             tiaConfig.tiaEnabled = false;
         }
 
-        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null || !vstestConfig.vsTestVersionDetails.isTestImpactSupported())) {
+        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null
+             || (!vstestConfig.vsTestVersionDetails.isTestImpactSupported() && !(utils.Helper.isToolsInstallerFlow(vstestConfig))))) {
             tl.warning(tl.loc('VstestTIANotSupported'));
             tiaConfig.tiaEnabled = false;
         }
@@ -579,7 +592,8 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
     }
 
     try {
-        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false);
+        newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig,
+             vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false, vstestConfig.codeCoverageEnabled && utils.Helper.isToolsInstallerFlow(vstestConfig));
         return vsTestCall(newSettingsFile, vsVersion);
     }
     catch (err) {

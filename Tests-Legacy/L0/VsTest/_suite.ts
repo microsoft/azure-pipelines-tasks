@@ -25,7 +25,7 @@ function setResponseFile(name: string) {
 }
 
 describe('VsTest Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         if (psm.testSupported()) {
@@ -45,6 +45,160 @@ describe('VsTest Suite', function () {
         console.log('Skipping vstest tests. Vstest tests run only on windows.');
         return;
     }
+
+    it('CodeCoverage enabled in tools installer flow with no settings file given', (done) => {
+        try {
+            settingsHelper.updateSettingsFileAsRequired(undefined, false, { tiaEnabled: false }, undefined, false, undefined, false, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[0].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('CodeCoverage and Test Impact enabled in tools installer flow with no settings file given', (done) => {
+        try {           
+            settingsHelper.updateSettingsFileAsRequired(undefined, false, { tiaEnabled: true, baseLineBuildIdFile: path.join(__dirname, 'data', 'baselineBuildId.txt') }, undefined, false, undefined, true, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[1].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    
+    it('CodeCoverage enabled in tools installer flow and settings file containing a data collector', (done) => {
+        try {     
+            const settingsFilePath = path.join(__dirname, 'data', 'ContainsTestImpactDataCollector.runsettings');      
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, undefined, false, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[1].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('Test Impact enabled with a run settings file with an exsiting data collector', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'UseVerifiableInstrumentationNotPresent.runsettings');
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: true, baseLineBuildIdFile: path.join(__dirname, 'data', 'baselineBuildId.txt') }, undefined, false, undefined, true, false)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            // Note: DataCollector[1] is used to assert because a data collector already existed in the runsettings file
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[1].Configuration[0].ImpactLevel, 'file', 'Test impact data collector addition failed.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('Test Impact enabled with a run settings file with an empty datacollectors node', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'RunsettingsWithEmptyDataCollectorsNode.runsettings');
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: true, baseLineBuildIdFile: path.join(__dirname, 'data', 'baselineBuildId.txt') }, undefined, false, undefined, true, false)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[0].Configuration[0].ImpactLevel, 'file', 'Test impact data collector addition failed.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('CodeCoverage enabled in tools installer flow with invalid settings file', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'Invalid.runsettings');
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, undefined, false, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[0].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('CodeCoverage enabled in tools installer flow with Valid settings file, without any configuration', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'ValidWithoutRunConfiguration.runsettings');
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, undefined, false, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[0].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('CodeCoverage enabled in tools installer flow with Valid settings file, without any UseVerifiableInstrumentation node', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'UseVerifiableInstrumentationNotPresent.runsettings');
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, undefined, false, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[0].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
+
+    it('CodeCoverage enabled in tools installer flow with Valid settings file, with a UseVerifiableInstrumentation node', (done) => {
+        try {
+            const settingsFilePath = path.join(__dirname, 'data', 'UseVerifiableInstrumentationNodePresent.runsettings');
+            settingsHelper.updateSettingsFileAsRequired(settingsFilePath, false, { tiaEnabled: false }, undefined, false, undefined, false, true)
+                .then(function (settingsXml: string) {
+                    utils.Helper.getXmlContents(settingsXml)
+                        .then(function (settings) {
+                            // Note: DataCollectors[1] is used to assert because a data collector already existed in the runsettings file
+                            assert.equal(settings.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector[1].Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation, 'False', 'UseVerifiableInstrumentation not set to false.');
+                            done();
+                        });
+                });
+        } catch (error) {
+            assert.fail('updateSettingsFileAsRequired failed');
+            done(error);
+        }
+    });
 
     it('Vstest task without test results files input', (done) => {
         setResponseFile('vstestGood.json');

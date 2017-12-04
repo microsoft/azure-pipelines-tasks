@@ -13,7 +13,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 126,
+    "Minor": 128,
     "Patch": 0
   },
   "groups": [
@@ -128,6 +128,7 @@
     "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued",
     "JenkinsPipelineFailed": "ms-resource:loc.messages.JenkinsPipelineFailed",
     "JenkinsJobFailed": "ms-resource:loc.messages.JenkinsJobFailed",
-    "JenkinsJobFailedtoQueue": "ms-resource:loc.messages.JenkinsJobFailedtoQueue"
+    "JenkinsJobFailedtoQueue": "ms-resource:loc.messages.JenkinsJobFailedtoQueue",
+    "JenkinsJobQueueUriInvalid": "ms-resource:loc.messages.JenkinsJobQueueUriInvalid"
   }
 }

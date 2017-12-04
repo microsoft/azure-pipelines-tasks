@@ -45,7 +45,8 @@ function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
     const paramFileReplacableToken = 'PARAM_FILE_REPLACE_TOKEN';
     var paramFileReplacableValues = {};
     try {
-        xmlDocument = ltxdomutility.initializeDOM(webConfigContent);
+        var ltxDomUtiltiyInstance = new ltxdomutility.LtxDomUtility(webConfigContent);
+        xmlDocument = ltxDomUtiltiyInstance.getXmlDom();
         for(var xmlChildNode of xmlDocument.children) {
             if(!varUtility.isObject(xmlChildNode)) {
                 continue;
@@ -62,7 +63,7 @@ function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
         tl.debug("Unable to parse parameter file : " + parameterFilePath + ' Error: ' + error);
         return;
     }
-    var domContent = (fileEncodeType[1] ? '\uFEFF' : '') + ltxdomutility.getContentWithHeader(xmlDocument);
+    var domContent = (fileEncodeType[1] ? '\uFEFF' : '') + ltxDomUtiltiyInstance.getContentWithHeader(xmlDocument);
     for(var paramFileReplacableValue in paramFileReplacableValues) {
         tl.debug('Parameters file - Replacing value for temp_name: ' + paramFileReplacableValue);
         domContent = domContent.replace(paramFileReplacableValue, paramFileReplacableValues[paramFileReplacableValue]);
@@ -103,7 +104,8 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     }
     var xmlDocument;
     try{
-        xmlDocument = ltxdomutility.initializeDOM(webConfigContent);
+        var ltxDomUtiltiyInstance = new ltxdomutility.LtxDomUtility(webConfigContent);
+        xmlDocument = ltxDomUtiltiyInstance.getXmlDom();
     } 
     catch(error) {
         tl.debug("Unable to parse file : " + configFile);
@@ -113,7 +115,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     var replacableTokenValues = {};
     var isSubstitutionApplied: boolean = false;
     for(var tag of tags) {
-        var nodes = ltxdomutility.getElementsByTagName(tag); 
+        var nodes = ltxDomUtiltiyInstance.getElementsByTagName(tag); 
         if(nodes.length == 0) {
             tl.debug("Unable to find node with tag '" + tag + "' in provided xml file.");
             continue;
@@ -123,7 +125,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
                 tl.debug("Processing substitution for xml node : " + xmlNode.name);
                 try {
                     if(xmlNode.name == "configSections") {
-                        isSubstitutionApplied = updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues) || isSubstitutionApplied;
+                        isSubstitutionApplied = updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues, ltxDomUtiltiyInstance) || isSubstitutionApplied;
                     }
                     else if(xmlNode.name == "connectionStrings") {
                         if(parameterFilePath) {
@@ -144,7 +146,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     }
 
     if(isSubstitutionApplied) {
-        var domContent = ( fileEncodeType[1]? '\uFEFF' : '' ) + ltxdomutility.getContentWithHeader(xmlDocument);
+        var domContent = ( fileEncodeType[1]? '\uFEFF' : '' ) + ltxDomUtiltiyInstance.getContentWithHeader(xmlDocument);
         for(var replacableTokenValue in replacableTokenValues) {
             tl.debug('Substituting original value in place of temp_name: ' + replacableTokenValue);
             domContent = domContent.split(replacableTokenValue).join(replacableTokenValues[replacableTokenValue]);
@@ -157,14 +159,14 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     }
 }
 
-function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues): boolean {
+function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap, replacableTokenValues, ltxDomUtiltiyInstance): boolean {
     var isSubstitutionApplied: boolean = false;
-    var sections = ltxdomutility.getChildElementsByTagName(xmlNode, "section");
+    var sections = ltxDomUtiltiyInstance.getChildElementsByTagName(xmlNode, "section");
     for(var section of sections) {
         if(varUtility.isObject(section)) {
             var sectionName = section.attr('name');
             if(!varUtility.isEmpty(sectionName)) {
-                var customSectionNodes = ltxdomutility.getElementsByTagName(sectionName);
+                var customSectionNodes = ltxDomUtiltiyInstance.getElementsByTagName(sectionName);
                 if( customSectionNodes.length != 0) {
                     var customNode = customSectionNodes[0];
                     isSubstitutionApplied = updateXmlNodeAttribute(customNode, variableMap, replacableTokenValues) || isSubstitutionApplied;

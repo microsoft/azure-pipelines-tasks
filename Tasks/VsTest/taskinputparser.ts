@@ -4,7 +4,9 @@ import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
 import * as utils from './helpers';
+import * as constants from './constants';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 const uuid = require('uuid');
@@ -206,7 +208,27 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             console.log('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
         }
-        if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+        if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
+            tl.debug("Trying VsTest installed by tools installer.");
+            ci.publishEvent( { subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) } );
+            
+            testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
+
+            // if Tools installer is not there throw.
+            if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
+                ci.publishEvent( { subFeature: 'ToolsInstallerInstallationError' } );
+                utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
+                throw new Error(tl.loc('ToolsInstallerInstallationError'));
+            }
+
+            ci.publishEvent( { subFeature: 'ToolsInstallerInstallationSuccessful' } );
+            // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
+            testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
+            testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
+
+            testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
+        }
+        else if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
             && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
         }
@@ -349,6 +371,51 @@ function getTiaConfiguration(): models.TiaConfiguration {
     return tiaConfiguration;
 }
 
+function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
+    const toolsInstallerConfiguration = {} as models.ToolsInstallerConfiguration;
+    
+    tl.debug("Path to VsTest from tools installer: " + tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable));
+    toolsInstallerConfiguration.vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
+
+    // get path to vstest.console.exe
+    var matches = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\vstest.console.exe");
+    if (matches && matches.length !== 0) {
+        toolsInstallerConfiguration.vsTestConsolePathFromPackageLocation = matches[0];
+    } else {
+        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1041, false);
+        throw new Error(tl.loc('toolsInstallerPathNotSet'));
+    }
+
+    // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
+    var amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+    if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+        toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
+    } else {
+        // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
+        amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+        if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+            toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
+        } else {
+            utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
+            tl.warning(tl.loc('testImpactAndCCWontWork'));
+        }
+
+        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
+        tl.warning(tl.loc('testImpactAndCCWontWork'));
+    }
+
+    // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
+    var x86ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+    if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
+        toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = x86ProfilerProxy[0];
+    } else {
+        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
+        tl.warning(tl.loc('testImpactAndCCWontWork'));
+    }
+
+    return toolsInstallerConfiguration;
+}
+
 function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurations) {
     const distributeOption = tl.getInput('distributionBatchType');
     if (distributeOption && distributeOption === 'basedOnTestCases') {
@@ -385,6 +452,8 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
         } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
             dtaTestConfiguration.runningTimePerBatchInMs = 0;
         }
+    } else if (distributeOption && distributeOption === 'basedOnAssembly') {
+        dtaTestConfiguration.batchingType = models.BatchingType.AssemblyBased;
     }
     return 0;
 }

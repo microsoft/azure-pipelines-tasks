@@ -11,7 +11,46 @@ import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/Handlers';
 
+var packagejson = require('./package.json');
+
 tl.setResourcePath(path.join(__dirname, 'task.json'));
+
+const area: string = 'DownloadBuildArtifacts';
+
+function getDefaultProps() {
+    return {
+        serverurl: tl.getVariable('System.TEAMFOUNDATIONSERVERURI'),
+        releaseurl: tl.getVariable('Release.ReleaseWebUrl'),
+        releaseid: tl.getVariable('Release.ReleaseId'),
+        builduri: tl.getVariable('Build.BuildUri'),
+        buildid: tl.getVariable('Build.Buildid'),
+        jobid: tl.getVariable('System.Jobid'),
+        agentVersion: tl.getVariable('Agent.Version'),
+        version: packagejson.version
+    };
+}
+
+function publishEvent(feature, properties: any): void {
+    try {
+        var splitVersion = (process.env.AGENT_VERSION || '').split('.');
+        var major = parseInt(splitVersion[0] || '0');
+        var minor = parseInt(splitVersion[1] || '0');
+        let telemetry = '';
+        if (major > 2 || (major == 2 && minor >= 120)) {
+            telemetry = `##vso[telemetry.publish area=${area};feature=${feature}]${JSON.stringify(Object.assign(getDefaultProps(), properties))}`;
+        }
+        else {
+            if (feature === 'reliability') {
+                let reliabilityData = properties;
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + packagejson.version + ";]" + reliabilityData.errorMessage
+            }
+        }
+        console.log(telemetry);;
+    }
+    catch (err) {
+        tl.warning("Failed to log telemetry, error: " + err);
+    }
+}
 
 async function main(): Promise<void> {
     var promise = new Promise<void>(async (resolve, reject) => {
@@ -69,7 +108,7 @@ async function main(): Promise<void> {
             }
 
             artifacts.push(artifact);
-            itemPattern = artifactName + '/**';
+            itemPattern = '**';
         }
         else {
             var buildArtifacts = await buildApi.getArtifacts(buildId, projectId).catch((reason) => {
@@ -148,4 +187,7 @@ async function main(): Promise<void> {
 
 main()
     .then((result) => tl.setResult(tl.TaskResult.Succeeded, ""))
-    .catch((error) => tl.setResult(tl.TaskResult.Failed, error));
+    .catch((err) => {
+        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+        tl.setResult(tl.TaskResult.Failed, err);
+    });

@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 121,
+        "Minor": 127,
         "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
@@ -104,6 +104,7 @@
         "JS_ExitCode": "Bash exited with code '%s'.",
         "JS_FormattedCommand": "Formatted command: %s",
         "JS_InvalidFilePath": "Invalid file path '%s'.",
+        "JS_ScriptContents": "Script contents:",
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
         "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system."
     }

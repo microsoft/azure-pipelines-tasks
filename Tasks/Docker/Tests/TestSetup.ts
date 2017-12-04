@@ -12,7 +12,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerType] || shared.ContainerTypes.ContainerRegistry);
 tr.setInput('action', process.env[shared.TestEnvVars.action] || shared.ActionTypes.buildImage);
-tr.setInput('imageName', 'test/test:2');
+tr.setInput('imageName', process.env[shared.TestEnvVars.imageName] || 'test/test:2');
 tr.setInput('imageNamesPath', ImageNamesPath);
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('dockerFile', DockerFilePath);
@@ -21,6 +21,7 @@ tr.setInput('includeLatestTag', process.env[shared.TestEnvVars.includeLatestTag]
 tr.setInput('qualifyImageName', process.env[shared.TestEnvVars.qualifyImageName] || "false");
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
+tr.setInput('additionalImageTags', process.env[shared.TestEnvVars.additionalImageTags] || '');
 
 console.log("Inputs have been set");
 
@@ -93,6 +94,10 @@ a.exec[`docker run --rm ${shared.ImageNamesFileImageName}`] = {
 };
 a.exec[`docker push ${shared.ImageNamesFileImageName}:latest`] = {
     "code": 0
+};
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6`] = {
+    "code": 0,
+    "stdout": "successfully build test/test:2 and test/test:6 image"
 };
 
 tr.setAnswers(<any>a);
