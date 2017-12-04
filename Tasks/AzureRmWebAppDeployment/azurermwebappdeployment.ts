@@ -2,8 +2,9 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 import * as ParameterParser from './parameterparser'
-import { AzureAppService } from  'azure-arm-rest/azure-app-service';
-
+import { AzureAppService, AzureAppServiceConfigurations } from  'azure-arm-rest/azure-app-service';
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-common';
+import { KuduService } from 'azure-arm-rest/azure-app-service-kudu';
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
@@ -54,18 +55,26 @@ async function run() {
         var linuxWebDeployPkg = "";
 
         var isBuiltinLinuxWebApp: boolean = imageSource && imageSource.indexOf("Builtin") >=0;
-        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
-        var appService: AzureAppService = new AzureAppService(endPoint, webAppName, resourceGroupName, slotName);
-
+        var endPoint = await (new AzureRMEndpoint(connectedServiceName)).getEndpoint();
+        var azureAppService: AzureAppService = new AzureAppService(endPoint, webAppName, resourceGroupName, slotName, webAppKind);
+        var appServicePublishingProfile = await azureAppService.getPublishingProfile();
+        var kududa = await azureAppService.getConfigurationDetails("publishingcredentials");
+        if(webAppUri) {
+            tl.setVariable(webAppUri, appServicePublishingProfile.destinationAppUrl);
+        }
         console.log("Finding RG Name");
-        console.log(await appService.getResourceGroupName());
-        console.log(await appService.getAppDetails());
-        console.log(await appService.getPublishingProfile());
-        var appService1: AzureAppService = new AzureAppService(endPoint, "vincalinux", resourceGroupName, slotName);
-        
-        console.log("Finding RG Name");
-        console.log(await appService1.getAppDetails());
-        console.log(await appService1.getAppDetails());
+        console.log(await azureAppService.getResourceGroupName());
+        console.log(await azureAppService.getAppDetails());
+        console.log(await azureAppService.getPublishingProfile());
+        console.log(await azureAppService.getConfigurationDetails("metadata"));
+        console.log(await azureAppService.getPhysicalPath("/vinca"));
+        console.log(await azureAppService.pingApplicationUrl(5000));
+        console.log(await azureAppService.patchConfigurationDetails("appsettings", {"CCC": "DDD", "AA": "VINCA"}));
+        var kuduService = new KuduService(kududa.properties["scmUri"], kududa.properties["publishingUserName"], kududa.properties["publishingPassword"]);
+        console.log(await kuduService.createPath("/site/vinca/wwwroot"));
+        console.log(await kuduService.getContinuousWebJobs());
+        console.log("************************* END ****************************");
+        var appService1: AzureAppService = new AzureAppService(endPoint, "vincalinux", resourceGroupName, slotName, webAppKind);
 
         if (isLinuxWebApp && isBuiltinLinuxWebApp) {
             linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
@@ -81,7 +90,9 @@ async function run() {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
 
+        // done
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        // done
         var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
 
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
