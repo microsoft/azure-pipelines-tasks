@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 126,
-        "Patch": 2
+        "Patch": 3
     },
     "groups": [
         {
@@ -102,12 +102,16 @@
         },
         {
             "name": "itemPattern",
-            "type": "string",
+            "type": "multiLine",
             "label": "Item Pattern",
             "defaultValue": "**",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Minimatch pattern to filter files to be downloaded."
+            "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the Jenkins. To download all files within artifact drop use drop/**.</p>",
+            "properties": {
+                "rows": "3",
+                "resizable": "true"
+            }
         },
         {
             "name": "downloadCommitsAndWorkItems",

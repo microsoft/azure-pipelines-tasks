@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 61
+    "Patch": 62
   },
   "groups": [
     {
@@ -99,12 +99,16 @@
     },
     {
       "name": "itemPattern",
-      "type": "string",
+      "type": "multiLine",
       "label": "Matching pattern",
       "defaultValue": "**",
       "required": false,
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
       "visibleRule": "downloadType == specific",
-      "helpMarkDown": "Minimatch pattern to specify files to be downloaded. The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**."
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**.</p>"
     },
     {
       "name": "downloadPath",
