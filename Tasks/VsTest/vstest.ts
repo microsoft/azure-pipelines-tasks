@@ -517,19 +517,26 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
     let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, true), vstestConfig.responseFile);
     if (!updateResponseFileSuccess){
-        return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function () {
-            if (!vstestConfig.rerunFailedTests) return publishTestResults(resultsDirectory);
+        return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function (runResult) {
+            if (!vstestConfig.rerunFailedTests){
+                let publishResult = publishTestResults(resultsDirectory);
+                return (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) ?
+                    tl.TaskResult.Failed :
+                    tl.TaskResult.Succeeded;
+            }
+            return runResult;
         });
     }
 
     return runVsTestAndUploadResults(settingsFile, vsVersion, true, vstestConfig.responseFile, false)
     .then(function (runResult) {
-        let publishResult = tl.TaskResult.Succeeded;
-        if (!vstestConfig.rerunFailedTests) publishResult = publishTestResults(resultsDirectory);
-        if (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) {
-            return tl.TaskResult.Failed;
+        if (!vstestConfig.rerunFailedTests) {
+            let publishResult = publishTestResults(resultsDirectory);
+            return (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) ?
+                tl.TaskResult.Failed :
+                tl.TaskResult.Succeeded;
         }
-        return tl.TaskResult.Succeeded;
+        return runResult;
     }).catch(function (err) {
         tl.error(err);
         return tl.TaskResult.Failed;
