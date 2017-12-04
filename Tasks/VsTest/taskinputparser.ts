@@ -64,9 +64,13 @@ export function getDistributedTestConfigurations() {
 export function getvsTestConfigurations() {
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
+    vsTestConfiguration.isResponseFileRun = false;
+    vsTestConfiguration.publishTestResultsInTiaMode = false;
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.vstestArgsFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.responseSupplementryFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
     return vsTestConfiguration;
 }
@@ -170,6 +174,32 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
+
+    // Rerun information
+    //TODO close the experience/UI text
+    testConfiguration.rerunFailedTests = tl.getBoolInput('rerunFailedTests');
+    console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
+
+    if (testConfiguration.rerunFailedTests) {
+        testConfiguration.rerunFailedThreshold = 10;
+        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+
+        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
+
+        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold < 100) {
+            testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
+            console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+        } else {
+            tl.warning(tl.loc('invalidRerunFailedThreshold'));
+        }
+        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0) {
+            testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
+            console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
+        } else {
+            tl.warning(tl.loc('invalidRerunMaxAttempts'));
+        }
+    }
 
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
     if (testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
