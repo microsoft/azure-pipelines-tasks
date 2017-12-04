@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",
@@ -64,11 +64,11 @@
         {
             "name": "ExclusiveLock",
             "type": "boolean",
-            "label": "Acquire exclusive app lock while executing scripts",
+            "label": "Acquire an exclusive app lock while executing script(s)",
             "required": false,
             "visibleRule": "ExecuteInTransaction = true",
             "defaultValue": "false",
-            "helpMarkDown": "Executes SQL script(s) within a transaction"
+            "helpMarkDown": "Acquires an exclusive app lock while executing script(s)"
         },
         {
             "name": "AppLockName",

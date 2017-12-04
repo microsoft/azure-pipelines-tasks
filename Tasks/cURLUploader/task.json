@@ -8,7 +8,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 121,
+        "Minor": 127,
         "Patch": 0
     },
     "runsOn": [
@@ -32,7 +32,7 @@
             "label": "Files",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders."
+            "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders."
         },
         {
             "name": "authType",
@@ -51,7 +51,7 @@
             "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The service endpoint with the credentials for the server authentication.",
+            "helpMarkDown": "The service endpoint with the credentials for the server authentication. Use the Generic connection type for the service endpoint.",
             "visibleRule": "authType = ServiceEndpoint"
         },
         {

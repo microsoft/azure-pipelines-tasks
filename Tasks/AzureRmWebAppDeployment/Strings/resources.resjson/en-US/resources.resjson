@@ -10,10 +10,10 @@
   "loc.group.displayName.ApplicationSettings": "Application Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
-  "loc.input.label.WebAppName": "App Service name",
-  "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service.",
   "loc.input.label.WebAppKind": "App Type",
   "loc.input.help.WebAppKind": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments.",
+  "loc.input.label.WebAppName": "App Service name",
+  "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.",
   "loc.input.label.DeployToSlotFlag": "Deploy to slot",
   "loc.input.help.DeployToSlotFlag": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
   "loc.input.label.ResourceGroupName": "Resource group",
@@ -79,7 +79,7 @@
   "loc.input.label.AdditionalArguments": "Additional arguments",
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471).",
   "loc.input.label.RenameFilesFlag": "Rename locked files",
-  "loc.input.help.RenameFilesFlag": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment",
+  "loc.input.help.RenameFilesFlag": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_LOCKED_FILES=1 in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment",
   "loc.input.label.XmlTransformation": "XML transformation",
   "loc.input.help.XmlTransformation": "The config transforms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform.",
   "loc.input.label.XmlVariableSubstitution": "XML variable substitution",
@@ -179,5 +179,8 @@
   "loc.messages.UnableToUpdateAzureRMWebAppMetadata": "Unable to update AzureRM WebApp metadata. Error Code: %s",
   "loc.messages.Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s']",
   "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
-  "loc.messages.UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'"
+  "loc.messages.UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
+  "loc.messages.AddingReleaseAnnotation": "Adding release annotation for the Application Insights resource '%s'",
+  "loc.messages.SuccessfullyAddedReleaseAnnotation": "Successfully added release annotation to the Application Insight : %s",
+  "loc.messages.FailedAddingReleaseAnnotation": "Failed to add release annotation. %s"
 }

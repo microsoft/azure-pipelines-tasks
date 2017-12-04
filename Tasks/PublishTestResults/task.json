@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -66,7 +66,7 @@
             "label": "Merge test results",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "To merge results from all test results files to one test run in VSTS/TFS, check this option. To create a test run for each test results file, uncheck this option."
+            "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
         },
         {
             "name": "testRunTitle",
@@ -110,5 +110,8 @@
             "target": "publishtestresults.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "mergeFiles": "Number of results files is greater than %d. Therefore merging all files to publish results against a single test run."
     }
 }

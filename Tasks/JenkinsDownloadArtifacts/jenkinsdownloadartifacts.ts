@@ -16,6 +16,10 @@ import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureSto
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
+var packagejson = require('./package.json');
+
+const area: string = 'JenkinsDownloadArtifacts';
+
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
 
@@ -38,6 +42,41 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     return downloaderOptions;
 }
 
+function getDefaultProps() {
+    return {
+        serverurl: tl.getVariable('System.TEAMFOUNDATIONSERVERURI'),
+        releaseurl: tl.getVariable('Release.ReleaseWebUrl'),
+        releaseid: tl.getVariable('Release.ReleaseId'),
+        builduri: tl.getVariable('Build.BuildUri'),
+        buildid: tl.getVariable('Build.Buildid'),
+        jobid: tl.getVariable('System.Jobid'),
+        agentVersion: tl.getVariable('Agent.Version'),
+        version: packagejson.version
+    };
+}
+
+function publishEvent(feature, properties: any): void {
+    try {
+        var splitVersion = (process.env.AGENT_VERSION || '').split('.');
+        var major = parseInt(splitVersion[0] || '0');
+        var minor = parseInt(splitVersion[1] || '0');
+        let telemetry = '';
+        if (major > 2 || (major == 2 && minor >= 120)) {
+            telemetry = `##vso[telemetry.publish area=${area};feature=${feature}]${JSON.stringify(Object.assign(getDefaultProps(), properties))}`;
+        }
+        else {
+            if (feature === 'reliability') {
+                let reliabilityData = properties;
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + packagejson.version + ";]" + reliabilityData.errorMessage
+            }
+        }
+        console.log(telemetry);;
+    }
+    catch (err) {
+        tl.warning("Failed to log telemetry, error: " + err);
+    }
+}
+
 async function doWork() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -53,23 +92,26 @@ async function doWork() {
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
 
         let jenkinsClient: JenkinsRestClient = new JenkinsRestClient();
-        let jenkinsJobDetails: JenkinsJobDetails = await jenkinsClient.GetJobDetails();
-        console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+        let jenkinsJobDetails: JenkinsJobDetails;
 
         if (tl.getBoolInput('propagatedArtifacts') == true) {
             var artifactProvider = tl.getInput('artifactProvider');
             switch (artifactProvider.toLowerCase()) {
                 case "azurestorage":
-                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true), 
-                        tl.getInput('storageAccountName', true), tl.getInput('containerName', true), tl.getInput('commonVirtualPath', false));
-                    azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
+                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true),
+                        tl.getInput('storageAccountName', true), 
+                        tl.getInput('containerName', true), 
+                        tl.getInput('commonVirtualPath', false));
+                        await azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
                     break;
-
                 default:
                     throw Error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
             }
         }
         else {
+            jenkinsJobDetails = await jenkinsClient.GetJobDetails();
+            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
                 "endpoint": {
@@ -81,23 +123,34 @@ async function doWork() {
             };
 
             var handler = new handlers.BasicCredentialHandler(username, password);
-            getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+            
+            await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
         }
 
         console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
 
         let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
         if (downloadCommitsAndWorkItems) {
+            if (tl.getBoolInput('propagatedArtifacts') == true) {
+                try {
+                    jenkinsJobDetails = await jenkinsClient.GetJobDetails();
+                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                }
+                catch (error) {
+                    tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));
+                }
+            }
+
             new ArtifactDetailsDownloader()
                 .DownloadCommitsAndWorkItems(jenkinsJobDetails)
-                .then(
-                () => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
+                .then(() => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
                 (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
         }
 
     } catch (err) {
         tl.debug(err.message);
         tl._writeError(err);
+        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }

@@ -34,8 +34,12 @@ async function run() {
         let workingDir: string = tl.getPathInput('cwd');
         tl.cd(workingDir);
 
-        let outPath: string = tl.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
-        tl.mkdirP(outPath);
+        let outPath: string;
+        let outputPattern: string = tl.getInput('outputPattern', false);
+        if (outputPattern) {
+            outPath = tl.resolve(workingDir, outputPattern); //use posix implementation to resolve paths to prevent unit test failures on Windows
+            tl.mkdirP(outPath);
+        }
 
         //--------------------------------------------------------
         // Xcode args
@@ -157,13 +161,18 @@ async function run() {
             });
         }
         xcb.arg(actions);
-        if (actions.toString().indexOf('archive') < 0) {
-            // redirect build output if archive action is not passed
-            // xcodebuild archive produces an invalid archive if output is redirected
-            xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
-            xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
-            xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
-            xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
+        if (outPath) {
+            if (actions.toString().indexOf('archive') < 0) {
+                // redirect build output if archive action is not passed
+                // xcodebuild archive produces an invalid archive if output is redirected
+                xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
+                xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
+                xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
+                xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
+            }
+            else {
+                tl.warning(tl.loc('OutputDirectoryIgnored', 'archive'));
+            }
         }
         if (args) {
             xcb.line(args);

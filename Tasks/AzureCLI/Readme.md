@@ -13,7 +13,7 @@ This task supports running [Azure CLI](https://docs.microsoft.com/en-us/cli/azur
 	- Currently, Hosted agents do not have AZ CLI installed, you can either install using ‘npm install -g azure-cli’ or use private agents with AZ CLI pre-installed
 
 ## Contact Information
-Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
  
 ## Pre-requisites for the task
 The following pre-requisites need to be setup in the target machine(s) for the task to work properly.

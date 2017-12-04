@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Upload $(files) with cURL",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.files": "Files",
-  "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders.",
+  "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders.",
   "loc.input.label.authType": "Authentication Method",
   "loc.input.label.serviceEndpoint": "Service Endpoint",
   "loc.input.help.serviceEndpoint": "The service endpoint with the credentials for the server authentication. Use the Generic connection type for the service endpoint.",

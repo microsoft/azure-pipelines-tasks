@@ -71,6 +71,7 @@ async function run() {
         }
 
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        var webAppSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         // For container based linux deployment
@@ -157,34 +158,34 @@ async function run() {
                     throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
                 }
 
-                    var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-                    if(renameFilesFlag) {
-                        if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
-                            appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
-                            await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-                        }
+                if(renameFilesFlag) {
+                    if (webAppSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || webAppSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
+                        webAppSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
+                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
                     }
-                    else {
-                        if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
-                            delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
-                            await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-                        }
+                }
+                else {
+                    if (webAppSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && webAppSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
+                        delete webAppSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
+                        await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, webAppSettings);
                     }
-                    console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
-                    console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
-                    await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-                                    excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
-                                    additionalArguments, isFolderBasedDeployment, useWebDeploy);
+                }
+
+                console.log("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
+                console.log("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+                await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+                                excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
+                                additionalArguments, isFolderBasedDeployment, useWebDeploy);
             } else {
                 tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
                 if(azureWebAppDetails == null) {
                     azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
                 }
+
                 await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
                 if(isLinuxWebApp) {
                     await updateAppSetting(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, inputAppSettings);
-                        
                     await updateStartupCommandAndRuntimeStack(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, runtimeStack, startupCommand);
                 }
             }
@@ -193,12 +194,23 @@ async function run() {
                 await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
             }
         }
+
         await updateWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
     }
     catch (error) {
         isDeploymentSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
     }
+
+    try {
+    	// Add release annotation for App Services which has an Application Insights resource configured to it.
+    	await addReleaseAnnotation(endPoint, webAppName, webAppSettings, isDeploymentSuccess);
+    }
+    catch (error) {
+    	// let the task silently continue if adding release annotation fails
+    	console.log(tl.loc("FailedAddingReleaseAnnotation", error));
+    }
+
     if(publishingProfile != null) {
         var customMessage = {
             type: "Deployment",
@@ -373,4 +385,25 @@ async function updateAppSetting(SPN, webAppName: string, resourceGroupName: stri
         }
     }
 }
+
+async function addReleaseAnnotation(SPN, webAppName: string, webAppSettings: any, isDeploymentSuccess: boolean) {
+    let appInsightsInstrumentationKey: string = webAppSettings.properties && webAppSettings.properties[azureRESTUtility.appInsightsInstrumentationKeyAppSetting];
+
+    if (!!appInsightsInstrumentationKey) {
+        let appInsightsResource = await azureRESTUtility.getApplicationInsightsResources(SPN, null, `InstrumentationKey eq '${appInsightsInstrumentationKey}'`);
+        if (appInsightsResource && appInsightsResource.length > 0) {
+            console.log(tl.loc("AddingReleaseAnnotation", appInsightsResource[0].name));
+            let releaseAnnotationResponse = await azureRESTUtility.addReleaseAnnotation(SPN, appInsightsResource[0].id, isDeploymentSuccess);
+            tl.debug(JSON.stringify(releaseAnnotationResponse, null, 2));
+            console.log(tl.loc("SuccessfullyAddedReleaseAnnotation", appInsightsResource[0].name));
+        }
+        else {
+            tl.debug(`Unable to find Application Insights resource with Instrumentation key ${appInsightsInstrumentationKey}. Skipping adding release annotation.`);
+        }
+    }
+    else {
+        tl.debug(`Application Insights is not configured for the App Service ${webAppName}. Skipping adding release annotation.`);
+    }
+}
+
 run();

@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
+        "Minor": 128,
         "Patch": 0
     },
     "demands": [
@@ -183,6 +183,7 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.9": "JDK 9",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",
                 "1.6": "JDK 6"
@@ -449,7 +450,7 @@
         "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
         "codeAnalysisDisabled": "Code analysis is disabled outside of the build environment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
+        "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
         "NoCodeCoverage": "No code coverage results were found to publish.",
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
         "EffectivePomInvalid": "Could not parse the effective POM.",

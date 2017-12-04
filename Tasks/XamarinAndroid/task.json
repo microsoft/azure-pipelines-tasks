@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
+        "Minor": 128,
         "Patch": 1
     },
     "demands": [
@@ -174,6 +174,7 @@
             "visibleRule": "jdkSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.9": "JDK 9",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",
                 "1.6": "JDK 6"
@@ -220,7 +221,7 @@
         }
     },
     "messages": {
-        "JDKNotFound": "Failed to find specified JDK version. Please make sure environment variable %s exists and is set to the location of a corresponding JDK.",
+        "JDKNotFound": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
         "NoMatchingProjects": "No files were found matching: %s.",
         "XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
         "XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",

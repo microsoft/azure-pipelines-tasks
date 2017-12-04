@@ -7,6 +7,8 @@ import * as auth from "nuget-task-common/Authentication";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import peParser = require('nuget-task-common/pe-parser/index');
+import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as telemetry from 'utility-common/telemetry';
 
 class NuGetExecutionOptions {
     constructor(
@@ -65,7 +67,7 @@ export async function run(nuGetPath: string): Promise<void> {
             args,
             authInfo);
 
-        await runNuGetAsync(executionOptions);
+        runNuGet(executionOptions);
     } catch (err) {
         tl.error(err);
 
@@ -77,10 +79,14 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function runNuGetAsync(executionOptions: NuGetExecutionOptions): Q.Promise<number> {
+function runNuGet(executionOptions: NuGetExecutionOptions): IExecSyncResult {
     let nugetTool = ngToolRunner.createNuGetToolRunner(executionOptions.nuGetPath, executionOptions.environment, executionOptions.authInfo);
     nugetTool.line(executionOptions.args);
     nugetTool.arg("-NonInteractive");
 
-    return nugetTool.exec();
+    let execResult = nugetTool.execSync();
+    if (execResult.code !== 0) {
+        telemetry.logExecResults(execResult.code, execResult.stderr);
+    }
+    return execResult;
 }

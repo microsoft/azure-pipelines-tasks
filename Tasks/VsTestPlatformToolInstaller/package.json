@@ -1,6 +1,6 @@
 {
     "name": "vstestplatform-tool-installer",
-    "version": "0.1.4",
+    "version": "1.0.4",
     "description": "Visual Studio Test Platform Installer",
     "main": "vstestplatformtoolInstaller.js",
     "scripts": {
@@ -23,6 +23,7 @@
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
+        "performance-now": "0.2.0",
         "vsts-task-lib": "2.0.6",
         "vsts-task-tool-lib": "0.4.1"
     }
