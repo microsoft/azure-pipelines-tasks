@@ -1,5 +1,5 @@
 # Setup job variables
-$collectorName = "vsts-tasks"
+$collectorName = "vsts-tasks-machine"
 Write-Host "##vso[task.setvariable variable=collectorName]$collectorName"
 Write-Host "##vso[task.setvariable variable=collectorStartTime]$([System.DateTime]::UtcNow.ToString("O"))"
 $jobName = $env:system_jobDisplayName
@@ -11,8 +11,6 @@ Write-Host "Deleting collector"
 # Create the collector
 Write-Host "Creating collector"
 $counters = @(
-    "\FileSystem Disk Activity(_Total)\FileSystem Bytes Read"
-    "\FileSystem Disk Activity(_Total)\FileSystem Bytes Written"
     "\Memory\Available MBytes"
     "\Memory\Pages/sec"
     "\PhysicalDisk(_Total)\Avg. Disk Read Queue Length"
@@ -26,7 +24,7 @@ $counters = @(
 )
 $sampleInterval = '5' # 5 seconds
 $maxSize = "1000" # 1,000 mb
-& C:\Windows\System32\logman.exe create counter -n $collectorName -c @counters -o "$PSScriptRoot\..\performance-monitors-$jobName-$('{0:yyyyMMdd-hhmmss}' -f ([System.DateTime]::Now))" -v nnnnnn -f bin -max $maxSize
+& C:\Windows\System32\logman.exe create counter -n $collectorName -c @counters -o "$PSScriptRoot\..\machine-monitors-$jobName" -v nnnnnn -f bin -max $maxSize
 
 # Start the collector
 Write-Host "Starting collector"

@@ -262,6 +262,25 @@ target.test = function() {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
 
+    if (process.env.collect_diagnostics) {
+        var testsSpec2 = [];
+        var sourceScript = path.join(__dirname, 'ci', 'collect-process-counters.js');
+        var targetScript = path.join(buildPath, 'collect-process-counters-0.js');
+        if (!pathExists(targetScript)) {
+            fs.linkSync(sourceScript, targetScript);
+        }
+        testsSpec2.push(targetScript);
+        for (var i = 0; i < testsSpec.length; i++) {
+            testsSpec2.push(testsSpec[i]);
+            var targetScript = path.join(buildPath, `collect-process-counters-${i + 1}.js`);
+            if (!pathExists(targetScript)) {
+                fs.linkSync(sourceScript, targetScript);
+            }
+            testsSpec2.push(targetScript);
+        }
+        testsSpec = testsSpec2;
+    }
+
     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
 }
 
