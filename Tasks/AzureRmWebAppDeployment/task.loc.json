@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 24
+    "Patch": 31
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -56,6 +56,26 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "WebAppKind",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppKind",
+      "defaultValue": "app",
+      "required": true,
+      "options": {
+        "app": "Web App",
+        "applinux": "Linux Web App",
+        "functionapp": "Function App",
+        "logicapp": "Logic App",
+        "api": "API App",
+        "mobileapp": "Mobile App"
+      },
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
+    },
+    {
       "name": "WebAppName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppName",
@@ -67,18 +87,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "WebAppKind",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppKind",
-      "defaultValue": "app",
-      "required": false,
-      "visibleRule": "WebAppName = invalidwebappname",
-      "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
-      }
-    },
-    {
       "name": "DeployToSlotFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.DeployToSlotFlag",
@@ -86,23 +94,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
       "visibleRule": "WebAppKind != \"\""
-    },
-    {
-      "name": "ImageSource",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ImageSource",
-      "defaultValue": "Registry",
-      "options": {
-        "Registry": "Container Registry",
-        "Builtin": "Built-in Image"
-      },
-      "required": false,
-      "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
-      "visibleRule": "WebAppKind = applinux"
     },
     {
       "name": "ResourceGroupName",
@@ -127,6 +118,23 @@
       },
       "helpMarkDown": "ms-resource:loc.input.help.SlotName",
       "visibleRule": "DeployToSlotFlag = true"
+    },
+    {
+      "name": "ImageSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ImageSource",
+      "defaultValue": "Registry",
+      "options": {
+        "Registry": "Container Registry",
+        "Builtin": "Built-in Image"
+      },
+      "required": false,
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
+      "visibleRule": "WebAppKind = applinux"
     },
     {
       "name": "AzureContainerRegistry",
@@ -488,7 +496,10 @@
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNames"
+      "dataSourceName": "AzureRMWebAppNamesByType",
+      "parameters": {
+        "WebAppKind": "$(WebAppKind)"
+      }
     },
     {
       "target": "ResourceGroupName",
@@ -497,15 +508,6 @@
       "parameters": {
         "WebAppName": "$(WebAppName)"
       }
-    },
-    {
-      "target": "WebAppKind",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureAppKind",
-      "parameters": {
-        "WebAppName": "$(WebAppName)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
     },
     {
       "target": "SlotName",
@@ -686,6 +688,9 @@
     "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
     "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
-    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
+    "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
   }
 }

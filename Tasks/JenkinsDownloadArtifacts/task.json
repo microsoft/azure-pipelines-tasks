@@ -17,12 +17,12 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 124,
-        "Patch": 0
+        "Minor": 126,
+        "Patch": 2
     },
     "groups": [
         {
-            "name":"propagatedArtifactsGroup",
+            "name": "propagatedArtifactsGroup",
             "displayName": "Propagated Artifacts",
             "isExpanded": true
         },
@@ -50,7 +50,7 @@
             "required": true,
             "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
             "properties": {
-              "EditableOptions": "True"
+                "EditableOptions": "True"
             }
         },
         {
@@ -97,17 +97,17 @@
             "visibleRule": "jenkinsBuild == BuildNumber",
             "helpMarkDown": "Download artifacts produced by this build.",
             "properties": {
-              "EditableOptions": "True"
+                "EditableOptions": "True"
             }
         },
         {
-          "name": "itemPattern",
-          "type": "string",
-          "label": "Item Pattern",
-          "defaultValue": "**",
-          "required": false,
-          "groupName": "advanced",
-          "helpMarkDown": "Minimatch pattern to filter files to be downloaded."
+            "name": "itemPattern",
+            "type": "string",
+            "label": "Item Pattern",
+            "defaultValue": "**",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Minimatch pattern to filter files to be downloaded."
         },
         {
             "name": "downloadCommitsAndWorkItems",
@@ -157,7 +157,7 @@
             "defaultValue": "azureStorage",
             "required": true,
             "options": {
-                "azureStorage":"Azure Storage"
+                "azureStorage": "Azure Storage"
             },
             "properties": {
                 "EditableOptions": "false",
@@ -182,7 +182,7 @@
             "label": "Storage Account Name",
             "required": true,
             "properties": {
-                "EditableOptions":"True"
+                "EditableOptions": "True"
             },
             "groupName": "propagatedArtifactsGroup",
             "visibleRule": "propagatedArtifacts == true",
@@ -208,46 +208,46 @@
         }
     ],
     "dataSourceBindings": [
-      {
-        "endpointId": "$(serverEndpoint)",
-        "target": "jobName",
-        "dataSourceName": "Jobs",
-        "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
-      },
-      {
-        "endpointId": "$(serverEndpoint)",
-        "target": "jenkinsJobType",
-        "dataSourceName": "JenkinsJobType",
-        "parameters": {
-            "definition": "$(jobName)"
+        {
+            "endpointId": "$(serverEndpoint)",
+            "target": "jobName",
+            "dataSourceName": "Jobs",
+            "resultTemplate": "{{#addField jobs 'parentPath' 'name' '/'}}{{#recursiveSelect jobs}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{name}}\", \"DisplayValue\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}{{/addField}}"
         },
-        "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
-      },
-      {
-        "endpointId": "$(serverEndpoint)",
-        "target": "jenkinsBuildNumber",
-        "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
-        "parameters": {
-            "definition": "$(jobName)",
-            "jenkinsJobType": "$(jenkinsJobType)"
+        {
+            "endpointId": "$(serverEndpoint)",
+            "target": "jenkinsJobType",
+            "dataSourceName": "JenkinsJobType",
+            "parameters": {
+                "definition": "$(jobName)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
         },
-        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
-      },
-      {
-        "endpointId": "$(serverEndpoint)",
-        "target": "startJenkinsBuildNumber",
-        "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
-        "parameters": {
-            "definition": "$(jobName)",
-            "jenkinsJobType": "$(jenkinsJobType)"
+        {
+            "endpointId": "$(serverEndpoint)",
+            "target": "jenkinsBuildNumber",
+            "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+            "parameters": {
+                "definition": "$(jobName)",
+                "jenkinsJobType": "$(jenkinsJobType)"
+            },
+            "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
         },
-        "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
-      },
-      {
-          "endpointId":"$(ConnectedServiceNameARM)",
-          "target": "storageAccountName",
-          "dataSourceName": "AzureStorageAccountRMandClassic"
-      }
+        {
+            "endpointId": "$(serverEndpoint)",
+            "target": "startJenkinsBuildNumber",
+            "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+            "parameters": {
+                "definition": "$(jobName)",
+                "jenkinsJobType": "$(jenkinsJobType)"
+            },
+            "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+        },
+        {
+            "endpointId": "$(ConnectedServiceNameARM)",
+            "target": "storageAccountName",
+            "dataSourceName": "AzureStorageAccountRMandClassic"
+        }
     ],
     "execution": {
         "Node": {
@@ -264,8 +264,8 @@
         "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
         "ArtifactDownloadUrl": "Downloading artifacts from: %s",
         "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
-        "ArtifactProviderNotSupported":"Downloading artifacts from %s is not supported",
-        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure Blob Storage, Container Name: %s",
+        "ArtifactProviderNotSupported": "Downloading artifacts from %s is not supported",
+        "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
         "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build. Commits and workitems will be downloaded from build: %s",
         "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between builds %s to %s",
         "GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
@@ -328,7 +328,7 @@
         "ResourceNameCannotBeNull": "Resource name is required.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url is required.",
         "StorageAccountCannotBeNull": "storage accountName is required.",
-        "ArtifactItemsTruncationWarning":"Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
+        "ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
         "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
         "CreatedContainer": "Created container {0}.",
         "ErrorInReadStream": "Error in Read stream: {0}",
@@ -340,6 +340,7 @@
         "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
         "UploadingItem": "Uploading {0}.",
         "FoundJobType": "Found job type %s",
-        "CannotFindJobType": "Could not detect job type"
+        "CannotFindJobType": "Could not detect job type",
+        "InvalidJobName": "Invalid job name %s"
     }
 }

@@ -5,7 +5,8 @@
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Deploy",
+  "category": "Utility",
+  "preview": true,
   "visibility": [
     "Release"
   ],
@@ -15,10 +16,16 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "queryId",
@@ -34,6 +41,9 @@
       "label": "ms-resource:loc.input.label.maxThreshold",
       "defaultValue": "0",
       "required": "true",
+      "properties": {
+        "isNonNegativeNumber": "true"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.maxThreshold"
     },
     {
@@ -42,6 +52,10 @@
       "label": "ms-resource:loc.input.label.minThreshold",
       "defaultValue": "0",
       "required": "true",
+      "properties": {
+        "isNonNegativeNumber": "true"
+      },
+      "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.minThreshold"
     }
   ],

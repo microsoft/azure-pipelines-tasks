@@ -114,6 +114,7 @@ tr.registerMock('./msdeployutility.js', {
 }); 
 
 tr.registerMock('azurerest-common/azurerestutility.js', {
+    appInsightsInstrumentationKeyAppSetting: "APPINSIGHTS_INSTRUMENTATIONKEY",
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -168,7 +169,8 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
         var appSettings = {
             properties : {
-                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+                MSDEPLOY_RENAME_LOCKED_FILES: '1',
+                APPINSIGHTS_INSTRUMENTATIONKEY: "00000000-0000-0000-0000-000000000000"
             }
         };
         return appSettings;
@@ -186,6 +188,16 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateAzureRMWebAppMetadata: function() {
         console.log("Successfully updated Web App metadata");
+    },
+    getApplicationInsightsResources: () => {
+        return [{
+            name: "ApplicationInsights", 
+            id: "ApplicationInsightsResourceId",
+            InstrumentationKey: "00000000-0000-0000-0000-000000000000"
+        }];
+    },
+    addReleaseAnnotation: () => {
+        return { };
     }
 });
 

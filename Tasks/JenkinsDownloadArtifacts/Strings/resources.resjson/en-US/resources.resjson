@@ -121,5 +121,6 @@
   "loc.messages.UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
   "loc.messages.UploadingItem": "Uploading {0}.",
   "loc.messages.FoundJobType": "Found job type %s",
-  "loc.messages.CannotFindJobType": "Could not detect job type"
+  "loc.messages.CannotFindJobType": "Could not detect job type",
+  "loc.messages.InvalidJobName": "Invalid job name %s"
 }

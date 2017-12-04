@@ -16,10 +16,15 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 1
+		"Patch": 2
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
-	"groups": [],
+	"groups": [{
+			"name": "completionOptions",
+			"displayName": "Completion options",
+			"isExpanded": false
+		}
+	],
 	"inputs": [{
 			"name": "function",
 			"type": "string",
@@ -32,8 +37,25 @@
 			"type": "string",
 			"label": "Function Key",
 			"defaultValue": "",
-			"required": false,
+			"required": true,
 			"helpMarkDown": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=="
+		}, {
+			"name": "method",
+			"type": "pickList",
+			"label": "Method",
+			"required": "true",
+			"defaultValue": "POST",
+			"options": {
+				"OPTIONS": "OPTIONS",
+				"GET": "GET",
+				"HEAD": "HEAD",
+				"POST": "POST",
+				"PUT": "PUT",
+				"DELETE": "DELETE",
+				"TRACE": "TRACE",
+				"PATCH": "PATCH"
+			},
+			"helpMarkDown": "Select the http method with which the funtion should be invoked with."
 		}, {
 			"name": "headers",
 			"type": "multiLine",
@@ -47,6 +69,13 @@
 			},
 			"helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
 		}, {
+			"name": "queryParameters",
+			"type": "string",
+			"label": "Query Parameters",
+			"defaultValue": "",
+			"required": false,
+			"helpMarkDown": "Query parameters string append to the function Url. Should not start with with \"?\" and \"&\"."
+		}, {
 			"name": "body",
 			"type": "multiLine",
 			"label": "Body",
@@ -56,25 +85,30 @@
 				"resizable": "true",
 				"rows": "3",
 				"maxLength": "2000"
-			}
+			},
+			"visibleRule": "method != GET && method != HEAD",
+			"helpMarkDown": "JSON formatted message body for the request."
 		}, {
-			"name": "executionMode",
+			"name": "waitForCompletion",
 			"type": "pickList",
-			"label": "Execution mode",
+			"label": "Complete based on",
 			"defaultValue": "false",
 			"required": true,
-			"helpMarkDown": "Default value \"Asynchronous mode\". Available values : \"synchronous mode\", \"asynchronous mode\" call where the Azure function calls back to update the timeline record​.",
+			"helpMarkDown": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+			"groupName": "completionOptions",
 			"options": {
-				"true": "Synchronous",
-				"false": "Asynchronous"
+				"true": "Callback",
+				"false": "ApiResponse"
 			}
 		}, {
-			"name": "successExpression",
+			"name": "successCriteria",
 			"type": "string",
-			"label": "Success Expression",
+			"label": "Success Criteria",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Expression which defines when to pass the task. Example:- eq(count(root['value']), 1), [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
+			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+			"groupName": "completionOptions",
+			"visibleRule": "waitForCompletion = false"
 		}
 	],
 
@@ -82,12 +116,12 @@
 		"HttpRequest": {
 			"Execute": {
 				"EndpointId": "",
-				"EndpointUrl": "$(function)?code=$(key)",
-				"Method": "POST",
+				"EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
+				"Method": "$(method)",
 				"Body": "$(body)",
 				"Headers": "$(headers)",
-				"WaitForCompletion": "$(executionMode)",
-				"Expression": "$(successExpression)"
+				"WaitForCompletion": "$(waitForCompletion)",
+				"Expression": "$(successCriteria)"
 			}
 		}
 	}

@@ -153,7 +153,7 @@ export class AzureRmAlertRulesRestClient {
 			// if the alert rule already exists, use the location, tags and actions of the existing alert rule
 			alertRuleResourceLocation = existingAlertRule.location;
 			alertRuleResourceTags = existingAlertRule.tags || {};
-			alertRuleActions = existingAlertRule["properties"].actions || [];
+			alertRuleActions = existingAlertRule["properties"] && existingAlertRule["properties"].actions || [];
 
 			if(notifyViaEmails) {
 				alertRuleActions = alertRuleActions.filter((action) => {

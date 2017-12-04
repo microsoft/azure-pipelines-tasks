@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 124,
-    "Patch": 0
+    "Minor": 126,
+    "Patch": 2
   },
   "groups": [
     {
@@ -212,7 +212,7 @@
       "endpointId": "$(serverEndpoint)",
       "target": "jobName",
       "dataSourceName": "Jobs",
-      "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      "resultTemplate": "{{#addField jobs 'parentPath' 'name' '/'}}{{#recursiveSelect jobs}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{name}}\", \"DisplayValue\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}{{/addField}}"
     },
     {
       "endpointId": "$(serverEndpoint)",
@@ -340,6 +340,7 @@
     "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
     "UploadingItem": "ms-resource:loc.messages.UploadingItem",
     "FoundJobType": "ms-resource:loc.messages.FoundJobType",
-    "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType"
+    "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
+    "InvalidJobName": "ms-resource:loc.messages.InvalidJobName"
   }
 }

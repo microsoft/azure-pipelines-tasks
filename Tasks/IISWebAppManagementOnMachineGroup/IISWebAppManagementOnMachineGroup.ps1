@@ -9,6 +9,7 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 # Get all inputs 
 
 # Website related inputs 
+$enableIIS = Get-VstsInput -Name "EnableIIS"
 $actionIISWebsite = Get-VstsInput -Name "ActionIISWebsite"
 $websiteName = Get-VstsInput -Name "WebsiteName" 
 $startStopWebsiteName = Get-VstsInput -Name "StartStopWebsiteName"
@@ -80,6 +81,13 @@ $appCmdCommands = Get-VstsInput -Name "AppCmdCommands"
 
 try {
     
+    if($enableIIS -eq "true")
+    {
+        Write-Host "Installing IIS. This may take few minutes."
+        Import-Module servermanager
+        Add-WindowsFeature web-server -includeallsubfeature
+    }
+
     $iisDeploymentType = Get-VstsInput -Name "IISDeploymentType"
 
     switch ($iisDeploymentType)

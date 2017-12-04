@@ -36,6 +36,8 @@ export interface TestConfigurations {
     otherConsoleOptions: string;
     taskInstanceIdentifier: string;
     runUITests: boolean;
+    ignoreTestFailures: string;
+    toolsInstallerConfig: ToolsInstallerConfiguration;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -47,6 +49,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     numberOfTestCasesPerSlice: number;
     batchingType: BatchingType;
     runningTimePerBatchInMs: number;
+    proceedAfterAbortedTestCase: boolean;
 }
 
 export interface DtaEnvironment {
@@ -60,7 +63,6 @@ export interface DtaEnvironment {
 export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
-    ignoreVstestFailure: string;
     responseFile: string;
     responseFileSupported: boolean;
 }
@@ -82,7 +84,16 @@ export interface TiaConfiguration {
     disableEnablingDataCollector: boolean;
 }
 
+export interface ToolsInstallerConfiguration {
+    vsTestPackageLocation: string; // root of the package downloaded by Tools installer
+    vsTestConsolePathFromPackageLocation: string; // path to vstest.console.exe
+    x86ProfilerProxyDLLLocation: string;
+    x64ProfilerProxyDLLLocation: string;
+    isToolsInstallerInUse: boolean;
+}
+
 export enum BatchingType {
     TestCaseBased,
-    TestExecutionTimeBased
+    TestExecutionTimeBased,
+    AssemblyBased
 }

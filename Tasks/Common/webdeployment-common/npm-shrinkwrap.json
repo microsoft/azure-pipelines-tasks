@@ -159,9 +159,9 @@
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.2.tgz"
     },
     "ltx": {
-      "version": "2.5.0",
-      "from": "ltx@2.5.0",
-      "resolved": "https://registry.npmjs.org/ltx/-/ltx-2.5.0.tgz"
+      "version": "2.6.2",
+      "from": "ltx@2.6.2",
+      "resolved": "https://registry.npmjs.org/ltx/-/ltx-2.6.2.tgz"
     },
     "minimatch": {
       "version": "3.0.3",

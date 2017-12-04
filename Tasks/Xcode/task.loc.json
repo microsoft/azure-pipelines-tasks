@@ -10,9 +10,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 124,
-    "Patch": 1
+    "Major": 4,
+    "Minor": 126,
+    "Patch": 7
   },
   "demands": [
     "xcode"
@@ -27,7 +27,12 @@
     {
       "name": "package",
       "displayName": "ms-resource:loc.group.displayName.package",
-      "isExpanded": false
+      "isExpanded": true
+    },
+    {
+      "name": "devices",
+      "displayName": "ms-resource:loc.group.displayName.devices",
+      "isExpanded": true
     },
     {
       "name": "advanced",
@@ -49,7 +54,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.configuration",
       "defaultValue": "$(Configuration)",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration"
     },
     {
       "name": "sdk",
@@ -63,7 +69,7 @@
       "name": "xcWorkspacePath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.xcWorkspacePath",
-      "defaultValue": "**/*.xcodeproj/*.xcworkspace",
+      "defaultValue": "**/*.xcodeproj/project.xcworkspace",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
     },
@@ -75,12 +81,36 @@
       "helpMarkDown": "ms-resource:loc.input.help.scheme"
     },
     {
+      "name": "xcodeVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.xcodeVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeVersion",
+      "defaultValue": "default",
+      ".comment": "//If you update the options here, be sure to update the Xcode.json build template as well.",
+      "options": {
+        "8": "Xcode 8",
+        "9": "Xcode 9",
+        "default": "Default",
+        "specifyPath": "Specify path"
+      }
+    },
+    {
+      "name": "xcodeDeveloperDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcodeDeveloperDir",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeDeveloperDir",
+      "visibleRule": "xcodeVersion == specifyPath"
+    },
+    {
       "name": "packageApp",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.packageApp",
-      "defaultValue": true,
+      "defaultValue": false,
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageApp"
+      "helpMarkDown": "ms-resource:loc.input.help.packageApp",
+      "groupName": "package"
     },
     {
       "name": "archivePath",
@@ -89,7 +119,8 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.archivePath",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "exportPath",
@@ -98,7 +129,8 @@
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportPath",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "exportOptions",
@@ -108,11 +140,12 @@
       "required": false,
       "groupName": "package",
       "options": {
-        "auto": "Auto",
+        "auto": "Automatic",
         "plist": "Plist",
         "specify": "Specify"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.exportOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
+      "visibleRule": "packageApp == true"
     },
     {
       "name": "exportMethod",
@@ -151,16 +184,41 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportArgs",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
     },
     {
-      "name": "xcode8AutomaticSigning",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.xcode8AutomaticSigning",
-      "defaultValue": false,
+      "name": "signingOption",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.signingOption",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcode8AutomaticSigning",
-      "groupName": "sign"
+      "groupName": "sign",
+      "defaultValue": "nosign",
+      "helpMarkDown": "ms-resource:loc.input.help.signingOption",
+      "options": {
+        "nosign": "Do not code sign",
+        "default": "Project defaults",
+        "manual": "Manual signing",
+        "auto": "Automatic signing"
+      }
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "provisioningProfileUuid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provisioningProfileUuid",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileUuid",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
     },
     {
       "name": "teamId",
@@ -170,94 +228,66 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.teamId",
       "groupName": "sign",
-      "visibleRule": "xcode8AutomaticSigning = true"
+      "visibleRule": "signingOption = auto"
     },
     {
-      "name": "signMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.signMethod",
+      "name": "destinationPlatformOption",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.destinationPlatformOption",
+      "defaultValue": "default",
       "required": false,
-      "groupName": "sign",
-      "defaultValue": "file",
-      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatformOption",
+      "groupName": "devices",
       "options": {
-        "file": "File Contents",
-        "id": "Identifiers"
+        "default": "Default",
+        "iOS": "iOS and watchOS",
+        "tvOS": "tvOS",
+        "macOS": "macOS",
+        "custom": "Custom"
       }
     },
     {
-      "name": "iosSigningIdentity",
+      "name": "destinationPlatform",
       "type": "string",
-      "label": "ms-resource:loc.input.label.iosSigningIdentity",
+      "label": "ms-resource:loc.input.label.destinationPlatform",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.iosSigningIdentity",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatform",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption == custom"
     },
     {
-      "name": "unlockDefaultKeychain",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.unlockDefaultKeychain",
-      "defaultValue": false,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.unlockDefaultKeychain",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
+      "name": "destinationTypeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.destinationTypeOption",
+      "defaultValue": "simulators",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationTypeOption",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+      "options": {
+        "simulators": "Simulator",
+        "devices": "Connected Device"
+      }
     },
     {
-      "name": "defaultKeychainPassword",
+      "name": "destinationSimulators",
+      "label": "ms-resource:loc.input.label.destinationSimulators",
       "type": "string",
-      "label": "ms-resource:loc.input.label.defaultKeychainPassword",
+      "defaultValue": "iPhone 7",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.defaultKeychainPassword",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationSimulators",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
     },
     {
-      "name": "provProfileUuid",
+      "name": "destinationDevices",
+      "label": "ms-resource:loc.input.label.destinationDevices",
       "type": "string",
-      "label": "ms-resource:loc.input.label.provProfileUuid",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "p12",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.p12",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.p12",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "p12pwd",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.p12pwd",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.p12pwd",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "provProfile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.provProfile",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfile",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "removeProfile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.removeProfile",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.removeProfile",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDevices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
     },
     {
       "name": "args",
@@ -283,14 +313,6 @@
       "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
-      "groupName": "advanced"
-    },
-    {
-      "name": "xcodeDeveloperDir",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.xcodeDeveloperDir",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcodeDeveloperDir",
       "groupName": "advanced"
     },
     {
@@ -340,6 +362,13 @@
     "ExportOptionsPlistInvalidFilePath": "ms-resource:loc.messages.ExportOptionsPlistInvalidFilePath",
     "SchemeRequiredForArchive": "ms-resource:loc.messages.SchemeRequiredForArchive",
     "WorkspaceOrProjectRequiredForArchive": "ms-resource:loc.messages.WorkspaceOrProjectRequiredForArchive",
-    "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist"
+    "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist",
+    "LocateXcodeBasedOnVersion": "ms-resource:loc.messages.LocateXcodeBasedOnVersion",
+    "FailedToLocateSpecifiedXcode": "ms-resource:loc.messages.FailedToLocateSpecifiedXcode",
+    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle",
+    "MultipleSchemesFound": "ms-resource:loc.messages.MultipleSchemesFound",
+    "NoSchemeFound": "ms-resource:loc.messages.NoSchemeFound",
+    "SchemeSelected": "ms-resource:loc.messages.SchemeSelected",
+    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme"
   }
 }
