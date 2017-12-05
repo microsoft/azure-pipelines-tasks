@@ -16,8 +16,8 @@
     ],
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 119,
+        "Major": 2,
+        "Minor": 127,
         "Patch": 0
     },
     "groups": [
@@ -27,34 +27,34 @@
             "isExpanded": true
         }
     ],
-    "instanceNameFormat": "Archive files $(message)",
+    "instanceNameFormat": "Archive $(rootFolderOrFile)",
     "inputs": [
         {
-            "name": "rootFolder",
+            "name": "rootFolderOrFile",
             "type": "filePath",
-            "label": "Root folder (or file) to archive",
+            "label": "Root folder or file to archive",
             "defaultValue": "$(Build.BinariesDirectory)",
             "required": true,
-            "helpMarkDown": "The root folder to add to the archive.  Everything under this folder will be added to the resulting archive."
+            "helpMarkDown": "Enter the root folder or file path to add to the archive. If a folder, everything under the folder will be added to the resulting archive."
         },
         {
             "name": "includeRootFolder",
             "type": "boolean",
-            "label": "Prefix root folder name to archive paths",
+            "label": "Prepend root folder name to archive paths",
             "defaultValue": true,
             "required": true,
-            "helpMarkDown": "If selected, the root folder name will be prefixed to file paths within the archive.  Otherwise, all file paths will start one level lower.<p>For example, suppose the selected root folder is: <b>`/home/user/output/classes/`</b>, and contains: <b>`com/acme/Main.class`</b>. <ul><li>If selected, the resulting archive would contain: <b>`classes/com/acme/Main.class`</b>.</li><li>Otherwise, the resulting archive would contain: <b>`com/acme/Main.class`</b>.</li></ul>"
+            "helpMarkDown": "If selected, the root folder name will be prepended to file paths within the archive. Otherwise, all file paths will start one level lower.<p>For example, suppose the selected root folder is: <b>`/home/user/output/classes/`</b>, and contains: <b>`com/acme/Main.class`</b>. <ul><li>If selected, the resulting archive would contain: <b>`classes/com/acme/Main.class`</b>.</li><li>Otherwise, the resulting archive would contain: <b>`com/acme/Main.class`</b>.</li></ul>"
         },
         {
             "name": "archiveType",
             "type": "pickList",
             "label": "Archive type",
             "required": true,
-            "defaultValue": "default",
+            "defaultValue": "zip",
             "helpMarkDown": "Specify the compression scheme used.  To create <b>`foo.jar`</b>, for example, choose <b>`zip`</b> for the compression, and specify <b>`foo.jar`</b> as the archive file to create.  For all tar files (including compressed ones), choose <b>`tar`</b>.",
             "groupName": "archive",
             "options": {
-                "default": "zip",
+                "zip": "zip",
                 "7z": "7z",
                 "tar": "tar",
                 "wim": "wim"
