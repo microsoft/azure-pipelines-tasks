@@ -77,6 +77,11 @@ export function startTest() {
 
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
+            if (vstestConfig.tiaConfig.tiaEnabled)
+            {
+                uploadTestImpactZip();
+                uploadTestImpactLogs();
+            }
             if (taskResult == tl.TaskResult.Failed) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
             }
@@ -358,6 +363,22 @@ function uploadVstestDiagFile(): void {
         let stats = fs.statSync(vstestConfig.vstestDiagFile);
         tl.debug('Diag file exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]' + vstestConfig.vstestDiagFile);
+    }
+}
+
+function uploadTestImpactZip(): void {
+    if (utils.Helper.pathExistsAsFile(path.join(os.tmpdir(), "TestImpactZip.zip"))) {
+        let stats = fs.statSync(path.join(os.tmpdir(), "TestImpactZip.zip"));
+        tl.debug('TestImpact zip file exists. Size: ' + stats.size + ' Bytes');
+        console.log('##vso[task.uploadfile]' + path.join(os.tmpdir(), "TestImpactZip.zip"));
+    }
+}
+
+function uploadTestImpactLogs(): void {
+    if (utils.Helper.pathExistsAsFile(path.join(os.tmpdir(), "TestSelector.log"))) {
+        let stats = fs.statSync(path.join(os.tmpdir(), "TestSelector.log"));
+        tl.debug('Test Selector log file exists. Size: ' + stats.size + ' Bytes');
+        console.log('##vso[task.uploadfile]' + path.join(os.tmpdir(), "TestSelector.log"));
     }
 }
 
