@@ -11,6 +11,9 @@ param()
 # .\_build\Tasks\PublishSymbols\PublishSymbols.ps1
 
 Trace-VstsEnteringInvocation $MyInvocation
+
+$ErrorActionPreference = "Stop"
+
 try {
     # Import the localized strings.
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
