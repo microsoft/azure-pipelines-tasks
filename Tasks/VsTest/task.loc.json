@@ -403,7 +403,7 @@
       "name": "rerunFailedThreshold",
       "type": "string",
       "label": "ms-resource:loc.input.label.rerunFailedThreshold",
-      "defaultValue": "10",
+      "defaultValue": "30",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.rerunFailedThreshold",
       "groupName": "executionOptions",
