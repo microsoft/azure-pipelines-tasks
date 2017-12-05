@@ -181,13 +181,13 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
 
     if (testConfiguration.rerunFailedTests) {
-        testConfiguration.rerunFailedThreshold = 10;
+        testConfiguration.rerunFailedThreshold = 30;
         testConfiguration.rerunMaxAttempts = 3; //default values incase of error
 
         const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
         const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
 
-        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold < 100) {
+        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
             testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
             console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
         } else {
@@ -211,7 +211,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug("Trying VsTest installed by tools installer.");
             ci.publishEvent( { subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) } );
-            
+
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
 
             // if Tools installer is not there throw.
@@ -373,7 +373,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
 
 function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
     const toolsInstallerConfiguration = {} as models.ToolsInstallerConfiguration;
-    
+
     tl.debug("Path to VsTest from tools installer: " + tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable));
     toolsInstallerConfiguration.vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
 
