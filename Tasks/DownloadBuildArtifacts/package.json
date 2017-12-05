@@ -15,10 +15,10 @@
   "bugs": {
     "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",  
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "0.9.20",
     "vso-node-api": "^6.2.5-preview",
-    "artifact-engine": "0.1.0"
+    "artifact-engine": "0.1.5"
   }
 }

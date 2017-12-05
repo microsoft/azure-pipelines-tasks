@@ -37,6 +37,9 @@ export interface TestConfigurations {
     taskInstanceIdentifier: string;
     runUITests: boolean;
     ignoreTestFailures: string;
+    rerunFailedTests: boolean;
+    rerunFailedThreshold: number;
+    rerunMaxAttempts: number;
     toolsInstallerConfig: ToolsInstallerConfiguration;
 }
 
@@ -64,7 +67,11 @@ export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
     responseFile: string;
+    isResponseFileRun: boolean;
+    responseSupplementryFile: string;
+    vstestArgsFile: string;
     responseFileSupported: boolean;
+    publishTestResultsInTiaMode: boolean;
 }
 
 export interface TiaConfiguration {

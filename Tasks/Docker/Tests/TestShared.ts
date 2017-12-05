@@ -5,7 +5,9 @@ export let TestEnvVars = {
     action: "__command__",
     containerType: "__container_type__",
     qualifyImageName: "__qualifyImageName__",
-    includeLatestTag: "__includeLatestTag__"
+    includeLatestTag: "__includeLatestTag__",
+    imageName: "__imageName__",
+    additionalImageTags: "__additionalImageTags__"
 };
 
 export let OperatingSystems = {

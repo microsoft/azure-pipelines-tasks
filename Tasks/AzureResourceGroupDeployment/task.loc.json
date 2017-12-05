@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 2,
-    "Patch": 14
+    "Patch": 15
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -57,7 +57,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "Create Or Update Resource Group": "Create or update resource group",
-        "Select Resource Group": "Select resource group",
+        "Select Resource Group": "Configure with deployment group agent",
         "Start": "Start virtual machines",
         "Stop": "Stop virtual machines",
         "StopWithDeallocate": "Stop and deallocate virtual machines",

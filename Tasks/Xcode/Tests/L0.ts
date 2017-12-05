@@ -416,7 +416,7 @@ describe('Xcode L0 Suite', function () {
             'PlistBuddy add method should have run.');
 
         //export
-        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' + 
+        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
 
@@ -452,15 +452,44 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add provisioningProfiles:com.vsts.test.myApp string Bob _XcodeTaskExportOptions.plist"),
             'PlistBuddy add provisioningProfiles:com.vsts.test.myApp should have run.');
-    
+
         //export
-        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' + 
+        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 18, 'Should have run \"PlistBuddy -c Add...\" four times, and 14 other command lines.');
+
+        done();
+    });
+
+    it('Task defaults - v4.127.0', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0TaskDefaults_4.127.0.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        //scheme
+        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -list'),
+            'xcodebuild for listing schemes should have been run.');
+
+        //version
+        assert(tr.ran('/home/bin/xcodebuild -version'),
+            'xcodebuild for version should have been run.');
+
+        //build
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme funScheme build ' +
+            'CODE_SIGNING_ALLOWED=NO'),
+            'xcodebuild for building the ios project/workspace should have been run.');
+
+        assert(tr.invokedToolCount == 3, 'should have run xcodebuild for scheme list, version and build.');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });

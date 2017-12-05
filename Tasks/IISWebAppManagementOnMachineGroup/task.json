@@ -15,7 +15,7 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 4,
+        "Minor": 5,
         "Patch": 4
     },
     "minimumAgentVersion": "2.111.0",
@@ -76,6 +76,14 @@
         }
     ],
     "inputs": [
+        {
+            "name": "EnableIIS",
+            "type": "boolean",
+            "label": "Enable IIS",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Check this if you want to install IIS on the machine."
+        },
         {
             "name": "IISDeploymentType",
             "type": "pickList",

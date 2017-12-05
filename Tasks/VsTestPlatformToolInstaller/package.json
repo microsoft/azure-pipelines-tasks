@@ -1,6 +1,6 @@
 {
     "name": "vstestplatform-tool-installer",
-    "version": "0.1.4",
+    "version": "1.0.4",
     "description": "Visual Studio Test Platform Installer",
     "main": "vstestplatformtoolInstaller.js",
     "scripts": {

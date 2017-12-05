@@ -16,6 +16,10 @@ import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureSto
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
+var packagejson = require('./package.json');
+
+const area: string = 'JenkinsDownloadArtifacts';
+
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
 
@@ -36,6 +40,41 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
 
     return downloaderOptions;
+}
+
+function getDefaultProps() {
+    return {
+        serverurl: tl.getVariable('System.TEAMFOUNDATIONSERVERURI'),
+        releaseurl: tl.getVariable('Release.ReleaseWebUrl'),
+        releaseid: tl.getVariable('Release.ReleaseId'),
+        builduri: tl.getVariable('Build.BuildUri'),
+        buildid: tl.getVariable('Build.Buildid'),
+        jobid: tl.getVariable('System.Jobid'),
+        agentVersion: tl.getVariable('Agent.Version'),
+        version: packagejson.version
+    };
+}
+
+function publishEvent(feature, properties: any): void {
+    try {
+        var splitVersion = (process.env.AGENT_VERSION || '').split('.');
+        var major = parseInt(splitVersion[0] || '0');
+        var minor = parseInt(splitVersion[1] || '0');
+        let telemetry = '';
+        if (major > 2 || (major == 2 && minor >= 120)) {
+            telemetry = `##vso[telemetry.publish area=${area};feature=${feature}]${JSON.stringify(Object.assign(getDefaultProps(), properties))}`;
+        }
+        else {
+            if (feature === 'reliability') {
+                let reliabilityData = properties;
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + packagejson.version + ";]" + reliabilityData.errorMessage
+            }
+        }
+        console.log(telemetry);;
+    }
+    catch (err) {
+        tl.warning("Failed to log telemetry, error: " + err);
+    }
 }
 
 async function doWork() {
@@ -84,7 +123,8 @@ async function doWork() {
             };
 
             var handler = new handlers.BasicCredentialHandler(username, password);
-            getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+            
+            await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
         }
 
         console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
@@ -110,6 +150,7 @@ async function doWork() {
     } catch (err) {
         tl.debug(err.message);
         tl._writeError(err);
+        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }

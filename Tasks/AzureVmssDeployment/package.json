@@ -3,6 +3,6 @@
   "main": "main.js",
   "dependencies": {
     "vsts-task-lib": "2.0.5",
-    "artifact-engine": "0.1.0"
+    "artifact-engine": "0.1.4"
   }
 }
