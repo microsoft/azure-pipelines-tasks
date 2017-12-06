@@ -21,10 +21,15 @@ process.env['Agent.TempDirectory'] = 'temppppppppppp';
 const nugetToolPath = path.join(__dirname, '..', 'nuget.exe');
 
 const testPlatformVersion = '15.6.0-preview-20171108-02';
-const downloadPath = process.env['Agent.TempDirectory'];
+let downloadPath = process.env['Agent.TempDirectory'];
+downloadPath = path.join(downloadPath, 'VsTest');
 
 const listPreReleaseCommand = nugetToolPath + ' list Microsoft.TestPlatform -PreRelease -Source https://api.nuget.org/v3/index.json';
-const downloadNugetPackageCommand = nugetToolPath + 'install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload';
+
+const downloadNugetPackageCommand = nugetToolPath + ' install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload';
+
+console.log(downloadNugetPackageCommand);
+console.log('D:\\OtherRepos\\vsts-tasks4\\_build\\Tasks\\VisualStudioTestPlatformInstaller\\nuget.exe install Microsoft.TestPlatform -Version 15.6.0-preview-20171108-02 -Source https://api.nuget.org/v3/index.json -OutputDirectory temppppppppppp\\VsTest -NoCache -DirectDownload')
 
 const listPreReleaseCommandOutput = 'Microsoft.TestPlatform 15.6.0-preview-20171108-02\r\nMicrosoft.TestPlatform.Build 15.5.0\r\nMicrosoft.TestPlatform.CLI 15.5.0\r\nMicrosoft.TestPlatform.ObjectModel 15.5.0\r\nMicrosoft.TestPlatform.Portable 15.6.0-preview-20171108-02\r\nMicrosoft.TestPlatform.TestHost 15.5.0\r\nMicrosoft.TestPlatform.TranslationLayer 15.5.0';
 
@@ -83,7 +88,6 @@ const tl = require('vsts-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 
 tlClone.getVariable = function(variable: string) {
-    console.log('wegwegewgewg');
     return process.env[variable];
 };
 
