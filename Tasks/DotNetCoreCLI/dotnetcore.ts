@@ -1,4 +1,5 @@
 import tl = require("vsts-task-lib/task");
+import tr = require("vsts-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
@@ -77,7 +78,9 @@ export class dotNetExe {
             }
             dotnet.line(dotnetArguments);
             try {
-                var result = await dotnet.exec();
+                var result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: path.dirname(projectFile)
+                });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
                 tl.error(err);
