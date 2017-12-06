@@ -1,4 +1,3 @@
-import { setTimeout } from 'timers';
 import msRestAzure = require('./azure-arm-common');
 import webClient = require('./webClient');
 import azureServiceClient = require('./AzureServiceClient');
@@ -6,6 +5,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import * as querystring from 'querystring';
 var parseString = require('xml2js').parseString;
+import {KuduService} from './azure-app-service-kudu';
 import {
     AzureAppServiceConfigurationDetails,
     AzureAppServicePublishingProfile,
@@ -60,12 +60,11 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
         var resourceGroupName: string = await this.getResourceGroupName();
         var slotUrl: string = !!this._slotName ? `/slots/${this._slotName}` : '';
         var httpRequest = new webClient.WebRequest();
+        var configSubUrl = AzureAppServiceConfigurations[configurationType].GET.subUrl;
         httpRequest.method = AzureAppServiceConfigurations[configurationType].GET.method;
-        httpRequest.uri = this.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/{slotUrl}/{ConfigSubUrl}', {
+        httpRequest.uri = this.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/${slotUrl}/${configSubUrl}`, {
             '{ResourceGroupName}': resourceGroupName,
-            '{AppServiceName}': this._appServiceName,
-            '{slotUrl}': slotUrl,
-            '{ConfigSubUrl}': AzureAppServiceConfigurations[configurationType].GET.subUrl
+            '{AppServiceName}': this._appServiceName
         }, null, '2016-08-01');
         this.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             if(response.statusCode == 200) {
@@ -89,13 +88,12 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
         }
         var resourceGroupName: string = await this.getResourceGroupName();
         var slotUrl: string = !!this._slotName ? `/slots/${this._slotName}` : '';
+        var configSubUrl = AzureAppServiceConfigurations[configurationType].UPDATE.subUrl;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = configurationSettings.UPDATE.method;
-        httpRequest.uri = this.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/{slotUrl}/{ConfigSubUrl}', {
+        httpRequest.uri = this.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/${slotUrl}/${configSubUrl}`, {
             '{ResourceGroupName}': resourceGroupName,
-            '{AppServiceName}': this._appServiceName,
-            '{slotUrl}': slotUrl,
-            '{ConfigSubUrl}': AzureAppServiceConfigurations[configurationType].UPDATE.subUrl
+            '{AppServiceName}': this._appServiceName
         }, null, '2016-08-01');
         httpRequest.body = JSON.stringify(configDetails);
         this.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
@@ -185,9 +183,12 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
      * @param virtualApplicationPath virtual application path
      */
     public async getPhysicalPath(virtualApplicationPath: string) {
+        virtualApplicationPath = virtualApplicationPath[0] == "/" ? virtualApplicationPath : "/" + virtualApplicationPath;
         var dataDeferred = Q.defer<any>();
-        var physicalPath = 'site/wwwroot';
-        this.getConfigurationDetails(AzureAppServiceConfigurations["web"].name).then((configurationDetails) => {
+        var physicalPath = '/site/wwwroot';
+        this.getConfigurationDetails("web").then((configurationDetails) => {
+            console.log(configurationDetails);
+            console.log(configurationDetails.properties);
             if(configurationDetails.properties && configurationDetails.properties["virtualApplications"]) {
                 for(var virtualApplication of configurationDetails.properties["virtualApplications"]) {
                     if(virtualApplication.virtualPath.toLowerCase() == virtualApplicationPath.toLowerCase()) {
@@ -207,6 +208,69 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
         return dataDeferred.promise;
     }
 
+    public async start() {
+        let dataDeferred = Q.defer<any>();
+        var webRequest = new webClient.WebRequest();
+        webRequest.method = 'POST';
+        var resourceGroupName: string = await this.getResourceGroupName();
+        var slotUrl: string = !!this._slotName ? `/slots/${this._slotName}` : '';
+        webRequest.uri = this.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/${slotUrl}/start`, {
+            '{ResourceGroupName}': resourceGroupName,
+            '{AppServiceName}': this._appServiceName
+        }, null, '2016-08-01');
+        tl.debug(`Starting ${this.getFormattedAppName()}`);
+        this.beginRequest(webRequest).then(async (response: webClient.WebResponse) => {
+            tl.debug(`Started ${this.getFormattedAppName()}`);
+            dataDeferred.resolve(response);
+        }, (error) => {
+            dataDeferred.reject(error);
+        });
+
+        return dataDeferred.promise;
+    }
+
+    public async stop() {
+        let dataDeferred = Q.defer<any>();
+        var webRequest = new webClient.WebRequest();
+        webRequest.method = 'POST';
+        var resourceGroupName: string = await this.getResourceGroupName();
+        var slotUrl: string = !!this._slotName ? `/slots/${this._slotName}` : '';
+        webRequest.uri = this.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/{slotUrl}/stop', {
+           '{ResourceGroupName}': resourceGroupName,
+           '{AppServiceName}': this._appServiceName,
+           '{slotUrl}': slotUrl
+        }, null, '2016-08-01');
+
+        this.beginRequest(webRequest).then(async (response: webClient.WebResponse) => {
+           dataDeferred.resolve(response);
+        }, (error) => {
+            dataDeferred.reject(error);
+        });
+
+        return dataDeferred.promise;
+   }
+
+   public async restart() {
+    let dataDeferred = Q.defer<any>();
+    var webRequest = new webClient.WebRequest();
+    webRequest.method = 'POST';
+    var resourceGroupName: string = await this.getResourceGroupName();
+    var slotUrl: string = !!this._slotName ? `/slots/${this._slotName}` : '';
+    webRequest.uri = this.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/{slotUrl}/restart', {
+       '{ResourceGroupName}': resourceGroupName,
+       '{AppServiceName}': this._appServiceName,
+       '{slotUrl}': slotUrl
+    }, ['synchronous=true'], '2016-08-01');
+
+    this.beginRequest(webRequest).then(async (response: webClient.WebResponse) => {
+       dataDeferred.resolve(response);
+    }, (error) => {
+        dataDeferred.reject(error);
+    });
+
+    return dataDeferred.promise;
+}
+
     /**
      * Ping site to warm-up the site
      * 
@@ -219,12 +283,17 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
             httpRequest.uri = publishingProfile.destinationAppUrl;
+            tl.debug(`Warming-up ${this.getFormattedAppName()}`);
             this.beginRequest(httpRequest).then((response) => {
                 setTimeout(()=> {
+                    tl.debug(`Warmed-up ${this.getFormattedAppName()}`);
                     dataDeferred.resolve(response);
                 }, timeOut);
             }, (error) => {
+                setTimeout(()=> {
+                tl.debug(`Unable to warm-up ${this.getFormattedAppName()}`);
                 dataDeferred.resolve(error);
+            }, timeOut);
             })
         }, (error) => {
             dataDeferred.reject(error);
@@ -241,7 +310,96 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
         await this.updateConfigurationDetails(configurationType, configDetails);
     }
 
-    // Move to azure-arm-common - Azure Monitor tasks
+    public async monitorAppServiceState(state: string, timeout?: number) {
+        state = state.toLowerCase();
+        timeout = timeout ? timeout*60 : 300;
+        tl.debug(`Monitoring App Service: ${this.getFormattedAppName()} for '${state}' state`);
+        while(true) {
+            var appServiceDetails = await this.getAppDetails(true);
+            if(!appServiceDetails.properties || !appServiceDetails.properties["state"] || timeout) {
+                break;
+            }
+
+            tl.debug(`${this.getFormattedAppName} ${this._slotName} in state : ${ appServiceDetails.properties["state"]}`);
+            if(appServiceDetails.properties && appServiceDetails.properties["state"].toLowerCase === state) {
+                tl.debug(`App Service: ${this.getFormattedAppName()} changed to '${state}' state`);
+                tl.debug(`Initiating warm-up for App service: '${this.getFormattedAppName()}'`);
+                await this.pingApplicationUrl();
+                break;
+            }
+            await this.sleepForSeconds(5000);
+            timeout -= 5;
+        }
+
+    }
+
+    public async swap(slotName: string, preserveVNet?: boolean) {
+        let dataDeferred = Q.defer<any>();
+        var webRequest = new webClient.WebRequest();
+        webRequest.method = 'POST';
+        webRequest.body = JSON.stringify({
+            targetSlot: slotName,
+            preserveVnet: preserveVNet
+        });
+
+        var resourceGroupName: string = await this.getResourceGroupName();
+        var slotUrl: string = !!this._slotName ? `/slots/${this._slotName}` : '';
+        webRequest.uri = this.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{AppServiceName}/{slotUrl}/slotsswap', {
+           '{ResourceGroupName}': resourceGroupName,
+           '{AppServiceName}': this._appServiceName,
+           '{slotUrl}': slotUrl
+        }, null, '2016-08-01');
+
+        this.beginRequest(webRequest).then(async (response: webClient.WebResponse) => {
+            if(response.statusCode == 200) {
+                dataDeferred.resolve(response);
+            }
+            else if(response.statusCode == 202) {
+                try {
+                    console.log("202!!!!!");
+                    this.getLongRunningOperationResult(response, 30).then((monitorResponse) => {
+                        console.log("object");
+                        dataDeferred.resolve(monitorResponse);
+                    }, (error) => {
+                        dataDeferred.reject(error.toString());
+                    })
+                    
+                }
+                catch(error) {
+                    dataDeferred.reject(error.toString());
+                }
+            }
+            else {
+                dataDeferred.reject(JSON.stringify(response));
+            }
+        }, (error) => {
+            dataDeferred.reject(error.toString());
+        });
+        return dataDeferred.promise;
+    }
+
+    public async getKuduService() {
+        let dataDeferred = Q.defer<KuduService>();
+        this.getConfigurationDetails("publishingcredentials").then((response) => {
+            if(response.properties && response.properties["scmUri"]) {
+                var kuduService = new KuduService(response.properties["scmUri"], response.properties["publishingUserName"], response.properties["publishingPassword"]);
+                dataDeferred.resolve(kuduService);
+            }
+        }, (error) => {
+            dataDeferred.reject(error.toString());
+        })
+        return dataDeferred.promise;
+    }
+
+    public isProductionSlot(): boolean {
+        return !this._slotName;
+    }
+
+    public getName() {
+        return this._appServiceName;
+    }
+
+    // Move to azure-arm-common
     private async getResourceID() {
         var dataDeferred = Q.defer<any>();
         var httpRequest = new webClient.WebRequest();
@@ -274,6 +432,15 @@ export class AzureAppService extends azureServiceClient.ServiceClient {
         });
 
         return dataDeferred.promise;
+    }
+
+    private getFormattedAppName() {
+        return `App Service: ${this._appServiceName}-${this._slotName ? this._slotName : ''} '`;
+    }
+    private sleepForSeconds(sleepDurationInSeconds): Promise<any> {
+        return new Promise((resolve, reeject) => {
+            setTimeout(resolve, sleepDurationInSeconds * 1000);
+        });
     }
 }
 
@@ -345,7 +512,7 @@ export const AzureAppServiceConfigurations = {
         }
     },
     publishingcredentials: {
-        name: "metadata",
+        name: "publishingcredentials",
         GET: {
             method: "POST",
             subUrl: "config/publishingcredentials/list"
@@ -366,11 +533,11 @@ export const AzureAppServiceConfigurations = {
         name: "connectionstrings",
         GET: {
             method: "GET",
-            subUrl: "/"
+            subUrl: "config/connectionstrings"
         },
         UPDATE: {
             method: "PUT",
-            subUrl: "/"
+            subUrl: "config/connectionstrings"
         }
     },
     web: {

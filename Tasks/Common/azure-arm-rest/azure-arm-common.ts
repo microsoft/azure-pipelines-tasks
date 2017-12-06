@@ -212,7 +212,8 @@ export class AzureRMEndpoint {
             }
         }, (error) => {
             dataDeferred.reject(error);
-        })
+        });
+        
         return dataDeferred.promise;
     }
 }

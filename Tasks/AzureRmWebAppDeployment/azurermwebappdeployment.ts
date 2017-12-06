@@ -67,15 +67,21 @@ async function run() {
         console.log(await azureAppService.getAppDetails());
         console.log(await azureAppService.getPublishingProfile());
         console.log(await azureAppService.getConfigurationDetails("metadata"));
-        console.log(await azureAppService.getPhysicalPath("/vinca"));
+        console.log(await azureAppService.getPhysicalPath("/myapp"));
         console.log(await azureAppService.pingApplicationUrl(5000));
         console.log(await azureAppService.patchConfigurationDetails("appsettings", {"CCC": "DDD", "AA": "VINCA"}));
-        var kuduService = new KuduService(kududa.properties["scmUri"], kududa.properties["publishingUserName"], kududa.properties["publishingPassword"]);
+        console.log(await azureAppService.stop());
+        console.log(await azureAppService.monitorAppServiceState("Stopped"));
+        console.log(await azureAppService.start());
+        console.log(await azureAppService.monitorAppServiceState("Running"));
+        console.log(await azureAppService.restart());
+        console.log(await azureAppService.swap('Hello', false));
+        var kuduService = await azureAppService.getKuduService();
         console.log(await kuduService.createPath("/site/vinca/wwwroot"));
         console.log(await kuduService.getContinuousWebJobs());
         console.log("************************* END ****************************");
         var appService1: AzureAppService = new AzureAppService(endPoint, "vincalinux", resourceGroupName, slotName, webAppKind);
-
+        
         if (isLinuxWebApp && isBuiltinLinuxWebApp) {
             linuxWebDeployPkg = tl.getInput('BuiltinLinuxPackage', true);
             runtimeStack = tl.getInput('RuntimeStack', true);

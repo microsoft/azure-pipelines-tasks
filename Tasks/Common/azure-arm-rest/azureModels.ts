@@ -220,6 +220,7 @@ export interface AzureAppServiceConfigurationDetails {
     name: string;
     type: string;
     tags: {[key: string]: string};
+    kind?: string;
     properties?: {[key: string]: any};
 }
 
