@@ -64,7 +64,8 @@ try {
     }
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
-    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)
+    [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
+    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
 
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
@@ -72,6 +73,10 @@ try {
         if ($SearchPattern.Contains("`n")) {
             [string[]]$SearchPattern = $SearchPattern -split "`n"
         }
+        if (-not $SymbolsFolder) { # Both SymbolsFolder and Build.SourcesDirectory are not present 
+            throw "Please provide value for SymbolFolder."
+        }
+
         $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
         $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
 
