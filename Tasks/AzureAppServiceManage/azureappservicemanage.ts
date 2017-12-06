@@ -1,6 +1,9 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
+import { AzureAppService, AzureAppServiceConfigurations } from  'azure-arm-rest/azure-app-service';
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-common';
+import { KuduService } from 'azure-arm-rest/azure-app-service-kudu';
 
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/utility.js');
@@ -63,7 +66,7 @@ async function run() {
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
-        var slotName: string = tl.getInput('Slot', false);
+        var slotName: string = specifySlotFlag ? tl.getInput('Slot', false) : null;
         var appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
         var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
@@ -77,20 +80,16 @@ async function run() {
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
 
-        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
-
-        if(slotName && slotName.toLowerCase() === 'production') {
-            specifySlotFlag = false;
-            slotName = null;
-        }
-
-        if(resourceGroupName === null) {
-            resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
-        }
+        var endPoint = await (new AzureRMEndpoint(connectedServiceName)).getEndpoint();
+        
         switch(action) {
             case "Start Azure App Service": {
-                console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
-                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                var appService = new AzureAppService(endPoint, webAppName, resourceGroupName, slotName);
+                console.log("Starting app service");
+                await appService.start();
+                console.log("Started app service");
+                await appService.monitorAppServiceState("Running");
+                console.log("monitored Started app service");
                 break;
             }
             case "Stop Azure App Service": {
