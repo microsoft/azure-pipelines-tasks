@@ -12,10 +12,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 127,
+        "Minor": 128,
         "Patch": 0
     },
-    "preview": true,
     "satisfies": ["Java"],
     "demands": [],
     "groups": [
