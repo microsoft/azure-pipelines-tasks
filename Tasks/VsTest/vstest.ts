@@ -79,8 +79,8 @@ export function startTest() {
             uploadVstestDiagFile();
             if (vstestConfig.tiaConfig.tiaEnabled)
             {
-                uploadTestImpactZip();
-                uploadTestImpactLogs();
+                uploadFile(path.join(os.tmpdir(), "TestImpactZip.zip"));
+                uploadFile(path.join(os.tmpdir(), "TestSelector.log"));
             }
             if (taskResult == tl.TaskResult.Failed) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
@@ -402,6 +402,14 @@ function uploadVstestDiagFile(): void {
         let stats = fs.statSync(vstestConfig.vstestDiagFile);
         tl.debug('Diag file exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]' + vstestConfig.vstestDiagFile);
+    }
+}
+
+function uploadFile(file: string): void {
+    if (utils.Helper.pathExistsAsFile(file)) {
+        let stats = fs.statSync(file);
+        tl.debug('File exists. Size: ' + stats.size + ' Bytes');
+        console.log('##vso[task.uploadfile]' + file);
     }
 }
 
