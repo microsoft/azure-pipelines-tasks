@@ -122,7 +122,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     // Set the task variable so that the VsTest task can consume this path
     tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
     console.log(tl.loc('InstallationSuccessful', toolPath));
-    tl.debug('Set variable VsTestToolsInstallerInstalledToolLocation value to ' + toolPath);
+    tl.debug(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${toolPath}.`);
 }
 
 function getLatestPackageVersionNumber(includePreRelease: boolean): string {

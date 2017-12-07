@@ -52,7 +52,16 @@ tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunn
 // Mock task-tool-lib
 const taskToolLibMock: any = {};
 taskToolLibMock.findLocalTool = function(tool: string, version: string): string {
-    return process.env[constants.findLocalToolFirstCallReturnValue]? process.env[constants.findLocalToolFirstCallReturnValue]: process.env[constants.findLocalToolSecondCallReturnValue];
+    if (process.env[constants.findLocalToolFirstCallReturnValue]) {
+        tl.debug(`Cache hit for ${version}`);
+        return process.env[constants.findLocalToolFirstCallReturnValue];
+    } else if (process.env[constants.findLocalToolSecondCallReturnValue]) {
+        tl.debug(`Cache hit for ${version}`);
+        return process.env[constants.findLocalToolSecondCallReturnValue];
+    }
+    tl.debug(`Cache miss for version ${version}`);
+
+    return null;
 };
 taskToolLibMock.isExplicitVersion = function(version: string): boolean {
     return true;
