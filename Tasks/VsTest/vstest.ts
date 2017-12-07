@@ -399,9 +399,7 @@ function getVstestTestsList(vsVersion: number): string {
 
 function uploadVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && utils.Helper.pathExistsAsFile(vstestConfig.vstestDiagFile)) {
-        let stats = fs.statSync(vstestConfig.vstestDiagFile);
-        tl.debug('Diag file exists. Size: ' + stats.size + ' Bytes');
-        console.log('##vso[task.uploadfile]' + vstestConfig.vstestDiagFile);
+        uploadFile(vstestConfig.vstestDiagFile);
     }
 }
 
@@ -410,22 +408,6 @@ function uploadFile(file: string): void {
         let stats = fs.statSync(file);
         tl.debug('File exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]' + file);
-    }
-}
-
-function uploadTestImpactZip(): void {
-    if (utils.Helper.pathExistsAsFile(path.join(os.tmpdir(), "TestImpactZip.zip"))) {
-        let stats = fs.statSync(path.join(os.tmpdir(), "TestImpactZip.zip"));
-        tl.debug('TestImpact zip file exists. Size: ' + stats.size + ' Bytes');
-        console.log('##vso[task.uploadfile]' + path.join(os.tmpdir(), "TestImpactZip.zip"));
-    }
-}
-
-function uploadTestImpactLogs(): void {
-    if (utils.Helper.pathExistsAsFile(path.join(os.tmpdir(), "TestSelector.log"))) {
-        let stats = fs.statSync(path.join(os.tmpdir(), "TestSelector.log"));
-        tl.debug('Test Selector log file exists. Size: ' + stats.size + ' Bytes');
-        console.log('##vso[task.uploadfile]' + path.join(os.tmpdir(), "TestSelector.log"));
     }
 }
 
