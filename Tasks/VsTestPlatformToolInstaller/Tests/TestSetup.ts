@@ -17,9 +17,15 @@ const nugetToolPath = path.join(__dirname, '..', 'nuget.exe');
 const downloadPath = process.env[constants.downloadPath];
 
 // Construct commands to be mocked
-const listPreReleaseCommand = nugetToolPath + ' list Microsoft.TestPlatform -PreRelease -Source https://api.nuget.org/v3/index.json';
+const listPackagesCommand = nugetToolPath + ' list Microsoft.TestPlatform ' + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '') + '-Source https://api.nuget.org/v3/index.json';
 const downloadNugetPackageCommand = nugetToolPath + ' install ' + constants.packageName + ' -Version ' + expectedTestPlatformVersion + ' -Source ' + constants.packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload';
-const listPreReleaseCommandOutput = 'Microsoft.TestPlatform 15.6.0-preview-20171108-02\r\nMicrosoft.TestPlatform.Build 15.5.0\r\nMicrosoft.TestPlatform.CLI 15.5.0\r\nMicrosoft.TestPlatform.ObjectModel 15.5.0\r\nMicrosoft.TestPlatform.Portable 15.6.0-preview-20171108-02\r\nMicrosoft.TestPlatform.TestHost 15.5.0\r\nMicrosoft.TestPlatform.TranslationLayer 15.5.0';
+let listPackagesCommandOutput;
+
+if (process.env[constants.listPackagesOutput] !== undefined) {
+    listPackagesCommandOutput = process.env[constants.listPackagesOutput];
+} else {
+    listPackagesCommandOutput = 'Microsoft.TestPlatform 15.6.0' + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-preview-20171108-02' : '') + '\r\nMicrosoft.TestPlatform.Build 15.5.0\r\nMicrosoft.TestPlatform.CLI 15.5.0\r\nMicrosoft.TestPlatform.ObjectModel 15.5.0\r\nMicrosoft.TestPlatform.Portable 15.6.0-preview-20171108-02\r\nMicrosoft.TestPlatform.TestHost 15.5.0\r\nMicrosoft.TestPlatform.TranslationLayer 15.5.0';
+}
 
 // Construct the answers object
 const answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -34,9 +40,9 @@ const answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 // Provide answers for task mock
 answers.which[`${nugetToolPath}`] = nugetToolPath;
 answers.checkPath[`${nugetToolPath}`] = true;
-answers.exec[`${listPreReleaseCommand}`] = {
+answers.exec[`${listPackagesCommand}`] = {
     'code': +process.env[constants.listPackagesReturnCode],
-    'stdout': listPreReleaseCommandOutput,
+    'stdout': listPackagesCommandOutput,
     'stderr': ''
 };
 answers.exec[`${downloadNugetPackageCommand}`] = {
@@ -52,14 +58,22 @@ tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunn
 // Mock task-tool-lib
 const taskToolLibMock: any = {};
 taskToolLibMock.findLocalTool = function(tool: string, version: string): string {
-    if (process.env[constants.findLocalToolFirstCallReturnValue]) {
+
+    if (process.env[constants.findLocalToolFirstCallReturnValue] !== constants.secondCacheLookup && process.env[constants.findLocalToolFirstCallReturnValue]) {
         tl.debug(`Cache hit for ${version}`);
-        return process.env[constants.findLocalToolFirstCallReturnValue];
-    } else if (process.env[constants.findLocalToolSecondCallReturnValue]) {
+        const retValue = process.env[constants.findLocalToolFirstCallReturnValue];
+        process.env[constants.findLocalToolFirstCallReturnValue] = constants.secondCacheLookup;
+        return retValue;
+    }
+
+    if (process.env[constants.findLocalToolFirstCallReturnValue] === constants.secondCacheLookup && process.env[constants.findLocalToolSecondCallReturnValue]) {
         tl.debug(`Cache hit for ${version}`);
         return process.env[constants.findLocalToolSecondCallReturnValue];
     }
-    tl.debug(`Cache miss for version ${version}`);
+
+    process.env[constants.findLocalToolFirstCallReturnValue] = constants.secondCacheLookup;
+
+    tl.debug(`Cache miss for ${version}`);
 
     return null;
 };

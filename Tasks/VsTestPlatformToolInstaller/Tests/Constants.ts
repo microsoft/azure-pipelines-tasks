@@ -10,3 +10,5 @@ export const findLocalToolFirstCallReturnValue = 'findLocalToolFirstCallReturnVa
 export const findLocalToolSecondCallReturnValue = 'findLocalToolSecondCallReturnValue';
 export const listPackagesReturnCode = 'listPackagesReturnCode';
 export const downloadPackageReturnCode = 'downloadPackageReturnCode';
+export const secondCacheLookup = 'SecondCacheLookup';
+export const listPackagesOutput = 'listPackagesOutput';
