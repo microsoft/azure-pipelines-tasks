@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 3,
-    "Patch": 30
+    "Minor": 4,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -32,6 +32,12 @@
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
       "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+    },
+    {
+      "name": "AdditionalDeploymentOptionsForLinux",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForLinux",
+      "isExpanded": false,
+      "visibleRule": "WebAppKind = applinux"
     },
     {
       "name": "output",
@@ -327,6 +333,40 @@
       "defaultValue": "",
       "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
+    },
+    {
+      "name": "ScriptTypeForLinux",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptTypeForLinux",
+      "defaultValue": "",
+      "options": {
+        "": "Select deployment script type (inline or file)",
+        "Inline Script": "Inline Script",
+        "File Path": "Script File Path"
+      },
+      "groupName": "AdditionalDeploymentOptionsForLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptTypeForLinux"
+    },
+    {
+      "name": "InlineScriptForLinux",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScriptForLinux",
+      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+      "groupName": "AdditionalDeploymentOptionsForLinux",
+      "visibleRule": "ScriptTypeForLinux == Inline Script",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptPathForLinux",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPathForLinux",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptionsForLinux",
+      "visibleRule": "ScriptTypeForLinux == File Path"
     },
     {
       "name": "ScriptType",

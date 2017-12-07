@@ -39,6 +39,9 @@ async function run() {
         var scriptType: string = tl.getInput('ScriptType', false);
         var inlineScript: string = tl.getInput('InlineScript', false);
         var scriptPath: string = tl.getPathInput('ScriptPath', false);
+        var scriptTypeForLinux: string = tl.getInput('ScriptTypeForLinux', false);
+        var inlineScriptForLinux: string = tl.getInput('InlineScriptForLinux', false);
+        var scriptPathForLinux: string = tl.getPathInput('ScriptPathForLinux', false);
         var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
         var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
         var webAppKind = tl.getInput('WebAppKind', false);
@@ -192,6 +195,9 @@ async function run() {
             if(!isLinuxWebApp && scriptType) {
                 var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
                 await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+            } else if(isBuiltinLinuxWebApp && scriptTypeForLinux) {
+                var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
+                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptTypeForLinux, inlineScriptForLinux, scriptPathForLinux, takeAppOfflineFlag, isLinuxWebApp);
             }
         }
 
