@@ -1,6 +1,11 @@
 {
     "common": [
         {
+            "module": "../Common/utility-common",
+            "type": "node",
+            "compile": true
+        },
+        {
             "module": "../Common/nuget-task-common",
             "type": "node",
             "compile": true
