@@ -64,12 +64,12 @@ function UploadTestDrop($testdrop, $src)
 
     $responseFileArgs = [String]::Format("/@:""{0}""", $responseFile)
     try {
-        Write-Verbose "Calling AzCopy tool with file $responseFile" -Verbose 
+        Write-Verbose "Calling AzCopy tool" -Verbose 
         Invoke-Tool -Path $azcopy -Arguments $responseFileArgs
     }
     finally {
         [System.IO.File]::Delete($responseFile)
-        Write-Verbose "Azcopy completed.. Deleted file $responseFile" -Verbose 
+        Write-Verbose "Azcopy completed.." -Verbose 
     }
 }
 
