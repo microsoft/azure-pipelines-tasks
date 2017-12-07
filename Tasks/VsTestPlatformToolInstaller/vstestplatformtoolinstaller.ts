@@ -65,17 +65,18 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
             testPlatformVersion = getLatestPackageVersionNumber(includePreRelease);
             if (testPlatformVersion === null) {
                 tl.warning(tl.loc('RequiredVersionNotListed'));
-                tl.debug('Looking for latest available version in cache.');
+                tl.debug('Looking for latest stable available version in cache.');
                 ci.publishEvent('RequestedVersionNotListed', { action: 'getLatestAvailableInCache' } );
+                // Look for the latest stable version available in the cache
                 testPlatformVersion = 'x';
             } else {
-                tl.debug(`Found the latest version to be ${testPlatformVersion}`);
+                tl.debug(`Found the latest version to be ${testPlatformVersion}.`);
                 ci.publishEvent('RequestedVersionListed', { action: 'lookInCacheForListedVersion', version: testPlatformVersion } );
             }
         } catch (error) {
-            // Failed to list available versions, look for the latest version available in the cache
+            // Failed to list available versions, look for the latest stable version available in the cache
             tl.warning(tl.loc('FailedToListAvailablePackagesFromNuget'));
-            tl.debug('Looking for latest available version in cache.');
+            tl.debug('Looking for latest stable version available version in cache.');
             ci.publishEvent('RequestedVersionListFailed', { action: 'getLatestAvailableInCache', error: error } );
             testPlatformVersion = 'x';
         }
@@ -143,6 +144,7 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
 
     if (result.code !== 0) {
+        tl.debug(`Nuget.exe returned error code: ${result.code}`);
         throw new Error('Listing packages failed. Nuget.exe returned ' + result.code);
     } else if (!(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
         tl.warning(result.stderr);
