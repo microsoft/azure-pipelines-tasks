@@ -82,7 +82,7 @@ let a: any = <any>{
     },
     "exist": {
         "/tmp/tempdir/100/.docker-compose.12345.yml" : true,
-        "/tmp/tempdir/100/.docker-compose.override.yml" : true
+        "/tmp/tempdir/100/docker-compose.override.yml" : true
     } 
 };
 
