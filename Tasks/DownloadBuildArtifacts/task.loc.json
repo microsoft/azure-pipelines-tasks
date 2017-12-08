@@ -9,8 +9,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 61
+    "Minor": 128,
+    "Patch": 1
   },
   "groups": [
     {
@@ -99,10 +99,14 @@
     },
     {
       "name": "itemPattern",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.itemPattern",
       "defaultValue": "**",
       "required": false,
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
       "visibleRule": "downloadType == specific",
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
