@@ -8,7 +8,7 @@ import shell = require('shelljs');
 import Q = require('q');
 import request = require('request');
 
-import * as handlers from "artifact-engine/Providers/Handlers"
+import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
 
@@ -148,8 +148,7 @@ async function doWork() {
         }
 
     } catch (err) {
-        tl.debug(err.message);
-        tl._writeError(err);
+        tl.error(err);
         publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }

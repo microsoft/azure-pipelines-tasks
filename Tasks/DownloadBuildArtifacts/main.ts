@@ -9,7 +9,7 @@ import { WebApi, getHandlerFromToken } from 'vso-node-api/WebApi';
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
-import * as webHandlers from 'artifact-engine/Providers/Handlers';
+import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
 
 var packagejson = require('./package.json');
 
@@ -83,7 +83,7 @@ async function main(): Promise<void> {
             });
 
             if (build) {
-                if (build.definition.id !== parseInt(definitionId)) {
+                if (!build.definition || build.definition.id !== parseInt(definitionId)) {
                     reject(tl.loc("BuildIdBuildDefinitionMismatch", buildId, definitionId));
                     return;
                 }
