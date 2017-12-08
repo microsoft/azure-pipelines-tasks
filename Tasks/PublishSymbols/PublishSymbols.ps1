@@ -65,7 +65,8 @@ try {
     }
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
-    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)
+    [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
+    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
 
     if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
         # Get the PDB file paths.
@@ -73,6 +74,10 @@ try {
         if ($SearchPattern.Contains("`n")) {
             [string[]]$SearchPattern = $SearchPattern -split "`n"
         }
+        if (-not $SymbolsFolder) { # Both SymbolsFolder and Build.SourcesDirectory are not present 
+            throw "Please provide value for SymbolFolder."
+        }
+
         $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
         $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
 
@@ -131,15 +136,51 @@ try {
 
         Write-Host "Symbol Request Name = $RequestName"
 
-        [string]$SymbolServiceUri = (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require) -replace ".visualstudio.com",".artifacts.visualstudio.com"
-        $SymbolServiceUri = $SymbolServiceUri.TrimEnd('/')
+        [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
+        [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
+        [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
 
-        $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
-        [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
+        if ( $asAccountName ) {
+            if ( $PersonalAccessToken ) {
+                if ( $UseAad ) {
+                    throw "If AccountName is specified, then only one of PAT or UseAad should be present"
+                }
 
-        if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
-            throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+                $variableInfo = Get-VstsTaskVariableInfo | Where-Object { $_.Name -eq "ArtifactServices.Symbol.PAT" }
+
+                if ($variableInfo -and -not $variableInfo.Secret) {
+                    throw "The PAT needs to be specified as a secret"
+                }
+            }
+            elseif ( -not $UseAad ) {
+                throw "If AccountName is specified, then either PAT or UseAad needs to be present"
+            }
+
+            [string]$SymbolServiceUri = "https://" + [System.Web.HttpUtility]::UrlEncode($asAccountName) + ".artifacts.visualstudio.com"
         }
+        else {
+            if ( $PersonalAccessToken -or $UseAad ) {
+                throw "If PAT or UseAad is specified, then AccountName needs to be present"
+            }
+
+            [string]$SymbolServiceUri = (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require)
+
+            if (-not $SymbolServiceUri.Contains(".visualstudio.com")) {
+                $SymbolServiceUri = $SymbolServiceUri.Replace(".vsts.me",".artifacts.vsts.me") # Handle Devfabric scenario
+            }
+            else {
+                $SymbolServiceUri = $SymbolServiceUri.Replace(".visualstudio.com",".artifacts.visualstudio.com")
+            }
+
+            $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
+            [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
+
+            if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
+                throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+            }
+        }
+
+        [string]$SymbolServiceUri = $SymbolServiceUri.TrimEnd('/')
 
         [string]$tmpFileName = [IO.Path]::GetTempFileName()
         [string]$SourcePath = Resolve-Path -LiteralPath $SymbolsFolder
