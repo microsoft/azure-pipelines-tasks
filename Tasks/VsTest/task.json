@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 2,
-        "Patch": 10
+        "Minor": 3,
+        "Patch": 2
     },
     "demands": [
         "vstest"
@@ -389,6 +389,35 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "rerunFailedTests",
+            "type": "boolean",
+            "label": "Rerun failed tests",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Selecting this option will rerun any failed tests until they pass or the maximum # of attempts is reached.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "rerunFailedThreshold",
+            "type": "string",
+            "label": "Do not trigger a rerun if failure rate exceeds",
+            "defaultValue": "30",
+            "required": false,
+            "helpMarkDown": "Use this option to avoid rerunning tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures as threshold.",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true"
+        },
+        {
+            "name": "rerunMaxAttempts",
+            "type": "string",
+            "label": "Maximum # of attempts",
+            "defaultValue": "3",
+            "required": false,
+            "helpMarkDown": "Specify the maximum # of times a failed test should be retried. If a test passes before the maximum # of attempts is reached, it will not be rerun further.",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true"
         }
     ],
     "sourceDefinitions": [
@@ -493,6 +522,12 @@
         "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
         "RunTimePerBatch": "Run time per batch(sec) : %s",
         "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
+        "rerunFailedTests": "Rerun failed tests: %s",
+        "rerunFailedThreshold": "Rerun failed tests threshold: %s",
+        "invalidRerunFailedThreshold": "Invalid rerun failed tests threshold, defaulting to 30%",
+        "rerunMaxAttempts": "Rerun maximum attempts: %s",
+        "invalidRerunMaxAttempts": "Invalid rerun maximum attempts, defaulting to 3",
+        "rerunNotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 to rerun failed tests.",
         "toolsInstallerPathNotSet": "VsTest Test Platform folder was not found in cache.",
         "testImpactAndCCWontWork": "Test Impact (Run only Impacted tests) and Code Coverage data collector will not work.",
         "ToolsInstallerInstallationError": "The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller",

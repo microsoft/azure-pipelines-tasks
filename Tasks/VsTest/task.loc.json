@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 2,
-    "Patch": 10
+    "Minor": 3,
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -389,6 +389,35 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "rerunFailedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rerunFailedTests",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedTests",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "rerunFailedThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunFailedThreshold",
+      "defaultValue": "30",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedThreshold",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true"
+    },
+    {
+      "name": "rerunMaxAttempts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunMaxAttempts",
+      "defaultValue": "3",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunMaxAttempts",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true"
     }
   ],
   "sourceDefinitions": [
@@ -493,6 +522,12 @@
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
     "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
     "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
+    "rerunFailedTests": "ms-resource:loc.messages.rerunFailedTests",
+    "rerunFailedThreshold": "ms-resource:loc.messages.rerunFailedThreshold",
+    "invalidRerunFailedThreshold": "ms-resource:loc.messages.invalidRerunFailedThreshold",
+    "rerunMaxAttempts": "ms-resource:loc.messages.rerunMaxAttempts",
+    "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts",
+    "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported",
     "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
     "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
     "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
