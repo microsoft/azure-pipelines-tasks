@@ -70,11 +70,9 @@ export function emitTelemetry(taskSpecificTelemetry: any) {
  * @param exitCode The exit code from your program
  * @param stderr STDERR from your program
  */
-export function logExecResults(exitCode: number, stderr: string) {
+export function logStderr(exitCode: number, stderr: string) {
     try {
         let nugetExecResultsStr = JSON.stringify({
-            'command': tl.getInput("command"),
-            'arguments': tl.getInput("arguments"),
             'exitCode': exitCode,
             'stderr': (stderr) ? stderr.substr(0, 1024) : null
         });
