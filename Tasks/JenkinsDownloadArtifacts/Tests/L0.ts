@@ -31,8 +31,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
         try {
             tr.run();
-
-            assert(tr.stderr.indexOf('Input required: serverEndpoint') !== -1, tr.stderr);
+            assert(tr.stdOutContained('Input required: serverEndpoint'));
             assert(tr.failed, 'task should have failed');
             done();
 
@@ -49,14 +48,14 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
-    it('run JenkinsDownloadArtifacts with no save to', (done) => {
+     it('run JenkinsDownloadArtifacts with no save to', (done) => {
         const tp: string = path.join(__dirname, 'L0NoSaveTo.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: saveTo') !== -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: saveTo'), 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -73,8 +72,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
         try {
             tr.run();
-
-            assert(tr.stderr.indexOf('Input required: jobName') !== -1, 'should have written to stderr');
+            assert(tr.stdOutContained('Input required: jobName'), 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
             done();
         } catch (err) {
@@ -171,7 +169,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         try{
             tr.run();
 
-            assert(tr.stderr.indexOf('loc_mock_ArtifactProviderNotSupported') !== -1, tr.stderr);
+            assert(tr.stdOutContained('loc_mock_ArtifactProviderNotSupported'), tr.stderr);
             assert(tr.failed, 'task should have failed');
             done();
         }
@@ -190,7 +188,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         try{
             tr.run();
 
-            assert(tr.stderr.indexOf('Input required: ConnectedServiceNameARM') !== -1, tr.stderr);
+            assert(tr.stdOutContained('Input required: ConnectedServiceNameARM'));
             assert(tr.failed, 'task should have failed');
             done();
         }
