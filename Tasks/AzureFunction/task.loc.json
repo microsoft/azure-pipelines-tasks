@@ -85,7 +85,7 @@
 				"resizable": "true",
 				"rows": "3",
 				"maxLength": "2000"
-			}
+			},
 			"visibleRule": "method != GET && method != HEAD",
 			"helpMarkDown": "ms-resource:loc.input.help.body"
 		}, {
