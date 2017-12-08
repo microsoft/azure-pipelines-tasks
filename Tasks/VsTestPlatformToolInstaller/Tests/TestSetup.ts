@@ -17,7 +17,7 @@ const nugetToolPath = path.join(__dirname, '..', 'nuget.exe');
 const downloadPath = process.env[constants.downloadPath];
 
 // Construct commands to be mocked
-const listPackagesCommand = nugetToolPath + ' list Microsoft.TestPlatform ' + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '') + constants.packageSource;
+const listPackagesCommand = nugetToolPath + ' list Microsoft.TestPlatform ' + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '') + '-Source ' + constants.packageSource;
 const downloadNugetPackageCommand = nugetToolPath + ' install ' + constants.packageName + ' -Version ' + expectedTestPlatformVersion + ' -Source ' + constants.packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload';
 let listPackagesCommandOutput;
 
