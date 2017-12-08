@@ -2,6 +2,7 @@
   "loc.friendlyName": "Invoke REST API",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "loc.description": "Invoke REST API as a part of your process.",
+  "loc.group.displayName.completionOptions": "Completion options",
   "loc.instanceNameFormat": "Invoke REST API: $(method)",
   "loc.input.label.connectedServiceName": "Generic Endpoint",
   "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
@@ -11,5 +12,7 @@
   "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
   "loc.input.label.body": "Body",
   "loc.input.label.waitForCompletion": "Wait For Completion",
-  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+  "loc.input.help.waitForCompletion": "The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below.",
+  "loc.input.label.successCriteria": "Success Expression​",
+  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

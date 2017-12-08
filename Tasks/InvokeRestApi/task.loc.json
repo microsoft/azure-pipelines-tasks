@@ -14,12 +14,17 @@
     "Server"
   ],
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 0,
     "Patch": 3
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [{
+		"name": "completionOptions",
+		"displayName": "ms-resource:loc.group.displayName.completionOptions",
+		"isExpanded": false
+	}
+  ],
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -79,8 +84,19 @@
       "label": "ms-resource:loc.input.label.waitForCompletion",
       "Required": "false",
       "defaultValue": "false",
+      "groupName": "completionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
-    }
+    },
+	{
+	  "name": "successCriteria",
+	  "type": "string",
+	  "label": "ms-resource:loc.input.label.successCriteria",
+	  "defaultValue": "",
+	  "required": false,
+	  "groupName": "completionOptions",
+	  "visibleRule": "waitForCompletion = false",
+	  "helpMarkDown": "ms-resource:loc.input.help.successCriteria"
+	}
   ],
   "execution": {
     "HttpRequest": {
@@ -90,7 +106,8 @@
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",
-        "WaitForCompletion": "$(waitForCompletion)"
+        "WaitForCompletion": "$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
       }
     }
   }
