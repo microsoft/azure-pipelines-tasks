@@ -101,9 +101,9 @@ function getEnvironmentUri(): string {
 
     if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
         || dontDistribute) {
-        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
+        environmentUri = `vstest://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
     } else {
-        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
+        environmentUri = `vstest://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
     }
 
     return environmentUri;
