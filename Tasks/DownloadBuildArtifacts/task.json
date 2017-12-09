@@ -187,6 +187,7 @@
     "BuildIdBuildDefinitionMismatch": "Build with id %s not found for build definition id %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
     "RetryingOperation" : "Error : in %s, so retrying => retries pending  : %s",
-    "OperationFailed": "Failed in %s with error: %s"
+    "OperationFailed": "Failed in %s with error: %s",
+    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
   }
 }

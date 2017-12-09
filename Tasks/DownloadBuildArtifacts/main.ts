@@ -1,5 +1,6 @@
-var path = require('path')
-var url = require('url')
+var path = require('path');
+var url = require('url');
+var fs = require('fs');
 
 import * as tl from 'vsts-task-lib/task';
 import { IBuildApi } from 'vso-node-api/BuildApi';
@@ -162,10 +163,17 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = artifact.resource.downloadUrl + '/' + artifact.name;
-                    console.log(tl.loc("DownloadArtifacts", downloadUrl));
-                    var fileShareProvider = new providers.FilesystemProvider(downloadUrl.replace("file:", ""));
+                    let downloadUrl = artifact.resource.downloadUrl.replace("file:", "");
+                    let artifactLocation = downloadUrl + '/' + artifact.name;
+                    if (!fs.existsSync(artifactLocation)) {
+                        console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
+                        artifactLocation = downloadUrl;
+                    }
+
+                    console.log(tl.loc("DownloadArtifacts", artifactLocation));
+                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath + '\\' + artifact.name);
+
 
                     downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
                         reject(reason);
