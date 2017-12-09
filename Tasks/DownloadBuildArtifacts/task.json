@@ -185,6 +185,8 @@
     "BuildArtifactNotFound": "Artifact %s not found for build %s",
     "NoArtifactsFound": "No artifacts found for build %s",
     "BuildIdBuildDefinitionMismatch": "Build with id %s not found for build definition id %s",
-    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s"
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
+    "RetryingOperation" : "Error : in %s, so retrying => retries pending  : %s",
+    "OperationFailed": "Failed in %s with error: %s"
   }
 }
