@@ -174,7 +174,6 @@ async function main(): Promise<void> {
                     var fileShareProvider = new providers.FilesystemProvider(artifactLocation);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath + '\\' + artifact.name);
 
-
                     downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
                         reject(reason);
                     }));
