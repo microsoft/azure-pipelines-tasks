@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 127,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -181,6 +181,8 @@
     "BuildArtifactNotFound": "ms-resource:loc.messages.BuildArtifactNotFound",
     "NoArtifactsFound": "ms-resource:loc.messages.NoArtifactsFound",
     "BuildIdBuildDefinitionMismatch": "ms-resource:loc.messages.BuildIdBuildDefinitionMismatch",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed"
   }
 }
