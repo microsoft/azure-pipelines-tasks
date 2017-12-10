@@ -1,57 +1,57 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-common';
+import { AzureEndpoint } from 'azure-arm-rest/azureModels';
+import { AzureAppService } from 'azure-arm-rest/AzureAppService';
+import { AzureApplicationInsights } from 'azure-arm-rest/AzureAppInsights';
+import { AzureResourceFilterController } from 'azure-arm-rest/AzureResourceFilter';
+import { Kudu } from 'azure-arm-rest/AzureAppServiceKudu';
+import { ApplicationInsightsWebTests } from 'azure-arm-rest/AzureAppInsightsWebTests';
 
-var azureRmUtil = require('azurerest-common/azurerestutility.js');
-var kuduLogUtil = require('azurerest-common/utility.js');
-var extensionManage = require('./extensionmanage.js');
-var appInsightsManageUtils = require('./appinsightsmanage.js');
-var azureStackUtility = require ('azurestack-common/azurestackrestutility.js');
-
-var APPLICATION_INSIGHTS_EXTENSION_NAME = "Microsoft.ApplicationInsights.AzureWebSites";
-
+const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
+const pingApplicationCount: number = 1;
 const productionSlot: string = "production";
 
-async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
+async function enableContinuousMonitoring(appService: AzureAppService, appInsights: AzureApplicationInsights) {
+    var appDetails = await appService.get();
+    var appInsightsResource = await appInsights.get();
+    var appInsightsWebTests = new ApplicationInsightsWebTests(appInsights.getEndpoint(), appInsights.getResourceGroupName());
+    var webDeployPublishingProfile = await appService.getWebDeployPublishingProfile();
+    var applicationUrl = webDeployPublishingProfile.destinationAppUrl;
+    if(appDetails.kind.indexOf("linux") == -1) {
+        var appKuduService = await appService.getKuduService();
+        await appKuduService.installSiteExtension(APPLICATION_INSIGHTS_EXTENSION_NAME);
+    }
+
+    appInsightsResource.tags["hidden-link:" + appDetails.id] = "Resource";
+    tl.debug('Link app insights with app service via tag');
+    await appInsights.update(appInsightsResource);
+    tl.debug('Link app service with app insights via instrumentation key');
+    await appService.patchApplicationSettings({"APPINSIGHTS_INSTRUMENTATIONKEY": appInsightsResource.properties.InstrumentationKey});
     try {
-        await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
-        console.log(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+        tl.debug('Enable alwaysOn property for app service.');
+        await appService.patchConfiguration({"alwaysOn": true});    
     }
     catch(error) {
-        if(!!error)
-            throw new Error(tl.loc("FailedToSwapWebAppSlots", webAppName, error));
-        else
-            throw new Error(tl.loc("SlotSwapOperationNotCompleted", webAppName));
+        tl.warning(error);
     }
-}
-
-async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, slotFlag, slotName, taskResult, customMessage, deploymentId) {
+    
     try {
-        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, slotFlag, slotName);
-        console.log(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage, deploymentId));
+        tl.debug('add web test for app service - app insights');
+        await appInsightsWebTests.addWebTest(appInsightsResource, applicationUrl);
     }
-    catch(exception) {
-        tl.warning(exception);
+    catch(error) {
+        tl.warning(error);
     }
 }
 
-async function waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName) {
-
-    while(true) {
-        var appServiceDetails = await azureRmUtil.getAppServiceDetails(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
-        if(appServiceDetails.hasOwnProperty("properties") && appServiceDetails.properties.hasOwnProperty("state")) {
-            tl.debug('App Service State : ' + appServiceDetails.properties.state);
-            if(appServiceDetails.properties.state == "Running" || appServiceDetails.properties.state == "running") {
-                tl.debug('App Service is in Running State');
-                break;
-            }
-            else {
-                tl.debug('App Service State : ' + appServiceDetails.properties.state);
-                continue;
-            }
-        }
-        tl.debug('Unable to find state of the App Service.');
-        break;
+async function updateDeploymentStatusInKudu(kuduService: Kudu, taskResult: boolean, DeploymentID: string, customMessage: any) {
+    try {
+        return await kuduService.updateDeployment(taskResult, DeploymentID, customMessage);
+    }
+    catch(error) {
+        tl.warning(error);
     }
 }
 
@@ -63,7 +63,7 @@ async function run() {
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
-        var slotName: string = tl.getInput('Slot', false);
+        var slotName: string = specifySlotFlag ? tl.getInput('Slot', false) : null;
         var appInsightsResourceGroupName: string = tl.getInput('AppInsightsResourceGroupName', false);
         var appInsightsResourceName: string = tl.getInput('ApplicationInsightsResourceName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
@@ -72,124 +72,135 @@ async function run() {
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         var extensionList = tl.getInput('ExtensionsList', false);
         var extensionOutputVariables = tl.getInput('OutputVariable');
-        var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var taskResult = true;
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
 
-        var endPoint = await azureStackUtility.initializeAzureRMEndpointData(connectedServiceName);
-
-        if(slotName && slotName.toLowerCase() === 'production') {
-            specifySlotFlag = false;
-            slotName = null;
+        var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
+        var resources: Array<any> = await new AzureResourceFilterController(azureEndpoint).getResources('Microsoft.Web/Sites', webAppName);
+        if(action != "Swap Slots" && !slotName) {
+            if(!resources || resources.length == 0) {
+                throw new Error(tl.loc('ResourceDoesntExist', webAppName));
+            }
+            else if(resources.length == 1) {
+                resourceGroupName = resources[0].id.split("/")[4];
+            }
+            else {
+                throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', webAppName));
+            }
         }
 
-        if(resourceGroupName === null) {
-            resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
-        }
+        tl.debug(`Resource Group: ${resourceGroupName}`);    
         switch(action) {
             case "Start Azure App Service": {
-                console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
-                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                await appService.start();
+                await appService.monitorAppState("running");
+                await appService.pingApplication(pingApplicationCount);
                 break;
             }
             case "Stop Azure App Service": {
-                console.log(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                await appService.stop();
+                await appService.monitorAppState("stopped");
+                await appService.pingApplication(pingApplicationCount);
                 break;
             }
-            case "Install Extensions": {
-                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
-                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
-                tl.debug('Retrieved publishing Profile');
-                var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
-                var anyExtensionInstalled = await extensionManage.installExtensions(publishingProfile, extensionList.split(','), extensionOutputVariablesArray);
-                if(!anyExtensionInstalled) {
-                    tl.debug('No new extension installed. Skipping Restart App Service.');
-                    break;
-                }
-            }
             case "Restart Azure App Service": {
-                console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
-                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                await appService.restart();
                 break;
             }
             case "Swap Slots": {
-                if (swapWithProduction) {
-                    targetSlot = productionSlot;
-                }
-
-                sourceSlot = sourceSlot.toLowerCase();
-                targetSlot = targetSlot.toLowerCase();
-
-                if(sourceSlot == productionSlot) {
-                    sourceSlot = targetSlot;
-                    targetSlot = productionSlot;
-                }
-
-                if(targetSlot == productionSlot) {
-                    tl.debug('Set swap with production to true as target is production');
-                    swapWithProduction = true;
-                }
-
-                if (sourceSlot === targetSlot) {
-                    updateDeploymentStatus = false;
-                    throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
-                }
-                await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
+                targetSlot = (swapWithProduction) ? productionSlot : targetSlot;
+                var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, sourceSlot);
+                var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, targetSlot);
+                console.log(tl.loc('WarmingUpSlots'));
+                await appServiceSourceSlot.pingApplication(1);
+                await appServiceTargetSlot.pingApplication(1);
+                await appServiceSourceSlot.swap({ 'targetSlot': targetSlot, 'preserveVnet': preserveVnet});
                 break;
             }
-            case "Enable Continuous Monitoring": {
-                var appInsightsManage = new appInsightsManageUtils.AppInsightsManage(endPoint, appInsightsResourceGroupName, appInsightsResourceName, webAppName, resourceGroupName, specifySlotFlag, slotName);
-                await appInsightsManage.configureAppInsights();
-                await waitForAppServiceToStart(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName);
-                break;   
-            }
             case "Start all continuous webjobs": {
-                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
-                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
-                var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
-                for(var continuousJob of continuousJobs) {
-                    await azureRmUtil.startContinuousWebJob(publishingProfile, continuousJob.name);
-                }
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appServiceKuduService = await appService.getKuduService();
+                console.log(tl.loc('StartingContinousWebJobs'));
+                await appServiceKuduService.startContinuousWebJobs();
+                console.log(tl.loc('StartedContinousWebJobs'));
                 break;
             }
             case "Stop all continuous webjobs": {
-                resourceGroupName = (specifySlotFlag ? resourceGroupName : await azureRmUtil.getResourceGroupName(endPoint, webAppName));
-                var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName);
-                tl.debug('Retrieved publishing Profile');
-                var continuousJobs = await azureRmUtil.getAllContinuousWebJobs(publishingProfile);
-                for(var continuousJob of continuousJobs) {
-                    await azureRmUtil.stopContinuousWebJob(publishingProfile, continuousJob.name);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appServiceKuduService = await appService.getKuduService();
+                console.log(tl.loc('StoppingContinousWebJobs'));
+                await appServiceKuduService.stopContinuousWebJobs();
+                console.log(tl.loc('StoppedContinousWebJobs'));
+                break;
+            }
+            case "Install Extensions": {
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appServiceKuduService = await appService.getKuduService();
+                var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
+                var isExtensionsInstalled: boolean = await appServiceKuduService.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
+                if(isExtensionsInstalled) {
+                    await appService.restart();
                 }
                 break;
             }
-            default:
+            case "Enable Continuous Monitoring": {
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
+                try {
+                    await enableContinuousMonitoring(appService, appInsights);
+                }
+                catch(error) {
+                    throw new Error(tl.loc('FailedToEnableContinuousMonitoring', error));
+                }
+                console.log(tl.loc("ContinousMonitoringEnabled", webAppName));
+                break;
+            }
+            default: {
                 throw Error(tl.loc('InvalidAction'));
+            }
         }
     }
     catch(exception) {
         taskResult = false;
         errorMessage = exception;
     }
-    if (updateDeploymentStatus) {
-        var customMessage = {
-            type: action
-        }
-        var deploymentId = kuduLogUtil.generateDeploymentId();
 
-        if(action === "Swap Slots") {
-            customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
-            customMessage['sourceSlot'] = sourceSlot;
-            customMessage['targetSlot'] = targetSlot;
+    try {
+        switch(action) {
+            case "Swap Slots": {
+                if(appServiceSourceSlot && appServiceTargetSlot) {
+                    var sourceSlotKuduService = await appServiceSourceSlot.getKuduService();
+                    var targetSlotKuduService = await appServiceTargetSlot.getKuduService();
+                    var customMessage = {
+                        'type': 'SlotSwap',
+                        'sourceSlot': appServiceSourceSlot.getSlot(),
+                        'targetSlot': appServiceTargetSlot.getSlot()
+                    }
+                    var DeploymentID = await updateDeploymentStatusInKudu(sourceSlotKuduService, taskResult, null, customMessage);
+                    await updateDeploymentStatusInKudu(targetSlotKuduService, taskResult, DeploymentID, customMessage);
+                }
+                break;
+            }
+            case "Install Extensions": {
+                if(appServiceKuduService) {
+                    await updateDeploymentStatusInKudu(appServiceKuduService, taskResult, DeploymentID, {"type": action});
+                }
+                break;
+            }
+            default: {
+                tl.debug(`deployment status not updated for action: ${action}`);
+            }
 
-            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
-            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);
-        }
-        else {
-            customMessage['slotName'] =  (specifySlotFlag) ? slotName : 'Production';
-            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName, taskResult, customMessage, deploymentId);
         }
     }
+    catch(error) {
+        tl.debug(error);
+    }
+
     if (!taskResult) {
         tl.setResult(tl.TaskResult.Failed, errorMessage);
     }

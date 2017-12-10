@@ -86,7 +86,7 @@ async function toWebResponse(response: httpClient.HttpClientResponse): Promise<W
     return res;
 }
 
-function sleepFor(sleepDurationInSeconds): Promise<any> {
+export function sleepFor(sleepDurationInSeconds): Promise<any> {
     return new Promise((resolve, reeject) => {
         setTimeout(resolve, sleepDurationInSeconds * 1000);
     });

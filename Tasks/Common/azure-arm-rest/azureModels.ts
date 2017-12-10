@@ -196,3 +196,31 @@ export interface StorageAccount extends AzureBaseObject {
     tags?: Map<string, string>;
     properties?: StorageAccountProperties;
 }
+
+export interface AzureEndpoint {
+    subscriptionID: string;
+    subscriptionName: string;
+    servicePrincipalClientID?: string;
+    servicePrincipalKey?: string;
+    tenantID: string;
+    environmentAuthorityUrl: string;
+    url: string;
+    environment: string;
+    activeDirectoryResourceID: string;
+    activeDirectoryAuthority?: string;
+    graphEndpoint?: string;
+    galleryUrl?: string;
+    portalEndpoint?: string;
+    AzureKeyVaultDnsSuffix?: string;
+    AzureKeyVaultServiceEndpointResourceId?: string;
+}
+
+export interface AzureAppServiceConfigurationDetails {
+    id: string;
+    name: string;
+    type: string;
+    kind?: string;
+    location: string;
+    tags: string;
+    properties?: {[key: string]: any};
+}

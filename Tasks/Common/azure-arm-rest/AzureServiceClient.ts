@@ -144,6 +144,7 @@ export class ServiceClient {
 
         while (true) {
             response = await this.beginRequest(request);
+            tl.debug(`Response status code : ${response.statusCode}`);
             if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
                 // If timeout; throw;
                 if (!waitIndefinitely && timeout < new Date().getTime()) {
@@ -207,5 +208,19 @@ export class ServiceClient {
         return new Promise((resolve, reeject) => {
             setTimeout(resolve, sleepDurationInSeconds * 1000);
         });
+    }
+
+    public getFormattedError(error: any) {
+        if(error && error.message) {
+            if(error.statusCode) {
+                var errorMessage = typeof error.message.valueOf == 'string'? error.message 
+                    : (error.message.Code || error.message.code) + " - " + (error.message.Message || error.message.message)
+                error.message = `${errorMessage} (CODE: ${error.statusCode})`
+            }
+
+            return error.message;
+        }
+
+        return error;
     }
 }
