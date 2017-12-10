@@ -62,31 +62,26 @@ export class ApplicationInsightsWebTests {
 
     public async addWebTest(appInsightsResource: any, applicationUrl: string) {
         var webTests = await this.list();
-        var isTestAlreadyConfigured: boolean = false;
         for(var webTest of webTests) {
             var isTagPresent: boolean = false;
             var isApplicationUrlPresent: boolean = false;
             for(var tag in webTest.tags) {
-                if(tag.toLowerCase() == appInsightsResource.id.toLowerCase()) {
+                if(tag.toLowerCase().indexOf(appInsightsResource.id.toLowerCase()) != -1) {
                     isTagPresent = true;
                     break;
                 }
                 
             }
 
-            isApplicationUrlPresent = webTest.properties.Configuration.WebTest.toLowerCase() == applicationUrl.toLowerCase();
+            isApplicationUrlPresent = webTest.properties.Configuration.WebTest.toLowerCase().indexOf(applicationUrl.toLowerCase()) != -1;
             if(isTagPresent && isApplicationUrlPresent) {
-                isTestAlreadyConfigured= true;
-                break;
+                console.log(tl.loc('WebTestAlreadyConfigured', applicationUrl));
+                return;
             }
         }
 
-        if(isTestAlreadyConfigured) {
-            console.log(tl.loc('WebTestAlreadyConfigured', applicationUrl));
-        }
-        else {
-            await this.create(appInsightsResource, applicationUrl);
-        }
+        await this.create(appInsightsResource, applicationUrl);
+        
     }
 
     private  webTestData = {
