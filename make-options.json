@@ -3,7 +3,7 @@
         "AndroidSigning",
         "ANT",
         "AppCenterDistribute",
-        "AppCenterTest",
+
         "ArchiveFiles",
         "AzureAppServiceManage",
         "AzureCLI",
@@ -34,7 +34,7 @@
         "DeployVisualStudioTestAgent",
         "Docker",
         "DockerCompose",
-        "DotNetCoreCLI",
+
         "DotNetCoreInstaller",
         "DownloadBuildArtifacts",
         "DownloadSecureFile",
@@ -51,19 +51,19 @@
         "InvokeRestApi",
         "JavaToolInstaller",
         "JenkinsDownloadArtifacts",
-        "JenkinsQueueJob",
+
         "Kubernetes",
         "ManualIntervention",
-        "Maven",
+
         "MSBuild",
         "NodeTool",
         "Npm",
         "NpmAuthenticate",
-        "NuGet",
+
         "NugetPackager",
-        "NuGetPublisher",
-        "NuGetCommand",
-        "NuGetToolInstaller",
+
+
+
         "PackerBuild",
         "DownloadPackage",
         "powerShell",

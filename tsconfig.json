@@ -2,5 +2,12 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "commonjs"
-    }
+    }, 
+    // "typeRoots": [
+    //     "typings/global"
+    //     // "typings/modules"
+    // ]
+    "exclude": [
+        "node_modules"
+    ]
 }
