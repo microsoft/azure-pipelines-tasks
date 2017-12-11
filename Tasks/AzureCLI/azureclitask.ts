@@ -6,7 +6,7 @@ import os = require("os");
 
 export class azureclitask {
     public static checkIfAzurePythonSdkIsInstalled() {
-        return !!tl.which("az", true);
+        return !!tl.which("az", false);
     }
 
     public static async runMain() {
