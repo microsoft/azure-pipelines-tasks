@@ -423,7 +423,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 14, 'Should have run \"PlistBuddy -c Add...\" once, and 10 other command lines.');
+        assert(tr.invokedToolCount == 14, 'Should have run \"PlistBuddy -c Add...\" once, and 14 other command lines.');
 
         done();
     });
