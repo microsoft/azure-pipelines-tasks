@@ -7,7 +7,7 @@ import Model = require("./azureModels");
 import Q = require("q");
 
 export class AzureResourceFilterManagementClient extends azureServiceClient.ServiceClient {
-    public _azureResourceFilter: AzureResourceFilter;
+    public azureResourceFilter: AzureResourceFilter;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials, subscriptionId);
@@ -15,7 +15,7 @@ export class AzureResourceFilterManagementClient extends azureServiceClient.Serv
         if (!!options && !!options.longRunningOperationRetryTimeout) {
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        this._azureResourceFilter = new AzureResourceFilter(this);
+        this.azureResourceFilter = new AzureResourceFilter(this);
     }
 }
 

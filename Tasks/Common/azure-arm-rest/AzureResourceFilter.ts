@@ -10,7 +10,7 @@ export class AzureResourceFilterController {
     private _azureResourceFilterManagementClient: AzureResourceFilterManagementClient;
     private _endpoint: AzureEndpoint;
 
-    constructor(endpoint) {
+    constructor(endpoint: AzureEndpoint) {
         var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
             endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
 
@@ -20,7 +20,7 @@ export class AzureResourceFilterController {
     public async getResources(resourceType: string, resourceName: string) {
         return new Promise<any>((resolve, reject) => {
             tl.debug(`Requesting list of resources for Resource type: '${resourceType}' and Resource name: '${resourceName}'`);
-            this._azureResourceFilterManagementClient._azureResourceFilter.getResources(resourceType, resourceName, null, (error, result, request, response) => {
+            this._azureResourceFilterManagementClient.azureResourceFilter.getResources(resourceType, resourceName, null, (error, result, request, response) => {
                 if(error) {
                     reject(tl.loc('FailedToGetResourceID', resourceType, resourceName, this._azureResourceFilterManagementClient.getFormattedError(error)));
                 }
