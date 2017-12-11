@@ -357,6 +357,10 @@ export class AppService {
             if(!slotSwapEntity) {
                 throw new Error(tl.loc('SlotSwapEntityCannotBeNull'));
             }
+
+            if(!slotSwapEntity.targetSlot || typeof slotSwapEntity.targetSlot.valueOf() != 'string' || slotSwapEntity.preserveVnet == null || typeof slotSwapEntity.preserveVnet.valueOf() != 'boolean') {
+                throw new Error(tl.loc('InvalidSlotSwapEntity', JSON.stringify(slotSwapEntity)));
+            }
         }
         catch(error) {
             return callback(error);
@@ -420,7 +424,7 @@ export class AppService {
                 throw new Error(tl.loc('SlotSwapEntityCannotBeNull'));
             }
 
-            if(!slotSwapEntity.targetSlot || typeof slotSwapEntity.valueOf != 'string' || slotSwapEntity.preserveVnet == null || typeof slotSwapEntity.preserveVnet.valueOf != 'boolean') {
+            if(!slotSwapEntity.targetSlot || typeof slotSwapEntity.targetSlot.valueOf() != 'string' || slotSwapEntity.preserveVnet == null || typeof slotSwapEntity.preserveVnet.valueOf() != 'boolean') {
                 throw new Error(tl.loc('InvalidSlotSwapEntity', JSON.stringify(slotSwapEntity)));
             }
         }

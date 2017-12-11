@@ -388,6 +388,8 @@
         "StartedContinousWebJobs": "Started continuous WebJobs.",
         "StoppingContinousWebJobs": "Stopping continuous WebJobs.",
         "StoppedContinousWebJobs": "Stopped continuous WebJobs.",
-        "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s"
+        "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s",
+        "InvalidSlotSwapEntity": "Invalid Slot swap entity. Error: %s",
+        "FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s"
     }
 }

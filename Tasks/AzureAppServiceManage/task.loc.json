@@ -388,6 +388,8 @@
     "StartedContinousWebJobs": "ms-resource:loc.messages.StartedContinousWebJobs",
     "StoppingContinousWebJobs": "ms-resource:loc.messages.StoppingContinousWebJobs",
     "StoppedContinousWebJobs": "ms-resource:loc.messages.StoppedContinousWebJobs",
-    "FailedToEnableContinuousMonitoring": "ms-resource:loc.messages.FailedToEnableContinuousMonitoring"
+    "FailedToEnableContinuousMonitoring": "ms-resource:loc.messages.FailedToEnableContinuousMonitoring",
+    "InvalidSlotSwapEntity": "ms-resource:loc.messages.InvalidSlotSwapEntity",
+    "FailedToUpdateDeploymentHistory": "ms-resource:loc.messages.FailedToUpdateDeploymentHistory"
   }
 }

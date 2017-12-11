@@ -115,6 +115,8 @@
         "StartedContinousWebJobsinAppService": "Started continuous WebJobs in App Service '%s'",
         "StoppingContinousWebJobsinAppService": "Stopping continuous WebJobs in App Service '%s'",
         "StoppedContinousWebJobsinAppService": "Stopped continuous WebJobs in App Service '%s'",
-        "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s"
+        "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s",
+        "InvalidSlotSwapEntity": "Invalid Slot swap entity. Error: %s",
+        "FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s"
     }
 }

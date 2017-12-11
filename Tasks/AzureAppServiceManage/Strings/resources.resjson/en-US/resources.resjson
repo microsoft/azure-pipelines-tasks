@@ -156,5 +156,7 @@
   "loc.messages.StartedContinousWebJobs": "Started continuous WebJobs.",
   "loc.messages.StoppingContinousWebJobs": "Stopping continuous WebJobs.",
   "loc.messages.StoppedContinousWebJobs": "Stopped continuous WebJobs.",
-  "loc.messages.FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s"
+  "loc.messages.FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s",
+  "loc.messages.InvalidSlotSwapEntity": "Invalid Slot swap entity. Error: %s",
+  "loc.messages.FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s"
 }

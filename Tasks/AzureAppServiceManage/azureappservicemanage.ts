@@ -115,6 +115,11 @@ async function run() {
                 targetSlot = (swapWithProduction) ? productionSlot : targetSlot;
                 var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, sourceSlot);
                 var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, targetSlot);
+                if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
+                    updateDeploymentStatus = false;
+                    throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));
+
+                }
                 console.log(tl.loc('WarmingUpSlots'));
                 await appServiceSourceSlot.pingApplication(1);
                 await appServiceTargetSlot.pingApplication(1);
@@ -169,10 +174,11 @@ async function run() {
         errorMessage = exception;
     }
 
+    tl.debug('Completed action');
     try {
         switch(action) {
             case "Swap Slots": {
-                if(appServiceSourceSlot && appServiceTargetSlot) {
+                if(appServiceSourceSlot && appServiceTargetSlot && updateDeploymentStatus) {
                     var sourceSlotKuduService = await appServiceSourceSlot.getKuduService();
                     var targetSlotKuduService = await appServiceTargetSlot.getKuduService();
                     var customMessage = {

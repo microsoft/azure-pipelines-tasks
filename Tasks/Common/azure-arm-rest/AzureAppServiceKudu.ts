@@ -30,7 +30,6 @@ export class Kudu {
         var deploymentStatusBody = this._getUpdateHistoryRequest(isSucceeded, deploymentID, customMessage);
         this.kuduServiceManagementClient.kuduService.updateDeployment(deploymentStatusBody.id, deploymentStatusBody, null, (error, result, request, response) => {
             if(error) {
-                console.log(error);
                 defer.reject(tl.loc('FailedToUpdateDeploymentHistory', this.error(error)));
             }
             else {
@@ -127,12 +126,13 @@ export class Kudu {
         var anyExtensionInstalled: boolean = false;
         var siteExtensionMap = {};
         for(var siteExtension of siteExtensions) {
-            siteExtensionMap[siteExtension.id] = true;
+            siteExtensionMap[siteExtension.id] = siteExtension;
         }
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
             if(siteExtensionMap[extensionID]) {
+                siteExtensionDetails = siteExtensionMap[extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {

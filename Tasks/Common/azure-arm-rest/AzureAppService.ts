@@ -147,13 +147,13 @@ export class AzureAppService {
             });
         }
         else {
-            console.log(tl.loc("SwappingAppServiceSlotWithProduction", this._appServiceName, this._slotName));
+            console.log(tl.loc("SwappingAppServiceSlotWithProduction", this._appServiceName, slotSwapEntity.targetSlot));
             this._appServiceManagementClient.appService.swapSlotWithProduction(this._resourceGroupName, this._appServiceName, slotSwapEntity, null, (error, result, request, response) => {
                 if(error) {
                     defer.reject(tl.loc("FailedToSwapAppServiceSlotWithProduction", this._appServiceName, slotSwapEntity.targetSlot, this._appServiceManagementClient.getFormattedError(error)));
                 }
                 else {
-                    console.log(tl.loc("SwappedAppServiceSlotWithProduction", this._appServiceName, this._slotName));
+                    console.log(tl.loc("SwappedAppServiceSlotWithProduction", this._appServiceName, slotSwapEntity.targetSlot));
                     defer.resolve(result);
                 }
             });
@@ -337,7 +337,7 @@ export class AzureAppService {
         return defer.promise;
     }
 
-    public async getSlot() {
+    public getSlot(): string {
         return this._slotName ? this._slotName : "production";
     }
 
