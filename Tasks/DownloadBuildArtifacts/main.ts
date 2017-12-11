@@ -194,21 +194,28 @@ async function main(): Promise<void> {
     return promise;
 }
 
-async function executeWithRetries(operationName, operation: () => Promise<any>, retryCount) {
-    var currentRetryCount = retryCount;
-    while (currentRetryCount > 0) {
-        currentRetryCount--;
-        try {
-            var result = await operation();
-            return result;
-        } catch (error) {
-            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
-            if (currentRetryCount === 0) {
-                tl.error(tl.loc("OperationFailed", operationName, error));
-                throw error;
-            }
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
+    var executePromise = new Promise((resolve, reject) => {
+        executeWithRetriesImplementaion(operationName, operation, retryCount, resolve, reject);
+    });
+
+    return executePromise;
+}
+
+function executeWithRetriesImplementaion(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+    operation().then((result) => {
+        resolve(result);
+    }).catch((error) => {
+        if (currentRetryCount <= 0) {
+            tl.error(tl.loc("OperationFailed", operationName, error));
+            reject(error);
         }
-    }
+        else {
+            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            currentRetryCount = currentRetryCount - 1;
+            setTimeout(() => executeWithRetriesImplementaion(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+        }
+    });
 }
 
 main()
