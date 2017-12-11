@@ -203,7 +203,7 @@
             "aliases": [ "jdkArchitectureOption" ],
             "type": "pickList",
             "label": "JDK Architecture",
-            "defaultValue": "x86",
+            "defaultValue": "x64",
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of the JDK.",
             "visibleRule": "jdkVersion != default",
