@@ -18,7 +18,7 @@
   "loc.input.label.jenkinsBuildNumber": "Jenkins build number",
   "loc.input.help.jenkinsBuildNumber": "Download artifacts produced by this build.",
   "loc.input.label.itemPattern": "Item Pattern",
-  "loc.input.help.itemPattern": "Minimatch pattern to filter files to be downloaded.",
+  "loc.input.help.itemPattern": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts produced by the Jenkins job. To download all files within artifact drop use drop/**.</p>",
   "loc.input.label.downloadCommitsAndWorkItems": "Download Commits and WorkItems",
   "loc.input.help.downloadCommitsAndWorkItems": "Enables downloading the commits and workitem details associated with the Jenkins Job",
   "loc.input.label.startJenkinsBuildNumber": "Download commits and workitems from",

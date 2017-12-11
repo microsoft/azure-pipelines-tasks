@@ -86,7 +86,10 @@ function runNuGet(executionOptions: NuGetExecutionOptions): IExecSyncResult {
 
     let execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logExecResults(execResult.code, execResult.stderr);
+        telemetry.logStderr(execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
     }
     return execResult;
 }

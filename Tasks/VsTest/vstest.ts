@@ -512,7 +512,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
     vstestConfig.publishTestResultsInTiaMode = uploadTiaResults;
     let updateResponseSupplementryFileSuccess = isResponseFileRun && updateResponseFile(getVstestArguments(settingsFile, false), vstestConfig.responseSupplementryFile);
-    if (!updateResponseSupplementryFileSuccess){
+    if (!updateResponseSupplementryFileSuccess && vstestConfig.rerunFailedTests){
         tl.warning(tl.loc("rerunNotSupported"));
         vstestConfig.rerunFailedTests = false;
     }

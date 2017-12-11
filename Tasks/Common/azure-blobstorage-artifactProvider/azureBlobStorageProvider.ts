@@ -2,9 +2,13 @@ import path = require('path');
 import azureStorage = require('azure-storage');
 import fs = require('fs');
 import models = require('artifact-engine/Models');
+import store = require('artifact-engine/Store');
 import tl = require('vsts-task-lib/task');
 
 export class AzureBlobProvider implements models.IArtifactProvider {
+
+    public artifactItemStore: store.ArtifactItemStore;
+
     constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
@@ -60,6 +64,9 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             var readStream: NodeJS.ReadableStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
             resolve(readStream);
         });
+    }
+
+    public dispose() {
     }
 
     private _ensureContainerExistence(): Promise<void> {

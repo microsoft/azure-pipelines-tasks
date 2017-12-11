@@ -71,7 +71,7 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.vstestArgsFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseSupplementryFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
+    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported() || utils.Helper.isToolsInstallerFlow(vsTestConfiguration);
     return vsTestConfiguration;
 }
 
@@ -101,9 +101,9 @@ function getEnvironmentUri(): string {
 
     if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
         || dontDistribute) {
-        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
+        environmentUri = `vstest://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
     } else {
-        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
+        environmentUri = `vstest://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
     }
 
     return environmentUri;
