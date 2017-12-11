@@ -51,7 +51,7 @@
         "InvokeRestApi",
         "JavaToolInstaller",
         "JenkinsDownloadArtifacts",
-        "JenkinsQueueJob",
+
         "Kubernetes",
         "ManualIntervention",
         "Maven",
