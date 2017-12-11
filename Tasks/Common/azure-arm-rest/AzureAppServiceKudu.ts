@@ -144,6 +144,7 @@ export class Kudu {
                 var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
                 tl.debug('Set output Variable ' + outputVariables[outputVariableIterator] + ' to value: ' + extensionLocalPath);
                 tl.setVariable(outputVariables[outputVariableIterator], this._getExtensionLocalPath(siteExtensionDetails));
+                outputVariableIterator += 1;
             }
         }
 
