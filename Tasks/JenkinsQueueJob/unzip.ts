@@ -6,8 +6,6 @@ import tr = require('vsts-task-lib/toolrunner');
 
 import path = require('path');
 
-import unzip = require('./unzip');
-
 import * as Util from './util';
 
 const win = tl.osType().match(/^Win/);
