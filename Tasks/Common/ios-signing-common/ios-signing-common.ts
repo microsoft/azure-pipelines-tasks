@@ -133,6 +133,52 @@ export async function findSigningIdentity(keychainPath: string) {
 }
 
 /**
+ * Check if provisioning profile contains Cloud entitlement 
+ * @param provProfilePath
+ * @returns {boolean} 
+ */
+export async function cloudEntitlement(provProfilePath: string) {
+    //find the provisioning profile details
+    let provProfileDetails: string;
+    let getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
+    getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+    getProvProfileDetailsCmd.on('stdout', function (data) {
+        if (data) {
+            if (provProfileDetails) {
+                provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
+            } else {
+                provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
+            }
+        }
+    })
+    
+    await getProvProfileDetailsCmd.exec();
+
+    let tmpPlist: string;
+    if (provProfileDetails) {
+        //write the provisioning profile to a plist
+        tmpPlist = '_xcodetasktmp.plist';
+        fs.writeFileSync(tmpPlist, provProfileDetails);
+    } else {
+        throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
+    }
+
+    //use PlistBuddy to figure if cloud entitlement exists. 
+    let cloudEntitlement: string = await printFromPlist('Entitlements:com.apple.developer.icloud-container-environment', tmpPlist);
+
+    //delete the temporary plist file
+    let deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
+    deletePlistCommand.arg(['-f', tmpPlist]);
+    await deletePlistCommand.exec();
+
+    if (cloudEntitlement) {
+        tl.debug('Provisioning Profile contains cloud entitlement');
+        return true;
+    }
+    return false;
+}
+
+/**
  * Find the UUID of the provisioning profile and install the profile
  * @param provProfilePath
  * @returns {string} UUID
@@ -413,7 +459,7 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string) {
         p12Pwd = '';
     }
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-    
+
     let openssl2: ToolRunner = tl.tool(opensslPath);
     openssl2.arg(['x509', '-noout', '-fingerprint']);
     openssl1.pipeExecOutputToTool(openssl2);
@@ -452,7 +498,7 @@ export async function getP12CommonName(p12Path: string, p12Pwd: string) {
         p12Pwd = '';
     }
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-    
+
     let openssl2: ToolRunner = tl.tool(opensslPath);
     openssl2.arg(['x509', '-noout', '-subject']);
     openssl1.pipeExecOutputToTool(openssl2);

@@ -4,6 +4,7 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
+import { fail } from 'assert';
 
 describe('Xcode L0 Suite', function () {
     before(() => {
@@ -41,7 +42,7 @@ describe('Xcode L0 Suite', function () {
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
-        assert(tr.invokedToolCount == 11, 'should have run xcodebuild for version, build, archive and export and PlistBuddy to init and add export method.');
+        assert(tr.invokedToolCount == 14, 'should have run xcodebuild for version, build, archive and export and PlistBuddy to init and add export method.');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -422,7 +423,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 11, 'Should have run \"PlistBuddy -c Add...\" once, and 10 other command lines.');
+        assert(tr.invokedToolCount == 14, 'Should have run \"PlistBuddy -c Add...\" once, and 10 other command lines.');
 
         done();
     });
@@ -458,9 +459,100 @@ describe('Xcode L0 Suite', function () {
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
 
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist") === false,
+            'PlistBuddy add cloud entitlement should not run');
+
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 18, 'Should have run \"PlistBuddy -c Add...\" four times, and 14 other command lines.');
+        assert(tr.invokedToolCount == 21, 'Should have run \"PlistBuddy -c Add...\" four times, and 17 other command lines.');
+
+        done();
+    });
+
+    it('Xcode 9 signing defaults to manual, with auto export and cloud entitlement for production', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0XCode9SigningDefaultsToAutoWithAutoExportAndCloudEntitlement.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        //version
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+
+        //export prep
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Clear _XcodeTaskExportOptions.plist"),
+            'PlistBuddy Clear should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add method string app-store _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add method should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add cloud entitlement list should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment: string Production _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add cloud entitlement for Production should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add signingStyle string manual _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add signingStyle should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add provisioningProfiles dict _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add provisioningProfiles should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add provisioningProfiles:com.vsts.test.myApp string Bob _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add provisioningProfiles:com.vsts.test.myApp should have run.');
+
+        //export
+        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
+            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
+
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 23, 'Should have run \"PlistBuddy -c Add...\" four times, and 19 other command lines.');
+
+        done();
+    });
+
+    it('Xcode 9 signing defaults to manual, with auto export and cloud entitlement for development', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForDevelopment.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        //version
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+
+        //export prep
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Clear _XcodeTaskExportOptions.plist"),
+            'PlistBuddy Clear should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add method string development _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add method should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add cloud entitlement list should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment: string Development _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add cloud entitlement for Production should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add signingStyle string manual _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add signingStyle should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add provisioningProfiles dict _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add provisioningProfiles should have run.');
+
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add provisioningProfiles:com.vsts.test.myApp string Bob _XcodeTaskExportOptions.plist"),
+            'PlistBuddy add provisioningProfiles:com.vsts.test.myApp should have run.');
+
+        //export
+        assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
+            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
+
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 22, 'Should have run \"PlistBuddy -c Add...\" four times, and 18 other command lines.');
 
         done();
     });

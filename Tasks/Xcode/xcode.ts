@@ -104,11 +104,11 @@ async function run() {
             let devices: string[];
             if (targetingSimulators) {
                 // Only one simulator for now.
-                devices = [ tl.getInput('destinationSimulators') ];
+                devices = [tl.getInput('destinationSimulators')];
             }
             else {
                 // Only one device for now.
-                devices = [ tl.getInput('destinationDevices') ];
+                devices = [tl.getInput('destinationDevices')];
             }
 
             destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
@@ -330,6 +330,7 @@ async function run() {
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+                let cloudEntitlement: boolean;
 
                 if (exportOptions === 'auto') {
                     // Automatically try to detect the export-method to use from the provisioning profile
@@ -338,6 +339,7 @@ async function run() {
                         tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
                         exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
                         tl.debug('Using export method = ' + exportMethod);
+                        cloudEntitlement = await sign.cloudEntitlement(embeddedProvProfiles[0]);
                     }
                     if (!exportMethod) {
                         tl.warning(tl.loc('ExportMethodNotIdentified'));
@@ -363,6 +365,15 @@ async function run() {
                     }
 
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
+                        if (cloudEntitlement === true) {
+                            tl.debug("Adding cloud entitlement");
+                            tl.tool(plist).arg(['-c', 'Add com.apple.developer.icloud-container-environment array', exportOptionsPlist]).execSync();
+                            if (exportMethod === "app-store") {
+                                tl.tool(plist).arg(['-c', 'Add com.apple.developer.icloud-container-environment: string Production', exportOptionsPlist]).execSync();
+                            } else {
+                                tl.tool(plist).arg(['-c', 'Add com.apple.developer.icloud-container-environment: string Development', exportOptionsPlist]).execSync();
+                            }
+                        }
                         let signingOptionForExport = signingOption;
 
                         // If we're using the project defaults, scan the pbxProject file for the type of signing being used.
