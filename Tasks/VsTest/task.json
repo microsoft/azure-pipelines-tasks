@@ -2,7 +2,7 @@
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
-    "description": "Run tests with Visual Studio test runner",
+    "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test runner. Test frameworks that have a Visual Studio test adapter such as xUnit, NUnit, Chutzpah, Python, etc. can also be run. Tests can be distributed on multiple agents using this task (version 2).",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
@@ -22,7 +22,7 @@
     "demands": [
         "vstest"
     ],
-    "releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+    "releaseNotes": "<ul><li><b>Run tests using agent phase:</b> Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can distribute tests using the multi-agent phase setting. Multi-config phase setting can be used to replicate tests in different configurations. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Use the <b>Visual Studio Test Platform Installer task</b> to run tests without needing a full Visual Studio installation.</li></ul>",
     "minimumAgentVersion": "2.103.0",
     "groups": [
         {
