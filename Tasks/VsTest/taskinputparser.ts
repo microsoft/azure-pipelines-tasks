@@ -71,7 +71,7 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.vstestArgsFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseSupplementryFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
+    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported() || utils.Helper.isToolsInstallerFlow(vsTestConfiguration);
     return vsTestConfiguration;
 }
 
