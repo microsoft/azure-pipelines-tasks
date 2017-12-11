@@ -1,121 +1,150 @@
-import msRestAzure = require("./azure-arm-common");
+import { ToError, ServiceClient } from './AzureServiceClient';
+import msRestAzure = require('./azure-arm-common');
 import tl = require('vsts-task-lib/task');
-import util = require("util");
-import webClient = require("./webClient");
-import azureServiceClient = require("./AzureServiceClient");
-import Model = require("./azureModels");
-import Q = require("q");
+import util = require('util');
+import webClient = require('./webClient');
+import Model = require('./azureModels');
+import Q = require('q');
+import { AzureEndpoint } from './azureModels';
 
+export class ApplicationInsightsWebTests {
+    private _resourceGroupName: string;
+    private _client: ServiceClient;
+    private _endpoint: AzureEndpoint;
 
-export class AppInsightsWebTestsManagementClient extends azureServiceClient.ServiceClient {
-    public appInsights: AppInsightsWebTests;
+    constructor(endpoint: AzureEndpoint, resourceGroup?: string) {
+        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
+            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
-        super(credentials, subscriptionId);
-
-        if (!!options && !!options.longRunningOperationRetryTimeout) {
-            this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
-        }
-
-        this.appInsights = new AppInsightsWebTests(this);
-    }
-}
-
-export class AppInsightsWebTests {
-    private _client: AppInsightsWebTestsManagementClient;
-    
-    constructor(client) {
-        this._client = client;
+        this._endpoint = endpoint;
+        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+        this._resourceGroupName = resourceGroup;
     }
 
-    public listByResourceGroup(resourceGroup: string, options: any, callback: azureServiceClient.ApiCallback) {
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-
-        try {
-            this._client.isValidResourceGroupName(resourceGroup);
-        }
-        catch(error) {
-            return callback(error);
-        }
-
+    public async list() {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/webtests`,
         {
-            '{resourceGroupName}': resourceGroup
+            '{resourceGroupName}': this._resourceGroupName
         }, null, '2015-05-01');
 
         var result = [];
-        this._client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
-            if (response.statusCode == 200) {
-                if (response.body.value) {
-                    result = result.concat(response.body.value);
-                }
-
-                if (response.body.nextLink) {
-                    var nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) {
-                        return new azureServiceClient.ApiResult(nextResult.error);
-                    }
-                    result = result.concat(nextResult.result);
-                }
-
-                return new azureServiceClient.ApiResult(null, result);
-            }
-            else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
-            }
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));        
-    }
-
-    public create(resourceGroupName: string, webTestName: string, webTestDefinition: any, options: any, callback: azureServiceClient.ApiCallback) {
-        if(!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
 
         try {
-            this._client.isValidResourceGroupName(resourceGroupName);
-            if(!webTestName || typeof webTestName.valueOf() != 'string') {
-                throw new Error(tl.loc("TestNameCannotBeNull"));
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
             }
-            if(webTestDefinition == null || webTestDefinition == undefined) {
-                throw new Error(tl.loc("TestDefinitionCannotBeNull"));
+
+            result = result.concat(response.body.value);
+            if(response.body.nextLink) {
+                var nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
+                if(nextResult.error) {
+                    throw ToError(nextResult.error);
+                }
+                result = result.concat(nextResult.result);
             }
+
+            return result;
         }
         catch(error) {
-            return callback(error);
+            throw Error(tl.loc('FailedToGetApplicationInsightsWebTestsForResourceGroup', this._resourceGroupName, this._client.getFormattedError(error)));
         }
+    }
 
+    public async create(appInsightsResource: any, applicationUrl: string) {
+        var webTestName = "vsts-web-test-" + Date.now();
+        var webTestData =  JSON.parse(JSON.stringify(this.webTestData));
+        webTestData.name = webTestName;
+        webTestData.properties.Name = webTestName;
+        webTestData.properties.SyntheticMonitorId = webTestName;
+        webTestData.location = appInsightsResource.location;
+        webTestData.tags["hidden-link:" + appInsightsResource.id] = "Resource";
+        webTestData.properties.Configuration.WebTest = webTestData.properties.Configuration.WebTest.replace("{WEB_TEST_NAME}", webTestName);
+        webTestData.properties.Configuration.WebTest = webTestData.properties.Configuration.WebTest.replace("{APPLICATION_URL}", applicationUrl);
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
-        httpRequest.body = JSON.stringify(webTestDefinition);
+        httpRequest.body = JSON.stringify(webTestData);
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/webtests/{webTestName}`,
         {
-            '{resourceGroupName}': resourceGroupName,
+            '{resourceGroupName}': this._resourceGroupName,
             '{webTestName}': webTestName
         }, null, '2015-05-01');
 
-        this._client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            let deferred = Q.defer<azureServiceClient.ApiResult>();
-            if(response.statusCode == 200) {
-                tl.debug(JSON.stringify(response));
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
             }
-            else {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+
+            return response.body;
+
+        }
+        catch(error) {
+            throw Error(tl.loc("FailedToCreateWebTests", this._client.getFormattedError(error)));
+        }
+    }
+
+    public async addWebTest(appInsightsResource: any, applicationUrl: string) {
+        var webTests = await this.list();
+        for(var webTest of webTests) {
+            var isTagPresent: boolean = false;
+            var isApplicationUrlPresent: boolean = false;
+            for(var tag in webTest.tags) {
+                if(tag.toLowerCase().indexOf(appInsightsResource.id.toLowerCase()) != -1) {
+                    isTagPresent = true;
+                    break;
+                }
+                
             }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+
+            isApplicationUrlPresent = webTest.properties.Configuration.WebTest.toLowerCase().indexOf(applicationUrl.toLowerCase()) != -1;
+            if(isTagPresent && isApplicationUrlPresent) {
+                console.log(tl.loc('WebTestAlreadyConfigured', applicationUrl));
+                return;
+            }
+        }
+
+        await this.create(appInsightsResource, applicationUrl);
+        
+    }
+
+    private  webTestData = {
+        "name": "",
+        "location": "",
+        "tags": {},
+        "properties": {
+            "SyntheticMonitorId": "",
+            "Name": "",
+            "Description": "",
+            "Enabled": true,
+            "Frequency": 300,
+            "Timeout": 120,
+            "Kind": "ping",
+            "RetryEnabled": true,
+            "Locations": [
+                {
+                    "Id": "us-tx-sn1-azr"
+                },
+                {
+                    "Id": "us-il-ch1-azr"
+                },
+                {
+                    "Id": "us-ca-sjc-azr"
+                },
+                {
+                    "Id": "us-va-ash-azr"
+                },
+                {
+                    "Id": "us-fl-mia-edge"
+                }
+            ],
+            "Configuration": {
+                "WebTest": "<WebTest Name=\"{WEB_TEST_NAME}\" Enabled=\"True\" CssProjectStructure=\"\"  CssIteration=\"\"  Timeout=\"120\"  WorkItemIds=\"\"  xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\" Description=\"\" CredentialUserName=\"\" CredentialPassword=\"\" PreAuthenticate=\"True\" Proxy=\"default\" StopOnError=\"False\" RecordedResultFile=\"\" ResultsLocale=\"\"> <Items> <Request Method=\"GET\"  Version=\"1.1\"  Url=\"{APPLICATION_URL}\"  ThinkTime=\"0\" Timeout=\"120\" ParseDependentRequests=\"True\" FollowRedirects=\"True\"         RecordResult=\"True\"         Cache=\"False\" ResponseTimeGoal=\"0\" Encoding=\"utf-8\"  ExpectedHttpStatusCode=\"200\" ExpectedResponseUrl=\"\"  ReportingName=\"\" IgnoreHttpStatusCode=\"False\" /></Items></WebTest>"
+            }
+        }
     }
 
 }

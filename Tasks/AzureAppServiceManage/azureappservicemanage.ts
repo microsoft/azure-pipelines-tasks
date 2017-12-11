@@ -3,11 +3,12 @@ import Q = require('q');
 import path = require('path');
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-common';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { AzureAppService } from 'azure-arm-rest/AzureAppService';
-import { AzureApplicationInsights } from 'azure-arm-rest/AzureAppInsights';
-import { AzureResourceFilterController } from 'azure-arm-rest/AzureResourceFilter';
-import { Kudu } from 'azure-arm-rest/AzureAppServiceKudu';
-import { ApplicationInsightsWebTests } from 'azure-arm-rest/AzureAppInsightsWebTests';
+import {AzureAppService  } from 'azure-arm-rest/azure-arm-app-service';
+// import { AzureAppService } from 'azure-arm-rest/AzureAppService';
+import { AzureApplicationInsights } from 'azure-arm-rest/azure-arm-appinsights';
+import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { ApplicationInsightsWebTests } from 'azure-arm-rest/azure-arm-appinsights-webtests';
+import { Resources } from 'azure-arm-rest/azure-arm-resource';
 
 const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
 const pingApplicationCount: number = 1;
@@ -46,6 +47,7 @@ async function enableContinuousMonitoring(appService: AzureAppService, appInsigh
     }
 }
 
+
 async function updateDeploymentStatusInKudu(kuduService: Kudu, taskResult: boolean, DeploymentID: string, customMessage: any) {
     try {
         return await kuduService.updateDeployment(taskResult, DeploymentID, customMessage);
@@ -77,7 +79,8 @@ async function run() {
         var updateDeploymentStatus: boolean = true;
 
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
-        var resources: Array<any> = await new AzureResourceFilterController(azureEndpoint).getResources('Microsoft.Web/Sites', webAppName);
+        var resources: Array<any> = await new Resources(azureEndpoint).getResources('Microsoft.Web/Sites', webAppName);
+
         if(action != "Swap Slots" && !slotName) {
             if(!resources || resources.length == 0) {
                 throw new Error(tl.loc('ResourceDoesntExist', webAppName));
@@ -86,35 +89,35 @@ async function run() {
                 resourceGroupName = resources[0].id.split("/")[4];
             }
             else {
-                throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', webAppName));
+                throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', resourceGroupName));
             }
         }
 
         tl.debug(`Resource Group: ${resourceGroupName}`);    
         switch(action) {
             case "Start Azure App Service": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 await appService.start();
                 await appService.monitorAppState("running");
                 await appService.pingApplication(pingApplicationCount);
                 break;
             }
             case "Stop Azure App Service": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 await appService.stop();
                 await appService.monitorAppState("stopped");
                 await appService.pingApplication(pingApplicationCount);
                 break;
             }
             case "Restart Azure App Service": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 await appService.restart();
                 break;
             }
             case "Swap Slots": {
                 targetSlot = (swapWithProduction) ? productionSlot : targetSlot;
-                var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, sourceSlot);
-                var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, targetSlot);
+                var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
+                var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
                 if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
                     updateDeploymentStatus = false;
                     throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));
@@ -123,7 +126,7 @@ async function run() {
                 console.log(tl.loc('WarmingUpSlots'));
                 await appServiceSourceSlot.pingApplication(1);
                 await appServiceTargetSlot.pingApplication(1);
-                await appServiceSourceSlot.swap({ 'targetSlot': targetSlot, 'preserveVnet': preserveVnet});
+                await appServiceSourceSlot.swap(targetSlot, preserveVnet);
                 break;
             }
             case "Start all continuous webjobs": {

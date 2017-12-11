@@ -224,3 +224,25 @@ export interface AzureAppServiceConfigurationDetails {
     tags: string;
     properties?: {[key: string]: any};
 }
+
+export interface WebJob {
+    name: string;
+    status: string;
+    runCommand: string;
+    log_url: string;
+    url: string;
+    type: string;
+}
+
+export interface SiteExtension {
+    id: string;
+    title: string;
+    description: string;
+    extension_url: string;
+    local_path: string;
+    version: string;
+    project_url: string;
+    authors: Array<string>;
+    provisioningState: string;
+    local_is_latest_version: boolean;
+}

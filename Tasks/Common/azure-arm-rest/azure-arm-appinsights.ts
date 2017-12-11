@@ -1,124 +1,79 @@
-import msRestAzure = require("./azure-arm-common");
+import msRestAzure = require('./azure-arm-common');
 import tl = require('vsts-task-lib/task');
-import util = require("util");
-import webClient = require("./webClient");
-import azureServiceClient = require("./AzureServiceClient");
-import Model = require("./azureModels");
-import Q = require("q");
+import util = require('util');
+import webClient = require('./webClient');
+import  {ToError, ServiceClient } from './AzureServiceClient';
+import Model = require('./azureModels');
+import Q = require('q');
+import { AzureEndpoint } from './azureModels';
 
+export class AzureApplicationInsights {
+    private _resourceName: string;
+    private _resourceGroupName: string;
+    private _endpoint: AzureEndpoint;
+    private _client: ServiceClient;
 
-export class AppInsightsManagementClient extends azureServiceClient.ServiceClient {
-    public appInsights: AppInsights;
-
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
-        super(credentials, subscriptionId);
-
-        if (!!options && !!options.longRunningOperationRetryTimeout) {
-            this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
-        }
-
-        this.appInsights = new AppInsights(this);
-    }
-}
-
-export class AppInsights {
-    private _client: AppInsightsManagementClient;
-    
-    constructor(client) {
-        this._client = client;
+    constructor(endpoint: AzureEndpoint, resourceGroupName: string, resourceName: string) {
+        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
+            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
+        
+        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+        this._endpoint = endpoint;
+        this._resourceGroupName = resourceGroupName;
+        this._resourceName = resourceName;
     }
 
-    public async get(resourceGroupName: string, resourceName: string, options: any, callback: azureServiceClient.ApiCallback) {
-        if(!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-
-        if (!callback) {
-            throw new Error('callback cannot be null.');    
-        }
-
-        try {
-            this._client.isValidResourceGroupName(resourceGroupName);
-            if(!resourceName || typeof resourceName.valueOf() != 'string') {
-                throw new Error(tl.loc('ResourceNameCannotBeNull'));
-            }
-        }
-        catch(error) {
-            return callback(error);
-        }
-
+    public async get() {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
-        if(options) {
-            httpRequest.headers = this._client.setCustomHeaders(options);
-        }
 
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}`,
         {
-            '{resourceGroupName}': resourceGroupName,
-            '{resourceName}': resourceName,
+            '{resourceGroupName}': this._resourceGroupName,
+            '{resourceName}': this._resourceName,
         }, null, '2015-05-01');
 
-        this._client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            let deferred = Q.defer<azureServiceClient.ApiResult>();
+        try {
+            var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                return response.body;
             }
-            else {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-        (error) => callback(error));
-    }
 
-    public async update(resourceGroupName: string, resourceName: string, insightProperties: any, options, callback: azureServiceClient.ApiCallback) {
-       if(!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-       }
-
-       if (!callback) {
-            throw new Error('callback cannot be null.');
-       }
-
-       try {
-            this._client.isValidResourceGroupName(resourceGroupName);
-            if(!resourceName || typeof resourceName.valueOf() != 'string') {
-                throw new Error(tl.loc('ResourceNameCannotBeNull'));
-            }
-            if(!insightProperties) {
-                throw new Error(tl.loc("AppInsightsPropertiesCannotBeNullOrEmpty"));
-            }
+            throw ToError(response);
         }
         catch(error) {
-            return callback(error);
+            throw Error(tl.loc('FailedToGetApplicationInsightsResource', this._resourceName, this._client.getFormattedError(error)))
         }
+    }
 
+    public async update(insightProperties: any) {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.body = JSON.stringify(insightProperties);
-        if(options) {
-            httpRequest.headers = this._client.setCustomHeaders(options);
-        }
-
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}`,
         {
-            '{resourceGroupName}': resourceGroupName,
-            '{resourceName}': resourceName,
+            '{resourceGroupName}': this._resourceGroupName,
+            '{resourceName}': this._resourceName,
         }, null, '2015-05-01');
 
-        this._client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
-            let deferred = Q.defer<azureServiceClient.ApiResult>();
+        try {
+            var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                return response.body;
             }
-            else {
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-        (error) => callback(error));
+
+            throw ToError(response);
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateApplicationInsightsResource', this._resourceName, this._client.getFormattedError(error)))
+        }
+    }
+
+    public getEndpoint(): AzureEndpoint {
+        return this._endpoint;
+    }
+
+    public getResourceGroupName(): string {
+        return this._resourceGroupName;
     }
 }

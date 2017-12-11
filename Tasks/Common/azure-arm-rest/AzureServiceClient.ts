@@ -213,7 +213,7 @@ export class ServiceClient {
     public getFormattedError(error: any) {
         if(error && error.message) {
             if(error.statusCode) {
-                var errorMessage = typeof error.message.valueOf == 'string'? error.message 
+                var errorMessage = typeof error.message.valueOf() == 'string' ? error.message 
                     : (error.message.Code || error.message.code) + " - " + (error.message.Message || error.message.message)
                 error.message = `${errorMessage} (CODE: ${error.statusCode})`
             }
