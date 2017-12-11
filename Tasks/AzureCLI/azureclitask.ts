@@ -12,8 +12,6 @@ export class azureclitask {
     public static async runMain() {
         var toolExecutionError = null;
         try {
-            tl.setResourcePath(path.join(__dirname, "task.json"));
-
             var tool;
             if (os.type() != "Windows_NT") {
                 tool = tl.tool(tl.which("bash", true));
@@ -149,6 +147,8 @@ export class azureclitask {
         }
     }
 }
+
+tl.setResourcePath(path.join(__dirname, "task.json"));
 
 if (!azureclitask.checkIfAzurePythonSdkIsInstalled()) {
     tl.setResult(tl.TaskResult.Failed, tl.loc("AzureSDKNotFound"));
