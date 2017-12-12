@@ -193,7 +193,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         } else {
             tl.warning(tl.loc('invalidRerunFailedThreshold'));
         }
-        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0) {
+        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
             testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
             console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
         } else {
