@@ -345,6 +345,7 @@
     "FoundJobType": "ms-resource:loc.messages.FoundJobType",
     "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
     "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
-    "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles"
+    "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
+    "GetArtifactItemNotSupported": "ms-resource:loc.messages.GetArtifactItemNotSupported"
   }
 }

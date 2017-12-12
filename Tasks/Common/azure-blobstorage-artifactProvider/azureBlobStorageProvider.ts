@@ -61,7 +61,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     public getArtifactItems(artifactItem: models.ArtifactItem): Promise<models.ArtifactItem[]> {
-        return this._getItems(this._container, artifactItem.path);
+        throw new Error(tl.loc("GetArtifactItemNotSupported"));
     }
 
     public getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
