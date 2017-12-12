@@ -367,11 +367,10 @@ async function run() {
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
                         if (cloudEntitlement === true) {
                             tl.debug("Adding cloud entitlement");
-                            tl.tool(plist).arg(['-c', 'Add com.apple.developer.icloud-container-environment array', exportOptionsPlist]).execSync();
                             if (exportMethod === "app-store") {
-                                tl.tool(plist).arg(['-c', 'Add com.apple.developer.icloud-container-environment: string Production', exportOptionsPlist]).execSync();
+                                tl.tool(plist).arg(['-c', 'Add iCloudContainerEnvironment string Production', exportOptionsPlist]).execSync();
                             } else {
-                                tl.tool(plist).arg(['-c', 'Add com.apple.developer.icloud-container-environment: string Development', exportOptionsPlist]).execSync();
+                                tl.tool(plist).arg(['-c', 'Add iCloudContainerEnvironment string Development', exportOptionsPlist]).execSync();
                             }
                         }
                         let signingOptionForExport = signingOption;

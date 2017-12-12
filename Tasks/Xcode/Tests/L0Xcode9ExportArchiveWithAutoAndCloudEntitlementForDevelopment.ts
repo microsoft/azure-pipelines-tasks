@@ -171,11 +171,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "plist add output here"
         },
-        "/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist": {
-            "code": 0,
-            "stdout": "plist add output here"
-        },
-        "/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment: string Development _XcodeTaskExportOptions.plist": {
+        "/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Development _XcodeTaskExportOptions.plist": {
             "code": 0,
             "stdout": "plist add output here"
         }

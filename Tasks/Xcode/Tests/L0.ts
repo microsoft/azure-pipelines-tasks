@@ -459,7 +459,7 @@ describe('Xcode L0 Suite', function () {
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
 
-        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist") === false,
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Production _XcodeTaskExportOptions.plist") === false,
             'PlistBuddy add cloud entitlement should not run');
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -486,11 +486,8 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add method string app-store _XcodeTaskExportOptions.plist"),
             'PlistBuddy add method should have run.');
 
-        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist"),
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Production _XcodeTaskExportOptions.plist"),
             'PlistBuddy add cloud entitlement list should have run.');
-
-        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment: string Production _XcodeTaskExportOptions.plist"),
-            'PlistBuddy add cloud entitlement for Production should have run.');
 
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add signingStyle string manual _XcodeTaskExportOptions.plist"),
             'PlistBuddy add signingStyle should have run.');
@@ -508,7 +505,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 23, 'Should have run \"PlistBuddy -c Add...\" four times, and 19 other command lines.');
+        assert(tr.invokedToolCount == 22, 'Should have run \"PlistBuddy -c Add...\" four times, and 18 other command lines.');
 
         done();
     });
@@ -530,10 +527,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add method string development _XcodeTaskExportOptions.plist"),
             'PlistBuddy add method should have run.');
 
-        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment array _XcodeTaskExportOptions.plist"),
-            'PlistBuddy add cloud entitlement list should have run.');
-
-        assert(tr.ran("/usr/libexec/PlistBuddy -c Add com.apple.developer.icloud-container-environment: string Development _XcodeTaskExportOptions.plist"),
+        assert(tr.ran("/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Development _XcodeTaskExportOptions.plist"),
             'PlistBuddy add cloud entitlement for Production should have run.');
 
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add signingStyle string manual _XcodeTaskExportOptions.plist"),
@@ -552,7 +546,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 22, 'Should have run \"PlistBuddy -c Add...\" four times, and 18 other command lines.');
+        assert(tr.invokedToolCount == 21, 'Should have run \"PlistBuddy -c Add...\" four times, and 17 other command lines.');
 
         done();
     });
