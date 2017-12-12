@@ -628,6 +628,9 @@ function publishTestResults(testResultsDirectory: string): tl.TaskResult {
                 console.log('##vso[task.logissue type=warning;code=002003;]');
                 tl.warning(tl.loc('NoResultsToPublish'));
             }
+        } else {
+            utils.Helper.publishEventToCi(AreaCodes.PUBLISHRESULTS, 'no test directory', 1041, false);
+            tl.warning(tl.loc('NoTestResultsDirectoryFound'));
         }
 
         return tl.TaskResult.Succeeded;
