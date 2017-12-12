@@ -130,7 +130,7 @@ async function run() {
                 break;
             }
             case "Start all continuous webjobs": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 var appServiceKuduService = await appService.getKuduService();
                 console.log(tl.loc('StartingContinousWebJobs'));
                 await appServiceKuduService.startContinuousWebJobs();
@@ -138,7 +138,7 @@ async function run() {
                 break;
             }
             case "Stop all continuous webjobs": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 var appServiceKuduService = await appService.getKuduService();
                 console.log(tl.loc('StoppingContinousWebJobs'));
                 await appServiceKuduService.stopContinuousWebJobs();
@@ -146,7 +146,7 @@ async function run() {
                 break;
             }
             case "Install Extensions": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 var appServiceKuduService = await appService.getKuduService();
                 var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
                 var isExtensionsInstalled: boolean = await appServiceKuduService.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
@@ -156,7 +156,7 @@ async function run() {
                 break;
             }
             case "Enable Continuous Monitoring": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, webAppName, resourceGroupName, slotName);
+                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
                 try {
                     await enableContinuousMonitoring(appService, appInsights);
