@@ -20,7 +20,7 @@ export class BlobService {
         var fileProvider = new artifactProviders.FilesystemProvider(source);
         var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, this._host);
         var processor = new artifactProcessor.ArtifactEngine();
-        var processorOptions =  new artifactProcessor.ArtifactEngineOptions();
+        var processorOptions = new artifactProcessor.ArtifactEngineOptions();
         if (itemPattern) {
             processorOptions.itemPattern = itemPattern;
         }
@@ -37,11 +37,12 @@ export class BlobService {
         return uploadedUrls;
     }
 
-    public async downloadBlobs(destination: string, container: string, prefixFolderPath?: string, itemPattern?: string): Promise<void> {
+    public async downloadBlobs(destination: string, container: string, prefixFolderPath?: string, itemPattern?: string, downloadRelativeToPrefixPath?: boolean): Promise<void> {
         var fileProvider = new artifactProviders.FilesystemProvider(destination);
         var azureProvider = new azureBlobProvider.AzureBlobProvider(this._storageAccountName, container, this._storageAccessKey, prefixFolderPath, this._host, true);
         var processor = new artifactProcessor.ArtifactEngine();
-        var processorOptions =  new artifactProcessor.ArtifactEngineOptions();
+        var processorOptions = new artifactProcessor.ArtifactEngineOptions();
+        processorOptions.parallelProcessingLimit = 10;
         if (itemPattern) {
             processorOptions.itemPattern = itemPattern;
         }

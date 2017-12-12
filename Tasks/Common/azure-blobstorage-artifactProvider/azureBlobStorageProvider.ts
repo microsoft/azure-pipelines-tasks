@@ -102,18 +102,35 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     private _getItems(container: string, parentRelativePath?: string): Promise<models.ArtifactItem[]> {
         var promise = new Promise<models.ArtifactItem[]>((resolve, reject) => {
             var items: models.ArtifactItem[] = [];
-
-            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, null, (error, result) => {
+            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, null, async (error, result) => {
                 if (!!error) {
                     console.log(tl.loc("FailedToListItemInsideContainer", container, error.message));
                     reject(error);
                 } else {
                     console.log(tl.loc("SuccessFullyFetchedItemList"));
-                    if (result.continuationToken) {
-                        tl.warning(tl.loc("ArtifactItemsTruncationWarning"));
+                    items = items.concat(this._convertBlobResultToArtifactItem(result.entries));
+
+                    while (result.continuationToken) {
+                        console.log(tl.loc("ContinuationTokenExistsFetchingRemainingFiles"));
+                        result = await this._getListOfItemsInsideContainer(container, parentRelativePath, result.continuationToken);
+                        items = items.concat(this._convertBlobResultToArtifactItem(result.entries));
                     }
-                    items = this._convertBlobResultToArtifactItem(result.entries);
-                    resolve(items);
+                }
+                resolve(items);
+            });
+        });
+
+        return promise;
+    }
+
+    private async _getListOfItemsInsideContainer(container, parentRelativePath, continuationToken): Promise<azureStorage.BlobService.ListBlobsResult> {
+        var promise = new Promise<azureStorage.BlobService.ListBlobsResult>((resolve, reject) => {
+            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, continuationToken, async (error, result) => {
+                if (!!error) {
+                    console.log(tl.loc("FailedToListItemInsideContainer", container, error.message));
+                    reject(error);
+                } else {
+                    resolve(result);
                 }
             });
         });
