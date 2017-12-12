@@ -4,6 +4,31 @@ import tl = require('vsts-task-lib');
 import * as path from 'path';
 
 describe('Azure App Service Manage Suite', function() {
+    this.timeout(30000);
+    before((done) => {
+        done();
+    });
+    after(function () {
+    });
+    
+    it('Action: Start App Service', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'L0StartAppServiceSuccess.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+            assert(tr.succeeded, "Task Should have succeeded for start App Service action");
+            console.log(tr.stdout);
+        }
+        catch(error) {
+            console.log(tr.stdout);
+            done(error);
+            return;
+        }
+
+        done();
+    });
+    /*
     it('Install Extensions successfully', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0ExtensionManageSuccess.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -31,4 +56,5 @@ describe('Azure App Service Manage Suite', function() {
         assert(tr.stdOutContained('ExtensionInstallFailedResponseError'), 'Should have failed when extension install failed.');
         done();
     });
+    */
 });
