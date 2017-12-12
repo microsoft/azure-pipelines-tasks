@@ -3,7 +3,7 @@
         "AndroidSigning",
         "ANT",
         "AppCenterDistribute",
-
+        "AppCenterTest",
         "ArchiveFiles",
         "AzureAppServiceManage",
         "AzureCLI",
@@ -51,7 +51,7 @@
         "InvokeRestApi",
         "JavaToolInstaller",
         "JenkinsDownloadArtifacts",
-
+        "JenkinsQueueJob",
         "Kubernetes",
         "ManualIntervention",
         "Maven",
