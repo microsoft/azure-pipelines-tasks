@@ -27,14 +27,15 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
-        if (this.command === "custom") {
-            this.command = tl.getInput("custom", true);
-        }
 
         switch (this.command) {
             case "build":
             case "publish":
             case "run":
+                await this.executeBasicCommand();
+                break;
+            case "custom":
+                this.command = tl.getInput("custom", true);
                 await this.executeBasicCommand();
                 break;
             case "test":
