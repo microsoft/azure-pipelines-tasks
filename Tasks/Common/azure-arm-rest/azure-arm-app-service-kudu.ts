@@ -5,6 +5,7 @@ import webClient = require('./webClient');
 import Q = require('q');
 import { ToError } from './AzureServiceClient';
 import { WebJob, SiteExtension } from './azureModels';
+
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
@@ -131,13 +132,14 @@ export class Kudu {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`installSiteExtension. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
+                console.log(tl.loc("SiteExtensionInstalled", extensionName));
                 return response.body;
             }
 
             throw ToError(response);
         }
         catch(error) {
-            throw Error(tl.loc('FailedToInstallSiteExtension', this._getFormattedError(error)))
+            throw Error(tl.loc('FailedToInstallSiteExtension', extensionName, this._getFormattedError(error)))
         }
     }
 

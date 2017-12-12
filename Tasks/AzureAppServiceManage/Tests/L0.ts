@@ -4,10 +4,13 @@ import tl = require('vsts-task-lib');
 import * as path from 'path';
 
 describe('Azure App Service Manage Suite', function() {
-    this.timeout(30000);
+
+    this.timeout(5*60000);
+
     before((done) => {
         done();
     });
+    
     after(function () {
     });
     
@@ -18,7 +21,6 @@ describe('Azure App Service Manage Suite', function() {
         try {
             tr.run();
             assert(tr.succeeded, "Task Should have succeeded for start App Service action");
-            console.log(tr.stdout);
         }
         catch(error) {
             console.log(tr.stdout);
