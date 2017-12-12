@@ -9,12 +9,17 @@ export class AzureBlobProvider implements models.IArtifactProvider {
 
     public artifactItemStore: store.ArtifactItemStore;
 
-    constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string) {
+    constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string, downloadRelativeToPrefixPath?: boolean) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
         this._container = container;
-        this._prefixFolderPath = prefixFolderPath;
+        if (!!prefixFolderPath) {
+            this._prefixFolderPath = prefixFolderPath.endsWith("/") ? prefixFolderPath : prefixFolderPath + "/";
+        } else {
+            this._prefixFolderPath = "";
+        }
         this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
+        this._downloadRelativeToPrefixPath = !!downloadRelativeToPrefixPath;
     }
 
     public putArtifactItem(item: models.ArtifactItem, readStream: NodeJS.ReadableStream): Promise<models.ArtifactItem> {
@@ -61,7 +66,12 @@ export class AzureBlobProvider implements models.IArtifactProvider {
 
     public getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
         return new Promise((resolve, reject) => {
-            var readStream: NodeJS.ReadableStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            var readStream: NodeJS.ReadableStream;
+            if (this._downloadRelativeToPrefixPath && !!this._prefixFolderPath) {
+                readStream = this._blobSvc.createReadStream(this._container, this._prefixFolderPath + artifactItem.path, null); // Adding prefix path to get the absolute path
+            } else {
+                readStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            }
             resolve(readStream);
         });
     }
@@ -118,7 +128,11 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             artifactitem.itemType = models.ItemType.File;
             artifactitem.fileLength = parseInt(element.contentLength);
             artifactitem.lastModified = new Date(element.lastModified + 'Z');
-            artifactitem.path = element.name;
+            if (this._downloadRelativeToPrefixPath && !!this._prefixFolderPath) {
+                artifactitem.path = element.name.replace(this._prefixFolderPath, "").trim(); // Supplying relative path without prefix; removing the first occurence
+            } else {
+                artifactitem.path = element.name;
+            }
             artifactItems.push(artifactitem);
         });
 
@@ -131,4 +145,5 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     private _prefixFolderPath: string;
     private _isContainerExists: boolean = false;
     private _blobSvc: azureStorage.BlobService;
+    private _downloadRelativeToPrefixPath: boolean = false;
 }
