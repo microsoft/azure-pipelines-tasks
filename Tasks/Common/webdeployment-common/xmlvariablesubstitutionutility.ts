@@ -184,15 +184,31 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
         tl.debug("Provided node is empty or a comment.");
         return isSubstitutionApplied;
     }
+
     var xmlDomNodeAttributes = xmlDomNode.attrs;
     const ConfigFileAppSettingsToken = 'CONFIG_FILE_SETTINGS_TOKEN';
+
     for(var attributeName in xmlDomNodeAttributes) {
-        var attributeNameValue = (attributeName === "key") ? xmlDomNodeAttributes[attributeName] : attributeName;
-        var attributeName = (attributeName === "key") ? "value" : attributeName;
+        var attributeNameValue = (attributeName === "key" || attributeName == "name") ? xmlDomNodeAttributes[attributeName] : attributeName;
+        var attributeName = (attributeName === "key" || attributeName == "name") ? "value" : attributeName;
+
         if(variableMap[attributeNameValue]) {
             var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
             tl.debug('Updating value for key=' + attributeNameValue + 'with token_value: ' + ConfigFileAppSettingsTokenName);
-            xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
+
+            if(xmlDomNode.getAttr(attributeName)) {
+                xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
+            } else {
+                var children = xmlDomNode.children;
+                for(var childNode of children) {
+                    if(varUtility.isObject(childNode) && childNode.name == attributeName) {
+                        if (childNode.children.length === 1) {
+                            childNode.children[0] = ConfigFileAppSettingsTokenName;
+                        }
+                    }
+                }
+            }
+
             replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
             isSubstitutionApplied = true;
         }
