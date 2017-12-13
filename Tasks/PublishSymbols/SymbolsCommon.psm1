@@ -85,7 +85,18 @@ function Get-SymbolBinaryPath
         [string]$V1AgentPath
     )
 
-    $useDbgLkg = [System.Convert]::ToBoolean($env:PublishSymbols_UseDbgLkg)
+    $useDbgLkg = $env:PublishSymbols_UseDbgLkg
+    if ($env:PublishSymbols_UseDbgLkg -eq $null)
+    {
+        # Opt-in to latest symbol binaries by default
+        $useDbgLkg = $true
+    }
+    else
+    {
+        # Opt-out if customer specified by variable in their build
+        $useDbgLkg = [System.Convert]::ToBoolean($env:PublishSymbols_UseDbgLkg)
+    }
+
     if($useDbgLkg)
     {
         # Use the latest symbol binaries as specified by variable "PublishSymbols_UseDbgLkg" in the build definition

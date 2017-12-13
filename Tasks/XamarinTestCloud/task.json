@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 31
+        "Minor": 126,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -27,6 +27,7 @@
     "inputs": [
         {
             "name": "app",
+            "aliases": [ "appFile" ],
             "type": "filePath",
             "label": "App File",
             "defaultValue": "",
@@ -35,6 +36,7 @@
         },
         {
             "name": "dsym",
+            "aliases": [ "dsymFile" ],
             "type": "string",
             "label": "dSYM File (iOS only)",
             "required": false,
@@ -51,6 +53,7 @@
         },
         {
             "name": "user",
+            "aliases": [ "email" ],
             "type": "string",
             "label": "User Email",
             "defaultValue": "",
@@ -75,6 +78,7 @@
         },
         {
             "name": "testDir",
+            "aliases": [ "testAssemblyDirectory" ],
             "type": "filePath",
             "label": "Test Assembly Directory",
             "defaultValue": "",
@@ -83,6 +87,7 @@
         },
         {
             "name": "parallelization",
+            "aliases": [ "parallelizationOption" ],
             "type": "pickList",
             "label": "Parallelization",
             "required": true,
@@ -96,6 +101,7 @@
         },
         {
             "name": "locale",
+            "aliases": [ "localeOption" ],
             "type": "pickList",
             "label": "System Language",
             "defaultValue": "en_US",
@@ -128,6 +134,7 @@
         },
         {
             "name": "testCloudLocation",
+            "aliases": [ "testCloudFile" ],
             "type": "filePath",
             "label": "test-cloud.exe Location",
             "groupName": "advanced",

@@ -4,7 +4,7 @@ import path = require('path');
 import * as ttm from 'vsts-task-lib/mock-test';
 
 describe('AndroidSigning Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
     before(() => {
     });
 

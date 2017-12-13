@@ -2,7 +2,7 @@
     "id": "F54D001C-999F-408A-9867-0400C1838C5E",
     "name": "XcodePackageiOS",
     "friendlyName": "Xcode Package iOS",
-    "description": "Generate an .ipa file from Xcode build output",
+    "description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613731)",
     "category": "Build",
     "visibility": [
@@ -11,9 +11,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 112,
-        "Patch": 1
+        "Minor": 125,
+        "Patch": 0
     },
+    "deprecated": true,
     "instanceNameFormat": "Xcode Package $(appName)",
     "demands": [
         "xcode"

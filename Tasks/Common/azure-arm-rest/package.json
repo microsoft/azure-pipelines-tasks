@@ -1,6 +1,6 @@
 {
   "name": "azure-arm-rest",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Common Lib for Azure ARM REST apis",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "q": "1.4.1",
-    "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "^0.9.20"
+    "vsts-task-lib": "2.0.5",
+    "typed-rest-client": "0.12.0"
   }
 }

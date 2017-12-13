@@ -443,4 +443,67 @@ describe('DotNetCoreExe Suite', function () {
         assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
         done();
     });
+
+    it('test command with publish test results should call trx logger and publish test results', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './TestCommandTests/publishtests.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent\\home\\temp'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent\\home\\temp\\sample.trx;]'), "should publish trx");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+        done();
+    });
+
+    it('test command with publish test results should call trx logger and publish test results without build props', (done: MochaDone) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, './TestCommandTests/publishtestsWithoutBuildConfig.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent\\home\\temp'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent\\home\\temp\\sample.trx;]'), "should publish trx");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('test command with publish test results should call trx logger and publish test results with failed dotnet test', (done: MochaDone) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, './TestCommandTests/publishtestsWithFailedTestCommand.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent\\home\\temp'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet error'), "should have dotnet output");
+        assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent\\home\\temp\\sample.trx;]'), "should publish trx");
+        assert(tr.failed, 'should have failed');
+        done();
+    });
+
+    it('test command without publish test results', (done: MochaDone) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutPublish.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
+        assert(!tr.stdOutContained('vso[results.publish'), 'it shouldnt contain publish command');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+        done();
+    });
 });

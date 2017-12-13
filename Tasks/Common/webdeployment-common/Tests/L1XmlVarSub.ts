@@ -13,7 +13,8 @@ async function xmlVarSub() {
         'DefaultConnection': "Url=https://primary;Database=db1;ApiKey=11111111-1111-1111-1111-111111111111;Failover = {Url:'https://secondary', ApiKey:'11111111-1111-1111-1111-111111111111'}",
         'OtherDefaultConnection': 'connectionStringValue2',
         'ParameterConnection': 'New_Connection_String From xml var subs',
-        'connectionString': 'replaced_value'
+        'connectionString': 'replaced_value',
+        'invariantName': 'System.Data.SqlServer'
     }
 
     var parameterFilePath = path.join(__dirname, 'L1XmlVarSub/parameters_test.xml');

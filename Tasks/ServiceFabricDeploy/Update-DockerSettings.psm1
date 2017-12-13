@@ -43,10 +43,14 @@ function Update-DockerSettings
             }
         }
 
-        if (-not $isPasswordEncrypted)
+        if (-not $isPasswordEncrypted -and $ClusterConnectionParameters["ServerCertThumbprint"])
         {
-            $password = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $ClusterConnectionParameters
-            $isPasswordEncrypted = $true
+            $encryptedPassword = Get-ServiceFabricEncryptedText -Text $password -ClusterConnectionParameters $clusterConnectionParameters
+            if ($encryptedPassword)
+            {
+                $password = $encryptedPassword
+                $isPasswordEncrypted = $true
+            }
         }
 
         $appManifestPath = Join-Path $ApplicationPackagePath "ApplicationManifest.xml"

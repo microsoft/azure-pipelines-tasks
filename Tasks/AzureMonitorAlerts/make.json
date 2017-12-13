@@ -1,0 +1,18 @@
+{
+    "common": [
+        {
+            "module": "../Common/azurestack-common",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/azurestack-common/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

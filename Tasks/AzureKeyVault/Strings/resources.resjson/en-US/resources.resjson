@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Download Azure Key Vault Secrets",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
-  "loc.releaseNotes": "Works with Xplat agents (Windows, Linux or OSX)",
+  "loc.releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure subscription for the key vault",
   "loc.input.label.KeyVaultName": "Key vault",
@@ -36,5 +36,6 @@
   "loc.messages.DownloadingSecretValue": "Downloading secret value for: %s.",
   "loc.messages.AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. Set these secret permissions in Azure portal",
   "loc.messages.GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
-  "loc.messages.ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault"
+  "loc.messages.ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault",
+  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Cannot find the secret with name: %s. Secret name must be a string 1-127 characters in length containing only 0-9, a-z, A-Z, and -"
 }

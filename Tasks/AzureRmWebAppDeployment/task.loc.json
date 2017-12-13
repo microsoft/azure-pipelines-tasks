@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 17
+    "Patch": 32
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -56,6 +56,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "WebAppKind",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppKind",
+      "defaultValue": "app",
+      "required": true,
+      "options": {
+        "app": "Web App",
+        "applinux": "Linux Web App",
+        "functionapp": "Function App",
+        "api": "API App",
+        "mobileapp": "Mobile App"
+      },
+      "properties": {
+        "EditableOptions": "false"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
+    },
+    {
       "name": "WebAppName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppName",
@@ -65,18 +83,6 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
-    },
-    {
-      "name": "WebAppKind",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebAppKind",
-      "defaultValue": "app",
-      "required": false,
-      "visibleRule": "WebAppName = invalidwebappname",
-      "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
-      }
     },
     {
       "name": "DeployToSlotFlag",
@@ -116,13 +122,112 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ImageSource",
       "defaultValue": "Registry",
-      "required": false,
       "options": {
         "Registry": "Container Registry",
         "Builtin": "Built-in Image"
       },
+      "required": false,
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
       "visibleRule": "WebAppKind = applinux"
+    },
+    {
+      "name": "AzureContainerRegistry",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AzureContainerRegistry",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistry",
+      "visibleRule": "ImageSource = AzureContainerRegistry"
+    },
+    {
+      "name": "AzureContainerRegistryLoginServer",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AzureContainerRegistryLoginServer",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "PopulateDefaultValue": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryLoginServer",
+      "visibleRule": "ImageSource = invalidimagesource"
+    },
+    {
+      "name": "AzureContainerRegistryImage",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AzureContainerRegistryImage",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryImage",
+      "visibleRule": "ImageSource = AzureContainerRegistry"
+    },
+    {
+      "name": "AzureContainerRegistryTag",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AzureContainerRegistryTag",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryTag",
+      "visibleRule": "ImageSource = AzureContainerRegistry"
+    },
+    {
+      "name": "DockerRepositoryAccess",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.DockerRepositoryAccess",
+      "required": true,
+      "options": {
+        "private": "Private",
+        "public": "Public"
+      },
+      "defaultValue": "public",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerRepositoryAccess",
+      "visibleRule": "ImageSource = invalidImage"
+    },
+    {
+      "name": "RegistryConnectedServiceName",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.RegistryConnectedServiceName",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.RegistryConnectedServiceName",
+      "visibleRule": "DockerRepositoryAccess = private || ImageSource = PrivateRegistry"
+    },
+    {
+      "name": "PrivateRegistryImage",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PrivateRegistryImage",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "ImageSource = PrivateRegistry",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.PrivateRegistryImage"
+    },
+    {
+      "name": "PrivateRegistryTag",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PrivateRegistryTag",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ImageSource = PrivateRegistry",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.PrivateRegistryTag"
     },
     {
       "name": "DockerNamespace",
@@ -139,7 +244,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux && ImageSource = Registry",
+      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -389,7 +494,10 @@
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNames"
+      "dataSourceName": "AzureRMWebAppNamesByType",
+      "parameters": {
+        "WebAppKind": "$(WebAppKind)"
+      }
     },
     {
       "target": "ResourceGroupName",
@@ -400,15 +508,6 @@
       }
     },
     {
-      "target": "WebAppKind",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureAppKind",
-      "parameters": {
-        "WebAppName": "$(WebAppName)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #stringReplace ',' '' kind }}}\",\"DisplayValue\":\"{{{ #stringReplace ',' '' kind }}}\"}"
-    },
-    {
       "target": "SlotName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
@@ -417,6 +516,74 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "AzureContainerRegistry",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{{{ name }}}\",\"DisplayValue\":\"{{{ name }}}\"}"
+    },
+    {
+      "target": "AzureContainerRegistryLoginServer",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureContainerRegistryLoginServer",
+      "parameters": {
+        "AzureContainerRegistry": "$(AzureContainerRegistry)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #stringReplace '.azurecr.io' '' loginServer }}}\",\"DisplayValue\":\"{{{ #stringReplace '.azurecr.io' '' loginServer }}}\"}"
+    },
+    {
+      "target": "AzureContainerRegistryImage",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureContainerRegistryImages",
+      "parameters": {
+        "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)"
+      }
+    },
+    {
+      "target": "AzureContainerRegistryTag",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureContainerRegistryTags",
+      "parameters": {
+        "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)",
+        "AzureContainerRegistryImage": "$(AzureContainerRegistryImage)"
+      }
+    },
+    {
+      "target": "DockerNamespace",
+      "endpointId": "$(RegistryConnectedServiceName)",
+      "dataSourceName": "Namespaces"
+    },
+    {
+      "target": "DockerRepository",
+      "endpointId": "$(RegistryConnectedServiceName)",
+      "dataSourceName": "Repos",
+      "parameters": {
+        "namespaces": "$(DockerNamespace)"
+      }
+    },
+    {
+      "target": "DockerImageTag",
+      "endpointId": "$(RegistryConnectedServiceName)",
+      "dataSourceName": "Tags",
+      "parameters": {
+        "DockerNamespace": "$(DockerNamespace)",
+        "DockerRepository": "$(DockerRepository)"
+      }
+    },
+    {
+      "target": "PrivateRegistryImage",
+      "endpointId": "$(RegistryConnectedServiceName)",
+      "endpointUrl": "{{endpoint.url}}v2/_catalog",
+      "resultSelector": "jsonpath:$.repositories[*]",
+      "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+    },
+    {
+      "target": "PrivateRegistryTag",
+      "endpointId": "$(RegistryConnectedServiceName)",
+      "endpointUrl": "{{endpoint.url}}v2/$(PrivateRegistryImage)/tags/list",
+      "resultSelector": "jsonpath:$.tags[*]",
+      "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -432,7 +599,7 @@
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
-    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
+    "UnabletoretrieveResourceID": "ms-resource:loc.messages.UnabletoretrieveResourceID",
     "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
@@ -456,7 +623,6 @@
     "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
     "Trytodeploywebappagainwithrenamefileoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithrenamefileoptionselected",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
-    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
     "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
     "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
@@ -466,7 +632,7 @@
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
-    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
     "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
@@ -515,6 +681,14 @@
     "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "ms-resource:loc.messages.SuccessfullyUpdatedRuntimeStackAndStartupCommand",
     "FailedToUpdateRuntimeStackAndStartupCommand": "ms-resource:loc.messages.FailedToUpdateRuntimeStackAndStartupCommand",
     "SuccessfullyUpdatedWebAppSettings": "ms-resource:loc.messages.SuccessfullyUpdatedWebAppSettings",
-    "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails"
+    "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails",
+    "UnableToGetAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToGetAzureRMWebAppMetadata",
+    "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
+    "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
+    "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
   }
 }

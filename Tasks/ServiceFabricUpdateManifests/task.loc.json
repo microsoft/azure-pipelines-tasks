@@ -10,15 +10,16 @@
     "Build"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "demands": [
     "Cmd"
   ],
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 10
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -114,6 +115,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.buildNumber",
       "visibleRule": "updateType = Manifest versions && compareType = Specific"
+    },
+    {
+      "name": "overwriteExistingPkgArtifact",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overwriteExistingPkgArtifact",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingPkgArtifact"
     },
     {
       "name": "imageDigestsPath",

@@ -10,7 +10,7 @@ var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('AzureFileCopy Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         if (psm.testSupported()) {

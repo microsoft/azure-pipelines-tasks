@@ -131,12 +131,14 @@ function configureWrapperScript(wrapperScript: string): string {
 // update JAVA_HOME if user selected specific JDK version or set path manually
 function setJavaHome(javaHomeSelection: string): void {
     let specifiedJavaHome: string;
+    let javaTelemetryData;
 
     if (javaHomeSelection === 'JDKVersion') {
         tl.debug('Using JDK version to find and set JAVA_HOME');
         let jdkVersion: string = tl.getInput('jdkVersion');
         let jdkArchitecture: string = tl.getInput('jdkArchitecture');
-
+        javaTelemetryData = { "jdkVersion": jdkVersion };
+        
         if (jdkVersion !== 'default') {
             specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
         }
@@ -144,7 +146,10 @@ function setJavaHome(javaHomeSelection: string): void {
         tl.debug('Using path from user input to set JAVA_HOME');
         let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
         specifiedJavaHome = jdkUserInputPath;
+        javaTelemetryData = { "jdkVersion": "custom" };
     }
+    javacommons.publishJavaTelemetry('Gradle', javaTelemetryData);
+    
     if (specifiedJavaHome) {
         tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
         process.env['JAVA_HOME'] = specifiedJavaHome;

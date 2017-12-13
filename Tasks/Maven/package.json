@@ -17,6 +17,7 @@
     "cheerio": "^0.22.0",
     "strip-bom": "^3.0.0",
     "fs-extra": "^0.30.0",
-    "vso-node-api": "6.0.1-preview"
+    "vso-node-api": "6.0.1-preview",
+    "uuid": "^3.0.1"
   }
 }

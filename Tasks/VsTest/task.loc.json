@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 12
+    "Minor": 3,
+    "Patch": 6
   },
   "demands": [
     "vstest"
@@ -65,7 +65,7 @@
       "name": "testAssemblyVer2",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssemblyVer2",
-      "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
+      "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "testSelection",
@@ -201,7 +201,8 @@
       "options": {
         "latest": "Latest",
         "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015"
+        "14.0": "Visual Studio 2015",
+        "toolsInstaller": "Installed by Tools Installer"
       }
     },
     {
@@ -292,7 +293,8 @@
       "groupName": "advancedExecutionOptions",
       "options": {
         "basedOnTestCases": "Based on number of tests and agents",
-        "basedOnExecutionTime": "Based on past running time of tests"
+        "basedOnExecutionTime": "Based on past running time of tests",
+        "basedOnAssembly": "Based on test assemblies"
       }
     },
     {
@@ -387,12 +389,41 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "rerunFailedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rerunFailedTests",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedTests",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "rerunFailedThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunFailedThreshold",
+      "defaultValue": "30",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedThreshold",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true"
+    },
+    {
+      "name": "rerunMaxAttempts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunMaxAttempts",
+      "defaultValue": "3",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunMaxAttempts",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true"
     }
   ],
   "sourceDefinitions": [
     {
       "target": "testPlan",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
       "authKey": "tfs:teamfoundation"
@@ -419,7 +450,8 @@
   },
   "messages": {
     "VstestLocationDoesNotExist": "ms-resource:loc.messages.VstestLocationDoesNotExist",
-    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
+    "VstestFailedReturnCode": "ms-resource:loc.messages.VstestFailedReturnCode",
+    "VstestPassedReturnCode": "ms-resource:loc.messages.VstestPassedReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
     "NoVstestFound": "ms-resource:loc.messages.NoVstestFound",
@@ -489,6 +521,16 @@
     "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
     "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
     "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
-    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory"
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
+    "rerunFailedTests": "ms-resource:loc.messages.rerunFailedTests",
+    "rerunFailedThreshold": "ms-resource:loc.messages.rerunFailedThreshold",
+    "invalidRerunFailedThreshold": "ms-resource:loc.messages.invalidRerunFailedThreshold",
+    "rerunMaxAttempts": "ms-resource:loc.messages.rerunMaxAttempts",
+    "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts",
+    "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported",
+    "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
+    "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
+    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
+    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation"
   }
 }

@@ -7,6 +7,8 @@ import * as auth from "nuget-task-common/Authentication";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import peParser = require('nuget-task-common/pe-parser/index');
+import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as telemetry from 'utility-common/telemetry';
 
 class NuGetExecutionOptions {
     constructor(
@@ -20,11 +22,9 @@ class NuGetExecutionOptions {
 export async function run(nuGetPath: string): Promise<void> {
     nutil.setConsoleCodePage();
 
-    tl.setResourcePath(path.join(__dirname, "task.json"));
-
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
-    
+
     let args: string = tl.getInput("arguments", false);
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
@@ -66,8 +66,8 @@ export async function run(nuGetPath: string): Promise<void> {
             environmentSettings,
             args,
             authInfo);
-            
-        await runNuGetAsync(executionOptions);
+
+        runNuGet(executionOptions);
     } catch (err) {
         tl.error(err);
 
@@ -79,10 +79,17 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function runNuGetAsync(executionOptions: NuGetExecutionOptions): Q.Promise<number> {
+function runNuGet(executionOptions: NuGetExecutionOptions): IExecSyncResult {
     let nugetTool = ngToolRunner.createNuGetToolRunner(executionOptions.nuGetPath, executionOptions.environment, executionOptions.authInfo);
     nugetTool.line(executionOptions.args);
     nugetTool.arg("-NonInteractive");
 
-    return nugetTool.exec();
+    let execResult = nugetTool.execSync();
+    if (execResult.code !== 0) {
+        telemetry.logStderr(execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
+    }
+    return execResult;
 }

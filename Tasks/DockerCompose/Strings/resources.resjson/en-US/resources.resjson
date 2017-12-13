@@ -68,5 +68,6 @@
   "loc.input.help.cwd": "Working directory for the Docker Compose command.",
   "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
-  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found."
+  "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
 }

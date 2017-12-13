@@ -125,9 +125,9 @@ Limitations/Challenges
 
 - Validation have to be performed in all phases:
     - Design time
-        - Includes - editor validation, when definition is being saved
+        - Includes - editor validation (**works for both release and build definitions**), when definition is being saved (**works only for build definitions, release definitions would get this soon**)
         - We would have to ignore macro expansions in values
-    - Queue time
+    - Queue time (**works only for build definitions, release definitions would get this soon**)
         - We can expand variables available for us at queue time and validate
     - Run time (**Not implemented yet**)
         - Agent would have to perform final validation when it actually has the value with all of the macros expanded

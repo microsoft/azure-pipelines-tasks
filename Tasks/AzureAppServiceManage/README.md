@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Azure App Service Management task is used to Start, Stop, Restart or Slot swap for an [Azure App Service](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/). The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only.
+The Azure App Service Management task is used to Start/Stop/Restart App Service, Swap Slot, Install Extentions, Enable [Continuous Monitoring](https://go.microsoft.com/fwlink/?linkid=859946) or Start/Stop all continuous WebJobs on an [Azure App Service](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/). The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only.
 
 ## Contact Information
 
@@ -33,11 +33,11 @@ The task is used to manage an existing Azure App Service. The mandatory fields a
 
 * **Azure Subscription**\*: Select the service connection for the Azure Subscription where the App Service is created. To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
-* **Action**\*: Select the action to be performed on the App Service. You can Start/Stop/Restart an App Service or Manage a slot swap. 
+* **Action**\*: Select the action to be performed on the App Service. You can Start/Stop/Restart an App Service, Start/Stop all continuous WebJobs on App Service, perform a slot swap or enable [Continuous Monitoring](https://go.microsoft.com/fwlink/?linkid=859946). 
  
 * **App Service Name\*:** Select the name of an existing AzureRM App Service. Enter the name of the App Service if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
 
-**Resource Group:** This parameter is visible when the Action selected above is "Swap Slots" or for other actions, when "Specify slots" option is selected. Select the Azure Resource Group that contains the AzureRM App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
+* **Resource Group:** This parameter is visible when the Action selected above is "Swap Slots" or for other actions, when "Specify slots" option is selected. Select the Azure Resource Group that contains the AzureRM App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
 
 * **Specify Slot:** Select the option to choose an existing slot other than the Production slot. This option is available when the Action is Start/Stop/Restart an App Service.
 
@@ -46,3 +46,7 @@ The task is used to manage an existing Azure App Service. The mandatory fields a
 * **Swap with Production:** Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names. The "Slot swap" action directs destination slot's traffic to the source slot.
 
 * **Preserve Vnet:** Select the option to preserve the Virtual network settings
+
+* **Resource group name for Application Insights resource:** This parameter is visible when "Enable Continuous Monitoring" action is selected. Select Azure Resource Group which contains the Application Insights resource used for enabling [Continuous Monitoring](https://go.microsoft.com/fwlink/?linkid=859946). 
+
+* **Application Insights Resource Name:** This parameter is visible when "Enable Continuous Monitoring" action is selected. Select the name of Application Insights resource where continuous monitoring data will be recorded. If your application insights resource is not listed here and you want to create a new resource, click on +new button. Once the resource is created on Azure Portal, come back here and click on refresh button.

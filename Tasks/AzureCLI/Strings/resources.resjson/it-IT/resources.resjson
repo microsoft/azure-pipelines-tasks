@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Anteprima dell'interfaccia della riga di comando di Azure",
+  "loc.friendlyName": "Interfaccia della riga di comando di Azure",
   "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Esegue uno script shell o batch con comandi dell'interfaccia della riga di comando di Azure su una sottoscrizione di Azure",
   "loc.instanceNameFormat": "Interfaccia della riga di comando di Azure $(scriptPath)",

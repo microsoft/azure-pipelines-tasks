@@ -43,9 +43,9 @@ Register-Mock Get-VstsEndpoint { $vstsEndpoint } -- -Name $serviceConnectionName
 
 # Setup mock Registry for Service Fabric
 $SfRegistry = @{
-    "FabricVersion" = "255.255.1.2"
+    "FabricSDKVersion" = "255.255.1.2"
 }
-Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -ErrorAction SilentlyContinue
+Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric SDK\' -ErrorAction SilentlyContinue
 
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint

@@ -40,12 +40,13 @@ async function run() {
                         additionalFiles,
                         { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
                         { matchBase: true });
-                    tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
                 }
                 else {
                     // Use the specific additional file (no wildcards)
                     var additionalFileMatches: string[] = [additionalFiles];
                 }
+                additionalFileMatches = additionalFileMatches.filter(file => pathExistsAsFile(file));
+                tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
             }
 
             // Publish code coverage data
@@ -95,6 +96,17 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : s
 function containsWildcard(inputValue: string) : boolean {
     return inputValue.indexOf('*') >= 0 ||
            inputValue.indexOf('?') >= 0;
+}
+
+// Gets whether the specified path exists as file.
+function pathExistsAsFile(path: string) {
+    try {
+        return tl.stats(path).isFile();
+    }
+    catch (error) {
+        tl.debug(error);
+        return false;
+    }
 }
 
 run();

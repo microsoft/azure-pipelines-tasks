@@ -171,6 +171,11 @@ function Publish-UpgradedServiceFabricApplication
        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
     }
 
+    if(!$ApplicationName)
+    {
+        Write-Error (Get-VstsLocString -Key EmptyApplicationName)
+    }    
+
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
     {
@@ -322,7 +327,7 @@ function Publish-UpgradedServiceFabricApplication
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
         $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
-        Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
                                 -ActionSuccessValidator $upgradeStatusValidator `
                                 -MaxTries 2147483647 `
                                 -RetryIntervalInSeconds 3 `

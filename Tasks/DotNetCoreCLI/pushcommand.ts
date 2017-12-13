@@ -18,10 +18,11 @@ export async function run(): Promise<void> {
     let buildIdentityAccount: string = null;
     try {
         // Get list of files to publish
-        const searchPattern = tl.getPathInput("searchPatternPush", true, false);
+        const searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
         let findOptions: tl.FindOptions = <tl.FindOptions>{};
         let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-        const filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+        let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+        const filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
 
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {

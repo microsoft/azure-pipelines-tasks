@@ -7,7 +7,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
-import * as util from './util';
+import * as util from 'npm-common/util';
 
 export class NpmToolRunner extends tr.ToolRunner {
     private cacheLocation: string;
@@ -89,7 +89,7 @@ export class NpmToolRunner extends tr.ToolRunner {
             options.env = process.env;
         }
 
-        if (this.dbg || tl.getBoolInput(NpmTaskInput.Verbose, false)) {            
+        if (this.dbg || tl.getBoolInput(NpmTaskInput.Verbose, false)) {
             options.env['NPM_CONFIG_LOGLEVEL'] = 'verbose';
         }
 

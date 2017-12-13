@@ -7,6 +7,7 @@
   "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
   "category": "Deploy",
   "visibility": [
+    "Build",
     "Release"
   ],
   "runsOn": [
@@ -15,10 +16,15 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 4
   },
   "instanceNameFormat": "Invoke REST API: $(method)",
-  "groups": [],
+  "groups": [{
+			"name": "completionOptions",
+			"displayName": "Completion options",
+			"isExpanded": false
+		}
+	],
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -78,8 +84,19 @@
       "label":"Wait For Completion",
       "Required":"false",
       "defaultValue":"false",
+      "groupName": "completionOptions",
       "helpMarkDown":"The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
-    }
+    },
+	{
+	  "name": "successCriteria",
+	  "type": "string",
+	  "label": "Success Criteria",
+	  "defaultValue": "",
+	  "required": false,
+	  "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+	  "groupName": "completionOptions",
+	  "visibleRule": "waitForCompletion = false"
+	}
   ],
 
   "execution": {
@@ -90,7 +107,8 @@
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers":"$(headers)",
-        "WaitForCompletion":"$(waitForCompletion)"
+        "WaitForCompletion":"$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
       }
     }
   }

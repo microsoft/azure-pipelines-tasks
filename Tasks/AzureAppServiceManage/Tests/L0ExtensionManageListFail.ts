@@ -4,6 +4,6 @@ var extensionManageUtility = require('./L0ExtensionMangeUtility.js');
 
 nock('https://mytestappKuduUrl.scm.azurewebsites.net:443')
     .get('/api/siteextensions/')
-    .reply(500, extensionManageUtility.installedExtensions);
+    .reply(299, extensionManageUtility.installedExtensions);
 
 extensionManage.getInstalledExtensions(extensionManageUtility.mockPublishProfile);

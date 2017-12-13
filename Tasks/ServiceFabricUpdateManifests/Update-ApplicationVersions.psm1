@@ -37,10 +37,11 @@
             $pkgArtifactName = Get-VstsInput -Name pkgArtifactName -Require
             $compareType = Get-VstsInput -Name compareType -Require
             $buildNumber = Get-VstsInput -Name buildNumber
+            $overwritePkgArtifact = ((Get-VstsInput -Name overwriteExistingPkgArtifact) -eq "true")
 
             try
             {
-                $oldDropLocation = Get-VstsBuild $pkgArtifactName $compareType $buildNumber
+                $oldDropLocation = Get-VstsBuild $pkgArtifactName $overwritePkgArtifact $compareType $buildNumber
             }
             catch
             {

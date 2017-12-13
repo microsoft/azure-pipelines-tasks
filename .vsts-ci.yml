@@ -15,6 +15,11 @@ phases:
   - checkout: self
     clean: true
 
+  # Start collect diagnostics
+  - powershell: .\ci\start-collect-diagnostics.ps1
+    displayName: Start collect diagnostics
+    condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
+
   # Use node 6, npm 3
   - task: NodeTool@0
     displayName: Use node 6.10.3
@@ -65,6 +70,11 @@ phases:
   - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
     displayName: Legacy tests
 
+  # Stop collect diagnostics
+  - powershell: .\ci\stop-collect-diagnostics.ps1
+    displayName: Stop collect diagnostics
+    condition: and(always(), eq(variables.collect_diagnostics, 'true'))
+
 ################################################################################
 - phase: publish_windows
 ################################################################################
@@ -105,16 +115,6 @@ phases:
   - script: node .\ci\stage-milestone.js
     displayName: Stage milestone
 
-  # Publish milestone package
-  - task: NuGetCommand@2
-    displayName: Publish milestone package
-    condition: and(succeeded(), variables.publish_milestone)
-    inputs:
-      command: push
-      searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
-      nuGetFeedType: internal
-      feedPublish: $(task_milestone_feed_name)
-
   # Create packages.config for restoring previous milestones
   - script: node .\ci\create-restore-config.js
     displayName: Create packages.config for restoring previous milestones
@@ -141,6 +141,16 @@ phases:
       artifactName: TaskPackage
       artifactType: container
 
+  # Publish milestone package
+  - task: NuGetCommand@2
+    displayName: Publish milestone package
+    condition: and(succeeded(), variables.publish_milestone)
+    inputs:
+      command: push
+      searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
+      nuGetFeedType: internal
+      feedPublish: $(task_milestone_feed_name)
+
   # Update build number
   - script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"
     displayName: Update build number
@@ -155,6 +165,11 @@ phases:
   # Clean
   - checkout: self
     clean: true
+
+  # Start collect diagnostics
+  - powershell: .\ci\start-collect-diagnostics.ps1
+    displayName: Start collect diagnostics
+    condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'), eq(variables['agent.os'], 'Windows_NT'))
 
   # Use node 6, npm 3
   - task: NodeTool@0
@@ -205,6 +220,11 @@ phases:
     displayName: Test
   - script: node make.js testLegacy --runner ts --task "$(task)"
     displayName: Legacy tests
+
+  # Stop collect diagnostics
+  - powershell: .\ci\stop-collect-diagnostics.ps1
+    displayName: Stop collect diagnostics
+    condition: and(always(), eq(variables.collect_diagnostics, 'true'), eq(variables['agent.os'], 'Windows_NT'))
 
 ################################################################################
 - phase: buildAll_linux

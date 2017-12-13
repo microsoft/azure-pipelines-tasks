@@ -1,11 +1,14 @@
 import path = require('path');
 import azureStorage = require('azure-storage');
 import fs = require('fs');
-import models = require('item-level-downloader/Models');
-import stream = require("stream");
+import models = require('artifact-engine/Models');
+import store = require('artifact-engine/Store');
 import tl = require('vsts-task-lib/task');
 
 export class AzureBlobProvider implements models.IArtifactProvider {
+
+    public artifactItemStore: store.ArtifactItemStore;
+
     constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
@@ -14,7 +17,7 @@ export class AzureBlobProvider implements models.IArtifactProvider {
         this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
     }
 
-    public putArtifactItem(item: models.ArtifactItem, readStream: stream.Readable): Promise<models.ArtifactItem> {
+    public putArtifactItem(item: models.ArtifactItem, readStream: NodeJS.ReadableStream): Promise<models.ArtifactItem> {
         return new Promise(async (resolve, reject) => {
             await this._ensureContainerExistence();
 
@@ -49,18 +52,21 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     public getRootItems(): Promise<models.ArtifactItem[]> {
-        return this._getItems(this._container)
+        return this._getItems(this._container, this._prefixFolderPath);
     }
 
     public getArtifactItems(artifactItem: models.ArtifactItem): Promise<models.ArtifactItem[]> {
         return this._getItems(this._container, artifactItem.path);
     }
 
-    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<stream.Readable> {
+    public getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
         return new Promise((resolve, reject) => {
-            var readStream: stream.Readable = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            var readStream: NodeJS.ReadableStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
             resolve(readStream);
         });
+    }
+
+    public dispose() {
     }
 
     private _ensureContainerExistence(): Promise<void> {

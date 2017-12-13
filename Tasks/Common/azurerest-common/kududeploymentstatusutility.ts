@@ -70,7 +70,7 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
     };
 
     var webAppHostUrl = webAppPublishKuduUrl.split(':')[0];
-    var requestUrl = "https://" + encodeURIComponent(webAppHostUrl) + "/deployments/" + encodeURIComponent(deploymentId);
+    var requestUrl = "https://" + encodeURIComponent(webAppHostUrl) + "/api/deployments/" + encodeURIComponent(deploymentId);
 
     var requestDetails = {
         "requestBody": requestBody,

@@ -10,7 +10,7 @@ var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('PowerShellOnTargetMachine Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         if (psm.testSupported()) {
@@ -53,7 +53,7 @@ describe('PowerShellOnTargetMachine Suite', function () {
 });
 
 describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWinRmConfig) Suite', function() {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
     
     before((done) => {
         if (psm.testSupported()) {

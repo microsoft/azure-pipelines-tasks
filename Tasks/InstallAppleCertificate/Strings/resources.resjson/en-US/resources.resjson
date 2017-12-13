@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Install Apple Certificate",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Install an Apple certificate required to build on a macOS agent",
   "loc.instanceNameFormat": "Install an Apple certificate",
   "loc.group.displayName.advanced": "Advanced",
@@ -20,5 +20,6 @@
   "loc.input.help.deleteCustomKeychain": "Select to delete the custom keychain from the agent after the build or release is complete.",
   "loc.input.label.signingIdentity": "Certificate Signing Identity",
   "loc.input.help.signingIdentity": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
-  "loc.messages.INVALID_P12": "Unable to find the certificate SHA1 hash and common name (CN). Verify that the certificate is a valid P12."
+  "loc.messages.INVALID_P12": "Unable to find the certificate SHA1 hash and common name (CN). Verify that the certificate is a valid P12.",
+  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
 }

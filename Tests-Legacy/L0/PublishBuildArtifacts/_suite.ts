@@ -12,7 +12,7 @@ function setResponseFile(name: string) {
 
 describe('Publish Build Artifacts Suite', function () {
     this.timeout(10000);
-	
+
 	before((done: MochaDone) => {
 		// init here
 		done();
@@ -20,15 +20,15 @@ describe('Publish Build Artifacts Suite', function () {
 
 	after(() => {
 	});
-	
+
 	it('Publish to container', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
-		
+
 		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactName', 'drop');
 		tr.setInput('ArtifactType', 'Container');
-		
+
 		tr.run()
 		.then(() => {
 			assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
@@ -39,7 +39,7 @@ describe('Publish Build Artifacts Suite', function () {
 		.fail((err) => {
 			done(err);
 		});
-	})	
+	})
 
 	if (os.platform() == 'win32') {
 		it('Publish to UNC', (done: MochaDone) => {
@@ -108,15 +108,37 @@ describe('Publish Build Artifacts Suite', function () {
 			});
 		})
 
+		it('Copy single file with robocopy', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsGood.json');
+
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', 'C:\\bin\\release\\file.exe');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare');
+
+			tr.run()
+			.then(() => {
+				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
+				assert(tr.succeeded, 'task should have succeeded');
+				assert(tr.stdout.indexOf('test stdout from robocopy (copy a single file)') >= 0, 'should copy files.');
+				assert(tr.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
+		})
+
 		it('fails if robocopy fails', (done: MochaDone) => {
 			setResponseFile('publishBuildArtifactsBad.json');
-			
+
 			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
 			tr.setInput('PathtoPublish', 'C:\\bin\\release');
 			tr.setInput('ArtifactName', 'drop');
 			tr.setInput('ArtifactType', 'FilePath');
 			tr.setInput('TargetPath', '\\\\UNCShare\\subdir');
-			
+
 			tr.run()
 			.then(() => {
 				assert(tr.failed, 'task should have failed');
@@ -175,8 +197,8 @@ describe('Publish Build Artifacts Suite', function () {
 
 	it('fails if PathtoPublish not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
-		
-		let tr = new trm.TaskRunner('PublishBuildArtifacts');		
+
+		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('ArtifactName', 'drop');
 		tr.setInput('ArtifactType', 'Container');
 		tr.run()
@@ -192,10 +214,10 @@ describe('Publish Build Artifacts Suite', function () {
 			done(err);
 		});
 	})
-	
+
 	it('fails if ArtifactName not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
-		
+
 		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactType', 'Container');
@@ -212,10 +234,10 @@ describe('Publish Build Artifacts Suite', function () {
 			done(err);
 		});
 	})
-	
+
 	it('fails if ArtifactType not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
-		
+
 		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactName', 'drop');
@@ -232,11 +254,11 @@ describe('Publish Build Artifacts Suite', function () {
 			done(err);
 		});
 	})
-	
-	
+
+
 	it('fails if PathtoPublish not found', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
-		
+
 		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/notexist');
 		tr.setInput('ArtifactName', 'drop');

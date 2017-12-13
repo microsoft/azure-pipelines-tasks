@@ -2,27 +2,27 @@
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
-    "description": "Run tests with Visual Studio test runner",
+    "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test runner. Test frameworks that have a Visual Studio test adapter such as xUnit, NUnit, Chutzpah, Python, etc. can also be run. Tests can be distributed on multiple agents using this task (version 2).",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 12
+        "Minor": 3,
+        "Patch": 6
     },
     "demands": [
         "vstest"
     ],
-    "releaseNotes" : "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
+    "releaseNotes": "<ul><li><b>Run tests using agent phase:</b> Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can distribute tests using the multi-agent phase setting. Multi-config phase setting can be used to replicate tests in different configurations. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Use the <b>Visual Studio Test Platform Installer task</b> to run tests without needing a full Visual Studio installation.</li></ul>",
     "minimumAgentVersion": "2.103.0",
     "groups": [
         {
@@ -65,7 +65,7 @@
             "name": "testAssemblyVer2",
             "type": "multiLine",
             "label": "Test assemblies",
-            "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
+            "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
             "required": true,
             "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
             "groupName": "testSelection",
@@ -195,13 +195,14 @@
             "label": "Test platform version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported.",
+            "helpMarkDown": "The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.",
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
-             "options": {
-                 "latest": "Latest",
-                 "15.0": "Visual Studio 2017",
-                 "14.0": "Visual Studio 2015"
+            "options": {
+                "latest": "Latest",
+                "15.0": "Visual Studio 2017",
+                "14.0": "Visual Studio 2015",
+                "toolsInstaller":"Installed by Tools Installer"
             }
         },
         {
@@ -243,7 +244,7 @@
             "label": "Path to custom test adapters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "helpMarkDown": "Directory path to custom test adapters. Adapters residing in the same folder as the test assemblies are automatically discovered.",
             "groupName": "executionOptions"
         },
         {
@@ -254,8 +255,8 @@
             "required": false,
             "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. This will override the MaxCpuCount if specified in your runsettings file. [Click here](https://aka.ms/paralleltestexecution) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
-         },
-         {
+        },
+        {
             "name": "runTestsInIsolation",
             "type": "boolean",
             "label": "Run tests in isolation",
@@ -265,7 +266,7 @@
             "groupName": "executionOptions"
         },
         {
-           "name": "codeCoverageEnabled",
+            "name": "codeCoverageEnabled",
             "type": "boolean",
             "label": "Code coverage enabled",
             "defaultValue": "False",
@@ -288,11 +289,12 @@
             "label": "Batch tests",
             "defaultValue": "basedOnTestCases",
             "required": false,
-            "helpMarkDown": "A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.",
+            "helpMarkDown": "A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.",
             "groupName": "advancedExecutionOptions",
             "options": {
                 "basedOnTestCases": "Based on number of tests and agents",
-                "basedOnExecutionTime": "Based on past running time of tests"
+                "basedOnExecutionTime": "Based on past running time of tests",
+                "basedOnAssembly": "Based on test assemblies"
             }
         },
         {
@@ -387,12 +389,41 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "rerunFailedTests",
+            "type": "boolean",
+            "label": "Rerun failed tests",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Selecting this option will rerun any failed tests until they pass or the maximum # of attempts is reached.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "rerunFailedThreshold",
+            "type": "string",
+            "label": "Do not trigger a rerun if failure rate exceeds",
+            "defaultValue": "30",
+            "required": false,
+            "helpMarkDown": "Use this option to avoid rerunning tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures as threshold.",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true"
+        },
+        {
+            "name": "rerunMaxAttempts",
+            "type": "string",
+            "label": "Maximum # of attempts",
+            "defaultValue": "3",
+            "required": false,
+            "helpMarkDown": "Specify the maximum # of times a failed test should be retried. If a test passes before the maximum # of attempts is reached, it will not be rerun further.",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true"
         }
     ],
     "sourceDefinitions": [
         {
             "target": "testPlan",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2",
             "selector": "jsonpath:$.value[*].name",
             "keySelector": "jsonpath:$.value[*].id",
             "authKey": "tfs:teamfoundation"
@@ -419,7 +450,8 @@
     },
     "messages": {
         "VstestLocationDoesNotExist": "The location of 'vstest.console.exe' specified '%s' does not exist.",
-        "VstestReturnCode": "Vstest exited with return code: %d.",
+        "VstestFailedReturnCode": "VsTest task failed.",
+        "VstestPassedReturnCode": "VsTest task succeeded.",
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Visual Studio %d is not found. Try again with a version that exists on your build agent machine.",
         "NoVstestFound": "Test platform is not found. Try again after installing it on your build agent machine.",
@@ -460,8 +492,8 @@
         "searchFolderInput": "Search folder : %s",
         "testFilterCriteriaInput": "Test filter criteria : %s",
         "runSettingsFileInput": "Run settings file : %s",
-        "runInParallelInput":"Run in parallel : %s",
-        "runInIsolationInput":"Run in isolation : %s",
+        "runInParallelInput": "Run in parallel : %s",
+        "runInIsolationInput": "Run in isolation : %s",
         "pathToCustomAdaptersInput": "Path to custom adapters : %s",
         "otherConsoleOptionsInput": "Other console options : %s",
         "codeCoverageInput": "Code coverage enabled : %s",
@@ -489,6 +521,16 @@
         "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
         "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
         "RunTimePerBatch": "Run time per batch(sec) : %s",
-        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist."
+        "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
+        "rerunFailedTests": "Rerun failed tests: %s",
+        "rerunFailedThreshold": "Rerun failed tests threshold: %s",
+        "invalidRerunFailedThreshold": "Invalid rerun failed tests threshold, defaulting to 30%",
+        "rerunMaxAttempts": "Rerun maximum attempts: %s",
+        "invalidRerunMaxAttempts": "Invalid/Exceeded rerun maximum attempts, defaulting to 3",
+        "rerunNotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 to rerun failed tests.",
+        "toolsInstallerPathNotSet": "VsTest Test Platform folder was not found in cache.",
+        "testImpactAndCCWontWork": "Test Impact (Run only Impacted tests) and Code Coverage data collector will not work.",
+        "ToolsInstallerInstallationError": "The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller",
+        "OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file."
     }
 }

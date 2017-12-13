@@ -9,8 +9,11 @@ param (
     [string]$httpProtocolOption,
     [string]$skipCACheckOption,
     [string]$enableDetailedLogging,
-    [string]$sessionVariables
+    [string]$sessionVariables,
+    [string]$scriptRoot
     )
+
+    Import-Module "$scriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "scriptPath = $scriptPath"

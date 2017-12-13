@@ -98,7 +98,7 @@ try
             $displayName = $resourceProperties.displayName
             Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStartedForMachine0" -ArgumentList $displayName)
 
-            $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
+            $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables, $PSScriptRoot
             Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $deploymentResponse
             $status = $deploymentResponse.Status
 
@@ -125,7 +125,7 @@ try
             $displayName = $resourceProperties.displayName
             Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStartedForMachine0" -ArgumentList $displayName)
 
-            $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables
+            $job = Start-Job -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables, $PSScriptRoot
             $Jobs.Add($job.Id, $resourceProperties)
         }
         While ($Jobs.Count -gt 0)

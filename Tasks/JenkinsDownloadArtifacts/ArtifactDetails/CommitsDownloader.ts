@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as  tl from 'vsts-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
-import {JenkinsRestClient} from "./JenkinsRestClient"
+import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
 
@@ -71,11 +71,11 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         return result.split(',');
     }
 
-    public DownloadFromSingleBuildAndSave(buildId: string): Q.Promise<string> {
+    public DownloadFromSingleBuildAndSave(jenkinsJobDetails: JenkinsJobDetails): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
         
-        console.log(tl.loc("GettingCommitsFromSingleBuild", buildId));
-        this.GetCommitsFromSingleBuild(buildId).then((commits: string) => {
+        console.log(tl.loc("GettingCommitsFromSingleBuild", jenkinsJobDetails.buildId));
+        this.GetCommitsFromSingleBuild(jenkinsJobDetails).then((commits: string) => {
             this.UploadCommits(commits).then(() => {
                 defer.resolve(commits);
             }, (error) => {
@@ -88,10 +88,10 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    public DownloadFromBuildRangeAndSave(startIndex: number, endIndex: number): Q.Promise<string> {
+    public DownloadFromBuildRangeAndSave(jenkinsJobDetails: JenkinsJobDetails, startIndex: number, endIndex: number): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
 
-        this.GetCommits(startIndex, endIndex).then((commits: string) => {
+        this.GetCommits(jenkinsJobDetails, startIndex, endIndex).then((commits: string) => {
             this.UploadCommits(commits).then(() => {
                 defer.resolve(commits);
             }, (error) => {
@@ -104,10 +104,10 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    private GetCommitsFromSingleBuild(buildId: string): Q.Promise<string> {
+    private GetCommitsFromSingleBuild(jenkinsJobDetails: JenkinsJobDetails): Q.Promise<string> {
         let defer = Q.defer<string>();
 
-        const commitsUrl: string = `/${buildId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
+        const commitsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitTemplate, null).then((commitsResult) => {
             tl.debug(`Downloaded commits: ${commitsResult}`);
@@ -119,11 +119,11 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         return defer.promise;
     }
 
-    private GetCommits(startIndex: number, endIndex: number): Q.Promise<string> {
+    private GetCommits(jenkinsJobDetails: JenkinsJobDetails, startIndex: number, endIndex: number): Q.Promise<string> {
         let defer = Q.defer<string>();
 
         const buildParameter: string = (startIndex >= 100 || endIndex >= 100) ? "allBuilds" : "builds"; // jenkins by default will return only 100 top builds. Have to use "allBuilds" if we are dealing with build which are older than 100 builds
-        const commitsUrl: string = `/api/json?tree=${buildParameter}[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{${endIndex},${startIndex}}`;
+        const commitsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/api/json?tree=${buildParameter}[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{${endIndex},${startIndex}}`;
 
         tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {

@@ -3,9 +3,9 @@ import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 
 import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
-import { INpmRegistry, NpmRegistry } from './npmregistry';
+import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
-import * as util from './util';
+import * as util from 'npm-common/util';
 
 export async function run(command?: string): Promise<void> {
     let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();

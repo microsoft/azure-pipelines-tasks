@@ -33,15 +33,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exist": {
-    	"C:\\out\\dir": true      
+    	"C:\\out\\dir": true
     },
     "stats": {
         "c:\\agent\\home\\directory\\foo.nuspec": {
             "isFile": true
         }
-    }, 
+    },
     "findMatch": {
-        "foo.nuspec" : ["c:\\agent\\home\\directory\\foo.nuspec"]
+        "fromMockedUtility-foo.nuspec" : ["c:\\agent\\home\\directory\\foo.nuspec"]
     }
 };
 nmh.setAnswers(a);

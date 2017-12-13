@@ -4,7 +4,7 @@ import path = require('path');
 import * as ttm from 'vsts-task-lib/mock-test';
 
 describe('InstallAppleCertificate Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
     before(() => {
     });
 
@@ -20,6 +20,24 @@ describe('InstallAppleCertificate Suite', function () {
         tr.run();
 
         assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
+            'certificate should have been installed in the keychain');
+        assert(tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain'),
+            'temp keychain should have been created.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('Defaults: install cert with empty password in temporary keychain', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0InstallCertWithEmptyPassword.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P  -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
             'certificate should have been installed in the keychain');
         assert(tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain'),
             'temp keychain should have been created.');
