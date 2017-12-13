@@ -8,7 +8,6 @@ import * as vsts from 'vso-node-api';
 import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
-tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function isPublishThroughExeFeatureFlagEnabled(): Promise<boolean> {
     let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
