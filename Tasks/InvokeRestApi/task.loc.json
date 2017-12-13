@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [{
@@ -33,6 +33,14 @@
       "defaultValue": "",
       "required": "true",
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
     },
     {
       "name": "method",
@@ -102,7 +110,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceName)",
-        "EndpointUrl": "$(endpoint.url)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",

@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -33,6 +33,14 @@
       "defaultValue": "",
       "required": "true",
       "helpMarkDown": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request."
+    },
+    {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "Url Suffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Query parameters string append to the Url."
     },
     {
       "name": "method",
@@ -103,7 +111,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId":"$(connectedServiceName)",
-        "EndpointUrl": "$(endpoint.url)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers":"$(headers)",

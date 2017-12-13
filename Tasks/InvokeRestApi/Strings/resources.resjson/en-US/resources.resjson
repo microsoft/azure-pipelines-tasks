@@ -6,6 +6,8 @@
   "loc.instanceNameFormat": "Invoke REST API: $(method)",
   "loc.input.label.connectedServiceName": "Generic Endpoint",
   "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
+  "loc.input.label.urlSuffix": "Url Suffix",
+  "loc.input.help.urlSuffix": "Query parameters string append to the Url.",
   "loc.input.label.method": "Method",
   "loc.input.help.method": "Select the http method with which the API should be invoked with.",
   "loc.input.label.headers": "Headers",
