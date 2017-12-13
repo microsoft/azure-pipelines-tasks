@@ -33,7 +33,7 @@
     {
       "name": "ConnectedServiceName",
       "aliases": [
-        "azureSubscription"
+        "azureClassicSubscription"
       ],
       "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",

@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -28,6 +28,7 @@
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": ["serviceConnection"],
       "type": "connectedService:Generic",
       "label": "Generic Endpoint",
       "defaultValue": "",

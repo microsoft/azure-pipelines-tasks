@@ -55,7 +55,7 @@
         },
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureSubscription"],
+            "aliases": ["azureClassicSubscription"],
             "type": "connectedService:Azure",
             "label": "Azure Classic Subscription",
             "defaultValue": "",

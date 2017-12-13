@@ -42,7 +42,7 @@
     {
       "name": "ConnectedServiceName",
       "aliases": [
-        "azureSubscription"
+        "azureClassicSubscription"
       ],
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",

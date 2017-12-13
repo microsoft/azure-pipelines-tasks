@@ -32,7 +32,7 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureSubscription"],
+            "aliases": ["azureClassicSubscription"],
             "type": "connectedService:Azure:Certificate,UsernamePassword",
             "label": "Azure subscription (Classic)",
             "defaultValue": "",
