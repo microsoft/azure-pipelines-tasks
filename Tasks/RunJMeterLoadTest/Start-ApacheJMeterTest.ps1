@@ -89,6 +89,9 @@ Write-Output "Load test = $LoadTest"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
+$machineType = 0
+Write-Output "Reset Load generator machine type to $machineType"
+
 #Validate Input
 ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testDrop $loadTest
 

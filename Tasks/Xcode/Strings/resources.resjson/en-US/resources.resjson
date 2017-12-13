@@ -60,7 +60,7 @@
   "loc.input.label.cwd": "Working directory",
   "loc.input.help.cwd": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
   "loc.input.label.outputPattern": "Output directory",
-  "loc.input.help.outputPattern": "Enter a path relative to the working directory where build output (binaries) will be placed. The default value includes variables. When are used, make sure to specify values on the **Variables** tab.",
+  "loc.input.help.outputPattern": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
   "loc.input.label.useXcpretty": "Use xcpretty",
   "loc.input.help.useXcpretty": "Specify whether to use xcpretty to format xcodebuild output and generate JUnit test results. Enabling this requires xcpretty to be installed on the agent machine. It is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
   "loc.input.label.publishJUnitResults": "Publish to VSTS/TFS",
@@ -87,5 +87,6 @@
   "loc.messages.MultipleSchemesFound": "The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.",
   "loc.messages.NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
   "loc.messages.SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
-  "loc.messages.FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme."
+  "loc.messages.FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
+  "loc.messages.OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action."
 }

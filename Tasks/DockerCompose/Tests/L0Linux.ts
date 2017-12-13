@@ -13,6 +13,8 @@ tr.setInput('dockerComposeFile', process.env["__composeFilePath__"] ||'/tmp/temp
 tr.setInput('customCommand', "pull test/test:2");
 tr.setInput('includeLatestTag', process.env["__includeLatestTag__"] || "false");
 tr.setInput('qualifyImageNames', process.env["__qualifyImageNames__"] || "false");
+tr.setInput('additionalDockerComposeFiles', process.env["__additionalDockerComposeFiles__"] || null);
+tr.setInput('dockerComposeCommand', process.env["__dockerComposeCommand__"] || null);
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 
@@ -64,10 +66,23 @@ let a: any = <any>{
         "docker push ajgtestacr1.azurecr.io/100_web:latest":{
             "code": 0,
             "stdout": "successfully pushed with qualified image"
+        },
+        "docker-compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml config":{
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/100_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
+        },
+        "docker-compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml up -d":{
+            "code": 0,
+            "stdout": "successfully ran up command"
+        },
+        "docker-compose -f /tmp/tempdir/100/docker-compose.yml up -d":{
+            "code": 0,
+            "stdout": "successfully ran up command"
         }
     },
     "exist": {
-        "/tmp/tempdir/100/.docker-compose.12345.yml" : true
+        "/tmp/tempdir/100/.docker-compose.12345.yml" : true,
+        "/tmp/tempdir/100/docker-compose.override.yml" : true
     } 
 };
 

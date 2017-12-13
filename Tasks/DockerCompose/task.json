@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 7
+        "Patch": 9
     },
     "demands": [],
     "preview": "false",
@@ -308,6 +308,7 @@
     "messages": {
         "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
-        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found."
+        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
+        "AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
     }
 }

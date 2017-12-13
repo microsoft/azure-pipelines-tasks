@@ -17,7 +17,7 @@
   "loc.input.label.artifactName": "Artifact name",
   "loc.input.help.artifactName": "The name of the artifact to download",
   "loc.input.label.itemPattern": "Matching pattern",
-  "loc.input.help.itemPattern": "Minimatch pattern to specify files to be downloaded. The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**.",
+  "loc.input.help.itemPattern": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**.</p>",
   "loc.input.label.downloadPath": "Destination directory",
   "loc.input.help.downloadPath": "Path on the agent machine where the artifacts will be downloaded",
   "loc.input.label.parallelizationLimit": "Parallelization limit",
@@ -30,5 +30,8 @@
   "loc.messages.BuildArtifactNotFound": "Artifact %s not found for build %s",
   "loc.messages.NoArtifactsFound": "No artifacts found for build %s",
   "loc.messages.BuildIdBuildDefinitionMismatch": "Build with id %s not found for build definition id %s",
-  "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s"
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
+  "loc.messages.RetryingOperation": "Error : in %s, so retrying => retries pending  : %s",
+  "loc.messages.OperationFailed": "Failed in %s with error: %s",
+  "loc.messages.ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
 }

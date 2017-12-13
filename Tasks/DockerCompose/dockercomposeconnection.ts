@@ -82,10 +82,7 @@ export default class DockerComposeConnection extends ContainerConnection {
 
         var basePath = path.dirname(this.dockerComposeFile);
         this.additionalDockerComposeFiles.forEach(file => {
-            // If the path is relative, resolve it
-            if (file.indexOf("/") !== 0) {
-                file = path.join(basePath, file);
-            }
+            file = this.resolveAdditionalDockerComposeFilePath(basePath, file);
             if (this.requireAdditionalDockerComposeFiles || tl.exist(file)) {
                 command.arg(["-f", file]);
             }
@@ -151,5 +148,18 @@ export default class DockerComposeConnection extends ContainerConnection {
             del.sync(this.finalComposeFile, { force: true });
         }
         super.close();
+    }
+
+    private resolveAdditionalDockerComposeFilePath(dockerComposeFolderPath: string, additionalComposeFilePath: string): string {
+        if (!path.isAbsolute(additionalComposeFilePath)) {
+            additionalComposeFilePath = path.join(dockerComposeFolderPath, additionalComposeFilePath);
+        }
+
+        if(!tl.exist(additionalComposeFilePath))
+        {
+            tl.warning(tl.loc('AdditionalDockerComposeFileDoesNotExists', additionalComposeFilePath));
+        }
+
+        return additionalComposeFilePath;
     }
 }

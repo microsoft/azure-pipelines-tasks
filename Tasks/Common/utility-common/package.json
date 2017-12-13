@@ -1,6 +1,6 @@
 {
   "name": "utility-common",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Common Library for Azure Rest Calls",
   "repository": {
     "type": "git",
@@ -13,7 +13,8 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "semver": "^5.4.1",
     "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "2.0.1-preview"
+    "vsts-task-lib": "2.0.6"
   }
 }

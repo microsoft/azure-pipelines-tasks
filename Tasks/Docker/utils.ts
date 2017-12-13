@@ -12,7 +12,7 @@ export function getImageNames(): string[] {
         throw new Error(tl.loc("NoImagesInImageNamesFile", imageNamesFilePath));
     }
 
-    return imageNames.map(n => imageUtils.changeDefaultImageNameToLowerCase(n));
+    return imageNames.map(n => imageUtils.generateValidImageName(n));
 }
 
 export function getImageMappings(connection: ContainerConnection, imageNames: string[]): ImageMapping[] {

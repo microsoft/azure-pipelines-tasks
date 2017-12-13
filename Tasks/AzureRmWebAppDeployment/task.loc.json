@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 4,
-    "Patch": 0
+    "Minor": 3,
+    "Patch": 33
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -71,13 +71,11 @@
         "app": "Web App",
         "applinux": "Linux Web App",
         "functionapp": "Function App",
-        "logicapp": "Logic App",
         "api": "API App",
         "mobileapp": "Mobile App"
       },
       "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
+        "EditableOptions": "false"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },

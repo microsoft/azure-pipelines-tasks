@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 126,
-        "Patch": 7
+        "Minor": 127,
+        "Patch": 0
     },
     "demands": [
         "xcode"
@@ -310,9 +310,8 @@
             "name": "outputPattern",
             "type": "string",
             "label": "Output directory",
-            "defaultValue": "output/$(SDK)/$(Configuration)",
-            "required": true,
-            "helpMarkDown": "Enter a path relative to the working directory where build output (binaries) will be placed. The default value includes variables. When are used, make sure to specify values on the **Variables** tab.",
+            "required": false,
+            "helpMarkDown": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
             "groupName": "advanced"
         },
         {
@@ -369,6 +368,7 @@
         "MultipleSchemesFound": "The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.",
         "NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
         "SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
-        "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme."
+        "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
+        "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action."
     }
 }
