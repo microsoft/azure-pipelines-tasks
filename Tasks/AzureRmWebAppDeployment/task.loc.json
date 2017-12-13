@@ -31,13 +31,13 @@
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != \"\""
     },
     {
-      "name": "AdditionalDeploymentOptionsForLinux",
-      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptionsForLinux",
+      "name": "PostDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.PostDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind = applinux"
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "output",
@@ -335,40 +335,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
-      "name": "ScriptTypeForLinux",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ScriptTypeForLinux",
-      "defaultValue": "",
-      "options": {
-        "": "Select deployment script type (inline or file)",
-        "Inline Script": "Inline Script",
-        "File Path": "Script File Path"
-      },
-      "groupName": "AdditionalDeploymentOptionsForLinux",
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptTypeForLinux"
-    },
-    {
-      "name": "InlineScriptForLinux",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.InlineScriptForLinux",
-      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptionsForLinux",
-      "visibleRule": "ScriptTypeForLinux == Inline Script",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "500"
-      }
-    },
-    {
-      "name": "ScriptPathForLinux",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.ScriptPathForLinux",
-      "required": true,
-      "groupName": "AdditionalDeploymentOptionsForLinux",
-      "visibleRule": "ScriptTypeForLinux == File Path"
-    },
-    {
       "name": "ScriptType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ScriptType",
@@ -442,7 +408,7 @@
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
