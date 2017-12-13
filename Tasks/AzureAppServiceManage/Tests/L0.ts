@@ -8,6 +8,7 @@ describe('Azure App Service Manage Suite', function() {
     this.timeout(5*60000);
 
     before((done) => {
+        tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-arm-rest'), '-rf', true);
         done();
     });
     

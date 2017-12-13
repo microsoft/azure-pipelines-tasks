@@ -36,6 +36,7 @@ export class WebRequestOptions {
     public retriableErrorCodes: string[];
     public retryCount: number;
     public retryIntervalInSeconds: number;
+    public retriableStatusCodes: number[];
 }
 
 export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
@@ -43,10 +44,19 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let retryCount = options && options.retryCount ? options.retryCount : 5;
     let retryIntervalInSeconds = options && options.retryIntervalInSeconds ? options.retryIntervalInSeconds : 5;
     let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT"];
+    let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes: [];
 
     while (true) {
         try {
-            return await sendRequestInternal(request);
+            let response: WebResponse = await sendRequestInternal(request);
+            if(retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
+                
+                tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
+                await sleepFor(retryIntervalInSeconds);
+                continue;
+            }
+
+            return response;
         }
         catch (error) {
             if (retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {

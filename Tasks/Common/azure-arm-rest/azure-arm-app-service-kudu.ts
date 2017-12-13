@@ -19,7 +19,13 @@ export class KuduServiceManagementClient {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
-        var httpResponse = webClient.sendRequest(request);
+        var options: webClient.WebRequestOptions = {
+            retryIntervalInSeconds: 10,
+            retryCount: 5,
+            retriableErrorCodes: ["ETIMEDOUT"],
+            retriableStatusCodes: [409, 503]
+        };
+        var httpResponse = webClient.sendRequest(request, options);
         return httpResponse;
     }
 
@@ -58,7 +64,7 @@ export class Kudu {
                 return response.body.id;
             }
 
-            throw ToError(response);
+            throw response;
         }
         catch(error) {
             throw Error(tl.loc('FailedToUpdateDeploymentHistory', this._getFormattedError(error)));
@@ -76,7 +82,7 @@ export class Kudu {
                 return response.body as Array<WebJob>;
             }
 
-            throw ToError(response);
+            throw response;
         }
         catch(error) {
             throw Error(tl.loc('FailedToGetContinuousWebJobs', this._getFormattedError(error)))
@@ -96,7 +102,7 @@ export class Kudu {
                 return response.body as WebJob;
             }
 
-            throw ToError(response);
+            throw response;
         }
         catch(error) {
             throw Error(tl.loc('FailedToStartContinuousWebJob', jobName, this._getFormattedError(error)));
@@ -116,7 +122,7 @@ export class Kudu {
                 return response.body as WebJob;
             }
 
-            throw ToError(response);
+            throw response;
         }
         catch(error) {
             throw Error(tl.loc('FailedToStopContinuousWebJob', jobName, this._getFormattedError(error)));
@@ -136,7 +142,7 @@ export class Kudu {
                 return response.body;
             }
 
-            throw ToError(response);
+            throw response;
         }
         catch(error) {
             throw Error(tl.loc('FailedToInstallSiteExtension', extensionName, this._getFormattedError(error)))
@@ -154,7 +160,7 @@ export class Kudu {
                 return response.body as Array<SiteExtension>;
             }
 
-            throw ToError(response);
+            throw response;
         }
         catch(error) {
             throw Error(tl.loc('FailedToGetSiteExtensions', this._getFormattedError(error)))
@@ -208,7 +214,10 @@ export class Kudu {
     }
 
     private _getFormattedError(error: any) {
-        if(error && error.message) {
+        if(error && error.statusCode) {
+            return `${error.statusMessage} (CODE: ${error.statusCode})`;
+        }
+        else if(error && error.message) {
             if(error.statusCode) {
                 error.message = `${typeof error.message.valueOf() == 'string' ? error.message : error.message.Code + " - " + error.message.Message } (CODE: ${error.statusCode})`
             }
