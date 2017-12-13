@@ -415,7 +415,7 @@
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
       "defaultValue": "false",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
     {
@@ -424,7 +424,7 @@
       "label": "ms-resource:loc.input.label.SetParametersFile",
       "defaultValue": "",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
@@ -434,7 +434,7 @@
       "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
@@ -444,7 +444,7 @@
       "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
@@ -454,7 +454,7 @@
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
       "defaultValue": "",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
@@ -465,7 +465,7 @@
       "defaultValue": "false",
       "required": false,
       "visibleRule": "UseWebDeploy == true",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
     {
