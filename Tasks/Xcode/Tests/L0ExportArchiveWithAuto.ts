@@ -114,10 +114,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stdout": "ProvisionedDevices not found"
         },
-        "/usr/libexec/PlistBuddy -c Print Entitlements:com.apple.developer.icloud-container-environment' _xcodetasktmp.plist": {
-            "code": 1,
-            "stdout": ":com.apple.developer.icloud-container-environment, Does Not Exist"
-        },
         "/bin/rm -f _xcodetasktmp.plist": {
             "code": 0,
             "stdout": "delete output here"

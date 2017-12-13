@@ -137,7 +137,7 @@ export async function findSigningIdentity(keychainPath: string) {
  * @param provisioningProfilePath
  * @returns {boolean} 
  */
-export async function includesCloudEntitlement(provisioningProfilePath: string) {
+export async function getCloudEntitlement(provisioningProfilePath: string, exportMethod: string): Promise<string> {
     //find the provisioning profile details
     let provProfileDetails: string;
     const getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
@@ -151,14 +151,14 @@ export async function includesCloudEntitlement(provisioningProfilePath: string) 
             }
         }
     });
-    
+
     await getProvProfileDetailsCmd.exec();
 
     let tmpPlist: string;
     if (provProfileDetails) {
         //write the provisioning profile to a plist
         tmpPlist = '_xcodetasktmp.plist';
-        tl.writeFile(tmpPlist,provProfileDetails);
+        tl.writeFile(tmpPlist, provProfileDetails);
     } else {
         throw tl.loc('ProvProfileDetailsNotFound', provisioningProfilePath);
     }
@@ -172,11 +172,11 @@ export async function includesCloudEntitlement(provisioningProfilePath: string) 
     await deletePlistCommand.exec();
 
     if (!cloudEntitlement) {
-        return false;
+        return null;
     }
     
     tl.debug('Provisioning Profile contains cloud entitlement');
-    return true;
+    return exportMethod === 'app-store' ? "Production" : "Development";
 }
 
 /**

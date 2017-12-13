@@ -330,8 +330,6 @@ async function run() {
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-                let cloudEntitlement: boolean = false;                    
-                
                 if (exportOptions === 'auto') {
                     // Automatically try to detect the export-method to use from the provisioning profile
                     // embedded in the .xcarchive file
@@ -339,7 +337,6 @@ async function run() {
                         tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
                         exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
                         tl.debug('Using export method = ' + exportMethod);
-                        cloudEntitlement = await sign.includesCloudEntitlement(embeddedProvProfiles[0]);
                     }
                     if (!exportMethod) {
                         tl.warning(tl.loc('ExportMethodNotIdentified'));
@@ -365,13 +362,10 @@ async function run() {
                     }
 
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
-                        if (cloudEntitlement === true) {
+                        const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);                        
+                        if (cloudEntitlement) {
                             tl.debug("Adding cloud entitlement");
-                            if (exportMethod === "app-store") {
-                                tl.tool(plist).arg(['-c', 'Add iCloudContainerEnvironment string Production', exportOptionsPlist]).execSync();
-                            } else {
-                                tl.tool(plist).arg(['-c', 'Add iCloudContainerEnvironment string Development', exportOptionsPlist]).execSync();
-                            }
+                            tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
                         }
                         let signingOptionForExport = signingOption;
 

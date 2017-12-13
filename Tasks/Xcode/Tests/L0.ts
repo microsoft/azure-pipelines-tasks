@@ -41,7 +41,7 @@ describe('Xcode L0 Suite', function () {
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
-        assert(tr.invokedToolCount == 14, 'should have run xcodebuild for version, build, archive and export and PlistBuddy to init and add export method.');
+        assert(tr.invokedToolCount == 11, 'should have run xcodebuild for version, build, archive and export and PlistBuddy to init and add export method.');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -527,7 +527,7 @@ describe('Xcode L0 Suite', function () {
             'PlistBuddy add method should have run.');
 
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Development _XcodeTaskExportOptions.plist"),
-            'PlistBuddy add cloud entitlement for Production should have run.');
+            'PlistBuddy add cloud entitlement for Development should have run.');
 
         assert(tr.ran("/usr/libexec/PlistBuddy -c Add signingStyle string manual _XcodeTaskExportOptions.plist"),
             'PlistBuddy add signingStyle should have run.');
