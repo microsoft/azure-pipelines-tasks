@@ -5,7 +5,10 @@ import * as publishExe from './PublishResultsThroughExe';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as vsts from 'vso-node-api';
+import { publishEvent } from './cieventlogger';
 
+const MERGE_THRESHOLD = 100;
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function isPublishThroughExeFeatureFlagEnabled(): Promise<boolean> {
     let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
@@ -66,9 +69,17 @@ async function run() {
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
-        let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
-        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            tl.warning(tl.loc('NoMatchingFilesFound', testResultsFiles));
+
+        const matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+        const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
+
+        const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
+        if (forceMerge) {
+            tl.warning(tl.loc('mergeFiles', MERGE_THRESHOLD));
+        }
+
+        if (testResultsFilesCount === 0) {
+            tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
         }
         else {
             let osType = tl.osType();
@@ -83,15 +94,20 @@ async function run() {
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
                 if (exitCode === 20000) {
-                    let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                    tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+                    const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+                    tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
                 }                
             }
             else {
-                let tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+                const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
+                tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
             }
         }
+
+        publishEvent({
+            'mergeResultsUserPreference': mergeResults,
+            'testResultsFilesCount': testResultsFilesCount
+        });
 
         tl.setResult(tl.TaskResult.Succeeded, '');
     }
