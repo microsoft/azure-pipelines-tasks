@@ -40,7 +40,7 @@
       "label": "Url Suffix",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Query parameters string append to the Url."
+      "helpMarkDown": "Given string append to the url."
     },
     {
       "name": "method",
