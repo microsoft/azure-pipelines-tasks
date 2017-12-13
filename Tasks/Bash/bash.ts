@@ -73,6 +73,12 @@ async function run() {
         }
         else {
             contents = input_script;
+
+            // Print one-liner scripts.
+            if (contents.indexOf('\n') < 0 && contents.toUpperCase().indexOf('##VSO[') < 0) {
+                console.log(tl.loc('JS_ScriptContents'));
+                console.log(contents);
+            }
         }
 
         // Write the script to disk.

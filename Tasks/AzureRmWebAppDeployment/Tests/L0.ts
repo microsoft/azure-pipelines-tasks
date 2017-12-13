@@ -20,8 +20,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), true);
     });
 
-    if(tl.osType().match(/^Win/)) {
-        it('Runs successfully with default inputs', (done:MochaDone) => {
+    if (tl.osType().match(/^Win/)) {
+        
+        it('Runs successfully with default inputs and application insights is configured for the app service', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0WindowsDefault.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -32,10 +33,34 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = "loc_mock_AddingReleaseAnnotation ApplicationInsights";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = "loc_mock_SuccessfullyAddedReleaseAnnotation ApplicationInsights";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
         });
 
+        it('Runs successfully with default inputs even when adding release annotation step fails', (done: MochaDone) => {
+            let tp = path.join(__dirname, 'L0WindowsDefaultReleaseAnnotationFail.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            var expectedOut = 'Updated history to kudu';
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = "loc_mock_AddingReleaseAnnotation ApplicationInsights";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = "loc_mock_FailedAddingReleaseAnnotation Random error";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+
+            assert(tr.succeeded, 'task should have succeeded');
+            done();
+        });
+        
         it('Runs successfully with default inputs and add web.config for node is selected', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0GenerateWebConfigForNode.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -92,37 +117,43 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.indexOf(expectedRequestBody) != -1, 'should have said: ' + expectedRequestBody);
             done();
         });
+        
 
-        it('Runs successfully with all other inputs', (done) => {
+        it('Runs successfully with all other inputs and application insights is not configured for the app service.', (done) => {
             let tp = path.join(__dirname, 'L0WindowsAllInput.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            
+
             var expectedOut = 'Updated history to kudu'; 
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
             expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = "Application Insights is not configured for the App Service mytestapp. Skipping adding release annotation.";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
         });
-
-        it('Runs successfully with default inputs for deployment to specific slot', (done) => {
+        
+        
+        it('Runs successfully with default inputs for deployment to specific slot and invalid application insights key is present in the app settings.', (done) => {
             let tp = path.join(__dirname, 'L0WindowsSpecificSlot.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
-            
+
             var expectedOut = 'Updated history to kudu';
             assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
             expectedOut = 'loc_mock_SuccessfullyUpdatedAzureRMWebAppConfigDetails';
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = "Unable to find Application Insights resource with Instrumentation key 00000000-0000-0000-0000-000000000000. Skipping adding release annotation."
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             assert(tr.succeeded, 'task should have succeeded');
             done();
         });
-
+        
         it('Fails if msdeploy cmd fails to execute', (done) => {
             let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

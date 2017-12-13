@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 30
+    "Patch": 32
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -71,13 +71,11 @@
         "app": "Web App",
         "applinux": "Linux Web App",
         "functionapp": "Function App",
-        "logicapp": "Logic App",
         "api": "API App",
         "mobileapp": "Mobile App"
       },
       "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
+        "EditableOptions": "false"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -706,6 +704,9 @@
     "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
     "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
-    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
+    "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
   }
 }

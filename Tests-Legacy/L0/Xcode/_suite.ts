@@ -356,7 +356,7 @@ describe('Xcode Suite', function() {
             })
     })
 
-    it('run Xcode with required args not specified', (done) => {
+    it('run Xcode with required arg not specified', (done) => {
      setResponseFile('responseErrorArgs.json');
 
      var tr = new trm.TaskRunner('Xcode', true, true);
@@ -377,29 +377,21 @@ describe('Xcode Suite', function() {
      tr.setInput('publishJUnitResults', 'false');
 
      tr.run()
-         .then(() => {
-             assert(tr.stdout.search(/Input required: outputPattern/) > 0, 'Error should be shown if outputPath is not specified.');
-             tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-             tr.run()
-                 .then(() => {
-                     assert(tr.stdout.search(/Input required: actions/) > 0, 'Error should be shown if actions are not specified.');
-                     tr.setInput('actions', 'build');
-                     tr.run()
-                        .then(() => {
-                             assert(tr.succeeded, 'Task should have run successfully with required inputs');
-                             done();
-                         })
-                        .fail((err) => {
-                             done(err);
-                         })
-                 })
-                 .fail((err) => {
-                     done(err);
-                 })
-         })
-         .fail((err) => {
-             done(err);
-         })
+        .then(() => {
+            assert(tr.stdout.search(/Input required: actions/) > 0, 'Error should be shown if actions are not specified.');
+            tr.setInput('actions', 'build');
+            tr.run()
+            .then(() => {
+                    assert(tr.succeeded, 'Task should have run successfully with required inputs');
+                    done();
+                })
+            .fail((err) => {
+                    done(err);
+                })
+        })
+        .fail((err) => {
+            done(err);
+        })
     })
 
     it('run Xcode with optional args specified', (done) => {

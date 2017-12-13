@@ -14,6 +14,13 @@ try {
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
     $contents = "$input_script".Replace("`r`n", "`n").Replace("`n", "`r`n")
+    if ($contents.IndexOf("`n") -lt 0 -and $contents.IndexOf("##vso[", ([System.StringComparison]::OrdinalIgnoreCase)) -lt 0) {
+        # Print one-liner scripts.
+        Write-Host (Get-VstsLocString -Key 'ScriptContents')
+        Write-Host $contents
+    }
+    # Prepend @echo off instead of using the /Q command line switch. When /Q is used, echo can't be turned on.
+    $contents = "@echo off`r`n$contents"
 
     # Write the script to disk.
     Assert-VstsAgent -Minimum '2.115.0'
@@ -29,7 +36,6 @@ try {
     $cmdPath = $env:ComSpec
     Assert-VstsPath -LiteralPath $cmdPath -PathType Leaf
     # Command line switches:
-    # /Q     Turns echo off.
     # /D     Disable execution of AutoRun commands from registry.
     # /E:ON  Enable command extensions. Note, command extensions are enabled
     #        by default, unless disabled via registry.
@@ -39,7 +45,7 @@ try {
     #
     # Note, use CALL otherwise if a script ends with "goto :eof" the errorlevel
     # will not bubble as the exit code of cmd.exe.
-    $arguments = "/Q /D /E:ON /V:OFF /S /C `"CALL `"$filePath`"`""
+    $arguments = "/D /E:ON /V:OFF /S /C `"CALL `"$filePath`"`""
     $splat = @{
         'FileName' = $cmdPath
         'Arguments' = $arguments

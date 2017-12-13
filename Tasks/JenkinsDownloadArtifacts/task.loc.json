@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 126,
-    "Patch": 0
+    "Minor": 128,
+    "Patch": 1
   },
   "groups": [
     {
@@ -102,12 +102,16 @@
     },
     {
       "name": "itemPattern",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.itemPattern",
       "defaultValue": "**",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern",
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      }
     },
     {
       "name": "downloadCommitsAndWorkItems",

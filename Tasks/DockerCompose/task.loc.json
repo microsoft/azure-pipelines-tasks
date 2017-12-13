@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "preview": "false",
@@ -317,6 +317,7 @@
   "messages": {
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
-    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound"
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists"
   }
 }
