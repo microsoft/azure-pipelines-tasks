@@ -333,7 +333,6 @@
         "ResourceNameCannotBeNull": "Resource name is required.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url is required.",
         "StorageAccountCannotBeNull": "storage accountName is required.",
-        "ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
         "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
         "CreatedContainer": "Created container {0}.",
         "ErrorInReadStream": "Error in Read stream: {0}",
@@ -346,6 +345,8 @@
         "UploadingItem": "Uploading {0}.",
         "FoundJobType": "Found job type %s",
         "CannotFindJobType": "Could not detect job type",
-        "InvalidJobName": "Invalid job name %s"
+        "InvalidJobName": "Invalid job name %s",
+        "ContinuationTokenExistsFetchingRemainingFiles": "Continuation token exists, trying to fetch the list of remaining files.",
+        "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path"
     }
 }
