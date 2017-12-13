@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "runsOn": [
     "Agent",
@@ -189,7 +189,7 @@
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPush",
-      "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
       "helpMarkDown": "ms-resource:loc.input.help.searchPatternPush",
       "required": true,
       "visibleRule": "command = push"

@@ -235,7 +235,7 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
-      "defaultValue": "x86",
+      "defaultValue": "x64",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
       "visibleRule": "jdkVersion != default",

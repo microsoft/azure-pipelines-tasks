@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "runsOn": [
         "Agent",
@@ -177,7 +177,7 @@
             "aliases": ["packagesToPush"],
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
-            "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
             "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
             "required": true,
             "visibleRule": "command = push"

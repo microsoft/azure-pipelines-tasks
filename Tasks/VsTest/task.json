@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [
         "vstest"
@@ -526,7 +526,7 @@
         "rerunFailedThreshold": "Rerun failed tests threshold: %s",
         "invalidRerunFailedThreshold": "Invalid rerun failed tests threshold, defaulting to 30%",
         "rerunMaxAttempts": "Rerun maximum attempts: %s",
-        "invalidRerunMaxAttempts": "Invalid rerun maximum attempts, defaulting to 3",
+        "invalidRerunMaxAttempts": "Invalid/Exceeded rerun maximum attempts, defaulting to 3",
         "rerunNotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 to rerun failed tests.",
         "toolsInstallerPathNotSet": "VsTest Test Platform folder was not found in cache.",
         "testImpactAndCCWontWork": "Test Impact (Run only Impacted tests) and Code Coverage data collector will not work.",
