@@ -137,7 +137,7 @@ export async function findSigningIdentity(keychainPath: string) {
  * @param provisioningProfilePath
  * @returns {boolean} 
  */
-export async function cloudEntitlement(provisioningProfilePath: string) {
+export async function includesCloudEntitlement(provisioningProfilePath: string) {
     //find the provisioning profile details
     let provProfileDetails: string;
     const getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));

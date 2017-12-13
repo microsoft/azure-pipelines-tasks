@@ -339,7 +339,7 @@ async function run() {
                         tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
                         exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
                         tl.debug('Using export method = ' + exportMethod);
-                        cloudEntitlement = await sign.cloudEntitlement(embeddedProvProfiles[0]);
+                        cloudEntitlement = await sign.includesCloudEntitlement(embeddedProvProfiles[0]);
                     }
                     if (!exportMethod) {
                         tl.warning(tl.loc('ExportMethodNotIdentified'));
