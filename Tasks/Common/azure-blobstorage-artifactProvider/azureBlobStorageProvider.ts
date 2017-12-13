@@ -6,8 +6,6 @@ import tl = require('vsts-task-lib/task');
 
 export class AzureBlobProvider implements models.IArtifactProvider {
 
-    public artifactItemStore: store.ArtifactItemStore;
-
     constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string, addPrefixToDownloadedItems?: boolean) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
