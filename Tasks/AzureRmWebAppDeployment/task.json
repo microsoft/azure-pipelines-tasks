@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 31
+        "Patch": 32
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -58,20 +58,18 @@
         {
             "name": "WebAppKind",
             "type": "pickList",
-            "label": "App Type",
+            "label": "App type",
             "defaultValue": "app",
             "required": true,
             "options": {
                 "app": "Web App",
                 "applinux": "Linux Web App",
                 "functionapp": "Function App",
-                "logicapp": "Logic App",
                 "api": "API App",
                 "mobileapp": "Mobile App"
             },
             "properties": {
-                "EditableOptions": "false",
-                "PopulateDefaultValue": "true"
+                "EditableOptions": "false"
             },
             "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
         },
