@@ -1,40 +1,13 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as publishExe from './PublishResultsThroughExe';
+import * as publishExe from './publishResultsThroughExe';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as vsts from 'vso-node-api';
 import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
-
-async function isPublishThroughExeFeatureFlagEnabled(): Promise<boolean> {
-    let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-
-    let token: string = tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false);
-
-    try {
-        let authHandler = vsts.getPersonalAccessTokenHandler(token);
-        let connection = new vsts.WebApi(collectionUrl, authHandler);
-
-        if (typeof connection["getFeatureAvailabilityApi"] === 'function') {
-            let vstsFeatureAvailability = connection["getFeatureAvailabilityApi"]();
-
-            let featureFlag = await vstsFeatureAvailability.getFeatureFlagByName("TestManagement.PublishTestResultsTask.UseTestResultsPublisherExe");
-            if (featureFlag) {
-                tl.debug("Feature flag effective state: " + featureFlag.effectiveState);
-                if (featureFlag.effectiveState === "On") {
-                    return true;
-                }
-            }
-        }
-    }
-    catch (err) {
-        tl.debug("Error while fetching Feature flag value: " + err);
-    }
-    return false;
-}
 
 function isNullOrWhitespace(input: any) {
     if (typeof input === 'undefined' || input === null) {
@@ -82,8 +55,6 @@ async function run() {
         }
         else {
             let osType = tl.osType();
-            // Enable this when Feature availability APIs are available.
-            // let isPublishResultsThroughExeEnabled: boolean = await isPublishThroughExeFeatureFlagEnabled();
 
             tl.debug('OS type: ' + osType);
 
@@ -93,6 +64,7 @@ async function run() {
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
                 if (exitCode === 20000) {
+                    // The exe returns with exit code: 20000 if the Feature flag is off or if it fails to fetch the Feature flag value
                     const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
                     tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
                 }                

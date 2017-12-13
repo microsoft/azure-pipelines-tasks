@@ -51,7 +51,12 @@ export class TestResultsPublisher {
         let fileContent: string = os.EOL + this.matchingTestResultsFiles.join(os.EOL);
 
         // Writing matching file names in the response file
-        fs.writeFileSync(responseFilePath, fileContent);
+        try {
+            fs.writeFileSync(responseFilePath, fileContent);
+        }
+        catch (ex) {
+            tl.warning("Exception while writing to response file: " + ex);
+        }
 
         return responseFilePath;
     }
