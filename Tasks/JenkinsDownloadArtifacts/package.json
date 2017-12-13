@@ -8,8 +8,10 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
+    "artifact-engine": "0.1.11",
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
+    "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider",
     "request": "2.74.0",
-    "vsts-task-lib": "2.1.0",
-    "artifact-engine": "0.1.11"
+    "vsts-task-lib": "2.1.0"
   }
 }

@@ -26,7 +26,7 @@ export class AzureStorageArtifactDownloader {
 
     const blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
 
-    await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
+    await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**", false);
   }
 
   private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
