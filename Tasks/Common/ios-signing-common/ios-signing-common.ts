@@ -132,11 +132,12 @@ export async function findSigningIdentity(keychainPath: string) {
     }
 }
 
-/**
- * Check if provisioning profile contains Cloud entitlement 
- * @param provisioningProfilePath
- * @returns {boolean} 
- */
+    /**
+     * Get Cloud entitlement type Production or Development according to the export method - if entitlement doesn't exists in provisioning profile returns null 
+     * @param provisioningProfilePath
+     * @param exportMethod
+     * @returns {string} 
+     */
 export async function getCloudEntitlement(provisioningProfilePath: string, exportMethod: string): Promise<string> {
     //find the provisioning profile details
     let provProfileDetails: string;
@@ -174,7 +175,7 @@ export async function getCloudEntitlement(provisioningProfilePath: string, expor
     if (!cloudEntitlement) {
         return null;
     }
-    
+
     tl.debug('Provisioning Profile contains cloud entitlement');
     return exportMethod === 'app-store' ? "Production" : "Development";
 }

@@ -57,9 +57,10 @@ declare module 'ios-signing-common/ios-signing-common' {
     export function getDefaultKeychainPath() : string;
 
     /**
-     * Check if provisioning profile is using Cloud entitlement 
-     * @param provProfilePath
-     * @returns {boolean} 
+     * Get Cloud entitlement type Production or Development according to the export method - if entitlement doesn't exists in provisioning profile returns null 
+     * @param provisioningProfilePath
+     * @param exportMethod
+     * @returns {string} 
      */
-    export function cloudEntitlement(provProfilePath: string)
+    export function getCloudEntitlement(provisioningProfilePath: string, exportMethod: string): Promise<string>
 }
