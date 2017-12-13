@@ -4,7 +4,6 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
-import { fail } from 'assert';
 
 describe('Xcode L0 Suite', function () {
     before(() => {
@@ -472,8 +471,8 @@ describe('Xcode L0 Suite', function () {
     it('Xcode 9 signing defaults to manual, with auto export and cloud entitlement for production', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0XCode9SigningDefaultsToAutoWithAutoExportAndCloudEntitlement.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0XCode9SigningDefaultsToAutoWithAutoExportAndCloudEntitlement.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
         //version
@@ -513,8 +512,8 @@ describe('Xcode L0 Suite', function () {
     it('Xcode 9 signing defaults to manual, with auto export and cloud entitlement for development', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForDevelopment.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForDevelopment.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
         //version

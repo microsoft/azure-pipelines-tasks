@@ -330,8 +330,8 @@ async function run() {
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-                let cloudEntitlement: boolean;
-
+                let cloudEntitlement: boolean = false;                    
+                
                 if (exportOptions === 'auto') {
                     // Automatically try to detect the export-method to use from the provisioning profile
                     // embedded in the .xcarchive file

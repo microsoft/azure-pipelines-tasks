@@ -134,14 +134,14 @@ export async function findSigningIdentity(keychainPath: string) {
 
 /**
  * Check if provisioning profile contains Cloud entitlement 
- * @param provProfilePath
+ * @param provisioningProfilePath
  * @returns {boolean} 
  */
-export async function cloudEntitlement(provProfilePath: string) {
+export async function cloudEntitlement(provisioningProfilePath: string) {
     //find the provisioning profile details
     let provProfileDetails: string;
     const getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
-    getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+    getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provisioningProfilePath]);
     getProvProfileDetailsCmd.on('stdout', function (data) {
         if (data) {
             if (provProfileDetails) {
@@ -160,10 +160,10 @@ export async function cloudEntitlement(provProfilePath: string) {
         tmpPlist = '_xcodetasktmp.plist';
         tl.writeFile(tmpPlist,provProfileDetails);
     } else {
-        throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
+        throw tl.loc('ProvProfileDetailsNotFound', provisioningProfilePath);
     }
 
-    //use PlistBuddy to figure if cloud entitlement exists. 
+    //use PlistBuddy to figure out if cloud entitlement exists. 
     const cloudEntitlement: string = await printFromPlist('Entitlements:com.apple.developer.icloud-container-environment', tmpPlist);
 
     //delete the temporary plist file

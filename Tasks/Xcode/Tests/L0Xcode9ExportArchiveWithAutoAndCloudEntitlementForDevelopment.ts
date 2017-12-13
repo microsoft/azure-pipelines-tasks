@@ -4,8 +4,8 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 
-let taskPath = path.join(__dirname, '..', 'xcode.js');
-let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'xcode.js');
+const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
