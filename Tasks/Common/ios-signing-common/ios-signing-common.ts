@@ -140,7 +140,7 @@ export async function findSigningIdentity(keychainPath: string) {
 export async function cloudEntitlement(provProfilePath: string) {
     //find the provisioning profile details
     let provProfileDetails: string;
-    let getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
+    const getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
     getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
     getProvProfileDetailsCmd.on('stdout', function (data) {
         if (data) {
@@ -150,7 +150,7 @@ export async function cloudEntitlement(provProfilePath: string) {
                 provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
             }
         }
-    })
+    });
     
     await getProvProfileDetailsCmd.exec();
 
@@ -158,24 +158,25 @@ export async function cloudEntitlement(provProfilePath: string) {
     if (provProfileDetails) {
         //write the provisioning profile to a plist
         tmpPlist = '_xcodetasktmp.plist';
-        fs.writeFileSync(tmpPlist, provProfileDetails);
+        tl.writeFile(tmpPlist,provProfileDetails);
     } else {
         throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
     }
 
     //use PlistBuddy to figure if cloud entitlement exists. 
-    let cloudEntitlement: string = await printFromPlist('Entitlements:com.apple.developer.icloud-container-environment', tmpPlist);
+    const cloudEntitlement: string = await printFromPlist('Entitlements:com.apple.developer.icloud-container-environment', tmpPlist);
 
     //delete the temporary plist file
-    let deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
+    const deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
     deletePlistCommand.arg(['-f', tmpPlist]);
     await deletePlistCommand.exec();
 
-    if (cloudEntitlement) {
-        tl.debug('Provisioning Profile contains cloud entitlement');
-        return true;
+    if (!cloudEntitlement) {
+        return false;
     }
-    return false;
+    
+    tl.debug('Provisioning Profile contains cloud entitlement');
+    return true;
 }
 
 /**
