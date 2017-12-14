@@ -6,7 +6,7 @@ var azure_arm_rest_common_tests = require("../node_modules/azure-arm-rest/Tests/
 
 describe('Azure App Service Manage Suite', function() {
 
-    this.timeout(5000);
+    this.timeout(60000);
 
     before((done) => {
         try {

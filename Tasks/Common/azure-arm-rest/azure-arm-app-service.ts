@@ -383,6 +383,7 @@ export class AzureAppService {
         }
         throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
     }
+    
     private async _getPublishingProfileWithSecrets() {
         try {
             var httpRequest = new webClient.WebRequest();
