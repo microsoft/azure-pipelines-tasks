@@ -148,6 +148,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/cp -f /user/build/testuuid.mobileprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "provisioning profile copied"
+        },
+        "/usr/libexec/PlistBuddy -c Print Entitlements:com.apple.developer.icloud-container-environment _xcodetasktmp.plist": {
+            "code": 1,
+            "stdout": ":com.apple.developer.icloud-container-environment, Does Not Exist"
         }
     }
 };

@@ -371,6 +371,12 @@ async function run() {
                         }
 
                         if (xcodeVersion >= 9 && !automaticSigningWithXcode && exportOptions === 'auto') {
+                            const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);                        
+                            if (cloudEntitlement) {
+                                tl.debug("Adding cloud entitlement");
+                                tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
+                            }
+                            
                             // Xcode 9 manual signing, set code sign style = manual
                             tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
 
