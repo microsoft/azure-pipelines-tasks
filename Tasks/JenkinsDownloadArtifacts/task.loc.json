@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 125,
-    "Patch": 1
+    "Patch": 2
   },
   "groups": [
     {
@@ -328,7 +328,6 @@
     "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
     "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
     "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull",
-    "ArtifactItemsTruncationWarning": "ms-resource:loc.messages.ArtifactItemsTruncationWarning",
     "CreatedBlobForItem": "ms-resource:loc.messages.CreatedBlobForItem",
     "CreatedContainer": "ms-resource:loc.messages.CreatedContainer",
     "ErrorInReadStream": "ms-resource:loc.messages.ErrorInReadStream",
@@ -341,6 +340,8 @@
     "UploadingItem": "ms-resource:loc.messages.UploadingItem",
     "FoundJobType": "ms-resource:loc.messages.FoundJobType",
     "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
-    "InvalidJobName": "ms-resource:loc.messages.InvalidJobName"
+    "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
+    "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported"
   }
 }

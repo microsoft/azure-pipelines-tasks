@@ -5,12 +5,18 @@ import models = require('artifact-engine/Models');
 import tl = require('vsts-task-lib/task');
 
 export class AzureBlobProvider implements models.IArtifactProvider {
-    constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string) {
+
+    constructor(storageAccount: string, container: string, accessKey: string, prefixFolderPath?: string, host?: string, addPrefixToDownloadedItems?: boolean) {
         this._storageAccount = storageAccount;
         this._accessKey = accessKey;
         this._container = container;
-        this._prefixFolderPath = prefixFolderPath;
+        if (!!prefixFolderPath) {
+            this._prefixFolderPath = prefixFolderPath.endsWith("/") ? prefixFolderPath : prefixFolderPath + "/";
+        } else {
+            this._prefixFolderPath = "";
+        }
         this._blobSvc = azureStorage.createBlobService(this._storageAccount, this._accessKey, host);
+        this._addPrefixToDownloadedItems = !!addPrefixToDownloadedItems;
     }
 
     public putArtifactItem(item: models.ArtifactItem, readStream: NodeJS.ReadableStream): Promise<models.ArtifactItem> {
@@ -52,12 +58,18 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     public getArtifactItems(artifactItem: models.ArtifactItem): Promise<models.ArtifactItem[]> {
-        return this._getItems(this._container, artifactItem.path);
+        throw new Error(tl.loc("GetArtifactItemsNotSupported"));
     }
 
     public getArtifactItem(artifactItem: models.ArtifactItem): Promise<NodeJS.ReadableStream> {
         return new Promise((resolve, reject) => {
-            var readStream: NodeJS.ReadableStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            var readStream: NodeJS.ReadableStream;
+            if (!this._addPrefixToDownloadedItems && !!this._prefixFolderPath) {
+                // Adding prefix path to get the absolute path
+                readStream = this._blobSvc.createReadStream(this._container, this._prefixFolderPath + artifactItem.path, null); 
+            } else {
+                readStream = this._blobSvc.createReadStream(this._container, artifactItem.path, null);
+            }
             resolve(readStream);
         });
     }
@@ -83,20 +95,34 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     }
 
     private _getItems(container: string, parentRelativePath?: string): Promise<models.ArtifactItem[]> {
-        var promise = new Promise<models.ArtifactItem[]>((resolve, reject) => {
+        var promise = new Promise<models.ArtifactItem[]>(async (resolve, reject) => {
             var items: models.ArtifactItem[] = [];
+            var continuationToken = null;
+            var result;
+            do {
+                result = await this._getListOfItemsInsideContainer(container, parentRelativePath, continuationToken);
+                items = items.concat(this._convertBlobResultToArtifactItem(result.entries));
+                continuationToken = result.continuationToken;
+                if (!!continuationToken) {
+                    console.log(tl.loc("ContinuationTokenExistsFetchingRemainingFiles"));
+                }
+            } while (continuationToken);
 
-            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, null, (error, result) => {
+            console.log(tl.loc("SuccessFullyFetchedItemList"));
+            resolve(items);
+        });
+
+        return promise;
+    }
+
+    private async _getListOfItemsInsideContainer(container, parentRelativePath, continuationToken): Promise<azureStorage.BlobService.ListBlobsResult> {
+        var promise = new Promise<azureStorage.BlobService.ListBlobsResult>((resolve, reject) => {
+            this._blobSvc.listBlobsSegmentedWithPrefix(container, parentRelativePath, continuationToken, async (error, result) => {
                 if (!!error) {
                     console.log(tl.loc("FailedToListItemInsideContainer", container, error.message));
                     reject(error);
                 } else {
-                    console.log(tl.loc("SuccessFullyFetchedItemList"));
-                    if (result.continuationToken) {
-                        tl.warning(tl.loc("ArtifactItemsTruncationWarning"));
-                    }
-                    items = this._convertBlobResultToArtifactItem(result.entries);
-                    resolve(items);
+                    resolve(result);
                 }
             });
         });
@@ -111,7 +137,12 @@ export class AzureBlobProvider implements models.IArtifactProvider {
             artifactitem.itemType = models.ItemType.File;
             artifactitem.fileLength = parseInt(element.contentLength);
             artifactitem.lastModified = new Date(element.lastModified + 'Z');
-            artifactitem.path = element.name;
+            if (!this._addPrefixToDownloadedItems && !!this._prefixFolderPath) {
+                 // Supplying relative path without prefix; removing the first occurence
+                artifactitem.path = element.name.replace(this._prefixFolderPath, "").trim();
+            } else {
+                artifactitem.path = element.name;
+            }
             artifactItems.push(artifactitem);
         });
 
@@ -124,4 +155,5 @@ export class AzureBlobProvider implements models.IArtifactProvider {
     private _prefixFolderPath: string;
     private _isContainerExists: boolean = false;
     private _blobSvc: azureStorage.BlobService;
+    private _addPrefixToDownloadedItems: boolean = false;
 }
