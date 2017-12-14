@@ -2,32 +2,34 @@ import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 import tl = require('vsts-task-lib');
 import * as path from 'path';
+var azure_arm_rest_common_tests = require("../node_modules/azure-arm-rest/Tests/L0.js");
 
 describe('Azure App Service Manage Suite', function() {
 
-    this.timeout(5*60000);
+    this.timeout(5000);
 
     before((done) => {
-        tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-arm-rest'), '-rf', true);
+        try {
+            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-arm-rest'), '-rf', true);
+        }
+        catch(error) {
+            tl.debug(error);
+        }
+
         done();
     });
     
     after(function () {
     });
     
-    it('Action: Start App Service', (done: MochaDone) => {
-        let tp = path.join(__dirname, 'L0StartAppServiceSuccess.js');
+    azure_arm_rest_common_tests.AzureAppServiceMockTests();
+    
+    /*
+    it('Action: Azure App Service', (done: MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "azure-arm-rest", "Tests", 'azure-arm-app-service-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        try {
-            tr.run();
-            assert(tr.succeeded, "Task Should have succeeded for start App Service action");
-        }
-        catch(error) {
-            console.log(tr.stdout);
-            done(error);
-            return;
-        }
+        AppServiceMocksTests.AzureAppServiceMockTests();
 
         done();
     });
