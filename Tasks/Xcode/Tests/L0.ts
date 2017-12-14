@@ -422,7 +422,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 14, 'Should have run \"PlistBuddy -c Add...\" once, and 14 other command lines.');
+        assert(tr.invokedToolCount == 14, 'Should have run \"PlistBuddy -c Add...\" once, and 13 other command lines.');
 
         done();
     });
@@ -458,9 +458,6 @@ describe('Xcode L0 Suite', function () {
             '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
 
-        assert(tr.ran("/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Production _XcodeTaskExportOptions.plist") === false,
-            'PlistBuddy add cloud entitlement should not run');
-
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 21, 'Should have run \"PlistBuddy -c Add...\" four times, and 17 other command lines.');
@@ -468,10 +465,10 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
-    it('Xcode 9 signing defaults to manual, with auto export and cloud entitlement for production', (done: MochaDone) => {
+    it('Xcode 9 signing with auto export and cloud entitlement for production', (done: MochaDone) => {
         this.timeout(1000);
 
-        const tp = path.join(__dirname, 'L0XCode9SigningDefaultsToAutoWithAutoExportAndCloudEntitlement.js');
+        const tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForProduction.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
@@ -509,7 +506,7 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
-    it('Xcode 9 signing defaults to manual, with auto export and cloud entitlement for development', (done: MochaDone) => {
+    it('Xcode 9 signing with auto export and cloud entitlement for development', (done: MochaDone) => {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForDevelopment.js');
