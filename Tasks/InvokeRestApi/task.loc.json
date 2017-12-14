@@ -35,14 +35,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
-      "name": "urlSuffix",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.urlSuffix",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
-    },
-    {
       "name": "method",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.method",
@@ -85,6 +77,14 @@
         "maxLength": "2000"
       },
       "visibleRule": "method != GET && method != HEAD"
+    },
+    {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
     },
     {
       "name": "waitForCompletion",
