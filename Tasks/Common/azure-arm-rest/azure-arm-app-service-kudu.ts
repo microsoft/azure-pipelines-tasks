@@ -33,18 +33,16 @@ export class KuduServiceManagementClient {
         uriFormat = uriFormat[0] == "/" ? uriFormat : "/" + uriFormat;
         return this._scmUri + uriFormat;
     }
+
+    public getScmUri(): string {
+        return this._scmUri;
+    }
 }
 
 export class Kudu {
     private _client: KuduServiceManagementClient;
-    private _scmUri: string;
-    private _username: string;
-    private _password: string;
 
     constructor(scmUri: string, username: string, password: string) {
-        this._scmUri = scmUri;
-        this._username = username;
-        this._password = password;
         var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
         this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
     }
@@ -57,6 +55,7 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${deploymentStatusBody.id}`);
 
         try {
+            console.log(httpRequest);
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
