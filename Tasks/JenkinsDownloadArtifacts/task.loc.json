@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 127,
-    "Patch": 2
+    "Patch": 3
   },
   "groups": [
     {
@@ -342,6 +342,6 @@
     "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
     "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
     "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
-    "GetArtifactItemNotSupported": "ms-resource:loc.messages.GetArtifactItemNotSupported"
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported"
   }
 }
