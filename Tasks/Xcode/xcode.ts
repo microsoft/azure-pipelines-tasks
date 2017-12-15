@@ -370,34 +370,36 @@ async function run() {
                             tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
                         }
 
-                        if (xcodeVersion >= 9 && !automaticSigningWithXcode && exportOptions === 'auto') {
-                            const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);                        
+                        if (xcodeVersion >= 9 && exportOptions === 'auto') {
+                            const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);
                             if (cloudEntitlement) {
                                 tl.debug("Adding cloud entitlement");
                                 tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
                             }
                             
-                            // Xcode 9 manual signing, set code sign style = manual
-                            tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
+                            if (!automaticSigningWithXcode) {
+                                // Xcode 9 manual signing, set code sign style = manual
+                                tl.tool(plist).arg(['-c', 'Add signingStyle string ' + 'manual', exportOptionsPlist]).execSync();
 
-                            // add provisioning profiles to the exportOptions plist
-                            // find bundle Id from Info.plist and prov profile name from the embedded profile in each .app package
-                            tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
+                                // add provisioning profiles to the exportOptions plist
+                                // find bundle Id from Info.plist and prov profile name from the embedded profile in each .app package
+                                tl.tool(plist).arg(['-c', 'Add provisioningProfiles dict', exportOptionsPlist]).execSync();
 
-                            for (let i = 0; i < embeddedProvProfiles.length; i++) {
-                                let embeddedProvProfile: string = embeddedProvProfiles[i];
-                                let profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
-                                tl.debug('embedded provisioning profile = ' + embeddedProvProfile + ', profile name = ' + profileName);
+                                for (let i = 0; i < embeddedProvProfiles.length; i++) {
+                                    let embeddedProvProfile: string = embeddedProvProfiles[i];
+                                    let profileName: string = await sign.getProvisioningProfileName(embeddedProvProfile);
+                                    tl.debug('embedded provisioning profile = ' + embeddedProvProfile + ', profile name = ' + profileName);
 
-                                let embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
-                                let bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
-                                tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
+                                    let embeddedInfoPlist: string = tl.resolve(path.dirname(embeddedProvProfile), 'Info.plist');
+                                    let bundleId: string = await sign.getBundleIdFromPlist(embeddedInfoPlist);
+                                    tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
 
-                                if (!profileName || !bundleId) {
-                                    throw tl.loc('FailedToGenerateExportOptionsPlist');
+                                    if (!profileName || !bundleId) {
+                                        throw tl.loc('FailedToGenerateExportOptionsPlist');
+                                    }
+
+                                    tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
                                 }
-
-                                tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
                             }
                         }
                     }
