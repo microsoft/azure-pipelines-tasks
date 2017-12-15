@@ -11,8 +11,8 @@ describe('Azure App Service Manage Suite', function() {
 
     before((done) => {
         try {
-            if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-arm-rest/node_modules'))) {
-                tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-arm-rest'), '-rf', true);
+            if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-arm-rest/Tests/node_modules'))) {
+                tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-arm-rest/Tests'), '-rf', true);
             }
         }
         catch(error) {
