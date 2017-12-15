@@ -56,7 +56,7 @@ export class ApplicationInsightsWebTests {
 
     public async create(appInsightsResource: any, applicationUrl: string) {
         var webTestName = "vsts-web-test-" + Date.now();
-        var webTestData =  JSON.parse(JSON.stringify(this.webTestData));
+        var webTestData =  JSON.parse(JSON.stringify(this._webTestData));
         webTestData.name = webTestName;
         webTestData.properties.Name = webTestName;
         webTestData.properties.SyntheticMonitorId = webTestName;
@@ -111,7 +111,7 @@ export class ApplicationInsightsWebTests {
         
     }
 
-    private  webTestData = {
+    private  _webTestData = {
         "name": "",
         "location": "",
         "tags": {},

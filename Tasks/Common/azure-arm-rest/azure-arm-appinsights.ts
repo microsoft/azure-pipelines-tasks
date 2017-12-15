@@ -8,19 +8,19 @@ import Q = require('q');
 import { AzureEndpoint } from './azureModels';
 
 export class AzureApplicationInsights {
-    private _resourceName: string;
+    private _name: string;
     private _resourceGroupName: string;
     private _endpoint: AzureEndpoint;
     private _client: ServiceClient;
 
-    constructor(endpoint: AzureEndpoint, resourceGroupName: string, resourceName: string) {
+    constructor(endpoint: AzureEndpoint, resourceGroupName: string, name: string) {
         var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
             endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
         
         this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
         this._endpoint = endpoint;
         this._resourceGroupName = resourceGroupName;
-        this._resourceName = resourceName;
+        this._name = name;
     }
 
     public async get() {
@@ -30,7 +30,7 @@ export class AzureApplicationInsights {
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}`,
         {
             '{resourceGroupName}': this._resourceGroupName,
-            '{resourceName}': this._resourceName,
+            '{resourceName}': this._name,
         }, null, '2015-05-01');
 
         try {
@@ -42,7 +42,7 @@ export class AzureApplicationInsights {
             throw ToError(response);
         }
         catch(error) {
-            throw Error(tl.loc('FailedToGetApplicationInsightsResource', this._resourceName, this._client.getFormattedError(error)))
+            throw Error(tl.loc('FailedToGetApplicationInsightsResource', this._name, this._client.getFormattedError(error)))
         }
     }
 
@@ -53,7 +53,7 @@ export class AzureApplicationInsights {
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}`,
         {
             '{resourceGroupName}': this._resourceGroupName,
-            '{resourceName}': this._resourceName,
+            '{resourceName}': this._name,
         }, null, '2015-05-01');
 
         try {
@@ -65,7 +65,7 @@ export class AzureApplicationInsights {
             throw ToError(response);
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUpdateApplicationInsightsResource', this._resourceName, this._client.getFormattedError(error)))
+            throw Error(tl.loc('FailedToUpdateApplicationInsightsResource', this._name, this._client.getFormattedError(error)))
         }
     }
 

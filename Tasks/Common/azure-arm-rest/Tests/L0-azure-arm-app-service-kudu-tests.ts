@@ -9,6 +9,8 @@ export function KuduServiceTests() {
         let passed: boolean = true;
         try {
             tr.run();
+            console.log(tr.stdout);
+            console.log(tr.stderr);
             assert(tr.succeeded, "azure-arm-app-service-kudu-tests should have passed but failed.");
         }
         catch(error) {
@@ -22,4 +24,8 @@ export function KuduServiceTests() {
             done();
         }
     });
+}
+
+function updateDeployment(tr) {
+    
 }

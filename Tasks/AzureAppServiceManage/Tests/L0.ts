@@ -27,5 +27,5 @@ describe('Azure App Service Manage Suite', function() {
     
     // azure_arm_appinsights_tests.ApplicationInsightsTests();
     azure_arm_rest_common_app_service_tests.AzureAppServiceMockTests();
-    // azure_arm_rest_common_kudu_tests.KuduServiceTests();
+    azure_arm_rest_common_kudu_tests.KuduServiceTests();
 });
