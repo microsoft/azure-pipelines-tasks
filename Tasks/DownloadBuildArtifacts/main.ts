@@ -44,7 +44,7 @@ function publishEvent(feature, properties: any): void {
         else {
             if (feature === 'reliability') {
                 let reliabilityData = properties;
-                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + taskJson.version + ";]" + reliabilityData.errorMessage
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + JSON.stringify(taskJson.version) + ";]" + reliabilityData.errorMessage
             }
         }
         console.log(telemetry);;
@@ -163,7 +163,7 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = artifact.resource.downloadUrl.replace("file:", "");
+                    let downloadUrl = decodeURI(artifact.resource.downloadUrl.replace("file:", ""));
                     let artifactLocation = downloadUrl + '/' + artifact.name;
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
