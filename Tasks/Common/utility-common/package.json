@@ -1,6 +1,6 @@
 {
   "name": "utility-common",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Common Library for Azure Rest Calls",
   "repository": {
     "type": "git",

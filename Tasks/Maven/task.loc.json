@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 127,
+    "Minor": 128,
     "Patch": 0
   },
   "demands": [
@@ -225,7 +225,7 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
-      "defaultValue": "x86",
+      "defaultValue": "x64",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
       "visibleRule": "jdkVersion != default",

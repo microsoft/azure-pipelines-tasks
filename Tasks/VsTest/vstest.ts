@@ -77,6 +77,11 @@ export function startTest() {
 
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
+            if (vstestConfig.tiaConfig.tiaEnabled)
+            {
+                uploadFile(path.join(os.tmpdir(), "TestImpactZip.zip"));
+                uploadFile(path.join(os.tmpdir(), "TestSelector.log"));
+            }
             if (taskResult == tl.TaskResult.Failed) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
             }
@@ -394,9 +399,15 @@ function getVstestTestsList(vsVersion: number): string {
 
 function uploadVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && utils.Helper.pathExistsAsFile(vstestConfig.vstestDiagFile)) {
-        let stats = fs.statSync(vstestConfig.vstestDiagFile);
-        tl.debug('Diag file exists. Size: ' + stats.size + ' Bytes');
-        console.log('##vso[task.uploadfile]' + vstestConfig.vstestDiagFile);
+        uploadFile(vstestConfig.vstestDiagFile);
+    }
+}
+
+function uploadFile(file: string): void {
+    if (utils.Helper.pathExistsAsFile(file)) {
+        let stats = fs.statSync(file);
+        tl.debug('File exists. Size: ' + stats.size + ' Bytes');
+        console.log('##vso[task.uploadfile]' + file);
     }
 }
 
@@ -501,7 +512,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
     vstestConfig.publishTestResultsInTiaMode = uploadTiaResults;
     let updateResponseSupplementryFileSuccess = isResponseFileRun && updateResponseFile(getVstestArguments(settingsFile, false), vstestConfig.responseSupplementryFile);
-    if (!updateResponseSupplementryFileSuccess){
+    if (!updateResponseSupplementryFileSuccess && vstestConfig.rerunFailedTests){
         tl.warning(tl.loc("rerunNotSupported"));
         vstestConfig.rerunFailedTests = false;
     }
@@ -628,6 +639,9 @@ function publishTestResults(testResultsDirectory: string): tl.TaskResult {
                 console.log('##vso[task.logissue type=warning;code=002003;]');
                 tl.warning(tl.loc('NoResultsToPublish'));
             }
+        } else {
+            utils.Helper.publishEventToCi(AreaCodes.PUBLISHRESULTS, 'no test directory', 1041, false);
+            tl.warning(tl.loc('NoTestResultsDirectoryFound'));
         }
 
         return tl.TaskResult.Succeeded;

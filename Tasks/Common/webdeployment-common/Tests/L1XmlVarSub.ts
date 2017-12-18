@@ -14,7 +14,8 @@ async function xmlVarSub() {
         'OtherDefaultConnection': 'connectionStringValue2',
         'ParameterConnection': 'New_Connection_String From xml var subs',
         'connectionString': 'replaced_value',
-        'invariantName': 'System.Data.SqlServer'
+        'invariantName': 'System.Data.SqlServer',
+        'blatvar': 'ApplicationSettingReplacedValue'
     }
 
     var parameterFilePath = path.join(__dirname, 'L1XmlVarSub/parameters_test.xml');

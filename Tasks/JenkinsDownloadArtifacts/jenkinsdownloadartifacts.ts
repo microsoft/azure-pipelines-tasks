@@ -8,7 +8,7 @@ import shell = require('shelljs');
 import Q = require('q');
 import request = require('request');
 
-import * as handlers from "artifact-engine/Providers/Handlers"
+import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
 
@@ -16,7 +16,7 @@ import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureSto
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
-var packagejson = require('./package.json');
+var taskJson = require('./task.json');
 
 const area: string = 'JenkinsDownloadArtifacts';
 
@@ -43,15 +43,16 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
 }
 
 function getDefaultProps() {
+    var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
     return {
-        serverurl: tl.getVariable('System.TEAMFOUNDATIONSERVERURI'),
-        releaseurl: tl.getVariable('Release.ReleaseWebUrl'),
-        releaseid: tl.getVariable('Release.ReleaseId'),
-        builduri: tl.getVariable('Build.BuildUri'),
-        buildid: tl.getVariable('Build.Buildid'),
-        jobid: tl.getVariable('System.Jobid'),
-        agentVersion: tl.getVariable('Agent.Version'),
-        version: packagejson.version
+        hostType: hostType,
+        definitionName: hostType === 'release' ? tl.getVariable('RELEASE.DEFINITIONNAME') : tl.getVariable('BUILD.DEFINITIONNAME'),
+        processId: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEID') : tl.getVariable('BUILD.BUILDID'),
+        processUrl: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEWEBURL') : (tl.getVariable('SYSTEM.TEAMFOUNDATIONSERVERURI') + tl.getVariable('SYSTEM.TEAMPROJECT') + '/_build?buildId=' + tl.getVariable('BUILD.BUILDID')),
+        taskDisplayName: tl.getVariable('TASK.DISPLAYNAME'),
+        jobid: tl.getVariable('SYSTEM.JOBID'),
+        agentVersion: tl.getVariable('AGENT.VERSION'),
+        version: taskJson.version
     };
 }
 
@@ -67,7 +68,7 @@ function publishEvent(feature, properties: any): void {
         else {
             if (feature === 'reliability') {
                 let reliabilityData = properties;
-                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + packagejson.version + ";]" + reliabilityData.errorMessage
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + taskJson.version + ";]" + reliabilityData.errorMessage
             }
         }
         console.log(telemetry);;
@@ -148,8 +149,7 @@ async function doWork() {
         }
 
     } catch (err) {
-        tl.debug(err.message);
-        tl._writeError(err);
+        tl.error(err);
         publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }

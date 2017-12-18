@@ -1,11 +1,11 @@
-import tl = require('vsts-task-lib/task');
+import * as tl from 'vsts-task-lib/task';
+import * as tr from 'vsts-task-lib/toolrunner';
 import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as taskLib from 'vsts-task-lib/task';
 import * as restm from 'typed-rest-client/RestClient';
-import {IExecOptions, IExecSyncResult, ToolRunner} from 'vsts-task-lib/toolrunner';
 import * as os from 'os';
 import * as path from 'path';
 import * as ci from './cieventlogger';
+import { exec } from 'child_process';
 const perf = require('performance-now');
 
 const executionStartTime = perf();
@@ -19,7 +19,7 @@ async function startInstaller() {
 
     if (osPlat !== 'win32') {
         // Fail the task if os is not windows
-        taskLib.setResult(taskLib.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+        tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
         return;
     }
 
@@ -28,8 +28,8 @@ async function startInstaller() {
         console.log('==============================================================================');
 
         // Read inputs
-        const versionSelectorInput = taskLib.getInput('versionSelector', true);
-        const testPlatformVersion = taskLib.getInput('testPlatformVersion', false);
+        const versionSelectorInput = tl.getInput('versionSelector', true);
+        const testPlatformVersion = tl.getInput('testPlatformVersion', false);
 
         ci.publishEvent('Options', { versionSelectorInput: versionSelectorInput, testPlatformVersion: testPlatformVersion } );
 
@@ -39,7 +39,7 @@ async function startInstaller() {
         await getVsTestPlatformTool(testPlatformVersion, versionSelectorInput);
     } catch (error) {
         ci.publishEvent('Completed', { isSetupSuccessful: 'false', error: error.message } );
-        taskLib.setResult(taskLib.TaskResult.Failed, error.message);
+        tl.setResult(tl.TaskResult.Failed, error.message);
     }
 
     ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: executionStartTime, endTime: perf() } );
@@ -54,7 +54,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
         console.log(tl.loc('LookingForLatestStableVersion'));
         testPlatformVersion = null;
         includePreRelease = false;
-    } else if(versionSelectorInput.toLowerCase() === 'latestprerelease') {
+    } else if (versionSelectorInput.toLowerCase() === 'latestprerelease') {
         console.log(tl.loc('LookingForLatestPreReleaseVersion'));
         testPlatformVersion = null;
         includePreRelease = true;
@@ -65,17 +65,18 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
             testPlatformVersion = getLatestPackageVersionNumber(includePreRelease);
             if (testPlatformVersion === null) {
                 tl.warning(tl.loc('RequiredVersionNotListed'));
-                tl.debug('Looking for latest available version in cache.');
+                tl.debug('Looking for latest stable available version in cache.');
                 ci.publishEvent('RequestedVersionNotListed', { action: 'getLatestAvailableInCache' } );
+                // Look for the latest stable version available in the cache
                 testPlatformVersion = 'x';
             } else {
-                tl.debug(`Found the latest version to be ${testPlatformVersion}`);
+                tl.debug(`Found the latest version to be ${testPlatformVersion}.`);
                 ci.publishEvent('RequestedVersionListed', { action: 'lookInCacheForListedVersion', version: testPlatformVersion } );
             }
         } catch (error) {
-            // Failed to list available versions, look for the latest version available in the cache
+            // Failed to list available versions, look for the latest stable version available in the cache
             tl.warning(tl.loc('FailedToListAvailablePackagesFromNuget'));
-            tl.debug('Looking for latest available version in cache.');
+            tl.debug('Looking for latest stable version available version in cache.');
             ci.publishEvent('RequestedVersionListFailed', { action: 'getLatestAvailableInCache', error: error } );
             testPlatformVersion = 'x';
         }
@@ -94,7 +95,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
                 // Download the required version and cache it
                 try {
                     toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion);
-                } catch(error) {
+                } catch (error) {
                     // Download failed, look for the latest version available in the cache
                     tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
                     ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
@@ -121,26 +122,29 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     // Set the task variable so that the VsTest task can consume this path
     tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
     console.log(tl.loc('InstallationSuccessful', toolPath));
-    tl.debug('Set variable VsTestToolsInstallerInstalledToolLocation value to ' + toolPath);
+    tl.debug(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${toolPath}.`);
 }
 
 function getLatestPackageVersionNumber(includePreRelease: boolean): string {
-    const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
+    const nugetTool = path.join(__dirname, 'nuget.exe');
+    let args = undefined;
 
     if (includePreRelease === true) {
-        nugetTool.line('list ' + packageName + ' -PreRelease' + ' -Source ' + packageSource);
+        args = 'list ' + packageName + ' -PreRelease' + ' -Source ' + packageSource;
     } else {
-        nugetTool.line('list ' + packageName + ' -Source ' + packageSource);
+        args = 'list ' + packageName + ' -Source ' + packageSource;
     }
 
-    const options = <IExecOptions>{};
+    const options = <tr.IExecOptions>{};
     options.silent = true;
 
     const startTime = perf();
-    const result = nugetTool.execSync(options);
+    const result = tl.execSync(nugetTool, args, options);
+
     ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
 
     if (result.code !== 0) {
+        tl.debug(`Nuget.exe returned error code: ${result.code}`);
         throw new Error('Listing packages failed. Nuget.exe returned ' + result.code);
     } else if (!(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
         tl.warning(result.stderr);
@@ -152,7 +156,7 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
 
     // nuget returns latest vesions of all packages that match the given name, we need to filter out the exact package we need from this list
     listOfPackages.forEach(nugetPackage => {
-        if(nugetPackage.split(' ')[0] === packageName) {
+        if (nugetPackage.split(' ')[0] === packageName) {
             version = nugetPackage.split(' ')[1];
             return;
         }
@@ -164,14 +168,12 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
 async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): Promise<string> {
     testPlatformVersion = toolLib.cleanVersion(testPlatformVersion);
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
-    let downloadPath: string;
-
-    downloadPath = taskLib.getVariable('Agent.TempDirectory');
+    let downloadPath = tl.getVariable('Agent.TempDirectory');
     if (!downloadPath) {
         throw new Error('Expected Agent.TempDirectory to be set');
     }
     // use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
-    downloadPath = path.join(downloadPath, 'VsTest'); 
+    downloadPath = path.join(downloadPath, 'VsTest');
     nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload');
 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);

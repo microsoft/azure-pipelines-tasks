@@ -104,11 +104,11 @@ async function run() {
             let devices: string[];
             if (targetingSimulators) {
                 // Only one simulator for now.
-                devices = [ tl.getInput('destinationSimulators') ];
+                devices = [tl.getInput('destinationSimulators')];
             }
             else {
                 // Only one device for now.
-                devices = [ tl.getInput('destinationDevices') ];
+                devices = [tl.getInput('destinationDevices')];
             }
 
             destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
@@ -330,7 +330,6 @@ async function run() {
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-
                 if (exportOptions === 'auto') {
                     // Automatically try to detect the export-method to use from the provisioning profile
                     // embedded in the .xcarchive file
@@ -363,6 +362,11 @@ async function run() {
                     }
 
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
+                        const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);                        
+                        if (cloudEntitlement) {
+                            tl.debug("Adding cloud entitlement");
+                            tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
+                        }
                         let signingOptionForExport = signingOption;
 
                         // If we're using the project defaults, scan the pbxProject file for the type of signing being used.

@@ -71,7 +71,7 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.vstestArgsFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.responseSupplementryFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported();
+    vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported() || utils.Helper.isToolsInstallerFlow(vsTestConfiguration);
     return vsTestConfiguration;
 }
 
@@ -101,9 +101,9 @@ function getEnvironmentUri(): string {
 
     if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
         || dontDistribute) {
-        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
+        environmentUri = `vstest://env/${projectName}/_apis/${pipelineId}/${phaseId}/${jobId}/${taskInstanceId}`;
     } else {
-        environmentUri = `dta://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
+        environmentUri = `vstest://env/${projectName}/_apis/${pipelineId}/${phaseId}/${taskInstanceId}`;
     }
 
     return environmentUri;
@@ -193,7 +193,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         } else {
             tl.warning(tl.loc('invalidRerunFailedThreshold'));
         }
-        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0) {
+        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
             testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
             console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
         } else {
@@ -344,7 +344,9 @@ function getTiaConfiguration(): models.TiaConfiguration {
     var buildReason = tl.getVariable('Build.Reason');
 
     // https://www.visualstudio.com/en-us/docs/build/define/variables
-    if (buildReason && buildReason === "PullRequest") {
+    // PullRequest -> This is the case for TfsGit PR flow
+    // CheckInShelveset -> This is the case for TFVC Gated Checkin
+    if (buildReason && (buildReason === "PullRequest" || buildReason === "CheckInShelveset")) {
         tiaConfiguration.isPrFlow = "true";
     }
     else {

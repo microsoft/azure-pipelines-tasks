@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 128,
-        "Patch": 1
+        "Patch": 3
     },
     "groups": [
         {
@@ -194,8 +194,11 @@
         },
         {
             "name": "containerName",
-            "type": "string",
+            "type": "pickList",
             "label": "Container Name",
+            "properties": {
+                "EditableOptions": "True"
+            },
             "required": true,
             "groupName": "propagatedArtifactsGroup",
             "visibleRule": "propagatedArtifacts == true",
@@ -251,6 +254,15 @@
             "endpointId": "$(ConnectedServiceNameARM)",
             "target": "storageAccountName",
             "dataSourceName": "AzureStorageAccountRMandClassic"
+        },
+        {
+            "target": "containerName",
+            "endpointId": "$(ConnectedServiceNameARM)",
+            "dataSourceName": "AzureStorageContainer",
+            "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+            "parameters": {
+                "storageAccount": "$(storageAccountName)"
+            }
         }
     ],
     "execution": {
@@ -332,7 +344,6 @@
         "ResourceNameCannotBeNull": "Resource name is required.",
         "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource url is required.",
         "StorageAccountCannotBeNull": "storage accountName is required.",
-        "ArtifactItemsTruncationWarning": "Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
         "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
         "CreatedContainer": "Created container {0}.",
         "ErrorInReadStream": "Error in Read stream: {0}",
@@ -345,6 +356,8 @@
         "UploadingItem": "Uploading {0}.",
         "FoundJobType": "Found job type %s",
         "CannotFindJobType": "Could not detect job type",
-        "InvalidJobName": "Invalid job name %s"
+        "InvalidJobName": "Invalid job name %s",
+        "ContinuationTokenExistsFetchingRemainingFiles": "Continuation token exists, trying to fetch the list of remaining files.",
+        "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path"
     }
 }
