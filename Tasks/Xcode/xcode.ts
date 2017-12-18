@@ -231,52 +231,59 @@ async function run() {
             xcb.pipeExecOutputToTool(xcPrettyTool);
         }
 
-        let xcodeTaskErrors;
-        try {
-            //--- Xcode Build ---
+        const publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
+        let xcodeTestErrors;
+        if (publishResults && useXcpretty && actions.toString().toLowerCase().indexOf('test') >= 0) {
+            tl.debug('Running Xcode test');
+            try {
+                //--- Xcode Test ---
+                await xcb.exec();
+            } catch (err) {
+                xcodeTestErrors = err;
+                tl.debug('Xcode task failed: ' + err);
+            }
+        } else {
+            tl.debug('Running Xcode build');
+            //--- Xcode Test ---
             await xcb.exec();
-        } catch (err) {
-            xcodeTaskErrors = err;
-            tl.debug('Xcode task failed: ' + err);
         }
 
         //--------------------------------------------------------
         // Test publishing - publish even if tests fail
         //--------------------------------------------------------
         let testResultsFiles: string;
-        let publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
-
+        
         if (publishResults) {
             if (!useXcpretty) {
                 tl.warning(tl.loc('UseXcprettyForTestPublishing'));
             } else {
                 testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
-            }
 
-            if (testResultsFiles && 0 !== testResultsFiles.length) {
-                //check for pattern in testResultsFiles
+                if (testResultsFiles && 0 !== testResultsFiles.length) {
+                    //check for pattern in testResultsFiles
 
-                let matchingTestResultsFiles: string[];
-                if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-                    tl.debug('Pattern found in testResultsFiles parameter');
-                    matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
+                    let matchingTestResultsFiles: string[];
+                    if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
+                        tl.debug('Pattern found in testResultsFiles parameter');
+                        matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
+                    }
+                    else {
+                        tl.debug('No pattern found in testResultsFiles parameter');
+                        matchingTestResultsFiles = [testResultsFiles];
+                    }
+
+                    if (!matchingTestResultsFiles) {
+                        tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
+                    } else {
+                        const tp = new tl.TestPublisher("JUnit");
+                        tp.publish(matchingTestResultsFiles, false, "", "", "", true);
+                    }
                 }
-                else {
-                    tl.debug('No pattern found in testResultsFiles parameter');
-                    matchingTestResultsFiles = [testResultsFiles];
-                }
-
-                if (!matchingTestResultsFiles) {
-                    tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
-                } else {
-                    let tp = new tl.TestPublisher("JUnit");
-                    tp.publish(matchingTestResultsFiles, false, "", "", "", true);
-                 }
             }
         }
 
-        if (xcodeTaskErrors) {
-            throw xcodeTaskErrors;
+        if (xcodeTestErrors) {
+            throw xcodeTestErrors;
         }
 
         //--------------------------------------------------------
