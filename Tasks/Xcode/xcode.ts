@@ -231,60 +231,8 @@ async function run() {
             xcb.pipeExecOutputToTool(xcPrettyTool);
         }
 
-        const publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
-        let xcodeTestErrors;
-        if (publishResults && useXcpretty && actions.toString().toLowerCase().indexOf('test') >= 0) {
-            tl.debug('Running Xcode test');
-            try {
-                //--- Xcode Test ---
-                await xcb.exec();
-            } catch (err) {
-                xcodeTestErrors = err;
-                tl.debug('Xcode task failed: ' + err);
-            }
-        } else {
-            tl.debug('Running Xcode build');
-            //--- Xcode Test ---
-            await xcb.exec();
-        }
-
-        //--------------------------------------------------------
-        // Test publishing - publish even if tests fail
-        //--------------------------------------------------------
-        let testResultsFiles: string;
-        
-        if (publishResults) {
-            if (!useXcpretty) {
-                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-            } else {
-                testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
-
-                if (testResultsFiles && 0 !== testResultsFiles.length) {
-                    //check for pattern in testResultsFiles
-
-                    let matchingTestResultsFiles: string[];
-                    if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-                        tl.debug('Pattern found in testResultsFiles parameter');
-                        matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
-                    }
-                    else {
-                        tl.debug('No pattern found in testResultsFiles parameter');
-                        matchingTestResultsFiles = [testResultsFiles];
-                    }
-
-                    if (!matchingTestResultsFiles) {
-                        tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
-                    } else {
-                        const tp = new tl.TestPublisher("JUnit");
-                        tp.publish(matchingTestResultsFiles, false, "", "", "", true);
-                    }
-                }
-            }
-        }
-
-        if (xcodeTestErrors) {
-            throw xcodeTestErrors;
-        }
+        //--- Xcode Build ---
+        await xcb.exec();
 
         //--------------------------------------------------------
         // Package app to generate .ipa
