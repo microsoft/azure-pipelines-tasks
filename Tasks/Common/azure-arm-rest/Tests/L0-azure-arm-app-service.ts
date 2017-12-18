@@ -61,11 +61,11 @@ function start(tr) {
 }
 
 function stop(tr) {
-    assert(tr.stdOutContained('StartingAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StartingAppService MOCK_APP_SERVICE_NAME');
-    assert(tr.stdOutContained('StartedAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StartedAppService MOCK_APP_SERVICE_NAME');
-    assert(tr.stdOutContained('StartingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME'), 'Should have printed: StartingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME');
-    assert(tr.stdOutContained('Error: FailedToStartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'),
-        'Should have printed Error: FailedToStartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('StoppingAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StoppingAppService MOCK_APP_SERVICE_NAME');
+    assert(tr.stdOutContained('StoppedAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StoppedAppService MOCK_APP_SERVICE_NAME');
+    assert(tr.stdOutContained('StoppingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME'), 'Should have printed: StoppingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME');
+    assert(tr.stdOutContained('Error: FailedToStopAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'),
+        'Should have printed Error: FailedToStopAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
 }
 
 function restart(tr) {
@@ -106,8 +106,6 @@ function getWebDeployPublishingProfile(tr) {
     assert(tr.stdOutContained('WEB DEPLOY PUBLISHING PROFILE: MOCK_APP_SERVICE_NAME - Web Deploy'),
         'Should have printed:WEB DEPLOY PUBLISHING PROFILE: MOCK_APP_SERVICE_NAME - Web Deploy');
 }
-
-// assert(tr.stdOutContained(''), 'Should have printed: ');
 
 function getPublishingCredentials(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME PUBLISHINGCREDENTIALS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/publishingcredentials/$MOCK_APP_SERVICE_NAME'),

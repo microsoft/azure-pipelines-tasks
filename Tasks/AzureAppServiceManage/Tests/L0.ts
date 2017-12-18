@@ -2,9 +2,10 @@ import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 import tl = require('vsts-task-lib');
 import * as path from 'path';
-var azure_arm_rest_common_app_service_tests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
-var azure_arm_rest_common_kudu_tests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
-var azure_arm_appinsights_tests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
+var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
+var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+var AppInsightsWebTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-webtests-tests.js");
 describe('Azure App Service Manage Suite', function() {
 
     this.timeout(60000);
@@ -25,7 +26,8 @@ describe('Azure App Service Manage Suite', function() {
     after(function () {
     });
     
-    // azure_arm_appinsights_tests.ApplicationInsightsTests();
-    azure_arm_rest_common_app_service_tests.AzureAppServiceMockTests();
-    azure_arm_rest_common_kudu_tests.KuduServiceTests();
+    ApplicationInsightsTests.ApplicationInsightsTests();
+    AppServiceTests.AzureAppServiceMockTests();
+    KuduServiceTests.KuduServiceTests();
+    AppInsightsWebTests.ApplicationInsightsTests();
 });

@@ -4,15 +4,17 @@ import tl = require('vsts-task-lib');
 import * as path from 'path';
 
 export function ApplicationInsightsTests() {
-    it('azure-arm-app-service AzureAppService', (done: MochaDone) => {
+    it('azure-arm-appinsights AzureApplicationInsights', (done: MochaDone) => {
         let tp = path.join(__dirname, 'azure-arm-appinsights-tests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         let passed: boolean = true;
         try {
             tr.run();
-            console.log(tr.stdout);
-            console.log(tr.stderr);
-            assert(tr.succeeded, "azure-arm-app-service-tests should have passed but failed.");
+            assert(tr.succeeded, "azure-arm-appinsights should have passed but failed.");
+            console.log("validating get");
+            get(tr);
+            console.log("validating update");
+            update(tr);
         }
         catch(error) {
             passed = false;
@@ -25,4 +27,18 @@ export function ApplicationInsightsTests() {
             done();
         }
     });
+}
+
+function get(tr) {
+    assert(tr.stdOutContained('GET APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME'),
+        'Should have printed: GET APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME');
+    assert(tr.stdOutContained('FailedToGetApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)'),
+        'Should have printed: FailedToGetApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)');
+}
+
+function update(tr) {
+    assert(tr.stdOutContained('UPDATE APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME'),
+        'Should have printed: UPDATE APP INSIGHTS RESOURCE ID MOCKED: subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_NAME');
+    assert(tr.stdOutContained('FailedToUpdateApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)'),
+        'Should have printed: FailedToUpdateApplicationInsightsResource FAIL_MOCK_APP_INSIGHTS_NAME Internal Server error occured. (CODE: 500)');
 }

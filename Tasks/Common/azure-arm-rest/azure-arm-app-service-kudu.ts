@@ -192,6 +192,7 @@ export class Kudu {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`killProcess. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 502) {
+                tl.debug(`Killed Process ${processID}`);
                 return;
             }
 

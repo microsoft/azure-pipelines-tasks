@@ -246,3 +246,26 @@ export interface SiteExtension {
     provisioningState: string;
     local_is_latest_version: boolean;
 }
+
+export interface WebTest {
+    id?: string;
+    name: string;
+    type: string;
+    location: string;
+    tags: {[key: string]: string},
+    kind?: string,
+    etag?: string;
+    properties?: {[key: string]: any};
+}
+
+
+export interface ApplicationInsights {
+    id?: string;
+    name: string;
+    type: string;
+    location: string;
+    tags: {[key: string]: string},
+    kind?: string,
+    etag?: string;
+    properties?: {[key: string]: any};
+}

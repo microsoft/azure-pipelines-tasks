@@ -5,7 +5,7 @@ import webClient = require('./webClient');
 import  {ToError, ServiceClient } from './AzureServiceClient';
 import Model = require('./azureModels');
 import Q = require('q');
-import { AzureEndpoint } from './azureModels';
+import { AzureEndpoint, ApplicationInsights } from './azureModels';
 
 export class AzureApplicationInsights {
     private _name: string;
@@ -23,7 +23,7 @@ export class AzureApplicationInsights {
         this._name = name;
     }
 
-    public async get() {
+    public async get(): Promise<ApplicationInsights> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
 
@@ -36,7 +36,7 @@ export class AzureApplicationInsights {
         try {
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200) {
-                return response.body;
+                return response.body as ApplicationInsights;
             }
 
             throw ToError(response);
@@ -59,7 +59,7 @@ export class AzureApplicationInsights {
         try {
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200) {
-                return response.body;
+                return response.body as ApplicationInsights;
             }
 
             throw ToError(response);

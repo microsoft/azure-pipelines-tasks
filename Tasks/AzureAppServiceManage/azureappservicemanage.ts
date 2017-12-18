@@ -29,7 +29,7 @@ async function enableContinuousMonitoring(appService: AzureAppService, appInsigh
     tl.debug('Link app insights with app service via tag');
     await appInsights.update(appInsightsResource);
     tl.debug('Link app service with app insights via instrumentation key');
-    await appService.patchApplicationSettings({"APPINSIGHTS_INSTRUMENTATIONKEY": appInsightsResource.properties.InstrumentationKey});
+    await appService.patchApplicationSettings({"APPINSIGHTS_INSTRUMENTATIONKEY": appInsightsResource.properties['InstrumentationKey']});
     try {
         tl.debug('Enable alwaysOn property for app service.');
         await appService.patchConfiguration({"alwaysOn": true});    

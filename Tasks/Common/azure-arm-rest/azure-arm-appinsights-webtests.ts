@@ -5,7 +5,7 @@ import util = require('util');
 import webClient = require('./webClient');
 import Model = require('./azureModels');
 import Q = require('q');
-import { AzureEndpoint } from './azureModels';
+import { AzureEndpoint, WebTest } from './azureModels';
 
 export class ApplicationInsightsWebTests {
     private _resourceGroupName: string;
@@ -13,7 +13,7 @@ export class ApplicationInsightsWebTests {
     private _endpoint: AzureEndpoint;
 
     constructor(endpoint: AzureEndpoint, resourceGroup?: string) {
-        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
+        let credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
             endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
 
         this._endpoint = endpoint;
@@ -21,8 +21,8 @@ export class ApplicationInsightsWebTests {
         this._resourceGroupName = resourceGroup;
     }
 
-    public async list() {
-        var httpRequest = new webClient.WebRequest();
+    public async list(): Promise<Array<WebTest>> {
+        let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/webtests`,
@@ -30,23 +30,23 @@ export class ApplicationInsightsWebTests {
             '{resourceGroupName}': this._resourceGroupName
         }, null, '2015-05-01');
 
-        var result = [];
+        let result: Array<WebTest> = [];
 
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
             }
 
             result = result.concat(response.body.value);
             if(response.body.nextLink) {
-                var nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
+                let nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
                 if(nextResult.error) {
                     throw ToError(nextResult.error);
                 }
                 result = result.concat(nextResult.result);
             }
-
+            tl.debug(`retrieved list of tests for ${this._resourceGroupName}.`);
             return result;
         }
         catch(error) {
@@ -54,10 +54,10 @@ export class ApplicationInsightsWebTests {
         }
     }
 
-    public async create(appInsightsResource: any, applicationUrl: string) {
+    public async create(appInsightsResource: any, applicationUrl: string, testName?: string) {
         
         let httpRequest = new webClient.WebRequest();
-        let webTestData = this.configureNewWebTest(appInsightsResource, applicationUrl);
+        let webTestData: WebTest = this.configureNewWebTest(appInsightsResource, applicationUrl, testName);
         httpRequest.method = 'PUT';
         
         httpRequest.body = JSON.stringify(webTestData);
@@ -68,11 +68,12 @@ export class ApplicationInsightsWebTests {
         }, null, '2015-05-01');
 
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
             }
 
+            tl.debug(`added web test ${testName}.`);
             return response.body;
 
         }
@@ -81,33 +82,32 @@ export class ApplicationInsightsWebTests {
         }
     }
 
-    public async addWebTest(appInsightsResource: any, applicationUrl: string) {
-        var webTests = await this.list();
-        for(var webTest of webTests) {
-            var isTagPresent: boolean = false;
-            var isApplicationUrlPresent: boolean = false;
-            for(var tag in webTest.tags) {
+    public async addWebTest(appInsightsResource: any, applicationUrl: string, webTestName?: string) {
+        let webTests = await this.list();
+        console.log(webTests);
+        for(let webTest of webTests) {
+            let isTagPresent: boolean = false;
+            let isApplicationUrlPresent: boolean = false;
+            for(let tag in webTest.tags) {
                 if(tag.toLowerCase().indexOf(appInsightsResource.id.toLowerCase()) != -1) {
                     isTagPresent = true;
                     break;
                 }
-                
             }
 
-            isApplicationUrlPresent = webTest.properties.Configuration.WebTest.toLowerCase().indexOf(applicationUrl.toLowerCase()) != -1;
+            isApplicationUrlPresent = webTest.properties['Configuration'].WebTest.toLowerCase().indexOf(applicationUrl.toLowerCase()) != -1;
             if(isTagPresent && isApplicationUrlPresent) {
                 console.log(tl.loc('WebTestAlreadyConfigured', applicationUrl));
                 return;
             }
         }
 
-        await this.create(appInsightsResource, applicationUrl);
-        
+        await this.create(appInsightsResource, applicationUrl, webTestName);
     }
 
-    private configureNewWebTest(appInsightsResource: any, applicationUrl: string) {
-        var webTestName = "vsts-web-test-" + Date.now();
-        var webTestData =  JSON.parse(JSON.stringify(this._webTestData));
+    public configureNewWebTest(appInsightsResource: any, applicationUrl: string, testName?: string): WebTest {
+        let webTestName = testName ? testName: "vsts-web-test-" + Date.now();
+        let webTestData =  JSON.parse(JSON.stringify(this._webTestData));
         webTestData.name = webTestName;
         webTestData.properties.Name = webTestName;
         webTestData.properties.SyntheticMonitorId = webTestName;
@@ -119,10 +119,11 @@ export class ApplicationInsightsWebTests {
         return webTestData;
     }
 
-    private  _webTestData = {
+    private  _webTestData: WebTest = {
         "name": "",
         "location": "",
         "tags": {},
+        "type": "microsoft.insights/webtests",
         "properties": {
             "SyntheticMonitorId": "",
             "Name": "",
@@ -154,5 +155,4 @@ export class ApplicationInsightsWebTests {
             }
         }
     }
-
 }

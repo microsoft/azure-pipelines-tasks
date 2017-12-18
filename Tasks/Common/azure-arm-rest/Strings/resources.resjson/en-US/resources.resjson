@@ -122,5 +122,8 @@
   "loc.messages.WebJobAlreadyInRunningState": "WebJob '%s' is already in running state.",
   "loc.messages.StoppingWebJob": "Stopping WebJob '%s'.",
   "loc.messages.StoppedWebJob": "WebJob '%s' stopped.",
-  "loc.messages.WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state."
+  "loc.messages.WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
+  "loc.messages.RestartingKuduService": "Restarting Kudu Service.",
+  "loc.messages.RestartedKuduService": "Kudu Service restarted",
+  "loc.messages.FailedToRestartKuduService": "Failed to restart kudu Service. %s."
 }
