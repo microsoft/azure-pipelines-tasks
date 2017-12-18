@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "preview": "false",
@@ -161,7 +161,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.versionOrLocation",
       "defaultValue": "version",
-      "required": "true",
+      "required": false,
       "options": {
         "version": "Version",
         "location": "Specify Location"
@@ -174,7 +174,6 @@
       "label": "ms-resource:loc.input.label.versionSpec",
       "defaultValue": "1.7",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
-      "required": "false",
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = version"
     },
@@ -194,7 +193,7 @@
       "label": "ms-resource:loc.input.label.specifyLocation",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.specifyLocation",
-      "required": "false",
+      "required": true,
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = location"
     },

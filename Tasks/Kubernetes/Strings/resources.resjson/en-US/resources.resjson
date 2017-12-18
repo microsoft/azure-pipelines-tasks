@@ -35,7 +35,7 @@
   "loc.input.label.checkLatest": "Check for Latest Version",
   "loc.input.help.checkLatest": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
   "loc.input.label.specifyLocation": "Path to Kubectl",
-  "loc.input.help.specifyLocation": "Path to the kubectl version to use",
+  "loc.input.help.specifyLocation": "Full path to the kubectl.exe",
   "loc.input.label.cwd": "Working directory",
   "loc.input.help.cwd": "Working directory for the Kubectl command.",
   "loc.input.label.outputFormat": "Output format",

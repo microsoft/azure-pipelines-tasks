@@ -24,8 +24,21 @@ export default class ClusterConnection {
         {
             tl.debug(tl.loc("DownloadingClient"));
             this.kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
-            var version = await utils.getStableKubectlVersion();
-            await utils.downloadKubectl(version, this.kubectlPath);
+            let versionOrLocation = tl.getInput("versionOrLocation");
+			if(versionOrLocation === "version")
+			{
+				let versionSpec = tl.getInput("versionSpec");
+				let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
+				let version  = await utils.getKubectlVersion(versionSpec, checkLatest, this.kubectlPath);
+				await utils.downloadKubectl(version, this.kubectlPath);
+			}
+			else if( versionOrLocation === "location")
+			{
+				let pathToKubectl = tl.getPathInput("specifyLocation", false, true);
+				tl.cp(pathToKubectl, this.kubectlPath, "-f");
+				fs.chmod(pathToKubectl, "777");
+				utils.assertFileExists(pathToKubectl);
+			}
         }
     }
 

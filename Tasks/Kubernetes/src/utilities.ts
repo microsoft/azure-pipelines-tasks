@@ -4,6 +4,7 @@ var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
+import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as os from "os";
 import * as util from "util";
 
@@ -32,6 +33,26 @@ function ensureDirExists(dirPath : string) : void
     if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);
     }
+}
+
+export async function getKubectlVersion(versionSpec: string, checkLatest: boolean, kubectlPath: string) : Promise<string> {
+   let version: string;   
+   let versionPrefex = 'v';
+   let explicitVersion = false;
+   if (versionSpec && toolLib.isExplicitVersion(versionSpec)) {
+	    version = versionPrefex.concat(versionSpec);
+        checkLatest = false; // check latest doesn't make sense when explicit version
+		explicitVersion = true;
+    }
+   
+   if (checkLatest || !versionSpec || !explicitVersion) {
+        version = await getStableKubectlVersion();
+        if (!version) {
+            throw new Error(`Unable to find Kubectl version '${versionSpec}' for platform ${os.type()}.`);
+        }
+   }
+	
+	return version;
 }
 
 export async function getStableKubectlVersion() : Promise<string> {
@@ -74,7 +95,7 @@ function getkubectlDownloadURL(version: string) : string {
     }
 }
 
-function assertFileExists(path: string) {
+export function assertFileExists(path: string) {
     if(!fs.existsSync(path)) {
         tl.error(tl.loc('FileNotFoundException', path));
         throw new Error(tl.loc('FileNotFoundException', path));
