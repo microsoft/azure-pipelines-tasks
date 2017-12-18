@@ -575,4 +575,22 @@ describe('Xcode L0 Suite', function () {
 
         done();
     });
+
+    it('Tests with failures', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0XcodeTestsWithFailures.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme test | /home/bin/xcpretty -r junit --no-color'),
+        'xcodebuild test should have run with xcpretty');
+        
+        assert(tr.invokedToolCount == 2, 'should have run xcodebuild for scheme list, version and test.');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf('##vso[results.publish type=JUnit;publishRunAttachments=true;resultFiles=/home/build/testbuild1/build/reports/junit.xml;]') > 0,
+            'test result should have been published even when there are test errors');
+        done();
+    });
 });

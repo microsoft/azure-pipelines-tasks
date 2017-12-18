@@ -231,11 +231,17 @@ async function run() {
             xcb.pipeExecOutputToTool(xcPrettyTool);
         }
 
-        //--- Xcode Build ---
-        await xcb.exec();
+        let xcodeTaskErrors;
+        try {
+            //--- Xcode Build ---
+            await xcb.exec();
+        } catch (err) {
+            xcodeTaskErrors = err;
+            tl.debug('Xcode task failed: ' + err);
+        }
 
         //--------------------------------------------------------
-        // Test publishing
+        // Test publishing - publish even if tests fail
         //--------------------------------------------------------
         let testResultsFiles: string;
         let publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
@@ -262,11 +268,15 @@ async function run() {
 
                 if (!matchingTestResultsFiles) {
                     tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
-                }
-
-                let tp = new tl.TestPublisher("JUnit");
-                tp.publish(matchingTestResultsFiles, false, "", "", "", true);
+                } else {
+                    let tp = new tl.TestPublisher("JUnit");
+                    tp.publish(matchingTestResultsFiles, false, "", "", "", true);
+                 }
             }
+        }
+
+        if (xcodeTaskErrors) {
+            throw xcodeTaskErrors;
         }
 
         //--------------------------------------------------------
