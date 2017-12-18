@@ -128,23 +128,23 @@ export class Kudu {
         }
     }
 
-    public async installSiteExtension(extensionName: string): Promise<SiteExtension> {
-        console.log(tl.loc("InstallingSiteExtension", extensionName));
+    public async installSiteExtension(extensionID: string): Promise<SiteExtension> {
+        console.log(tl.loc("InstallingSiteExtension", extensionID));
         var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this._client.getRequestUri(`/api/siteextensions`);
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/siteextensions/${extensionID}`);
         try {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`installSiteExtension. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
-                console.log(tl.loc("SiteExtensionInstalled", extensionName));
+                console.log(tl.loc("SiteExtensionInstalled", extensionID));
                 return response.body;
             }
 
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToInstallSiteExtension', extensionName, this._getFormattedError(error)))
+            throw Error(tl.loc('FailedToInstallSiteExtension', extensionID, this._getFormattedError(error)))
         }
     }
 
