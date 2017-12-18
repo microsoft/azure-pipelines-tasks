@@ -254,13 +254,11 @@ async function run() {
             new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
         // Enable SonarQube Analysis (if desired)
-        let isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
+        let isSonarQubeEnabled: boolean = tl.getBoolInput('sqAnalysisEnabled', false);
         if (isSonarQubeEnabled) {
             // Looks like: 'SonarQube analysis is enabled.'
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
-
             gradleRunner = <ToolRunner> sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
-            gradleRunner = <ToolRunner> sqGradle.applySonarQubeCodeCoverageArguments(gradleRunner, isCodeCoverageOpted, codeCoverageTool, summaryFile);
         }
         gradleRunner = codeAnalysisOrchestrator.configureBuild(gradleRunner);
 
