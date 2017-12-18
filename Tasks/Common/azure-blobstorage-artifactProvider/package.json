@@ -14,7 +14,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "q": "1.4.1",
-    "artifact-engine": "0.1.13",
+    "artifact-engine": "0.1.14",
     "azure-storage": "2.2.1",
     "vsts-task-lib": "2.1.0"
   }
