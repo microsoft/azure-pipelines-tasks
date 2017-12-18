@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "artifact-engine": "0.1.13",
+    "artifact-engine": "0.1.14",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
     "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider",
     "request": "2.74.0",
