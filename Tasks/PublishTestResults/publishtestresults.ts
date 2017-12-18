@@ -42,7 +42,7 @@ async function run() {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
 
-        const matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+        let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;

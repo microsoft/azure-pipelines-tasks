@@ -24,7 +24,7 @@ export class TestResultsPublisher {
         let args: string[] = this.getArguments();
         testResultsPublisherTool.arg(args);
         
-        let exitCode = await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars, ignoreReturnCode: true });
+        let exitCode: number = await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars, ignoreReturnCode: true });
 
         return exitCode;
     }
