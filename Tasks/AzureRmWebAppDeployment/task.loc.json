@@ -31,13 +31,13 @@
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != \"\""
+      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
-      "name": "PostDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.PostDeploymentOptions",
+      "name": "PostDeploymentAction",
+      "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != \"\""
     },
     {
       "name": "output",
@@ -342,7 +342,7 @@
         "Inline Script": "Inline Script",
         "File Path": "Script File Path"
       },
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
     },
     {
@@ -350,7 +350,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.InlineScript",
       "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "visibleRule": "ScriptType == Inline Script",
       "properties": {
         "resizable": "true",
@@ -363,7 +363,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.ScriptPath",
       "required": true,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "visibleRule": "ScriptType == File Path"
     },
     {
@@ -406,7 +406,7 @@
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
       "defaultValue": "false",
       "required": false,
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
@@ -415,7 +415,7 @@
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
       "defaultValue": "false",
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
     {
@@ -424,7 +424,7 @@
       "label": "ms-resource:loc.input.label.SetParametersFile",
       "defaultValue": "",
       "required": false,
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
@@ -434,7 +434,7 @@
       "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
       "defaultValue": "false",
       "required": false,
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
@@ -444,7 +444,7 @@
       "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
       "defaultValue": "false",
       "required": false,
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
@@ -454,7 +454,7 @@
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
       "defaultValue": "",
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
@@ -465,7 +465,7 @@
       "defaultValue": "false",
       "required": false,
       "visibleRule": "UseWebDeploy == true",
-      "groupName": "PostDeploymentOptions",
+      "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
     {
