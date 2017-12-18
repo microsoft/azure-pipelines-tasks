@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 128,
-        "Patch": 2
+        "Patch": 3
     },
     "groups": [
         {
@@ -194,8 +194,11 @@
         },
         {
             "name": "containerName",
-            "type": "string",
+            "type": "pickList",
             "label": "Container Name",
+            "properties": {
+                "EditableOptions": "True"
+            },
             "required": true,
             "groupName": "propagatedArtifactsGroup",
             "visibleRule": "propagatedArtifacts == true",
@@ -251,6 +254,15 @@
             "endpointId": "$(ConnectedServiceNameARM)",
             "target": "storageAccountName",
             "dataSourceName": "AzureStorageAccountRMandClassic"
+        },
+        {
+            "target": "containerName",
+            "endpointId": "$(ConnectedServiceNameARM)",
+            "dataSourceName": "AzureStorageContainer",
+            "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+            "parameters": {
+                "storageAccount": "$(storageAccountName)"
+            }
         }
     ],
     "execution": {
