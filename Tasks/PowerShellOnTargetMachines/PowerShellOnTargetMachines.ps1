@@ -101,7 +101,8 @@ try
             $deploymentResponse = Invoke-Command -ScriptBlock $RunPowershellJob -ArgumentList $machine, $scriptPath, $resourceProperties.winrmPort, $scriptArguments, $initializationScriptPath, $resourceProperties.credential, $resourceProperties.protocolOption, $resourceProperties.skipCACheckOption, $enableDetailedLoggingString, $sessionVariables, $PSScriptRoot
             Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $deploymentResponse
             $status = $deploymentResponse.Status
-
+            Write-Telemetry "IsAzureVm" $deploymentResponse.IsAzureVm
+            Write-Telemetry "VmUuidsHash" $deploymentResponse.VmUuidHash
             Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
 
             if ($status -ne "Passed")
@@ -117,7 +118,7 @@ try
     {
         [hashtable]$Jobs = @{} 
         $dtlsdkErrors = @()
-
+        $VmUuids =@();
         foreach($resource in $resources)
         {
             $resourceProperties = $resourcesPropertyBag.Item($resource.Id)
@@ -140,6 +141,7 @@ try
                     $status = $output.Status
                     $displayName = $Jobs.Item($job.Id).displayName
                     $resOperationId = $Jobs.Item($job.Id).resOperationId
+                    $VmUuids += $output.VmUuidHash
 
                     Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                     Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
@@ -158,6 +160,9 @@ try
                 }
             }
         }
+            $VmUuidsHash = $VmUuids -join ","
+            Write-Telemetry "IsAzureVm" $deploymentResponse.IsAzureVm
+            Write-Telemetry "VmUuidsHash" $VmUuidsHash
     }
 
     if($envOperationStatus -ne "Passed")
