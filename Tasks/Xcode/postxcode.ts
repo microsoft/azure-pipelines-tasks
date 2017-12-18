@@ -17,7 +17,7 @@ async function run() {
         const useXcpretty: boolean = tl.getBoolInput('useXcpretty', false);
         const workingDir: string = tl.getPathInput('cwd');
         
-        if (publishResults && useXcpretty) {
+        if (publishResults) {
             if (!useXcpretty) {
                 tl.warning(tl.loc('UseXcprettyForTestPublishing'));
             } else {
