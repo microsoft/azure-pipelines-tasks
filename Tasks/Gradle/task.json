@@ -235,22 +235,29 @@
             "helpMarkDown": "Run a [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
+            "name": "sqGradlePluginVersionChoice",
+            "type": "radio",
+            "label": "SonarQube Scanner for Gradle version",
+            "required": true,
+            "defaultValue": "specify",
+            "options": {
+                "specify": "Specify version number",
+                "build": "Use plugin applied in your build.gradle"
+            },
+            "helpMarkDown": "The SonarQube Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
             "name": "sqGradlePluginVersion",
             "aliases": [ "sonarQubeGradlePluginVersion" ],
-            "type": "pickList",
+            "type": "string",
             "label": "SonarQube Scanner for Gradle Plugin Version",
             "required": true,
             "defaultValue": "2.6.1",
-            "options": {
-                "applied": "Use plugin applied in your build.gradle",
-                "2.6.1": "2.6.1"
-            },
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The SonarQube Gradle plugin version to use. Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
+            "helpMarkDown": "Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
             "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
+            "visibleRule": "sqAnalysisEnabled = true && sqGradlePluginVersionChoice = specify"
         },
         {
             "name": "checkstyleAnalysisEnabled",

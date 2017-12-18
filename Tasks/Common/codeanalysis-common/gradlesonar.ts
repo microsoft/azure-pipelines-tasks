@@ -9,11 +9,12 @@ import trm = require('vsts-task-lib/toolrunner');
 // Returns the changed toolRunner. Has no effect if SonarQube is not enabled.
 export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner | any): trm.ToolRunner | any {
 
-    // #1: Inject custom script to the Gradle build, triggering a SonarQube run
-    // Add a custom initialisation script to the Gradle run that will apply the SonarQube plugin and task
-    // Set the SonarQube Gradle plugin version in the script
-    let pluginVersion: string = getSonarQubeGradlePluginVersion();
-    if (pluginVersion !== 'applied') {
+    const specifyPluginVersion = tl.getInput('sqGradlePluginVersionChoice') === 'specify';
+    if (specifyPluginVersion) {
+        // #1: Inject custom script to the Gradle build, triggering a SonarQube run
+        // Add a custom initialisation script to the Gradle run that will apply the SonarQube plugin and task
+        // Set the SonarQube Gradle plugin version in the script
+        const pluginVersion: string = getSonarQubeGradlePluginVersion();
         let initScriptPath: string = path.join(__dirname, 'sonar.gradle');
         let scriptContents: string= fs.readFileSync(initScriptPath, 'utf8');
         scriptContents = scriptContents.replace('SONARQUBE_GRADLE_PLUGIN_VERSION', pluginVersion);
