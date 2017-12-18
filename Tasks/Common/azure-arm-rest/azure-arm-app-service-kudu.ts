@@ -5,7 +5,6 @@ import webClient = require('./webClient');
 import Q = require('q');
 import { ToError } from './AzureServiceClient';
 import { WebJob, SiteExtension } from './azureModels';
-
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
@@ -15,15 +14,15 @@ export class KuduServiceManagementClient {
         this._scmUri = scmUri;
     }
 
-    public async beginRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
         var options: webClient.WebRequestOptions = {
-            retryIntervalInSeconds: 10,
-            retryCount: 5,
-            retriableErrorCodes: ["ETIMEDOUT"],
-            retriableStatusCodes: [409, 503]
+            retryIntervalInSeconds: reqOptions && reqOptions.retryIntervalInSeconds ? reqOptions.retryIntervalInSeconds :  10,
+            retryCount: reqOptions && reqOptions.retryCount ? reqOptions.retryCount : 6,
+            retriableErrorCodes: reqOptions && reqOptions.retriableErrorCodes ? reqOptions.retriableErrorCodes : ["ETIMEDOUT"],
+            retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 503]
         };
         var httpResponse = webClient.sendRequest(request, options);
         return httpResponse;
@@ -55,7 +54,6 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${deploymentStatusBody.id}`);
 
         try {
-            console.log(httpRequest);
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
@@ -89,7 +87,7 @@ export class Kudu {
     }
 
     public async startContinuousWebJob(jobName: string): Promise<WebJob> {
-        tl.debug(`Starting Web job: ${jobName}.`);
+        console.log(tl.loc('StartingWebJob', jobName));
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/continuouswebjobs/${jobName}/start`);
@@ -98,6 +96,7 @@ export class Kudu {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`startContinuousWebJob. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
+                console.log(tl.loc('StartedWebJob', jobName));
                 return response.body as WebJob;
             }
 
@@ -109,7 +108,7 @@ export class Kudu {
     }
 
     public async stopContinuousWebJob(jobName: string): Promise<WebJob> {
-        tl.debug(`Stopping Web job: ${jobName}.`);
+        console.log(tl.loc('StoppingWebJob', jobName));
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/continuouswebjobs/${jobName}/stop`);
@@ -118,6 +117,7 @@ export class Kudu {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`stopContinuousWebJob. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
+                console.log(tl.loc('StoppedWebJob', jobName));
                 return response.body as WebJob;
             }
 
@@ -166,7 +166,43 @@ export class Kudu {
         }
     }
 
-    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>): Promise<boolean> {
+    public async getProcess(processID: number) {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getProcess. status code: ${response.statusCode} - ${response.statusMessage}`);
+            if(response.statusCode == 200) {
+                return response.body;
+            }
+
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetProcess', this._getFormattedError(error)))
+        }
+    }
+
+    public async killProcess(processID: number) {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`killProcess. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 502) {
+                return;
+            }
+
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToKillProcess', this._getFormattedError(error)))
+        }
+    }
+
+    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>) {
         outputVariables = outputVariables ? outputVariables : [];
         var outputVariableIterator: number = 0;
         var siteExtensions = await this.getSiteExtensions();
@@ -194,21 +230,46 @@ export class Kudu {
                 outputVariableIterator += 1;
             }
         }
-
-        return anyExtensionInstalled;
+        
+        if(anyExtensionInstalled) {
+            await this.restart();
+        }
     }
 
+    public async restart() {
+        try {
+            console.log(tl.loc('RestartingKuduService'));
+            var process0 = await this.getProcess(0);
+            tl.debug(`Process 0 ID: ${process0.id}`);
+            await this.killProcess(0);
+            await this._pollForNewProcess(0, process0.id);
+            console.log(tl.loc('RestartedKuduService'));
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToRestartKuduService', error.toString()));
+        }
+    }
     public async startContinuousWebJobs() {
         var webJobs = await this.getContinuousJobs();
         for(var webJob of webJobs) {
-            await this.startContinuousWebJob(webJob.name);
+            if(webJob.status.toLowerCase() == "running") {
+                console.log(tl.loc('WebJobAlreadyInRunningState', webJob.name));
+            }
+            else {
+                await this.startContinuousWebJob(webJob.name);
+            }
         }
     }
 
     public async stopContinuousWebJobs() {
         var webJobs = await this.getContinuousJobs();
         for(var webJob of webJobs) {
-            await this.stopContinuousWebJob(webJob.name);
+            if(webJob.status.toLowerCase() == "stopped") {
+                console.log(tl.loc('WebJobAlreadyInStoppedState', webJob.name));
+            }
+            else {
+                await this.stopContinuousWebJob(webJob.name);
+            }
         }
     }
 
@@ -225,6 +286,30 @@ export class Kudu {
         }
 
         return error;
+    }
+
+    private async _pollForNewProcess(processID: number, id: number) {
+        var retryCount = 6;
+        while(true) {
+            try {
+                var process = await this.getProcess(processID);
+                tl.debug(`process ${processID} ID: ${process.id}`);
+                if(process.id != id) {
+                    tl.debug(`New Process created`);
+                    return process;
+                }
+            }
+            catch(error) {
+                tl.debug(`error while polling for process ${processID}: ` + error.toString());
+            }
+            retryCount -= 1;
+            if(retryCount == 0) {
+                throw new Error(tl.loc('TimeoutWhileWaiting'));
+            }
+
+            tl.debug(`sleep for 10 seconds`)
+            await webClient.sleepFor(10);
+        }
     }
 
     private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {

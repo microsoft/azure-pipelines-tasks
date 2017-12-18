@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import webClient = require("./webClient");
 import { AzureEndpoint } from "./azureModels";
+
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;

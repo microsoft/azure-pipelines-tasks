@@ -386,6 +386,15 @@
     "StoppedContinousWebJobs": "ms-resource:loc.messages.StoppedContinousWebJobs",
     "FailedToEnableContinuousMonitoring": "ms-resource:loc.messages.FailedToEnableContinuousMonitoring",
     "InvalidSlotSwapEntity": "ms-resource:loc.messages.InvalidSlotSwapEntity",
-    "FailedToUpdateDeploymentHistory": "ms-resource:loc.messages.FailedToUpdateDeploymentHistory"
+    "FailedToUpdateDeploymentHistory": "ms-resource:loc.messages.FailedToUpdateDeploymentHistory",
+    "StartingWebJob": "ms-resource:loc.messages.StartingWebJob",
+    "StartedWebJob": "ms-resource:loc.messages.StartedWebJob",
+    "WebJobAlreadyInRunningState": "ms-resource:loc.messages.WebJobAlreadyInRunningState",
+    "StoppingWebJob": "ms-resource:loc.messages.StoppingWebJob",
+    "StoppedWebJob": "ms-resource:loc.messages.StoppedWebJob",
+    "WebJobAlreadyInStoppedState": "ms-resource:loc.messages.WebJobAlreadyInStoppedState",
+    "RestartingKuduService": "ms-resource:loc.messages.RestartingKuduService",
+    "RestartedKuduService": "ms-resource:loc.messages.RestartedKuduService",
+    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService"
   }
 }

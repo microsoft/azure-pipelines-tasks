@@ -55,22 +55,16 @@ export class ApplicationInsightsWebTests {
     }
 
     public async create(appInsightsResource: any, applicationUrl: string) {
-        var webTestName = "vsts-web-test-" + Date.now();
-        var webTestData =  JSON.parse(JSON.stringify(this._webTestData));
-        webTestData.name = webTestName;
-        webTestData.properties.Name = webTestName;
-        webTestData.properties.SyntheticMonitorId = webTestName;
-        webTestData.location = appInsightsResource.location;
-        webTestData.tags["hidden-link:" + appInsightsResource.id] = "Resource";
-        webTestData.properties.Configuration.WebTest = webTestData.properties.Configuration.WebTest.replace("{WEB_TEST_NAME}", webTestName);
-        webTestData.properties.Configuration.WebTest = webTestData.properties.Configuration.WebTest.replace("{APPLICATION_URL}", applicationUrl);
-        var httpRequest = new webClient.WebRequest();
+        
+        let httpRequest = new webClient.WebRequest();
+        let webTestData = this.configureNewWebTest(appInsightsResource, applicationUrl);
         httpRequest.method = 'PUT';
+        
         httpRequest.body = JSON.stringify(webTestData);
         httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/webtests/{webTestName}`,
         {
             '{resourceGroupName}': this._resourceGroupName,
-            '{webTestName}': webTestName
+            '{webTestName}': webTestData.name
         }, null, '2015-05-01');
 
         try {
@@ -109,6 +103,20 @@ export class ApplicationInsightsWebTests {
 
         await this.create(appInsightsResource, applicationUrl);
         
+    }
+
+    private configureNewWebTest(appInsightsResource: any, applicationUrl: string) {
+        var webTestName = "vsts-web-test-" + Date.now();
+        var webTestData =  JSON.parse(JSON.stringify(this._webTestData));
+        webTestData.name = webTestName;
+        webTestData.properties.Name = webTestName;
+        webTestData.properties.SyntheticMonitorId = webTestName;
+        webTestData.location = appInsightsResource.location;
+        webTestData.tags["hidden-link:" + appInsightsResource.id] = "Resource";
+        webTestData.properties.Configuration.WebTest = webTestData.properties.Configuration.WebTest.replace("{WEB_TEST_NAME}", webTestName);
+        webTestData.properties.Configuration.WebTest = webTestData.properties.Configuration.WebTest.replace("{APPLICATION_URL}", applicationUrl);
+
+        return webTestData;
     }
 
     private  _webTestData = {

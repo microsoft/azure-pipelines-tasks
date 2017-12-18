@@ -386,6 +386,15 @@
         "StoppedContinousWebJobs": "Stopped continuous WebJobs.",
         "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s",
         "InvalidSlotSwapEntity": "Invalid Slot swap entity. Error: %s",
-        "FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s"
+        "FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s",
+        "StartingWebJob": "Starting WebJob '%s'.",
+        "StartedWebJob": "WebJob '%s' started.",
+        "WebJobAlreadyInRunningState": "WebJob '%s' is already in running state.",
+        "StoppingWebJob": "Stopping WebJob '%s'.",
+        "StoppedWebJob": "WebJob '%s' stopped.",
+        "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
+        "RestartingKuduService": "Restarting Kudu Service.",
+        "RestartedKuduService": "Kudu Service restarted",
+        "FailedToRestartKuduService": "Failed to restart kudu Service. %s."
     }
 }

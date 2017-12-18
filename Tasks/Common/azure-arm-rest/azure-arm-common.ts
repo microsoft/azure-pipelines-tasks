@@ -2,7 +2,6 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
 import webClient = require("./webClient");
-import { AzureEndpoint } from "./azureModels";
 
 export class ApplicationTokenCredentials {
     private clientId: string;

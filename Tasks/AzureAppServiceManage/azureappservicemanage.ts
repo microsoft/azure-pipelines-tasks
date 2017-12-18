@@ -149,10 +149,7 @@ async function run() {
                 var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 var appServiceKuduService = await appService.getKuduService();
                 var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
-                var isExtensionsInstalled: boolean = await appServiceKuduService.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
-                if(isExtensionsInstalled) {
-                    await appService.restart();
-                }
+                await appServiceKuduService.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
                 break;
             }
             case "Enable Continuous Monitoring": {
