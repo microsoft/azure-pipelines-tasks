@@ -3,7 +3,7 @@ import Q = require('q');
 import webClient = require("./webClient");
 import { AzureEndpoint } from "./azureModels";
 export class AzureRMEndpoint {
-    public _endpoint: AzureEndpoint;
+    public endpoint: AzureEndpoint;
     private _connectedServiceName: string;
     // Add an entry here and separate function for each new environment
     private _environments = {
@@ -12,16 +12,16 @@ export class AzureRMEndpoint {
 
     constructor(connectedServiceName: string) {
         this._connectedServiceName = connectedServiceName;
-        this._endpoint = null;
+        this.endpoint = null;
     }
 
-    public getEndpoint() {
+    public async getEndpoint() {
         let dataDeferred = Q.defer<AzureEndpoint>();
-        if(!!this._endpoint) {
-            dataDeferred.resolve(this._endpoint);
+        if(!!this.endpoint) {
+            return this.endpoint;
         }
         else {
-            this._endpoint = {
+            this.endpoint = {
                 subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
                 subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
                 servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', false),
@@ -33,26 +33,18 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
-            // Initialize Azure Endpoint for specific environment
-            switch(this._endpoint.environment.toLowerCase()) {
-                case this._environments.AzureStack: {
-                    this._getAzureStackData(this._endpoint).then((endpoint) => {
-                        dataDeferred.resolve(endpoint);
-                    }, (error) => {
-                        dataDeferred.reject(error);
-                    })
-                    break;
+            if(this.endpoint.environment != null && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
+                if(this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
+                    return await this._getAzureStackData(this.endpoint);
                 }
-                default: {
-                    this._endpoint.environmentAuthorityUrl = (!!this._endpoint.environmentAuthorityUrl) ? this._endpoint.environmentAuthorityUrl : "https://login.windows.net/";
-                    this._endpoint.activeDirectoryResourceID = this._endpoint.url;
-                    dataDeferred.resolve(this._endpoint);
-                }
+            }
+            else {
+                this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
+                this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
         }
 
-        return dataDeferred.promise;
-    
+        return this.endpoint;
     }
 
     private _getAzureStackData(endpoint: AzureEndpoint) {
