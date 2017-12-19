@@ -32,7 +32,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS signing with files', (done:MochaDone) => {
-        this.timeout(1000);
+        this.timeout(2000);
 
         let tp = path.join(__dirname, 'L0SignWithFiles.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

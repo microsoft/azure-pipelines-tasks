@@ -42,6 +42,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/home/bin/xbuild": true,
         "src/project.sln": true
+    },
+    "findMatch" : {
+        "src/project.sln": ["src/project.sln"]
     }
 };
 tr.setAnswers(a);

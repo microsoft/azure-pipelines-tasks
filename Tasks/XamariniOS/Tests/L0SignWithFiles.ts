@@ -108,6 +108,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/user/build": {
             "isFile": false
         }
+    },
+    "findMatch" : {
+        "src/project.sln": ["src/project.sln"]
     }
 };
 tr.setAnswers(a);
