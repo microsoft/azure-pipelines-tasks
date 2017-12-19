@@ -36,6 +36,7 @@
     "inputs": [
         {
             "name": "serverEndpoint",
+            "aliases": ["jenkinsServerConnection"],
             "type": "connectedService:Jenkins",
             "label": "Jenkins service endpoint",
             "defaultValue": "",

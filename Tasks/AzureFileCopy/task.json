@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 104
+        "Patch": 105
     },
     "demands": [
         "azureps"
@@ -37,6 +37,7 @@
         },
         {
             "name": "ConnectedServiceNameSelector",
+            "aliases": ["azureConnectionType"],
             "type": "pickList",
             "label": "Azure Connection Type",
             "required": false,
@@ -49,6 +50,7 @@
         },
         {
             "name": "ConnectedServiceName",
+            "aliases": ["azureClassicSubscription"],
             "type": "connectedService:Azure",
             "label": "Azure Classic Subscription",
             "defaultValue": "",
@@ -58,6 +60,7 @@
         },
         {
             "name": "ConnectedServiceNameARM",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -79,6 +82,7 @@
         },
         {
             "name": "StorageAccount",
+            "aliases": ["classicStorage"],
             "type": "pickList",
             "label": "Classic Storage Account",
             "defaultValue": "",
@@ -91,6 +95,7 @@
         },
         {
             "name": "StorageAccountRM",
+            "aliases": ["storage"],
             "type": "pickList",
             "label": "RM Storage Account",
             "defaultValue": "",
@@ -121,6 +126,7 @@
         },
         {
             "name": "EnvironmentName",
+            "aliases": ["cloudService"],
             "type": "pickList",
             "label": "Cloud Service",
             "defaultValue": "",
@@ -133,6 +139,7 @@
         },
         {
             "name": "EnvironmentNameRM",
+            "aliases": ["resourceGroup"],
             "type": "pickList",
             "label": "Resource Group",
             "defaultValue": "",

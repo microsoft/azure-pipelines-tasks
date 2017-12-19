@@ -123,5 +123,5 @@
   "loc.messages.CannotFindJobType": "Could not detect job type",
   "loc.messages.InvalidJobName": "Invalid job name %s",
   "loc.messages.ContinuationTokenExistsFetchingRemainingFiles": "Continuation token exists, trying to fetch the list of remaining files.",
-  "loc.messages.GetArtifactItemNotSupported": "Get artifact item not supported, invalid code path"
+  "loc.messages.GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path"
 }
