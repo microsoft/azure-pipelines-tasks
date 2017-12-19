@@ -88,6 +88,9 @@
     },
     {
       "name": "StorageAccount",
+      "aliases": [
+        "classicStorage"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
@@ -101,7 +104,7 @@
     {
       "name": "StorageAccountRM",
       "aliases": [
-        "storageAccount"
+        "storage"
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccountRM",

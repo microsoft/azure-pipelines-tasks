@@ -82,6 +82,7 @@
         },
         {
             "name": "StorageAccount",
+            "aliases": ["classicStorage"],
             "type": "pickList",
             "label": "Classic Storage Account",
             "defaultValue": "",
@@ -94,7 +95,7 @@
         },
         {
             "name": "StorageAccountRM",
-            "aliases": ["storageAccount"],
+            "aliases": ["storage"],
             "type": "pickList",
             "label": "RM Storage Account",
             "defaultValue": "",
