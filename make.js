@@ -420,7 +420,7 @@ target.package = function() {
 
     var dashIndex = version.indexOf('-');
     if (dashIndex >= 0) {
-        version = `${version.substr(0, dashIndex)}${version.substr(dashIndex).replace('.', '_')}`
+        version = `${version.substr(0, dashIndex)}${version.substr(dashIndex).replace(/\./g, '_')}`
     }
 
     var pkgName = 'Mseng.MS.TF.Build.Tasks';
