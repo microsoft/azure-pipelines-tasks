@@ -89,7 +89,7 @@ async function run() {
                 resourceGroupName = resources[0].id.split("/")[4];
             }
             else {
-                throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', resourceGroupName));
+                throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', webAppName));
             }
         }
 

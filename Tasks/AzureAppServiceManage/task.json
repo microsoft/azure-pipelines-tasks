@@ -394,7 +394,7 @@
         "StoppedWebJob": "WebJob '%s' stopped.",
         "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
         "RestartingKuduService": "Restarting Kudu Service.",
-        "RestartedKuduService": "Kudu Service restarted",
+        "RestartedKuduService": "Kudu Service restarted.",
         "FailedToRestartKuduService": "Failed to restart kudu Service. %s."
     }
 }
