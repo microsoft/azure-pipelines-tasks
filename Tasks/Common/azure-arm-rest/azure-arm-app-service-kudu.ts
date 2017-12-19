@@ -22,7 +22,7 @@ export class KuduServiceManagementClient {
             retryIntervalInSeconds: reqOptions && reqOptions.retryIntervalInSeconds ? reqOptions.retryIntervalInSeconds :  10,
             retryCount: reqOptions && reqOptions.retryCount ? reqOptions.retryCount : 6,
             retriableErrorCodes: reqOptions && reqOptions.retriableErrorCodes ? reqOptions.retriableErrorCodes : ["ETIMEDOUT"],
-            retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 503]
+            retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 502, 503]
         };
         var httpResponse = webClient.sendRequest(request, options);
         return httpResponse;
@@ -189,7 +189,12 @@ export class Kudu {
         httpRequest.method = 'DELETE';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            var response = await this._client.beginRequest(httpRequest, {
+                retriableErrorCodes: ["ETIMEDOUT"],
+                retriableStatusCodes: [503],
+                retryCount: 1,
+                retryIntervalInSeconds: 5
+            });
             tl.debug(`killProcess. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 502) {
                 tl.debug(`Killed Process ${processID}`);
