@@ -2,7 +2,7 @@
 	"id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
 	"name": "AzureFunction",
 	"friendlyName": "Invoke Azure Function",
-	"description": "Invoke Azure Function as a part of your process.",
+	"description": "Invoke Azure function as a part of your process.",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
 	"category": "Utility",
@@ -16,26 +16,26 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 2
+		"Patch": 3
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
 			"name": "completionOptions",
-			"displayName": "Completion options",
+			"displayName": "Completion Options",
 			"isExpanded": false
 		}
 	],
 	"inputs": [{
 			"name": "function",
 			"type": "string",
-			"label": "Azure Function Url",
+			"label": "Azure function url",
 			"defaultValue": "",
 			"required": true,
 			"helpMarkDown": "Url of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
 		}, {
 			"name": "key",
 			"type": "string",
-			"label": "Function Key",
+			"label": "Function key",
 			"defaultValue": "",
 			"required": true,
 			"helpMarkDown": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=="
@@ -71,7 +71,7 @@
 		}, {
 			"name": "queryParameters",
 			"type": "string",
-			"label": "Query Parameters",
+			"label": "Query parameters",
 			"defaultValue": "",
 			"required": false,
 			"helpMarkDown": "Query parameters string append to the function Url. Should not start with with \"?\" and \"&\"."
@@ -103,7 +103,7 @@
 		}, {
 			"name": "successCriteria",
 			"type": "string",
-			"label": "Success Criteria",
+			"label": "Success criteria",
 			"defaultValue": "",
 			"required": false,
 			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",

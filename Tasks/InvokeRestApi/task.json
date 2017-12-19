@@ -21,7 +21,7 @@
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
 			"name": "completionOptions",
-			"displayName": "Completion options",
+			"displayName": "Completion Options",
 			"isExpanded": false
 		}
 	],
@@ -29,7 +29,7 @@
     {
       "name": "connectedServiceName",
       "type": "connectedService:Generic",
-      "label": "Generic Endpoint",
+      "label": "Generic endpoint",
       "defaultValue": "",
       "required": "true",
       "helpMarkDown": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request."
@@ -81,7 +81,7 @@
     {
       "name": "urlSuffix",
       "type": "string",
-      "label": "Url Suffix String",
+      "label": "Url suffix string",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Given string append to the url."
@@ -89,7 +89,7 @@
     {
       "name":"waitForCompletion",
       "type":"boolean",
-      "label":"Wait For Completion",
+      "label":"Wait for completion",
       "Required":"false",
       "defaultValue":"false",
       "groupName": "completionOptions",
@@ -98,7 +98,7 @@
 	{
 	  "name": "successCriteria",
 	  "type": "string",
-	  "label": "Success Criteria",
+	  "label": "Success criteria",
 	  "defaultValue": "",
 	  "required": false,
 	  "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
