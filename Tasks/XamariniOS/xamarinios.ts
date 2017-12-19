@@ -14,20 +14,20 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get build inputs
-        let solutionPath: string = tl.getPathInput('solution', true, true);
-        let configuration: string = tl.getInput('configuration', true);
-        let clean: boolean = tl.getBoolInput('clean');
-        let args: string = tl.getInput('args');
-        let packageApp: boolean = tl.getBoolInput('packageApp');
-        let buildForSimulator: boolean = tl.getBoolInput('forSimulator');
-        let device: string = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
+        const solutionPath: string = tl.getPathInput('solution', true, true);
+        const configuration: string = tl.getInput('configuration', true);
+        const clean: boolean = tl.getBoolInput('clean');
+        const args: string = tl.getInput('args');
+        const packageApp: boolean = tl.getBoolInput('packageApp');
+        const buildForSimulator: boolean = tl.getBoolInput('forSimulator');
+        const device: string = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
         tl.debug('device: ' + device);
-        let cwd: string = tl.getInput('cwd');
-        let runNugetRestore: boolean = tl.getBoolInput('runNugetRestore');
+        const cwd: string = tl.getInput('cwd');
+        const runNugetRestore: boolean = tl.getBoolInput('runNugetRestore');
 
         // find the build tool path based on the build tool and location inputs
-        let buildTool: string = tl.getInput('buildTool');
-        let buildToolLocation: string = tl.getInput('mdtoolLocation', false);
+        const buildTool: string = tl.getInput('buildTool');
+        const buildToolLocation: string = tl.getInput('mdtoolLocation', false);
         let buildToolPath: string;
         if (buildToolLocation) {
             // location is specified
@@ -51,7 +51,7 @@ async function run() {
         tl.debug('Build tool path = ' + buildToolPath);
 
         if (clean) {
-            let cleanBuildRunner: ToolRunner = tl.tool(buildToolPath);
+            const cleanBuildRunner: ToolRunner = tl.tool(buildToolPath);
             cleanBuildRunner.arg(solutionPath);
             cleanBuildRunner.argIf(configuration, '/p:Configuration=' + configuration);
             cleanBuildRunner.argIf(device, '/p:Platform=' + device);
@@ -64,19 +64,19 @@ async function run() {
 
         if (runNugetRestore) {
             // Find location of nuget
-            let nugetPath: string = tl.which('nuget', true);
+            const nugetPath: string = tl.which('nuget', true);
 
             // Restore NuGet packages of the solution
-            let nugetRunner: ToolRunner = tl.tool(nugetPath);
+            const nugetRunner: ToolRunner = tl.tool(nugetPath);
             nugetRunner.arg(['restore', solutionPath]);
             await nugetRunner.exec();
         }
 
         //Process working directory
-        let workingDir: string = cwd || tl.getVariable('System.DefaultWorkingDirectory');
+        const workingDir: string = cwd || tl.getVariable('System.DefaultWorkingDirectory');
         tl.cd(workingDir);
 
-        let signMethod: string = tl.getInput('signMethod', false);
+        const signMethod: string = tl.getInput('signMethod', false);
         let provProfileUUID: string = null;
         let signIdentity: string = null;
 
@@ -110,10 +110,10 @@ async function run() {
                 }
             }
         } else if (signMethod === 'id') {
-            let unlockDefaultKeychain: boolean = tl.getBoolInput('unlockDefaultKeychain');
-            let defaultKeychainPassword: string = tl.getInput('defaultKeychainPassword');
+            const unlockDefaultKeychain: boolean = tl.getBoolInput('unlockDefaultKeychain');
+            const defaultKeychainPassword: string = tl.getInput('defaultKeychainPassword');
             if (unlockDefaultKeychain) {
-                let defaultKeychain: string = await sign.getDefaultKeychainPath();
+                const defaultKeychain: string = await sign.getDefaultKeychainPath();
                 await sign.unlockKeychain(defaultKeychain, defaultKeychainPassword);
             }
 
@@ -122,7 +122,7 @@ async function run() {
         }
 
         // Prepare xbuild build command line
-        let buildRunner: ToolRunner = tl.tool(buildToolPath);
+        const buildRunner: ToolRunner = tl.tool(buildToolPath);
         buildRunner.arg(solutionPath);
         buildRunner.argIf(configuration, '/p:Configuration=' + configuration);
         buildRunner.argIf(device, '/p:Platform=' + device);
