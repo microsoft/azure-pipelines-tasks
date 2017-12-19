@@ -23,22 +23,7 @@ export default class ClusterConnection {
         if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
         {
             tl.debug(tl.loc("DownloadingClient"));
-            this.kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
-            let versionOrLocation = tl.getInput("versionOrLocation");
-			if(versionOrLocation === "version")
-			{
-				let versionSpec = tl.getInput("versionSpec");
-				let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
-				let version  = await utils.getKubectlVersion(versionSpec, checkLatest, this.kubectlPath);
-				await utils.downloadKubectl(version, this.kubectlPath);
-			}
-			else if( versionOrLocation === "location")
-			{
-				let pathToKubectl = tl.getPathInput("specifyLocation", false, true);
-				tl.cp(pathToKubectl, this.kubectlPath, "-f");
-				fs.chmod(pathToKubectl, "777");
-				utils.assertFileExists(pathToKubectl);
-			}
+            this.kubectlPath = await this.getKubectl();
         }
     }
 
@@ -90,5 +75,23 @@ export default class ClusterConnection {
         }
 
         return "";
+    }
+
+    private async getKubectl() : Promise<string> {
+
+        var kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
+        let versionOrLocation = tl.getInput("versionOrLocation");
+        if( versionOrLocation === "location") {
+            let pathToKubectl = tl.getPathInput("specifyLocation", false, true);
+            fs.chmod(pathToKubectl, "777");
+            return pathToKubectl;
+        }
+        else if(versionOrLocation === "version") {
+            let versionSpec = tl.getInput("versionSpec");
+            let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
+            let version  = await utils.getKubectlVersion(versionSpec, checkLatest);
+            await utils.downloadKubectl(version, kubectlPath);
+            return kubectlPath;
+        }
     }
 }

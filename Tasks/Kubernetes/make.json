@@ -15,7 +15,7 @@
         {
             "items": [
                 "node_modules/utility-common/node_modules/vsts-task-lib",
-				"node_modules/docker-common/node_modules/vsts-task-lib"
+                "node_modules/docker-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }

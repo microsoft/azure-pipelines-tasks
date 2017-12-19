@@ -35,10 +35,11 @@ function ensureDirExists(dirPath : string) : void
     }
 }
 
-export async function getKubectlVersion(versionSpec: string, checkLatest: boolean, kubectlPath: string) : Promise<string> {
+export async function getKubectlVersion(versionSpec: string, checkLatest: boolean) : Promise<string> {
    let version: string;   
    let versionPrefex = 'v';
    let explicitVersion = false;
+   
    if (versionSpec && toolLib.isExplicitVersion(versionSpec)) {
 	    version = versionPrefex.concat(versionSpec);
         checkLatest = false; // check latest doesn't make sense when explicit version
