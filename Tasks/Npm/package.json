@@ -21,6 +21,6 @@
     "mockery": "^1.7.0",
     "vso-node-api": "^6.2.2-preview",
     "vsts-task-lib": "2.0.6",
-    "npm-common": "../Common/npm-common"
+    "npm-common": "file:../../_build/Tasks/Common/npm-common"
   }
 }
