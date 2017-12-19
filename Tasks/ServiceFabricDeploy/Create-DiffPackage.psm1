@@ -41,7 +41,7 @@ function Create-DiffPackage
         $clusterAppTypeVersion = $app.ApplicationTypeVersion
 
         # If the ApplicationTypeVersion of the Application is not upgraded, no diff package is made because there is no need
-        if (Compare-Version -clusterVersionStr $clusterAppTypeVersion -localVersionStr $localAppTypeVersion)
+        if ($clusterAppTypeVersion -eq $localAppTypeVersion)
         {
             Write-Host (Get-VstsLocString -Key DIFFPKG_ApplicationIsNotChanged -ArgumentList @($ApplicationName, $clusterAppTypeVersion, $ConnectedServiceEndpoint.Url))
             Return
@@ -90,7 +90,7 @@ function Create-DiffPackage
             }
         
             # If the Version of the Service is not changed, don't include the service in the diff package
-            if (Compare-Version -clusterVersionStr $clusterServiceManifest.Version -localVersionStr $localServiceManifest.Version)
+            if ($clusterServiceManifest.Version -eq $localServiceManifest.Version)
             {
                 Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceIsNotChanged -ArgumentList @($localServiceManifest.Name, $ApplicationName, $clusterServiceManifest.Version, $ConnectedServiceEndpoint.Url))
                 continue
@@ -133,7 +133,7 @@ function Copy-DiffPackage
         $clusterPackage = $clusterPackagesByName[$localPackage.Name]
 
         # If cluster package exists and the version is the same to the local package version, do not add the local package to Diff Package
-        if (Compare-Version -clusterVersionStr $clusterPackage.Version -localVersionStr $localPackage.Version)
+        if ($clusterPackage.Version -eq $localPackage.Version)
         {
             continue
         }
@@ -146,36 +146,4 @@ function Copy-DiffPackage
         Copy-Item $localPkgPath $diffPkgPath -Recurse
     }
     return
-}
-
-function Compare-Version
-{
-    param (
-        [string] $clusterVersionStr,
-        [string] $localVersionStr
-    )
-
-    $clusterPackageVersionTokens = $clusterVersionStr.Split(".")
-    $localPackageVersionTokens = $localVersionStr.Split(".")
-    
-    # remove build info from version. E.g. 1.0.0.20171215.1 => 1.0.0
-    if ($clusterPackageVersionTokens.Count -ge 3)
-    {
-        $secondLastToken = $clusterPackageVersionTokens[-2]
-        if ($secondLastToken.Length -eq 8 -and $secondLastToken.StartsWith("20"))
-        {
-            $clusterVersionStr = $clusterPackageVersionTokens[0..($clusterPackageVersionTokens.Count - 3)] -join "."
-        }
-    }
-
-    if ($localPackageVersionTokens.Count -ge 3)
-    {
-        $secondLastToken = $localPackageVersionTokens[-2]
-        if ($secondLastToken.Length -eq 8 -and $secondLastToken.StartsWith("20"))
-        {
-            $localVersionStr = $localPackageVersionTokens[0..($localPackageVersionTokens.Count - 3)] -join "."
-        }
-    }
-
-    return $clusterVersionStr -eq $localVersionStr
 }
