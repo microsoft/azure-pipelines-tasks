@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "instanceNameFormat": "Query Work Items",
   "groups": [
@@ -38,7 +38,7 @@
     {
       "name": "maxThreshold",
       "type": "string",
-      "label": "Maximum Threshold",
+      "label": "Maximum threshold",
       "defaultValue": "0",
       "required": "true",
       "properties": {
@@ -49,7 +49,7 @@
     {
       "name": "minThreshold",
       "type": "string",
-      "label": "Minimum Threshold",
+      "label": "Minimum threshold",
       "defaultValue": "0",
       "required": "true",
       "properties": {

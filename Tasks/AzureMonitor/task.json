@@ -1,7 +1,7 @@
 {
 	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
 	"name": "AzureMonitor",
-	"friendlyName": "Azure Monitor",
+	"friendlyName": "Monitor Azure Alerts",
 	"description": "Observe the configured Azure monitor rules for active alerts.",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
@@ -15,10 +15,10 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 2
+		"Patch": 3
 	},
 	"preview": "true",
-	"instanceNameFormat": "Azure Monitor",
+	"instanceNameFormat": "Monitor Azure Alerts",
 	"groups": [],
 	"inputs": [{
 			"name": "connectedServiceNameARM",
@@ -39,7 +39,7 @@
 		}, {
 			"name": "ResourceType",
 			"type": "pickList",
-			"label": "Resource Type",
+			"label": "Resource type",
 			"defaultValue": "Microsoft.Insights/components",
 			"options": {
 				"Microsoft.Insights/components": "Application Insights",
@@ -58,7 +58,7 @@
 		}, {
 			"name": "alertRules",
 			"type": "pickList",
-			"label": "Alert Rules",
+			"label": "Alert rules",
 			"defaultValue": "",
 			"required": true,
 			"properties": {

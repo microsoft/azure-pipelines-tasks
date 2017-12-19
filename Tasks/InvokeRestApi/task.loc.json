@@ -83,6 +83,14 @@
       "visibleRule": "method != GET && method != HEAD"
     },
     {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
+    },
+    {
       "name": "waitForCompletion",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.waitForCompletion",
@@ -106,7 +114,7 @@
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceName)",
-        "EndpointUrl": "$(endpoint.url)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",
