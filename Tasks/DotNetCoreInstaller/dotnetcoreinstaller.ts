@@ -9,11 +9,12 @@ import * as path from 'path';
 async function run() {
     let packageType = taskLib.getInput('packageType', true);
     let version = taskLib.getInput('version', true).trim();
+    let setSystemVariable: boolean = taskLib.getBoolInput('setSystemVariable');
     console.log(taskLib.loc("ToolToInstall", packageType, version));
-    await getDotnetCore(packageType, version);
+    await getDotnetCore(packageType, version, setSystemVariable);
 }
 
-async function getDotnetCore(packageType: string, version: string): Promise<void> {
+async function getDotnetCore(packageType: string, version: string, setSystemVariable: boolean): Promise<void> {
     if (!toolLib.isExplicitVersion(version)) {
         throw taskLib.loc("ImplicitVersionNotSupported", version);
     }
@@ -26,12 +27,38 @@ async function getDotnetCore(packageType: string, version: string): Promise<void
         // download, extract, cache
         console.log(taskLib.loc("InstallingAfresh"));
         toolPath = await acquireDotNetCore(packageType, version);
+
+        // set system variable only when installing .NET Core afresh in order to avoid appending same path multiple times
+        if(setSystemVariable){
+            setSystemPathVariable(toolPath);
+        }
     } else {
         console.log(taskLib.loc("UsingCachedTool", toolPath));
     }
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     toolLib.prependPath(toolPath);
+}
+
+async function setSystemPathVariable(toolPath: string): Promise<string> {
+    const exec = require('child_process').exec;
+    if (taskLib.osType().match(/^Win/)) {
+        exec("setx /M PATH \"%PATH%;"+toolPath, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+            }
+        });    
+    }
+    else{
+        exec('cd $HOME; if [ -f .bash_profile ]; then echo "export PATH="$PATH":'+toolPath+'" >> .bash_profile; else echo "export PATH="$PATH":'+toolPath+'" >> .profile; fi;', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+            }
+        });
+    }
+    return;
 }
 
 function getCachedToolName(packageType: string): string {
