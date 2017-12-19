@@ -11,7 +11,6 @@ try {
 
     # Load utility functions
     . "$PSScriptRoot\utilities.ps1"
-    . "$PSScriptRoot\Create-DiffPackage.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
     Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
@@ -103,7 +102,8 @@ try {
     $useDiffPackage = Get-VstsInput -Name useDiffPackage
     if ($useDiffPackage)
     {
-        $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+        Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
+        $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
     }
 
     $publishParameters = @{
