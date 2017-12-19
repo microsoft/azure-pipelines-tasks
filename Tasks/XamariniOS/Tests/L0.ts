@@ -14,7 +14,7 @@ describe('XamariniOS L0 Suite', function () {
 
     });
 
-    it('XamariniOS signing with identifiers', (done: MochaDone) => {
+    it('XamariniOS signing with identifiers', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0SignWithIds.js');
@@ -31,8 +31,8 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
 
-    it('XamariniOS signing with files', (done: MochaDone) => {
-        this.timeout(2000);
+    it('XamariniOS signing with files', function (done: MochaDone) {
+        this.timeout(2500);
 
         const tp = path.join(__dirname, 'L0SignWithFiles.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -49,7 +49,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
 
-    it('XamariniOS skip nuget restore', (done: MochaDone) => {
+    it('XamariniOS skip nuget restore', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0SkipNugetRestore.js');
@@ -66,7 +66,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
 
-    it('XamariniOS clean build', (done: MochaDone) => {
+    it('XamariniOS clean build', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0CleanBuild.js');
@@ -85,7 +85,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
     
-    it('XamariniOS msbuild as build tool', (done: MochaDone) => {
+    it('XamariniOS msbuild as build tool', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0MSBuildDefault.js');
@@ -104,7 +104,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
 
-    it('XamariniOS msbuild as build tool with location', (done: MochaDone) => {
+    it('XamariniOS msbuild as build tool with location', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0MSBuildLocation.js');
