@@ -122,4 +122,18 @@ describe('XamariniOS L0 Suite', function () {
 
         done();
     });
+
+    it('XamariniOS match wildcard patterns for the solution file input', function (done: MochaDone) {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0WildcardMatch.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 })
