@@ -84,9 +84,9 @@ describe('XamariniOS L0 Suite', function () {
 
         done();
     });
-    
+
     it('XamariniOS msbuild as build tool', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0MSBuildDefault.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -105,7 +105,7 @@ describe('XamariniOS L0 Suite', function () {
     });
 
     it('XamariniOS msbuild as build tool with location', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(2000);
 
         const tp = path.join(__dirname, 'L0MSBuildLocation.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -123,16 +123,50 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
 
-    it('XamariniOS match wildcard patterns for the solution file input', function (done: MochaDone) {
-        this.timeout(1000);
+    it('XamariniOS can find a single solution file with a glob pattern', function (done: MochaDone) {
+        this.timeout(2000);
 
-        const tp = path.join(__dirname, 'L0WildcardMatch.js');
+        const tp = path.join(__dirname, 'L0SingleWildcardMatch.js');
         const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.warningIssues.length === 0, 'should not have issued any warnings');
+        assert(tr.errorIssues.length === 0, 'should not have produced any errors');
         assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('XamariniOS warns when multiple solution files match a glob pattern', function (done: MochaDone) {
+        this.timeout(2000);
+
+        const tp = path.join(__dirname, 'L0MultipleWildcardMatch.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.warningIssues.length > 0, 'should have issued a warning');
+        assert(tr.errorIssues.length === 0, 'should not have produced any errors');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it('XamariniOS fails when no solution files match a glob pattern', function (done: MochaDone) {
+        this.timeout(2000);
+
+        const tp = path.join(__dirname, 'L0NoWildcardMatch.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.warningIssues.length === 0, 'should not have issued any warnings');
+        assert(tr.errorIssues.length > 0, 'should have produced an error');
+        assert(!tr.succeeded, 'task should not have succeeded');
 
         done();
     });

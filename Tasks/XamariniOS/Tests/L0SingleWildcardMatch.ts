@@ -8,7 +8,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/user/home'; //replace with mock of setVariable when task-lib has the support
 
-tr.setInput('solution', 'src/project.sln'); //path
+tr.setInput('solution', '**/*.sln'); //path
 tr.setInput('configuration', 'Release');
 tr.setInput('args', '');
 tr.setInput('clean', 'true');
@@ -51,10 +51,10 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/home/bin/xbuild": true,
         "/home/bin/nuget": true,
-        "src/project.sln": true
+        "**/*.sln": true
     },
     "findMatch" : {
-        "src/project.sln": ["src/project.sln"]
+        "**/*.sln": ["src/project.sln"]
     }
 };
 tr.setAnswers(a);
