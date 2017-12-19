@@ -22,6 +22,7 @@
   "inputs": [
   {
     "name": "connectedServiceName",
+    "aliases": ["azureSubscription"],
     "type": "connectedService:AzureServiceBus",
     "label": "Azure service bus connection",
     "defaultValue": "",

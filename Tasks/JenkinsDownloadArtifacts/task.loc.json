@@ -36,6 +36,9 @@
   "inputs": [
     {
       "name": "serverEndpoint",
+      "aliases": [
+        "jenkinsServerConnection"
+      ],
       "type": "connectedService:Jenkins",
       "label": "ms-resource:loc.input.label.serverEndpoint",
       "defaultValue": "",

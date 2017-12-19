@@ -19,15 +19,19 @@
     "Patch": 5
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [{
-		"name": "completionOptions",
-		"displayName": "ms-resource:loc.group.displayName.completionOptions",
-		"isExpanded": false
-	}
+  "groups": [
+    {
+      "name": "completionOptions",
+      "displayName": "ms-resource:loc.group.displayName.completionOptions",
+      "isExpanded": false
+    }
   ],
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": [
+        "serviceConnection"
+      ],
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
@@ -95,16 +99,16 @@
       "groupName": "completionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
     },
-	{
-	  "name": "successCriteria",
-	  "type": "string",
-	  "label": "ms-resource:loc.input.label.successCriteria",
-	  "defaultValue": "",
-	  "required": false,
-	  "groupName": "completionOptions",
-	  "visibleRule": "waitForCompletion = false",
-	  "helpMarkDown": "ms-resource:loc.input.help.successCriteria"
-	}
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.successCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.successCriteria",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
+    }
   ],
   "execution": {
     "HttpRequest": {

@@ -28,6 +28,7 @@
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": ["serviceConnection"],
       "type": "connectedService:Generic",
       "label": "Generic endpoint",
       "defaultValue": "",
