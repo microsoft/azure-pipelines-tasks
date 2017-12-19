@@ -12,15 +12,30 @@ function Get-ServiceFabricEncryptedText
 
     $defaultCertStoreName = "My"
     $defaultCertStoreLocation = "CurrentUser"
-    $serverCertThumbprint = $ClusterConnectionParameters["ServerCertThumbprint"]
+    $serverCertThumbprints = $ClusterConnectionParameters["ServerCertThumbprint"]
 
-    $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
+    if ($serverCertThumbprints -is [array])
+    {
+        foreach($serverCertThumbprint in $serverCertThumbprints)
+        {
+            $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
+            if (-not $cert)
+            {
+                break
+            }
+        }
+    }
+    else
+    {
+        $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprints" -ErrorAction SilentlyContinue
+    }
+
     if (-not $cert)
     {
-        Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertThumbprint)
+        Write-Warning (Get-VstsLocString -Key ServerCertificateNotFoundForTextEncrypt -ArgumentList $serverCertThumbprints)
         return $null
     }
 
     # Encrypt the text using the cluster connection's certificate.
-    return Invoke-ServiceFabricEncryptText -Text $Text -CertStore -CertThumbprint $serverCertThumbprint -StoreName $defaultCertStoreName -StoreLocation $defaultCertStoreLocation
+    return Invoke-ServiceFabricEncryptText -Text $Text -CertStore -CertThumbprint $cert.Thumbprint -StoreName $defaultCertStoreName -StoreLocation $defaultCertStoreLocation
 }
