@@ -542,7 +542,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0RunPostDeploymentScriptForLinux.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.sh') >= 0, 'should have uploaded file: kuduPostDeploymentScript.sh');
         assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.sh') >= 0, 'should have uploaded file: mainCmdFile.sh');
