@@ -267,6 +267,8 @@
     "MSB_DetectedNuGetExtensionsLoaderPath0": "ms-resource:loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0",
     "MSB_SolutionNotFoundUsingSearchPattern0": "ms-resource:loc.messages.MSB_SolutionNotFoundUsingSearchPattern0",
     "MSB_RestoreNuGetPackagesDeprecated": "ms-resource:loc.messages.MSB_RestoreNuGetPackagesDeprecated",
-    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound"
+    "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound",
+    "MultipleSolutionsFound": "ms-resource:loc.messages.MultipleSolutionsFound",
+    "SolutionDoesNotExist": "ms-resource:loc.messages.SolutionDoesNotExist"
   }
 }

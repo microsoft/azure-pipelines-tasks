@@ -5,8 +5,23 @@ import msbuildhelpers = require('msbuildhelpers/msbuildhelpers');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
-async function run() {
+function expandSolutionWildcardPatterns(solutionPattern: string): string {
+    const matchedSolutionFiles = tl.findMatch(null, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+    tl.debug(`Found ${matchedSolutionFiles.length} solution files matching the pattern.`);
 
+    if (matchedSolutionFiles.length > 0) {
+        const result = matchedSolutionFiles[0];
+        if (matchedSolutionFiles.length > 1) {
+            tl.warning(tl.loc('MultipleSolutionsFound', result));
+        }
+
+        return result;
+    } else {
+        throw tl.loc('SolutionDoesNotExist', solutionPattern);
+    }
+}
+
+async function run() {
     let codesignKeychain: string;
     let profileToDelete: string;
 
@@ -14,7 +29,7 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get build inputs
-        const solutionPath: string = tl.getPathInput('solution', true, true);
+        const solutionInput: string = tl.getPathInput('solution', true, true);
         const configuration: string = tl.getInput('configuration', true);
         const clean: boolean = tl.getBoolInput('clean');
         const args: string = tl.getInput('args');
@@ -50,6 +65,8 @@ async function run() {
         tl.checkPath(buildToolPath, 'build tool');
         tl.debug('Build tool path = ' + buildToolPath);
 
+        const solutionPath = expandSolutionWildcardPatterns(solutionInput);
+
         if (clean) {
             const cleanBuildRunner: ToolRunner = tl.tool(buildToolPath);
             cleanBuildRunner.arg(solutionPath);
@@ -82,15 +99,15 @@ async function run() {
 
         if (signMethod === 'file') {
             let p12: string = tl.getPathInput('p12', false, false);
-            let p12pwd: string = tl.getInput('p12pwd', false);
-            let provProfilePath: string = tl.getPathInput('provProfile', false);
-            let removeProfile: boolean = tl.getBoolInput('removeProfile', false);
+            const p12pwd: string = tl.getInput('p12pwd', false);
+            const provProfilePath: string = tl.getPathInput('provProfile', false);
+            const removeProfile: boolean = tl.getBoolInput('removeProfile', false);
 
             if (tl.filePathSupplied('p12') && tl.exist(p12)) {
                 p12 = tl.resolve(cwd, p12);
                 tl.debug('cwd = ' + cwd);
-                let keychain: string = tl.resolve(cwd, '_xamariniostasktmp.keychain');
-                let keychainPwd: string = '_xamariniostask_TmpKeychain_Pwd#1';
+                const keychain: string = tl.resolve(cwd, '_xamariniostasktmp.keychain');
+                const keychainPwd: string = '_xamariniostask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
                 tl.debug('installing cert in temp keychain');
@@ -134,7 +151,7 @@ async function run() {
         if (buildTool === 'msbuild' && signIdentity && signIdentity.indexOf(',') > 0) {
             // Escape the input to workaround msbuild bug https://github.com/Microsoft/msbuild/issues/471
             tl.debug('Escaping , in arg /p:Codesignkey to workaround msbuild bug.');
-            let signIdentityEscaped = signIdentity.replace(/[,]/g, '%2C');
+            const signIdentityEscaped = signIdentity.replace(/[,]/g, '%2C');
             buildRunner.arg('/p:Codesignkey=' + signIdentityEscaped);
         } else {
             tl.debug('Passing in arg /p:Codesignkey as is without escpaing any characters.')
