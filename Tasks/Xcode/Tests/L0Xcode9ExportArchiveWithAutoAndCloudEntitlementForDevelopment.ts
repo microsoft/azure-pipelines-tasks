@@ -4,8 +4,8 @@ import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 
-let taskPath = path.join(__dirname, '..', 'xcode.js');
-let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'xcode.js');
+const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
@@ -25,7 +25,7 @@ tr.registerMock('fs', {
 tr.registerMock('readline', {
     createInterface: function () {
         return {
-            on: function(event, cb) {
+            on: function (event, cb) {
                 if (event === 'line') {
                     cb("Foo");
                     cb("                                    ProvisioningStyle = Manual;");
@@ -127,7 +127,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "plist initialized output here"
         },
-        "/usr/libexec/PlistBuddy -c Add method string app-store _XcodeTaskExportOptions.plist": {
+        "/usr/libexec/PlistBuddy -c Add method string development _XcodeTaskExportOptions.plist": {
             "code": 0,
             "stdout": "plist add output here"
         },
@@ -141,11 +141,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         "/usr/libexec/PlistBuddy -c Print Entitlements:get-task-allow _xcodetasktmp.plist": {
             "code": 0,
-            "stdout": "false"
+            "stdout": "true"
         },
-        "/usr/libexec/PlistBuddy -c Print ProvisionedDevices _xcodetasktmp.plist": {
-            "code": 1,
-            "stdout": "ProvisionedDevices not found"
+        "/usr/libexec/PlistBuddy -c Print Entitlements:com.apple.developer.icloud-container-environment _xcodetasktmp.plist": {
+            "code": 0,
+            "stdout": "Array { Development, Production}"
         },
         "/bin/rm -f _xcodetasktmp.plist": {
             "code": 0,
@@ -169,15 +169,16 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         "/usr/libexec/PlistBuddy -c Add provisioningProfiles:com.vsts.test.myApp string Bob _XcodeTaskExportOptions.plist": {
             "code": 0,
-            "stdout": "plist add output here"            
+            "stdout": "plist add output here"
         },
-        "/usr/libexec/PlistBuddy -c Print Entitlements:com.apple.developer.icloud-container-environment _xcodetasktmp.plist": {
-            "code": 1,
-            "stdout": ":com.apple.developer.icloud-container-environment, Does Not Exist"
+        "/usr/libexec/PlistBuddy -c Add iCloudContainerEnvironment string Development _XcodeTaskExportOptions.plist": {
+            "code": 0,
+            "stdout": "plist add output here"
         }
     }
 };
 tr.setAnswers(a);
 
 tr.run();
+
 
