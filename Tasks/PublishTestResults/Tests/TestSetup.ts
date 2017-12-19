@@ -19,7 +19,8 @@ tr.setInput('publishRunAttachments', process.env[constants.publishRunAttachments
 tr.setInput('searchFolder', process.env[constants.searchFolder]);
 
 const PublishExeToolPath = path.join(__dirname, '../modules', 'TestResultsPublisher.exe');
-const PublishExeArgs = '@' + path.join(__dirname, '..', 'tempResponseFile.txt');
+const newUuid = "1e1faf9e-d9e5-4054-b351-398ac75b62f5";
+const PublishExeArgs = '@' + path.join(__dirname, newUuid + '.txt');
 
 // Construct the answers object
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -32,14 +33,21 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 a.exec[`${PublishExeToolPath} ${PublishExeArgs}`] = {
     'code': +process.env[constants.listPackagesReturnCode],
-    'stdout': 'atool output here',
-    'stderr': 'atool with this stderr output'
+    'stdout': 'tool output',
+    'stderr': ''
 };
 
 tr.setAnswers(a);
 
 // Mock toolrunner
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
+
+// Mock guid generator
+tr.registerMock('uuid', {
+    v1: function () {
+        return newUuid;
+    }
+});
 
 // Create mock for getVariable
 const tl = require('vsts-task-lib/mock-task');

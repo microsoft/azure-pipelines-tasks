@@ -53,10 +53,11 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = 20000;
+        process.env[constants.agentTempDirectory] = __dirname;
 
         // Start the run
         tr.run();
-
+        
         // Asserts
         assert(tr.stdOutContained(`TestResultsPublisher.exe`),
             `TestResultsPublisher.exe should have been called on Windows OS`);
@@ -65,8 +66,8 @@ describe('PublishTestResults Suite', function() {
         done();
     });
 
-    it('TestResultsPublisher.exe is called on non-Windows OS', (done: MochaDone) => {
-        console.log('TestCaseName: TestResultsPublisher.exe is called on non-Windows OS');
+    it('TestResultsPublisher.exe is not called on non-Windows OS', (done: MochaDone) => {
+        console.log('TestCaseName: TestResultsPublisher.exe is not called on non-Windows OS');
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -83,6 +84,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = 20000;
+        process.env[constants.agentTempDirectory] = __dirname;        
 
         // Start the run
         tr.run();
@@ -113,6 +115,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = 20000;
+        process.env[constants.agentTempDirectory] = __dirname; 
 
         // Start the run
         tr.run();
@@ -147,6 +150,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
         process.env[constants.listPackagesReturnCode] = 0;
+        process.env[constants.agentTempDirectory] = __dirname; 
 
         // Start the run
         tr.run();

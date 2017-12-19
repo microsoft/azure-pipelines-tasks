@@ -8,4 +8,4 @@ export const publishRunAttachments = 'publishRunAttachments';
 export const searchFolder = 'searchFolder';
 export const listPackagesReturnCode = 'listPackagesReturnCode';
 export const osType = 'osType';
-export const agentTempDirectory = 'agentTempDirectory';
+export const agentTempDirectory = 'Agent.TempDirectory';

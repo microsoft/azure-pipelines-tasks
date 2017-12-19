@@ -5,6 +5,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
 var uuidV4 = require('uuid/v4');
+let uuid = require('uuid');
 
 export class TestResultsPublisher {
     constructor(matchingTestResultsFiles: string[], mergeResults: string, platform: string, config: string,
@@ -52,7 +53,8 @@ export class TestResultsPublisher {
         let responseFilePath: string = null;
         try {
             let agentTempDirectory = tl.getVariable('Agent.TempDirectory');
-            responseFilePath = path.join(agentTempDirectory, uuidV4() + '.txt');
+            // The response file is being created in agent temp directory so that it is automatically deleted after.         
+            responseFilePath = path.join(agentTempDirectory, uuid.v1() + '.txt');
             
             // Adding quotes around matching file names
             matchingTestResultsFiles = this.modifyMatchingFileName(matchingTestResultsFiles);
