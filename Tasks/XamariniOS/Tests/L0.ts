@@ -14,28 +14,28 @@ describe('XamariniOS L0 Suite', function () {
 
     });
 
-    it('XamariniOS signing with identifiers', (done:MochaDone) => {
+    it('XamariniOS signing with identifiers', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0SignWithIds.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0SignWithIds.js');
+        const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
         assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone ' +
             '/p:Codesignkey=testSignIdentity /p:CodesignProvision=testUUID'),
                 'xbuild should have run with codesign for IDs');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('XamariniOS signing with files', (done:MochaDone) => {
+    it('XamariniOS signing with files', (done: MochaDone) => {
         this.timeout(2000);
 
-        let tp = path.join(__dirname, 'L0SignWithFiles.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0SignWithFiles.js');
+        const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -43,34 +43,34 @@ describe('XamariniOS L0 Suite', function () {
                 '/p:CodesignKeychain=/user/build/_xamariniostasktmp.keychain ' +
                 '/p:Codesignkey=iPhone Developer: XamariniOS Tester (HE432Y3E2Q) /p:CodesignProvision=testuuid'),
         'xbuild should have run with codesigning with files');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('XamariniOS skip nuget restore', (done:MochaDone) => {
+    it('XamariniOS skip nuget restore', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0SkipNugetRestore.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0SkipNugetRestore.js');
+        const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
         assert(!tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should not have run');
         assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
         'xbuild should have run');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('XamariniOS clean build', (done:MochaDone) => {
+    it('XamariniOS clean build', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0CleanBuild.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0CleanBuild.js');
+        const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -79,17 +79,17 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should have run');
         assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
         'xbuild should have run');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });
     
-    it('XamariniOS msbuild as build tool', (done:MochaDone) => {
+    it('XamariniOS msbuild as build tool', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0MSBuildDefault.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0MSBuildDefault.js');
+        const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -98,17 +98,17 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should have run');
         assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
         'msbuild should have run');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
-        done(); 
+        done();
     });
 
-    it('XamariniOS msbuild as build tool with location', (done:MochaDone) => {
+    it('XamariniOS msbuild as build tool with location', (done: MochaDone) => {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0MSBuildLocation.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const tp = path.join(__dirname, 'L0MSBuildLocation.js');
+        const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
 
@@ -117,9 +117,9 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should have run');
         assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
         'msbuild should have run');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
-        done(); 
+        done();
     });
 })
