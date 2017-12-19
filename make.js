@@ -418,6 +418,11 @@ target.package = function() {
         fail('invalid semver version: ' + version);
     }
 
+    var dashIndex = version.indexOf('-');
+    if (dashIndex >= 0) {
+        version = `${version.substr(0, dashIndex)}${version.substr(dashIndex).replace('.', '_')}`
+    }
+
     var pkgName = 'Mseng.MS.TF.Build.Tasks';
     console.log();
     console.log('> Generating .nuspec file');
