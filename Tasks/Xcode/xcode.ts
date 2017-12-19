@@ -235,41 +235,6 @@ async function run() {
         await xcb.exec();
 
         //--------------------------------------------------------
-        // Test publishing
-        //--------------------------------------------------------
-        let testResultsFiles: string;
-        let publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
-
-        if (publishResults) {
-            if (!useXcpretty) {
-                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-            } else {
-                testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
-            }
-
-            if (testResultsFiles && 0 !== testResultsFiles.length) {
-                //check for pattern in testResultsFiles
-
-                let matchingTestResultsFiles: string[];
-                if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-                    tl.debug('Pattern found in testResultsFiles parameter');
-                    matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
-                }
-                else {
-                    tl.debug('No pattern found in testResultsFiles parameter');
-                    matchingTestResultsFiles = [testResultsFiles];
-                }
-
-                if (!matchingTestResultsFiles) {
-                    tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
-                }
-
-                let tp = new tl.TestPublisher("JUnit");
-                tp.publish(matchingTestResultsFiles, false, "", "", "", true);
-            }
-        }
-
-        //--------------------------------------------------------
         // Package app to generate .ipa
         //--------------------------------------------------------
         if (tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
