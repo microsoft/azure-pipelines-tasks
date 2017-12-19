@@ -26,9 +26,11 @@ async function run() {
                 if (testResultsFiles && 0 !== testResultsFiles.length) {
                     //check for pattern in testResultsFiles
                     let matchingTestResultsFiles: string[];
-                    if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
+                    if (testResultsFiles.indexOf('*') >= 0) {
                         tl.debug('Pattern found in testResultsFiles parameter');
-                        matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
+                        matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, 
+                            { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, 
+                            { matchBase: true, nocase: true });
                     }
                     else {
                         tl.debug('No pattern found in testResultsFiles parameter');
