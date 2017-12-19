@@ -294,16 +294,40 @@ async function run() {
                 let exportTeamId: string;
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
+                let macOSEmbeddedProfilesFound: boolean;
+
+                // iOS provisioning profiles use the .mobileprovision suffix. macOS profiles have the .provisionprofile suffix.
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+
+                if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
+                    tl.debug(`${embeddedProvProfiles.length} iOS embedded.mobileprovision file(s) found.`);
+                } else {
+                    embeddedProvProfiles = tl.findMatch(archiveToCheck, '**/embedded.provisionprofile', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+
+                    if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
+                        tl.debug(`${embeddedProvProfiles.length} macOS embedded.provisionprofile file(s) found.`);
+                        macOSEmbeddedProfilesFound = true;
+                    }
+                }
+
                 if (exportOptions === 'auto') {
                     // Automatically try to detect the export-method to use from the provisioning profile
                     // embedded in the .xcarchive file
                     if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
                         tl.debug('embedded prov profile = ' + embeddedProvProfiles[0]);
-                        exportMethod = await sign.getProvisioningProfileType(embeddedProvProfiles[0]);
+
+                        if (macOSEmbeddedProfilesFound) {
+                            exportMethod = await sign.getmacOSProvisioningProfileType(embeddedProvProfiles[0]);
+                        } else {
+                            exportMethod = await sign.getiOSProvisioningProfileType(embeddedProvProfiles[0]);
+                        }
+
                         tl.debug('Using export method = ' + exportMethod);
                     }
-                    if (!exportMethod) {
+
+                    // If you create a simple macOS app with automatic signing and no entitlements, it won't have an embedded profile.
+                    // And export for that app will work with an empty exportOptionsPlist.
+                    if (!exportMethod && sdk && sdk !== 'macosx') {
                         tl.warning(tl.loc('ExportMethodNotIdentified'));
                     }
                 } else if (exportOptions === 'specify') {
@@ -316,22 +340,36 @@ async function run() {
                     }
                 }
 
-                if (exportMethod) {
-                    // generate the plist file if we have an exportMethod set from exportOptions = auto or specify
+                if (exportOptions !== 'plist') {
+                    // As long as the user didn't provide a plist, start with an empty one.
+                    // Xcode 7 warns "-exportArchive without -exportOptionsPlist is deprecated"
+                    // Xcode 8+ will error if a plist isn't provided.
                     let plist: string = tl.which('/usr/libexec/PlistBuddy', true);
+
                     exportOptionsPlist = '_XcodeTaskExportOptions.plist';
                     tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
-                    tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
+
+                    // Add the teamId if provided.
                     if (exportTeamId) {
                         tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
                     }
 
+                    // Add the export method if provided or determined above.
+                    if (exportMethod) {
+                        tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
+                    }
+
+                    // For auto export, conditionally add entitlements, signingStyle and provisioning profiles.
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
-                        const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);                        
-                        if (cloudEntitlement) {
-                            tl.debug("Adding cloud entitlement");
-                            tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
+                        // Propagate any iCloud entitlement.
+                        if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
+                            const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);
+                            if (cloudEntitlement) {
+                                tl.debug("Adding cloud entitlement");
+                                tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
+                            }
                         }
+
                         let signingOptionForExport = signingOption;
 
                         // If we're using the project defaults, scan the pbxProject file for the type of signing being used.
