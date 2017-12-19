@@ -54,7 +54,7 @@ export class ApplicationInsightsWebTests {
         }
     }
 
-    public async create(appInsightsResource: any, applicationUrl: string, testName?: string) {
+    public async create(appInsightsResource: any, applicationUrl: string, testName?: string): Promise<WebTest> {
         
         let httpRequest = new webClient.WebRequest();
         let webTestData: WebTest = this.configureNewWebTest(appInsightsResource, applicationUrl, testName);
@@ -73,7 +73,7 @@ export class ApplicationInsightsWebTests {
                 throw ToError(response);
             }
 
-            tl.debug(`added web test ${testName}.`);
+            tl.debug(`added web test ${response.body.name}.`);
             return response.body;
 
         }
@@ -84,7 +84,6 @@ export class ApplicationInsightsWebTests {
 
     public async addWebTest(appInsightsResource: any, applicationUrl: string, webTestName?: string) {
         let webTests = await this.list();
-        console.log(webTests);
         for(let webTest of webTests) {
             let isTagPresent: boolean = false;
             let isApplicationUrlPresent: boolean = false;
