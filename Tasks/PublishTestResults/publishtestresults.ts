@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as publishExe from './publishresultsthroughexe';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import * as vsts from 'vso-node-api';
 import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
@@ -55,10 +54,12 @@ async function run() {
         }
         else {
             let osType = tl.osType();
+            // This variable can be set as build variable to force the task to use command flow
+            let isExeFlowOverridden = tl.getVariable('PublishTestResults.OverrideExeFlow');
 
             tl.debug('OS type: ' + osType);
 
-            if (osType === 'Windows_NT') {
+            if (osType === 'Windows_NT' && isExeFlowOverridden != 'true') {
                 let testResultsPublisher = new publishExe.TestResultsPublisher(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
                 let exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);

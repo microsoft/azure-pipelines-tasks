@@ -3,7 +3,8 @@ import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import * as vsts from 'vso-node-api';
+import { publishEvent } from './cieventlogger';
+var uuidV4 = require('uuid/v4');
 
 export class TestResultsPublisher {
     constructor(matchingTestResultsFiles: string[], mergeResults: string, platform: string, config: string,
@@ -21,7 +22,10 @@ export class TestResultsPublisher {
     public async publishResultsThroughExe(): Promise<number> {
         let testResultsPublisherTool: tr.ToolRunner = tl.tool(this.getTestResultsPublisherLocation());
         let envVars: { [key: string]: string; } = this.getEnvironmentVariables();
-        let args: string[] = this.getArguments();
+        let args: string[] = this.getArguments(this.matchingTestResultsFiles);
+        if (testResultsPublisherTool == null || args == null) {
+            return 20000;
+        }
         testResultsPublisherTool.arg(args);
         
         let exitCode: number = await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars, ignoreReturnCode: true });
@@ -33,40 +37,52 @@ export class TestResultsPublisher {
         return path.join(__dirname, 'modules/TestResultsPublisher.exe');
     }
 
-    private getArguments(): string[] {
-        let responseFilePath = this.createResponseFile();
+    private getArguments(matchingTestResultsFiles: string[]): string[] {
+        let responseFilePath = this.createResponseFile(matchingTestResultsFiles);
+        if (responseFilePath == null) {
+            return null;
+        }
         // Adding '@' because this is a response file argument
         let args = ['@' + responseFilePath];
+        
         return args;
-
     }
 
-    private createResponseFile(): string {
-        let responseFilePath: string = path.join(__dirname, 'tempResponseFile.txt');
-
-        // Adding quotes around matching file names
-        this.modifyMatchingFileName();
-        
-        // Preparing File content
-        let fileContent: string = os.EOL + this.matchingTestResultsFiles.join(os.EOL);
-
-        // Writing matching file names in the response file
+    private createResponseFile(matchingTestResultsFiles: string[]): string {
+        let responseFilePath: string = null;
         try {
+            let agentTempDirectory = tl.getVariable('Agent.TempDirectory');
+            responseFilePath = path.join(agentTempDirectory, uuidV4() + '.txt');
+            
+            // Adding quotes around matching file names
+            matchingTestResultsFiles = this.modifyMatchingFileName(matchingTestResultsFiles);
+            
+            // Preparing File content
+            let fileContent: string = os.EOL + matchingTestResultsFiles.join(os.EOL);
+
+            // Writing matching file names in the response file
             fs.writeFileSync(responseFilePath, fileContent);
         }
         catch (ex) {
+            // Log telemetry and return null path
+            publishEvent({
+                "exception": ex
+            });
             tl.warning("Exception while writing to response file: " + ex);
+            return null;
         }
 
         return responseFilePath;
     }
 
-    private modifyMatchingFileName(): void {
+    private modifyMatchingFileName(matchingTestResultsFiles: string[]): string[] {
         for (let i = 0; i < this.matchingTestResultsFiles.length; i++) {
             // We need to add quotes around the file name because the file name can contain spaces.
             // The quotes will be handled by response file reader.
-            this.matchingTestResultsFiles[i] = '\"' + this.matchingTestResultsFiles[i] + '\"';
+            matchingTestResultsFiles[i] = '\"' + matchingTestResultsFiles[i] + '\"';
         }
+
+        return matchingTestResultsFiles;
     }
 
     private getEnvironmentVariables(): { [key: string]: string; } {
