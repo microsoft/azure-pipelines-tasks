@@ -84,7 +84,7 @@
       "label": "Url suffix string",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/release and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1."
+      "helpMarkDown": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1."
     },
     {
       "name":"waitForCompletion",

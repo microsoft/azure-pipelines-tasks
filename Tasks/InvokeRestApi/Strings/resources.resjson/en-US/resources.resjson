@@ -7,7 +7,7 @@
   "loc.input.label.connectedServiceName": "Generic endpoint",
   "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
   "loc.input.label.urlSuffix": "Url suffix string",
-  "loc.input.help.urlSuffix": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/release and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.help.urlSuffix": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
   "loc.input.label.method": "Method",
   "loc.input.help.method": "Select the http method with which the API should be invoked with.",
   "loc.input.label.headers": "Headers",
