@@ -336,7 +336,7 @@ export class Kudu {
          var repoProvider = tl.getVariable('build.repository.provider');
     
         var buildOrReleaseUrl = "" ;
-        deploymentID = !!deploymentID ? deploymentID : (buildId ? buildId : releaseId) + Date.now().toString();
+        deploymentID = !!deploymentID ? deploymentID : (releaseId ? releaseId : buildId) + Date.now().toString();
     
         if(releaseUrl !== undefined) {
             buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
