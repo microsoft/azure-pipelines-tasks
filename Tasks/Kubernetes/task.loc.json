@@ -170,7 +170,7 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.versionOrLocation",
       "defaultValue": "version",
-      "required": "true",
+      "required": false,
       "options": {
         "version": "Version",
         "location": "Specify Location"
@@ -181,9 +181,8 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "1.7",
+      "defaultValue": "1.7.0",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
-      "required": "false",
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = version"
     },
@@ -203,7 +202,7 @@
       "label": "ms-resource:loc.input.label.specifyLocation",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.specifyLocation",
-      "required": "false",
+      "required": true,
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = location"
     },
@@ -259,6 +258,9 @@
     "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
     "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
     "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
-    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt"
+    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
+    "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion"
   }
 }
