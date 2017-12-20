@@ -15,6 +15,10 @@ $applicationTypeName = "TestType"
 $applicationTypeVersion = "1.0.0"
 $appManifestPath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\ApplicationManifest.xml"
 $appManifestDiffPath = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\ApplicationManifest.xml"
+$serviceManifestPath1 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless1Pkg\ServiceManifest.xml"
+$serviceManifestDiffPath1 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless1Pkg\ServiceManifest.xml"
+$codePkg1 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless1Pkg\Code"
+$codeDiffPkg1 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless1Pkg\Code"
 $serviceManifestPath2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\ServiceManifest.xml"
 $serviceManifestDiffPath2 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless2Pkg\ServiceManifest.xml"
 $codePkg2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\Code"
@@ -64,7 +68,7 @@ $app = @{
     "ApplicationTypeVersion" = $applicationTypeVersion
 }
 Register-Mock Get-ServiceFabricApplication { $app } -- -ApplicationName $appName
-$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", "aaa", "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
+$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $diffPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 $serviceType1 = @{
@@ -74,7 +78,7 @@ $serviceType2 = @{
     "ServiceManifestName" = "Stateless2Pkg"
 }
 $serviceTypes = @($serviceType1, $serviceType2)
-$serviceManifest = '<ServiceManifest Name="Stateless1Pkg" Version="1.0.0">' +
+$serviceManifest1 = '<ServiceManifest Name="Stateless1Pkg" Version="1.0.0">' +
   '<ServiceTypes>' +
     '<StatelessServiceType ServiceTypeName="Stateless1Type" />' +
   '</ServiceTypes>' +
@@ -82,10 +86,18 @@ $serviceManifest = '<ServiceManifest Name="Stateless1Pkg" Version="1.0.0">' +
   '</CodePackage>' +
   '<ConfigPackage Name="Config" Version="1.0.0" />' +
 '</ServiceManifest>'
+$serviceManifest2 = '<ServiceManifest Name="Stateless2Pkg" Version="1.0.0">' +
+  '<ServiceTypes>' +
+    '<StatelessServiceType ServiceTypeName="Stateless2Type" />' +
+  '</ServiceTypes>' +
+  '<CodePackage Name="Code" Version="1.0.0">' +
+  '</CodePackage>' +
+  '<ConfigPackage Name="Config" Version="1.0.0" />' +
+'</ServiceManifest>'
 
 Register-Mock Get-ServiceFabricServiceType {$serviceTypes} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion
-Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless1Pkg"
-Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless2Pkg"
+Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest1} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless1Pkg"
+Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest2} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless2Pkg"
 
 Register-Mock Copy-Item {} $appManifestPath $appManifestDiffPath -Force
 
@@ -97,5 +109,8 @@ Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Create-DiffPackage.psm
 
 # Assert
 Assert-WasCalled Copy-Item $appManifestPath $appManifestDiffPath -Force
+Assert-WasCalled Copy-Item $serviceManifestPath1 $serviceManifestDiffPath1 -Force -Times 0
 Assert-WasCalled Copy-Item $serviceManifestPath2 $serviceManifestDiffPath2 -Force
+Assert-WasCalled Copy-Item $codePkg1 $codeDiffPkg1 -Recurse -Times 0
 Assert-WasCalled Copy-Item $codePkg2 $codeDiffPkg2 -Recurse
+Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs

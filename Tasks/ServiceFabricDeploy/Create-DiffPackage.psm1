@@ -52,8 +52,7 @@ function Create-DiffPackage
         # Pack the service manifest names into an array
         $clusterServiceManifestNames = $serviceTypes.ServiceManifestName
 
-        # If $clusterServiceManifestNames is null, it means no service types are registered. Services can be registered without running but will still show up in this list in that case. 
-        # Diff Package is equal to Full Package. Use Full Package to do deployment
+        # If $clusterServiceManifestNames is null, it means no service types are registered. Diff Package is equal to Full Package. Use Full Package to do deployment
         if (!$clusterServiceManifestNames)
         {
             Write-Host (Get-VstsLocString -Key DIFFPKG_NoServicesRunning -ArgumentList @($ApplicationName, $ConnectedServiceEndpoint.Url))

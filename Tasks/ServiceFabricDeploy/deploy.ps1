@@ -105,9 +105,8 @@ try {
         Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
         $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
     }
-
     $publishParameters = @{
-        'ApplicationPackagePath' = if (!$diffPackagePath) {$applicationPackagePath} else {$diffPackagePath}
+        'ApplicationPackagePath' = if (!$diffPackagePath) {$applicationPackagePath} else {[string]$diffPackagePath}
         'ApplicationParameterFilePath' = $applicationParameterFile
         'ErrorAction' = "Stop"
     }
