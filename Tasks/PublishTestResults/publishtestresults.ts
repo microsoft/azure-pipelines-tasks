@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as publishExe from './publishresultsthroughexe';
+import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
@@ -60,7 +60,7 @@ async function run() {
             tl.debug('OS type: ' + osType);
 
             if (osType === 'Windows_NT' && isExeFlowOverridden != 'true') {
-                let testResultsPublisher = new publishExe.TestResultsPublisher(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
+                let testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
                 let exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
