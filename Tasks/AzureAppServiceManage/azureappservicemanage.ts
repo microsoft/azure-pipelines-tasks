@@ -193,7 +193,7 @@ async function run() {
             }
             case "Install Extensions": {
                 if(appServiceKuduService) {
-                    await updateDeploymentStatusInKudu(appServiceKuduService, taskResult, DeploymentID, {"type": action});
+                    await updateDeploymentStatusInKudu(appServiceKuduService, taskResult, null, {"type": action});
                 }
                 break;
             }
