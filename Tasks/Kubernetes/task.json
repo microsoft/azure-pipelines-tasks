@@ -161,7 +161,7 @@
             "type": "radio",
             "label": "Kubectl",
             "defaultValue": "version",
-            "required": "true",
+            "required": false,
             "options": {
                 "version": "Version",
                 "location": "Specify Location"
@@ -172,9 +172,8 @@
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",
-            "defaultValue": "1.7",
-            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7, 1.x, 4.x, 6.10.0, >=6.10.0",
-            "required": "false",
+            "defaultValue": "1.7.0",
+            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
             "groupName": "advanced",
             "visibleRule": "versionOrLocation = version"
         },
@@ -193,8 +192,8 @@
             "type": "filePath",
             "label": "Path to Kubectl",
             "defaultValue": "",
-            "helpMarkDown": "Path to the kubectl version to use",
-            "required": "false",
+            "helpMarkDown": "Full path to the kubectl.exe",
+            "required": true,
             "groupName": "advanced",
             "visibleRule": "versionOrLocation = location"
         },
@@ -244,12 +243,15 @@
         }
     },
     "messages": {
-        "DownloadingClient":"Downloading kubernetes client.",
-        "CreatingSecret":"Executing create docker-registry %s secret.",
+        "DownloadingClient": "Downloading kubernetes client.",
+        "CreatingSecret": "Executing create docker-registry %s secret.",
         "DeleteSecret": "Executing delete docker-registry %s secret",
         "DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
         "FileNotFoundException": "Can not find file at location: %s",
         "DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
-        "DownloadPathForStableTxt": "Download path for stable.txt: %s"
+        "DownloadPathForStableTxt": "Download path for stable.txt: %s",
+        "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
+        "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+        "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases"
     }
 }
