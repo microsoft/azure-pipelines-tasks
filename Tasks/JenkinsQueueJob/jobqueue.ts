@@ -195,7 +195,8 @@ export class JobQueue {
             if (job.ExecutableNumber === -1) {
                 jobContents += indent + job.Name + ' ' + colorize(job.GetResultString()) + '<br />\n';
             } else {
-                jobContents += indent + '<a href="' + job.ExecutableUrl.replace('"', '%22') + '">' + job.Name + ' #' + job.ExecutableNumber + '</a> ' + colorize(job.GetResultString()) + '<br />\n';
+                const url = job.ExecutableUrl && job.ExecutableUrl.replace('"', '%22');
+                jobContents += indent + '<a href="' + url + '">' + job.Name + ' #' + job.ExecutableNumber + '</a> ' + colorize(job.GetResultString()) + '<br />\n';
             }
 
             let childContents: string = '';
