@@ -6,7 +6,6 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('codeanalysis-common/SonarQube/common');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
@@ -293,18 +292,19 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
         mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
     }
 
-    mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:${getSonarQubeMavenPluginVersion()}:sonar`);
+    switch (tl.getInput('sqMavenPluginVersionChoice')) {
+        case 'latest':
+            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);
+            break;
+        case 'specify':
+            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:${tl.getInput('sqMavenPluginVersion')}:sonar`);
+            break;
+        case 'pom':
+            mvnsq.arg(`sonar:sonar`);
+            break;
+    }
 
     return mvnsq;
-}
-
-function getSonarQubeMavenPluginVersion(): string {
-    let pluginVersion = 'RELEASE';
-    let userSpecifiedVersion = tl.getInput('sqMavenPluginVersion');
-    if (userSpecifiedVersion) {
-        pluginVersion = userSpecifiedVersion.trim();
-    }
-    return pluginVersion;
 }
 
 // Configure the JVM associated with this run.

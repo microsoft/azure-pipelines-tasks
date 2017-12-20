@@ -282,21 +282,30 @@
             "helpMarkDown": "Run a [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing the current goals. 'install' or 'package' goals should be executed first."
         },
         {
-            "name": "sqMavenPluginVersion",
-            "type": "pickList",
-            "label": "SonarQube Scanner for Maven Plugin Version",
+            "name": "sqMavenPluginVersionChoice",
+            "type": "radio",
+            "label": "SonarQube Scanner for Maven version",
             "required": true,
-            "defaultValue": "RELEASE",
+            "defaultValue": "latest",
             "options": {
-                "RELEASE": "Latest release",
-                "3.4.0.905": "3.4.0.905"
+                "latest": "Use latest release",
+                "specify": "Specify version number",
+                "pom": "Use version declared in your pom.xml"
             },
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The SonarQube Scanner for Maven plugin version to use. Refer to http://repo1.maven.org/maven2/org/sonarsource/scanner/maven/sonar-maven-plugin/ for all available versions.",
+            "helpMarkDown": "The SonarQube Maven plugin version to use. You can use latest version, fix version here or in your pom.xml.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
+            "name": "sqMavenPluginVersion",
+            "aliases": [ "sonarQubeGradlePluginVersion" ],
+            "type": "string",
+            "label": "SonarQube Scanner for Maven Plugin Version",
+            "required": true,
+            "defaultValue": "3.4.0.905",
+            "helpMarkDown": "Refer to http://repo1.maven.org/maven2/org/sonarsource/scanner/maven/sonar-maven-plugin/ for all available versions.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true && sqMavenPluginVersionChoice = specify"
         },
         {
             "name": "checkstyleAnalysisEnabled",
