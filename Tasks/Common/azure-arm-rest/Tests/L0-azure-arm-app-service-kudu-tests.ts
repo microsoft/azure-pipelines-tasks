@@ -10,21 +10,21 @@ export function KuduServiceTests() {
         try {
             tr.run();
             assert(tr.succeeded, "azure-arm-app-service-kudu-tests should have passed but failed.");
-            console.log("validating updateDeployment");
+            console.log("\tvalidating updateDeployment");
             updateDeployment(tr);
-            console.log("validating getContinuousJobs");
+            console.log("\tvalidating getContinuousJobs");
             getContinuousJobs(tr);
-            console.log("validating startContinuousWebJob");
+            console.log("\tvalidating startContinuousWebJob");
             startContinuousWebJob(tr);
-            console.log("validating stopContinuousWebJob");
+            console.log("\tvalidating stopContinuousWebJob");
             stopContinuousWebJob(tr);
-            console.log("validating installSiteExtension");
+            console.log("\tvalidating installSiteExtension");
             installSiteExtension(tr);
-            console.log("validating getSiteExtensions");
+            console.log("\tvalidating getSiteExtensions");
             getSiteExtensions(tr);
-            console.log("validating getProcess");
+            console.log("\tvalidating getProcess");
             getProcess(tr);
-            console.log("validating killProcess");
+            console.log("\tvalidating killProcess");
             killProcess(tr);
         }
         catch(error) {

@@ -11,11 +11,11 @@ export function ApplicationInsightsTests() {
         try {
             tr.run();
             assert(tr.succeeded, "azure-arm-appinsights-tests should have passed but failed.");
-            console.log("validating list");
+            console.log("\tvalidating list");
             list(tr);
-            console.log("validating create");
+            console.log("\tvalidating create");
             create(tr);
-            console.log("validating addWebTest");
+            console.log("\tvalidating addWebTest");
             addWebTest(tr);
         }
         catch(error) {

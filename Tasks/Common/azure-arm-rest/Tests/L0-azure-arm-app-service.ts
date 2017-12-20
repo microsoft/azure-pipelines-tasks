@@ -11,31 +11,31 @@ export function AzureAppServiceMockTests() {
         try {
             tr.run();
             assert(tr.succeeded, "azure-arm-app-service-tests should have passed but failed.");
-            console.log("validating start");
+            console.log("\tvalidating start");
             start(tr);
-            console.log("validating stop");
+            console.log("\tvalidating stop");
             stop(tr);
-            console.log("validating restart");
+            console.log("\tvalidating restart");
             restart(tr);
-            console.log("validating swap");
+            console.log("\tvalidating swap");
             swap(tr);
-            console.log("validating get");
+            console.log("\tvalidating get");
             get(tr);
-            console.log("validating monitorAppState");
+            console.log("\tvalidating monitorAppState");
             monitorAppState(tr);
-            console.log("validating getPublishingProfileWithSecrets");
+            console.log("\tvalidating getPublishingProfileWithSecrets");
             getPublishingProfileWithSecrets(tr);
-            console.log("validating getWebDeployPublishingProfile");
+            console.log("\tvalidating getWebDeployPublishingProfile");
             getWebDeployPublishingProfile(tr);
-            console.log("validating getApplicationSettings");
+            console.log("\tvalidating getApplicationSettings");
             getApplicationSettings(tr);
-            console.log("validating updateApplicationSettings");
+            console.log("\tvalidating updateApplicationSettings");
             updateApplicationSettings(tr);
-            console.log("validating getConfiguration");
+            console.log("\tvalidating getConfiguration");
             getConfiguration(tr);
-            console.log("validating updateConfiguration");
+            console.log("\tvalidating updateConfiguration");
             updateConfiguration(tr);
-            console.log("validating getKuduService");
+            console.log("\tvalidating getKuduService");
             getKuduService(tr);
         }
         catch(error) {

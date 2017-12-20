@@ -11,9 +11,9 @@ export function ApplicationInsightsTests() {
         try {
             tr.run();
             assert(tr.succeeded, "azure-arm-appinsights should have passed but failed.");
-            console.log("validating get");
+            console.log("\tvalidating get");
             get(tr);
-            console.log("validating update");
+            console.log("\tvalidating update");
             update(tr);
         }
         catch(error) {
