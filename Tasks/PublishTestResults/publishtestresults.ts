@@ -60,7 +60,7 @@ async function run() {
             tl.debug('OS type: ' + osType);
 
             if (osType === 'Windows_NT' && isExeFlowOverridden != 'true') {
-                let testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
+                let testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
                 let exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
