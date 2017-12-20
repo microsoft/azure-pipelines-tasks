@@ -19,11 +19,12 @@ export default class ClusterConnection {
         this.userDir = utils.getNewUserDirPath();
     }
 
-    private async initialize() {
+    private async initialize(): Promise<void> {
         if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
         {
-            tl.debug(tl.loc("DownloadingClient"));
-            this.kubectlPath = await this.getKubectl();
+            return this.getKubectl().then((kubectlpath)=> {
+                this.kubectlPath = kubectlpath;
+            });
         }
     }
 
@@ -39,10 +40,11 @@ export default class ClusterConnection {
 
     // open kubernetes connection
     public async open(kubernetesEndpoint?: string){
-         await this.initialize();
-         if (kubernetesEndpoint) {
-            this.downloadKubeconfigFileFromEndpoint(kubernetesEndpoint);
-         }
+         return this.initialize().then(() => {
+            if (kubernetesEndpoint) {
+                this.downloadKubeconfigFileFromEndpoint(kubernetesEndpoint);
+            }
+         });
     }
 
     // close kubernetes connection
@@ -78,20 +80,20 @@ export default class ClusterConnection {
     }
 
     private async getKubectl() : Promise<string> {
-
-        var kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
         let versionOrLocation = tl.getInput("versionOrLocation");
         if( versionOrLocation === "location") {
-            let pathToKubectl = tl.getPathInput("specifyLocation", false, true);
+            let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
             fs.chmod(pathToKubectl, "777");
             return pathToKubectl;
         }
         else if(versionOrLocation === "version") {
+            tl.debug(tl.loc("DownloadingClient"));
+            var kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
-            let version  = await utils.getKubectlVersion(versionSpec, checkLatest);
-            await utils.downloadKubectl(version, kubectlPath);
-            return kubectlPath;
+            return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
+                return utils.downloadKubectl(version, kubectlPath);
+            })
         }
     }
 }

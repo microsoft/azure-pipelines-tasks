@@ -4,7 +4,6 @@ var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
-import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as os from "os";
 import * as util from "util";
 
@@ -36,23 +35,20 @@ function ensureDirExists(dirPath : string) : void
 }
 
 export async function getKubectlVersion(versionSpec: string, checkLatest: boolean) : Promise<string> {
-   let version: string;   
-   let versionPrefex = 'v';
-   let explicitVersion = false;
-   
-   if (versionSpec && toolLib.isExplicitVersion(versionSpec)) {
-	    version = versionPrefex.concat(versionSpec);
-        checkLatest = false; // check latest doesn't make sense when explicit version
-		explicitVersion = true;
-    }
-   
-   if (checkLatest || !versionSpec || !explicitVersion) {
-        version = await getStableKubectlVersion();
-        if (!version) {
-            throw new Error(`Unable to find Kubectl version '${versionSpec}' for platform ${os.type()}.`);
-        }
+   let version: string = "v1.6.6";   
+
+   if(checkLatest) {
+        return getStableKubectlVersion();
    }
-	
+   else if (versionSpec) {
+       if(!versionSpec.startsWith("v")) {
+           version = "v".concat(versionSpec);
+       }
+       else {
+            version = versionSpec;
+       } 
+    }
+
 	return version;
 }
 
@@ -61,23 +57,34 @@ export async function getStableKubectlVersion() : Promise<string> {
     var version;
     var stableVersionUrl = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
     var downloadPath = path.join(getTempDirectory(), getCurrentTime().toString()+".txt");
-    await downloadutility.download(stableVersionUrl, downloadPath);
-    tl.debug(tl.loc('DownloadPathForStableTxt', downloadPath));
-    version = fs.readFileSync(downloadPath, "utf8").toString().trim();
-    if(!version){
-        version = stableVersion;
-    }
-    return version;
+    return downloadutility.download(stableVersionUrl, downloadPath).then((resolve) => {
+        version = fs.readFileSync(downloadPath, "utf8").toString().trim();
+        if(!version){
+            version = stableVersion;
+        }
+        return version;
+    },
+    (reject) => {
+        tl.debug(reject);
+        tl.warning(tl.loc('DownloadStableVersionFailed', stableVersionUrl, stableVersion));
+        return stableVersion;
+    })
 }
 
-export async function downloadKubectl(version: string, kubectlPath: string): Promise<void> {
+export async function downloadKubectl(version: string, kubectlPath: string): Promise<string> {
     var kubectlURL = getkubectlDownloadURL(version);
     tl.debug(tl.loc('DownloadingKubeCtlFromUrl', kubectlURL));
     var kubectlPathTmp = kubectlPath+".tmp";
-    await downloadutility.download(kubectlURL, kubectlPathTmp);
-    tl.cp(kubectlPathTmp, kubectlPath, "-f");
-    fs.chmod(kubectlPath, "777");
-    assertFileExists(kubectlPath);
+    return downloadutility.download(kubectlURL, kubectlPathTmp).then( (res) => {
+            tl.cp(kubectlPathTmp, kubectlPath, "-f");
+            fs.chmod(kubectlPath, "777");
+            assertFileExists(kubectlPath);
+            return kubectlPath;
+    },
+    (reason) => {
+        //Download kubectl client failed.
+        throw new Error(tl.loc('DownloadKubeCtlFailed', version));
+    }); 
 }
 
 function getkubectlDownloadURL(version: string) : string {

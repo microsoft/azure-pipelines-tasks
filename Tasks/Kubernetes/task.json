@@ -172,8 +172,8 @@
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",
-            "defaultValue": "1.7",
-            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7, 1.x, 4.x, 6.10.0, >=6.10.0",
+            "defaultValue": "1.7.0",
+            "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
             "groupName": "advanced",
             "visibleRule": "versionOrLocation = version"
         },
@@ -249,6 +249,8 @@
         "DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
         "FileNotFoundException": "Can not find file at location: %s",
         "DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
-        "DownloadPathForStableTxt": "Download path for stable.txt: %s"
+        "DownloadPathForStableTxt": "Download path for stable.txt: %s",
+        "DownloadKubeCtlFailed":"Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
+        "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s"
     }
 }
