@@ -4,7 +4,6 @@ import path = require('path');
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import {AzureAppService  } from 'azure-arm-rest/azure-arm-app-service';
-// import { AzureAppService } from 'azure-arm-rest/AzureAppService';
 import { AzureApplicationInsights } from 'azure-arm-rest/azure-arm-appinsights';
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { ApplicationInsightsWebTests } from 'azure-arm-rest/azure-arm-appinsights-webtests';

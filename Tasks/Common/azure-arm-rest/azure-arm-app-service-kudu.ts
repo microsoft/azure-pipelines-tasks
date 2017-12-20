@@ -22,8 +22,9 @@ export class KuduServiceManagementClient {
             retryIntervalInSeconds: reqOptions && reqOptions.retryIntervalInSeconds ? reqOptions.retryIntervalInSeconds :  10,
             retryCount: reqOptions && reqOptions.retryCount ? reqOptions.retryCount : 6,
             retriableErrorCodes: reqOptions && reqOptions.retriableErrorCodes ? reqOptions.retriableErrorCodes : ["ETIMEDOUT"],
-            retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 502, 503]
+            retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 502, 503, 504]
         };
+        
         var httpResponse = webClient.sendRequest(request, options);
         return httpResponse;
     }
