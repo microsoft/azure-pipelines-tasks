@@ -251,6 +251,7 @@
     "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
-    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed"
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion"
   }
 }

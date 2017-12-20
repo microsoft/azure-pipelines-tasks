@@ -41,7 +41,12 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
         return getStableKubectlVersion();
    }
    else if (versionSpec) {
-       if(!versionSpec.startsWith("v")) {
+       if(versionSpec === "1.7") {
+           // Backward compat handle
+           tl.warning(tl.loc("UsingLatestStableVersion"));
+           return getStableKubectlVersion();
+       } 
+       else if(!versionSpec.startsWith("v")) {
            version = "v".concat(versionSpec);
        }
        else {
