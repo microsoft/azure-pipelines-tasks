@@ -195,7 +195,7 @@ export class JobQueue {
             if (job.ExecutableNumber === -1) {
                 jobContents += indent + job.Name + ' ' + colorize(job.GetResultString()) + '<br />\n';
             } else {
-                jobContents += indent + '[' + job.Name + ' #' + job.ExecutableNumber + '](' + job.ExecutableUrl + ') ' + colorize(job.GetResultString()) + '<br />\n';
+                jobContents += indent + '<a href="' + job.ExecutableUrl + '">' + job.Name + ' #' + job.ExecutableNumber + '</a> ' + colorize(job.GetResultString()) + '<br />\n';
             }
 
             let childContents: string = '';
@@ -203,7 +203,7 @@ export class JobQueue {
                 const child: Job = job.Children[i];
                 childContents += walkHierarchy(child, indent + tab, padding + paddingTab);
             }
-            return jobContents + childContents + indent + '</ul>\n';
+            return jobContents + childContents + indent + '\n</ul>\n';
         }
 
         function findWorkingJob(job: Job): Job {
