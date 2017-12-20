@@ -47,12 +47,13 @@ function Create-DiffPackage
             Return
         }
 
-        # gets the service types from the cluster
+        # Get the service types from the cluster
         $serviceTypes = Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion
-        # packs the service manifest names into an array
+        # Pack the service manifest names into an array
         $clusterServiceManifestNames = $serviceTypes.ServiceManifestName
 
-        # If $clusterServiceManifestNames is null, it means no services are running in the cluster. Diff Package is equal to Full Package. Use Full Package to do deployment
+        # If $clusterServiceManifestNames is null, it means no service types are registered. Services can be registered without running but will still show up in this list in that case. 
+        # Diff Package is equal to Full Package. Use Full Package to do deployment
         if (!$clusterServiceManifestNames)
         {
             Write-Host (Get-VstsLocString -Key DIFFPKG_NoServicesRunning -ArgumentList @($ApplicationName, $ConnectedServiceEndpoint.Url))
@@ -95,12 +96,12 @@ function Create-DiffPackage
                 Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceIsNotChanged -ArgumentList @($localServiceManifest.Name, $ApplicationName, $clusterServiceManifest.Version, $ConnectedServiceEndpoint.Url))
                 continue
             }
-            Write-Host "Service Name: " $localServiceManifest.Name ", clusterServiceManifest.Version: " $clusterServiceManifest.Version ", localServiceManifest.Version: " $localServiceManifest.Version
+            Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackageForService -ArgumentList @($localServiceManifest.Name, $clusterServiceManifest.Version, $localServiceManifest.Version))
 
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.CodePackage -localPackages $localServiceManifest.CodePackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.ConfigPackage -localPackages $localServiceManifest.ConfigPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.DataPackage -localPackages $localServiceManifest.DataPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
-            
+
             Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localServiceManifestPath, (Join-Path $diffServicePkgPath $serviceManifestName)))
             Copy-Item $localServiceManifestPath (Join-Path $diffServicePkgPath $serviceManifestName) -Force
         }

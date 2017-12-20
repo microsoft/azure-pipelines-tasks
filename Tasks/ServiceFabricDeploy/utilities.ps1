@@ -165,4 +165,3 @@ function Get-VstsUpgradeParameters
 
     return $parameters
 }
-
