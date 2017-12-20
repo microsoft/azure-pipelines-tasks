@@ -184,7 +184,7 @@ export async function runPostDeploymentScript(publishingProfile, physicalPath, s
             var commandResult;
             if(isLinux){
                 commandResult = await runCommandOnKudu(publishingProfile, physicalPath, 'sh ' + 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
-            }else {
+            } else {
                 commandResult = await runCommandOnKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
             }
             tl.debug(JSON.stringify(commandResult));

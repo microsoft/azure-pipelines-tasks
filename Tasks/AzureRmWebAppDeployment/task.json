@@ -343,7 +343,7 @@
                 "File Path": "Script File Path"
             },
             "groupName": "PostDeploymentAction",
-            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
+            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service once the task has completed the deployment successfully . For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
         },
         {
             "name": "InlineScript",
@@ -663,7 +663,7 @@
         "FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s",
         "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
         "ScriptFileNotFound": "Script file '%s' not found.",
-        "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
+        "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd for windows and .sh for linux",
         "RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
         "stdoutFromScript": "Standard output from script: ",
         "stderrFromScript": "Standard error from script: ",
