@@ -53,6 +53,7 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk\VstsTaskSdk.psm1 -NOClobber
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
@@ -119,7 +120,7 @@ catch
     throw
 }
 
-if($isPremiumStorage)
+if($isPremiumStorage -and $additionalArguments -notLike "*/BlobType:page*")
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
     $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
