@@ -53,7 +53,6 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure
-Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk\VstsTaskSdk.psm1 -NOClobber
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
