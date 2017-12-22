@@ -148,8 +148,8 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
     return defer.promise;
 }
 
-export async function runPostDeploymentScript(publishingProfile, physicalPath, scriptType, inlineScript, scriptPath, appOfflineFlag, isLinux = false) {
-    var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
+export async function runPostDeploymentScript(publishingProfile, physicalPath, scriptType, inlineScript, scriptPath, appOfflineFlag, isLinux) {
+    var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux);
     var uniqueID = azureUtility.generateDeploymentId();
     tl.debug('Deployment ID : ' + uniqueID);
     var deleteLogFiles = false;
@@ -198,7 +198,7 @@ export async function runPostDeploymentScript(publishingProfile, physicalPath, s
     }
 }
 
-function getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux = false) {
+function getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux) {
     if(scriptType === 'Inline Script') {
         tl.debug('creating kuduPostDeploymentScript_local file');
         var scriptFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), isLinux ? 'kuduPostDeploymentScript_local.sh' : 'kuduPostDeploymentScript_local.cmd');
