@@ -94,43 +94,8 @@ describe('XamariniOS Suite', function() {
         .fail((err) => {
             done(err);
         });
-    })    
-    
-    it('fails when solution is a pattern', (done) => {
-        setResponseFile('response.json');
-        
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
-        // Required inputs
-        tr.setInput('solution', '**/*.sln'); //path
-        tr.setInput('configuration', 'Release');
-        // Optional inputs
-        tr.setInput('args', '');
-        tr.setInput('packageApp', ''); //boolean
-        tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('mdtoolLocation', '');
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
-        tr.setInput('iosSigningIdentity', '');
-        tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
-        
-        tr.run()
-        .then(() => {
-            assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
-            assert(tr.resultWasSet, 'task should have set a result');
-            assert(tr.stderr.length > 0, 'should have written to stderr');
-            assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.indexOf('not found solution: **/*.sln') >= 0, 'wrong error message');            
-            done();
-        })
-        .fail((err) => {
-            done(err);
-        });
-    })    
-    
+    })
+
     it('fails when solution is missing', (done) => {
         setResponseFile('response.json');
         
