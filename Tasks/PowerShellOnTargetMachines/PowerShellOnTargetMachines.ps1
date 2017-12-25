@@ -39,7 +39,7 @@ function Publish-Azure-Telemetry
        "," , 
        "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
        "," , 
-       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" ,
+       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
        "," ,
        "`"jobId`" : `"$jobId`"" ,
        "}")
@@ -77,7 +77,7 @@ try
     $deploymentOperation = 'Deployment'
 
     $envOperationStatus = "Passed"
-
+    $jobId = $env:SYSTEM_JOBID;
     # enabling detailed logging only when system.debug is true
     $enableDetailedLoggingString = $env:system_debug
     if ($enableDetailedLoggingString -ne "true")
@@ -124,7 +124,6 @@ try
 
             Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
             Publish-Azure-Telemetry  -deploymentResponse $deploymentResponse -jobId $jobId
-
             if ($status -ne "Passed")
             {
                 Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
@@ -164,7 +163,7 @@ try
 
                     Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                     Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
-                    Publish-Azure-Telemetry  -deploymentResponse $output -jobId $job.Id
+                    Publish-Azure-Telemetry  -deploymentResponse $output -jobId $jobId
                     if($status -ne "Passed")
                     {
                         $envOperationStatus = "Failed"
