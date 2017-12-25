@@ -29,6 +29,26 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
+
+function Publish-Azure-Telemetry
+ {
+   param([object] $deploymentResponse, [string] $jobId)
+    if($deploymentResponse){
+       $jsonString = -join("{" , 
+       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" ,
+       "," ,
+       "`"jobId`" : `"$jobId`"" ,
+       "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PS]$jsonString"
+    Write-Host $telemetryString
+ }
+
 try
 {
     # keep machineNames parameter name unchanged due to back compatibility
@@ -103,6 +123,7 @@ try
             $status = $deploymentResponse.Status
 
             Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
+            Publish-Azure-Telemetry  -deploymentResponse $deploymentResponse -jobId $jobId
 
             if ($status -ne "Passed")
             {
@@ -143,6 +164,7 @@ try
 
                     Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                     Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
+                    Publish-Azure-Telemetry  -deploymentResponse $output -jobId $job.Id
                     if($status -ne "Passed")
                     {
                         $envOperationStatus = "Failed"
