@@ -45,7 +45,7 @@ function Publish-Azure-Telemetry
        "}")
     }
 
-    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PS]$jsonString"
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
     Write-Host $telemetryString
  }
 
