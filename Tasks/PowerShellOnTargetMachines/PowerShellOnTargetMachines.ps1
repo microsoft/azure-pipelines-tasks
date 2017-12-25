@@ -41,7 +41,7 @@ function Publish-Azure-Telemetry
        "," , 
        "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
        "," ,
-       "`"jobId`" : `"$jobId`"" ,
+       "`"JobId`" : `"$jobId`"" ,
        "}")
     }
 
