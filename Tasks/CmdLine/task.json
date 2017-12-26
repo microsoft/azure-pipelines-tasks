@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 120,
-        "Patch": 1
+        "Minor": 127,
+        "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines.",
     "preview": true,
@@ -78,6 +78,7 @@
         "JS_ExitCode": "Bash exited with code '%s'.",
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
         "PS_ExitCode": "Cmd.exe exited with code '{0}'.",
-        "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from cmd.exe."
+        "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from cmd.exe.",
+        "ScriptContents": "Script contents:"
     }
 }

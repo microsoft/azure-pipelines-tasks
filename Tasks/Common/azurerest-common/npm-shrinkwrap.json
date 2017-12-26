@@ -67,6 +67,11 @@
       "from": "underscore@1.8.3",
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
     },
+    "uuid": {
+      "version": "3.1.0",
+      "from": "uuid@latest",
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.1.0.tgz"
+    },
     "vsts-task-lib": {
       "version": "2.0.1-preview",
       "from": "vsts-task-lib@https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",

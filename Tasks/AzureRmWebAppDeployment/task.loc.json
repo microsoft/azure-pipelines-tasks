@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 29
+    "Patch": 33
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -34,6 +34,12 @@
       "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
+      "name": "PostDeploymentAction",
+      "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
+      "isExpanded": false,
+      "visibleRule": "WebAppKind != \"\""
+    },
+    {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
@@ -49,6 +55,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -57,6 +66,9 @@
     },
     {
       "name": "WebAppKind",
+      "aliases": [
+        "appType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
       "defaultValue": "app",
@@ -65,13 +77,11 @@
         "app": "Web App",
         "applinux": "Linux Web App",
         "functionapp": "Function App",
-        "logicapp": "Logic App",
         "api": "API App",
         "mobileapp": "Mobile App"
       },
       "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
+        "EditableOptions": "false"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -200,6 +210,9 @@
     },
     {
       "name": "RegistryConnectedServiceName",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.RegistryConnectedServiceName",
       "required": true,
@@ -278,6 +291,9 @@
     },
     {
       "name": "BuiltinLinuxPackage",
+      "aliases": [
+        "packageForLinux"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -338,7 +354,7 @@
         "Inline Script": "Inline Script",
         "File Path": "Script File Path"
       },
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
     },
     {
@@ -346,7 +362,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.InlineScript",
       "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "visibleRule": "ScriptType == Inline Script",
       "properties": {
         "resizable": "true",
@@ -359,7 +375,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.ScriptPath",
       "required": true,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "visibleRule": "ScriptType == File Path"
     },
     {
@@ -466,6 +482,9 @@
     },
     {
       "name": "XmlTransformation",
+      "aliases": [
+        "enableXmlTransform"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlTransformation",
       "required": false,
@@ -475,6 +494,9 @@
     },
     {
       "name": "XmlVariableSubstitution",
+      "aliases": [
+        "enableXmlVariableSubstitution"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
       "required": false,
@@ -688,6 +710,9 @@
     "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
     "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
-    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails"
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
+    "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
   }
 }

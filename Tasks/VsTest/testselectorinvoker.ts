@@ -84,7 +84,8 @@ export class TestSelectorInvoker {
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
-                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT')
+                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging' : this.isDebugEnabled()
             },
             silent: null,
             outStream: null,
@@ -179,7 +180,8 @@ export class TestSelectorInvoker {
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
-                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT')
+                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging' : this.isDebugEnabled()
             },
             silent: null,
             outStream: null,
@@ -241,7 +243,8 @@ export class TestSelectorInvoker {
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
-                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT')
+                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging' : this.isDebugEnabled()
             },
             silent: null,
             outStream: null,
@@ -271,5 +274,14 @@ export class TestSelectorInvoker {
 
     private getTestSelectorLocation(): string {
         return path.join(__dirname, 'TestSelector/TestSelector.exe');
+    }
+
+    private isDebugEnabled(): string {
+        const sysDebug = tl.getVariable('System.Debug');
+        if (sysDebug === undefined) {
+            return "false";
+        }
+    
+        return sysDebug.toLowerCase() === 'true' ? "true" : "false";
     }
 }

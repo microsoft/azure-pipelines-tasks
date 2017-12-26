@@ -34,8 +34,12 @@ async function run() {
         let workingDir: string = tl.getPathInput('cwd');
         tl.cd(workingDir);
 
-        let outPath: string = tl.resolve(workingDir, tl.getInput('outputPattern', true)); //use posix implementation to resolve paths to prevent unit test failures on Windows
-        tl.mkdirP(outPath);
+        let outPath: string;
+        let outputPattern: string = tl.getInput('outputPattern', false);
+        if (outputPattern) {
+            outPath = tl.resolve(workingDir, outputPattern); //use posix implementation to resolve paths to prevent unit test failures on Windows
+            tl.mkdirP(outPath);
+        }
 
         //--------------------------------------------------------
         // Xcode args
@@ -100,11 +104,11 @@ async function run() {
             let devices: string[];
             if (targetingSimulators) {
                 // Only one simulator for now.
-                devices = [ tl.getInput('destinationSimulators') ];
+                devices = [tl.getInput('destinationSimulators')];
             }
             else {
                 // Only one device for now.
-                devices = [ tl.getInput('destinationDevices') ];
+                devices = [tl.getInput('destinationDevices')];
             }
 
             destinations = utils.buildDestinationArgs(platform, devices, targetingSimulators);
@@ -157,13 +161,18 @@ async function run() {
             });
         }
         xcb.arg(actions);
-        if (actions.toString().indexOf('archive') < 0) {
-            // redirect build output if archive action is not passed
-            // xcodebuild archive produces an invalid archive if output is redirected
-            xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
-            xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
-            xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
-            xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
+        if (outPath) {
+            if (actions.toString().indexOf('archive') < 0) {
+                // redirect build output if archive action is not passed
+                // xcodebuild archive produces an invalid archive if output is redirected
+                xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
+                xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
+                xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
+                xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
+            }
+            else {
+                tl.warning(tl.loc('OutputDirectoryIgnored', 'archive'));
+            }
         }
         if (args) {
             xcb.line(args);
@@ -226,41 +235,6 @@ async function run() {
         await xcb.exec();
 
         //--------------------------------------------------------
-        // Test publishing
-        //--------------------------------------------------------
-        let testResultsFiles: string;
-        let publishResults: boolean = tl.getBoolInput('publishJUnitResults', false);
-
-        if (publishResults) {
-            if (!useXcpretty) {
-                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-            } else {
-                testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
-            }
-
-            if (testResultsFiles && 0 !== testResultsFiles.length) {
-                //check for pattern in testResultsFiles
-
-                let matchingTestResultsFiles: string[];
-                if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-                    tl.debug('Pattern found in testResultsFiles parameter');
-                    matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, { matchBase: true });
-                }
-                else {
-                    tl.debug('No pattern found in testResultsFiles parameter');
-                    matchingTestResultsFiles = [testResultsFiles];
-                }
-
-                if (!matchingTestResultsFiles) {
-                    tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
-                }
-
-                let tp = new tl.TestPublisher("JUnit");
-                tp.publish(matchingTestResultsFiles, false, "", "", "", true);
-            }
-        }
-
-        //--------------------------------------------------------
         // Package app to generate .ipa
         //--------------------------------------------------------
         if (tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
@@ -321,7 +295,6 @@ async function run() {
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-
                 if (exportOptions === 'auto') {
                     // Automatically try to detect the export-method to use from the provisioning profile
                     // embedded in the .xcarchive file
@@ -354,6 +327,11 @@ async function run() {
                     }
 
                     if (xcodeVersion >= 9 && exportOptions === 'auto') {
+                        const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);                        
+                        if (cloudEntitlement) {
+                            tl.debug("Adding cloud entitlement");
+                            tl.tool(plist).arg(['-c', `Add iCloudContainerEnvironment string ${cloudEntitlement}`, exportOptionsPlist]).execSync();
+                        }
                         let signingOptionForExport = signingOption;
 
                         // If we're using the project defaults, scan the pbxProject file for the type of signing being used.

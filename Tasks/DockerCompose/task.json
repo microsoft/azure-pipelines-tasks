@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 7
+        "Patch": 10
     },
     "demands": [],
     "preview": "false",
@@ -46,6 +46,7 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
@@ -182,6 +183,7 @@
         },
         {
             "name": "workDir",
+            "aliases": ["workingDirectory"],
             "type": "string",
             "label": "Working Directory",
             "visibleRule": "action = Run a specific service",
@@ -283,6 +285,7 @@
         },
         {
             "name": "cwd",
+            "aliases": ["currentWorkingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -308,6 +311,7 @@
     "messages": {
         "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
-        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found."
+        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
+        "AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
     }
 }

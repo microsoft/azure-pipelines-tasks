@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 126,
-    "Patch": 0
+    "Minor": 128,
+    "Patch": 3
   },
   "groups": [
     {
@@ -36,6 +36,9 @@
   "inputs": [
     {
       "name": "serverEndpoint",
+      "aliases": [
+        "jenkinsServerConnection"
+      ],
       "type": "connectedService:Jenkins",
       "label": "ms-resource:loc.input.label.serverEndpoint",
       "defaultValue": "",
@@ -102,12 +105,16 @@
     },
     {
       "name": "itemPattern",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.itemPattern",
       "defaultValue": "**",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern",
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      }
     },
     {
       "name": "downloadCommitsAndWorkItems",
@@ -190,8 +197,11 @@
     },
     {
       "name": "containerName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.containerName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "required": true,
       "groupName": "propagatedArtifactsGroup",
       "visibleRule": "propagatedArtifacts == true",
@@ -247,6 +257,15 @@
       "endpointId": "$(ConnectedServiceNameARM)",
       "target": "storageAccountName",
       "dataSourceName": "AzureStorageAccountRMandClassic"
+    },
+    {
+      "target": "containerName",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureStorageContainer",
+      "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+      "parameters": {
+        "storageAccount": "$(storageAccountName)"
+      }
     }
   ],
   "execution": {
@@ -328,7 +347,6 @@
     "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
     "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
     "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull",
-    "ArtifactItemsTruncationWarning": "ms-resource:loc.messages.ArtifactItemsTruncationWarning",
     "CreatedBlobForItem": "ms-resource:loc.messages.CreatedBlobForItem",
     "CreatedContainer": "ms-resource:loc.messages.CreatedContainer",
     "ErrorInReadStream": "ms-resource:loc.messages.ErrorInReadStream",
@@ -341,6 +359,8 @@
     "UploadingItem": "ms-resource:loc.messages.UploadingItem",
     "FoundJobType": "ms-resource:loc.messages.FoundJobType",
     "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
-    "InvalidJobName": "ms-resource:loc.messages.InvalidJobName"
+    "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
+    "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported"
   }
 }

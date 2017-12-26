@@ -14,13 +14,14 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
     "inputs": [
         {
             "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",

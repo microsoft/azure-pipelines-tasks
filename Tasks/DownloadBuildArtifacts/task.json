@@ -9,8 +9,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 58
+    "Minor": 128,
+    "Patch": 1
   },
   "groups": [
     {
@@ -99,12 +99,16 @@
     },
     {
       "name": "itemPattern",
-      "type": "string",
+      "type": "multiLine",
       "label": "Matching pattern",
       "defaultValue": "**",
       "required": false,
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
       "visibleRule": "downloadType == specific",
-      "helpMarkDown": "Minimatch pattern to specify files to be downloaded. The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**."
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**.</p>"
     },
     {
       "name": "downloadPath",
@@ -181,6 +185,9 @@
     "BuildArtifactNotFound": "Artifact %s not found for build %s",
     "NoArtifactsFound": "No artifacts found for build %s",
     "BuildIdBuildDefinitionMismatch": "Build with id %s not found for build definition id %s",
-    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s"
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
+    "RetryingOperation" : "Error : in %s, so retrying => retries pending  : %s",
+    "OperationFailed": "Failed in %s with error: %s",
+    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
   }
 }
