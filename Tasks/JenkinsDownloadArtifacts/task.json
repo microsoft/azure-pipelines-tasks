@@ -153,7 +153,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "propagatedArtifactsGroup",
-            "helpMarkDown": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this Jenkins plugin: https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin"
+            "helpMarkDown": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this [Jenkins plugin](https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin)"
         },
         {
             "name": "artifactProvider",
