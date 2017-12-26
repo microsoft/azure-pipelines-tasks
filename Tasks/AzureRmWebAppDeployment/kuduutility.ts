@@ -148,21 +148,26 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
     return defer.promise;
 }
 
-export async function runPostDeploymentScript(publishingProfile, physicalPath, scriptType, inlineScript, scriptPath, appOfflineFlag) {
-    var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath);
+export async function runPostDeploymentScript(publishingProfile, physicalPath, scriptType, inlineScript, scriptPath, appOfflineFlag, isLinux) {
+    var scriptFile = getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux);
     var uniqueID = azureUtility.generateDeploymentId();
     tl.debug('Deployment ID : ' + uniqueID);
     var deleteLogFiles = false;
-
+    var fileExtension : string = isLinux ? '.sh' : '.cmd';
+ 
     if(appOfflineFlag) {
         await appOfflineKuduService(publishingProfile, physicalPath, true);
     }
     try {
-        var mainCmdFilePath = path.join(__dirname, 'postDeploymentScript', 'mainCmdFile.cmd');
-        await uploadFiletoKudu(publishingProfile, physicalPath, 'mainCmdFile_' + uniqueID + '.cmd', mainCmdFilePath);
-        await uploadFiletoKudu(publishingProfile, physicalPath, 'kuduPostDeploymentScript_' + uniqueID + '.cmd', scriptFile.filePath);
+        var mainCmdFilePath = path.join(__dirname, 'postDeploymentScript', 'mainCmdFile' + fileExtension);
+        await uploadFiletoKudu(publishingProfile, physicalPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
+        await uploadFiletoKudu(publishingProfile, physicalPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
-        await runCommandOnKudu(publishingProfile, physicalPath, 'mainCmdFile_' + uniqueID + '.cmd ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
+        if(isLinux){
+            await runCommandOnKudu(publishingProfile, physicalPath, 'sh ' + 'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
+        } else {
+            await runCommandOnKudu(publishingProfile, physicalPath, 'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
+        }
         console.log(tl.loc('ScriptExecutionOnKuduSuccess'));
         deleteLogFiles = true;
         await getPostDeploymentScriptLogs(publishingProfile, physicalPath, uniqueID);
@@ -175,8 +180,13 @@ export async function runPostDeploymentScript(publishingProfile, physicalPath, s
             tl.rmRF(scriptFile.filePath, true);
         }
         try {
-            await uploadFiletoKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + '.cmd', path.join(__dirname, 'postDeploymentScript', 'deleteLogFile.cmd'));
-            var commandResult = await runCommandOnKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + '.cmd ' + uniqueID, 0, null);
+            await uploadFiletoKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, 'postDeploymentScript', 'deleteLogFile' + fileExtension));
+            var commandResult;
+            if(isLinux){
+                commandResult = await runCommandOnKudu(publishingProfile, physicalPath, 'sh ' + 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+            } else {
+                commandResult = await runCommandOnKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+            }
             tl.debug(JSON.stringify(commandResult));
         }
         catch(error) {
@@ -188,10 +198,10 @@ export async function runPostDeploymentScript(publishingProfile, physicalPath, s
     }
 }
 
-function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
+function getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux) {
     if(scriptType === 'Inline Script') {
         tl.debug('creating kuduPostDeploymentScript_local file');
-        var scriptFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'),'kuduPostDeploymentScript_local.cmd');
+        var scriptFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), isLinux ? 'kuduPostDeploymentScript_local.sh' : 'kuduPostDeploymentScript_local.cmd');
         tl.writeFile(scriptFilePath, inlineScript);
         tl.debug('Created temporary script file : ' + scriptFilePath);
         return {
@@ -203,8 +213,14 @@ function getPostDeploymentScript(scriptType, inlineScript, scriptPath) {
         throw Error(tl.loc('ScriptFileNotFound', scriptPath));
     }
     var scriptExtension = path.extname(scriptPath);
-    if(scriptExtension != '.bat' && scriptExtension != '.cmd') {
-        throw Error(tl.loc('InvalidScriptFile', scriptPath));
+    if(isLinux){
+        if(scriptExtension != '.sh'){
+            throw Error(tl.loc('InvalidScriptFile', scriptPath));
+        }
+    } else {
+        if(scriptExtension != '.bat' && scriptExtension != '.cmd') {
+            throw Error(tl.loc('InvalidScriptFile', scriptPath));
+        }
     }
     tl.debug('postDeployment script path to execute : ' + scriptPath);
     return {

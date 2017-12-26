@@ -139,9 +139,6 @@ describe('Xcode Suite', function() {
                         '| /home/bin/xcpretty -r junit --no-color'),
                     'xcodebuild for running tests in the ios project/workspace should have been run with xcpretty formatting.');
 
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/build\/reports\/junit.xml;\]/) >= 0,
-                    'publish test results should have been called');
-
                 assert(tr.invokedToolCount == 2, 'should have xcodebuild for version, xcodebuild for test with xcpretty');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -356,7 +353,7 @@ describe('Xcode Suite', function() {
             })
     })
 
-    it('run Xcode with required args not specified', (done) => {
+    it('run Xcode with required arg not specified', (done) => {
      setResponseFile('responseErrorArgs.json');
 
      var tr = new trm.TaskRunner('Xcode', true, true);
@@ -377,29 +374,21 @@ describe('Xcode Suite', function() {
      tr.setInput('publishJUnitResults', 'false');
 
      tr.run()
-         .then(() => {
-             assert(tr.stdout.search(/Input required: outputPattern/) > 0, 'Error should be shown if outputPath is not specified.');
-             tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
-             tr.run()
-                 .then(() => {
-                     assert(tr.stdout.search(/Input required: actions/) > 0, 'Error should be shown if actions are not specified.');
-                     tr.setInput('actions', 'build');
-                     tr.run()
-                        .then(() => {
-                             assert(tr.succeeded, 'Task should have run successfully with required inputs');
-                             done();
-                         })
-                        .fail((err) => {
-                             done(err);
-                         })
-                 })
-                 .fail((err) => {
-                     done(err);
-                 })
-         })
-         .fail((err) => {
-             done(err);
-         })
+        .then(() => {
+            assert(tr.stdout.search(/Input required: actions/) > 0, 'Error should be shown if actions are not specified.');
+            tr.setInput('actions', 'build');
+            tr.run()
+            .then(() => {
+                    assert(tr.succeeded, 'Task should have run successfully with required inputs');
+                    done();
+                })
+            .fail((err) => {
+                    done(err);
+                })
+        })
+        .fail((err) => {
+            done(err);
+        })
     })
 
     it('run Xcode with optional args specified', (done) => {

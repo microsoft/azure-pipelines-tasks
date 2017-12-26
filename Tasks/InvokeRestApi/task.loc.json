@@ -16,13 +16,22 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 5
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [
+    {
+      "name": "completionOptions",
+      "displayName": "ms-resource:loc.group.displayName.completionOptions",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": [
+        "serviceConnection"
+      ],
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
@@ -74,23 +83,43 @@
       "visibleRule": "method != GET && method != HEAD"
     },
     {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
+    },
+    {
       "name": "waitForCompletion",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.waitForCompletion",
       "Required": "false",
       "defaultValue": "false",
+      "groupName": "completionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+    },
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.successCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.successCriteria",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
     }
   ],
   "execution": {
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceName)",
-        "EndpointUrl": "$(endpoint.url)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",
-        "WaitForCompletion": "$(waitForCompletion)"
+        "WaitForCompletion": "$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
       }
     }
   }

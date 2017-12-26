@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
+import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
@@ -18,6 +19,7 @@ import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
 import peParser = require('nuget-task-common/pe-parser/index');
 import * as commandHelper from "nuget-task-common/CommandHelper";
+import * as telemetry from 'utility-common/telemetry';
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -191,7 +193,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 }
 
                 for (const packageFile of filesList) {
-                    await publishPackageVstsNuGetPushAsync(packageFile, publishOptions);
+                    publishPackageVstsNuGetPush(packageFile, publishOptions);
                 }
             }
             else {
@@ -206,8 +208,7 @@ export async function run(nuGetPath: string): Promise<void> {
                     environmentSettings);
 
                 for (const packageFile of filesList) {
-
-                    await publishPackageNuGetAsync(packageFile, publishOptions, authInfo);
+                    publishPackageNuGet(packageFile, publishOptions, authInfo);
                 }
             }
 
@@ -228,7 +229,7 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function publishPackageNuGetAsync(packageFile: string, options: PublishOptions, authInfo: auth.NuGetExtendedAuthInfo): Q.Promise<number> {
+function publishPackageNuGet(packageFile: string, options: PublishOptions, authInfo: auth.NuGetExtendedAuthInfo): IExecSyncResult {
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
     nugetTool.arg("push");
 
@@ -250,10 +251,17 @@ function publishPackageNuGetAsync(packageFile: string, options: PublishOptions, 
         nugetTool.arg(options.verbosity);
     }
 
-    return nugetTool.exec();
+    let execResult = nugetTool.execSync();
+    if (execResult.code !== 0) {
+        telemetry.logStderr(execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
+    }
+    return execResult;
 }
 
-async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IVstsNuGetPushOptions) {
+function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPushOptions) {
     let vstsNuGetPushTool = vstsNuGetPushToolRunner.createVstsNuGetPushToolRunner(options.vstsNuGetPushPath, options.settings, options.internalAuthInfo);
     vstsNuGetPushTool.arg(packageFile);
     vstsNuGetPushTool.arg(["-Source", options.feedUri]);
@@ -264,20 +272,21 @@ async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IV
         vstsNuGetPushTool.arg(["-Verbosity", "Detailed"]);
     }
 
-    let exitCode: number = await vstsNuGetPushTool.exec();
-    if (exitCode === 0)
-    {
+    let execResult: IExecSyncResult = vstsNuGetPushTool.execSync();
+    if (execResult.code === 0) {
         return;
     }
 
     // ExitCode 2 means a push conflict occurred
-    if (exitCode === 2 && options.settings.continueOnConflict)
-    {
+    if (execResult.code === 2 && options.settings.continueOnConflict) {
         tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`)
         return;
     }
 
-    throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush"));
+    telemetry.logStderr(execResult.code, execResult.stderr);
+    throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
+        execResult.code,
+        execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
 function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {

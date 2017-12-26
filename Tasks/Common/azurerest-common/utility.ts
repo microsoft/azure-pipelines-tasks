@@ -17,3 +17,21 @@ export function generateDeploymentId(): string {
         throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
     }
 }
+
+export function getDeploymentUri(): string {
+    let buildUri = tl.getVariable("Build.BuildUri");
+    let releaseWebUrl = tl.getVariable("Release.ReleaseWebUrl");
+    let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+    let teamProject = tl.getVariable('System.TeamProjectId');
+    let buildId = tl.getVariable('build.buildId');
+
+    if (!!releaseWebUrl) {
+        return releaseWebUrl;
+    }
+
+    if (!!buildUri) {
+        return `${collectionUrl}${teamProject}/_build?buildId=${buildId}&_a=summary`;
+    }
+
+    return "";
+}

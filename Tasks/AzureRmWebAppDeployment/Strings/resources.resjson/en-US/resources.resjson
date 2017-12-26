@@ -6,11 +6,12 @@
   "loc.releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
+  "loc.group.displayName.PostDeploymentAction": "Post Deployment Action",
   "loc.group.displayName.output": "Output",
   "loc.group.displayName.ApplicationSettings": "Application Settings",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
-  "loc.input.label.WebAppKind": "App Type",
+  "loc.input.label.WebAppKind": "App type",
   "loc.input.help.WebAppKind": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments.",
   "loc.input.label.WebAppName": "App Service name",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.",
@@ -179,5 +180,8 @@
   "loc.messages.UnableToUpdateAzureRMWebAppMetadata": "Unable to update AzureRM WebApp metadata. Error Code: %s",
   "loc.messages.Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s']",
   "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
-  "loc.messages.UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'"
+  "loc.messages.UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
+  "loc.messages.AddingReleaseAnnotation": "Adding release annotation for the Application Insights resource '%s'",
+  "loc.messages.SuccessfullyAddedReleaseAnnotation": "Successfully added release annotation to the Application Insight : %s",
+  "loc.messages.FailedAddingReleaseAnnotation": "Failed to add release annotation. %s"
 }

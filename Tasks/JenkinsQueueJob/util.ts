@@ -129,11 +129,12 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
     request.get({ url: queueUri, strictSSL: taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
         tl.debug('createRootJob().requestCallback()');
         if (err) {
+            tl.debug(err);
             if (err.code == 'ECONNRESET') {
-                tl.debug(err);
                 defer.resolve(null);
             } else {
-                defer.reject(err);
+                const error = { message: tl.loc('JenkinsJobQueueUriInvalid', queueUri, JSON.stringify(err)) };
+                defer.reject(error);
             }
         } else if (httpResponse.statusCode !== 200) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job progress tracking failed to read job queue'));

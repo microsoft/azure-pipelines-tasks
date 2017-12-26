@@ -1,6 +1,5 @@
 {
   "messages": {
-    "ArtifactItemsTruncationWarning":"Downloaded items may be trucated at 5000 items, all artifact items might not have been downloaded.",
     "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
     "CreatedContainer": "Created container {0}.",
     "ErrorInReadStream": "Error in Read stream: {0}",
@@ -10,6 +9,8 @@
     "FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
     "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
     "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
-    "UploadingItem": "Uploading {0}."
+    "UploadingItem": "Uploading {0}.",
+    "ContinuationTokenExistsFetchingRemainingFiles": "Continuation token exists, trying to fetch the list of remaining files.",
+    "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path"
   }
 }

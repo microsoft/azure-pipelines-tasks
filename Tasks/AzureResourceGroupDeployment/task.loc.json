@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 2,
-    "Patch": 14
+    "Patch": 17
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -40,6 +40,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -57,7 +60,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
         "Create Or Update Resource Group": "Create or update resource group",
-        "Select Resource Group": "Select resource group",
+        "Select Resource Group": "Configure virtual machine deployment options",
         "Start": "Start virtual machines",
         "Stop": "Stop virtual machines",
         "StopWithDeallocate": "Stop and deallocate virtual machines",
@@ -182,6 +185,9 @@
     },
     {
       "name": "deploymentGroupEndpoint",
+      "aliases": [
+        "teamServicesConnection"
+      ],
       "type": "connectedService:ExternalTfs",
       "label": "ms-resource:loc.input.label.deploymentGroupEndpoint",
       "groupName": "AdvancedDeploymentOptions",
@@ -194,6 +200,9 @@
     },
     {
       "name": "project",
+      "aliases": [
+        "teamProject"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.project",
       "groupName": "AdvancedDeploymentOptions",

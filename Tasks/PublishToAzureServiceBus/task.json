@@ -16,14 +16,15 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 5
   },
   "preview": "true",
   "inputs": [
   {
     "name": "connectedServiceName",
+    "aliases": ["azureSubscription"],
     "type": "connectedService:AzureServiceBus",
-    "label": "Azure Service Bus Connection",
+    "label": "Azure service bus connection",
     "defaultValue": "",
     "required": true,
     "helpMarkDown": "Select a Azure Service Bus connection."
@@ -45,7 +46,7 @@
   {
         "name": "waitForCompletion",
         "type": "boolean",
-        "label": "Wait for Task Completion",
+        "label": "Wait for task completion",
         "defaultValue": "false",
         "required": true,
         "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
