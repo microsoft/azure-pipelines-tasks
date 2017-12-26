@@ -119,7 +119,7 @@ catch
     throw
 }
 
-if($isPremiumStorage)
+if($isPremiumStorage -and $additionalArguments -notLike "*/BlobType:page*")
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
     $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"

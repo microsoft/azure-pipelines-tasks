@@ -34,6 +34,12 @@
             "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
         },
         {
+            "name": "PostDeploymentAction",
+            "displayName": "Post Deployment Action",
+            "isExpanded": false,
+            "visibleRule": "WebAppKind != \"\""
+        },
+        {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
@@ -340,15 +346,15 @@
                 "Inline Script": "Inline Script",
                 "File Path": "Script File Path"
             },
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
+            "groupName": "PostDeploymentAction",
+            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service once the task has completed the deployment successfully . For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
         },
         {
             "name": "InlineScript",
             "type": "multiLine",
             "label": "Inline Script",
             "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-            "groupName": "AdditionalDeploymentOptions",
+            "groupName": "PostDeploymentAction",
             "visibleRule": "ScriptType == Inline Script",
             "properties": {
                 "resizable": "true",
@@ -361,7 +367,7 @@
             "type": "filePath",
             "label": "Deployment script path",
             "required": true,
-            "groupName": "AdditionalDeploymentOptions",
+            "groupName": "PostDeploymentAction",
             "visibleRule": "ScriptType == File Path"
         },
         {
@@ -663,7 +669,7 @@
         "FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s",
         "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
         "ScriptFileNotFound": "Script file '%s' not found.",
-        "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
+        "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd for windows and .sh for linux",
         "RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
         "stdoutFromScript": "Standard output from script: ",
         "stderrFromScript": "Standard error from script: ",

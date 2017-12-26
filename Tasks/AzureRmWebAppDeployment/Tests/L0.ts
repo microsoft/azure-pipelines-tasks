@@ -538,6 +538,20 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
+    it('Validate webdepoyment-common.utility.runPostDeploymentScriptForLinux()', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0RunPostDeploymentScriptForLinux.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/kuduPostDeploymentScript.sh') >= 0, 'should have uploaded file: kuduPostDeploymentScript.sh');
+        assert(tr.stdout.search('PUT:https://mytestappKuduUrl/api/vfs/site/wwwroot/mainCmdFile.sh') >= 0, 'should have uploaded file: mainCmdFile.sh');
+        assert(tr.stdout.search('POST:https://mytestappKuduUrl/api/command') >= 0, 'should have executed script');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stdout.txt') >= 0, 'should have retrieved file content: stdout.txt');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/stderr.txt') >= 0, 'should have retrieved file content: stderr.txt');
+        assert(tr.stdout.search('GET:https://mytestappKuduUrl/api/vfs/site/wwwroot/script_result.txt') >= 0, 'should have retrieved file content: script_result.txt');
+        done();
+    });
+
     it('Validate webdeployment-common.generatewebconfig.generateWebConfigFile()', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0GenerateWebConfig.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
