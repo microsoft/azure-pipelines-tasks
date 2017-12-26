@@ -1012,7 +1012,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $copyResponse
         Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-        Publish-Azure-Telemetry  -deploymentResponse $copyResponse -jobId $jobId
+        Publish-Azure-Telemetry -deploymentResponse $copyResponse -jobId $jobId
         if ($status -ne "Passed")
         {
             $winrmHelpMsg = Get-VstsLocString -Key "AFC_WinRMHelpMessage"
@@ -1081,7 +1081,7 @@ function Copy-FilesParallellyToAzureVMs
 
                 Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $output
                 Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-                Publish-Azure-Telemetry  -deploymentResponse $output -jobId $jobId
+                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
                 if ($status -ne "Passed")
                 {
                     $parallelOperationStatus = "Failed"
