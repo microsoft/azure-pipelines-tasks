@@ -46,12 +46,6 @@ $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
 $containerName = $containerName.Trim().ToLower()
 
-# Normalize admin username
-if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
-{
-    $vmsAdminUserName = ".\" + $vmsAdminUserName 
-}
-
 # azcopy location on automation agent
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
@@ -162,6 +156,11 @@ if ($destination -eq "AzureBlob")
 # Copying files to Azure VMs
 try
 {
+    # Normalize admin username
+    if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
+    {
+        $vmsAdminUserName = ".\" + $vmsAdminUserName 
+    }
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
     -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
