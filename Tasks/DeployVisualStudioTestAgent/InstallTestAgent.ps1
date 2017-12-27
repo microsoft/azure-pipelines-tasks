@@ -25,7 +25,7 @@ function InstallTestAgent2017 {
     }
 
     # First we need to install the certificates for TA 2017
-    $SetupDir = Split-Path -Path $SetupPath    
+    $SetupDir = Split-Path -Path $SetupPath
     $certFiles = Get-ChildItem -Path "$SetupDir\certificates\*.p12" -ErrorAction SilentlyContinue
     if($certFiles -and $certFiles.Length -gt 0)
     {
@@ -65,7 +65,7 @@ function InstallTestAgent2017 {
         Write-Warning "Installation couldn't get completed in an hour. Terminating the process. Please check %temp% logs for more information".
         Stop-Process $p -ErrorAction SilentlyContinue
         return -1
-    } 
+    }
 
     return $p.ExitCode
 }
@@ -83,7 +83,7 @@ function Import-PfxCertificateWin7 {
     $store = new-object System.Security.Cryptography.X509Certificates.X509Store($certStore,$certRootStore)
     $store.open("MaxAllowed")
     $store.add($pfx)
-    $store.close()    
+    $store.close()
 }
 
 function Install-Product($SetupPath, $ProductVersion, $Update) {
@@ -117,7 +117,7 @@ function Install-Product($SetupPath, $ProductVersion, $Update) {
         Write-Verbose -Message ("Test Agent already exists") -verbose
         return $exitCode
     }
-    if ([version]$versionInstalled -gt ([version]"0.0") -and [version]$versionInstalled -le [version]$versionToInstall) {
+    if ([version]$versionInstalled -gt ([version]"0.0") -and [version]$versionInstalled -ge [version]$versionToInstall) {
         # Already upto date. Ignore Update flag
         Write-Verbose -Message ("Test Agent is already upto date") -verbose
         return $exitCode
