@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [
         "vstest"
@@ -400,14 +400,38 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "rerunType",
+            "type": "pickList",
+            "label": "Do not rerun if",
+            "defaultValue": "basedOnTestFailurePercentage",
+            "required": false,
+            "helpMarkDown": "Use this option to avoid re-running tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures or # of failed tests as a threshold.",
+            "groupName": "executionOptions",
+            "options": {
+                "basedOnTestFailurePercentage": "% Failure rate exceeds",
+                "basedOnTestFailureCount": "# of Failed test cases exceeds"
+            },
+            "visibleRule": "rerunFailedTests = true"
+        },
+        {
             "name": "rerunFailedThreshold",
             "type": "string",
-            "label": "Do not trigger a rerun if failure rate exceeds",
+            "label": "Failure rate",
             "defaultValue": "30",
             "required": false,
-            "helpMarkDown": "Use this option to avoid rerunning tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures as threshold.",
+            "helpMarkDown": "Use this option to avoid rerunning tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.",
             "groupName": "executionOptions",
-            "visibleRule": "rerunFailedTests = true"
+            "visibleRule": "rerunFailedTests = true && rerunType = basedOnTestFailurePercentage"
+        },
+        {
+            "name": "rerunFailedTestCasesMaxLimit",
+            "type": "string",
+            "label": "Failure count",
+            "defaultValue": "5",
+            "required": false,
+            "helpMarkDown": "Use this option to avoid rerunning tests when number of failed test cases crosses specified limit. This is applicable if any environment issues leads to massive failures.",
+            "groupName": "executionOptions",
+            "visibleRule": "rerunFailedTests = true && rerunType = basedOnTestFailureCount"
         },
         {
             "name": "rerunMaxAttempts",
@@ -525,6 +549,8 @@
         "rerunFailedTests": "Rerun failed tests: %s",
         "rerunFailedThreshold": "Rerun failed tests threshold: %s",
         "invalidRerunFailedThreshold": "Invalid rerun failed tests threshold, defaulting to 30%",
+        "rerunFailedTestCasesMaxLimit": "Rerun maxmimum failed test case limit: %s",
+        "invalidRerunFailedTestCasesMaxLimit": "Invalid rerun failed tests case limit, defaulting to 5",
         "rerunMaxAttempts": "Rerun maximum attempts: %s",
         "invalidRerunMaxAttempts": "Invalid/Exceeded rerun maximum attempts, defaulting to 3",
         "rerunNotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 to rerun failed tests.",
