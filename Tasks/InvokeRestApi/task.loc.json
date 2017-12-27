@@ -74,7 +74,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.body",
       "required": "false",
-      "defaultValue": "",
+      "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
       "properties": {
         "resizable": "true",
         "rows": "3",

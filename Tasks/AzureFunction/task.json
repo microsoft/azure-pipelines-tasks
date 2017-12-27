@@ -16,7 +16,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 3
+		"Patch": 4
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
@@ -80,7 +80,7 @@
 			"type": "multiLine",
 			"label": "Body",
 			"required": "false",
-			"defaultValue": "",
+			"defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
 			"properties": {
 				"resizable": "true",
 				"rows": "3",
