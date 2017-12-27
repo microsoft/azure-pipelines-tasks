@@ -408,8 +408,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.rerunType",
       "groupName": "executionOptions",
       "options": {
-        "basedOnTestFailurePercentage": "% Failure rate exceeds",
-        "basedOnTestFailureCount": "# of Failed test cases exceeds"
+        "basedOnTestFailurePercentage": "% failure",
+        "basedOnTestFailureCount": "# of failed tests"
       },
       "visibleRule": "rerunFailedTests = true"
     },

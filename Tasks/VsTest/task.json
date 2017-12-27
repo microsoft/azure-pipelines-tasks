@@ -402,21 +402,21 @@
         {
             "name": "rerunType",
             "type": "pickList",
-            "label": "Do not rerun if",
+            "label": "Do not rerun if test failures exceed specified threshold",
             "defaultValue": "basedOnTestFailurePercentage",
             "required": false,
-            "helpMarkDown": "Use this option to avoid re-running tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures or # of failed tests as a threshold.",
+            "helpMarkDown": "Use this option to avoid rerunning tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.<br>You can specify % failures or # of failed tests as a threshold.",
             "groupName": "executionOptions",
             "options": {
-                "basedOnTestFailurePercentage": "% Failure rate exceeds",
-                "basedOnTestFailureCount": "# of Failed test cases exceeds"
+                "basedOnTestFailurePercentage": "% failure",
+                "basedOnTestFailureCount": "# of failed tests"
             },
             "visibleRule": "rerunFailedTests = true"
         },
         {
             "name": "rerunFailedThreshold",
             "type": "string",
-            "label": "Failure rate",
+            "label": "% failure",
             "defaultValue": "30",
             "required": false,
             "helpMarkDown": "Use this option to avoid rerunning tests when failure rate crosses the specified threshold. This is applicable if any environment issues leads to massive failures.",
@@ -426,7 +426,7 @@
         {
             "name": "rerunFailedTestCasesMaxLimit",
             "type": "string",
-            "label": "Failure count",
+            "label": "# of failed tests",
             "defaultValue": "5",
             "required": false,
             "helpMarkDown": "Use this option to avoid rerunning tests when number of failed test cases crosses specified limit. This is applicable if any environment issues leads to massive failures.",
