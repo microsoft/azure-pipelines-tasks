@@ -181,18 +181,30 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
 
     if (testConfiguration.rerunFailedTests) {
-        testConfiguration.rerunFailedThreshold = 30;
-        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+        testConfiguration.rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
 
-        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
-        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
-
-        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
-            testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
-            console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+        if (testConfiguration.rerunType === 'basedOnTestFailureCount') {
+            testConfiguration.rerunFailedTestCasesMaxLimit = 5; //default value in case of error
+            const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
+            if (!isNaN(rerunFailedTestCasesMaxLimit) && rerunFailedTestCasesMaxLimit > 0 && rerunFailedTestCasesMaxLimit <= 100) {
+                testConfiguration.rerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
+                console.log(tl.loc('rerunFailedTestCasesMaxLimit', testConfiguration.rerunFailedTestCasesMaxLimit));
+            } else {
+                tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
+            }
         } else {
-            tl.warning(tl.loc('invalidRerunFailedThreshold'));
+            testConfiguration.rerunFailedThreshold = 30; //default value in case of error
+            const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+            if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
+                testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
+                console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+            } else {
+                tl.warning(tl.loc('invalidRerunFailedThreshold'));
+            }
         }
+
+        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
         if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
             testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
             console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
