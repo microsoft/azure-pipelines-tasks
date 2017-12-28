@@ -25,7 +25,7 @@ export class DistributedTest {
 
     public runDistributedTest() {
         this.publishCodeChangesIfRequired();
-        this.registerAndConfigureAgent();
+        this.beginDtaExecutionHost();
     }
 
     private publishCodeChangesIfRequired(): void {
@@ -39,20 +39,9 @@ export class DistributedTest {
         }
     }
 
-    private async registerAndConfigureAgent() {
-        tl.debug('Configure the Agent with DTA... Invoking the createAgent REST API');
-
-        try {            
-
-            await this.startDtaExecutionHost();
-            // try {
-            //     if (this.dtaPid !== -1) {
-            //         tl.debug('Trying to kill the Modules/DTAExecutionHost.exe process with pid :' + this.dtaPid);
-            //         process.kill(this.dtaPid);
-            //     }
-            // } catch (error) {
-            //     tl.warning('Modules/DTAExecutionHost.exe process kill failed, pid: ' + this.dtaPid + ' , error :' + error);
-            // }
+    private async beginDtaExecutionHost() { 
+        try {
+            await this.startDtaExecutionHost();            
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
             ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error });
