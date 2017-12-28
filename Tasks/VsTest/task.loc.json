@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 3,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [
     "vstest"
@@ -532,6 +532,7 @@
     "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
     "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
     "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation",
-    "NoTestResultsDirectoryFound": "ms-resource:loc.messages.NoTestResultsDirectoryFound"
+    "NoTestResultsDirectoryFound": "ms-resource:loc.messages.NoTestResultsDirectoryFound",
+    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported"
   }
 }
