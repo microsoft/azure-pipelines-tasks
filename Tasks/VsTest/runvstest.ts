@@ -72,7 +72,7 @@ function isDtaEngineRequired(): boolean {
 
     if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine') {
         const dontDistribute = tl.getBoolInput('dontDistribute');
-        if(dontDistribute){
+        if (dontDistribute) {
             return false;
         }
         return true;
