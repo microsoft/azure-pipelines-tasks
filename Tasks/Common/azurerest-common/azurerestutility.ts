@@ -412,6 +412,8 @@ export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: str
             deferred.reject(tl.loc("UnableToUpdateWebAppConfigDetails", response.statusCode));
         }
     }, (error) => {
+        tl.debug("Unable to retrieve your web config. Add a `web.config` file to the root of your app's repo, as described here: ")
+        tl.debug("    https://github.com/projectkudu/kudu/wiki/Using-a-custom-web.config-for-Node-apps")
         deferred.reject(error);
     });
 
