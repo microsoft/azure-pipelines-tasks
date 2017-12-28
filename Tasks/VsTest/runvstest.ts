@@ -12,39 +12,39 @@ const osPlat: string = os.platform();
 if (osPlat !== 'win32') {
     // Fail the task if os is not windows
     tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
-}
-
-//Starting the VsTest execution
-const taskProps = { state: 'started', result: '' };
-ci.publishEvent(taskProps);
-
-try {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
-    utils.Helper.setConsoleCodePage();
-    const useDtaExecutionEngine = isDtaEngineRequired();
-    if (useDtaExecutionEngine) {
-        ci.publishEvent({
-            runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
-            testtype: tl.getInput('testSelector')
-        });
-
-        console.log(tl.loc('distributedTestWorkflow'));
-        console.log('======================================================');
-        const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
-        console.log('======================================================');
-
-        const test = new distributedTest.DistributedTest(dtaTestConfig);
-        test.runDistributedTest();
-    } else {
-        ci.publishEvent({ runmode: 'vstest' });
-        localTest.startTest();
-    }
-} catch (error) {
-    tl.setResult(tl.TaskResult.Failed, error);
-    taskProps.result = error;
-} finally {
-    taskProps.state = 'completed';
+} else {
+    //Starting the VsTest execution
+    const taskProps = { state: 'started', result: '' };
     ci.publishEvent(taskProps);
+
+    try {
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
+        utils.Helper.setConsoleCodePage();
+        const useDtaExecutionEngine = isDtaEngineRequired();
+        if (useDtaExecutionEngine) {
+            ci.publishEvent({
+                runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
+                testtype: tl.getInput('testSelector')
+            });
+
+            console.log(tl.loc('distributedTestWorkflow'));
+            console.log('======================================================');
+            const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
+            console.log('======================================================');
+
+            const test = new distributedTest.DistributedTest(dtaTestConfig);
+            test.runDistributedTest();
+        } else {
+            ci.publishEvent({ runmode: 'vstest' });
+            localTest.startTest();
+        }
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, error);
+        taskProps.result = error;
+    } finally {
+        taskProps.state = 'completed';
+        ci.publishEvent(taskProps);
+    }
 }
 
 function isDtaEngineRequired(): boolean {
