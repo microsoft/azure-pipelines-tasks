@@ -6,6 +6,13 @@ import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
 import * as utils from './helpers';
+import * as os from 'os';
+const osPlat: string = os.platform();
+
+if (osPlat !== 'win32') {
+    // Fail the task if os is not windows
+    tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+}
 
 //Starting the VsTest execution
 const taskProps = { state: 'started', result: '' };
