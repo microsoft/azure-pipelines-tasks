@@ -9,6 +9,8 @@ import * as utils from './helpers';
 import * as os from 'os';
 const osPlat: string = os.platform();
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 if (osPlat !== 'win32') {
     // Fail the task if os is not windows
     tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
@@ -18,7 +20,6 @@ if (osPlat !== 'win32') {
     ci.publishEvent(taskProps);
 
     try {
-        tl.setResourcePath(path.join(__dirname, 'task.json'));
         utils.Helper.setConsoleCodePage();
         const useDtaExecutionEngine = isDtaEngineRequired();
         if (useDtaExecutionEngine) {
