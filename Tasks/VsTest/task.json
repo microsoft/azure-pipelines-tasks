@@ -202,7 +202,7 @@
                 "latest": "Latest",
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
-                "toolsInstaller":"Installed by Tools Installer"
+                "toolsInstaller": "Installed by Tools Installer"
             }
         },
         {

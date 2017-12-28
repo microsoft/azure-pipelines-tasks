@@ -94,7 +94,7 @@ export interface TiaConfiguration {
     context: string;
     useTestCaseFilterInResponseFile: string;
     userMapFile: string;
-    disableEnablingDataCollector: boolean;    
+    disableEnablingDataCollector: boolean;
 }
 
 export interface ToolsInstallerConfiguration {

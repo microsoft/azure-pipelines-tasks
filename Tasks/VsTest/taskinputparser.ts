@@ -81,7 +81,7 @@ function initDtaEnvironment(): models.DtaEnvironment {
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
     dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     dtaEnvironment.environmentUri = getEnvironmentUri();
-    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log'); 
+    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
     return dtaEnvironment;
 }
 
@@ -97,7 +97,7 @@ function getEnvironmentUri(): string {
     const dontDistribute = tl.getBoolInput('dontDistribute');
     const pipelineId = utils.Helper.isNullEmptyOrUndefined(releaseId) ? 'build'.concat(`/${buildId}`) : 'release'.concat(`/${releaseId}`);
     const phaseId = utils.Helper.isNullEmptyOrUndefined(releaseId) ?
-    tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
+        tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
 
     if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
         || dontDistribute) {
@@ -210,18 +210,18 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         }
         if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug("Trying VsTest installed by tools installer.");
-            ci.publishEvent( { subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) } );
+            ci.publishEvent({ subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) });
 
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
 
             // if Tools installer is not there throw.
-            if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
-                ci.publishEvent( { subFeature: 'ToolsInstallerInstallationError' } );
+            if (utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
+                ci.publishEvent({ subFeature: 'ToolsInstallerInstallationError' });
                 utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
                 throw new Error(tl.loc('ToolsInstallerInstallationError'));
             }
 
-            ci.publishEvent( { subFeature: 'ToolsInstallerInstallationSuccessful' } );
+            ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
             // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
             testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
@@ -342,7 +342,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
-    
+
     const useNewCollector = tl.getVariable('tia.useNewCollector');
     if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
         tiaConfiguration.useNewCollector = true;

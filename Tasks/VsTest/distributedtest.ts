@@ -39,9 +39,9 @@ export class DistributedTest {
         }
     }
 
-    private async beginDtaExecutionHost() { 
+    private async beginDtaExecutionHost() {
         try {
-            await this.startDtaExecutionHost();            
+            await this.startDtaExecutionHost();
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
             ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error });
@@ -50,7 +50,7 @@ export class DistributedTest {
         }
     }
 
-    private async startDtaExecutionHost() {        
+    private async startDtaExecutionHost() {
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         const envVars: { [key: string]: string; } = process.env;
 
@@ -65,12 +65,12 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProceedAfterAbortedTestCase',
-                                        this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
+            this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
 
-        if(utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
+        if (utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
             utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_32', this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation);
             utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_64', this.dtaTestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation);
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.ForcePlatformV2', 'true');
@@ -85,8 +85,7 @@ export class DistributedTest {
         }
 
         // Set proxy settings to environment if provided
-        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyUrl))
-        {
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyUrl)) {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.proxyUrl);
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.proxyUserName);
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.proxyPassword);
@@ -111,7 +110,7 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.VisualStudio.Path', exelocation);
         }
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exelocation);
-        
+
         tl.debug('Total env vars set is ' + Object.keys(envVars).length);
         var code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'Modules'), env: envVars });
 
@@ -183,7 +182,7 @@ export class DistributedTest {
         }
     }
 
-    private async addDtaTestRunEnvVars(envVars: any) {        
+    private async addDtaTestRunEnvVars(envVars: any) {
         utils.Helper.addToProcessEnvVars(envVars, 'accesstoken', this.dtaTestConfig.dtaEnvironment.patToken);
         utils.Helper.addToProcessEnvVars(envVars, 'environmenturi', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'TE.SourceFilter', this.dtaTestConfig.sourceFilter.join('|'));
@@ -225,14 +224,14 @@ export class DistributedTest {
         }
         utils.Helper.setEnvironmentVariableToString(envVars, 'TE.IgnoreTestFailures', this.dtaTestConfig.ignoreTestFailures);
 
-        if(!utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
+        if (!utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
             utils.Helper.setEnvironmentVariableToString(envVars, 'TE.CodeCoverageEnabled', this.dtaTestConfig.codeCoverageEnabled);
         }
 
         utils.Helper.setEnvironmentVariableToString(envVars, 'TE.TestPlan', this.dtaTestConfig.testplan);
         utils.Helper.setEnvironmentVariableToString(envVars, 'TE.TestPlanConfigId', this.dtaTestConfig.testPlanConfigId);
 
-        if(this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
+        if (this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
             utils.Helper.setEnvironmentVariableToString(envVars, 'TE.CustomSlicingEnabled', 'false');
         }
         else {
