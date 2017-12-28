@@ -159,5 +159,5 @@
   "loc.messages.ToolsInstallerInstallationError": "The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller",
   "loc.messages.OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file.",
   "loc.messages.NoTestResultsDirectoryFound": "Test results directory not found.",
-  "loc.messages.OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows build agent."
+  "loc.messages.OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms."
 }

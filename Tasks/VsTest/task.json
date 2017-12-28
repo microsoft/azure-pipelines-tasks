@@ -533,6 +533,6 @@
         "ToolsInstallerInstallationError": "The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller",
         "OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file.",
         "NoTestResultsDirectoryFound": "Test results directory not found.",
-        "OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows build agent."
+        "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms."
     }
 }
