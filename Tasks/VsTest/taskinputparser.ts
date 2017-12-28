@@ -254,10 +254,10 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
 
     // Get proxy details
-    testConfiguration.proxyUrl = tl.getVariable("agent.proxyurl");
-    testConfiguration.proxyUserName = tl.getVariable("agent.proxyusername");
-    testConfiguration.proxyPassword = tl.getVariable("agent.proxypassword");
-    testConfiguration.proxyBypassHosts = tl.getVariable("agent.proxybypasslist");
+    testConfiguration.proxyConfiguration.proxyUrl = tl.getVariable("agent.proxyurl");
+    testConfiguration.proxyConfiguration.proxyUserName = tl.getVariable("agent.proxyusername");
+    testConfiguration.proxyConfiguration.proxyPassword = tl.getVariable("agent.proxypassword");
+    testConfiguration.proxyConfiguration.proxyBypassHosts = tl.getVariable("agent.proxybypasslist");
 }
 
 async function logWarningForWER(runUITests: boolean) {

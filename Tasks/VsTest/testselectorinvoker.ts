@@ -7,7 +7,7 @@ import { Helper } from './helpers'
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, vstestConfig: models.VsTestConfigurations, dtaTestConfig: models.DtaTestConfigurations, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, vstestConfig: models.VsTestConfigurations, dtaTestConfig: models.DtaTestConfigurations, testCaseFilterFile: string): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
@@ -77,12 +77,12 @@ export class TestSelectorInvoker {
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
-                'proxyurl': vstestConfig ? vstestConfig.proxyUrl : dtaTestConfig.proxyUrl,
-                'proxyusername': vstestConfig ? vstestConfig.proxyUserName : dtaTestConfig.proxyUserName,
-                'proxypassword': vstestConfig ? vstestConfig.proxyPassword : dtaTestConfig.proxyPassword,
-                'proxybypasslist': vstestConfig ? vstestConfig.proxyBypassHosts : dtaTestConfig.proxyBypassHosts,
+                'proxyurl': vstestConfig ? vstestConfig.proxyConfiguration.proxyUrl : dtaTestConfig.proxyConfiguration.proxyUrl,
+                'proxyusername': vstestConfig ? vstestConfig.proxyConfiguration.proxyUserName : dtaTestConfig.proxyConfiguration.proxyUserName,
+                'proxypassword': vstestConfig ? vstestConfig.proxyConfiguration.proxyPassword : dtaTestConfig.proxyConfiguration.proxyPassword,
+                'proxybypasslist': vstestConfig ? vstestConfig.proxyConfiguration.proxyBypassHosts : dtaTestConfig.proxyConfiguration.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-                'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
+                'VsTest_TaskInstanceIdentifier': vstestConfig ? vstestConfig.taskInstanceIdentifier : dtaTestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
                 'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
                 'DebugLogging': this.isDebugEnabled()
@@ -173,10 +173,10 @@ export class TestSelectorInvoker {
                 'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
                 'testCaseFilterOutputFile': testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
                 'isCustomEngineEnabled': String(!Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
-                'proxyurl': vstestConfig.proxyUrl,
-                'proxyusername': vstestConfig.proxyUserName,
-                'proxypassword': vstestConfig.proxyPassword,
-                'proxybypasslist': vstestConfig.proxyBypassHosts,
+                'proxyurl': vstestConfig.proxyConfiguration.proxyUrl,
+                'proxyusername': vstestConfig.proxyConfiguration.proxyUserName,
+                'proxypassword': vstestConfig.proxyConfiguration.proxyPassword,
+                'proxybypasslist': vstestConfig.proxyConfiguration.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
@@ -236,10 +236,10 @@ export class TestSelectorInvoker {
                 'resultfile': resultFile,
                 'runidfile': tiaConfig.runIdFile,
                 'context': tiaConfig.context,
-                'proxyurl': vstestConfig.proxyUrl,
-                'proxyusername': vstestConfig.proxyUserName,
-                'proxypassword': vstestConfig.proxyPassword,
-                'proxybypasslist': vstestConfig.proxyBypassHosts,
+                'proxyurl': vstestConfig.proxyConfiguration.proxyUrl,
+                'proxyusername': vstestConfig.proxyConfiguration.proxyUserName,
+                'proxypassword': vstestConfig.proxyConfiguration.proxyPassword,
+                'proxybypasslist': vstestConfig.proxyConfiguration.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),

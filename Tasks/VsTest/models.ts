@@ -41,12 +41,7 @@ export interface TestConfigurations {
     rerunFailedThreshold: number;
     rerunMaxAttempts: number;
     toolsInstallerConfig: ToolsInstallerConfiguration;
-
-    // Proxy properties
-    proxyUrl: string;
-    proxyUserName: string;
-    proxyPassword: string;
-    proxyBypassHosts: string;
+    proxyConfiguration: ProxyConfiguration
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -59,6 +54,13 @@ export interface DtaTestConfigurations extends TestConfigurations {
     batchingType: BatchingType;
     runningTimePerBatchInMs: number;
     proceedAfterAbortedTestCase: boolean;
+}
+
+export interface ProxyConfiguration {
+    proxyUrl: string;
+    proxyUserName: string;
+    proxyPassword: string;
+    proxyBypassHosts: string;
 }
 
 export interface DtaEnvironment {

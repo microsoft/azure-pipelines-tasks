@@ -30,7 +30,7 @@ export class DistributedTest {
 
     private publishCodeChangesIfRequired(): void {
         if (this.dtaTestConfig.tiaConfig.tiaEnabled) {
-            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig, null, this.dtaTestConfig.taskInstanceIdentifier);
+            const code = testSelector.publishCodeChanges(this.dtaTestConfig.tiaConfig, null, this.dtaTestConfig, null);
             //todo: enable custom engine
 
             if (code !== 0) {
@@ -50,10 +50,8 @@ export class DistributedTest {
         }
     }
 
-    private async startDtaExecutionHost() {
-        const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
+    private async startDtaExecutionHost() {        
         const envVars: { [key: string]: string; } = process.env;
-
         this.testSourcesFile = this.createTestSourcesFile();
         tl.debug('Total env vars before setting DTA specific vars is :' + Object.keys(envVars).length);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
@@ -85,11 +83,11 @@ export class DistributedTest {
         }
 
         // Set proxy settings to environment if provided
-        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyUrl)) {
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.proxyUrl);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.proxyUserName);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.proxyPassword);
-            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyBypassHosts', this.dtaTestConfig.proxyBypassHosts);
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyConfiguration.proxyUrl)) {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUrl', this.dtaTestConfig.proxyConfiguration.proxyUrl);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyUsername', this.dtaTestConfig.proxyConfiguration.proxyUserName);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyPassword', this.dtaTestConfig.proxyConfiguration.proxyPassword);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProxyBypassHosts', this.dtaTestConfig.proxyConfiguration.proxyBypassHosts);
         }
 
         // Adding Test Execution Host specific variables
@@ -112,6 +110,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exelocation);
 
         tl.debug('Total env vars set is ' + Object.keys(envVars).length);
+        const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         var code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'Modules'), env: envVars });
 
         var consolidatedCiData = {
