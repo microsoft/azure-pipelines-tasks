@@ -68,7 +68,7 @@ function publishEvent(feature, properties: any): void {
         else {
             if (feature === 'reliability') {
                 let reliabilityData = properties;
-                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + taskJson.version + ";]" + reliabilityData.errorMessage
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + JSON.stringify(taskJson.version) + ";]" + reliabilityData.errorMessage
             }
         }
         console.log(telemetry);;
