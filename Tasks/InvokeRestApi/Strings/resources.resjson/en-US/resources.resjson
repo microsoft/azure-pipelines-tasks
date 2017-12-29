@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
   "loc.description": "Invoke REST API as a part of your process.",
   "loc.instanceNameFormat": "Invoke REST API: $(method)",
   "loc.group.displayName.completionOptions": "Completion Options",
