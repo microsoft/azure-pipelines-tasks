@@ -126,7 +126,7 @@ describe('XamariniOS L0 Suite', function () {
     it('XamariniOS can find a single solution file with a glob pattern', function (done: MochaDone) {
         this.timeout(2000);
 
-        const tp = path.join(__dirname, 'L0SingleWildcardMatch.js');
+        const tp = path.join(__dirname, 'L0OneWildcardMatch.js');
         const tr = new ttm.MockTestRunner(tp);
 
         tr.run();

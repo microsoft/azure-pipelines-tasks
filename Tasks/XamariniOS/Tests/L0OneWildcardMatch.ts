@@ -48,12 +48,12 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "xbuild"
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin/xbuild": true,
         "/home/bin/nuget": true,
         "**/*.sln": true
     },
-    "findMatch" : {
+    "findMatch": {
         "**/*.sln": ["src/project.sln"]
     }
 };
