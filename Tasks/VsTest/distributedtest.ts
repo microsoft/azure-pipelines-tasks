@@ -63,7 +63,6 @@ export class DistributedTest {
         this.testSourcesFile = this.createTestSourcesFile();
         tl.debug('Total env vars before setting DTA specific vars is :' + Object.keys(envVars).length);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentId', '0');
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentName', this.dtaTestConfig.dtaEnvironment.agentName);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
@@ -119,7 +118,7 @@ export class DistributedTest {
 
         tl.debug('Total env vars set is ' + Object.keys(envVars).length);
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
-        var code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'Modules'), env: envVars });
+        var code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
 
         var consolidatedCiData = {
             agentFailure: false,
@@ -142,7 +141,6 @@ export class DistributedTest {
         };
 
         if (code !== 0) {
-            tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + code);
             consolidatedCiData.agentFailure = true;
         } else {
             tl.debug('Modules/DTAExecutionHost.exe exited');
@@ -263,7 +261,7 @@ export class DistributedTest {
             if (this.dtaTestConfig.rerunType === 'basedOnTestFailureCount') {
                 utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedTestCasesMaxLimit', this.dtaTestConfig.rerunFailedTestCasesMaxLimit.toString());
             } else {
-                utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedThresholdTE', this.dtaTestConfig.rerunFailedThreshold.toString());
+                utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedThreshold', this.dtaTestConfig.rerunFailedThreshold.toString());
             }
             utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunMaxAttempts', this.dtaTestConfig.rerunMaxAttempts.toString());
         }
