@@ -42,7 +42,7 @@ async function run() {
         const buildForSimulator: boolean = tl.getBoolInput('forSimulator');
         const device: string = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
         tl.debug('device: ' + device);
-        const cwd: string = tl.getInput('cwd');
+        const cwd: string = tl.getPathInput('cwd', false, true);
         const runNugetRestore: boolean = tl.getBoolInput('runNugetRestore');
 
         // find the build tool path based on the build tool and location inputs
