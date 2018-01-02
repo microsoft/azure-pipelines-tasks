@@ -169,6 +169,7 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.warningIssues.length === 0, 'should not have issued any warnings');
         assert(tr.errorIssues.length > 0, 'should have produced an error');
+        assert(tr.errorIssues[0] === 'loc_mock_XamariniOSFailed loc_mock_SolutionDoesNotExist **/*.sln');
         assert(!tr.succeeded, 'task should not have succeeded');
 
         done();
