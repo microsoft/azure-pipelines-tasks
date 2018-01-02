@@ -89,7 +89,7 @@
         "NumberOfSecretsFound": "Number of secrets found in %s: %s",
         "NumberOfEnabledSecretsFound": "Number of enabled and unexpired secrets found in %s: %s",
         "DownloadingSecretValue": "Downloading secret value for: %s.",
-        "AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download ProvisionKeyVaultPermissions.ps1 script from release logs and execute it OR set them from Azure portal.",
+        "AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it OR set them from Azure portal.",
         "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
         "ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault",
         "GetSecretFailedBecauseOfInvalidCharacters": "Cannot find the secret with name: %s. Secret name must be a string 1-127 characters in length containing only 0-9, a-z, A-Z, and -",
