@@ -163,7 +163,7 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = decodeURI(artifact.resource.downloadUrl.replace("file:", ""));
+                    let downloadUrl = decodeURIComponent(artifact.resource.downloadUrl.replace("file:", ""));
                     let artifactLocation = downloadUrl + '/' + artifact.name;
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
