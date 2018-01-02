@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 129,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -243,12 +243,16 @@
       "groupName": "AdvancedDeploymentOptions",
       "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
-    }
-  ],
-  "OutputVariables": [
+    },
     {
-      "name": "DeploymentOutputs",
-      "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+      "name": "deploymentOutputs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deploymentOutputs",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "action = Create Or Update Resource Group",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentOutputs"
     }
   ],
   "dataSourceBindings": [
