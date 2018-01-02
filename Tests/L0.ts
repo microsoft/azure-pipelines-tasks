@@ -203,7 +203,7 @@ describe('General Suite', function () {
 
     it('Find unsupported runsOn', (done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-        var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server', 'Gate'];
+        var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server', 'ServerGate'];
 
         supportedRunsOn.forEach(runsOn => {
             if (supportedRunsOn.indexOf(runsOn.toLocaleLowerCase()) < 0) {
@@ -244,7 +244,7 @@ describe('General Suite', function () {
         done();
     })
 
-    it('Find invalid server Task/Gate', (done) => {
+    it('Find invalid server Task/ServerGate', (done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Path to the _build/Tasks folder.
@@ -272,24 +272,24 @@ describe('General Suite', function () {
             var taskFolder = taskFolders[i];
             var taskjson = path.join(taskFolder, 'task.json');
             var task = JSON.parse(fs.readFileSync(taskjson).toString());
-            if (task.hasOwnProperty('runsOn') && (task['runsOn'].some(x => x.toLowerCase() == 'server') || task['runsOn'].some(x => x.toLowerCase() == 'gate'))) {
+            if (task.hasOwnProperty('runsOn') && (task['runsOn'].some(x => x.toLowerCase() == 'server') || task['runsOn'].some(x => x.toLowerCase() == 'servergate'))) {
                 task['runsOn'].sort();
                 if (task['runsOn'].length > 2
                     || (task['runsOn'].length == 2
-                        && (task['runsOn'][0].toLowerCase() != 'gate' || task['runsOn'][1].toLowerCase() != 'server'))) {
-                        assert(false, 'Found invalid value of runsOn in ' + taskjson + '. RunsOn should "server" or "server","gate" for server task. "gate" for gate');             
+                        && (task['runsOn'][0].toLowerCase() != 'server' || task['runsOn'][1].toLowerCase() != 'servergate'))) {
+                        assert(false, 'Found invalid value of runsOn in ' + taskjson + '. RunsOn should "server" or "server","servergate" for server task. "servergate" for server gate');
                 }
 
                 if (task.hasOwnProperty('demands') && task['demands'].length > 0) {
-                    assert(false, 'Found invalid value for demands in ' + taskjson + '. Demands should be either empty or absent for server task/gate.');
+                    assert(false, 'Found invalid value for demands in ' + taskjson + '. Demands should be either empty or absent for server task/servergate.');
                 }
 
                 if (task.hasOwnProperty('minimumAgentVersion')){
-                     assert(false, 'Found minimumAgentVersion in ' + taskjson + '. This should not be present for server task/gate.');
+                     assert(false, 'Found minimumAgentVersion in ' + taskjson + '. This should not be present for server task/servergate.');
                 }
 
                 if (!task.hasOwnProperty('execution')) {
-                    assert(false, 'No execution section found for server task/gate in ' + taskjson + '.');
+                    assert(false, 'No execution section found for server task/servergate in ' + taskjson + '.');
                 }
                 
                 var handlers = Object.keys(task['execution']);
@@ -299,8 +299,8 @@ describe('General Suite', function () {
                 }
                 
                 var handlerName : string = handlers[0];
-                if (task['runsOn'].some(x => x.toLowerCase() == 'gate') && handlerName.toLowerCase() != 'HttpRequest'.toLowerCase()) {
-                        assert(false, 'Found Invalid gate handler name : ' + handlerName + ' in ' + taskjson + '.'); 
+                if (task['runsOn'].some(x => x.toLowerCase() == 'servergate') && handlerName.toLowerCase() != 'HttpRequest'.toLowerCase()) {
+                        assert(false, 'Found Invalid servergate handler name : ' + handlerName + ' in ' + taskjson + '.'); 
                 }
                 else if (!supportedServerExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())) {
                         assert(false, 'Found Invalid task handler name : ' + handlerName + ' in ' + taskjson + '.');
@@ -311,7 +311,7 @@ describe('General Suite', function () {
                     var taskEvents = execution['events'];
                     Object.keys(taskEvents).forEach( eventName => {
                         if (!supportedTaskEvents.some(x => x.toLowerCase() == eventName.toLowerCase())) {
-                            assert(false, 'Found Invalid task/gate event name ' + eventName + 'in ' + taskjson + '.')
+                            assert(false, 'Found Invalid task/servergate event name ' + eventName + 'in ' + taskjson + '.')
                         }
                     });
                 }
