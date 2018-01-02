@@ -65,7 +65,7 @@ Azure App Service Deploy incorporates third party material from the projects lis
 57.	Xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
 58.	xtend (https://github.com/Raynos/xtend)
 59.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
-60. uuid (https://github.com/kelektiv/node-uuid)
+60.	uuid (https://github.com/kelektiv/node-uuid)
 
 
 %% abbrev NOTICES, INFORMATION, AND LICENSE BEGIN HERE
