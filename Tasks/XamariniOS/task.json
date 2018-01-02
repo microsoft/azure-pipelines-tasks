@@ -35,7 +35,7 @@
             "aliases": [ "solutionFile" ],
             "type": "filePath",
             "label": "Solution",
-            "defaultValue": "",
+            "defaultValue": "**/*.sln",
             "required": true,
             "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build."
         },

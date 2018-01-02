@@ -37,7 +37,7 @@
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
-      "defaultValue": "",
+      "defaultValue": "**/*.sln",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
