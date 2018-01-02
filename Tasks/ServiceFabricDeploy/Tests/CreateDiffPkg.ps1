@@ -5,24 +5,23 @@ param()
 
 $publishProfilePath = "$PSScriptRoot\data\NoAuthPublishProfile.xml"
 $applicationPackagePath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg"
-$diffPackagePath = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage"
+$diffPackagePath = $env:TEMP + "\DiffPackage"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
 $overwriteBehavior = "SameAppTypeAndVersion"
-$diffPkgAssetsPath = "$PSScriptRoot\data\DiffPkgAssets"
 $applicationTypeName = "TestType"
 $applicationTypeVersion = "1.0.0"
 $appManifestPath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\ApplicationManifest.xml"
-$appManifestDiffPath = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\ApplicationManifest.xml"
+$appManifestDiffPath = $diffPackagePath + "\ApplicationManifest.xml"
 $serviceManifestPath1 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless1Pkg\ServiceManifest.xml"
-$serviceManifestDiffPath1 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless1Pkg\ServiceManifest.xml"
+$serviceManifestDiffPath1 = $diffPackagePath + "\Stateless1Pkg\ServiceManifest.xml"
 $codePkg1 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless1Pkg\Code"
-$codeDiffPkg1 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless1Pkg\Code"
+$codeDiffPkg1 = $diffPackagePath + "\Stateless1Pkg\Code"
 $serviceManifestPath2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\ServiceManifest.xml"
-$serviceManifestDiffPath2 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless2Pkg\ServiceManifest.xml"
+$serviceManifestDiffPath2 = $diffPackagePath + "\Stateless2Pkg\ServiceManifest.xml"
 $codePkg2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\Code"
-$codeDiffPkg2 = "$PSScriptRoot\data\DiffPkgAssets\DiffPackage\Stateless2Pkg\Code"
+$codeDiffPkg2 = $diffPackagePath + "\Stateless2Pkg\Code"
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -35,7 +34,6 @@ Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { $true }  --  -Name useDiffPackage
-Register-Mock Get-VstsInput { $diffPkgAssetsPath } -- -Name diffPackagePath -Require
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath

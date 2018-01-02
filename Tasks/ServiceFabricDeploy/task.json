@@ -15,8 +15,8 @@
         "DeploymentGroup"
     ],
     "version": {
-        "Major": 2,
-        "Minor": 0,
+        "Major": 1,
+        "Minor": 5,
         "Patch": 0
     },
     "demands": [
@@ -91,16 +91,6 @@
             "required": false,
             "groupname": "advanced",
             "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
-        },
-        {
-            "name": "diffPackagePath",
-            "type": "filePath",
-            "label": "Diff Package",
-            "defaultValue": "",
-            "required": true,
-            "groupname": "advanced",
-            "helpMarkDown": "Path to the diff package that is to be created. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) can be used in the path.",
-            "visibleRule": "useDiffPackage = true"
         },
         {
             "name": "copyPackageTimeoutSec",

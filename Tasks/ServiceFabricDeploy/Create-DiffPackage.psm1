@@ -30,14 +30,6 @@ function Create-DiffPackage
             Return
         }
 
-        $diffPackagePath = Join-Path (Get-VstsInput -Name diffPackagePath -Require) "DiffPackage"
-        if (Test-Path -PathType Container -Path $diffPackagePath)
-        {
-            Remove-Item -Path $diffPackagePath -Recurse -Force
-        }
-        $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
-        $diffPkgAppManifestPath = Join-Path $diffPackagePath $appManifestName
-
         $clusterAppTypeVersion = $app.ApplicationTypeVersion
 
         # If the ApplicationTypeVersion of the Application is not upgraded, no diff package is made because there is no need
@@ -46,6 +38,14 @@ function Create-DiffPackage
             Write-Host (Get-VstsLocString -Key DIFFPKG_ApplicationIsNotChanged -ArgumentList @($ApplicationName, $clusterAppTypeVersion, $ConnectedServiceEndpoint.Url))
             Return
         }
+
+        $diffPackagePath = Join-Path $env:Temp "DiffPackage"
+        if (Test-Path -PathType Container -Path $diffPackagePath)
+        {
+            Remove-Item -Path $diffPackagePath -Recurse -Force
+        }
+        $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
+        $diffPkgAppManifestPath = Join-Path $diffPackagePath $appManifestName
 
         # Get the service types from the cluster
         $serviceTypes = Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion
@@ -74,28 +74,30 @@ function Create-DiffPackage
         {
             # Open the service manifest associated with the current ServiceManifestImport element of the local ApplicationManifest
             $serviceManifestName = "ServiceManifest.xml"
-            $localServicePkgPath = Join-Path $ApplicationPackagePath $serviceManifestImport.ServiceManifestRef.ServiceManifestName
+            $localServiceManifestName = $serviceManifestImport.ServiceManifestRef.ServiceManifestName
+            $localServiceManifestVersion = $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion
+            $localServicePkgPath = Join-Path $ApplicationPackagePath $localServiceManifestName
             $localServiceManifestPath = [System.IO.Path]::Combine($localServicePkgPath, $serviceManifestName)
             $localServiceManifest = ([XML](Get-Content $localServiceManifestPath)).ServiceManifest
-            $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifest.Name)
-            $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifest.Name].ServiceManifest
+            $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifestName)
+            $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifestName].ServiceManifest
 
             # If there's no matching manifest from the cluster it means this is a newly added service that doesn't exist yet on the cluster. 
             if (!$clusterServiceManifest)
             {
                 # Copy this service and all the children
-                Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceDoesNotExist -ArgumentList @($localServiceManifest.Name, $ApplicationName, $ConnectedServiceEndpoint.Url))
+                Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceDoesNotExist -ArgumentList @($localServiceManifestName, $ApplicationName, $ConnectedServiceEndpoint.Url))
                 Copy-Item $localServicePkgPath $diffServicePkgPath -Recurse
                 continue
             }
         
             # If the Version of the Service is not changed, don't include the service in the diff package
-            if ($clusterServiceManifest.Version -eq $localServiceManifest.Version)
+            if ($clusterServiceManifest.Version -eq $localServiceManifestVersion)
             {
-                Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceIsNotChanged -ArgumentList @($localServiceManifest.Name, $ApplicationName, $clusterServiceManifest.Version, $ConnectedServiceEndpoint.Url))
+                Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceIsNotChanged -ArgumentList @($localServiceManifestName, $ApplicationName, $clusterServiceManifest.Version, $ConnectedServiceEndpoint.Url))
                 continue
             }
-            Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackageForService -ArgumentList @($localServiceManifest.Name, $clusterServiceManifest.Version, $localServiceManifest.Version))
+            Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackageForService -ArgumentList @($localServiceManifestName, $clusterServiceManifest.Version, $localServiceManifestVersion))
 
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.CodePackage -localPackages $localServiceManifest.CodePackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.ConfigPackage -localPackages $localServiceManifest.ConfigPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
