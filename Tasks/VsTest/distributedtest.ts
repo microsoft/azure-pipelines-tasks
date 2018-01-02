@@ -25,7 +25,7 @@ export class DistributedTest {
 
     public runDistributedTest() {
         this.publishCodeChangesIfRequired();
-        this.beginDtaExecutionHost();
+        this.invokeDtaExecutionHost();
     }
 
     private publishCodeChangesIfRequired(): void {
@@ -39,10 +39,18 @@ export class DistributedTest {
         }
     }
 
-    private async beginDtaExecutionHost() {
+    private async invokeDtaExecutionHost() {
         try {
-            await this.startDtaExecutionHost();
-            tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+            var exitCode = await this.startDtaExecutionHost();
+            tl.debug('DtaExecutionHost finished');
+
+            if (exitCode !== 0) {
+                tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
+                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
+            } else {
+                tl.debug('Modules/DTAExecutionHost.exe exited');
+                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+            }            
         } catch (error) {
             ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error });
             tl.error(error);
@@ -50,7 +58,7 @@ export class DistributedTest {
         }
     }
 
-    private async startDtaExecutionHost() {        
+    private async startDtaExecutionHost(): Promise<number> {        
         const envVars: { [key: string]: string; } = process.env;
         this.testSourcesFile = this.createTestSourcesFile();
         tl.debug('Total env vars before setting DTA specific vars is :' + Object.keys(envVars).length);
@@ -142,7 +150,7 @@ export class DistributedTest {
 
         ci.publishEvent(consolidatedCiData);
         this.cleanUpDtaExeHost();
-        tl.debug('DtaExecutionHost finished');
+        return code;        
     }
 
     private cleanUpDtaExeHost() {
@@ -181,9 +189,7 @@ export class DistributedTest {
         }
     }
 
-    private async addDtaTestRunEnvVars(envVars: any) {
-        utils.Helper.addToProcessEnvVars(envVars, 'accesstoken', this.dtaTestConfig.dtaEnvironment.patToken);
-        utils.Helper.addToProcessEnvVars(envVars, 'environmenturi', this.dtaTestConfig.dtaEnvironment.environmentUri);
+    private async addDtaTestRunEnvVars(envVars: any) {        
         utils.Helper.addToProcessEnvVars(envVars, 'TE.SourceFilter', this.dtaTestConfig.sourceFilter.join('|'));
         //Modify settings file to enable configurations and data collectors.
         let settingsFile = this.dtaTestConfig.settingsFile;
