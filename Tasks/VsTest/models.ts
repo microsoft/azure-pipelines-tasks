@@ -38,7 +38,9 @@ export interface TestConfigurations {
     runUITests: boolean;
     ignoreTestFailures: string;
     rerunFailedTests: boolean;
+    rerunType: string;
     rerunFailedThreshold: number;
+    rerunFailedTestCasesMaxLimit: number;
     rerunMaxAttempts: number;
     toolsInstallerConfig: ToolsInstallerConfiguration;
     proxyConfiguration: ProxyConfiguration

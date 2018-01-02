@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Invoke Azure Function",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-function)",
   "loc.description": "Invoke Azure function as a part of your process.",
   "loc.instanceNameFormat": "Azure Function: $(function)",
   "loc.group.displayName.completionOptions": "Completion Options",

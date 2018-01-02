@@ -26,7 +26,7 @@
   "loc.input.label.artifactDetailsFileNameSuffix": "Commit and WorkItem FileName",
   "loc.input.help.artifactDetailsFileNameSuffix": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json",
   "loc.input.label.propagatedArtifacts": "Artifacts are propagated to Azure",
-  "loc.input.help.propagatedArtifacts": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this Jenkins plugin: https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin",
+  "loc.input.help.propagatedArtifacts": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this [Jenkins plugin](https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin)",
   "loc.input.label.artifactProvider": "Artifact Provider",
   "loc.input.help.artifactProvider": "Choose the external storage provider used in Jenkins job to upload the artifacts.",
   "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",

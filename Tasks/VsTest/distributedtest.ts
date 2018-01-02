@@ -257,9 +257,14 @@ export class DistributedTest {
                 this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
         }
 
-        if (this.dtaTestConfig.rerunFailedTests) {
+        if (this.dtaTestConfig.rerunFailedTests) {            
             utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedTests', "true");
-            utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedThresholdTE', this.dtaTestConfig.rerunFailedThreshold.toString());
+            tl.debug("Type of rerun: " + this.dtaTestConfig.rerunType);
+            if (this.dtaTestConfig.rerunType === 'basedOnTestFailureCount') {
+                utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedTestCasesMaxLimit', this.dtaTestConfig.rerunFailedTestCasesMaxLimit.toString());
+            } else {
+                utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedThresholdTE', this.dtaTestConfig.rerunFailedThreshold.toString());
+            }
             utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunMaxAttempts', this.dtaTestConfig.rerunMaxAttempts.toString());
         }
     }

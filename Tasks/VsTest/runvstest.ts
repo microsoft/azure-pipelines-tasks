@@ -6,38 +6,46 @@ import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
 import * as utils from './helpers';
+import * as os from 'os';
+const osPlat: string = os.platform();
 
-//Starting the VsTest execution
-const taskProps = { state: 'started', result: '' };
-ci.publishEvent(taskProps);
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-try {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
-    utils.Helper.setConsoleCodePage();
-    const useDtaExecutionEngine = isDtaEngineRequired();
-    if (useDtaExecutionEngine) {
-        ci.publishEvent({
-            runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
-            testtype: tl.getInput('testSelector')
-        });
-
-        console.log(tl.loc('distributedTestWorkflow'));
-        console.log('======================================================');
-        const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
-        console.log('======================================================');
-
-        const test = new distributedTest.DistributedTest(dtaTestConfig);
-        test.runDistributedTest();
-    } else {
-        ci.publishEvent({ runmode: 'vstest' });
-        localTest.startTest();
-    }
-} catch (error) {
-    tl.setResult(tl.TaskResult.Failed, error);
-    taskProps.result = error;
-} finally {
-    taskProps.state = 'completed';
+if (osPlat !== 'win32') {
+    // Fail the task if os is not windows
+    tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+} else {
+    //Starting the VsTest execution
+    const taskProps = { state: 'started', result: '' };
     ci.publishEvent(taskProps);
+
+    try {
+        utils.Helper.setConsoleCodePage();
+        const useDtaExecutionEngine = isDtaEngineRequired();
+        if (useDtaExecutionEngine) {
+            ci.publishEvent({
+                runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
+                testtype: tl.getInput('testSelector')
+            });
+
+            console.log(tl.loc('distributedTestWorkflow'));
+            console.log('======================================================');
+            const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
+            console.log('======================================================');
+
+            const test = new distributedTest.DistributedTest(dtaTestConfig);
+            test.runDistributedTest();
+        } else {
+            ci.publishEvent({ runmode: 'vstest' });
+            localTest.startTest();
+        }
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, error);
+        taskProps.result = error;
+    } finally {
+        taskProps.state = 'completed';
+        ci.publishEvent(taskProps);
+    }
 }
 
 function isDtaEngineRequired(): boolean {
@@ -64,7 +72,7 @@ function isDtaEngineRequired(): boolean {
 
     if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine') {
         const dontDistribute = tl.getBoolInput('dontDistribute');
-        if(dontDistribute){
+        if (dontDistribute) {
             return false;
         }
         return true;

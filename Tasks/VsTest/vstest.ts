@@ -260,7 +260,11 @@ async function executeVstest(parallelRunSettingsFile: string, vsVersion: number,
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.VstestTaskInstanceIdentifier', vstestConfig.taskInstanceIdentifier);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunIterationCount', vstestConfig.rerunMaxAttempts.toString());
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
+        if (vstestConfig.rerunType === 'basedOnTestFailureCount') {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedTestCasesMaxLimit', vstestConfig.rerunFailedTestCasesMaxLimit.toString());
+        } else {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.RerunFailedThreshold', vstestConfig.rerunFailedThreshold.toString());
+        }
     } else {
         addVstestArgs(argsArray, vstest);
         // Adding the other console options here

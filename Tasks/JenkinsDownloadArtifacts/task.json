@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 128,
-        "Patch": 3
+        "Patch": 4
     },
     "groups": [
         {
@@ -36,7 +36,9 @@
     "inputs": [
         {
             "name": "serverEndpoint",
-            "aliases": ["jenkinsServerConnection"],
+            "aliases": [
+                "jenkinsServerConnection"
+            ],
             "type": "connectedService:Jenkins",
             "label": "Jenkins service endpoint",
             "defaultValue": "",
@@ -153,7 +155,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "propagatedArtifactsGroup",
-            "helpMarkDown": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this Jenkins plugin: https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin"
+            "helpMarkDown": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this [Jenkins plugin](https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin)"
         },
         {
             "name": "artifactProvider",

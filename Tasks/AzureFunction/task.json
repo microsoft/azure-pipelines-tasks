@@ -4,19 +4,20 @@
 	"friendlyName": "Invoke Azure Function",
 	"description": "Invoke Azure function as a part of your process.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-function)",
 	"category": "Utility",
 	"preview": "true",
 	"visibility": [
 		"Release"
 	],
 	"runsOn": [
-		"Server"
+		"Server",
+		"Gate"
 	],
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 3
+		"Patch": 5
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
@@ -80,7 +81,7 @@
 			"type": "multiLine",
 			"label": "Body",
 			"required": "false",
-			"defaultValue": "",
+			"defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
 			"properties": {
 				"resizable": "true",
 				"rows": "3",

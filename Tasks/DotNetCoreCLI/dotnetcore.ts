@@ -1,4 +1,5 @@
 import tl = require("vsts-task-lib/task");
+import tr = require("vsts-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
@@ -16,6 +17,7 @@ export class dotNetExe {
     private zipAfterPublish: boolean;
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
+    private workingDirectory: string;
 
     constructor() {
         this.command = tl.getInput("command");
@@ -23,6 +25,7 @@ export class dotNetExe {
         this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
+        this.workingDirectory = tl.getPathInput("workingDirectory", false);
     }
 
     public async execute() {
@@ -77,7 +80,9 @@ export class dotNetExe {
             }
             dotnet.line(dotnetArguments);
             try {
-                var result = await dotnet.exec();
+                var result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: this.workingDirectory
+                });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
                 tl.error(err);

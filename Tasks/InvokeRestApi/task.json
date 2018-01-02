@@ -4,19 +4,20 @@
   "friendlyName": "Invoke REST API",
   "description": "Invoke REST API as a part of your process.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
   "runsOn": [
-    "Server"
+    "Server",
+    "Gate"
   ],
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 7
   }, 
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -71,7 +72,7 @@
       "type": "multiLine",
       "label": "Body",
       "required": "false",
-      "defaultValue": "",
+      "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
       "properties": {
                 "resizable": "true",
                 "rows": "3",

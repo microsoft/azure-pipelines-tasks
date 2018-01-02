@@ -11,12 +11,13 @@
 		"Release"
 	],
 	"runsOn": [
-		"Server"
+		"Server",
+		"Gate"
 	],
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 2
+		"Patch": 5
 	},
 	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
 	"groups": [{
@@ -80,7 +81,7 @@
 			"type": "multiLine",
 			"label": "ms-resource:loc.input.label.body",
 			"required": "false",
-			"defaultValue": "",
+			"defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
 			"properties": {
 				"resizable": "true",
 				"rows": "3",
