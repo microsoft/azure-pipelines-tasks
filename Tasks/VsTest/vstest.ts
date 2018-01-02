@@ -72,7 +72,8 @@ export function startTest() {
             settingsType:  !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
             testSelection: vstestConfig.testSelection,
             tiaEnabled: vstestConfig.tiaConfig.tiaEnabled,
-            vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber
+            vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber,
+            consoleOptionsEnabled: !utils.Helper.isNullOrWhitespace(vstestConfig.otherConsoleOptions) ? 'true' : 'false'
         };
 
         invokeVSTest().then(function (taskResult) {
