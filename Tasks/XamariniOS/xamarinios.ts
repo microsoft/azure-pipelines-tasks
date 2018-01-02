@@ -7,9 +7,9 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 function expandSolutionWildcardPatterns(solutionPattern: string): string {
     const matchedSolutionFiles = tl.findMatch(null, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
-    tl.debug(`Found ${matchedSolutionFiles.length} solution files matching the pattern.`);
+    tl.debug(`Found ${matchedSolutionFiles ? matchedSolutionFiles.length : 0} solution files matching the pattern.`);
 
-    if (matchedSolutionFiles.length > 0) {
+    if (matchedSolutionFiles && matchedSolutionFiles.length > 0) {
         const result = matchedSolutionFiles[0];
         if (matchedSolutionFiles.length > 1) {
             tl.warning(tl.loc('MultipleSolutionsFound', result));
