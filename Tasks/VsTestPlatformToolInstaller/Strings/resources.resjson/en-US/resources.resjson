@@ -10,7 +10,7 @@
   "loc.messages.StartingInstaller": "Starting VsTest platform tools installer task.",
   "loc.messages.ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
   "loc.messages.NoPackageFoundInCache": "Failed to find any stable version of the test platform package in the cache.",
-  "loc.messages.OnlyWindowsOsSupported": "This task is meant to run on Windows machines only. Please retry with a Windows Build Agent.",
+  "loc.messages.OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
   "loc.messages.RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest stable version cached.",
   "loc.messages.FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest stable version cached.",
   "loc.messages.FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please refer to the logs for additional information.",

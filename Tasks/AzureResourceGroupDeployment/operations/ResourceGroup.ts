@@ -243,7 +243,7 @@ export class ResourceGroup {
         switch (type.toLowerCase()) {
             case "int":
             case "object":
-            case "secureObject":
+            case "secureobject":
             case "array":
             case "bool":
                 return JSON.parse(value);
