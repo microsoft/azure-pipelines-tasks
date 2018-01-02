@@ -150,6 +150,7 @@ describe('XamariniOS L0 Suite', function () {
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.warningIssues.length > 0, 'should have issued a warning');
+        assert(tr.warningIssues[0] === 'loc_mock_MultipleSolutionsFound src/1.sln');
         assert(tr.errorIssues.length === 0, 'should not have produced any errors');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.ran('/home/bin/xbuild src/1.sln /p:Configuration=Release /p:Platform=iPhone'));
