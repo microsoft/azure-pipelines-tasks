@@ -135,6 +135,7 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.warningIssues.length === 0, 'should not have issued any warnings');
         assert(tr.errorIssues.length === 0, 'should not have produced any errors');
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'));
 
         done();
     });
@@ -151,6 +152,7 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.warningIssues.length > 0, 'should have issued a warning');
         assert(tr.errorIssues.length === 0, 'should not have produced any errors');
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.ran('/home/bin/xbuild src/1.sln /p:Configuration=Release /p:Platform=iPhone'));
 
         done();
     });
