@@ -5,6 +5,10 @@ import armKeyVault = require("./azure-arm-keyvault");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
 
+import * as os from 'os';
+import * as path from 'path';
+import * as fs from 'fs';
+
 export class SecretsToErrorsMapping { 
     public errorsMap: { [key: string]: string; };
 
@@ -41,14 +45,21 @@ export class KeyVault {
 
     private taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters;
     private keyVaultClient: armKeyVault.KeyVaultClient;
+    private provisionKeyVaultSecretsScript: string;
 
     constructor(taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters) {
         this.taskParameters = taskParameters;
+
         this.keyVaultClient = new armKeyVault.KeyVaultClient(
             this.taskParameters.vaultCredentials, 
             this.taskParameters.subscriptionId,
             this.taskParameters.keyVaultName,
             this.taskParameters.keyVaultUrl);
+
+        this.provisionKeyVaultSecretsScript = util.format("$ErrorActionPreference=\"Stop\";Login-AzureRmAccount -SubscriptionId %s;$spn=(Get-AzureRmADServicePrincipal -SPN %s);$spnObjectId=$spn.Id;Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -PermissionsToSecrets get,list;",
+                                            this.taskParameters.subscriptionId,
+                                            this.taskParameters.servicePrincipalId,
+                                            this.taskParameters.keyVaultName);
     }
 
     public downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
@@ -149,10 +160,11 @@ export class KeyVault {
         });
     }
 
-    private getError(error: any) {
+    private getError(error: any): any {
         tl.debug(JSON.stringify(error));
 
         if (error && error.message && error.statusCode && error.statusCode == 403) {
+            this.generateProvisionKeyVaultPermissionsScript();
             return tl.loc("AccessDeniedError", error.message);
         }
 
@@ -161,5 +173,20 @@ export class KeyVault {
         }
 
         return error;
+    }
+
+    private generateProvisionKeyVaultPermissionsScript(): void {
+        let filePath = path.join(os.tmpdir(), "ProvisionKeyVaultPermissions.ps1");
+
+        fs.writeFile(filePath, this.provisionKeyVaultSecretsScript, (err) => {
+            if (err) {
+                console.log(tl.loc("CouldNotWriteToFile", err));
+                return;
+            }
+            else {
+                console.log(tl.loc("UploadingAttachment", filePath));
+                console.log(`##vso[task.uploadfile]${filePath}`);
+            }
+        });
     }
 }
