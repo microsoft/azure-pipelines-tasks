@@ -35,6 +35,12 @@
             "displayName": "Advanced deployment options for virtual machines",
             "isExpanded": true,
             "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+        },
+        {
+            "name": "Outputs",
+            "displayName": "Outputs",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group"
         }
     ],
     "inputs": [
@@ -250,8 +256,7 @@
             "label": "Deployment outputs",
             "required": false,
             "defaultValue": "",
-            "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "action = Create Or Update Resource Group",
+            "groupName": "Outputs",
             "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
         }
     ],

@@ -35,6 +35,12 @@
       "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
       "isExpanded": true,
       "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+    },
+    {
+      "name": "Outputs",
+      "displayName": "ms-resource:loc.group.displayName.Outputs",
+      "isExpanded": true,
+      "visibleRule": "action = Create Or Update Resource Group"
     }
   ],
   "inputs": [
@@ -250,8 +256,7 @@
       "label": "ms-resource:loc.input.label.deploymentOutputs",
       "required": false,
       "defaultValue": "",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "action = Create Or Update Resource Group",
+      "groupName": "Outputs",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentOutputs"
     }
   ],
