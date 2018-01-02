@@ -446,7 +446,26 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-            // assert(tr.stdout.indexOf("AddedOutputVariable") > 0, "should have set task output variable");
+            assert(tr.stdout.indexOf("set someVar") < 0, "deploymentsOutput should not have been updated");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it('Successfully triggered createOrUpdate deployment and updated deploymentOutputs', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("set someVar") >= 0, "deploymentsOutput should have been updated");
             done();
         }
         catch (error) {
