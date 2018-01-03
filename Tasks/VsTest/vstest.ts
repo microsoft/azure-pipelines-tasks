@@ -410,9 +410,17 @@ function uploadVstestDiagFile(): void {
 
 function uploadFile(file: string): void {
     if (utils.Helper.pathExistsAsFile(file)) {
-        let stats = fs.statSync(file);
+        const stats = fs.statSync(file);
         tl.debug('File exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]' + file);
+
+        const files = tl.findMatch(os.tmpdir(), '*.host.*.txt');
+        if (files) {
+            files.forEach(file => {
+                tl.debug('Uploading file: ' + file);
+                console.log('##vso[task.uploadfile]' + file);
+            });
+        }
     }
 }
 
