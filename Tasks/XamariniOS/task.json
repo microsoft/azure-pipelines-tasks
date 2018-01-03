@@ -37,7 +37,7 @@
             "label": "Solution",
             "defaultValue": "**/*.sln",
             "required": true,
-            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build."
+            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards."
         },
         {
             "name": "configuration",

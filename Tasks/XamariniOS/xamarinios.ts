@@ -7,11 +7,10 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 /**
  * Find all filenames starting from `rootDirectory` that match a wildcard pattern.
- * @param rootDirectory Directory to evaluate the pattern on. Falls back to System.DefaultWorkingDirectory and then `process.cwd()` if `null`.
  * @param solutionPattern A filename pattern to evaluate, possibly containing wildcards.
  */
-function expandSolutionWildcardPatterns(rootDirectory: string | null, solutionPattern: string): string {
-    const matchedSolutionFiles = tl.findMatch(rootDirectory, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+function expandSolutionWildcardPatterns(solutionPattern: string): string {
+    const matchedSolutionFiles = tl.findMatch(null, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
     tl.debug(`Found ${matchedSolutionFiles ? matchedSolutionFiles.length : 0} solution files matching the pattern.`);
 
     if (matchedSolutionFiles && matchedSolutionFiles.length > 0) {
@@ -70,7 +69,7 @@ async function run() {
         tl.checkPath(buildToolPath, 'build tool');
         tl.debug('Build tool path = ' + buildToolPath);
 
-        const solutionPath = expandSolutionWildcardPatterns(cwd, solutionInput);
+        const solutionPath = expandSolutionWildcardPatterns(solutionInput);
 
         if (clean) {
             const cleanBuildRunner: ToolRunner = tl.tool(buildToolPath);
