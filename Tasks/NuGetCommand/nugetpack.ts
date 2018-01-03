@@ -88,7 +88,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 let buildNumber: string =  tl.getVariable("BUILD_BUILDNUMBER");
                 tl.debug(`Build number: ${buildNumber}`);
 
-                let versionRegex = /\d+\.\d+\.\d+(?:\.\d+)?/;
+                let versionRegex = /\d+\.\d+\.\d+(?:\.\d+)?(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?/i;
                 let versionMatches = buildNumber.match(versionRegex);
                 if (!versionMatches)
                 {
