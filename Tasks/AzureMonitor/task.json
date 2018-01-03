@@ -11,7 +11,7 @@
 	],
 	"runsOn": [
 		"Server",
-		"Gate"
+		"ServerGate"
 	],
 	"version": {
 		"Major": 0,
