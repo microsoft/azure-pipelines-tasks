@@ -33,11 +33,11 @@
         {
             "name": "solution",
             "aliases": [ "solutionFile" ],
-            "type": "string",
+            "type": "filePath",
             "label": "Solution",
             "defaultValue": "**/*.sln",
             "required": true,
-            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards."
+            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build."
         },
         {
             "name": "configuration",

@@ -34,7 +34,7 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get build inputs
-        const solutionInput: string = tl.getInput('solution', true);
+        const solutionInput: string = tl.getPathInput('solution', true, false);
         const configuration: string = tl.getInput('configuration', true);
         const clean: boolean = tl.getBoolInput('clean');
         const args: string = tl.getInput('args');
