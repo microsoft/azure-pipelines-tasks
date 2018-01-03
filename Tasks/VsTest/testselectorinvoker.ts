@@ -7,7 +7,7 @@ import { Helper } from './helpers'
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, vstestConfig: models.VsTestConfigurations, dtaTestConfig: models.DtaTestConfigurations, testCaseFilterFile: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, proxyConfig: models.ProxyConfiguration, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
@@ -77,12 +77,12 @@ export class TestSelectorInvoker {
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
-                'proxyurl': vstestConfig ? vstestConfig.proxyConfiguration.proxyUrl : dtaTestConfig.proxyConfiguration.proxyUrl,
-                'proxyusername': vstestConfig ? vstestConfig.proxyConfiguration.proxyUserName : dtaTestConfig.proxyConfiguration.proxyUserName,
-                'proxypassword': vstestConfig ? vstestConfig.proxyConfiguration.proxyPassword : dtaTestConfig.proxyConfiguration.proxyPassword,
-                'proxybypasslist': vstestConfig ? vstestConfig.proxyConfiguration.proxyBypassHosts : dtaTestConfig.proxyConfiguration.proxyBypassHosts,
+                'proxyurl': proxyConfig.proxyUrl,
+                'proxyusername': proxyConfig.proxyUserName,
+                'proxypassword': proxyConfig.proxyPassword,
+                'proxybypasslist': proxyConfig.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-                'VsTest_TaskInstanceIdentifier': vstestConfig ? vstestConfig.taskInstanceIdentifier : dtaTestConfig.taskInstanceIdentifier,
+                'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
                 'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
                 'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
                 'DebugLogging': this.isDebugEnabled()

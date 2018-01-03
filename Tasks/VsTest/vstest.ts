@@ -436,7 +436,7 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
     }
 
     let testselector = new testselectorinvoker.TestSelectorInvoker();
-    let code = testselector.publishCodeChanges(tiaConfig, vstestConfig, null, testCaseFilterFile);
+    let code = testselector.publishCodeChanges(tiaConfig, vstestConfig.proxyConfiguration, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
 
     if (code !== 0) {
         // If publishing code changes fails, we run all tests. Here we are calling the non tia run because
