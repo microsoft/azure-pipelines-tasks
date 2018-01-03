@@ -11,6 +11,7 @@ export class KeyVaultTaskParameters {
     public secretsFilter: string[];
     public vaultCredentials: msRestAzure.ApplicationTokenCredentials;
     public keyVaultUrl: string;
+    public servicePrincipalId: string;
 
     constructor() {
         var connectedService = tl.getInput("ConnectedServiceName", true);
@@ -19,6 +20,7 @@ export class KeyVaultTaskParameters {
         this.secretsFilter = tl.getDelimitedInput("SecretsFilter", ",", true);
         var azureKeyVaultDnsSuffix = tl.getEndpointDataParameter(connectedService, "AzureKeyVaultDnsSuffix", true);
 
+        this.servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
         this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
         this.vaultCredentials = this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
     }
@@ -26,13 +28,12 @@ export class KeyVaultTaskParameters {
     private getVaultCredentials(connectedService: string, azureKeyVaultDnsSuffix: string): msRestAzure.ApplicationTokenCredentials {
         var vaultUrl = util.format("https://%s", azureKeyVaultDnsSuffix);
 
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false);
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, vaultUrl, envAuthorityUrl, vaultUrl, false);
+        var credentials = new msRestAzure.ApplicationTokenCredentials(this.servicePrincipalId, tenantId, servicePrincipalKey, vaultUrl, envAuthorityUrl, vaultUrl, false);
         return credentials;
     }
 }
