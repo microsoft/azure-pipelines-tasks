@@ -414,7 +414,7 @@ function uploadFile(file: string): void {
         tl.debug('File exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]' + file);
 
-        const files = tl.findMatch(os.tmpdir(), '*.host.*.txt');
+        const files = tl.findMatch(os.tmpdir(), ['*host.*.txt', '*datacollector.*.txt']);
         if (files) {
             files.forEach(file => {
                 tl.debug('Uploading file: ' + file);
