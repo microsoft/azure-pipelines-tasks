@@ -63,7 +63,6 @@
       true,
       "debug",
       "info",
-      "log",
       "time",
       "timeEnd",
       "trace"
