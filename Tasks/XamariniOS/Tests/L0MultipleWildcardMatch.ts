@@ -8,23 +8,25 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/user/home'; //replace with mock of setVariable when task-lib has the support
 
-tr.setInput('solution', 'src/project.sln'); //path
+tr.setInput('solution', '**/*.sln'); //path
 tr.setInput('configuration', 'Release');
 tr.setInput('args', '');
+tr.setInput('clean', 'true');
 tr.setInput('packageApp', ''); //boolean
 tr.setInput('forSimulator', ''); //boolean
-tr.setInput('signMethod', 'id');
+tr.setInput('runNugetRestore', 'true'); //boolean
+tr.setInput('signMethod', 'file');
 tr.setInput('unlockDefaultKeychain', ''); //boolean
 tr.setInput('defaultKeychainPassword', '');
 tr.setInput('p12', ''); //path
 tr.setInput('p12pwd', '');
-tr.setInput('iosSigningIdentity', 'testSignIdentity');
-tr.setInput('provProfileUuid', 'testUUID');
+tr.setInput('iosSigningIdentity', '');
+tr.setInput('provProfileUuid', '');
 tr.setInput('provProfile', ''); //path
 tr.setInput('removeProfile', ''); //boolean
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "getVariable": {
         "HOME": "/user/home"
     },
@@ -33,27 +35,29 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "nuget": "/home/bin/nuget"
     },
     "exec": {
-        "/home/bin/nuget restore src/project.sln": {
+        "/home/bin/xbuild src/1.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean": {
+            "code": 0,
+            "stdout": "xbuild"
+        },
+        "/home/bin/nuget restore src/1.sln": {
             "code": 0,
             "stdout": "nuget restore"
         },
-        "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /p:Codesignkey=testSignIdentity /p:CodesignProvision=testUUID": {
+        "/home/bin/xbuild src/1.sln /p:Configuration=Release /p:Platform=iPhone": {
             "code": 0,
             "stdout": "xbuild"
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/user/build": true,
         "/home/bin/xbuild": true,
-        "/home/bin2/xbuild": true,
         "/home/bin/nuget": true,
-        "src/project.sln": true
+        "**/*.sln": true
     },
-    "findMatch" : {
-        "src/project.sln": ["src/project.sln"]
+    "findMatch": {
+        "**/*.sln": ["src/1.sln", "src/2.sln" ]
     }
 };
 tr.setAnswers(a);
 
 tr.run();
-

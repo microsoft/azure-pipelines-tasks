@@ -9,7 +9,7 @@
     "exec": {
         "/home/bin/nuget restore src/project.sln": {
             "code": 0,
-            "stdout": "nuget restore"            
+            "stdout": "nuget restore"
         },
         "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
             "code": 0,
@@ -20,10 +20,13 @@
             "stdout": "xbuild"
         }
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin/xbuild": true,
         "/home/bin2/xbuild": true,
         "/home/bin/nuget": true,
-        "src/project.sln": true  
+        "src/project.sln": true
+    },
+    "findMatch": {
+        "src/project.sln": ["src/project.sln"]
     }
 }

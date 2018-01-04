@@ -2,8 +2,11 @@
     "getVariable": {
         "HOME": "/user/home"
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin2/xbuild": true,
-        "src/project.sln": true  
+        "src/project.sln": true
+    },
+    "findMatch": {
+        "src/project.sln": ["src/project.sln"]
     }
 }
